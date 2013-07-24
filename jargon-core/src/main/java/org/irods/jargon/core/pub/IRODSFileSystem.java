@@ -84,8 +84,8 @@ public final class IRODSFileSystem {
 	}
 
 	public IRODSFileSystem() throws JargonException {
-		this.irodsProtocolManager = IRODSSimpleProtocolManager.instance();
-		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
+		irodsProtocolManager = IRODSSimpleProtocolManager.instance();
+		irodsSession = IRODSSession.instance(irodsProtocolManager);
 		initialize();
 		log.info("IRODSfileSystem is initialized");
 	}
@@ -106,7 +106,7 @@ public final class IRODSFileSystem {
 			throw new IllegalArgumentException("null irodsProtocolManager");
 		}
 		this.irodsProtocolManager = irodsProtocolManager;
-		this.irodsSession = IRODSSession.instance(irodsProtocolManager);
+		irodsSession = IRODSSession.instance(irodsProtocolManager);
 		initialize();
 		log.info("IRODSfileSystem is initialized");
 

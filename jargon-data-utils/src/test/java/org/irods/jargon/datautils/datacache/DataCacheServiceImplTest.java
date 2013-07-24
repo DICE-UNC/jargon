@@ -56,7 +56,7 @@ public class DataCacheServiceImplTest {
 		accountCacheService.setIrodsAccount(testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties));
 		accountCacheService.putSerializedEncryptedObjectIntoCache("obj", "key");
-	} 
+	}
 
 	@Test
 	public void testPutStringIntoCacheUsingDefaultsUserHomeDirCache()
@@ -95,7 +95,7 @@ public class DataCacheServiceImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		DataCacheService accountCacheService = new DataCacheServiceImpl();
 		CacheServiceConfiguration cacheServiceConfiguration = new CacheServiceConfiguration();
-		cacheServiceConfiguration.setLifetimeInMinutes(90);
+		cacheServiceConfiguration.setLifetimeInDays(90);
 		cacheServiceConfiguration.setDoCleanupDuringRequests(false);
 		String testDir = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SCRATCH_DIR_KEY)

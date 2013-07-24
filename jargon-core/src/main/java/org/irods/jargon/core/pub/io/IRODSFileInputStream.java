@@ -90,6 +90,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		this.irodsFile = irodsFile;
 		this.fileIOOperations = fileIOOperations;
+		openFile();
 
 	}
 
@@ -106,7 +107,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		try {
 			openIRODSFile();
-			this.fd = irodsFile.getFileDescriptor();
+			fd = irodsFile.getFileDescriptor();
 		} catch (JargonException e) {
 			final String msg = "JargonException caught in constructor, rethrow as JargonRuntimeException";
 			log.error(msg, e);
@@ -170,9 +171,7 @@ public class IRODSFileInputStream extends InputStream {
 		// open the file (read-only since its an input stream)
 		fd = irodsFile.openReadOnly();
 
-		if (log.isDebugEnabled()) {
-			log.debug("file descriptor from open operation:{}", fd);
-		}
+		log.info("file descriptor from open operation:{}", fd);
 
 		return fd;
 
@@ -198,7 +197,7 @@ public class IRODSFileInputStream extends InputStream {
 	@Override
 	public int read() throws IOException {
 		try {
-			openFile();
+			// openFile();
 			byte buffer[] = new byte[1];
 
 			int temp = fileIOOperations.fileRead(fd, buffer, 0, 1);
@@ -297,7 +296,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		int temp;
 		try {
-			openFile();
+			// openFile();
 			temp = fileIOOperations.fileRead(fd, b, off, len);
 		} catch (JargonException e) {
 			log.error(
@@ -361,7 +360,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	@Override
 	public int read(final byte b[]) throws IOException {
-		openFile();
+		// openFile();
 		return read(b, 0, b.length);
 	}
 
@@ -468,7 +467,7 @@ public class IRODSFileInputStream extends InputStream {
 					e);
 			throw new IOException(e);
 		}
-		this.filePointer = 0L;
+		filePointer = 0L;
 	}
 
 }

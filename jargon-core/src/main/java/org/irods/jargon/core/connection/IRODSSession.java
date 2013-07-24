@@ -326,14 +326,14 @@ public class IRODSSession {
 			throws JargonException {
 		IRODSCommands irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
-				buildPipelineConfigurationBasedOnJargonProperties());
+				buildPipelineConfigurationBasedOnJargonProperties(), this);
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
 			throw new JargonException(
 					"null connection returned from connection manager");
 		}
 
-		irodsProtocol.setIrodsSession(this);
+		// irodsProtocol.setIrodsSession(this);
 		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
 
 		/*

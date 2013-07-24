@@ -19,7 +19,7 @@ public enum FilePermissionEnum {
 	private int permissionNumericValue;
 
 	FilePermissionEnum(final int i) {
-		this.permissionNumericValue = i;
+		permissionNumericValue = i;
 	}
 
 	public static FilePermissionEnum valueOf(final int i) {

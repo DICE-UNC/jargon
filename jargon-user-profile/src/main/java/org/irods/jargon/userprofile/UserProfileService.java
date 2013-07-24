@@ -96,4 +96,16 @@ public interface UserProfileService {
 	 */
 	void updateUserProfile(UserProfile userProfile) throws JargonException;
 
+	/**
+	 * Check and see if a group has been configured with read/write access to
+	 * the protected profile. If a group is not configured, then things still
+	 * operate, but that permission is not set and will have to be set by the
+	 * administrator
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if you want to set
+	 *         permissions for a protected profile group
+	 * @throws JargonException
+	 */
+	boolean isProtectedReadGroupConfigured() throws JargonException;
+
 }

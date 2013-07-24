@@ -7,6 +7,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.domain.Collection;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -70,6 +71,114 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		// no errors means test passes
 		Assert.assertTrue(true);
+
+	}
+
+	@Test
+	public void testListCollectionsUnderPathWithPermissionsSmallWithSpecificQuery()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsSmallWithSpecificQuery";
+		int count = 100;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
+						0);
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list",
+				entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals(entry.getCount(), entries.size());
+
+		Assert.assertTrue("should be last result", entry.isLastResult());
+		Assert.assertEquals(
+				"last record count should equal number of expected total records",
+				count, entry.getCount());
+	}
+
+	@Test
+	public void testListCollectionsUnderPathWithPermissionsSmallWithoutSpecificQuery()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPathWithPermissionsSmallWithoutSpecificQuery";
+		int count = 100;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listCollectionsUnderPathWithPermissions(targetIrodsCollection,
+						0);
+		Assert.assertNotNull("null result from query", entries);
+		Assert.assertFalse("should not have been and empty result list",
+				entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertTrue("should be last result", entry.isLastResult());
+		Assert.assertEquals(
+				"last record count should equal number of expected total records",
+				count, entry.getCount());
 
 	}
 
@@ -822,6 +931,94 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		// add another acl for another user to this file
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+			collectionAO
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+							false);
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+			dataObjectAO
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		Assert.assertEquals(count * 2, entries.size());
+
+		// bounce thru entries, each has two permissions
+
+		for (CollectionAndDataObjectListingEntry entry : entries) {
+			Assert.assertEquals("did not have the two permissions", 2, entry
+					.getUserFilePermission().size());
+		}
+
+	}
+
+	@Test
+	public void testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery()
+			throws Exception {
+
+		String subdirPrefix = "testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery";
+		String fileName = "testListFilesAndCollectionsUnderPathWithAccessInfoViaSpecificQuery.csv";
+
+		int count = 30;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
@@ -1013,6 +1210,169 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		int ctr = actual
 				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
 		Assert.assertEquals(count * 2, ctr);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCountFilesUnderPath() throws Exception {
+
+		String subdirPrefix = "testCountFilesUnderPath";
+		String fileName = "testCountFilesUnderPath.txt";
+
+		int count = 5;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		int ctr = actual.countDataObjectsUnderPath(targetIrodsCollection);
+		Assert.assertEquals(count, ctr);
+
+	}
+
+	/**
+	 * Bug [#1560] counts of data objects under collections skewed by replicas
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCountFilesUnderPathAfterReplicate() throws Exception {
+
+		String subdirPrefix = "testCountFilesUnderPathAfterReplicate";
+		String fileName = "testCountFilesUnderPathAfterReplicate.txt";
+
+		int count = 5;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.replicate(
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				null, null);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		int ctr = actual.countDataObjectsUnderPath(targetIrodsCollection);
+		Assert.assertEquals(count, ctr);
+
+	}
+
+	/**
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testCountCollectionsUnderPath() throws Exception {
+
+		String subdirPrefix = "testCountCollectionsUnderPath";
+		String fileName = "testCountCollectionsUnderPath.txt";
+
+		int count = 5;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ subdirPrefix);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.mkdir();
+			irodsFile.close();
+		}
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		int ctr = actual.countCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertEquals(count, ctr);
 
 	}
 

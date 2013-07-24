@@ -65,7 +65,7 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 		}
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.force = force;
-		this.setApiNumber(DELETE_FILE_API_NBR);
+		setApiNumber(DELETE_FILE_API_NBR);
 
 	}
 

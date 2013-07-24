@@ -38,7 +38,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			.getLogger(IRODSConnection.class);
 	private IRODSProtocolManager irodsProtocolManager;
 	private String connectionInternalIdentifier;
-	private boolean connected = false;
+	private volatile boolean connected = false;
 	private Socket connection;
 	private InputStream irodsInputStream;
 	private OutputStream irodsOutputStream;
@@ -152,7 +152,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 				.getName());
 		connectionInternalIdentifierBuilder.append('/');
 		connectionInternalIdentifierBuilder.append(System.currentTimeMillis());
-		this.connectionInternalIdentifier = connectionInternalIdentifierBuilder
+		connectionInternalIdentifier = connectionInternalIdentifierBuilder
 				.toString();
 	}
 
@@ -183,7 +183,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 
@@ -239,13 +239,13 @@ public class IRODSConnection implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null providedSocket");
 		}
 
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 
 		log.info("pipeline configuration:{}", pipelineConfiguration);
-		this.connection = providedSocket;
-		this.connected = true;
+		connection = providedSocket;
+		connected = true;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
 
 		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
@@ -314,7 +314,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			} catch (IOException ioe) {
 
 				if (i < attemptCount - 1) {
-					log.info("IOExeption, sleep and attempt a reconnect");
+					log.error("IOExeption, sleep and attempt a reconnect", ioe);
 					try {
 						Thread.sleep(3000);
 					} catch (InterruptedException e) {
@@ -416,7 +416,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		}
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		this.irodsProtocolManager.returnIRODSConnection(this);
+		irodsProtocolManager.returnIRODSConnection(this);
 
 		log.info("disconnected");
 	}
@@ -432,7 +432,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		this.irodsProtocolManager.returnConnectionWithIoException(this);
+		irodsProtocolManager.returnConnectionWithIoException(this);
 	}
 
 	/*
@@ -461,9 +461,9 @@ public class IRODSConnection implements IRODSManagedConnection {
 	 * 
 	 */
 	private void closeDownSocketAndEatAnyExceptions() {
-		if (this.isConnected()) {
+		if (isConnected()) {
 
-			log.info("is connected for : {}", this.toString());
+			log.info("is connected for : {}", toString());
 			try {
 				connection.close();
 
@@ -500,7 +500,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 	@Override
 	public String toString() {
-		return this.connectionInternalIdentifier;
+		return connectionInternalIdentifier;
 	}
 
 	/**
@@ -526,7 +526,9 @@ public class IRODSConnection implements IRODSManagedConnection {
 				return;
 			}
 
-			if ((value.length + outputOffset) >= pipelineConfiguration
+			if (pipelineConfiguration.getInternalCacheBufferSize() <= 0) {
+				irodsOutputStream.write(value);
+			} else if ((value.length + outputOffset) >= pipelineConfiguration
 					.getInternalCacheBufferSize()) {
 				// in cases where OUTPUT_BUFFER_LENGTH isn't big enough
 				irodsOutputStream.write(outputBuffer, 0, outputOffset);
@@ -735,16 +737,21 @@ public class IRODSConnection implements IRODSManagedConnection {
 		}
 
 		try {
-			irodsOutputStream.write(outputBuffer, 0, outputOffset);
-			irodsOutputStream.flush();
+			if (this.pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+				irodsOutputStream.write(outputBuffer, 0, outputOffset);
+				irodsOutputStream.flush();
+				byte zerByte = (byte) 0;
+				java.util.Arrays.fill(outputBuffer, zerByte);
+				outputOffset = 0;
+			} else {
+				irodsOutputStream.flush();
+			}
+
 		} catch (IOException ioe) {
 			disconnectWithIOException();
 			throw ioe;
 		}
-		byte zerByte = (byte) 0;
-		java.util.Arrays.fill(outputBuffer, zerByte);
 
-		outputOffset = 0;
 	}
 
 	/**
@@ -791,7 +798,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
-	 * from iRODS to the give <code>OutputStream</code>.
+	 * from iRODS to the given <code>OutputStream</code>.
 	 * 
 	 * @param destination
 	 *            <code>OutputStream</code> to which data will be streamed from
@@ -825,14 +832,13 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		try {
 			byte[] temp = new byte[Math.min(
-					pipelineConfiguration.getInternalCacheBufferSize(),
-					(int) length)]; // FIXME: parameterize to
-									// jargon.io.get.read.write.buffer.size
+					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
+					(int) length)];
+
 			int n = 0;
 			while (length > 0) {
-				n = read(temp, 0, Math.min(
-						pipelineConfiguration.getInternalCacheBufferSize(),
-						(int) length));
+				n = read(temp, 0, Math.min(pipelineConfiguration
+						.getInputToOutputCopyBufferByteSize(), (int) length));
 				if (n > 0) {
 					length -= n;
 					bos.write(temp, 0, n);
@@ -986,7 +992,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			log.error("********  connection is:{}, will attempt to disconnect",
 					getConnectionUri());
 			log.error("**************************************************************************************");
-			this.disconnect();
+			disconnect();
 		}
 
 		super.finalize();

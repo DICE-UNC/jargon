@@ -48,14 +48,14 @@ public class IRODSFileWriter extends Writer {
 		}
 
 		try {
-			this.irodsFileOutputStream = irodsFileFactory
+			irodsFileOutputStream = irodsFileFactory
 					.instanceIRODSFileOutputStream(irodsFile);
 		} catch (JargonException e) {
 			throw new IOException("unable to open IRODSFileOutputStream for:"
 					+ irodsFile.getAbsolutePath());
 		}
 
-		this.connectionEncoding = irodsFileOutputStream.getFileIOOperations()
+		connectionEncoding = irodsFileOutputStream.getFileIOOperations()
 				.getIRODSSession()
 				.buildPipelineConfigurationBasedOnJargonProperties()
 				.getDefaultEncoding();

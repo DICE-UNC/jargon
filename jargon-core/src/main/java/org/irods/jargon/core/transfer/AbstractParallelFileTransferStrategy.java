@@ -114,10 +114,10 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
-		this.jargonProperties = irodsAccessObjectFactory.getIrodsSession()
+		jargonProperties = irodsAccessObjectFactory.getIrodsSession()
 				.getJargonProperties();
 
-		this.parallelSocketTimeoutInSecs = jargonProperties
+		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
 
 	}

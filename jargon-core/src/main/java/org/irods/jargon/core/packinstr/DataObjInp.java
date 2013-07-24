@@ -713,7 +713,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		this.offset = offset;
 		this.dataSize = dataSize;
 		this.resource = resource;
-		this.forceOption = DataObjInp.ForceOptions.NO_FORCE;
+		forceOption = DataObjInp.ForceOptions.NO_FORCE;
 		this.transferOptions = transferOptions;
 
 	}
@@ -724,8 +724,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int transferOptionsNumThreads = 0;
 
 		if (transferOptions != null) {
-			if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR
-					|| this.getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
+			if (getApiNumber() == DataObjInp.PUT_FILE_API_NBR
+					|| getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
 				transferOptionsNumThreads = transferOptions.getMaxThreads();
 			}
 		}
@@ -741,7 +741,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		if (this.getApiNumber() == DataObjInp.PUT_FILE_API_NBR) {
+		if (getApiNumber() == DataObjInp.PUT_FILE_API_NBR) {
 			processPutOperationKvps(transferOptionsNumThreads, kvps);
 		}
 
@@ -749,21 +749,21 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			kvps.add(KeyValuePair.instance(FORCE_FLAG_KW, ""));
 		}
 
-		if (this.getOperationType() == REPLICATE_OPERATION_TYPE
+		if (getOperationType() == REPLICATE_OPERATION_TYPE
 				&& isReplicationToAll()) {
 			kvps.add(KeyValuePair.instance(ALL, ""));
 		}
 
-		if (!this.getLocalPath().isEmpty()) {
+		if (!getLocalPath().isEmpty()) {
 			kvps.add(KeyValuePair.instance(LOCAL_PATH, getLocalPath()));
 		}
 
 		// add a keyword tag for resource if a resource was given to the packing
 		// instruction.
 		if (getResource().length() > 0) {
-			if (this.getApiNumber() == DataObjInp.GET_FILE_API_NBR
-					|| this.getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
-					|| this.getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
+			if (getApiNumber() == DataObjInp.GET_FILE_API_NBR
+					|| getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
+					|| getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
 				kvps.add(KeyValuePair.instance(DEST_RESC_NAME, getResource()));

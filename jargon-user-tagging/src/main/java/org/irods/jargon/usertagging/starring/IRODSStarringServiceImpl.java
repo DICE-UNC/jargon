@@ -202,8 +202,11 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#listStarredCollections(int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
+	 * listStarredCollections(int)
 	 */
 	@Override
 	public List<IRODSStarredFileOrCollection> listStarredCollections(
@@ -213,21 +216,24 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection>  irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
-		
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+
 		// Do collections, then do files
 
 		log.info("querying metadata as a collection to look for starred");
 		CollectionAO collectionAO = getIrodsAccessObjectFactory()
 				.getCollectionAO(getIrodsAccount());
 		try {
-			List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesByMetadataQuery(avuQueryElements);
-			
-			for(MetaDataAndDomainData metadataAndDomainData : metadata) {
+			List<MetaDataAndDomainData> metadata = collectionAO
+					.findMetadataValuesByMetadataQuery(avuQueryElements);
+
+			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
-				irodsStarredFiles.add(this.transformMetadataValueToStarValue(metadataAndDomainData));
+				irodsStarredFiles
+						.add(this
+								.transformMetadataValueToStarValue(metadataAndDomainData));
 			}
-			
+
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for metadata", e);
 		}
@@ -235,9 +241,12 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		return irodsStarredFiles;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#listStarredDataObjects(int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.usertagging.starring.IRODSStarringService#
+	 * listStarredDataObjects(int)
 	 */
 	@Override
 	public List<IRODSStarredFileOrCollection> listStarredDataObjects(
@@ -247,21 +256,24 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection>  irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
-		
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+
 		// Do collections, then do files
 
 		log.info("querying metadata as a data object to look for starred");
 		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
 				.getDataObjectAO(getIrodsAccount());
 		try {
-			List<MetaDataAndDomainData> metadata = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
-			
-			for(MetaDataAndDomainData metadataAndDomainData : metadata) {
+			List<MetaDataAndDomainData> metadata = dataObjectAO
+					.findMetadataValuesByMetadataQuery(avuQueryElements);
+
+			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
-				irodsStarredFiles.add(this.transformMetadataValueToStarValue(metadataAndDomainData));
+				irodsStarredFiles
+						.add(this
+								.transformMetadataValueToStarValue(metadataAndDomainData));
 			}
-			
+
 		} catch (JargonQueryException e) {
 			throw new JargonException("error querying for metadata", e);
 		}
@@ -332,8 +344,6 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		log.info("modified");
 	}
 
-	
-
 	/**
 	 * @param irodsAbsolutePath
 	 * @param objStat
@@ -384,14 +394,15 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 			throw new IllegalArgumentException("metadata is not a starred item");
 		}
 
-		IRODSStarredFileOrCollection irodsStarredFileOrCollection =  new IRODSStarredFileOrCollection(
+		IRODSStarredFileOrCollection irodsStarredFileOrCollection = new IRODSStarredFileOrCollection(
 				metadataAndDomainData.getMetadataDomain(),
 				metadataAndDomainData.getDomainObjectUniqueName(),
 				metadataAndDomainData.getAvuAttribute(),
 				metadataAndDomainData.getAvuValue());
-		
+
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
-		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData.isLastResult());
+		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData
+				.isLastResult());
 		return irodsStarredFileOrCollection;
 
 	}

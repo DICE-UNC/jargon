@@ -47,6 +47,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for adding the given user to
 	 * iRODS.
+	 * <p/>
+	 * Note that the user DN is not updated in this call, as there appears to be
+	 * bug where it gets truncated. The <code>UserAO</code> methods will instead
+	 * add a call to the equivalent of 'iadmin aua' to insert the user DN. See
+	 * comments for that class.
 	 * 
 	 * @param user
 	 *            {@link org.irods.jargon.core.pub.domain.User} to be added to
@@ -70,8 +75,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		return new GeneralAdminInp("add", "user", user.getName(), user
-				.getUserType().getTextValue(), "", user.getUserDN(), BLANK,
-				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+				.getUserType().getTextValue(), "", "", BLANK, BLANK, BLANK,
+				BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -309,6 +314,60 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create the iadmin command that is analogous to the aua command that adds
+	 * a user DN
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name
+	 * @param userDN
+	 *            <code>String</code> with the DN for the user
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForModifyUserDN(
+			final String userName, final String userDN) throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("user name is null or empty");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new JargonException("user dn is null or empty");
+		}
+
+		return new GeneralAdminInp("modify", "user", userName, "addAuth",
+				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create the iadmin command that is analogous to the rua command that
+	 * removes a user DN
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the iRODS user name
+	 * @param userDN
+	 *            <code>String</code> with the DN for the user
+	 * @return
+	 * @throws JargonException
+	 */
+	public static GeneralAdminInp instanceForRemoveUserDN(
+			final String userName, final String userDN) throws JargonException {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new JargonException("user name is null or empty");
+		}
+
+		if (userDN == null || userDN.isEmpty()) {
+			throw new JargonException("user dn is null or empty");
+		}
+
+		return new GeneralAdminInp("modify", "user", userName, "rmAuth",
+				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
+	}
+
+	/**
 	 * Generate the packing instruction suitable for modifying the password
 	 * associated with the given user.
 	 * 
@@ -522,7 +581,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("api type is <= zero");
 		}
 
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 
 		this.arg0 = arg0;
 		this.arg1 = arg1;

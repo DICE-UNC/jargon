@@ -35,9 +35,6 @@ public class IRODSGenQueryBuilder {
 	 */
 	private final boolean computeTotalRowCount;
 
-	@SuppressWarnings("unused")
-	private final ExtensibleMetaDataMapping extensibleMetadataMapping;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -81,10 +78,9 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
-		this.computeTotalRowCount = false;
+		computeTotalRowCount = false;
 
 	}
 
@@ -112,7 +108,6 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase, final boolean computeTotalRowCount,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
 		this.computeTotalRowCount = computeTotalRowCount;
@@ -132,10 +127,9 @@ public class IRODSGenQueryBuilder {
 	 */
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
-		this.upperCase = false;
-		this.computeTotalRowCount = false;
+		upperCase = false;
+		computeTotalRowCount = false;
 
 	}
 
@@ -417,7 +411,7 @@ public class IRODSGenQueryBuilder {
 		}
 		IRODSGenQueryBuilderQueryData queryData = IRODSGenQueryBuilderQueryData
 				.instance(selectFields, conditions, orderByFields, distinct,
-						upperCase, this.computeTotalRowCount);
+						upperCase, computeTotalRowCount);
 
 		if (!queryData.isQueryValid()) {
 			throw new GenQueryBuilderException(

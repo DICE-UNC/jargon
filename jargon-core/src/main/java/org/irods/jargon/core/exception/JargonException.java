@@ -12,9 +12,6 @@ package org.irods.jargon.core.exception;
  */
 public class JargonException extends Exception {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -4060585048895549767L;
 	private final int underlyingIRODSExceptionCode;
 
@@ -23,7 +20,7 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final String message) {
 		super(message);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
 
 	/**
@@ -32,7 +29,7 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final String message, final Throwable cause) {
 		super(message, cause);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
 
 	/**
@@ -40,7 +37,7 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final Throwable cause) {
 		super(cause);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
 
 	/**

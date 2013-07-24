@@ -123,7 +123,7 @@ public class ReconnectionManager implements Callable<Void> {
 			} else {
 				// time to reconnect
 				log.info("calling reconnect internally on irods commands: {}",
-						this.getIrodsCommands());
+						getIrodsCommands());
 				reconnect();
 			}
 		}

@@ -40,7 +40,7 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 		}
 
 		this.ruleExecId = ruleExecId;
-		this.setApiNumber(RULE_PURGE_API_NBR);
+		setApiNumber(RULE_PURGE_API_NBR);
 
 	}
 

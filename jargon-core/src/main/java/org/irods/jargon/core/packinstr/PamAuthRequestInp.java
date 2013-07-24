@@ -53,7 +53,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.userName = userName;
 		this.password = password;
-		this.setApiNumber(PAM_API_NBR);
+		setApiNumber(PAM_API_NBR);
 
 	}
 

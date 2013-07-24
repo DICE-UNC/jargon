@@ -23,11 +23,11 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagGrouping;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.domain.TagQuerySearchResult;
-import org.irods.jargon.usertagging.domain.UserAnnotatedCatalogItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -469,7 +469,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		List<CollectionAndDataObjectListingEntry> resultEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, true,
+				null);
 		try {
 			DataAOHelper.buildDataObjectQuerySelectsNoReplicationInfo(builder);
 		} catch (GenQueryBuilderException e) {
@@ -477,7 +478,8 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		}
 
 		// do data objects first, no replicas
-		//builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_REPL_NUM, QueryConditionOperators.NUMERIC_EQUAL, 0);
+		// builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_REPL_NUM,
+		// QueryConditionOperators.NUMERIC_EQUAL, 0);
 
 		builder.addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
@@ -495,7 +497,7 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 		IRODSQueryResultSetInterface resultSet;
 		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
 				.getIRODSGenQueryExecutor(getIrodsAccount());
-		
+
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
@@ -506,21 +508,22 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 					resultSet.getResults().size());
 
 			/*
-			 * the query that gives the necessary data will cause duplication when
-			 * there are replicas, so discard duplicates. This is the nature of
-			 * GenQuery.
+			 * the query that gives the necessary data will cause duplication
+			 * when there are replicas, so discard duplicates. This is the
+			 * nature of GenQuery.
 			 */
-		
+
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				resultEntries.add(DataAOHelper
-						.buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
-								row, resultSet.getTotalRecords()));
+				resultEntries
+						.add(DataAOHelper
+								.buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
+										row, resultSet.getTotalRecords()));
 			}
-			
+
 			log.info(
 					"retrieved {} data objects based on query, converting to query result entries",
 					files.size());
-			
+
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query", e);
 			throw new JargonException(
@@ -535,13 +538,13 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 					e);
 		}
 
-	
-
-		// now find collections  buildCollectionListEntryFromResultSetRowForCollectionQuery
+		// now find collections
+		// buildCollectionListEntryFromResultSetRowForCollectionQuery
 
 		builder = new IRODSGenQueryBuilder(true, true, null);
 		try {
-			CollectionAOHelper.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+			CollectionAOHelper
+					.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -565,11 +568,12 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				resultEntries.add(CollectionAOHelper
-						.buildCollectionListEntryFromResultSetRowForCollectionQuery(
-								row, resultSet.getTotalRecords()));
+				resultEntries
+						.add(CollectionAOHelper
+								.buildCollectionListEntryFromResultSetRowForCollectionQuery(
+										row, resultSet.getTotalRecords()));
 			}
-			
+
 		} catch (JargonQueryException e) {
 			log.error("query exception for  query", e);
 			throw new JargonException(

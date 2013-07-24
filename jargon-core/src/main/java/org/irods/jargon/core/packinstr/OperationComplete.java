@@ -34,7 +34,7 @@ public class OperationComplete extends AbstractIRODSPackingInstruction {
 					"status must be greater than or equal to zero");
 		}
 		this.status = status;
-		this.setApiNumber(OPR_COMPLETE_API_NBR);
+		setApiNumber(OPR_COMPLETE_API_NBR);
 	}
 
 	/*

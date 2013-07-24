@@ -15,8 +15,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses( { IRODSTagValueTest.class, IRODSTaggingServiceTest.class, IRODSTagGroupingTest.class, FreeTaggingServiceImplTest.class, TagCloudEntryTest.class,
-	UserTagCloudViewTest.class, UserTagCloudServiceImplTest.class, TagQuerySearchResultTest.class, TaggingServiceFactoryImplTest.class, IRODSStarringServiceImplTest.class, IRODSSharingServiceImplTest.class })
+@Suite.SuiteClasses({ IRODSTagValueTest.class, IRODSTaggingServiceTest.class,
+		IRODSTagGroupingTest.class, FreeTaggingServiceImplTest.class,
+		TagCloudEntryTest.class, UserTagCloudViewTest.class,
+		UserTagCloudServiceImplTest.class, TagQuerySearchResultTest.class,
+		TaggingServiceFactoryImplTest.class,
+		IRODSStarringServiceImplTest.class, IRODSSharingServiceImplTest.class })
 public class AllTests {
 
 }

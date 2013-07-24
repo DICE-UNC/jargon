@@ -208,7 +208,7 @@ class ResourceAOHelper extends AOHelper {
 		List<Resource> resources = new ArrayList<Resource>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			resources.add(this.buildResourceFromResultSetRow(row));
+			resources.add(buildResourceFromResultSetRow(row));
 		}
 
 		return resources;

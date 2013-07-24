@@ -25,9 +25,9 @@ import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
-import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -62,7 +62,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 
 	private final IRODSGenQueryExecutor irodsGenQueryExecutor;
-	private final UserAO userAO;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
 	/**
@@ -72,9 +71,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public IRODSFileSystemAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
+
 		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(this.getIRODSAccount());
-		userAO = this.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 		collectionAndDataObjectListAndSearchAO = this
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
@@ -173,18 +172,21 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL, irodsFile.getName());
-			CollectionAndDataObjectListAndSearchAO listAndSearchAO = this
-					.getIRODSAccessObjectFactory()
+			CollectionAndDataObjectListAndSearchAO listAndSearchAO = getIRODSAccessObjectFactory()
 					.getCollectionAndDataObjectListAndSearchAO(
 							getIRODSAccount());
 			ObjStat objStat = listAndSearchAO
 					.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+
+			String absPath = MiscIRODSUtils
+					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(100);
 			boolean executable = false;
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							objStat.getOwnerZone());
+							MiscIRODSUtils.getZoneInPath(absPath));
 			IRODSQueryResultRow resultRow = resultSet.getFirstResult();
 			if (resultRow.getColumn(0).equals("33261")) {
 				executable = true;
@@ -256,7 +258,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("checking permissions on:{}", irodsFile);
 
-		return getFilePermissionsForGivenUser(irodsFile, this.getIRODSAccount()
+		return getFilePermissionsForGivenUser(irodsFile, getIRODSAccount()
 				.getUserName());
 
 	}
@@ -273,140 +275,27 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final String userName) throws JargonException {
 
 		log.info("getFilePermissionsForGivenUser()");
+
 		if (irodsFile == null) {
-			throw new IllegalArgumentException("irods file is null");
+			throw new IllegalArgumentException("null irodsFile");
 		}
 
 		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("userName is null or empty");
+			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		log.info("checking permissions on:{}", irodsFile);
-		log.info("for userName:{}", userName);
+		DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+				.getDataObjectAO(getIRODSAccount());
 
-		log.debug("getting file permissions on file:{} ",
-				irodsFile.getAbsolutePath());
 
-		/*
-		 * See if this is a soft link
-		 */
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
-
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
-			throw new DataNotFoundException("no file found for given path");
-		}
-
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(effectiveAbsolutePath);
-
-		User user = userAO.findByName(userName);
-
-		log.debug("user name translated to id:{}", user.getId());
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		buildPermisionsQueryFile(collectionAndPath.getCollectionParent(),
-				collectionAndPath.getChildName(), user.getId(), builder);
-
-		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
-
-		log.debug("highest permission value:{}", highestPermissionValue);
-
-		return highestPermissionValue;
-	}
-
-	/**
-	 * @param irodsGenQueryExecutor
-	 * @param builder
-	 * @param zone
-	 * @return
-	 * @throws JargonException
-	 */
-	private int extractHighestPermission(
-			final IRODSGenQueryExecutor irodsGenQueryExecutor,
-			final IRODSGenQueryBuilder builder, final String zone)
-			throws JargonException {
-
-		log.info("extractHighestPermission()");
-
-		if (zone == null) {
-			throw new IllegalArgumentException("null zone");
-		}
-
-		log.info("for zone:{}", zone);
-
-		IRODSGenQueryFromBuilder irodsQuery;
-		try {
-			irodsQuery = builder.exportIRODSQueryFromBuilder(this
-					.getJargonProperties().getMaxFilesAndDirsQueryMax());
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException("query builder error", e);
-		}
-
-		IRODSQueryResultSet resultSet;
-		try {
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:{}", builder.toString(), e);
-			throw new JargonException("error in file permissions query");
-		}
-
-		int highestPermissionValue = -1;
-		int resultPermissionValue = 0;
-		for (IRODSQueryResultRow result : resultSet.getResults()) {
-			try {
-				resultPermissionValue = Integer.parseInt(result.getColumn(0));
-				if (resultPermissionValue > highestPermissionValue) {
-					highestPermissionValue = resultPermissionValue;
-				}
-			} catch (NumberFormatException nfe) {
-				String msg = "number format exception for result:"
-						+ result.getColumn(0)
-						+ " I expected a numeric value for the access permissions in col 0";
-				log.error(msg);
-				throw new JargonException(msg);
-			}
-		}
-		return highestPermissionValue;
-	}
-
-	/**
-	 * @param zone
-	 * @param parent
-	 * @param fileName
-	 * @param userId
-	 * @param builder
-	 * @return
-	 */
-	private void buildPermisionsQueryFile(final String parent,
-			final String fileName, final String userId,
-			final IRODSGenQueryBuilder builder) throws JargonException {
-
-		log.info("buildPermisionsQueryFile()");
-		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, parent)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_NAME,
-							QueryConditionOperators.EQUAL, fileName)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId.trim());
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException(e);
+		log.info("delegating to DataObjectAO");
+		FilePermissionEnum permissionEnum = dataObjectAO
+				.getPermissionForDataObject(irodsFile.getAbsolutePath(),
+						userName, this.getIRODSAccount().getZone());
+		if (permissionEnum == null) {
+			return FilePermissionEnum.NONE.getPermissionNumericValue();
+		} else {
+			return permissionEnum.getPermissionNumericValue();
 		}
 	}
 
@@ -421,8 +310,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getDirectoryPermissions(final IRODSFile irodsFile)
 			throws JargonException {
 
-		return getDirectoryPermissionsForGivenUser(irodsFile, this
-				.getIRODSAccount().getUserName());
+		return getDirectoryPermissionsForGivenUser(irodsFile, getIRODSAccount()
+				.getUserName());
 	}
 
 	/*
@@ -436,104 +325,31 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile,
 			final String userName) throws FileNotFoundException,
 			JargonException {
-		
+
 		log.info("getDirectoryPermissionsForGivenUser()");
 
 		if (irodsFile == null) {
-			throw new IllegalArgumentException("irods file is null");
+			throw new IllegalArgumentException("null irodsFile");
 		}
 
 		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("userName is null or empty");
+
+			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		log.info("checking directory permissions on:{}", irodsFile);
-		log.info("for userName:{}", userName);
+		CollectionAO collectionAO = this.getIRODSAccessObjectFactory()
+				.getCollectionAO(getIRODSAccount());
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
 
-		if (objStat == null) {
-			log.error("no file found for path:{}", irodsFile.getAbsolutePath());
-			throw new DataNotFoundException("no file found for given path");
+		log.info("delegating to CollectionAO");
+		FilePermissionEnum permissionEnum = collectionAO
+				.getPermissionForCollection(irodsFile.getAbsolutePath(),
+						userName, this.getIRODSAccount().getZone());
+		if (permissionEnum == null) {
+			return FilePermissionEnum.NONE.getPermissionNumericValue();
+		} else {
+			return permissionEnum.getPermissionNumericValue();
 		}
-
-		if (!objStat.isSomeTypeOfCollection()) {
-			log.error(
-					"cannot get directory permissions, this is not a colleciton:{}",
-					objStat);
-			throw new JargonException(
-					"given file is not a collection, cannot get directory permissions");
-		}
-
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-
-		String fileName = irodsFile.getName();
-
-		// get the id for the user name, GenQuery can't do this join
-
-		User user = userAO.findByName(userName);
-
-		log.debug("getting directory permissions on:{} ", fileName);
-		log.debug("user name translated to id:{}", user.getId());
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		buildPermissionsQueryDirectory(effectiveAbsolutePath, user.getId(),
-				builder);
-
-		int highestPermissionValue = extractHighestPermission(
-				irodsGenQueryExecutor, builder, objStat.getOwnerZone());
-
-		return highestPermissionValue;
-	}
-
-	/**
-	 * Build a query to get the permissions for a directory
-	 * 
-	 * @param dir
-	 *            <code>String</code> with absolute path to the iRODS directory
-	 * @param userId
-	 *            <code>String</code> with an iRODS access user ID (not name)
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder}
-	 * @throws JargonException
-	 */
-	private void buildPermissionsQueryDirectory(final String dir,
-			final String userId, final IRODSGenQueryBuilder builder)
-			throws JargonException {
-
-		
-		log.info("buildPermissionsQueryDirectory()");
-		if (dir == null || dir.isEmpty()) {
-			throw new IllegalArgumentException("null or empty dir");
-		}
-
-		if (userId == null || userId.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userId");
-		}
-
-		if (builder == null) {
-			throw new IllegalArgumentException("null builder");
-		}
-
-		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, dir)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID,
-							QueryConditionOperators.EQUAL, userId.trim());
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException("error building permissions query", e);
-		}
-
 	}
 
 	/*
@@ -696,7 +512,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		try {
 			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			/*
@@ -704,7 +520,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			 * get more results with an eventual close below
 			 */
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+					irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				processListDirsResultRowForCollection(subdirs, row);
 			}
@@ -712,7 +529,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing collections, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, objStat.getOwnerZone());
+						resultSet,
+						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					processListDirsResultRowForCollection(subdirs, row);
 				}
@@ -738,11 +556,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0, objStat.getOwnerZone());
+					irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				subdirs.add(row.getColumn(1));
@@ -751,7 +570,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			while (resultSet.isHasMoreRecords()) {
 				log.debug("more results to get for listing files, requerying");
 				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet, objStat.getOwnerZone());
+						resultSet,
+						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 				for (IRODSQueryResultRow row : resultSet.getResults()) {
 					subdirs.add(row.getColumn(1));
 				}
@@ -807,7 +627,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<String> getListInDirWithFilter(final IRODSFile irodsFile,
 			final FilenameFilter fileNameFilter) throws JargonException,
 			DataNotFoundException {
-		
+
 		log.info("getListInDirWithFilter(final IRODSFile irodsFile,final FilenameFilter fileNameFilter) ");
 
 		if (irodsFile == null) {
@@ -838,7 +658,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		try {
 			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -879,7 +699,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 
@@ -959,7 +779,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	public List<File> getListInDirWithFileFilter(final IRODSFile irodsFile,
 			final FileFilter fileFilter) throws JargonException,
 			DataNotFoundException {
-		
+
 		log.info("getListInDirWithFileFilter(final IRODSFile irodsFile,final FileFilter fileFilter)");
 
 		if (irodsFile == null) {
@@ -987,7 +807,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		try {
 			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -1027,7 +847,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQuery(irodsQuery, 0);
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
@@ -1071,7 +891,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
 		String thisFileDir = row.getColumn(1);
-		File irodsFile = (File) this.getIRODSFileFactory().instanceIRODSFile(
+		File irodsFile = (File) getIRODSFileFactory().instanceIRODSFile(
 				thisFileDir);
 
 		if (fileFilter.accept(irodsFile)) {
@@ -1091,7 +911,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		// this is a file, does it pass the file name filter?
 		String thisFileDir = row.getColumn(0);
 		String thisFileName = row.getColumn(1);
-		File irodsFile = (File) this.getIRODSFileFactory().instanceIRODSFile(
+		File irodsFile = (File) getIRODSFileFactory().instanceIRODSFile(
 				thisFileDir, thisFileName);
 
 		if (fileFilter.accept(irodsFile)) {
@@ -1109,7 +929,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public ObjectType getFileDataType(final IRODSFile irodsFile)
 			throws FileNotFoundException, JargonException {
-		
+
 		log.info("getFileDataType(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
@@ -1133,26 +953,24 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final DataObjInp.OpenFlags openFlags, final int createMode)
 			throws NoResourceDefinedException,
 			JargonFileOrCollAlreadyExistsException, JargonException {
-		
+
 		log.info("createFile(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode)");
 
 		// find the correct resource and call the method with the resource
 		// signature
-		String defaultResource = this.getIRODSAccount()
-				.getDefaultStorageResource();
+		String defaultResource = getIRODSAccount().getDefaultStorageResource();
 
 		log.debug("setting resource to account default:{}", defaultResource);
 
-		log.debug("checking if parent exists");
-		IRODSFile target = this.getIRODSFileFactory().instanceIRODSFile(
-				absolutePath);
-		IRODSFile parent = (IRODSFile) target.getParentFile();
-		if (!parent.exists()) {
-			log.warn(
-					"creating an output stream for parent:{} that does not exist, making parent dirs..",
-					parent.getAbsolutePath());
-			parent.mkdirs();
-		}
+		// IRODSFile target = this.getIRODSFileFactory().instanceIRODSFile(
+		// absolutePath);
+
+		/*
+		 * IRODSFile parent = (IRODSFile) target.getParentFile(); if
+		 * (!parent.exists()) { log.warn(
+		 * "creating an output stream for parent:{} that does not exist, making parent dirs.."
+		 * , parent.getAbsolutePath()); parent.mkdirs(); }
+		 */
 
 		int fileId = 0;
 
@@ -1179,7 +997,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int openFile(final IRODSFile irodsFile,
 			final DataObjInp.OpenFlags openFlags) throws JargonException {
-		
+
 		log.info("openFile(final IRODSFile irodsFile,final DataObjInp.OpenFlags openFlags)");
 
 		if (irodsFile == null) {
@@ -1223,7 +1041,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final DataObjInp.OpenFlags openFlags, final int createMode,
 			final String resource) throws NoResourceDefinedException,
 			JargonFileOrCollAlreadyExistsException, JargonException {
-		
+
 		log.info("createFileInResource(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode,final String resource)");
 
 		if (absolutePath == null || absolutePath.length() == 0) {
@@ -1239,9 +1057,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					"resource is null, set to blank to automatically have the irods system select the default storage resource by rule");
 		}
 
-		String trimmedPath = absolutePath.trim();
 		String thisResource = null;
-		if (!MiscIRODSUtils.isFileInThisZone(trimmedPath, getIRODSAccount())) {
+		if (!MiscIRODSUtils.isFileInThisZone(absolutePath, getIRODSAccount())) {
 			thisResource = "";
 		} else {
 			thisResource = resource;
@@ -1252,7 +1069,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int responseFileNbr = 0;
 
-		DataObjInp dataObjInp = DataObjInp.instance(trimmedPath, createMode,
+		DataObjInp dataObjInp = DataObjInp.instance(absolutePath, createMode,
 				openFlags, offset, dataSize, thisResource, null);
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
@@ -1427,7 +1244,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void directoryDeleteForce(final IRODSFile irodsFile)
 			throws JargonException {
-		
+
 		log.info("directoryDeleteForce(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
@@ -1513,8 +1330,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new DataNotFoundException(msg);
 		}
 
-		ResourceAO resourceAO = this.getIRODSAccessObjectFactory()
-				.getResourceAO(getIRODSAccount());
+		ResourceAO resourceAO = getIRODSAccessObjectFactory().getResourceAO(
+				getIRODSAccount());
 		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
 		log.debug("found resource for file:{}", resource);
 
@@ -1600,7 +1417,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public String getResourceNameForFile(final IRODSFile irodsFile)
 			throws JargonException {
-		
+
 		log.info("getResourceNameForFile(final IRODSFile irodsFile)");
 
 		if (irodsFile == null) {
@@ -1619,8 +1436,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException(msg);
 		}
 
-		ResourceAO resourceAO = this.getIRODSAccessObjectFactory()
-				.getResourceAO(getIRODSAccount());
+		ResourceAO resourceAO = getIRODSAccessObjectFactory().getResourceAO(
+				getIRODSAccount());
 		try {
 			resource = resourceAO.getFirstResourceForIRODSFile(irodsFile)
 					.getName();
@@ -1675,7 +1492,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void physicalMove(final String absolutePathToSourceFile,
 			final String targetResource) throws JargonException {
-		
+
 		log.info("physicalMove(final String absolutePathToSourceFile,final String targetResource)");
 
 		if (absolutePathToSourceFile == null
@@ -1733,7 +1550,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					if (fileCount < IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
 						done = true;
 					} else {
-						this.getIRODSProtocol().sendInNetworkOrder(
+						getIRODSProtocol().sendInNetworkOrder(
 								IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
 						ackResult = getIRODSProtocol().readMessage();
 					}

@@ -316,4 +316,24 @@ public class ObjStat {
 		this.objectPath = objectPath;
 	}
 
+	/**
+	 * Based on the collection type, determine the absolute path used to query
+	 * iRODS. This is meant to handle special collections, such as soft links,
+	 * where the iCAT data may be associated with the canonical path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} with information on the given iRODS object
+	 * @return <code>String</code> with the canonical iRODS path
+	 */
+	public String determineAbsolutePathBasedOnCollTypeInObjectStat() {
+		String effectiveAbsolutePath = null;
+
+		if (this.getSpecColType() == SpecColType.LINKED_COLL) {
+			effectiveAbsolutePath = this.getObjectPath();
+		} else {
+			effectiveAbsolutePath = this.getAbsolutePath();
+		}
+		return effectiveAbsolutePath;
+	}
+
 }

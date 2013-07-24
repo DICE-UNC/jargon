@@ -8,13 +8,16 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.query.GenQueryBuilderException;
-import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * General helper methods for users and user groups.
@@ -25,6 +28,7 @@ import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 public class UserAOHelper {
 
 	private static final char COMMA = ',';
+	static Logger log = LoggerFactory.getLogger(UserAOHelper.class);
 
 	/**
 	 * Handy method will build the select portion of a gen query that accesses
@@ -122,6 +126,7 @@ public class UserAOHelper {
 			}
 		}
 
+		log.info("user built:{}", user);
 		return user;
 	}
 
@@ -139,29 +144,24 @@ public class UserAOHelper {
 			throws JargonException {
 		String dn = null;
 
-		StringBuilder userQuery = new StringBuilder();
-
-		userQuery.append("select ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
-		userQuery.append(COMMA);
-		userQuery.append(RodsGenQueryEnum.COL_USER_DN.getName());
-
-		userQuery.append(" where ");
-		userQuery.append(RodsGenQueryEnum.COL_USER_ID.getName());
-		userQuery.append(" = '");
-		userQuery.append(userId);
-		userQuery.append("'");
-
-		String userQueryString = userQuery.toString();
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(userQueryString, 500);
-
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet;
+
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 500);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
+							QueryConditionOperators.EQUAL, userId);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException("error in query", e);
 		} catch (JargonQueryException e) {
-			throw new JargonException(e);
+			throw new JargonException("error in query", e);
 		}
 
 		if (resultSet.getResults().size() == 0) {

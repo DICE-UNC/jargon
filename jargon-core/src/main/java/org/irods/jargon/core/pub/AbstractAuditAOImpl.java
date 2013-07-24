@@ -54,7 +54,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 	public AbstractAuditAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+		irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 				.getIRODSGenQueryExecutor(irodsAccount);
 	}
 
@@ -100,8 +100,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		}
 
 		log.info("looking up data object id via objStat");
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
@@ -214,8 +213,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		}
 
 		log.info("looking up data object id via objStat");
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());

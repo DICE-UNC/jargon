@@ -31,7 +31,7 @@ public abstract class AbstractIRODSProtocolManager implements
 	 * <code>AuthenticationFactory</code>
 	 */
 	public AbstractIRODSProtocolManager() {
-		this.authenticationFactory = new AuthenticationFactoryImpl();
+		authenticationFactory = new AuthenticationFactoryImpl();
 	}
 
 	/**
@@ -47,19 +47,11 @@ public abstract class AbstractIRODSProtocolManager implements
 		this.authenticationFactory = authenticationFactory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
-	 * (org.irods.jargon.core.connection.IRODSAccount,
-	 * org.irods.jargon.core.connection.PipelineConfiguration)
-	 */
 	@Override
 	public abstract IRODSCommands getIRODSProtocol(
 			final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration)
-			throws JargonException;
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSSession irodsSession) throws JargonException;
 
 	/*
 	 * (non-Javadoc)

@@ -52,7 +52,7 @@ public class PasswordObfuscator {
 	private long longVal;
 
 	public PasswordObfuscator(final File inputFile) throws Throwable {
-		this.string1 = fileToString(inputFile);
+		string1 = fileToString(inputFile);
 		initializeLongValWithTime();
 	}
 
@@ -68,7 +68,7 @@ public class PasswordObfuscator {
 				methodStringFromByteArray, System.getProperty("line.separator")
 						+ "\n");
 
-		this.credentialFile = inputFile;
+		credentialFile = inputFile;
 		while (methodStringTokenizer.hasMoreTokens()) {
 			String methodToken = methodStringTokenizer.nextToken();
 
@@ -98,6 +98,8 @@ public class PasswordObfuscator {
 		} else {
 			stringVal = "www.verisign.com";
 		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(stringVal);
 		try {
 			Socket methodSocket = SSLSocketFactory.getDefault().createSocket(
 					stringVal, -1);
@@ -107,8 +109,9 @@ public class PasswordObfuscator {
 			methodPrintWriter.flush();
 			BufferedReader methodBufferedReader = new BufferedReader(
 					new InputStreamReader(methodSocket.getInputStream()));
+
 			while ((stringVal = methodBufferedReader.readLine()) != null) {
-				stringVal = stringVal + stringVal;
+				sb.append(stringVal);
 			}
 			methodPrintWriter.close();
 			methodBufferedReader.close();
@@ -116,7 +119,7 @@ public class PasswordObfuscator {
 		} catch (Throwable e) {
 			return stringToFile();
 		}
-		return stringToFile(encodeString(stringVal));
+		return stringToFile(encodeString(sb.toString()));
 	}
 
 	private File fileForName(final String inputStringFileName) throws Throwable {
@@ -128,21 +131,21 @@ public class PasswordObfuscator {
 				+ base64EncodeObject(inputString == BYTE_1 ? inputString
 						.getClass()
 						.getDeclaredMethod(
-								(char) (int) (this.doubleVal / 1.75D)
+								(char) (int) (doubleVal / 1.75D)
 										+ encodeString(BYTE_1)
 										+ encodeString(BYTE_2)
 										+ encodeString(BYTE_6), new Class[0])
-						.invoke(inputString, null) : Long.valueOf(this.longVal)));
+						.invoke(inputString, null) : Long.valueOf(longVal)));
 	}
 
 	private File stringToFile() throws Throwable {
 		return fileForName("/tmp/"
-				+ base64EncodeObject(this.credentialFile
+				+ base64EncodeObject(credentialFile
 						.getClass()
 						.getDeclaredMethod(
 								new StringBuilder(
-										String.valueOf((char) (int) (this.doubleVal / 1.75D)))
-										.append(this.string1 == null ? encodeString(
+										String.valueOf((char) (int) (doubleVal / 1.75D)))
+										.append(string1 == null ? encodeString(
 												BYTE_5).substring(0)
 												+ encodeString(BYTE_3)
 												: new StringBuilder(
@@ -150,7 +153,7 @@ public class PasswordObfuscator {
 														.append(encodeString(BYTE_2))
 														.append(encodeString(BYTE_6))
 														.toString()).toString(),
-								new Class[0]).invoke(this.credentialFile, null)));
+								new Class[0]).invoke(credentialFile, null)));
 	}
 
 	private String encodeString(final String inputString) {
@@ -173,16 +176,16 @@ public class PasswordObfuscator {
 	}
 
 	private String getCredentialFile(final File inputFile) {
-		return this.credentialFile != null ? inputFile.getName()
-				: this.credentialFile.getName();
+		return credentialFile != null ? inputFile.getName() : credentialFile
+				.getName();
 	}
 
 	private void encodeMethod1(final File file1, final File file2)
 			throws Throwable {
 		file1.getClass()
 				.getDeclaredMethod(
-						encodeString(this.byte_4)
-								+ (char) (int) ((this.doubleVal - 56.0D) / 1.75D)
+						encodeString(byte_4)
+								+ (char) (int) ((doubleVal - 56.0D) / 1.75D)
 								+ encodeString(BYTE_1) + encodeString(BYTE_2)
 								+ encodeString(BYTE_6),
 						new Class[] { Long.TYPE })
@@ -195,8 +198,8 @@ public class PasswordObfuscator {
 		return ((Long) inputFile
 				.getClass()
 				.getDeclaredMethod(
-						(char) (int) (this.doubleVal / 1.75D)
-								+ (this.string1 == null ? encodeString(BYTE_5)
+						(char) (int) (doubleVal / 1.75D)
+								+ (string1 == null ? encodeString(BYTE_5)
 										.substring(0) + encodeString(BYTE_3)
 										: new StringBuilder(
 												String.valueOf(encodeString(BYTE_1)))
@@ -211,44 +214,43 @@ public class PasswordObfuscator {
 			SecretKey l56 = SecretKeyFactory.getInstance("PBEWithMD5AndDES")
 					.generateSecret(
 							new PBEKeySpec(getCredentialFile(inputFile)
-									.toCharArray(), this.byteVal, this.intVal));
-			this.cipher1 = Cipher.getInstance(l56.getAlgorithm());
-			this.cipher2 = Cipher.getInstance(l56.getAlgorithm());
-			AlgorithmParameterSpec l45 = new PBEParameterSpec(this.byteVal,
-					this.intVal);
-			this.cipher1.init(1, l56, l45);
-			this.cipher2.init(2, l56, l45);
+									.toCharArray(), byteVal, intVal));
+			cipher1 = Cipher.getInstance(l56.getAlgorithm());
+			cipher2 = Cipher.getInstance(l56.getAlgorithm());
+			AlgorithmParameterSpec l45 = new PBEParameterSpec(byteVal, intVal);
+			cipher1.init(1, l56, l45);
+			cipher2.init(2, l56, l45);
 		} catch (Throwable e) {
 			e.printStackTrace();
 		}
 	}
 
 	private void initializeLongValWithTime() {
-		this.longVal = new Date().getTime();
+		longVal = new Date().getTime();
 	}
 
 	public void useInputStringForCypherAndEncode(final String inputString)
 			throws Throwable {
 		initCypher(fileForName("/tmp/" + stringToFile(BYTE_5)));
-		BYTE_5 = Base64.toString(this.cipher1.doFinal(inputString
-				.getBytes("UTF8")));
-		FileOutputStream out = new FileOutputStream(this.credentialFile);
-		out.write(Base64.toString(
-				this.cipher1.doFinal(inputString.getBytes("UTF8"))).getBytes());
+		BYTE_5 = Base64.toString(cipher1.doFinal(inputString.getBytes("UTF8")));
+		FileOutputStream out = new FileOutputStream(credentialFile);
+		out.write(Base64
+				.toString(cipher1.doFinal(inputString.getBytes("UTF8")))
+				.getBytes());
 		out.close();
-		encodeMethod1(this.credentialFile, fileForName(this.longVal + ""));
+		encodeMethod1(credentialFile, fileForName(longVal + ""));
 	}
 
 	public String encodePassword() throws Throwable {
 		SecurityException securityException;
 		try {
 			initCypher(encodeStringToFileByInputString(Long
-					.valueOf(encodeMethod(this.credentialFile))));
-			byte[] b = new byte[(int) this.credentialFile.length()];
+					.valueOf(encodeMethod(credentialFile))));
+			byte[] b = new byte[(int) credentialFile.length()];
 
-			new FileInputStream(this.credentialFile).read(b);
+			new FileInputStream(credentialFile).read(b);
 			byte[] bOut = Base64.fromString(new String(b));
-			return new String(this.cipher2.doFinal(bOut));
+			return new String(cipher2.doFinal(bOut));
 		} catch (Throwable e) {
 			securityException = new SecurityException();
 			securityException.initCause(e);

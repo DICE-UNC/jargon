@@ -95,6 +95,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private Future<Void> reconnectionFuture = null;
 	private boolean inRestartMode = false;
 	private boolean closeConnectionOnFinalizer = true;
+	private IRODSSession irodsSession = null;
 	/**
 	 * authResponse contains
 	 */
@@ -130,7 +131,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private IRODSCommands(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession)
+			throws JargonException {
 		/*
 		 * create the IRODSConnection object. The connection object encapsulates
 		 * an open socket to the host/port described by the irodsAccount.
@@ -144,11 +146,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
-		this.irodsConnection = IRODSConnection.instance(irodsAccount,
+		irodsConnection = IRODSConnection.instance(irodsAccount,
 				irodsConnectionManager, pipelineConfiguration);
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
+		this.irodsSession = irodsSession;
 		startupConnection(irodsAccount);
 	}
 
@@ -169,7 +172,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final AuthResponse authResponse, final AuthMechanism authMechanism,
 			final IRODSConnection reconnectedIRODSConnection) {
-		this.irodsConnection = reconnectedIRODSConnection;
+		irodsConnection = reconnectedIRODSConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
@@ -203,7 +206,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final AuthResponse authResponse, final AuthMechanism authMechanism,
 			final IRODSConnection reconnectedIRODSConnection,
 			final boolean closeConnectionOnFinalizer) {
-		this.irodsConnection = reconnectedIRODSConnection;
+		irodsConnection = reconnectedIRODSConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
@@ -236,7 +239,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error(
 					"authentication exception, will close iRODS sockets and streams and re-throw",
 					e);
-			this.disconnectWithIOException();
+			disconnectWithIOException();
 			throw e;
 		}
 
@@ -256,7 +259,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		// renew the connection
 		// this is based on the reconnect property which is in the pipeline
 		// configuration
-		if (this.pipelineConfiguration.isReconnect()) {
+		if (pipelineConfiguration.isReconnect()) {
 			log.info("starting up reconnect service...");
 			reconnectService = Executors.newSingleThreadExecutor();
 			reconnectionManager = ReconnectionManager.instance(this);
@@ -276,6 +279,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            for the connection (e.g. buffer sizes)
 	 * @param authMechanism
 	 *            {@link AuthMechanism} that will authenticate with iRODS
+	 * @param irodsSession
+	 *            {@link IRODSSession} that manages this connection
 	 * @return instance of <code>IRODSCommands</code> connected and
 	 *         authenticated to an iRODS agent
 	 * @throws JargonException
@@ -283,10 +288,12 @@ public class IRODSCommands implements IRODSManagedConnection {
 	static IRODSCommands instance(final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsConnectionManager,
 			final PipelineConfiguration pipelineConfiguration,
-			final AuthMechanism authMechanism) throws JargonException {
+			final AuthMechanism authMechanism, final IRODSSession irodsSession)
+			throws JargonException {
 
 		return new IRODSCommands(irodsAccount, irodsConnectionManager,
-				pipelineConfiguration, authMechanism);
+				pipelineConfiguration, authMechanism, irodsSession);
+
 	}
 
 	/**
@@ -366,7 +373,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					messageLength, errorLength, byteStringLength, intInfo));
 
 			// flush is needed between header and message when SSL processing
-			irodsConnection.flush();
+			// irodsConnection.flush();
 
 			irodsConnection.send(message);
 
@@ -860,11 +867,18 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private void processMessageInfoLessThanZero(final int messageLength,
 			final int errorLength, final int info) throws JargonException {
 		log.debug("info is < 0");
+		byte[] messageByte = new byte[messageLength];
 		// if nothing else, read the returned bytes and throw them away
 		if (messageLength > 0) {
 			log.debug("throwing away bytes");
 			try {
 				irodsConnection.read(new byte[messageLength], 0, messageLength);
+				Tag.readNextTag(messageByte,
+						pipelineConfiguration.getDefaultEncoding()); // just
+																		// thrown
+																		// away
+																		// for
+																		// now
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
 				throw new JargonException(e);
@@ -877,24 +891,28 @@ public class IRODSCommands implements IRODSManagedConnection {
 			}
 		}
 
-		readAndLogErrorMessage(errorLength, info);
+		String addlMessage = readAndLogErrorMessage(errorLength, info);
 
 		if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			// handleSuccessButNoRowsFound(errorLength, info);
 			log.info("success but no info returned from irods");
 		} else {
-			IRODSErrorScanner.inspectAndThrowIfNeeded(info);
+			IRODSErrorScanner.inspectAndThrowIfNeeded(info, addlMessage);
 		}
 
 	}
 
 	/**
+	 * Look at error message and log it, returning any additional message info
+	 * found in the error tag
+	 * 
 	 * @param errorLength
 	 * @param info
 	 * @throws JargonException
 	 */
-	private void readAndLogErrorMessage(final int errorLength, final int info)
+	private String readAndLogErrorMessage(final int errorLength, final int info)
 			throws JargonException {
+		String additionalMessage = "";
 		if (errorLength != 0) {
 			byte[] errorMessage = new byte[errorLength];
 			try {
@@ -909,22 +927,32 @@ public class IRODSCommands implements IRODSManagedConnection {
 				log.error("io exception", e);
 				throw new JargonException(e);
 			}
-			if (log.isDebugEnabled()) {
-				Tag errorTag;
-				try {
-					errorTag = Tag.readNextTag(errorMessage,
-							pipelineConfiguration.getDefaultEncoding());
-				} catch (UnsupportedEncodingException e) {
-					log.error("Unsupported encoding for: {}",
-							pipelineConfiguration.getDefaultEncoding());
-					throw new JargonException("Unsupported encoding for: "
-							+ pipelineConfiguration.getDefaultEncoding());
+
+			Tag errorTag;
+
+			try {
+				errorTag = Tag.readNextTag(errorMessage,
+						pipelineConfiguration.getDefaultEncoding());
+
+				if (errorTag != null) {
+					log.error("IRODS error occured "
+							+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
+									IRodsPI.MESSAGE_TAG) + " : " + info);
+
+					additionalMessage = errorTag.getTag(RErrMsg.PI_TAG)
+							.getTag(IRodsPI.MESSAGE_TAG).getStringValue();
 				}
-				log.error("IRODS error occured "
-						+ errorTag.getTag(RErrMsg.PI_TAG).getTag(
-								IRodsPI.MESSAGE_TAG) + " : " + info);
+
+			} catch (UnsupportedEncodingException e) {
+				log.error("Unsupported encoding for: {}",
+						pipelineConfiguration.getDefaultEncoding());
+				throw new JargonException("Unsupported encoding for: "
+						+ pipelineConfiguration.getDefaultEncoding());
 			}
+
 		}
+		return additionalMessage;
+
 	}
 
 	private void processMessageErrorNotEqualZero(final int errorLength)
@@ -1304,16 +1332,6 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * get the zone associated with this connection. Convenience method
-	 * retrieves this information from the returned server properties.
-	 * 
-	 * @return <code>String</code> with zone name.
-	 */
-	public synchronized String getZone() {
-		return irodsServerProperties.getRodsZone();
-	}
-
-	/**
 	 * Required to close out certain operations, such as parallel transfer
 	 * operations.
 	 * 
@@ -1354,7 +1372,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	@Override
 	public synchronized IRODSSession getIrodsSession() {
-		return irodsConnection.getIrodsSession();
+		return irodsSession;
 	}
 
 	/*
@@ -1471,10 +1489,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			reconnectedIRODSConnection = IRODSConnection
 					.instanceWithReconnectInfo(irodsAccount,
-							this.getIrodsProtocolManager(),
-							pipelineConfiguration,
+							getIrodsProtocolManager(), pipelineConfiguration,
 							authResponse.getStartupResponse(),
-							this.getIrodsSession());
+							getIrodsSession());
 		} catch (Exception e) {
 			log.debug(
 					"exception on open of reconnect socket, will sleep and try again:{}",
@@ -1588,7 +1605,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
 					getConnectionUri());
 			log.error("**************************************************************************************");
-			this.obliterateConnectionAndDiscardErrors();
+			obliterateConnectionAndDiscardErrors();
 		}
 		super.finalize();
 	}
@@ -1656,8 +1673,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
-		this.getIrodsConnection().getConnection().close();
-		this.getIrodsConnection().setConnected(false);
+		getIrodsConnection().getConnection().close();
+		getIrodsConnection().setConnected(false);
 	}
 
 }

@@ -25,9 +25,7 @@ public class PipelineConfiguration {
 	private final int sendInputStreamBufferSize;
 	private final int localFileInputStreamBufferSize;
 	private final int localFileOutputStreamBufferSize;
-	private final String defaultEncoding = "utf-8"; // FIXME: put into
-													// jargon.properties and
-													// propogate
+	private final String defaultEncoding;
 	private final int inputToOutputCopyBufferByteSize;
 	private final boolean reconnect;
 	private final long reconnectTimeInMillis;
@@ -52,27 +50,26 @@ public class PipelineConfiguration {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
 
-		this.irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
-		this.irodsParallelSocketTimeout = jargonProperties
+		irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
+		irodsParallelSocketTimeout = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
-		this.internalInputStreamBufferSize = jargonProperties
+		internalInputStreamBufferSize = jargonProperties
 				.getInternalInputStreamBufferSize();
-		this.internalOutputStreamBufferSize = jargonProperties
+		internalOutputStreamBufferSize = jargonProperties
 				.getInternalOutputStreamBufferSize();
-		this.internalCacheBufferSize = jargonProperties
-				.getInternalCacheBufferSize();
-		this.sendInputStreamBufferSize = jargonProperties
+		internalCacheBufferSize = jargonProperties.getInternalCacheBufferSize();
+		sendInputStreamBufferSize = jargonProperties
 				.getSendInputStreamBufferSize();
-		this.localFileInputStreamBufferSize = jargonProperties
+		localFileInputStreamBufferSize = jargonProperties
 				.getLocalFileInputStreamBufferSize();
-		this.localFileOutputStreamBufferSize = jargonProperties
+		localFileOutputStreamBufferSize = jargonProperties
 				.getLocalFileOutputStreamBufferSize();
-		this.inputToOutputCopyBufferByteSize = jargonProperties
+		inputToOutputCopyBufferByteSize = jargonProperties
 				.getInputToOutputCopyBufferByteSize();
-		this.instrument = jargonProperties.isInstrument();
-		this.reconnect = jargonProperties.isReconnect();
-		this.reconnectTimeInMillis = jargonProperties
-				.getReconnectTimeInMillis();
+		instrument = jargonProperties.isInstrument();
+		reconnect = jargonProperties.isReconnect();
+		reconnectTimeInMillis = jargonProperties.getReconnectTimeInMillis();
+		defaultEncoding = jargonProperties.getEncoding();
 	}
 
 	@Override

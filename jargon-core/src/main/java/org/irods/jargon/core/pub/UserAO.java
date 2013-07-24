@@ -305,4 +305,30 @@ public interface UserAO extends IRODSAccessObject {
 	void updateUserInfo(String userName, String userInfo)
 			throws DataNotFoundException, JargonException;
 
+	/**
+	 * Update the DN for the given user
+	 * 
+	 * @param userName
+	 *            userName <code>String</code> with the name of the user
+	 * @param userDN
+	 *            <code>DN</code> to add to the user
+	 * @throws InvalidUserException
+	 *             if the user does not exist
+	 * @throws JargonException
+	 */
+	void updateUserDN(String userName, String userDN)
+			throws InvalidUserException, JargonException;
+
+	/**
+	 * Remove the DN for the given user. If the user or DN does not exist, it
+	 * will silently ignore the command
+	 * 
+	 * @param userName
+	 *            userName <code>String</code> with the name of the user
+	 * @param userDN
+	 *            <code>DN</code> to remove from the user
+	 * @throws JargonException
+	 */
+	void removeUserDN(String userName, String userDN) throws JargonException;
+
 }

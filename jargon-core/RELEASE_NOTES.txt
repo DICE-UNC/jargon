@@ -6,9 +6,6 @@
 
 ==News==
 
-release branch of Jargon, representing currently merged changes for the next release
-
-Note that this API represents a fundamental shift, and is meant to make development of applications easier and faster.
 
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
@@ -28,7 +25,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.2
+*Jargon supports iRODS 2.5 through iRODS 3.3
 
 ==Libraries==
 
@@ -42,16 +39,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1182] add support for workflows
 
- *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
- **Added code to properly query the permissions as they exist on the current zone
  
- *[#1139] Spaces at the begin or end of a data object name will cause an exception
- **removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with
- embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
- 
-*[#1264] [iROD-Chat:9666] Referencing Data Objects
-**Added findById() methods to DataObjectAO and CollectionAO
+ ==Features==
 
-*[#1172] Jargon enhancements supporting HIVE integration project
-**Added new methods to CollectionAO for paging queries by AVU using offsets
-**Added row counts and other stats to MetaDataAndDomainData lists for find metadata by metadata query methods
+

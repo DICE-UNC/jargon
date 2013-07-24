@@ -138,8 +138,7 @@ public class TicketClientOperationsImplTest {
 		targetFile.mkdirs();
 
 		String ticketString = ticketSvc.createTicket(
-				TicketCreateModeEnum.WRITE, targetFile,
-				testCollection);
+				TicketCreateModeEnum.WRITE, targetFile, testCollection);
 
 		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
 				accessObjectFactory, secondaryAccount);
@@ -200,8 +199,7 @@ public class TicketClientOperationsImplTest {
 		ticketSvc.deleteTicket(testCollection);
 
 		String ticketString = ticketSvc.createTicket(
-				TicketCreateModeEnum.WRITE, targetFile,
-				testCollection);
+				TicketCreateModeEnum.WRITE, targetFile, testCollection);
 
 		TicketClientOperations ticketClientService = new TicketClientOperationsImpl(
 				accessObjectFactory, secondaryAccount);
@@ -304,8 +302,8 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		ticketSvc.deleteTicket(testFileName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				testFileName);
 
 		IRODSFile getIRODSFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -370,8 +368,8 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		ticketSvc.deleteTicket(testFileName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				testFileName);
 
 		IRODSFile getIRODSFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -498,8 +496,8 @@ public class TicketClientOperationsImplTest {
 		collectionAO.setAccessPermissionInherit("", destFile.getAbsolutePath(),
 				true);
 		ticketSvc.deleteTicket(rootCollectionAndTicketName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, rootCollectionAndTicketName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				rootCollectionAndTicketName);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
@@ -530,8 +528,9 @@ public class TicketClientOperationsImplTest {
 
 		File transferredCollection = getLocalFile.listFiles()[0];
 
-		assertionHelper
-				.assertIrodsFileOrCollectionExists(returnedLocalCollection);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				returnedLocalCollection,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, transferredCollection);
 
@@ -586,8 +585,8 @@ public class TicketClientOperationsImplTest {
 		collectionAO.setAccessPermissionInherit("", destFile.getAbsolutePath(),
 				true);
 		ticketSvc.deleteTicket(rootCollectionAndTicketName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, rootCollectionAndTicketName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				rootCollectionAndTicketName);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
@@ -618,8 +617,9 @@ public class TicketClientOperationsImplTest {
 
 		File transferredCollection = getLocalFile.listFiles()[0];
 
-		assertionHelper
-				.assertIrodsFileOrCollectionExists(returnedLocalCollection);
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				returnedLocalCollection,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, transferredCollection);
 
@@ -673,8 +673,8 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		ticketSvc.deleteTicket(testFileName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				testFileName);
 
 		IRODSFile getIRODSFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -832,8 +832,8 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		ticketSvc.deleteTicket(testCollection);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, testCollection);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				testCollection);
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -904,8 +904,8 @@ public class TicketClientOperationsImplTest {
 		TicketAdminService ticketSvc = new TicketAdminServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		ticketSvc.deleteTicket(testFileName);
-		ticketSvc.createTicket(TicketCreateModeEnum.READ,
-				destFile, testFileName);
+		ticketSvc.createTicket(TicketCreateModeEnum.READ, destFile,
+				testFileName);
 
 		IRODSFile getIRODSFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
@@ -943,7 +943,6 @@ public class TicketClientOperationsImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testCollection);
-
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

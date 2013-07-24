@@ -68,7 +68,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized void reset() {
-		this.objStat = null;
+		objStat = null;
 	}
 
 	protected IRODSFileImpl(final String pathName,
@@ -106,16 +106,15 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		MiscIRODSUtils.checkPathSizeForMax(parent, child);
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
-		String trimmedParent = parent.trim();
-		setDirectory(trimmedParent);
-		setFileName(child.trim());
-		makePathCanonical(trimmedParent);
+		setDirectory(parent);
+		setFileName(child);
+		makePathCanonical(parent);
 	}
 
 	protected IRODSFileImpl(final File parent, final String child,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 
-		this(parent.getAbsolutePath().trim(), child.trim(), irodsFileSystemAO);
+		this(parent.getAbsolutePath(), child, irodsFileSystemAO);
 	}
 
 	/**
@@ -376,17 +375,18 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized boolean createNewFile() throws IOException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(
-					this.getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(),
+					DataObjInp.OpenFlags.READ_WRITE,
 					DataObjInp.DEFAULT_CREATE_MODE);
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
+			// TODO: clean up after tests
 			// in irods the file must be closed, then opened when doing a create
 			// new
-			this.close();
-			this.openKnowingExists();
-			log.debug("file now closed");
+			// this.close();
+			// this.openKnowingExists();
+			// log.debug("file now closed");
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 
@@ -403,17 +403,13 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public synchronized boolean createNewFileCheckNoResourceFound()
 			throws NoResourceDefinedException, JargonException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(
-					this.getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(),
+					DataObjInp.OpenFlags.READ_WRITE,
 					DataObjInp.DEFAULT_CREATE_MODE);
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
-			// in irods the file must be closed, then opened when doing a create
-			// new
-			this.close();
-			this.openKnowingExists();
-			log.debug("file now closed");
+			
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
@@ -432,9 +428,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			successful = true;
 		} else {
 			try {
-				if (this.isFile()) {
+				if (isFile()) {
 					irodsFileSystemAO.fileDeleteNoForce(this);
-				} else if (this.isDirectory()) {
+				} else if (isDirectory()) {
 					irodsFileSystemAO.directoryDeleteNoForce(this);
 				}
 			} catch (FileNotFoundException dnf) {
@@ -470,9 +466,9 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public synchronized boolean deleteWithForceOption() {
 		boolean successful = true;
 		try {
-			if (this.isFile()) {
+			if (isFile()) {
 				irodsFileSystemAO.fileDeleteForce(this);
-			} else if (this.isDirectory()) {
+			} else if (isDirectory()) {
 				irodsFileSystemAO.directoryDeleteForce(this);
 			}
 		} catch (FileNotFoundException fnf) {
@@ -511,7 +507,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		if (obj instanceof File) {
 			File temp = (File) obj;
-			return temp.getAbsolutePath().equals(this.getAbsolutePath());
+			return temp.getAbsolutePath().equals(getAbsolutePath());
 		} else {
 			return false;
 		}
@@ -547,7 +543,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public File getAbsoluteFile() {
 
 		try {
-			return new IRODSFileImpl(getAbsolutePath(), this.irodsFileSystemAO);
+			return new IRODSFileImpl(getAbsolutePath(), irodsFileSystemAO);
 		} catch (JargonException e) {
 			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
 					+ e.getMessage();
@@ -603,7 +599,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public File getCanonicalFile() throws IOException {
 		String canonicalPath = getCanonicalPath();
 		try {
-			return new IRODSFileImpl(canonicalPath, this.irodsFileSystemAO);
+			return new IRODSFileImpl(canonicalPath, irodsFileSystemAO);
 		} catch (JargonException e) {
 			String msg = "jargon exception in file method, rethrown as IOException to match method signature"
 					+ e.getMessage();
@@ -626,12 +622,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			path.append(directory.get(0));
 
 			while (i < size) {
-				path.append(separator);
+				path.append('/');
 				path.append(directory.get(i));
 				i++;
 			}
 
-			path.append(separator);
+			path.append('/');
 			path.append(fileName);
 			return path.toString();
 		}
@@ -665,7 +661,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		try {
-			return new IRODSFileImpl(parentPath, this.irodsFileSystemAO);
+			return new IRODSFileImpl(parentPath, irodsFileSystemAO);
 		} catch (JargonException e) {
 			String msg = "jargon exception in file method, rethrown as JargonRuntimeException to match method signature"
 					+ e.getMessage();
@@ -724,12 +720,12 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized boolean isDirectory() {
-		log.info("isDirectory() for path:{}", this.getAbsolutePath());
+		log.info("isDirectory() for path:{}", getAbsolutePath());
 		boolean isDir = false;
 		try {
 			if (objStat == null) {
 				log.info("looking up objStat, not cached in file");
-				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
+				objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			}
 
 			if (getObjStat().getObjectType() == ObjectType.COLLECTION
@@ -754,14 +750,14 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized boolean isFile() {
 
-		log.info("isFile() for path:{}", this.getAbsolutePath());
+		log.info("isFile() for path:{}", getAbsolutePath());
 		boolean isFile = false;
 
 		try {
 			if (objStat == null) {
 
 				log.info("looking up objStat, not cached in file");
-				objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
+				objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			}
 
 			if (getObjStat().getObjectType() == ObjectType.DATA_OBJECT
@@ -785,7 +781,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public String getPath() {
-		return this.getAbsolutePath();
+		return getAbsolutePath();
 	}
 
 	/*
@@ -805,7 +801,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized long lastModified() {
-		log.info("lastModified() for path:{}", this.getAbsolutePath());
+		log.info("lastModified() for path:{}", getAbsolutePath());
 		long lastMod = 0L;
 
 		try {
@@ -829,7 +825,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized long length() {
 
-		log.info("length() for path:{}", this.getAbsolutePath());
+		log.info("length() for path:{}", getAbsolutePath());
 
 		long length = 0L;
 
@@ -892,8 +888,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			for (String fileName : result) {
 				// result has just the subdir under this file, need to create
 				// the absolute path to create a file
-				irodsFile = new IRODSFileImpl(this.getAbsolutePath(), fileName,
-						this.irodsFileSystemAO);
+				irodsFile = new IRODSFileImpl(getAbsolutePath(), fileName,
+						irodsFileSystemAO);
 				a[i++] = irodsFile;
 
 			}
@@ -944,7 +940,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			IRODSFileImpl irodsFile;
 			int i = 0;
 			for (String fileName : result) {
-				irodsFile = new IRODSFileImpl(fileName, this.irodsFileSystemAO);
+				irodsFile = new IRODSFileImpl(fileName, irodsFileSystemAO);
 				a[i++] = irodsFile;
 
 			}
@@ -1032,7 +1028,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		IRODSFile destIRODSFile = dest;
 
 		if (log.isInfoEnabled()) {
-			log.info("renaming:" + this.getAbsolutePath() + " to:"
+			log.info("renaming:" + getAbsolutePath() + " to:"
 					+ destIRODSFile.getAbsolutePath());
 		}
 
@@ -1045,7 +1041,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			// dest file
 			log.info("doing a physical move");
 			try {
-				this.irodsFileSystemAO.physicalMove(this,
+				irodsFileSystemAO.physicalMove(this,
 						destIRODSFile.getResource());
 				success = true;
 			} catch (JargonException e) {
@@ -1066,7 +1062,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		if (isDirectory()) {
 			log.info("paths different, and a directory is being renamed");
 			try {
-				this.irodsFileSystemAO.renameDirectory(this, destIRODSFile);
+				irodsFileSystemAO.renameDirectory(this, destIRODSFile);
 			} catch (JargonException e) {
 				log.error("jargon exception, rethrow as unchecked", e);
 				throw new JargonRuntimeException(e);
@@ -1074,7 +1070,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		} else if (isFile()) {
 			log.info("paths different, and a file is being renamed");
 			try {
-				this.irodsFileSystemAO.renameFile(this, destIRODSFile);
+				irodsFileSystemAO.renameFile(this, destIRODSFile);
 			} catch (JargonException e) {
 				log.error("jargon exception, rethrow as unchecked", e);
 				throw new JargonRuntimeException(e);
@@ -1181,11 +1177,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public String toString() {
 		StringBuilder s = new StringBuilder();
 		s.append("irods://");
-		s.append(this.irodsFileSystemAO.getIRODSAccount().getUserName());
+		s.append(irodsFileSystemAO.getIRODSAccount().getUserName());
 		s.append('@');
-		s.append(this.irodsFileSystemAO.getIRODSAccount().getHost());
+		s.append(irodsFileSystemAO.getIRODSAccount().getHost());
 		s.append(':');
-		s.append(this.irodsFileSystemAO.getIRODSAccount().getPort());
+		s.append(irodsFileSystemAO.getIRODSAccount().getPort());
 		s.append(getAbsolutePath());
 		return s.toString();
 	}
@@ -1201,17 +1197,15 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		try {
 			if (isDirectory()) {
-				uri = new URI("irods", this.irodsFileSystemAO.getIRODSAccount()
-						.getUserName(), this.irodsFileSystemAO
-						.getIRODSAccount().getHost(), this.irodsFileSystemAO
-						.getIRODSAccount().getPort(), getAbsolutePath(), null,
-						null);
+				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount()
+						.getUserName(), irodsFileSystemAO.getIRODSAccount()
+						.getHost(), irodsFileSystemAO.getIRODSAccount()
+						.getPort(), getAbsolutePath(), null, null);
 			} else {
-				uri = new URI("irods", this.irodsFileSystemAO.getIRODSAccount()
-						.getUserName(), this.irodsFileSystemAO
-						.getIRODSAccount().getHost(), this.irodsFileSystemAO
-						.getIRODSAccount().getPort(), getAbsolutePath(), null,
-						null);
+				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount()
+						.getUserName(), irodsFileSystemAO.getIRODSAccount()
+						.getHost(), irodsFileSystemAO.getIRODSAccount()
+						.getPort(), getAbsolutePath(), null, null);
 			}
 		} catch (URISyntaxException e) {
 			log.error("URISyntaxException, rethrow as unchecked", e);
@@ -1265,10 +1259,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			final boolean checkExists) throws JargonException {
 
 		if (log.isInfoEnabled()) {
-			log.info("opening irodsFile:" + this.getAbsolutePath());
+			log.info("opening irodsFile:" + getAbsolutePath());
 		}
 
-		if (checkExists && !this.exists()) {
+		if (checkExists && !exists()) {
 			throw new JargonException(
 					"this file does not exist, so it cannot be opened.  The file should be created first!");
 		}
@@ -1278,7 +1272,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			return fileDescriptor;
 		}
 
-		int fileDescriptor = this.irodsFileSystemAO.openFile(this, openFlags);
+		int fileDescriptor = irodsFileSystemAO.openFile(this, openFlags);
 
 		if (log.isDebugEnabled()) {
 			log.debug("opened file with descriptor of:" + fileDescriptor);
@@ -1308,17 +1302,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
 	}
 
-	/**
-	 * Open the file without doing an <code>exists()</code> check, since I know
-	 * it already does. This saves a bit of time
-	 * 
-	 * @return
-	 * @throws JargonException
-	 */
-	private synchronized int openKnowingExists() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, false);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1327,20 +1310,20 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized void close() throws JargonException {
 		if (log.isInfoEnabled()) {
-			log.info("closing irodsFile:{}", this.getAbsolutePath());
+			log.info("closing irodsFile:{}", getAbsolutePath());
 		}
 
-		this.reset();
+		reset();
 
-		if (this.getFileDescriptor() <= 0) {
+		if (getFileDescriptor() <= 0) {
 			log.info("file is not open, silently ignore");
-			this.setFileDescriptor(-1);
+			setFileDescriptor(-1);
 			return;
 		}
 
-		this.irodsFileSystemAO.fileClose(this.getFileDescriptor());
-		this.setFileDescriptor(-1);
-		this.objStat = null;
+		irodsFileSystemAO.fileClose(getFileDescriptor());
+		setFileDescriptor(-1);
+		objStat = null;
 
 	}
 
@@ -1358,13 +1341,13 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		if (fd <= 0) {
 			log.info("file is not open, silently ignore");
-			this.setFileDescriptor(-1);
+			setFileDescriptor(-1);
 			return;
 		}
 
-		this.irodsFileSystemAO.fileClose(fd);
-		this.setFileDescriptor(-1);
-		this.objStat = null;
+		irodsFileSystemAO.fileClose(fd);
+		setFileDescriptor(-1);
+		objStat = null;
 
 	}
 
@@ -1375,7 +1358,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public int compareTo(final IRODSFile pathname) {
-		return (this.getAbsolutePath().compareTo(pathname.getAbsolutePath()));
+		return (getAbsolutePath().compareTo(pathname.getAbsolutePath()));
 	}
 
 	@Override
@@ -1418,7 +1401,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public synchronized ObjStat initializeObjStatForFile()
 			throws FileNotFoundException, JargonException {
 		if (objStat == null) {
-			objStat = irodsFileSystemAO.getObjStat(this.getAbsolutePath());
+			objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 		}
 		return objStat;
 	}

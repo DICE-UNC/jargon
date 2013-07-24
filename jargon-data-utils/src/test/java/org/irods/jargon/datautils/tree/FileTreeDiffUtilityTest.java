@@ -958,10 +958,6 @@ public class FileTreeDiffUtilityTest {
 							.nextElement();
 					FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) fileTreeNode
 							.getUserObject();
-					Assert.assertEquals("nodes out of synch", child
-							.getAbsolutePath(), fileTreeDiffEntry
-							.getCollectionAndDataObjectListingEntry()
-							.getFormattedAbsolutePath());
 					Assert.assertEquals(
 							"node is not a no-diff directory entry",
 							FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF,

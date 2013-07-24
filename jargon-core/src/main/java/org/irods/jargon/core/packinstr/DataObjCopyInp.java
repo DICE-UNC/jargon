@@ -167,7 +167,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("negative sourceFileLength");
 		}
 
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 		this.fromFileAbsolutePath = fromFileAbsolutePath;
 		this.toFileAbsolutePath = toFileAbsolutePath;
 		this.operationType = operationType;
@@ -191,7 +191,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.DATA_SIZE, 0),
 				new Tag(DataObjInp.NUM_THREADS, 0),
 				new Tag(DataObjInp.OPR_TYPE, operationType),
-				this.createKeyValueTag(kvps) });
+				createKeyValueTag(kvps) });
 		return fileTag;
 	}
 
@@ -245,7 +245,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.NUM_THREADS, 0),
 				new Tag(DataObjInp.OPR_TYPE,
 						DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
-				this.createKeyValueTag(kvps) });
+				createKeyValueTag(kvps) });
 		return fileTag;
 	}
 

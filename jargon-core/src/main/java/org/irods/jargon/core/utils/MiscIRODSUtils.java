@@ -111,7 +111,7 @@ public class MiscIRODSUtils {
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file or
 	 *            collection
-	 * @return <code>String</code> with the zone name, or null if the zone name
+	 * @return <code>String</code> with the zone name, or blank if the zone name
 	 *         is not in the path (e.g. if the path is just '/')
 	 */
 	public static String getZoneInPath(final String irodsAbsolutePath) {
@@ -126,7 +126,7 @@ public class MiscIRODSUtils {
 		List<String> pathComponents = breakIRODSPathIntoComponents(irodsAbsolutePath);
 
 		if (pathComponents.size() <= 1) {
-			return null;
+			return "";
 		} else {
 			return pathComponents.get(1);
 		}
@@ -525,7 +525,7 @@ public class MiscIRODSUtils {
 			throw new NullPointerException("The file name cannot be null");
 		}
 
-		String fileName = filePath;//.trim();
+		String fileName = filePath;// .trim();
 		String directory = "";
 
 		if (fileName.length() > 1) { // add to allow path = root "/"
@@ -647,6 +647,29 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * build a user home directory path (with no trailing slash) based on the
+	 * common /zone/home/userName scheme given an iRODS account
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAcocunt} for the given user
+	 * @return <code>String</code> with the iRODS user home directory path
+	 */
+	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(
+			final IRODSAccount irodsAccount) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(irodsAccount.getZone());
+		sb.append("/home/");
+		sb.append(irodsAccount.getUserName());
+		return sb.toString();
+
+	}
+
+	/**
 	 * Checks the given parent and child path for a length violation
 	 * 
 	 * @param parentPath
@@ -669,6 +692,32 @@ public class MiscIRODSUtils {
 		if (childPath.length() + childPath.length() > ConnectionConstants.MAX_PATH_SIZE) {
 			throw new PathTooLongException("Path is too long");
 		}
+
+	}
+
+	/**
+	 * Create a truncated file name suitable for display in interfaces
+	 * 
+	 * @param fileName
+	 * @return
+	 */
+	public static final String abbreviateFileName(final String fileName) {
+
+		if (fileName == null) {
+			throw new IllegalArgumentException("null fileName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		if (fileName.length() < 100) {
+			sb.append(fileName);
+		} else {
+			// gt 100 bytes, redact
+			sb.append(fileName.substring(0, 50));
+			sb.append(" ... ");
+			sb.append(fileName.substring(fileName.length() - 50));
+		}
+
+		return sb.toString();
 
 	}
 

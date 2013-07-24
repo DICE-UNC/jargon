@@ -52,14 +52,14 @@ public class IRODSFileReader extends Reader {
 		}
 
 		try {
-			this.irodsFileInputStream = irodsFileFactory
+			irodsFileInputStream = irodsFileFactory
 					.instanceIRODSFileInputStream(irodsFile);
 		} catch (JargonException e) {
 			throw new IOException("unable to open IRODSFileInputStream for:"
 					+ irodsFile.getAbsolutePath());
 		}
 
-		this.connectionEncoding = irodsFileInputStream.getFileIOOperations()
+		connectionEncoding = irodsFileInputStream.getFileIOOperations()
 				.getIRODSSession()
 				.buildPipelineConfigurationBasedOnJargonProperties()
 				.getDefaultEncoding();

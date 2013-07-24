@@ -61,7 +61,7 @@ public class IRODSRuleExecResult {
 		}
 
 		this.irodsRule = irodsRule;
-		this.outputParameterResults = resultParameters;
+		outputParameterResults = resultParameters;
 	}
 
 	public IRODSRule getIrodsRule() {

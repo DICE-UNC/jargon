@@ -348,7 +348,7 @@ public class IRODSGenQueryExecutorImplTest {
 	@Test
 	public final void testExecuteIRODSQueryManyTimes() throws Exception {
 
-		int count = 1000;
+		int count = 200;
 		String queryString = "select "
 				+ RodsGenQueryEnum.COL_R_RESC_NAME.getName()
 				+ " ,"
@@ -535,7 +535,7 @@ public class IRODSGenQueryExecutorImplTest {
 		IRODSFileFactory iff = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 
-		int nbrTimes = 100;
+		int nbrTimes = 20;
 
 		for (int i = 0; i < nbrTimes; i++) {
 			// get connection and file
@@ -675,9 +675,8 @@ public class IRODSGenQueryExecutorImplTest {
 				.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_R_ZONE_NAME,
 						QueryConditionOperators.EQUAL,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-								.trim());
+						testingProperties.getProperty(
+								TestingPropertiesHelper.IRODS_ZONE_KEY).trim());
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -705,13 +704,11 @@ public class IRODSGenQueryExecutorImplTest {
 			throws Exception {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		final String zoneKey = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-				.trim();
+		final String zoneKey = testingProperties.getProperty(
+				TestingPropertiesHelper.IRODS_ZONE_KEY).trim();
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-				.addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_R_ZONE_NAME,
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
 						QueryConditionOperators.EQUAL, zoneKey)
 				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 						GenQueryOrderByField.OrderByType.DESC);
@@ -752,13 +749,11 @@ public class IRODSGenQueryExecutorImplTest {
 			throws Exception {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-		final String zoneKey = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
-				.trim();
+		final String zoneKey = testingProperties.getProperty(
+				TestingPropertiesHelper.IRODS_ZONE_KEY).trim();
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-				.addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_R_ZONE_NAME,
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
 						QueryConditionOperators.EQUAL, zoneKey)
 				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 						GenQueryOrderByField.OrderByType.ASC);

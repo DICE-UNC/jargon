@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
+import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -50,8 +51,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
@@ -88,11 +88,11 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		 */
 
 		if (resourceName.isEmpty()) {
-			IRODSFile fileToGet = this.getIRODSFileFactory().instanceIRODSFile(
+			IRODSFile fileToGet = getIRODSFileFactory().instanceIRODSFile(
 					sourceAbsolutePath);
 			if (fileToGet.isFile()) {
 				log.debug("this is a file, look for resource it is stored on to retrieve host");
-				DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+				DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
 						.getDataObjectAO(getIRODSAccount());
 				List<Resource> resources = dataObjectAO
 						.getResourcesForDataObject(fileToGet.getParent(),
@@ -101,7 +101,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 					return null;
 				} else {
 					// if the file is on the same host, just use this
-					String thisHostName = this.getIRODSAccount().getHost();
+					String thisHostName = getIRODSAccount().getHost();
 					for (Resource resource : resources) {
 						if (resource.getLocation().equals(thisHostName)) {
 							log.info("file replica is on current host:{}",
@@ -167,7 +167,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 */
 	private String evaluateGetHostResponseAndReturnReroutingHost(
 			final DataObjInp dataObjInp) throws JargonException {
-		Tag result = this.getIRODSProtocol().irodsFunction(dataObjInp);
+		Tag result = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		// irods file doesn't exist
 		if (result == null) {
@@ -204,8 +204,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public ObjStat getObjectStatForAbsolutePath(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		return collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
@@ -263,7 +262,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty fileName");
 		}
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				parentPath, fileName);
 		return retrieveObjStat(irodsFile.getAbsolutePath());
 	}
@@ -305,5 +304,40 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public abstract boolean isUserHasAccess(final String irodsAbsolutePath,
 			final String userName) throws JargonException;
+
+	/**
+	 * Given two permissions (one by user, one by group) score and return the
+	 * highest permission, or null if no permissions found
+	 * 
+	 * @param userFilePermission
+	 * @param groupFilePermission
+	 * @return {@link UserFilePermission} that is the highest level, or
+	 *         <code>null</code> if no permissions found
+	 */
+	protected UserFilePermission scoreAndReturnHighestPermission(UserFilePermission userFilePermission, UserFilePermission groupFilePermission) {
+		int userScore = -1;
+		int groupScore = -1;
+	
+		if (userFilePermission != null) {
+			userScore = userFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+	
+		if (groupFilePermission != null) {
+			groupScore = groupFilePermission.getFilePermissionEnum()
+					.getPermissionNumericValue();
+		}
+	
+		if (userScore >= groupScore && userScore > -1) {
+			log.info("user file permission greater, using this:{}",
+					userFilePermission);
+			return userFilePermission;
+		} else if (groupScore > -1) {
+			log.info("returning groupFilePermission:{}", groupFilePermission);
+			return groupFilePermission;
+		} else {
+			return null;
+		}
+	}
 
 }

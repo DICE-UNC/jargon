@@ -83,11 +83,11 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 		StringBuilder sb = new StringBuilder();
 		sb.append("ParallelPutFileViaNIOTransferStrategy");
 		sb.append("\n   host:");
-		sb.append(this.getHost());
+		sb.append(getHost());
 		sb.append("\n   port:");
-		sb.append(this.getPort());
+		sb.append(getPort());
 		sb.append("\n   numberOfThreads:");
-		sb.append(this.getNumberOfThreads());
+		sb.append(getNumberOfThreads());
 		sb.append("\n   localFile:");
 		sb.append(localFile.getAbsolutePath());
 		sb.append("\n   transferLength:");
@@ -109,8 +109,8 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 				transferStatusCallbackListener);
 
 		try {
-			this.raFile = new RandomAccessFile(localFile.getAbsolutePath(), "r");
-			this.fileChannel = raFile.getChannel();
+			raFile = new RandomAccessFile(localFile.getAbsolutePath(), "r");
+			fileChannel = raFile.getChannel();
 
 		} catch (FileNotFoundException e) {
 			log.error("source file for put not found:{}", localFile);
@@ -121,7 +121,7 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 				.isIntraFileStatusCallbacks()
 				&& transferStatusCallbackListener != null) {
 			log.info("will do intra-file status callbacks from transfer");
-			this.setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
+			setConnectionProgressStatusListener(DefaultIntraFileProgressCallbackListener
 					.instance(TransferStatus.TransferType.PUT, transferLength,
 							transferControlBlock,
 							transferStatusCallbackListener));
@@ -138,7 +138,7 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 	 */
 	@Override
 	public void transfer() throws JargonException {
-		log.info("initiating transfer for: {}", this.toString());
+		log.info("initiating transfer for: {}", toString());
 		ExecutorService executor = getIrodsAccessObjectFactory()
 				.getIrodsSession().getParallelTransferThreadPool();
 		if (executor == null) {
@@ -154,8 +154,7 @@ public final class ParallelPutFileViaNIOTransferStrategy extends
 
 	private void transferWithExecutor(final ExecutorService executor)
 			throws JargonException {
-		log.info("initiating transfer for: {} without executor",
-				this.toString());
+		log.info("initiating transfer for: {} without executor", toString());
 		final List<ParallelPutViaNIOTransferThread> parallelPutTransferThreads = new ArrayList<ParallelPutViaNIOTransferThread>();
 		localFile.length();
 		ParallelPutViaNIOTransferThread parallelTransferThread;

@@ -459,8 +459,8 @@ public class FederatedIRODSFileImplTest {
 		irodsFile.reset();
 
 		Assert.assertTrue("did not get success in the mkdirs command", success);
-		assertionHelper.assertIrodsFileOrCollectionExists(irodsFile
-				.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionExists(
+				irodsFile.getAbsolutePath(), accessObjectFactory, irodsAccount);
 	}
 
 }

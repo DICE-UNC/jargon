@@ -310,7 +310,7 @@ public interface IRODSAccessObjectFactory {
 	 * 
 	 * @throws JargonException
 	 */
-	void closeSessionAndEatExceptions() throws JargonException;
+	void closeSessionAndEatExceptions();
 
 	/**
 	 * Close the underlying connection for the given IRODSAccount. Any resulting

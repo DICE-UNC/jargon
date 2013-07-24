@@ -25,18 +25,6 @@ public interface IRODSProtocolManager {
 			final AuthenticationFactory authenticationFactory);
 
 	/**
-	 * For an account provided by the caller, return an open IRODS connection.
-	 * This may be created new, cached from previous connection by the same
-	 * user, or from a pool.
-	 * 
-	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
-	 *            other connection options
-	 */
-	IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
-			PipelineConfiguration pipelineConfiguration) throws JargonException;
-
-	/**
 	 * This method is called by a client when the connection is no longer
 	 * needed. The connection may be closed, or returned to a pool.
 	 * 
@@ -65,5 +53,22 @@ public interface IRODSProtocolManager {
 	void destroy() throws JargonException;
 
 	void initialize() throws JargonException;
+
+	/**
+	 * For an account provided by the caller, return an open IRODS connection.
+	 * This may be created new, cached from previous connection by the same
+	 * user, or from a pool.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
+	 *            other connection options
+	 * @params irodsSession {@link IRODSSession} that will manage this
+	 *         connection and cache information
+	 */
+	IRODSCommands getIRODSProtocol(IRODSAccount irodsAccount,
+			PipelineConfiguration pipelineConfiguration,
+			IRODSSession irodsSession) throws JargonException;
 
 }

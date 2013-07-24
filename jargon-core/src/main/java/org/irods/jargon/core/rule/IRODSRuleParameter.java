@@ -112,7 +112,7 @@ public class IRODSRuleParameter {
 	 * input values for the rule engine.
 	 */
 	void setNullValue() {
-		this.value = "";
+		value = "";
 		type = NULL_PI;
 	}
 

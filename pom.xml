@@ -10,8 +10,9 @@
 	<url>https://code.renci.org/gf/project/jargon</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
-		<spring.core.version>3.1.0.RELEASE</spring.core.version>
+		<spring.webmvc.version>3.2.3.RELEASE</spring.webmvc.version>
+		<spring.core.version>3.2.3.RELEASE</spring.core.version>
+		<spring.security.version>3.1.0.RELEASE</spring.security.version>
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
@@ -350,12 +351,12 @@
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-core</artifactId>
-				<version>${spring.webmvc.version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.security</groupId>
 				<artifactId>spring-security-web</artifactId>
-				<version>${spring.webmvc.version}</version>
+				<version>${spring.security.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>javassist</groupId>
@@ -381,9 +382,11 @@
 			<artifactId>slf4j-api</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.slf4j</groupId>
-			<artifactId>slf4j-log4j12</artifactId>
-		</dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.5.10</version>
+				<scope>test</scope>
+			</dependency>
 		<dependency>
 			<groupId>org.perf4j</groupId>
 			<artifactId>perf4j</artifactId>

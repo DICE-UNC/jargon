@@ -106,15 +106,15 @@ public final class ParallelPutViaNIOTransferThread extends
 			log.error(
 					"An exception occurred during a parallel file put operation",
 					e);
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException("error during parallel file put", e);
 		} finally {
 			log.info("closing sockets, this eats any exceptions");
-			this.close();
+			close();
 		}
 
 		ParallelTransferResult result = new ParallelTransferResult();
-		result.transferException = this.getExceptionInTransfer();
+		result.transferException = getExceptionInTransfer();
 
 		return result;
 
@@ -122,7 +122,7 @@ public final class ParallelPutViaNIOTransferThread extends
 
 	private void put() throws JargonException {
 		log.info("put()..");
-		int copyBuffSize = this.parallelPutFileTransferStrategy
+		int copyBuffSize = parallelPutFileTransferStrategy
 				.getJargonProperties().getInputToOutputCopyBufferByteSize();
 		boolean done = false;
 
@@ -178,7 +178,7 @@ public final class ParallelPutViaNIOTransferThread extends
 	private void readWriteLoopForCurrentHeaderDirective(final long position,
 			final long length) throws IOException, JargonException {
 
-		int copyBuffSize = this.parallelPutFileTransferStrategy
+		int copyBuffSize = parallelPutFileTransferStrategy
 				.getJargonProperties().getInputToOutputCopyBufferByteSize();
 
 		try {
@@ -223,7 +223,7 @@ public final class ParallelPutViaNIOTransferThread extends
 
 		} catch (Exception e) {
 			log.error("error writing to iRODS parallel transfer socket", e);
-			this.setExceptionInTransfer(e);
+			setExceptionInTransfer(e);
 			throw new JargonException(e);
 		}
 	}

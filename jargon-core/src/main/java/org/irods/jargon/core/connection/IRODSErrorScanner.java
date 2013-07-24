@@ -13,7 +13,9 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.exception.InvalidGroupException;
+import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
@@ -22,7 +24,10 @@ import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.exception.SpecificQueryException;
+import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This object is interposed in the process of interpreting the iRODS responses
@@ -39,18 +44,43 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
  */
 public class IRODSErrorScanner {
 
-	public static void inspectAndThrowIfNeeded(final int infoValue)
-			throws JargonException {
+	public static final Logger log = LoggerFactory
+			.getLogger(IRODSErrorScanner.class);
+
+	/**
+	 * Scan the response for errors, and incorporate any message information
+	 * that might expand the error
+	 * 
+	 * @param infoValue
+	 *            <code>int</code> with the iRODS info value from a packing
+	 *            instruction response header
+	 * @param message
+	 *            <code>String</code> with any additional error information
+	 *            coming from the response in the <code>msg</code> field of the
+	 *            header
+	 * @throws JargonException
+	 */
+	public static void inspectAndThrowIfNeeded(final int infoValue,
+			String message) throws JargonException {
+
+		log.debug("inspectAndThrowIfNeeded:{}", infoValue);
 
 		if (infoValue == 0) {
 			return;
 		}
 
+		if (message == null) {
+			message = "";
+		}
+
 		ErrorEnum errorEnum;
 
 		try {
+			log.debug("scanning for info value...");
 			errorEnum = ErrorEnum.valueOf(infoValue);
+			log.debug("errorEnum val:{}", errorEnum);
 		} catch (IllegalArgumentException ie) {
+			log.error("error getting error enum value", ie);
 			throw new JargonException(
 					"error code received from iRODS, not in ErrorEnum translation table:"
 							+ infoValue, infoValue);
@@ -115,11 +145,42 @@ public class IRODSErrorScanner {
 		case SPECIFIC_QUERY_EXCEPTION:
 			throw new SpecificQueryException(
 					"Exception processing specific query", infoValue);
-		default:
-			throw new JargonException("error code received from iRODS:"
-					+ infoValue, infoValue);
-		}
+		case CAT_INVALID_ARGUMENT:
+			throw new InvalidArgumentException(message, infoValue);
 
+		case CAT_INVALID_RESOURCE:
+			throw new InvalidResourceException(message, infoValue);
+		case FEDERATED_ZONE_NOT_AVAILABLE:
+			throw new ZoneUnavailableException(
+					"the federated zone is not available");
+		default:
+			StringBuilder sb = new StringBuilder();
+			if (message.isEmpty()) {
+				sb.append("error code received from iRODS:");
+				sb.append(infoValue);
+
+				throw new JargonException(sb.toString(), infoValue);
+			} else {
+				sb.append("error code received from iRODS:");
+				sb.append(infoValue);
+				sb.append(" message:");
+				sb.append(message);
+				throw new JargonException(sb.toString(), infoValue);
+			}
+		}
+	}
+
+	/**
+	 * Inspect the <code>info</code> value from an iRODS packing instruction
+	 * response header and throw an exception if an error was detected
+	 * 
+	 * @param infoValue
+	 * @throws JargonException
+	 */
+	public static void inspectAndThrowIfNeeded(final int infoValue)
+			throws JargonException {
+
+		inspectAndThrowIfNeeded(infoValue, "");
 	}
 
 }

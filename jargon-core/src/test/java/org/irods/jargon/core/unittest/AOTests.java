@@ -11,11 +11,13 @@ import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplForSoftLinksTest;
 import org.irods.jargon.core.pub.DataTransferOperationsImplTest;
+import org.irods.jargon.core.pub.DataTransferOperationsImplTestNoInternalCache;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
+import org.irods.jargon.core.pub.FederatedSpecificQueryAOTest;
 import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
@@ -47,6 +49,7 @@ import org.junit.runners.Suite;
 		CollectionAOImplTest.class, DataObjectAOImplTest.class,
 		RuleProcessingAOImplTest.class, IRODSFileSystemTest.class,
 		DataTransferOperationsImplTest.class,
+		DataTransferOperationsImplTestNoInternalCache.class,
 		RemoteExecutionOfCommandsAOImplTest.class,
 		CollectionAndDataObjectListAndSearchAOImplTest.class,
 		IRODSAccessObjectFactoryImplTest.class,
@@ -67,7 +70,8 @@ import org.junit.runners.Suite;
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
 		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,
 		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
-		SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class })
+		SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class,
+		FederatedSpecificQueryAOTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

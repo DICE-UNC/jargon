@@ -44,16 +44,17 @@ public final class IRODSSimpleProtocolManager extends
 	 */
 	@Override
 	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration)
-			throws JargonException {
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSSession irodsSession) throws JargonException {
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
 		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
 
-		return IRODSCommands.instance(irodsAccount, this,
-				pipelineConfiguration, this.getAuthenticationFactory()
-						.instanceAuthMechanism(irodsAccount));
+		IRODSCommands commands = IRODSCommands.instance(irodsAccount, this,
+				pipelineConfiguration, getAuthenticationFactory()
+						.instanceAuthMechanism(irodsAccount), irodsSession);
+		return commands;
 	}
 
 	/**
