@@ -98,6 +98,8 @@ public class PasswordObfuscator {
 		} else {
 			stringVal = "www.verisign.com";
 		}
+		StringBuilder sb = new StringBuilder();
+		sb.append(stringVal);
 		try {
 			Socket methodSocket = SSLSocketFactory.getDefault().createSocket(
 					stringVal, -1);
@@ -107,8 +109,9 @@ public class PasswordObfuscator {
 			methodPrintWriter.flush();
 			BufferedReader methodBufferedReader = new BufferedReader(
 					new InputStreamReader(methodSocket.getInputStream()));
+
 			while ((stringVal = methodBufferedReader.readLine()) != null) {
-				stringVal = stringVal + stringVal;
+				sb.append(stringVal);
 			}
 			methodPrintWriter.close();
 			methodBufferedReader.close();
@@ -116,7 +119,7 @@ public class PasswordObfuscator {
 		} catch (Throwable e) {
 			return stringToFile();
 		}
-		return stringToFile(encodeString(stringVal));
+		return stringToFile(encodeString(sb.toString()));
 	}
 
 	private File fileForName(final String inputStringFileName) throws Throwable {

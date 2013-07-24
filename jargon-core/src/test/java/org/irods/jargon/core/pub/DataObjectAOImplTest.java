@@ -1916,9 +1916,10 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		String getFileName = "testGetFileGTParallelMaxNoParallelInOptionsResult.doc";
+
+		String getFileName = "returnedTestGetFileGTParallelMaxNoParallelInOptions.doc";
 		String getResultLocalPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/return")
 				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
@@ -1959,10 +1960,9 @@ public class DataObjectAOImplTest {
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
 				transferControlBlock, transferStatusCallbackListener);
 
-		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
-				+ '/' + getFileName);
-		assertionHelper.assertLocalScratchFileLengthEquals(
-				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, testFileLen);
+		Assert.assertTrue("local file that was returned does not exist", localFile.exists());
+		Assert.assertEquals("local file wrong length", testFileLen, localFile.length());
+		
 
 	}
 

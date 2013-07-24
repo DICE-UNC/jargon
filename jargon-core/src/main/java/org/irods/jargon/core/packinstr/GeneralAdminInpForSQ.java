@@ -174,7 +174,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 		if (action == SQ_RM) {
 			// check to see if this is remove by alias - if so put alias name in
 			// arg2
-			if (arg2 == BLANK) {
+			if (arg2.equals(BLANK)) {
 				arg2 = arg3;
 				arg3 = BLANK;
 			}
