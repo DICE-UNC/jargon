@@ -20,7 +20,7 @@ public class ZoneUnavailableException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public ZoneUnavailableException(String message) {
+	public ZoneUnavailableException(final String message) {
 		super(message);
 	}
 
@@ -28,14 +28,14 @@ public class ZoneUnavailableException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public ZoneUnavailableException(String message, Throwable cause) {
+	public ZoneUnavailableException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ZoneUnavailableException(Throwable cause) {
+	public ZoneUnavailableException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -44,8 +44,8 @@ public class ZoneUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZoneUnavailableException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ZoneUnavailableException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -53,8 +53,8 @@ public class ZoneUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZoneUnavailableException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ZoneUnavailableException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -62,8 +62,8 @@ public class ZoneUnavailableException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ZoneUnavailableException(String message,
-			int underlyingIRODSExceptionCode) {
+	public ZoneUnavailableException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

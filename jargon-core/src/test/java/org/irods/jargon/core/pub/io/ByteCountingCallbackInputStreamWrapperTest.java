@@ -28,6 +28,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
 		ConnectionProgressStatusListener listener = Mockito
 				.mock(ConnectionProgressStatusListener.class);
+		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 		byte[] readBuffer = new byte[100];
@@ -46,6 +47,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
 		ConnectionProgressStatusListener listener = Mockito
 				.mock(ConnectionProgressStatusListener.class);
+		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 		Mockito.when(dummyInputStream.available()).thenReturn(expectedLen);
@@ -75,6 +77,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
 		ConnectionProgressStatusListener listener = Mockito
 				.mock(ConnectionProgressStatusListener.class);
+		@SuppressWarnings("resource")
 		ByteCountingCallbackInputStreamWrapper byteCountingCallbackInputStream = new ByteCountingCallbackInputStreamWrapper(
 				listener, dummyInputStream);
 		byte[] readBuffer = new byte[100];
@@ -89,6 +92,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 				Matchers.isA(ConnectionProgressStatus.class));
 	}
 
+	@SuppressWarnings("resource")
 	@Test
 	public void testByteCountingCallbackInputStreamWrapper() {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
@@ -98,6 +102,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		Assert.assertTrue(true);
 	}
 
+	@SuppressWarnings("resource")
 	@Test(expected = IllegalArgumentException.class)
 	public void testByteCountingCallbackInputStreamWrapperNullListener() {
 		InputStream dummyInputStream = Mockito.mock(InputStream.class);
@@ -105,6 +110,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 		new ByteCountingCallbackInputStreamWrapper(listener, dummyInputStream);
 	}
 
+	@SuppressWarnings("resource")
 	@Test(expected = IllegalArgumentException.class)
 	public void testByteCountingCallbackInputStreamWrapperNullStream() {
 		InputStream dummyInputStream = null;

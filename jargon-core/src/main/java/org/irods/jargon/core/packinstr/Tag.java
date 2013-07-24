@@ -87,7 +87,7 @@ public class Tag implements Cloneable {
 		this.value = String.valueOf(value);
 	}
 
-	public void setValue(String value, final boolean decode) {
+	public void setValue(final String value, final boolean decode) {
 		if (value == null) {
 			this.value = null;
 			return;
@@ -148,7 +148,7 @@ public class Tag implements Cloneable {
 		this.value = value;
 	}
 
-	private void evaluateCache(StringBuilder sb, StringBuilder cache) {
+	private void evaluateCache(final StringBuilder sb, final StringBuilder cache) {
 
 		if (cache.length() == 0) {
 			// do nothing, shouldn't happen
@@ -361,7 +361,7 @@ public class Tag implements Cloneable {
 		return parsed.toString();
 	}
 
-	String escapeChars(String out) {
+	String escapeChars(final String out) {
 		if (out == null) {
 			return null;
 		}

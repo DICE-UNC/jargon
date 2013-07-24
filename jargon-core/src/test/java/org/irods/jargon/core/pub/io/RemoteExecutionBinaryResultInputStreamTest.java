@@ -196,6 +196,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 	}
 
+	@SuppressWarnings("resource")
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoteExecutionBinaryResultInputStreamNullCommands()
 			throws Exception {
@@ -205,6 +206,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 	}
 
+	@SuppressWarnings("resource")
 	@Test(expected = IllegalArgumentException.class)
 	public void testRemoteExecutionBinaryResultInputStreamZeroDescriptor()
 			throws Exception {

@@ -54,7 +54,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Specific query for coll listing with ACLs
 	 */
 	public static final String SHOW_COLL_ACLS = "ilsLACollections";
-	
+
 	public static final String SHOW_DATA_OBJ_ACLS = "ilsLADataObjects";
 
 	/**

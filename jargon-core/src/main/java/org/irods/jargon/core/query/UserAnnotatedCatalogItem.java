@@ -10,7 +10,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject{
+public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject {
 
 	private final MetadataDomain metadataDomain;
 	private final String domainUniqueName;

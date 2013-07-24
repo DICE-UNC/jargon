@@ -35,9 +35,6 @@ public class IRODSGenQueryBuilder {
 	 */
 	private final boolean computeTotalRowCount;
 
-	@SuppressWarnings("unused")
-	private final ExtensibleMetaDataMapping extensibleMetadataMapping;
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -81,7 +78,6 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
 		computeTotalRowCount = false;
@@ -112,7 +108,6 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase, final boolean computeTotalRowCount,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		this.upperCase = upperCase;
 		this.computeTotalRowCount = computeTotalRowCount;
@@ -132,7 +127,6 @@ public class IRODSGenQueryBuilder {
 	 */
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
-		this.extensibleMetadataMapping = extensibleMetadataMapping;
 		this.distinct = distinct;
 		upperCase = false;
 		computeTotalRowCount = false;

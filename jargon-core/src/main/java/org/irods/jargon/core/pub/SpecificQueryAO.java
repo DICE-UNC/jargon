@@ -119,8 +119,9 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * 
 	 * <p/>
 	 * 
-	 * This variant supports a common user practice with specific query, where the provided SQL has parameterized options for
-	 * offset and result set size, for example, this query:
+	 * This variant supports a common user practice with specific query, where
+	 * the provided SQL has parameterized options for offset and result set
+	 * size, for example, this query:
 	 * 
 	 * <code>
 	 * SELECT c.parent_coll_name, c.coll_name, c.create_ts, c.modify_ts, c.coll_id, c.coll_owner_name, c.coll_owner_zone, c.coll_type,
@@ -128,8 +129,9 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *  JOIN r_user_main u ON a.user_id = u.user_id WHERE c.parent_coll_name = ? LIMIT ? OFFSET ?
 	 * </code>
 	 * 
-	 * The 'userDefinedOffset' is a clue that sends this OFFSET value to the code that prepares the returned result set, so that the 'count' fields
-	 * in the result accurately reflect the 
+	 * The 'userDefinedOffset' is a clue that sends this OFFSET value to the
+	 * code that prepares the returned result set, so that the 'count' fields in
+	 * the result accurately reflect the
 	 * 
 	 * 
 	 * @param specificQuery

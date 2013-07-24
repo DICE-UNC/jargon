@@ -644,25 +644,28 @@ public class MiscIRODSUtils {
 		}
 
 	}
-	
+
 	/**
-	 * build a user home directory path (with no trailing slash) based on the common /zone/home/userName scheme given an iRODS account
-	 * @param irodsAccount {@link IRODSAcocunt} for the given user
+	 * build a user home directory path (with no trailing slash) based on the
+	 * common /zone/home/userName scheme given an iRODS account
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAcocunt} for the given user
 	 * @return <code>String</code> with the iRODS user home directory path
 	 */
-	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(final IRODSAccount irodsAccount) {
+	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(
+			final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		StringBuilder sb = new StringBuilder();
 		sb.append('/');
 		sb.append(irodsAccount.getZone());
 		sb.append("/home/");
 		sb.append(irodsAccount.getUserName());
 		return sb.toString();
-		
-		
+
 	}
 
 	/**
@@ -690,9 +693,10 @@ public class MiscIRODSUtils {
 		}
 
 	}
-	
+
 	/**
 	 * Create a truncated file name suitable for display in interfaces
+	 * 
 	 * @param fileName
 	 * @return
 	 */
