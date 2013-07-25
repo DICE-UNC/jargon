@@ -91,4 +91,30 @@ public interface MountedCollectionAO {
 			String absolutePathToMountedCollection)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * Create a file system mount point in iRODS. Mounting the file system at
+	 * the given local absolute path on the server to the given collection.
+	 * <p/>
+	 * Be aware that this is a physical file path on the iRODS server in
+	 * question, this does not mount a local (to the client) file system!
+	 * <p/>
+	 * See https://www.irods.org/index.php/Mounted_iRODS_Collection for notes on
+	 * mounted collections
+	 * 
+	 * @param absolutePhysicalPathOnServer
+	 *            <code>String</code> with the absolute path to the local file
+	 *            system (local to the iRODS server) that is to be mounted.
+	 * @param absoluteIRODSTargetPathToBeMounted
+	 *            <code>String</code> with the iRODS absolute path to the new
+	 *            mounted collection
+	 * @param storageResource
+	 *            <code>String</code> with the required storage resource for the
+	 *            mount
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
+			String absoluteIRODSTargetPathToBeMounted, String storageResource)
+			throws FileNotFoundException, JargonException;
+
 }

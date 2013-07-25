@@ -1,5 +1,5 @@
 package org.irods.jargon.core.utils;
 public final class JargonVersion {
- public static String VERSION="b1182-workflow";
- public static String BUILD_TIME="20130724-1528";
+ public static String VERSION="3.3.3-workflow-SNAPSHOT";
+ public static String BUILD_TIME="20130725-0854";
 }

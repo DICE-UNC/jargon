@@ -48,6 +48,27 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create a dataObjInp for a mounted filesystem
+	 * 
+	 * @param localFileSystemAbsolutePath
+	 *            <code>String</code> with a local filesystem absolute path
+	 * @param irodsMountedCollectionAbsolutePath
+	 *            <code>String</code> with the irods collection to be mounted
+	 * @param destRescName
+	 *            <code>String</code> with the storage resource
+	 * @return
+	 */
+	public static DataObjInpForMcoll instanceForFileSystemMount(
+			final String localFileSystemAbsolutePath,
+			final String irodsMountedCollectionAbsolutePath,
+			final String destRescName) {
+
+		return new DataObjInpForMcoll(localFileSystemAbsolutePath,
+				irodsMountedCollectionAbsolutePath, COLL_TYPE_MOUNT,
+				destRescName);
+	}
+
+	/**
 	 * Create a packing instruction to mount a soft link
 	 * 
 	 * @param sourceFileAbsolutePath

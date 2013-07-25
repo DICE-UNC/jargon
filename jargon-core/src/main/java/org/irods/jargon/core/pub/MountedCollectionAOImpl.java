@@ -216,6 +216,55 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 	}
 
+	@Override
+	public void createMountedFileSystemCollection(
+			final String absolutePhysicalPathOnServer,
+			final String absoluteIRODSTargetPathToBeMounted,
+			final String storageResource) throws FileNotFoundException,
+			JargonException {
+
+		log.info("createMountedFileSystemCollection()");
+
+		if (absolutePhysicalPathOnServer == null
+				|| absolutePhysicalPathOnServer.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePhysicalPathOnServer");
+		}
+
+		if (absoluteIRODSTargetPathToBeMounted == null
+				|| absoluteIRODSTargetPathToBeMounted.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absoluteIRODSTargetPathToBeMounted");
+		}
+
+		if (storageResource == null || storageResource.isEmpty()) {
+			throw new IllegalArgumentException("null or empty storageResource");
+		}
+
+		log.info("absolutePhysicalPathOnServer:{}",
+				absolutePhysicalPathOnServer);
+		log.info("absoluteIRODSTargetPathToBeMounted:{}",
+				absoluteIRODSTargetPathToBeMounted);
+
+		getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+
+		log.info("making the directory for the mount if not exists...");
+		IRODSFile mountColl = getIRODSFileFactory().instanceIRODSFile(
+				absoluteIRODSTargetPathToBeMounted);
+		mountColl.mkdirs();
+		log.info("...dirs made");
+
+		log.info("all is well, make the call to mount file system...");
+		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
+				.instanceForFileSystemMount(absolutePhysicalPathOnServer,
+						absoluteIRODSTargetPathToBeMounted, storageResource);
+
+		getIRODSProtocol().irodsFunction(dataObjInp);
+		log.debug("file system mount successful");
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

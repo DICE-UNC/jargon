@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -362,6 +363,179 @@ public class MountedCollectionAOImplTest {
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
 						irodsAccount);
 		mountedCollectionAO.createASoftLink("hello", "");
+
+	}
+
+	@Test
+	public void testCreateAndRemoveMountedFileSystem() throws Exception {
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testCreateAndRemoveMountedFileSystem", ".txt", 10, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// FIXME: right now no errors means success. will test further in
+		// listing methods
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankResource()
+			throws Exception {
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankSource()
+			throws Exception {
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("",
+				targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullSource()
+			throws Exception {
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(null,
+				targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankTarget()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("source", "",
+				"resc");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullTarget()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("source", null,
+				"resc");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullResource()
+			throws Exception {
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection, null);
 
 	}
 
