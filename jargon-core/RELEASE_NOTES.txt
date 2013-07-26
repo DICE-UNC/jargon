@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
-*'''Date''': 07/23/2013
-*'''Release Version''': 3.3.1 Release
-*'''git tag''': 3.3.1-RELEASE
+*'''Date''': 
+*'''Release Version''': 3.3.2 snapshot with eirods
+*'''git tag''': 3.3.2-snapshot
 
 ==News==
 
-Release of Jargon, representing the iRODS 3.3 release compatibility
+Release of Jargon, representing the iRODS 3.3/EIRODS 3.0 release compatibility
 
 
 =======
@@ -36,81 +36,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
- *[#1263] ACL retrieval query and the user lookup queries, the method queries the zone of the user and not the zone containing the collection
- **Added code to properly query the permissions as they exist on the current zone
- 
-*[#1139] Spaces at the begin or end of a data object name will cause an exception
-**removed trim() statements in query building to handle intended spaces in file names.  Note that there may be a bug for collection names with embedded spaces, this is ignored in the JUNit tests for CollectionAOImpl, and that issue has been routed to iRODS for now.
- 
-*[#1211] Re: [iROD-Chat:9536] jargon mangling UTF-8 characters
-**completed wiring codebase into jargon.properties settings
-
-*[#1358] hbm2ddl maven build errors
-**remove htm2ddl maven build step, not really used, caused maven build errors.  We might revisit this later with the new conveyor framework.
-
-*[#1371] error with cache using griffin
-**Handle GSI login in caching when using Griffin so that zone name can be null.  This will instead cache on host name
-
-*[#1372] continuation not propagated for specific query
-**Added continuation code to specific query
-
-*[#1373] alias lookup failing on specific query
-**Added additional lookup tests for specific queries that contained special characters (returns and spaces) in the query string
-**Added InvalidParameterException and checks for duplicate aliases
-**Propagate additional message information in ErrorScanner and IRODSCommand processing
-**Clarified alias versus sql in various specific query AO services
-
-*[#1434] unchecked IRODSFile exceptions bubbling through, should be caught and passed to callback
-**TransferOperationsHelper now greedily traps any exception, including runtime and io exception, in its processing, so that they may be passed back to the callback listener.  This helps trap errors that were 'leaking' and not making it to the callback listeners in iDrop.
- 
-*[#1468] unable to load cart in idrop lite from idrop web
-**Data cache feature used by shopping cart in idrop lite defaults to purge old requests, but this can be problematic if there is a lot of clock drift, so instead of a couple of minutes, the cleanup now purges files based on a number of days, making it much less likely that files are deleted at the wrong time.  This clock slop was causing the cart to not be available in some cases because it was purged before access
-
-*[#1410] -92111 errors accessing zone collections when zone is down
-**Added zone unavailable exception
-
-*[#1555] truncation of user DN when adding using GenAdminPI add user, works with GenAdmin for aua
-**UserAO (when adding user) uses 'iadmin aua' call instead of add user call to set DN.  This is an overhead for an iRODS bug.
-
-*[#1553] faulty sl4j bindings
-**Removed explicit binding on log4j by removing binding library from maven dependencies
-
-*[#1575] [iROD-Chat:10314] jargon-core permissions issue 
-**Removed canRead and canWrite checks from IRODSFileFactory until it can also consider group permissions. This will be re-added in the next release.
-**Added group permission lookup to DataObjectAO.getPermissionForDataObject() methods and IRODSFile canRead and canWrite methods.  We can add this to the list methods as well in a later feature
-
-*[#1560] counts of data objects under collections skewed by replicas
-**Added counts of files and counts of collections methods to CollectionAndDataObjectListAndSearchAO.  Made queries able to ignore replicas in the counts.
-
-*[#1317] fix trim statements in irodsfileImpl
-**Remove any trim() statements from iRODS absolute paths to not assume that spaces are never embedded
-
-*[#1460] cross platform test fixes
-**More testing and fixes for cross-zone testing
-
-Plus clean runs of FindBugs and PMD and misc cleanups and formatting
 
 ==Features==
 
-*[#1264] [iROD-Chat:9666] Referencing Data Objects
-**Added findById() methods to DataObjectAO and CollectionAO
-
-*[#1250] jargon/idrop performance testing and optimization for 3.3.2
-**Added cache of server properties in IRODSSession to avoid repreated queries for same host/zone
-
-*[#902] IP - ils -A performance fix
-**Add zoneHint capability to specific query
-**Implement optional specific query solution for ils which does not expand group membership
-
-*[#1392] remove icommands from remaining unit tests
-**Remove wrapped icommands from remaining unit tests
-
-*[#1392] Resource AVU methods to add and remove metadata from resources
-
-*[#1554] user dn not being updated by userAO
-**Added methods to modify user DN, put into user update code to automatically manage DN
-
-*[#1556] up/download performance of idrop web
-**Added new features to Stream2StreamAO for smarter buffering of stream copies
-
+*[#1603] EIRODS 3.0 compatability
 
