@@ -44,6 +44,8 @@ public class TestingPropertiesHelper {
 	public static String IRODS_USER_GROUP_KEY = "test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
 	public static String IRODS_TEST_OPTION_KERBEROS_KEY = "test.option.kerberos";
+	public static String IRODS_TEST_OPTION_REG_FILESYSTEM = "test.option.exercise.filesystem.reg";
+	public static String IRODS_REG_BASEDIR="test.option.mount.basedir";
 	public static String IRODS_FEDERATED_HOST_KEY = "test.federated.irods.host";
 	public static String IRODS_FEDERATED_PORT_KEY = "test.federated.irods.port";
 	public static String IRODS_FEDERATED_ZONE_KEY = "test.federated.irods.zone";
@@ -819,6 +821,21 @@ public class TestingPropertiesHelper {
 		}
 	}
 
+	/**
+	 * Check if optional registration functions that test imcoll operations on physical file systems are supported
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestFileSystemMount(final Properties testingProperties) {
+		String val = (String) testingProperties.get("test.option.exercise.filesystem.mount");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+	
 	/**
 	 * Check if optional registration functions are to be tested (tests must be
 	 * running on a resource server)
