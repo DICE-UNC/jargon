@@ -7,6 +7,7 @@ import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.packinstr.DataObjInpForMcoll;
 import org.irods.jargon.core.packinstr.DataObjInpForUnmount;
 import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
@@ -216,12 +217,19 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.MountedCollectionAO#
+	 * createMountedFileSystemCollection(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
 	@Override
 	public void createMountedFileSystemCollection(
 			final String absolutePhysicalPathOnServer,
 			final String absoluteIRODSTargetPathToBeMounted,
-			final String storageResource) throws FileNotFoundException,
-			JargonException {
+			final String storageResource) throws CollectionNotMountedException,
+			FileNotFoundException, JargonException {
 
 		log.info("createMountedFileSystemCollection()");
 
@@ -260,7 +268,14 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 				.instanceForFileSystemMount(absolutePhysicalPathOnServer,
 						absoluteIRODSTargetPathToBeMounted, storageResource);
 
-		getIRODSProtocol().irodsFunction(dataObjInp);
+		try {
+			getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (UnixFileMkdirException e) {
+			log.error(
+					"unix file level mkdir error, will wrap in collection not mounted exception",
+					e);
+			throw new CollectionNotMountedException(e);
+		}
 		log.debug("file system mount successful");
 
 	}

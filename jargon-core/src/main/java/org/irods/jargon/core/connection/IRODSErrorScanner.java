@@ -24,6 +24,7 @@ import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.exception.SpecificQueryException;
+import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.slf4j.Logger;
@@ -153,6 +154,15 @@ public class IRODSErrorScanner {
 		case FEDERATED_ZONE_NOT_AVAILABLE:
 			throw new ZoneUnavailableException(
 					"the federated zone is not available");
+		case SYS_MOUNT_MOUNTED_COLL_ERR:
+			throw new CollectionNotMountedException(
+					"unable to mount collection, potential duplicate mount");
+		case UNIX_FILE_MKDIR_ERR:
+			throw new UnixFileMkdirException("Exception making unix directory",
+					infoValue);
+		case UNIX_FILE_MKDIR2_ERR:
+			throw new UnixFileMkdirException("Exception making unix directory",
+					infoValue);
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

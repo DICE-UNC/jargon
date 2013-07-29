@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 
@@ -110,11 +111,15 @@ public interface MountedCollectionAO {
 	 * @param storageResource
 	 *            <code>String</code> with the required storage resource for the
 	 *            mount
+	 * @throws CollectionNotMountedException
+	 *             for cases such as duplicate mount points
 	 * @throws FileNotFoundException
+	 *             when local file path to be mounted is not found
 	 * @throws JargonException
 	 */
 	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
 			String absoluteIRODSTargetPathToBeMounted, String storageResource)
-			throws FileNotFoundException, JargonException;
+			throws CollectionNotMountedException, FileNotFoundException,
+			JargonException;
 
 }

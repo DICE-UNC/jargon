@@ -63,8 +63,9 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		// contain the contents of test-data/reg. This is a manual setup step
 
 		String targetCollectionName = "testListFilesInMountedDirMountedx";
-		String localMountDir = "testListFilesInMountedDirLocal";
 		String scratchDir = "testListFilesInMountedDir";
+		String testFilePrefix = "testFile";
+		int count = 10;
 
 		String localCollectionAbsolutePath = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
@@ -75,8 +76,7 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 						+ '/' + scratchDir);
 
 		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
-				localScratchAbsolutePath,
-				"testCreateAndRemoveMountedFileSystem", ".txt", 10, 1, 2);
+				localScratchAbsolutePath, testFilePrefix, ".txt", count, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -114,8 +114,20 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> actual = ao
-				.listDataObjectsUnderPath(targetIrodsCollection, 0);
+				.listDataObjectsUnderPath(targetIrodsCollection + "/"
+						+ scratchDir, 0);
 		Assert.assertFalse("no results", actual.isEmpty());
+
+		int countFoundMine = 0;
+
+		for (CollectionAndDataObjectListingEntry entry : actual) {
+			if (entry.getPathOrName().indexOf(testFilePrefix) > -1) {
+				countFoundMine++;
+			}
+		}
+
+		Assert.assertEquals("did not find all of the files", count,
+				countFoundMine);
 
 	}
 
