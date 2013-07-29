@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': 
-*'''Release Version''': 3.3.2 snapshot with eirods
+*'''Release Version''': 3.3.2 snapshot
 *'''git tag''': 3.3.2-snapshot
 
 ==News==
 
-Release of Jargon, representing the iRODS 3.3/EIRODS 3.0 release compatibility
+Release of Jargon, representing the iRODS 3.3.2 release snapshot
 
 
 =======
@@ -40,5 +40,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Features==
 
-*[#1603] EIRODS 3.0 compatability
 
