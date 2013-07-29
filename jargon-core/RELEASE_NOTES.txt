@@ -36,6 +36,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+*[#1575] fix missing space in jargon_specquery.sh for ilsLACollections
 
 ==Features==
 
