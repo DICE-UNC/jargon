@@ -59,6 +59,7 @@ import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1054,6 +1055,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @return
 	 * @throws OverwriteException
 	 */
+	@Overheaded
+	// [#1606] inconsistent objstat semantics for mounted collections
 	private OverwriteResponse evaluateOverwrite(
 			final File sourceFile,
 			final TransferControlBlock transferControlBlock,
@@ -1062,6 +1065,30 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws OverwriteException {
 		OverwriteResponse overwriteResponse = OverwriteResponse.PROCEED_WITH_NO_FORCE;
 		if (targetFile.exists()) {
+
+			/*
+			 * objstat does not work for mounted collections (see Bug [#1606]
+			 * inconsistent objstat semantics for mounted collections) this
+			 * overhead will always force for puts to a mounted collection
+			 */
+
+			IRODSFile myTargetIRODSFile = (IRODSFile) targetFile;
+			try {
+				if (myTargetIRODSFile.initializeObjStatForFile()
+						.getSpecColType() == SpecColType.MOUNTED_COLL) {
+					log.info("always use force for mounted collections, see comments for Bug 1606");
+					overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
+					return overwriteResponse;
+
+				}
+			} catch (org.irods.jargon.core.exception.FileNotFoundException e) {
+				// ignore, should not happen
+			} catch (JargonException e) {
+				log.error("jargon error checking overwrite", e);
+				throw new JargonRuntimeException(
+						"runtime exception in overwrite handling process", e);
+			}
+
 			log.info(
 					"target file exists, check if overwrite allowed, file is:{}",
 					targetFile.getAbsolutePath());
@@ -2927,9 +2954,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(
-						dataObjectAbsolutePath, currentAvuData,
-						newAvuData);
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
 

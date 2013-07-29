@@ -25,17 +25,14 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		
-	
-		
+
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		
+
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
 			return;
 		}
-		
-		
+
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
@@ -50,32 +47,33 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
 			return;
 		}
-		
+
 		irodsFileSystem.closeAndEatExceptions();
 
 	}
 
 	@Test
 	public void testListFilesInMountedDir() throws Exception {
-		
+
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
 			return;
 		}
-		
-		// this test requires the prop test.option.reg.basedir to be set, and to contain the contents of test-data/reg.  This is a manual setup step
-		
+
+		// this test requires the prop test.option.reg.basedir to be set, and to
+		// contain the contents of test-data/reg. This is a manual setup step
+
 		String targetCollectionName = "testListFilesInMountedDirMountedx";
 		String localMountDir = "testListFilesInMountedDirLocal";
 		String scratchDir = "testListFilesInMountedDir";
 
-		//String localCollectionAbsolutePath = testingProperties.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
-		
-		String localCollectionAbsolutePath = "/home/test1/reg";
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+
+		// String localCollectionAbsolutePath = "/home/test1/reg";
 		String localScratchAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + scratchDir);
-		
-		
+
 		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
 				localScratchAbsolutePath,
 				"testCreateAndRemoveMountedFileSystem", ".txt", 10, 1, 2);
@@ -92,8 +90,9 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
 						irodsAccount);
-		
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		unmountFile.delete();
 
 		mountedCollectionAO.unmountACollection(targetIrodsCollection,
@@ -102,13 +101,14 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		mountedCollectionAO.createMountedFileSystemCollection(
 				localCollectionAbsolutePath, targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
-		
-		
+
 		// put the scratch files to the mount
-		
-		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
-		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection, irodsAccount.getDefaultStorageResource(), null, null);
-		
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(localScratchAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
 
 		CollectionAndDataObjectListAndSearchAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory()
