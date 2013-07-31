@@ -74,6 +74,15 @@ public class IRODSErrorScanner {
 			message = "";
 		}
 
+		// non-zero value, create appropriate exception, first try some ranges
+		// (especially for unix file system exceptions, which can have subcodes
+
+		if (infoValue >= -520013 && infoValue <= -520000) {
+			throw new UnixFileMkdirException("Exception making unix directory",
+					infoValue);
+		}
+
+		// now check specific codes
 		ErrorEnum errorEnum;
 
 		try {
@@ -87,8 +96,20 @@ public class IRODSErrorScanner {
 							+ infoValue, infoValue);
 		}
 
-		// non-zero value, create appropriate exception
+		checkSpecificCodesAndThrowIfExceptionLocated(infoValue, message,
+				errorEnum);
+	}
 
+	/**
+	 * @param infoValue
+	 * @param message
+	 * @param errorEnum
+	 * @throws JargonException
+	 *             or specific child exception of <code>JargonException</code>
+	 */
+	private static void checkSpecificCodesAndThrowIfExceptionLocated(
+			final int infoValue, final String message, final ErrorEnum errorEnum)
+			throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
 			throw new JargonFileOrCollAlreadyExistsException(
@@ -157,12 +178,6 @@ public class IRODSErrorScanner {
 		case SYS_MOUNT_MOUNTED_COLL_ERR:
 			throw new CollectionNotMountedException(
 					"unable to mount collection, potential duplicate mount");
-		case UNIX_FILE_MKDIR_ERR:
-			throw new UnixFileMkdirException("Exception making unix directory",
-					infoValue);
-		case UNIX_FILE_MKDIR2_ERR:
-			throw new UnixFileMkdirException("Exception making unix directory",
-					infoValue);
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {
