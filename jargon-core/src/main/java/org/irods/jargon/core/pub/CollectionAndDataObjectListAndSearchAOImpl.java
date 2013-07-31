@@ -283,10 +283,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		entries.addAll(listCollectionsUnderPath(objStat, 0));
 		entries.addAll(listDataObjectsUnderPath(objStat, 0));
 
-		/*
-		 * if (this.isInstrumented()) { stopWatch.stop(); }
-		 */
-
 		return entries;
 	}
 
@@ -988,11 +984,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.debug("response from function: {}", response.parseTag());
 
 		int totalRecords = response.getTag("totalRowCount").getIntValue();
+		int continueInx = response.getTag("continueInx").getIntValue();
 		log.info("total records:{}", totalRecords);
 
 		List<IRODSQueryResultRow> results = QueryResultProcessingUtils
 				.translateResponseIntoResultSet(response,
-						new ArrayList<String>(), 0, partialStartIndex);
+						new ArrayList<String>(), continueInx, partialStartIndex);
 
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		CollectionAndDataObjectListingEntry listingEntry;
@@ -1005,6 +1002,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.getLongOrZeroFromIRODSValue(row.getColumn(4)));
 			listingEntry.setModifiedAt(IRODSDataConversionUtil
 					.getDateFromIRODSValue(row.getColumn(3)));
+
 			row.getColumn(1);
 
 			listingEntry.setObjectType(ObjectType.COLLECTION);
@@ -1014,6 +1012,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			listingEntry.setParentPath(row.getColumn(0));
 			listingEntry.setPathOrName(row.getColumn(1));
 			listingEntry.setSpecColType(objStat.getSpecColType());
+			listingEntry.setCount(row.getRecordCount());
+			listingEntry.setLastResult(row.isLastResult());
 			entries.add(listingEntry);
 		}
 
@@ -1021,7 +1021,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	// FIXME: refactor with data objects version, duplicate code
 	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWhenSpecColl(
 			final ObjStat objStat, final int partialStartIndex,
 			final String effectiveAbsolutePath) throws JargonException {
@@ -1035,13 +1034,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			specColInfo.setCacheDirty(1);
 		}
 
-		specColInfo.setCollClass(1); // FIXME: ??? what is collClass?
+		specColInfo.setCollClass(1);
 		specColInfo.setCollection(objStat.getCollectionPath());
 		specColInfo.setObjPath(objStat.getObjectPath());
 		specColInfo.setPhyPath(objStat.getObjectPath());
 		specColInfo.setReplNum(objStat.getReplNumber());
-		specColInfo.setType(2); // FIXME: ?? what is type
-		// FIXME: what should reource be?
+		specColInfo.setType(2);
 
 		DataObjInpForQuerySpecColl dataObjInp = DataObjInpForQuerySpecColl
 				.instanceQueryCollections(effectiveAbsolutePath, specColInfo);
@@ -1141,9 +1139,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			}
 		}
 
-		/*
-		 * if (this.isInstrumented()) { stopWatch.stop(); }
-		 */
 		return subdirs;
 	}
 

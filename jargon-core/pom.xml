@@ -101,6 +101,7 @@
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}
 									test.option.exercise.filesystem.mount=${jargon.test.option.exercise.filesystem.mount}
+									test.option.exercise.filesystem.mount.local=${jargon.test.option.exercise.filesystem.mount.local}
 									test.option.distributed.resources=${test.option.distributed.resources}
 									test.option.registration=${test.option.registration}
 									test.option.strictACL=${test.option.strictACL}

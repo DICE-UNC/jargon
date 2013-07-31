@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.MountedCollectionAO;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.User;
@@ -46,15 +47,19 @@ public class IRODSThousandFilesTest {
 	private static IRODSFileSystem irodsFileSystem;
 	private static final String testFilePrefix = "thousandFileTest";
 	private static final String testFileSuffix = ".txt";
+	private static String localAbsPath = "";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
+
 		scratchFileUtils
 				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
+
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
@@ -67,9 +72,10 @@ public class IRODSThousandFilesTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		localAbsPath = absPath + collDir;
 
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ '/' + collDir, testFilePrefix, testFileSuffix, 1000, 20, 500);
+				+ "/" + collDir, testFilePrefix, testFileSuffix, 1000, 20, 500);
 
 		DataTransferOperations dto = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -553,6 +559,71 @@ public class IRODSThousandFilesTest {
 			}
 
 		}
+
+		// System.out.println("got to last entry");
+
+		// here we just want to know that we made it out of the loop
+		Assert.assertTrue(true);
+
+	}
+
+	/**
+	 * As a practical matter, this test is only run if the test runs on the same
+	 * machine as the iRODS physical file system.
+	 * 
+	 * The prop test.option.exercise.filesystem.mount.local must be true in
+	 * testing properties, as configured in your settings.xml file
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListFilesAndCollectionsUnderMountedFilePath()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
+		if (!testingPropertiesHelper
+				.isTestFileSystemMountLocal(testingProperties)) {
+			return;
+		}
+
+		String testIrodsMountPoint = "testListFilesAndCollectionsUnderMountedFilePath";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		props.setUsingSpecificQueryForCollectionListingWithPermissions(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testIrodsMountPoint);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO
+				.createMountedFileSystemCollection(localAbsPath,
+						targetIrodsCollection,
+						irodsAccount.getDefaultStorageResource());
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
 
 		// System.out.println("got to last entry");
 
