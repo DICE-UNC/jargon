@@ -687,6 +687,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
+		
+		log.info("listCollectionsUnderPath()");
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");

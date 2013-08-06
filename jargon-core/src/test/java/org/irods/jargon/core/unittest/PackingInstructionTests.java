@@ -6,7 +6,6 @@ import org.irods.jargon.core.packinstr.DataObjCloseInpTest;
 import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpForMcollTest;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStatTest;
-import org.irods.jargon.core.packinstr.DataObjInpForQuerySpecCollTest;
 import org.irods.jargon.core.packinstr.DataObjInpForRegTest;
 import org.irods.jargon.core.packinstr.DataObjInpForUnmountTest;
 import org.irods.jargon.core.packinstr.DataObjInpForUnregisterTest;
@@ -52,7 +51,7 @@ import org.junit.runners.Suite;
 		DataObjInpForUnregisterTest.class, DataObjInpForMcollTest.class,
 		DataObjInpForUnmountTest.class, ReconnMsgTest.class,
 		SpecificQueryInpTest.class, PamAuthRequestInpTest.class,
-		SSLStartInpTest.class, SSLEndInpTest.class, DataObjInpForQuerySpecCollTest.class })
+		SSLStartInpTest.class, SSLEndInpTest.class })
 public class PackingInstructionTests {
 
 }

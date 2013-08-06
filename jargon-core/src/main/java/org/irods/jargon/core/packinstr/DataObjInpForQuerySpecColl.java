@@ -19,10 +19,11 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	public static final int QUERY_SPEC_COLL_API_NBR = 645;
 
 	private String fileAbsolutePath = "";
-	private long offset = 0L;
-	private int operationType = 0;
+	private final long offset = 0L;
+	private final int operationType = 0;
 	private String selObjType = null;
-	private SpecColInfo specColInfo;
+	private final SpecColInfo specColInfo;
+	private final int continueInx;
 
 	/**
 	 * Create the DataObjInp packing instruction to query data objects in
@@ -30,13 +31,43 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * 
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
+	 * 
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
-			final String fileAbsolutePath) throws JargonException {
-		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj", null);
+			final String fileAbsolutePath, final SpecColInfo specColInfo)
+			throws JargonException {
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
+				specColInfo, 0);
+	}
+
+	/**
+	 * Create the DataObjInp packing instruction to query data objects in
+	 * special collections as a continuation
+	 * 
+	 * @param fileAbsolutePath
+	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
+	 * 
+	 * @param continueInx
+	 *            <code>int</code> with the continueInx value from a previous
+	 *            request
+	 * 
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * 
+	 * @throws JargonException
+	 */
+	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
+			final String fileAbsolutePath, final SpecColInfo specColInfo,
+			final int continueInx) throws JargonException {
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
+				specColInfo, continueInx);
 	}
 
 	/**
@@ -45,6 +76,8 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * 
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -57,12 +90,38 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 		}
 
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
-				specColInfo);
+				specColInfo, 0);
+	}
+
+	/**
+	 * Create the DataObjInp packing instruction to query collections in special
+	 * collections
+	 * 
+	 * @param fileAbsolutePath
+	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
+	 * @param continueInx
+	 *            <code>int</code> with the continueInx value from a previous
+	 *            request
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * @throws JargonException
+	 */
+	public static final DataObjInpForQuerySpecColl instanceQueryCollections(
+			final String fileAbsolutePath, final SpecColInfo specColInfo,
+			final int continueInx) throws JargonException {
+		if (specColInfo == null) {
+			throw new IllegalArgumentException("null specColInfo");
+		}
+
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
+				specColInfo, continueInx);
 	}
 
 	private DataObjInpForQuerySpecColl(final String fileAbsolutePath,
-			final String selObjType, final SpecColInfo specColInfo)
-			throws JargonException {
+			final String selObjType, final SpecColInfo specColInfo,
+			final int continueInx) throws JargonException {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
@@ -74,10 +133,15 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 			throw new IllegalArgumentException("selObjType is null or empty");
 		}
 
+		if (continueInx < 0) {
+			throw new IllegalArgumentException("continueInx < 0");
+		}
+
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.selObjType = selObjType;
 		this.specColInfo = specColInfo;
 		this.setApiNumber(QUERY_SPEC_COLL_API_NBR);
+		this.continueInx = continueInx;
 	}
 
 	@Override
@@ -86,7 +150,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
 				new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()),
 				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
+				new Tag(DataObjInp.OPEN_FLAGS, continueInx),
 				new Tag(DataObjInp.OFFSET, offset),
 				new Tag(DataObjInp.DATA_SIZE, 0),
 				new Tag(DataObjInp.NUM_THREADS, 0),

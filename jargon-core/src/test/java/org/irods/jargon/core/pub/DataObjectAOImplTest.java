@@ -1829,7 +1829,7 @@ public class DataObjectAOImplTest {
 	public final void testGetParallelWithIntraFileCallbacks() throws Exception {
 
 		int testFileLen = 92 * 1024 * 1024;
-		
+
 		// generate a local scratch file
 		String testFileName = "testGetParallelWithIntraFileCallbacks.doc";
 		String absPath = scratchFileUtils
@@ -1916,10 +1916,10 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-
 		String getFileName = "returnedTestGetFileGTParallelMaxNoParallelInOptions.doc";
 		String getResultLocalPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/return")
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/return")
 				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
@@ -1960,9 +1960,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
 				transferControlBlock, transferStatusCallbackListener);
 
-		Assert.assertTrue("local file that was returned does not exist", localFile.exists());
-		Assert.assertEquals("local file wrong length", testFileLen, localFile.length());
-		
+		Assert.assertTrue("local file that was returned does not exist",
+				localFile.exists());
+		Assert.assertEquals("local file wrong length", testFileLen,
+				localFile.length());
 
 	}
 
@@ -4649,7 +4650,7 @@ public class DataObjectAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						40000 * 1024);
+						80000 * 1024);
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

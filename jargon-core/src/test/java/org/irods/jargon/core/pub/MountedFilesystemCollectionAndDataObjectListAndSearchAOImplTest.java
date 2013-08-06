@@ -6,8 +6,11 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -53,7 +56,7 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
-	public void testListFilesInMountedDir() throws Exception {
+	public void testListInMountedDirDataObjs() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
 			return;
@@ -62,15 +65,13 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		// this test requires the prop test.option.reg.basedir to be set, and to
 		// contain the contents of test-data/reg. This is a manual setup step
 
-		String targetCollectionName = "testListFilesInMountedDirMountedx";
-		String scratchDir = "testListFilesInMountedDir";
+		String scratchDir = "testListInMountedDirDataObjs";
 		String testFilePrefix = "testFile";
 		int count = 10;
 
 		String localCollectionAbsolutePath = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
 
-		// String localCollectionAbsolutePath = "/home/test1/reg";
 		String localScratchAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + scratchDir);
@@ -83,8 +84,7 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -114,7 +114,173 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> actual = ao
-				.listDataObjectsUnderPath(targetIrodsCollection + "/"
+				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection
+						+ "/" + scratchDir);
+		Assert.assertFalse("no results", actual.isEmpty());
+
+		Assert.assertEquals("did not find all of the files", count,
+				actual.size());
+
+		// inspect first data object
+
+		CollectionAndDataObjectListingEntry entry = actual.get(0);
+
+		Assert.assertEquals("wrong parent name", targetIrodsCollection + "/"
+				+ scratchDir, entry.getParentPath());
+		Assert.assertEquals("should be data object", ObjectType.DATA_OBJECT,
+				entry.getObjectType());
+		Assert.assertEquals("should be mounted coll",
+				ObjStat.SpecColType.MOUNTED_COLL, entry.getSpecColType());
+		Assert.assertEquals("should have a count of 1", 1, entry.getCount());
+
+		// inspect last data object
+
+		entry = actual.get(actual.size() - 1);
+		Assert.assertEquals("should have a count equal to size", actual.size(),
+				entry.getCount());
+		Assert.assertTrue("should be last record", entry.isLastResult());
+
+	}
+
+	/**
+	 * Looking for any leaks in file handles
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListCollectionsInMountedDirWithMultiplePagesMultipleTimes()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
+		// this test requires the prop test.option.reg.basedir to be set, and to
+		// contain the contents of test-data/reg. This is a manual setup step
+
+		String targetCollectionName = "testListCollectionsInMountedDirWithMultiplePagesMultipleTimes";
+		String scratchDir = "testListCollectionsInMountedDirWithMultiplePagesMultipleTimes";
+		String testFilePrefix = "subdir";
+		int count = 300;
+		int times = 100;
+
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		unmountFile.delete();
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// mkdirs under the mount
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, targetCollectionName);
+		dirFile.mkdirs();
+		String testDirPath = dirFile.getAbsolutePath();
+
+		for (int i = 0; i < count; i++) {
+			dirFile = irodsFileFactory.instanceIRODSFile(testDirPath,
+					testFilePrefix + i);
+			dirFile.mkdir();
+		}
+
+		CollectionAndDataObjectListAndSearchAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		for (int i = 0; i < times; i++) {
+			ao.listCollectionsUnderPath(targetIrodsCollection + "/"
+					+ scratchDir, 0);
+		}
+
+		// looking for run w/o exception
+		Assert.assertTrue(true);
+
+	}
+
+	@Test
+	public void testListCollectionsInMountedDirWithMultiplePages()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
+		// this test requires the prop test.option.reg.basedir to be set, and to
+		// contain the contents of test-data/reg. This is a manual setup step
+
+		String targetCollectionName = "testListCollectionsInMountedDirWithMultiplePages";
+		String scratchDir = "testListCollectionsInMountedDirWithMultiplePages";
+		String testFilePrefix = "subdir";
+		int count = 200;
+
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		unmountFile.delete();
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// mkdirs under the mount
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, targetCollectionName);
+		dirFile.mkdirs();
+		String testDirPath = dirFile.getAbsolutePath();
+
+		for (int i = 0; i < count; i++) {
+			dirFile = irodsFileFactory.instanceIRODSFile(testDirPath,
+					testFilePrefix + i);
+			dirFile.mkdir();
+		}
+
+		CollectionAndDataObjectListAndSearchAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> actual = ao
+				.listCollectionsUnderPath(targetIrodsCollection + "/"
 						+ scratchDir, 0);
 		Assert.assertFalse("no results", actual.isEmpty());
 

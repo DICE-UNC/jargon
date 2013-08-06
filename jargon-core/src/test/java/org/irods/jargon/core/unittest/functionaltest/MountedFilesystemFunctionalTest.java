@@ -130,22 +130,24 @@ public class MountedFilesystemFunctionalTest {
 			}
 		}
 
-		Assert.assertEquals("did not find all of the files for first page", 100,
-				countFoundMine);
-		CollectionAndDataObjectListingEntry lastEntry = actual.get(actual.size() -1);
-		
-		Assert.assertFalse("this is last entry", lastEntry.isLastResult());
-		
-		
-		// get next page
-		
-		actual = ao.listDataObjectsUnderPath(targetIrodsCollection, lastEntry.getCount());
+		Assert.assertEquals("did not find all of the files for first page",
+				100, countFoundMine);
+		CollectionAndDataObjectListingEntry lastEntry = actual.get(actual
+				.size() - 1);
 
+		Assert.assertFalse("this is last entry", lastEntry.isLastResult());
+
+		// get next page
+
+		actual = ao.listDataObjectsUnderPath(targetIrodsCollection,
+				lastEntry.getCount());
 
 	}
-	
+
 	/**
-	 * Check for errors not closing results by asking for a count and getting a partial page n number of times
+	 * Check for errors not closing results by asking for a count and getting a
+	 * partial page n number of times
+	 * 
 	 * @throws Exception
 	 */
 	@Test
@@ -210,16 +212,12 @@ public class MountedFilesystemFunctionalTest {
 		CollectionAndDataObjectListAndSearchAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		
-		
-		
-		
+
 		for (int i = 0; i < iterations; i++) {
-		ao
-				.listDataObjectsUnderPath(targetIrodsCollection + "/"
-						+ scratchDir, 0);
+			ao.listDataObjectsUnderPath(targetIrodsCollection + "/"
+					+ scratchDir, 0);
 		}
-		
+
 	}
 
 }
