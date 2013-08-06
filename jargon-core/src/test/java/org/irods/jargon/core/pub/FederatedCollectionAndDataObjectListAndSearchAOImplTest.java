@@ -45,7 +45,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 
-
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;
 		}
@@ -698,14 +697,17 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
-		// Assert.assertEquals(count * 2, entries.size());
-
-		// bounce thru entries, each has two permissions
-
-		// FIXME: currently ignored
 		for (CollectionAndDataObjectListingEntry entry : entries) {
-			Assert.assertEquals("did not have the two permissions", 3, entry
-					.getUserFilePermission().size());
+			System.out.println("bad entry?:" + entry);
+			if (entry.isCollection()) {
+				Assert.assertEquals(
+						"did not have the three permissions for collection", 3,
+						entry.getUserFilePermission().size());
+			} else {
+				Assert.assertEquals(
+						"did not have the  permissions for data objects", 3,
+						entry.getUserFilePermission().size());
+			}
 		}
 
 	}
