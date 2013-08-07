@@ -7,6 +7,9 @@
 ==News==
 
 
+Release of Jargon, representing the iRODS 3.3.2 release snapshot
+
+
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 

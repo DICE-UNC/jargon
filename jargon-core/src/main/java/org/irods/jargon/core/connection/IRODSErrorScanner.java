@@ -25,6 +25,7 @@ import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.exception.SpecificQueryException;
 import org.irods.jargon.core.exception.UnixFileMkdirException;
+import org.irods.jargon.core.exception.UnixFileRenameException;
 import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.slf4j.Logger;
@@ -80,9 +81,11 @@ public class IRODSErrorScanner {
 		if (infoValue >= -520013 && infoValue <= -520000) {
 			throw new UnixFileMkdirException("Exception making unix directory",
 					infoValue);
+		} else if (infoValue >= -528036 && infoValue <= -528000) {
+			throw new UnixFileRenameException(
+					"Exception renaming file in file system", infoValue);
 		}
 
-		// now check specific codes
 		ErrorEnum errorEnum;
 
 		try {

@@ -705,8 +705,9 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 						entry.getUserFilePermission().size());
 			} else {
 				Assert.assertEquals(
-						"did not have the two permissions for data objects", 2,
-						entry.getUserFilePermission().size());
+
+				"did not have the  permissions for data objects", 3, entry
+						.getUserFilePermission().size());
 			}
 		}
 
