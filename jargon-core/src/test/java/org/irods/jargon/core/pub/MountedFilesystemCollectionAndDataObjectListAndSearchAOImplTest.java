@@ -297,4 +297,58 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
+	@Test
+	public void testListMissingCollectionInMountedDir() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
+		// this test requires the prop test.option.reg.basedir to be set, and to
+		// contain the contents of test-data/reg. This is a manual setup step
+
+		String targetCollectionName = "testListMissingCollectionInMountedDir";
+		String testSubdir = "subdir";
+
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		unmountFile.delete();
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile dirFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, targetCollectionName);
+		dirFile.mkdirs();
+		String testDirPath = dirFile.getAbsolutePath();
+
+		CollectionAndDataObjectListAndSearchAO ao = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> actual = ao
+				.listCollectionsUnderPath(testDirPath + "/" + testSubdir, 0);
+		Assert.assertTrue("should be empty collection", actual.isEmpty());
+	}
+
 }

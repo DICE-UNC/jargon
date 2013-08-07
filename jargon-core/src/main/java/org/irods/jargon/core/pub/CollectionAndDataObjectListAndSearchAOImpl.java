@@ -36,6 +36,7 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -684,10 +685,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * softlink
 	 */
 	@Override
+	@Overheaded
+	// Bug [#1606] inconsistent objstat semantics for mounted collections
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
 			throws FileNotFoundException, JargonException {
-		
+
 		log.info("listCollectionsUnderPath()");
 
 		if (absolutePathToParent == null) {

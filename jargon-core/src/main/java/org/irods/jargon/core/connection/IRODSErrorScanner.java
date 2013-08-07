@@ -181,6 +181,8 @@ public class IRODSErrorScanner {
 		case SYS_MOUNT_MOUNTED_COLL_ERR:
 			throw new CollectionNotMountedException(
 					"unable to mount collection, potential duplicate mount");
+		case SYS_SPEC_COLL_OBJ_NOT_EXIST:
+			throw new DataNotFoundException("Special collection not found");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {
