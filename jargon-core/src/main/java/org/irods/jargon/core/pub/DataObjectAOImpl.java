@@ -1072,21 +1072,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			 * overhead will always force for puts to a mounted collection
 			 */
 
-			IRODSFile myTargetIRODSFile = (IRODSFile) targetFile;
-			try {
-				if (myTargetIRODSFile.initializeObjStatForFile()
-						.getSpecColType() == SpecColType.MOUNTED_COLL) {
-					log.info("always use force for mounted collections, see comments for Bug 1606");
-					overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
-					return overwriteResponse;
+			if (targetFile instanceof IRODSFile) {
+				IRODSFile myTargetIRODSFile = (IRODSFile) targetFile;
+				try {
+					if (myTargetIRODSFile.initializeObjStatForFile()
+							.getSpecColType() == SpecColType.MOUNTED_COLL) {
+						log.info("always use force for mounted collections, see comments for Bug 1606");
+						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
+						return overwriteResponse;
 
+					}
+				} catch (org.irods.jargon.core.exception.FileNotFoundException e) {
+					// ignore, should not happen
+				} catch (JargonException e) {
+					log.error("jargon error checking overwrite", e);
+					throw new JargonRuntimeException(
+							"runtime exception in overwrite handling process",
+							e);
 				}
-			} catch (org.irods.jargon.core.exception.FileNotFoundException e) {
-				// ignore, should not happen
-			} catch (JargonException e) {
-				log.error("jargon error checking overwrite", e);
-				throw new JargonRuntimeException(
-						"runtime exception in overwrite handling process", e);
 			}
 
 			log.info(
