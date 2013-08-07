@@ -44,6 +44,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1626] order by missing in list data obj acl causing permissions to be off
 **Add explicit order by to specific queries in jargon_specquery.sh and update unit tests for listings with permissions
 
+*[#1628] intermittent -528036 errors on delete of collections
+**Added overhead for iRODS bug with intermittent deletes of collections in unit test running (added overhead to IRODSTestSetupUtilities)
+
+
 ==Features==
 
 
