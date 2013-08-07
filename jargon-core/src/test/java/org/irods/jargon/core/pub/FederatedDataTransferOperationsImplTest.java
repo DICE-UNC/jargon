@@ -4,8 +4,10 @@ import java.io.File;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -155,8 +157,12 @@ public class FederatedDataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						crossZoneAccount);
 		File localFile = new File(localCollectionAbsolutePath);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 
-		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, tcb);
 		destFile.close();
 
 		destFile = irodsFileFactory
