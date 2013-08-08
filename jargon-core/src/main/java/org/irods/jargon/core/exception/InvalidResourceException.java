@@ -21,7 +21,7 @@ public class InvalidResourceException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public InvalidResourceException(String message) {
+	public InvalidResourceException(final String message) {
 		super(message);
 	}
 
@@ -29,14 +29,14 @@ public class InvalidResourceException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public InvalidResourceException(String message, Throwable cause) {
+	public InvalidResourceException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public InvalidResourceException(Throwable cause) {
+	public InvalidResourceException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -45,8 +45,8 @@ public class InvalidResourceException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidResourceException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -54,8 +54,8 @@ public class InvalidResourceException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidResourceException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -63,8 +63,8 @@ public class InvalidResourceException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidResourceException(String message,
-			int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

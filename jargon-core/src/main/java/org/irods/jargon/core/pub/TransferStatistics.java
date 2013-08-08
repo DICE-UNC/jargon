@@ -38,7 +38,7 @@ public class TransferStatistics {
 		return totalBytes;
 	}
 
-	public void setTotalBytes(long totalBytes) {
+	public void setTotalBytes(final long totalBytes) {
 		this.totalBytes = totalBytes;
 	}
 
@@ -46,7 +46,7 @@ public class TransferStatistics {
 		return seconds;
 	}
 
-	public void setSeconds(int seconds) {
+	public void setSeconds(final int seconds) {
 		this.seconds = seconds;
 	}
 
@@ -54,7 +54,7 @@ public class TransferStatistics {
 		return kbPerSecond;
 	}
 
-	public void setKbPerSecond(int kbPerSecond) {
+	public void setKbPerSecond(final int kbPerSecond) {
 		this.kbPerSecond = kbPerSecond;
 	}
 

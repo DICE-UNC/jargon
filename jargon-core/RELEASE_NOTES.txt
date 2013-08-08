@@ -3,10 +3,12 @@
 *'''Release Version''': x.x.x transfer engine upgrade
 *'''git tag''': 964-grid-memory
 
+
 ==News==
 
-Jargon-core implements the iRODS protocol, and allows development of iRODS-enabled Java applications.  This API is especially useful for developing
-mid-tier applications and services, as well as desktop-clients (such as iDROP).  These libraries also provide a foundation for a new set of interfaces that will come with iRODS.
+
+Release of Jargon, representing the iRODS 3.3.2 release snapshot
+
 
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
@@ -17,9 +19,9 @@ Jargon-core consists of the following libraries
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 * jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
-* jargon-transfer - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
+* jargon-conveyor - transfer management and automation
 
 
 ==Requirements==
@@ -42,10 +44,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 **refactor of database to include grid memory
 **conveyor framework
  
-*[#1243] issues with griffen with jargon 3.2.1.4
-**Remove over-headed create/close/open sequence for IRODSOutputStream creation
-**Reduce calls for objStat, no longer get an objStat on a parent directory, no longer creates parent dir if missing
-
-*[#1371] 3.3.2 error with cache using griffin
-**Handle GSI login in caching when using Griffin so that zone name can be null.  This will instead cache on host name
 

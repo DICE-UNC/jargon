@@ -1139,6 +1139,57 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
+	 * Bug [#1615] special chars (alpha, beta) causing synch to stop
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutThenGetOneFileWithSpecialCharsÅßá.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreivedòËæêðāéu,1o·ÆÃ.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now get
+		File retrievedLocalFile = new File(absPath + testRetrievedFileName);
+		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
+				null, null);
+
+		// compare checkums
+
+		long origChecksum = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localFile.getAbsolutePath());
+		long retrievedChecksum = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localFile.getAbsolutePath());
+
+		Assert.assertEquals(origChecksum, retrievedChecksum);
+	}
+
+	/**
 	 * Create a collection with a few files, then try and put a file that would
 	 * be an overwrite. Force is not specified, so it should be an overwrite
 	 * exception on the transfer

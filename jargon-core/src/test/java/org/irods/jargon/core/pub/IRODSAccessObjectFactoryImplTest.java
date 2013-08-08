@@ -108,4 +108,27 @@ public class IRODSAccessObjectFactoryImplTest {
 		irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
 	}
 
+	@Test
+	public final void authenticateWithInvalidMultipleTimes() throws Exception {
+
+		int ctr = 200;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setPassword("bogus");
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		for (int i = 0; i < ctr; i++) {
+
+			try {
+				irodsAccessObjectFactory.authenticateIRODSAccount(irodsAccount);
+			} catch (Exception e) {
+				// ignore
+			}
+		}
+	}
+
 }

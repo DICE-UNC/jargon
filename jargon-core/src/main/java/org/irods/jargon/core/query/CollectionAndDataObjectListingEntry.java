@@ -1,6 +1,5 @@
 package org.irods.jargon.core.query;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -177,7 +176,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 			sb.append(pathOrName);
 		} else {
 			sb.append(parentPath);
-			sb.append(File.pathSeparatorChar);
+			sb.append('/');
 			sb.append(pathOrName);
 		}
 

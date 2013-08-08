@@ -155,6 +155,11 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 			} else {
 				log.info("target file is a normal file");
+				
+				if (!targetFile.exists()) {
+					targetFile.createNewFile();
+				}
+				
 				fileOutputStream = new FileOutputStream(targetFile);
 			}
 

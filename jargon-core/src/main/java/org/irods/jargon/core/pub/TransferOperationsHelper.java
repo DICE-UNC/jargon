@@ -911,8 +911,9 @@ final class TransferOperationsHelper {
 			final String irodsFileAbsolutePath,
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock, int totalFiles,
-			int totalFilesSoFar, JargonException e) throws JargonException {
+			final TransferControlBlock transferControlBlock,
+			final int totalFiles, final int totalFilesSoFar,
+			final JargonException e) throws JargonException {
 		// may rethrow or send back to the callback listener
 		log.error("exception in transfer", e);
 
