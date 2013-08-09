@@ -307,7 +307,7 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + "/" + rootCollection);
+				.instanceIRODSFile(targetIrodsCollection);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

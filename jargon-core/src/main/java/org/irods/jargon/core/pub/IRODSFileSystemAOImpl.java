@@ -30,6 +30,7 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -39,7 +40,6 @@ import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -287,7 +287,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
 				.getDataObjectAO(getIRODSAccount());
 
-
 		log.info("delegating to DataObjectAO");
 		FilePermissionEnum permissionEnum = dataObjectAO
 				.getPermissionForDataObject(irodsFile.getAbsolutePath(),
@@ -340,7 +339,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		CollectionAO collectionAO = this.getIRODSAccessObjectFactory()
 				.getCollectionAO(getIRODSAccount());
 
-
 		log.info("delegating to CollectionAO");
 		FilePermissionEnum permissionEnum = collectionAO
 				.getPermissionForCollection(irodsFile.getAbsolutePath(),
@@ -371,9 +369,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("checking existence of: {}", irodsFile.getAbsolutePath());
 		try {
-			irodsFile.initializeObjStatForFile();
-			// no error means it exists
-			exists = true;
+			ObjStat objStat = irodsFile.initializeObjStatForFile();
+
+			if (objStat.getObjectType() == ObjectType.UNKNOWN) {
+				exists = false;
+			} else {
+
+				exists = true;
+			}
 		} catch (FileNotFoundException e) {
 			log.info("file not found, will treat as not exists");
 		}
@@ -479,141 +482,40 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irods file is null");
 		}
 
-		ObjStat objStat = irodsFile.initializeObjStatForFile();
-		// no error means it exists
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(effectiveAbsolutePath);
-
-		log.info("getListInDir for parent:{}", irodsFile.getAbsolutePath());
-
 		List<String> subdirs = new ArrayList<String>();
-		String path = "";
 
-		if (irodsFile.isDirectory()) {
-			path = effectiveAbsolutePath;
-		} else {
-			path = collectionAndPath.getCollectionParent();
-		}
+		List<CollectionAndDataObjectListingEntry> entries;
 
-		log.debug("path for query:{}", path);
+		boolean lastEntry = false;
+		int ctr = 0;
 
-		IRODSQueryResultSet resultSet = null;
+		if (!lastEntry) {
+			entries = collectionAndDataObjectListAndSearchAO
+					.listCollectionsUnderPath(irodsFile.getAbsolutePath(), ctr);
 
-		// get all the subdirs
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		try {
-			IRODSFileSystemAOHelper.buildQueryListAllCollections(path, builder);
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties()
-							.getMaxFilesAndDirsQueryMax());
-
-			/*
-			 * Note that query does not close result set, and will use paging to
-			 * get more results with an eventual close below
-			 */
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0,
-					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				processListDirsResultRowForCollection(subdirs, row);
-			}
-
-			while (resultSet.isHasMoreRecords()) {
-				log.debug("more results to get for listing collections, requerying");
-				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet,
-						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-				for (IRODSQueryResultRow row : resultSet.getResults()) {
-					processListDirsResultRowForCollection(subdirs, row);
-				}
-
-			}
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:", e);
-			throw new JargonException("error in exists query");
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception for  query:", e);
-			throw new JargonException("error in exists query");
-		} finally {
-			if (resultSet != null) {
-				irodsGenQueryExecutor.closeResults(resultSet);
+			for (CollectionAndDataObjectListingEntry entry : entries) {
+				subdirs.add(MiscIRODSUtils
+						.getLastPathComponentForGiveAbsolutePath(entry
+								.getPathOrName()));
+				lastEntry = entry.isLastResult();
+				ctr = entry.getCount();
 			}
 		}
 
-		resultSet = null;
+		lastEntry = false;
+		ctr = 0;
 
-		// get all files
-		builder = new IRODSGenQueryBuilder(true, null);
-		IRODSFileSystemAOHelper.buildQueryListAllFiles(path, builder);
-
-		try {
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties()
-							.getMaxFilesAndDirsQueryMax());
-
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryInZone(
-					irodsQuery, 0,
-					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-
-			for (IRODSQueryResultRow row : resultSet.getResults()) {
-				subdirs.add(row.getColumn(1));
-			}
-
-			while (resultSet.isHasMoreRecords()) {
-				log.debug("more results to get for listing files, requerying");
-				resultSet = irodsGenQueryExecutor.getMoreResultsInZone(
-						resultSet,
-						MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
-				for (IRODSQueryResultRow row : resultSet.getResults()) {
-					subdirs.add(row.getColumn(1));
-				}
-			}
-
-		} catch (JargonQueryException e) {
-			log.error("query exception for  query:", e);
-			throw new JargonException("error in exists query", e);
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception for  query:", e);
-			throw new JargonException("error in exists query", e);
-		} finally {
-			if (resultSet != null) {
-				irodsGenQueryExecutor.closeResults(resultSet);
+		if (!lastEntry) {
+			entries = collectionAndDataObjectListAndSearchAO
+					.listDataObjectsUnderPath(irodsFile.getAbsolutePath(), ctr);
+			for (CollectionAndDataObjectListingEntry entry : entries) {
+				subdirs.add(entry.getPathOrName());
+				lastEntry = entry.isLastResult();
+				ctr = entry.getCount();
 			}
 		}
-
-		log.info("length of subdirs after gathering all results:{}",
-				subdirs.size());
 
 		return subdirs;
-	}
-
-	/**
-	 * @param subdirs
-	 * @param row
-	 * @throws JargonException
-	 */
-	private void processListDirsResultRowForCollection(
-			final List<String> subdirs, final IRODSQueryResultRow row)
-			throws JargonException {
-		int idxLastSlash;
-		idxLastSlash = row.getColumn(1).lastIndexOf('/');
-
-		/*
-		 * Special case when root is the parent, don't repeat root from query
-		 * results
-		 */
-
-		if (!(row.getColumn(1).equals("/"))) {
-			subdirs.add(row.getColumn(1).substring(idxLastSlash + 1));
-		}
 	}
 
 	/*
