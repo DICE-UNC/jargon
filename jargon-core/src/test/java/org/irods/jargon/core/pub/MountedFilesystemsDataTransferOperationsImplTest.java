@@ -68,6 +68,11 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 	@Test
 	public void testPutOneFile() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
 		// generate a local scratch file
 		String testFileName = "testPutOneFile.txt";
 		String absPath = scratchFileUtils
@@ -124,6 +129,10 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 	@Test
 	public void testGetCollectionWithTwoFilesNoCallbacks() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
 
 		String rootCollection = "testGetCollectionWithTwoFilesNoCallbacks";
 		String returnedLocalCollection = "testGetCollectionWithTwoFilesNoCallbacksReturnedLocalFiles";
@@ -206,6 +215,10 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 	@Test(expected = DataNotFoundException.class)
 	public void testGetFromMissingSubdirInMountedCollection() throws Exception {
 
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new DataNotFoundException("throw to match expected");
+		}
+
 		String rootCollection = "testGetFromMissingSubdirInMountedCollection";
 		String returnedLocalCollection = "testGetCollectionWithTwoFilesNoCallbacksReturnedLocalFiles";
 
@@ -261,6 +274,10 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 	@Test
 	public void testCopyFromMountedToIrods() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
 
 		String rootCollection = "testCopyFromMountedToIrods";
 		String copyCollectionSubdir = "MountedFileSystemsDataTansferOperationsImplTestCopyTarget";
@@ -331,6 +348,10 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 	@Test
 	public void testCopyFromIrodsToMounted() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
 
 		String irodsSourceDirName = "testCopyFromIrodsToMounted/sourceDir";
 		String irodsTargetDirName = "testCopyFromIrodsToMounted/targetDir";
@@ -418,6 +439,10 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 	@Test
 	public void testMoveFromMountedToIrods() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
 
 		String rootCollection = "testMoveFromMountedToIrods";
 		String copyCollectionSubdir = "MountedFileSystemsDataTansferOperationsImplTestMoveTarget";
