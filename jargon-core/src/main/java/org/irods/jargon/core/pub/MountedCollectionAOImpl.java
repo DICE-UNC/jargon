@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -225,6 +226,8 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	 * java.lang.String)
 	 */
 	@Override
+	@Overheaded
+	// [#1634] Strange erroneous DataNotFoundExceptions mounting a file system
 	public void createMountedFileSystemCollection(
 			final String absolutePhysicalPathOnServer,
 			final String absoluteIRODSTargetPathToBeMounted,
@@ -270,6 +273,21 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (DataNotFoundException dnf) {
+			log.warn(
+					"Data not found exception?  Seems to be a bug in iRODS...",
+					dnf);
+			log.warn("overheaded for  [#1634] Strange erroneous DataNotFoundExceptions mounting a file system");
+			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+					.getIRODSAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(
+							getIRODSAccount());
+
+			log.warn("got data not found, do a compensating lookup, will throw FNF if the file really is not found");
+			ObjStat objStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(absoluteIRODSTargetPathToBeMounted);
+			log.info("really did find the file:{}", objStat);
+
 		} catch (UnixFileMkdirException e) {
 			log.error(
 					"unix file level mkdir error, will wrap in collection not mounted exception",

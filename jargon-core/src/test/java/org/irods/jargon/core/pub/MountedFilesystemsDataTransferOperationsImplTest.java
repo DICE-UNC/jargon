@@ -290,10 +290,6 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
 						irodsAccount);
 
-		IRODSFile unmountFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		unmountFile.delete();
-
 		mountedCollectionAO.unmountACollection(targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
@@ -336,19 +332,16 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 	@Test
 	public void testCopyFromIrodsToMounted() throws Exception {
 
-		String irodsSourceDirName = "sourceDir";
-		String irodsTargetDirName = "targetDir";
+		String irodsSourceDirName = "testCopyFromIrodsToMounted/sourceDir";
+		String irodsTargetDirName = "testCopyFromIrodsToMounted/targetDir";
 		String rootCollection = "root";
 
 		String copyTargetCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, irodsSourceDirName);
+						testingProperties, irodsTargetDirName);
 
-		String sourceDirAbsPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-
-		File sourceDirFile = new File(sourceDirAbsPath + "/" + rootCollection);
-		sourceDirFile.mkdirs();
+		String localSourceDirPath = (IRODS_TEST_SUBDIR_PATH
+				+ "/testCopyFromIrodsToMounted/" + rootCollection);
 
 		String localCollectionAbsolutePath = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR);
@@ -356,12 +349,12 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		String irodsCollectionForTargetToMove = testingPropertiesHelper
+		String irodsCollectionForTarget = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ irodsTargetDirName);
 
-		String irodsCollectionForMoveSource = testingPropertiesHelper
+		String irodsCollectionForSource = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ irodsSourceDirName);
@@ -371,51 +364,56 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
 						irodsAccount);
 
-		IRODSFile mountedCollectionFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(irodsCollectionForTargetToMove);
+		IRODSFile mountedCollectionTargetFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsCollectionForTarget);
 
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(irodsCollectionForMoveSource);
+				irodsAccount).instanceIRODSFile(irodsCollectionForSource);
 
-		mountedCollectionFile.delete();
+		mountedCollectionTargetFile.delete();
 
-		mountedCollectionAO.unmountACollection(irodsCollectionForTargetToMove,
+		mountedCollectionAO.unmountACollection(irodsCollectionForTarget,
 				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionTargetFile.reset();
+		mountedCollectionTargetFile.mkdirs();
 
 		mountedCollectionAO.createMountedFileSystemCollection(
-				localCollectionAbsolutePath, irodsCollectionForTargetToMove,
+				localCollectionAbsolutePath, irodsCollectionForTarget,
 				irodsAccount.getDefaultStorageResource());
 
-		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
-				+ "/" + rootCollection, "xxx", ".txt", 10, 10, 100);
+		FileGenerator.generateManyFilesInGivenDirectory(localSourceDirPath,
+				"xxx", ".txt", 10, 10, 100);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsMoveTargetFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionForTargetToMove);
+
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 
+		String localSourceDirAbsPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(localSourceDirPath);
+		File sourceDirFile = new File(localSourceDirAbsPath);
+
 		dataTransferOperationsAO.putOperation(sourceDirFile, irodsSourceFile,
 				null, null);
-		irodsMoveTargetFile.close();
-		irodsMoveTargetFile.reset();
-
-		irodsMoveTargetFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionForTargetToMove);
 
 		IRODSFile copyTargetIrodsFile = irodsFileFactory
 				.instanceIRODSFile(copyTargetCollection);
 
-		dataTransferOperationsAO.copy(irodsMoveTargetFile, copyTargetIrodsFile,
+		irodsSourceFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsCollectionForSource, rootCollection);
+
+		dataTransferOperationsAO.copy(irodsSourceFile, copyTargetIrodsFile,
 				null, null);
 
-		copyTargetIrodsFile = irodsFileFactory.instanceIRODSFile(
+		IRODSFile actual = irodsFileFactory.instanceIRODSFile(
 				copyTargetIrodsFile.getAbsolutePath(), rootCollection);
 
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
-				sourceDirFile, (File) copyTargetIrodsFile);
+				sourceDirFile, (File) actual);
 	}
 
 	@Test
