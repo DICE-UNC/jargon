@@ -48,7 +48,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 **CollectionAndDataObjectListAndSearchAO now supports mounted collection types
 
 *[#1182] add support for workflows
-
+**Added jargon-workflow library and initial support for workflow objects
 
 
 

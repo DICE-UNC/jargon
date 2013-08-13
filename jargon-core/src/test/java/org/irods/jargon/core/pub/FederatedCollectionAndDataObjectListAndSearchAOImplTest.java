@@ -520,8 +520,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					zone1Account.getZone(), crossZoneEntry.getUserZone());
 			Assert.assertEquals("did not set owner zone correctly",
 					irodsAccount.getZone(), ownerEntry.getUserZone());
-			ownerEntry = null;
-			crossZoneEntry = null;
+	
 
 		}
 
