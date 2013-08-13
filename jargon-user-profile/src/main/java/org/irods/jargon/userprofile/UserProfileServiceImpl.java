@@ -463,6 +463,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			throw new DuplicateDataException("user profile already exists");
 		}
 
+		userProfileFile.getParentFile().mkdirs();
+
 		log.info("creating the public profile");
 
 		try {
