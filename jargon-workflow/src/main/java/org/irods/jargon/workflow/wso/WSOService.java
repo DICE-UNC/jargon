@@ -1,5 +1,7 @@
 package org.irods.jargon.workflow.wso;
 
+import java.io.InputStream;
+
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.workflow.mso.exception.WSOException;
@@ -104,6 +106,30 @@ public interface WSOService {
 	 */
 	void ingestLocalParameterFileIntoWorkflow(
 			String workflowParameterLocalFileAbsolutePath,
+			String absolutePathToMountedWorkflowCollection)
+			throws WSONotFoundException, WSOException;
+
+	/**
+	 * Ingest the given workflow parameter file as a stream. This convenience
+	 * method will stream the content to a file given a file name (not an
+	 * absolute path), the parameter file will be placed in the mounted workflow
+	 * collection
+	 * 
+	 * @param targetParameterFileName
+	 *            <code>String</code> with the unique (must not exist) parameter
+	 *            file name
+	 * @param workflowParameterFileInputStream
+	 *            <code>InputStream</code> that will be streamed to the mounted
+	 *            workflow collection. Note that this method will wrap the
+	 *            stream in a buffer for you
+	 * @param absolutePathToMountedWorkflowCollection
+	 *            <code>String</code> with the iRODS mounted collection path
+	 *            associated with a workflow.
+	 * @throws WSONotFoundException
+	 * @throws WSOException
+	 */
+	void ingestLocalParameterFileIntoWorkflow(String targetParameterFileName,
+			InputStream workflowParameterFileInputStream,
 			String absolutePathToMountedWorkflowCollection)
 			throws WSONotFoundException, WSOException;
 

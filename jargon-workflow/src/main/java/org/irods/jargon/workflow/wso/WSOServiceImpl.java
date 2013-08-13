@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.workflow.wso;
 
-import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.InputStream;
 
@@ -19,7 +18,9 @@ import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.workflow.mso.exception.WSOException;
 import org.irods.jargon.workflow.mso.exception.WSONotFoundException;
 import org.slf4j.Logger;
@@ -154,6 +155,14 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 					"null or empty absolutePathToMountedWorkflowCollection");
 		}
 
+		String extension = LocalFileUtils
+				.getFileExtension(targetParameterFileName);
+
+		if (!extension.equals(".mpf")) {
+			throw new IllegalArgumentException(
+					"parameter file name must have the .mpf extension");
+		}
+
 		log.info("targetParameterFileName:{}", targetParameterFileName);
 
 		log.info("absolutePathToMountedWorkflowCollection:{}",
@@ -168,8 +177,36 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 		log.info("wso is:{}", wso);
 		try {
 
-			BufferedInputStream bis = new BufferendInputStream(
-					workflowParameterFileInputStream);
+			StringBuilder sb = new StringBuilder();
+			sb.append(wso.getCollection().getAbsolutePath());
+			sb.append("/");
+			sb.append(targetParameterFileName);
+			String targetFileName = sb.toString();
+
+			log.info("target parameter file absPath:{}", targetFileName);
+
+			log.info("checking if this exists...");
+
+			IRODSFile parameterFile = this.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(this.getIrodsAccount())
+					.instanceIRODSFile(targetFileName);
+			if (parameterFile.exists()) {
+				log.error("duplicate parameter file name");
+				throw new WSOException("duplicate parameter file name");
+			}
+
+			IRODSFileOutputStream outputStream = this
+					.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFileOutputStream(parameterFile);
+
+			log.info("streaming parameter file to target...");
+
+			Stream2StreamAO stream2StreamAO = this
+					.getIrodsAccessObjectFactory().getStream2StreamAO(
+							getIrodsAccount());
+			stream2StreamAO.streamToStreamCopyUsingStandardIO(
+					workflowParameterFileInputStream, outputStream);
 
 			log.info("workflow submitted");
 		} catch (JargonException e) {

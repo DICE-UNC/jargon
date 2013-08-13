@@ -10,6 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.packinstr.DataObjInpForMcoll;
 import org.irods.jargon.core.packinstr.DataObjInpForUnmount;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -343,6 +344,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 		TransferControlBlock tcb = buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setPutOption(PutOptions.MSSO_FILE);
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 
 		DataTransferOperations dto = getIRODSAccessObjectFactory()
 				.getDataTransferOperations(getIRODSAccount());

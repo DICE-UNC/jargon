@@ -1,6 +1,8 @@
 package org.irods.jargon.workflow.wso;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Properties;
 
@@ -227,6 +229,124 @@ public class WSOServiceImplTest {
 
 		wsoService.ingestLocalParameterFileIntoWorkflow(
 				wpfFile.getAbsolutePath(), mountedCollectionPath);
+
+	}
+
+	@Test
+	public void testSubmitLocalParameterFileToWorkflowViaStream()
+			throws Exception {
+
+		if (!testWorkflow) {
+			return;
+		}
+
+		String targetCollectionName = "testSubmitLocalParameterFileToWorkflowViaStream";
+		String subMountCollection = "testSubmitLocalParameterFileToWorkflowViaStreamMounted";
+		String mssoFile = "/msso/mssotest.mss";
+		String paramFile = "/msso/mssotest.mpf";
+		String paramFileName = "testSubmitLocalParameterFileToWorkflowViaStreamParam1.mpf";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		String mountedCollectionPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName + "/"
+								+ subMountCollection);
+
+		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		parentCollection.mkdirs();
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(mountedCollectionPath,
+				irodsAccount.getDefaultStorageResource());
+
+		// create the msso workflow mount
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
+		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
+				+ "eCWkflow.mss";
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
+				mountedCollectionPath);
+
+		WSOService wsoService = new WSOServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+
+		File wpfFile = LocalFileUtils.getClasspathResourceAsFile(paramFile);
+		InputStream localInputStream = new FileInputStream(wpfFile);
+
+		wsoService.ingestLocalParameterFileIntoWorkflow(paramFileName,
+				localInputStream, mountedCollectionPath);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testSubmitLocalParameterFileToWorkflowViaStreamNotMpf()
+			throws Exception {
+
+		if (!testWorkflow) {
+			throw new IllegalArgumentException("throw to keep expected");
+		}
+
+		String targetCollectionName = "testSubmitLocalParameterFileToWorkflowViaStreamNotMpf";
+		String subMountCollection = "testSubmitLocalParameterFileToWorkflowViaStreamNotMpfMounted";
+		String mssoFile = "/msso/mssotest.mss";
+		String paramFile = "/msso/mssotest.mpf";
+		String paramFileName = "testSubmitLocalParameterFileToWorkflowViaStreamNotMpf";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		String mountedCollectionPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName + "/"
+								+ subMountCollection);
+
+		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		parentCollection.mkdirs();
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(mountedCollectionPath,
+				irodsAccount.getDefaultStorageResource());
+
+		// create the msso workflow mount
+		File mssoAsFile = LocalFileUtils.getClasspathResourceAsFile(mssoFile);
+		String workflowFileTransferredToIrods = targetIrodsCollection + "/"
+				+ "eCWkflow.mss";
+		mountedCollectionAO.createAnMSSOMountForWorkflow(
+				mssoAsFile.getAbsolutePath(), workflowFileTransferredToIrods,
+				mountedCollectionPath);
+
+		WSOService wsoService = new WSOServiceImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+
+		File wpfFile = LocalFileUtils.getClasspathResourceAsFile(paramFile);
+		InputStream localInputStream = new FileInputStream(wpfFile);
+
+		wsoService.ingestLocalParameterFileIntoWorkflow(paramFileName,
+				localInputStream, mountedCollectionPath);
 
 	}
 
