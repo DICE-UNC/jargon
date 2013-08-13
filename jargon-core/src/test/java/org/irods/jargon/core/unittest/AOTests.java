@@ -26,6 +26,7 @@ import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.IRODSRegistrationOfFilesAOImplTest;
 import org.irods.jargon.core.pub.MountedCollectionAOImplForMSSOTest;
 import org.irods.jargon.core.pub.MountedCollectionAOImplTest;
+import org.irods.jargon.core.pub.MountedFilesystemCollectionAOImplTest;
 import org.irods.jargon.core.pub.MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.MountedFilesystemsDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
@@ -75,7 +76,8 @@ import org.junit.runners.Suite;
 		SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class,
 		FederatedSpecificQueryAOTest.class,
 		MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
-		MountedFilesystemsDataTransferOperationsImplTest.class })
+		MountedFilesystemsDataTransferOperationsImplTest.class,
+		MountedFilesystemCollectionAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
