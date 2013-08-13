@@ -3,7 +3,9 @@
  */
 package org.irods.jargon.workflow.wso;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -116,6 +118,64 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 				absoluteLocalPathToWssFile,
 				absoluteIRODSTargetPathToTheWssToBeMounted,
 				absolutePathToMountedCollection);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.workflow.wso.WSOService#ingestLocalParameterFileIntoWorkflow
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void ingestLocalParameterFileIntoWorkflow(
+			final String targetParameterFileName,
+			final InputStream workflowParameterFileInputStream,
+			final String absolutePathToMountedWorkflowCollection)
+			throws WSONotFoundException, WSOException {
+
+		log.info("ingestLocalParameterFileIntoWorkflow()");
+
+		if (targetParameterFileName == null
+				|| targetParameterFileName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty targetParameterFileName");
+		}
+
+		if (workflowParameterFileInputStream == null) {
+			throw new IllegalArgumentException(
+					"null or empty workflowParameterFileInputStream");
+		}
+
+		if (absolutePathToMountedWorkflowCollection == null
+				|| absolutePathToMountedWorkflowCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToMountedWorkflowCollection");
+		}
+
+		log.info("targetParameterFileName:{}", targetParameterFileName);
+
+		log.info("absolutePathToMountedWorkflowCollection:{}",
+				absolutePathToMountedWorkflowCollection);
+
+		// get the wso
+
+		log.info("getting wso...");
+
+		WorkflowStructuredObject wso = this
+				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+		log.info("wso is:{}", wso);
+		try {
+
+			BufferedInputStream bis = new BufferendInputStream(
+					workflowParameterFileInputStream);
+
+			log.info("workflow submitted");
+		} catch (JargonException e) {
+			log.error("jargon exception processing workflow", e);
+			throw new WSOException("jargon exception processing workflow", e);
+		}
 
 	}
 
