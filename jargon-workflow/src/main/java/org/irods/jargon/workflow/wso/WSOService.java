@@ -90,4 +90,21 @@ public interface WSOService {
 			final String absolutePathToMountedWorkflowCollection)
 			throws WSONotFoundException, WSOException;
 
+	/**
+	 * Ingest the given workflow parameter file, causing the workflow to run
+	 * 
+	 * @param workflowParameterLocalFileAbsolutePath
+	 *            <code>String</code> with the absolute path to a workflow
+	 *            parameter file on the local file system.
+	 * @param absolutePathToMountedWorkflowCollection
+	 *            <code>String</code> with the iRODS mounted collection path
+	 *            associated with a workflow.
+	 * @throws WSONotFoundException
+	 * @throws WSOException
+	 */
+	void ingestLocalParameterFileIntoWorkflow(
+			String workflowParameterLocalFileAbsolutePath,
+			String absolutePathToMountedWorkflowCollection)
+			throws WSONotFoundException, WSOException;
+
 }

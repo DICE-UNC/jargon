@@ -6,6 +6,7 @@ package org.irods.jargon.core.utils;
 import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.COLL_TYPE_HAAW;
 import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.COLL_TYPE_LINK;
 import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.COLL_TYPE_MOUNT;
+import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.COLL_TYPE_MSSO;
 import static org.irods.jargon.core.packinstr.DataObjInpForMcoll.COLL_TYPE_TAR;
 
 import java.text.DateFormat;
@@ -152,7 +153,8 @@ public class IRODSDataConversionUtil {
 		}
 
 		if (irodsValue.equals(COLL_TYPE_HAAW)
-				|| irodsValue.equals(COLL_TYPE_TAR)) {
+				|| irodsValue.equals(COLL_TYPE_TAR)
+				|| irodsValue.equals(COLL_TYPE_MSSO)) {
 			return SpecColType.STRUCT_FILE_COLL;
 		}
 

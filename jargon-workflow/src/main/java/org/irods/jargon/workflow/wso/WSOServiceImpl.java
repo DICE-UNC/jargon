@@ -3,11 +3,14 @@
  */
 package org.irods.jargon.workflow.wso;
 
+import java.io.File;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAO;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.MountedCollectionAO;
 import org.irods.jargon.core.pub.Stream2StreamAO;
@@ -113,6 +116,74 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 				absoluteLocalPathToWssFile,
 				absoluteIRODSTargetPathToTheWssToBeMounted,
 				absolutePathToMountedCollection);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.workflow.wso.WSOService#ingestLocalParameterFileIntoWorkflow
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void ingestLocalParameterFileIntoWorkflow(
+			final String workflowParameterLocalFileAbsolutePath,
+			final String absolutePathToMountedWorkflowCollection)
+			throws WSONotFoundException, WSOException {
+
+		log.info("ingestLocalParameterFileIntoWorkflow()");
+
+		if (workflowParameterLocalFileAbsolutePath == null
+				|| workflowParameterLocalFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty workflowParameterLocalFileAbsolutePath");
+		}
+
+		if (absolutePathToMountedWorkflowCollection == null
+				|| absolutePathToMountedWorkflowCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToMountedWorkflowCollection");
+		}
+
+		log.info("workflowParameterLocalFileAbsolutePath:{}",
+				workflowParameterLocalFileAbsolutePath);
+
+		log.info("absolutePathToMountedWorkflowCollection:{}",
+				absolutePathToMountedWorkflowCollection);
+
+		// make sure we have a valid local file
+
+		log.info("getting local file...");
+
+		File localFile = new File(workflowParameterLocalFileAbsolutePath);
+
+		if (localFile.exists() && localFile.isFile()) {
+			// OK
+		} else {
+			log.error("no parameter file found at path:{}",
+					workflowParameterLocalFileAbsolutePath);
+			throw new WSOException("local parameter file is missing");
+		}
+
+		// get the wso
+
+		log.info("getting wso...");
+
+		WorkflowStructuredObject wso = this
+				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+		log.info("wso is:{}", wso);
+		try {
+			DataTransferOperations dto = this.getIrodsAccessObjectFactory()
+					.getDataTransferOperations(getIrodsAccount());
+			dto.putOperation(workflowParameterLocalFileAbsolutePath,
+					absolutePathToMountedWorkflowCollection, getIrodsAccount()
+							.getDefaultStorageResource(), null, null);
+			log.info("workflow submitted");
+		} catch (JargonException e) {
+			log.error("jargon exception processing workflow", e);
+			throw new WSOException("jargon exception processing workflow", e);
+		}
 
 	}
 
