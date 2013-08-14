@@ -1,7 +1,6 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,8 +12,10 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -59,6 +60,7 @@ import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -643,7 +645,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.error(
 						"File not found for local file I was trying to put:{}",
 						localFile.getAbsolutePath());
-				throw new JargonException(
+				throw new DataNotFoundException(
+						"localFile not found to put to irods", e);
+			} catch (java.io.FileNotFoundException e) {
+				throw new DataNotFoundException(
 						"localFile not found to put to irods", e);
 			}
 		} else {
@@ -795,11 +800,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else {
 				throw je;
 			}
-		} catch (FileNotFoundException e) {
-			log.error("File not found for local file I was trying to put:{}",
-					localFile.getAbsolutePath());
-			throw new DataNotFoundException(
-					"localFile not found to put to irods", e);
 		} catch (Exception e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
@@ -1054,6 +1054,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @return
 	 * @throws OverwriteException
 	 */
+	@Overheaded
+	// [#1606] inconsistent objstat semantics for mounted collections
 	private OverwriteResponse evaluateOverwrite(
 			final File sourceFile,
 			final TransferControlBlock transferControlBlock,
@@ -1062,6 +1064,33 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throws OverwriteException {
 		OverwriteResponse overwriteResponse = OverwriteResponse.PROCEED_WITH_NO_FORCE;
 		if (targetFile.exists()) {
+
+			/*
+			 * objstat does not work for mounted collections (see Bug [#1606]
+			 * inconsistent objstat semantics for mounted collections) this
+			 * overhead will always force for puts to a mounted collection
+			 */
+
+			if (targetFile instanceof IRODSFile) {
+				IRODSFile myTargetIRODSFile = (IRODSFile) targetFile;
+				try {
+					if (myTargetIRODSFile.initializeObjStatForFile()
+							.getSpecColType() == SpecColType.MOUNTED_COLL) {
+						log.info("always use force for mounted collections, see comments for Bug 1606");
+						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
+						return overwriteResponse;
+
+					}
+				} catch (org.irods.jargon.core.exception.FileNotFoundException e) {
+					// ignore, should not happen
+				} catch (JargonException e) {
+					log.error("jargon error checking overwrite", e);
+					throw new JargonRuntimeException(
+							"runtime exception in overwrite handling process",
+							e);
+				}
+			}
+
 			log.info(
 					"target file exists, check if overwrite allowed, file is:{}",
 					targetFile.getAbsolutePath());
@@ -1576,8 +1605,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException {
+			throws OperationNotSupportedForCollectionTypeException,
+			DataNotFoundException, DuplicateDataException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
@@ -1595,18 +1624,26 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (Exception e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddDataObjectMetadata(sb.toString(), avuData);
+				.instanceForAddDataObjectMetadata(absPath, avuData);
 
 		log.debug("sending avu request");
 
@@ -1670,7 +1707,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 
-		String absPath = resolveAbsolutePathViaObjStat(irodsCollectionAbsolutePath);
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		StringBuilder sb = new StringBuilder(absPath);
 		sb.append("/");
@@ -1705,18 +1756,29 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("deleting avu metadata on dataObject: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
+		/*
+		 * Handle soft links by munging the path
+		 */
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (FileNotFoundException e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteDataObjectMetadata(sb.toString(), avuData);
+				.instanceForDeleteDataObjectMetadata(absPath, avuData);
 
 		log.debug("sending avu request");
 
@@ -2166,6 +2228,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(dataObjectCollectionAbsPath,
 				dataObjectFileName);
 
+		ObjStat objStat = this.retrieveObjStat(dataObjectCollectionAbsPath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		// contract checks in delegated method
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
@@ -2203,6 +2275,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(dataObjectAbsolutePath);
+
+		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 		try {
@@ -2305,17 +2387,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, sb.toString(), userName,
+				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2349,19 +2434,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone,
-						sb.toString(), userName,
-						ModAccessControlInp.READ_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absPath,
+						userName, ModAccessControlInp.READ_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2394,17 +2482,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
+		/*
+		 * Handle soft links by munging the path
+		 */
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, sb.toString(), userName,
+				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2486,19 +2581,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone,
-						sb.toString(), userName,
-						ModAccessControlInp.WRITE_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absPath,
+						userName, ModAccessControlInp.WRITE_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2531,17 +2628,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, sb.toString(), userName,
+				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2575,20 +2675,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone,
-						sb.toString(), userName,
-						ModAccessControlInp.OWN_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absPath,
+						userName, ModAccessControlInp.OWN_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
@@ -2621,17 +2722,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermission(false, zone, sb.toString(), userName,
+				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
@@ -2667,8 +2770,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 */
 		CollectionAndPath collName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
-		String absPath = resolveAbsolutePathViaObjStat(collName
-				.getCollectionParent());
+
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(absPath);
@@ -2748,6 +2861,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("dataName: {}", irodsCollectionAbsolutePath);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
@@ -2859,6 +2981,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("with avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
@@ -2926,10 +3058,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
+		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(
-						dataObjectAbsolutePath, currentAvuData,
-						newAvuData);
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
 
@@ -2986,6 +3127,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
+		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		log.info("overwrite avu metadata for collection: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", irodsCollectionAbsolutePath);
@@ -3034,6 +3185,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("userName:{}", userName);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		/*
@@ -3287,6 +3447,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+
+		ObjStat objStat = this.retrieveObjStat(irodsAbsolutePath);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
 
 		log.info("listPermissionsForDataObjectForUserName path: {}",
 				irodsAbsolutePath);

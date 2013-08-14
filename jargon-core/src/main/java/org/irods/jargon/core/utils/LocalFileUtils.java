@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DateFormat;
@@ -298,6 +300,41 @@ public class LocalFileUtils {
 		}
 
 		return sb.toString();
+	}
+
+	/**
+	 * Given a path to a classpath resoruce, return that resource as a
+	 * <code>File</code>
+	 * 
+	 * @param resourcePath
+	 *            <code>String</code> with an absolute path to a resource in the
+	 *            classpath
+	 * @return <code>File</code> representing the resource in the classpath
+	 * @throws JargonException
+	 */
+	public static File getClasspathResourceAsFile(final String resourcePath)
+			throws JargonException {
+
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourcePath");
+		}
+		// Load the directory as a resource
+		URL resourceUrl = LocalFileUtils.class.getResource(resourcePath);
+
+		if (resourceUrl == null) {
+			throw new JargonException("null resource, cannot find file");
+		}
+
+		// Turn the resource into a File object
+		try {
+			File resourceFile = new File(resourceUrl.toURI());
+			if (!resourceFile.exists()) {
+				throw new JargonException("resource file does not exist");
+			}
+			return resourceFile;
+		} catch (URISyntaxException e) {
+			throw new JargonException("unable to create uri from file path");
+		}
 	}
 
 	/**

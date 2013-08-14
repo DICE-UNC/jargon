@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,6 +48,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int GET_HOST_FOR_PUT_API_NBR = 686;
 
 	public static final String DATA_TYPE_GENERIC = "generic";
+	public static final String DATA_TYPE_MSSO = "msso file";
 
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
@@ -779,17 +781,22 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	private void processPutOperationKvps(final int transferOptionsNumThreads,
 			final List<KeyValuePair> kvps) throws JargonException {
+
+		if (transferOptions == null) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
+		} else if (this.transferOptions.getPutOption() == PutOptions.NORMAL) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
+		} else if (this.transferOptions.getPutOption() == PutOptions.MSSO_FILE) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_MSSO));
+		}
+
 		if (!isInitialPutGetCall()) {
-			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 			kvps.add(KeyValuePair.instance(DATA_INCLUDED_KW, ""));
-		} else if (transferOptionsNumThreads > 0) {
-			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
 		}
 
 		if (transferOptions == null) {
 			return;
 		}
-
 		// transfer options passed, in, use in put operation kvps
 
 		if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()

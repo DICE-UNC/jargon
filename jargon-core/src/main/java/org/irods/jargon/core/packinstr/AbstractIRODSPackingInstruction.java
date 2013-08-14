@@ -92,6 +92,35 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	}
 
 	/**
+	 * Create a SpecColl_PI tag from the given value object data
+	 * 
+	 * @param specColInfo
+	 *            {@link SpecColInfo} parameter holding object
+	 * @return {@Tag} representation of the SpecColl_PI tag
+	 */
+	protected Tag createSpecCollTag(SpecColInfo specColInfo) {
+
+		if (specColInfo == null) {
+			throw new IllegalArgumentException("null specColInfo");
+		}
+
+		Tag specCol = new Tag("SpecColl_PI");
+		specCol.addTag("collClass", String.valueOf(specColInfo.getCollClass()));
+		specCol.addTag("type", String.valueOf(specColInfo.getType()));
+		specCol.addTag("collection", specColInfo.getCollection());
+		specCol.addTag("objPath", specColInfo.getObjPath());
+		specCol.addTag("resource", specColInfo.getResource());
+		specCol.addTag("phyPath", specColInfo.getPhyPath());
+		specCol.addTag("cacheDir", specColInfo.getCacheDir());
+		specCol.addTag("cacheDirty",
+				String.valueOf(specColInfo.getCacheDirty()));
+		// FIXME: add create tag with int value and get rid of these valueOf
+		specCol.addTag("replNum", String.valueOf(specColInfo.getReplNum()));
+		return specCol;
+
+	}
+
+	/**
 	 * Internally used method to format InxValue tags for various packing
 	 * instructions.
 	 * 

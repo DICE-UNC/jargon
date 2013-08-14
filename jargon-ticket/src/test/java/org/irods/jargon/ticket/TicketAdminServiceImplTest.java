@@ -1171,6 +1171,7 @@ public class TicketAdminServiceImplTest {
 		Assert.assertTrue(ticketSvc.setTicketExpiration(ticketId, expireSoon));
 
 		Ticket ticket = ticketSvc.getTicketForSpecifiedTicketString(ticketId);
+		Assert.assertNotNull(ticket);
 
 		// just look for success now by seeing if expire time is set
 

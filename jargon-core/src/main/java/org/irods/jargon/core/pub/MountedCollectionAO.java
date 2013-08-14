@@ -1,6 +1,7 @@
 package org.irods.jargon.core.pub;
 
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 
@@ -59,7 +60,7 @@ public interface MountedCollectionAO {
 	 *            <code>String</code> with the absolute path to the collection
 	 *            to be unmounted
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not nused)
+	 *            <code>String</code> with the optional (blank if not used)
 	 *            resource name
 	 * @return <code>boolean</code> will return <code>true</code> if unmounted,
 	 *         <code>false</code> if the collection to unmount was not found
@@ -67,5 +68,58 @@ public interface MountedCollectionAO {
 	 */
 	boolean unmountACollection(String absolutePathToCollectionToUnmount,
 			String resourceName) throws JargonException;
+
+	/**
+	 * Create an MSSO mount using the given MSSO file, mounting the result to
+	 * the provided collection path.
+	 * <p/>
+	 * This method takes a local file path to the mso object that will be 'put'
+	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
+	 * given the provided path to the desired collection, and the .wss file that
+	 * was just
+	 * 
+	 * @param absolutePathToTheMSSOToBeMounted
+	 *            <code>String</code> with the absolute path to msso structured
+	 *            object to mount
+	 * @param absolutePathToMountedCollection
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection that will be created based on the MSSO service
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	void createAnMSSOMountForWorkflow(String absoluteLocalPathToWssFile,
+			String absoluteIRODSTargetPathToTheWssToBeMounted,
+			String absolutePathToMountedCollection)
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Create a file system mount point in iRODS. Mounting the file system at
+	 * the given local absolute path on the server to the given collection.
+	 * <p/>
+	 * Be aware that this is a physical file path on the iRODS server in
+	 * question, this does not mount a local (to the client) file system!
+	 * <p/>
+	 * See https://www.irods.org/index.php/Mounted_iRODS_Collection for notes on
+	 * mounted collections
+	 * 
+	 * @param absolutePhysicalPathOnServer
+	 *            <code>String</code> with the absolute path to the local file
+	 *            system (local to the iRODS server) that is to be mounted.
+	 * @param absoluteIRODSTargetPathToBeMounted
+	 *            <code>String</code> with the iRODS absolute path to the new
+	 *            mounted collection
+	 * @param storageResource
+	 *            <code>String</code> with the required storage resource for the
+	 *            mount
+	 * @throws CollectionNotMountedException
+	 *             for cases such as duplicate mount points
+	 * @throws FileNotFoundException
+	 *             when local file path to be mounted is not found
+	 * @throws JargonException
+	 */
+	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
+			String absoluteIRODSTargetPathToBeMounted, String storageResource)
+			throws CollectionNotMountedException, FileNotFoundException,
+			JargonException;
 
 }

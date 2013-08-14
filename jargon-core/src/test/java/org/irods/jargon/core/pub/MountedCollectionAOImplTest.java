@@ -1,18 +1,22 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -362,6 +366,337 @@ public class MountedCollectionAOImplTest {
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
 						irodsAccount);
 		mountedCollectionAO.createASoftLink("hello", "");
+
+	}
+
+	@Test(expected = CollectionNotMountedException.class)
+	public void testCreateMountedFileSystemTwice() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateMountedFileSystemTwice";
+		String localMountDir = "testCreateMountedFileSystemTwiceLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testCreateMountedFileSystemTwice", ".txt", 10, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// no errors means success. will test further in
+		// listing methods
+
+	}
+
+	@Test(expected = CollectionNotMountedException.class)
+	public void testCreateAMountedFileSystemPhyPathMissing() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAMountedFileSystemPhyPathMissing";
+
+		String localCollectionAbsolutePath = "/i/dont/exist";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+	}
+
+	@Test
+	public void testCreateAMountedFileSystemPhyPathMissingButUnderConfiguredPath()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAMountedFileSystemPhyPathMissingButUnderConfiguredPath";
+		String localMountDir = "testCreateAMountedFileSystemPhyPathMissingButUnderConfiguredPathLocal";
+
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR)
+				+ "/"
+				+ localMountDir;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		// now get an objstat it should exist
+
+		CollectionAndDataObjectListAndSearchAO searchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = searchAO
+				.retrieveObjectStatForPath(targetIrodsCollection);
+
+		Assert.assertEquals("did not get spec col in objStat",
+				SpecColType.MOUNTED_COLL, objStat.getSpecColType());
+
+	}
+
+	@Test
+	public void testCreateAndRemoveMountedFileSystem() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_REG_BASEDIR)
+				+ "/"
+				+ localMountDir;
+
+		File localFile = new File(localCollectionAbsolutePath);
+		localFile.mkdirs();
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testCreateAndRemoveMountedFileSystem", ".txt", 10, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		// do an initial unmount
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.unmountACollection(targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource());
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankResource()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankSource()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("",
+				targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullSource()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(null,
+				targetIrodsCollection, "");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemBlankTarget()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("source", "",
+				"resc");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullTarget()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection("source", null,
+				"resc");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testCreateAndRemoveMountedFileSystemNullResource()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			throw new CollectionNotMountedException("thrown to honor contracts");
+		}
+
+		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
+		String localMountDir = "testCreateAndRemoveMountedFileSystemLocal";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + localMountDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ targetCollectionName);
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						irodsAccount);
+
+		mountedCollectionAO.createMountedFileSystemCollection(
+				localCollectionAbsolutePath, targetIrodsCollection, null);
 
 	}
 

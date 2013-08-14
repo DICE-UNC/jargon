@@ -520,8 +520,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					zone1Account.getZone(), crossZoneEntry.getUserZone());
 			Assert.assertEquals("did not set owner zone correctly",
 					irodsAccount.getZone(), ownerEntry.getUserZone());
-			ownerEntry = null;
-			crossZoneEntry = null;
+	
 
 		}
 
@@ -696,6 +695,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.listDataObjectsAndCollectionsUnderPathWithPermissions(targetIrodsCollection);
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
+
 		for (CollectionAndDataObjectListingEntry entry : entries) {
 			System.out.println("bad entry?:" + entry);
 			if (entry.isCollection()) {
@@ -704,8 +704,9 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 						entry.getUserFilePermission().size());
 			} else {
 				Assert.assertEquals(
-						"did not have the  permissions for data objects", 3,
-						entry.getUserFilePermission().size());
+
+				"did not have the  permissions for data objects", 3, entry
+						.getUserFilePermission().size());
 			}
 		}
 

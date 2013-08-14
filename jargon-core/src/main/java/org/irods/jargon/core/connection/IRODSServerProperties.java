@@ -115,6 +115,20 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Does the server (based on version) support workflow (WSOs)?
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if this version
+	 *         supports WSO workflow
+	 */
+	public boolean isSupportsWSOWorkflow() {
+		boolean supports = false;
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support case-insensitive gen query
 	 * conditions
 	 * 

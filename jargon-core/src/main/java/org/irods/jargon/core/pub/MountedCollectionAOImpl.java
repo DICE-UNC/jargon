@@ -3,14 +3,20 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.packinstr.DataObjInpForMcoll;
 import org.irods.jargon.core.packinstr.DataObjInpForUnmount;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
+import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -89,7 +95,10 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 			getIRODSProtocol().irodsFunction(dataObjInp);
 		} catch (DataNotFoundException e) {
 			success = false;
+		} catch (CollectionNotMountedException e) {
+			success = false;
 		}
+
 		log.debug("unmount complete, success?:{}", success);
 
 		/*
@@ -115,10 +124,6 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#createASoftLink(java.lang
 	 * .String, java.lang.String)
-	 */
-
-	/*
-	 * todo: should I specify a resource in the parms or take the default?
 	 */
 	@Override
 	public void createASoftLink(
@@ -195,7 +200,6 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("all is well, make the call to mount the soft link...");
-
 		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
 				.instanceForSoftLinkMount(
 						absolutePathToTheIRODSCollectionToBeMounted,
@@ -203,8 +207,172 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 						getIRODSAccount().getDefaultStorageResource());
 
 		getIRODSProtocol().irodsFunction(dataObjInp);
-
 		log.debug("soft link creation successful");
+
+	}
+
+	public void removeMountedWorkflowAndWorkflowFile(
+			final String absolutePathToMssFile,
+			final String absolutePathToWorkflowCollectionToBeUnmounted)
+			throws JargonException {
+		log.info("removeMountedWorkflowAndWorkflowFile(final String absolutePathToMssFile, final String absolutePathToWorkflowCollectionToBeUnmounted)");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.MountedCollectionAO#
+	 * createMountedFileSystemCollection(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	@Overheaded
+	// [#1634] Strange erroneous DataNotFoundExceptions mounting a file system
+	public void createMountedFileSystemCollection(
+			final String absolutePhysicalPathOnServer,
+			final String absoluteIRODSTargetPathToBeMounted,
+			final String storageResource) throws CollectionNotMountedException,
+			FileNotFoundException, JargonException {
+
+		log.info("createMountedFileSystemCollection()");
+
+		if (absolutePhysicalPathOnServer == null
+				|| absolutePhysicalPathOnServer.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePhysicalPathOnServer");
+		}
+
+		if (absoluteIRODSTargetPathToBeMounted == null
+				|| absoluteIRODSTargetPathToBeMounted.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absoluteIRODSTargetPathToBeMounted");
+		}
+
+		if (storageResource == null || storageResource.isEmpty()) {
+			throw new IllegalArgumentException("null or empty storageResource");
+		}
+
+		log.info("absolutePhysicalPathOnServer:{}",
+				absolutePhysicalPathOnServer);
+		log.info("absoluteIRODSTargetPathToBeMounted:{}",
+				absoluteIRODSTargetPathToBeMounted);
+
+		getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+
+		log.info("making the directory for the mount if not exists...");
+		IRODSFile mountColl = getIRODSFileFactory().instanceIRODSFile(
+				absoluteIRODSTargetPathToBeMounted);
+		mountColl.mkdirs();
+		log.info("...dirs made");
+
+		log.info("all is well, make the call to mount file system...");
+		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
+				.instanceForFileSystemMount(absolutePhysicalPathOnServer,
+						absoluteIRODSTargetPathToBeMounted, storageResource);
+
+		try {
+			getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (DataNotFoundException dnf) {
+			log.warn(
+					"Data not found exception?  Seems to be a bug in iRODS...",
+					dnf);
+			log.warn("overheaded for  [#1634] Strange erroneous DataNotFoundExceptions mounting a file system");
+			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+					.getIRODSAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(
+							getIRODSAccount());
+
+			log.warn("got data not found, do a compensating lookup, will throw FNF if the file really is not found");
+			ObjStat objStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(absoluteIRODSTargetPathToBeMounted);
+			log.info("really did find the file:{}", objStat);
+
+		} catch (UnixFileMkdirException e) {
+			log.error(
+					"unix file level mkdir error, will wrap in collection not mounted exception",
+					e);
+			throw new CollectionNotMountedException(e);
+		}
+		log.debug("file system mount successful");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.MountedCollectionAO#createAnMSSOMount(java.
+	 * lang.String, java.lang.String)
+	 */
+	@Override
+	public void createAnMSSOMountForWorkflow(
+			final String absoluteLocalPathToWorkflowFile,
+			final String absoluteIRODSTargetPathToTheWssToBeMounted,
+			final String absolutePathToMountedCollection)
+			throws FileNotFoundException, JargonException {
+
+		log.info("createAnMSSOMount()");
+
+		if (absoluteLocalPathToWorkflowFile == null
+				|| absoluteLocalPathToWorkflowFile.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absoluteLocalPathToWssFile");
+		}
+
+		if (absoluteIRODSTargetPathToTheWssToBeMounted == null
+				|| absoluteIRODSTargetPathToTheWssToBeMounted.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absoluteIRODSTargetPathToTheWssToBeMounted");
+		}
+
+		if (absolutePathToMountedCollection == null
+				|| absolutePathToMountedCollection.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToMountedCollection");
+		}
+
+		log.info("absoluteLocalPathToWssFile:{}",
+				absoluteLocalPathToWorkflowFile);
+		log.info("absoluteIRODSTargetPathToTheWssToBeMounted:{}",
+				absoluteIRODSTargetPathToTheWssToBeMounted);
+		log.info("absolutePathToMountedCollection:{}",
+				absolutePathToMountedCollection);
+
+		log.info("putting the wss file as type msso");
+
+		TransferControlBlock tcb = buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setPutOption(PutOptions.MSSO_FILE);
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		DataTransferOperations dto = getIRODSAccessObjectFactory()
+				.getDataTransferOperations(getIRODSAccount());
+
+		dto.putOperation(absoluteLocalPathToWorkflowFile,
+				absoluteIRODSTargetPathToTheWssToBeMounted, getIRODSAccount()
+						.getDefaultStorageResource(), null, tcb);
+
+		log.info("wss file is put as an msso file...now mount the collection");
+
+		getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+
+		log.info("making the directory for the mount if not exists...");
+		IRODSFile mountColl = getIRODSFileFactory().instanceIRODSFile(
+				absolutePathToMountedCollection);
+		mountColl.mkdirs();
+		log.info("...dirs made");
+
+		log.info("all is well, make the call to mount the soft link...");
+		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
+				.instanceForMSSOMount(
+						absoluteIRODSTargetPathToTheWssToBeMounted,
+						absolutePathToMountedCollection, getIRODSAccount()
+								.getDefaultStorageResource());
+
+		getIRODSProtocol().irodsFunction(dataObjInp);
+		log.debug("MSSO creation successful");
 
 	}
 

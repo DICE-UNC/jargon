@@ -3,7 +3,6 @@
 *'''Release Version''': x.x.x transfer engine upgrade
 *'''git tag''': 964-grid-memory
 
-
 ==News==
 
 

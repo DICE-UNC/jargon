@@ -1,8 +1,7 @@
 <!-- what follows is an example maven settings.xml profile for jargon testing.  This is picked up by the jargon pom file and used to generate a testing.properties file in the
 java test resources directory -->
-<profile>
-			<profile>
-			<id>jargonTestPAM</id>
+		<profile>
+			<id>jargonTest</id>
 			<properties>
 				<jargon.test.confirm>true</jargon.test.confirm>
 				<jargon.test.data.directory>/Users/mikeconway/temp/irodsscratch/</jargon.test.data.directory>
@@ -25,18 +24,20 @@ java test resources directory -->
 				<jargon.test.user.group>jargonTestUg</jargon.test.user.group>
 				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
 				<jargon.test.irods.scratch.subdir>jargon-scratch</jargon.test.irods.scratch.subdir>
-				<jargon.test.mac.icommand.path>/opt/iRODS/iRODS_SSL_3.2/trunk/iRODS/clients/icommands/bin/</jargon.test.mac.icommand.path>
+				<jargon.test.mac.icommand.path>/opt/iRODS/iRODS2.5/iRODS/clients/icommands/bin/</jargon.test.mac.icommand.path>
 				<jargon.test.option.exercise.remoteexecstream>true</jargon.test.option.exercise.remoteexecstream>
  				<jargon.test.option.exercise.ticket>true</jargon.test.option.exercise.ticket>
  				<jargon.test.option.exercise.audit>false</jargon.test.option.exercise.audit>
+ 				<jargon.test.option.exercise.workflow>true</jargon.test.option.exercise.workflow>
+ 				<jargon.test.option.exercise.filesystem.mount>true</jargon.test.option.exercise.filesystem.mount>
+ 				<test.option.mount.basedir>/Users/mikeconway/temp/basedir</test.option.mount.basedir>
+ 				<test.option.pam>false</test.option.pam>
 				<test.option.distributed.resources>false</test.option.distributed.resources>
 				<test.option.registration>true</test.option.registration>
 				<test.option.federated.zone>false</test.option.federated.zone>
 				<test.option.kerberos>false</test.option.kerberos>
-				<test.option.pam>true</test.option.pam>
-				<jargon.test.pam.user>pam</jargon.test.pam.user>
-				<jargon.test.pam.password>pam</jargon.test.pam.password>
 				<test.option.strictACL>false</test.option.strictACL>
+				<test.rest.port>8888</test.rest.port>
 				<jargon.test.federated.irods.admin>rods</jargon.test.federated.irods.admin>
 				<jargon.test.federated.irods.admin.password>test</jargon.test.federated.irods.admin.password>
 				<jargon.test.federated.irods.user>test1</jargon.test.federated.irods.user>
@@ -45,12 +46,5 @@ java test resources directory -->
 				<jargon.test.federated.irods.host>fedzone2</jargon.test.federated.irods.host>
 				<jargon.test.federated.irods.port>1247</jargon.test.federated.irods.port>
 				<jargon.test.federated.irods.zone>fedzone2</jargon.test.federated.irods.zone>
-				<test.option.gsi>true</test.option.gsi>
-				<test.option.gsi.host>localhost</test.option.gsi.host>
-				<test.option.gsi.port>1247</test.option.gsi.port>
-				<test.option.gsi.zone>tempZone</test.option.gsi.zone>
-				<test.option.gsi.dn>/DC=org/DC=cilogon/C=US/O=University of North Carolina at Chapel Hill/CN=Michael Conway A1660</test.option.gsi.dn>
-				<test.option.gsi.user>mikec</test.option.gsi.user>
 			</properties>
 		</profile>
-		

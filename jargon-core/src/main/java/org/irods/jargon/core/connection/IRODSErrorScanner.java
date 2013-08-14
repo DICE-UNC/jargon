@@ -7,8 +7,10 @@ import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidArgumentException;
@@ -97,8 +99,20 @@ public class IRODSErrorScanner {
 							+ infoValue, infoValue);
 		}
 
-		// non-zero value, create appropriate exception
+		checkSpecificCodesAndThrowIfExceptionLocated(infoValue, message,
+				errorEnum);
+	}
 
+	/**
+	 * @param infoValue
+	 * @param message
+	 * @param errorEnum
+	 * @throws JargonException
+	 *             or specific child exception of <code>JargonException</code>
+	 */
+	private static void checkSpecificCodesAndThrowIfExceptionLocated(
+			final int infoValue, final String message, final ErrorEnum errorEnum)
+			throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
 			throw new JargonFileOrCollAlreadyExistsException(
@@ -146,7 +160,11 @@ public class IRODSErrorScanner {
 		case USER_NO_RESC_INPUT_ERR:
 			throw new NoResourceDefinedException("No resource defined");
 		case NO_MORE_RULES_ERR:
-			throw new NoMoreRulesException("No more rules");
+			throw new NoMoreRulesException("no more rules");
+		case COLLECTION_NOT_MOUNTED:
+			throw new CollectionNotMountedException("collection not mounted");
+		case UNIX_FILE_OPENDIR_ERR:
+			throw new FileDriverError("file driver error", infoValue);
 		case CAT_SQL_ERR:
 			throw new CatalogSQLException("Catalog SQL error");
 		case SPECIFIC_QUERY_EXCEPTION:
@@ -160,6 +178,11 @@ public class IRODSErrorScanner {
 		case FEDERATED_ZONE_NOT_AVAILABLE:
 			throw new ZoneUnavailableException(
 					"the federated zone is not available");
+		case SYS_MOUNT_MOUNTED_COLL_ERR:
+			throw new CollectionNotMountedException(
+					"unable to mount collection, potential duplicate mount");
+		case SYS_SPEC_COLL_OBJ_NOT_EXIST:
+			throw new DataNotFoundException("Special collection not found");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

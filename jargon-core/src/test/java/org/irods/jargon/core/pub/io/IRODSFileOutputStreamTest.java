@@ -257,7 +257,7 @@ public class IRODSFileOutputStreamTest {
 
 	@Test
 	public final void testCloseFileThenStream() throws Exception {
-		String testFileName = "testCloseStreamTwice.csv";
+		String testFileName = "testCloseFileThenStream.csv";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -401,7 +401,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileShouldOpen()
 			throws Exception {
-		String testFileName = "testFileShouldOpen.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileShouldOpen.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = FileGenerator
@@ -562,7 +562,7 @@ public class IRODSFileOutputStreamTest {
 	@Test
 	public final void testIRODSFileOutputStreamIRODSFileClose()
 			throws Exception {
-		String testFileName = "testFileClose.txt";
+		String testFileName = "testIRODSFileOutputStreamIRODSFileClose.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,

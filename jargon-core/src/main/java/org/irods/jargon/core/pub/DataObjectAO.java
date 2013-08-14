@@ -6,6 +6,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -103,6 +104,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 * @throws OperationNotSupportedForCollectionTypeException
+	 *             when the special collection type does not support this
+	 *             operation
 	 * @throws DataNotFoundException
 	 *             when data object is missing
 	 * @throws DuplicateDataException
@@ -111,8 +115,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *             units are not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+			throws OperationNotSupportedForCollectionTypeException,
+			DataNotFoundException, DuplicateDataException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular data object, as well as

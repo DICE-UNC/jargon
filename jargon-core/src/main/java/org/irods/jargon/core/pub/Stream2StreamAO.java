@@ -118,6 +118,9 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * <p/>
 	 * Note that this method will buffer the streams provided in the call if
 	 * they are not buffered, controlled by the jargon.properties.
+	 * <p/>
+	 * This method will close the streams and do a final flush of the output
+	 * stream, so no further processing is necessary.
 	 * 
 	 * @param inputStream
 	 *            {@link InputStream}. If not buffered, it will be buffered

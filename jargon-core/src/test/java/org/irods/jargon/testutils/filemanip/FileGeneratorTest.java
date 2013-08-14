@@ -14,6 +14,7 @@ public class FileGeneratorTest {
 	private static ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "FileGeneratorTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
+
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();

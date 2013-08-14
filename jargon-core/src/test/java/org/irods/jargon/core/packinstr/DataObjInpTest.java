@@ -118,11 +118,14 @@ public class DataObjInpTest {
 		sb.append("<dataSize>716800000</dataSize>\n");
 		sb.append("<numThreads>0</numThreads>\n");
 		sb.append("<oprType>1</oprType>\n");
-		sb.append("<KeyValPair_PI><ssLen>1</ssLen>\n");
+		sb.append("<KeyValPair_PI><ssLen>2</ssLen>\n");
+		sb.append("<keyWord>dataType</keyWord>\n");
 		sb.append("<keyWord>destRescName</keyWord>\n");
+		sb.append("<svalue>generic</svalue>\n");
 		sb.append("<svalue>test1-resc</svalue>\n");
 		sb.append("</KeyValPair_PI>\n");
 		sb.append("</DataObjInp_PI>\n");
+
 		Assert.assertEquals("did not get expected packing instruction",
 				sb.toString(), dataObjInp.getParsedTags());
 

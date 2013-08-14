@@ -44,6 +44,9 @@ public class TestingPropertiesHelper {
 	public static String IRODS_USER_GROUP_KEY = "test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
 	public static String IRODS_TEST_OPTION_KERBEROS_KEY = "test.option.kerberos";
+	public static String IRODS_TEST_OPTION_REG_FILESYSTEM = "test.option.exercise.filesystem.reg";
+	public static String IRODS_TEST_OPTION_REG_FILESYSTEM_LOCAL = "test.option.exercise.filesystem.reg.local";
+	public static String IRODS_REG_BASEDIR = "test.option.mount.basedir";
 	public static String IRODS_FEDERATED_HOST_KEY = "test.federated.irods.host";
 	public static String IRODS_FEDERATED_PORT_KEY = "test.federated.irods.port";
 	public static String IRODS_FEDERATED_ZONE_KEY = "test.federated.irods.zone";
@@ -54,6 +57,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_FEDERATED_ADMIN_PASSWORD_KEY = "test.federated.irods.admin.password";
 	public static String IRODS_KERBEROS_USER_KEY = "jargon.test.kerberos.user";
 	public static String IRODS_TEST_OPTION_PAM_KEY = "test.option.pam";
+	public static String IRODS_TEST_OPTION_EXERCISE_WORKFLOW = "test.option.exercise.workflow";
 	public static String IRODS_PAM_USER_KEY = "jargon.test.pam.user";
 	public static String IRODS_PAM_PASSWORD_KEY = "jargon.test.pam.password";
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
@@ -795,6 +799,56 @@ public class TestingPropertiesHelper {
 	 */
 	public boolean isTestKerberos(final Properties testingProperties) {
 		String val = (String) testingProperties.get("test.option.kerberos");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional workflow testing to be done
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestWorkflow(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get(IRODS_TEST_OPTION_EXERCISE_WORKFLOW);
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional registration functions that test imcoll operations on
+	 * physical file systems are supported
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestFileSystemMount(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.exercise.filesystem.mount");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional registration functions that test imcoll operations on
+	 * physical file systems are running on the same machine as the irods
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestFileSystemMountLocal(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.exercise.filesystem.mount.local");
 		if (val == null) {
 			return false;
 		} else {

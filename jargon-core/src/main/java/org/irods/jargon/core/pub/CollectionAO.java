@@ -377,7 +377,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @throws JargonException
 	 */
 	Collection findByAbsolutePath(final String irodsCollectionAbsolutePath)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
