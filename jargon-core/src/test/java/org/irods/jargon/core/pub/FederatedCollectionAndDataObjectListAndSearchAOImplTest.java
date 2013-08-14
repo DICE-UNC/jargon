@@ -433,7 +433,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				foundCrossZone);
 	}
 
-	@SuppressWarnings("null")
 	@Test
 	public void testListDataObjectsUnderPathWithAccessInfoInAnotherZone()
 			throws Exception {
