@@ -48,6 +48,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean usingDiscoveredServerPropertiesCache = true;
 	private boolean usingSpecificQueryForCollectionListingsWithPermissions = true;
 	private boolean usingSpecQueryForDataObjPermissionsForUserInGroup = false;
+	private int pamTimeToLive = 1209600;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -122,7 +123,8 @@ public class SettableJargonProperties implements JargonProperties {
 		this.setReconnect(jargonProperties.isReconnect());
 		this.setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
-		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
+		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
+				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 	}
 
 	/*
@@ -712,20 +714,44 @@ public class SettableJargonProperties implements JargonProperties {
 		this.usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingSpecQueryForDataObjPermissionsForUserInGroup()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
 	@Override
 	public synchronized boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup() {
-	return usingSpecQueryForDataObjPermissionsForUserInGroup;
+		return usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
 	/**
-	 * @param usingSpecQueryForDataObjPermissionsForUserInGroup the usingSpecQueryForDataObjPermissionsForUserInGroup to set
+	 * @param usingSpecQueryForDataObjPermissionsForUserInGroup
+	 *            the usingSpecQueryForDataObjPermissionsForUserInGroup to set
 	 */
 	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
 			boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
 		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
+	 */
+	@Override
+	public synchronized int getPAMTimeToLive() {
+		return pamTimeToLive;
+	}
+
+	/**
+	 * Set the pam time to live (in seconds)
+	 * 
+	 * @param pamTimeToLive
+	 *            <code>int</code> with the time to live for pam passwords
+	 */
+	public synchronized void setPAMTimeToLive(final int pamTimeToLive) {
+		this.pamTimeToLive = pamTimeToLive;
 	}
 
 }

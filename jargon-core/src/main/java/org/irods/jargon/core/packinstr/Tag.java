@@ -291,6 +291,18 @@ public class Tag implements Cloneable {
 		addTag(new Tag(name, val));
 	}
 
+	/**
+	 * Convenience method to add a tag with an int value
+	 * 
+	 * @param name
+	 *            <code>String</code> with the tag name
+	 * @param val
+	 *            <code>int</code> with the tag value
+	 */
+	public void addTag(final String name, final int val) {
+		addTag(new Tag(name, val));
+	}
+
 	public void addTag(final Tag add) {
 		if (tags == null) {
 			tags = new ArrayList<Tag>();
