@@ -6,7 +6,6 @@ package org.irods.jargon.conveyor.basic;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
@@ -247,7 +246,7 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("dequeueNextOperation()");
 
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 		} catch (ConveyorBusyException e) {
 			log.info("busy, ignore..");
 			return;
@@ -262,7 +261,7 @@ public class BasicQueueManagerServiceImpl extends
 
 			if (transfers.isEmpty()) {
 				log.info("nothing to process...");
-				this.getConveyorExecutorService().setOperationCompleted();
+				getConveyorExecutorService().setOperationCompleted();
 				return;
 			}
 
@@ -271,7 +270,7 @@ public class BasicQueueManagerServiceImpl extends
 					transfer);
 
 			// upon dequeue clear the error status
-			this.getConveyorExecutorService().setErrorStatus(ErrorStatus.OK);
+			getConveyorExecutorService().setErrorStatus(ErrorStatus.OK);
 			transferAttempt = transferAttemptDAO
 					.findLastTransferAttemptForTransferByTransferId(transfer
 							.getId());
@@ -289,40 +288,38 @@ public class BasicQueueManagerServiceImpl extends
 			transferDAO.save(transfer);
 			transferAttemptDAO.save(transferAttempt);
 
-			this.getConveyorExecutorService().processTransfer(transferAttempt,
-					this.conveyorService);
+			getConveyorExecutorService().processTransfer(transferAttempt,
+					conveyorService);
 		} catch (JargonException je) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 
 			if (transferAttempt != null) {
 				log.info("updating transfer with exception", je);
-				this.getConveyorService()
-						.getTransferAccountingManagementService()
+				getConveyorService().getTransferAccountingManagementService()
 						.updateTransferAttemptWithConveyorException(
 								transferAttempt, je);
 
 			}
 
-			this.getConveyorExecutorService().setOperationCompleted();
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorExecutorService().setOperationCompleted();
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(je);
-			this.dequeueNextOperation();
+			dequeueNextOperation();
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 
 			if (transferAttempt != null) {
 				log.info("updating transfer with exception", e);
-				this.getConveyorService()
-						.getTransferAccountingManagementService()
+				getConveyorService().getTransferAccountingManagementService()
 						.updateTransferAttemptWithConveyorException(
 								transferAttempt, e);
 
 			}
 
-			this.getConveyorExecutorService().setOperationCompleted();
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorExecutorService().setOperationCompleted();
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
-			this.dequeueNextOperation();
+			dequeueNextOperation();
 		}
 	}
 
@@ -363,7 +360,7 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("see if conveyor is busy");
 
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 		} catch (ConveyorBusyException e) {
 			log.info("conveyor is busy, cannot purge");
 			throw e;
@@ -377,7 +374,7 @@ public class BasicQueueManagerServiceImpl extends
 			log.error("jargon exception dequeue operation, will unlock queue");
 			throw new ConveyorExecutionException(e);
 		} finally {
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 
 		}
 
@@ -398,7 +395,7 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("see if conveyor is busy");
 
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 		} catch (ConveyorBusyException e) {
 			log.info("conveyor is busy, cannot purge");
 			throw e;
@@ -412,7 +409,7 @@ public class BasicQueueManagerServiceImpl extends
 			log.error("jargon exception deleting transfer");
 			throw new ConveyorExecutionException(e);
 		} finally {
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 
 		}
 	}
@@ -598,23 +595,26 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("attempt added");
 
 	}
-        
-        @Override
-	public List<TransferItem> getNextTransferItems(final long transferId, int start, int length)
+
+	@Override
+	public List<TransferItem> getNextTransferItems(final long transferId,
+			final int start, final int length)
 			throws ConveyorExecutionException {
-                List<TransferItem> items = null;
-                
-                log.info("getNextTransferItems");
+		List<TransferItem> items = null;
+
+		log.info("getNextTransferItems");
 		if (transferId <= 0) {
 			throw new IllegalArgumentException("invalid transferId");
 		}
-                try {
-                    items = transferAttemptDAO.findNextTransferItems(transferId, start, length);
-                } catch (TransferDAOException e) {
-                    log.error("exception retrieving transfer items", e);
-			throw new ConveyorExecutionException("error finding transfer items", e);
-                }
-                
-                return items;
-        }
+		try {
+			items = transferAttemptDAO.findNextTransferItems(transferId, start,
+					length);
+		} catch (TransferDAOException e) {
+			log.error("exception retrieving transfer items", e);
+			throw new ConveyorExecutionException(
+					"error finding transfer items", e);
+		}
+
+		return items;
+	}
 }

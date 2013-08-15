@@ -370,14 +370,18 @@ public abstract class AbstractConveyorCallable implements
 	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 		log.info("overall status callback:{}", transferStatus);
+		boolean doComplete = false;
 		try {
 			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 				log.info("overall completion...updating status of transfer...");
+				doComplete = true;
 				processOverallCompletionOfTransfer(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
 				log.error("failure to transfer in status");
+				doComplete = true;
 				processOverallCompletionOfTransferWithFailure(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferState.CANCELLED) {
+				doComplete = true;
 				log.error("transfer cancelled, this will be handled by the conveyor execution service, and the callback here will be ignored");
 				// processOverallCompletionOfTransferWithCancel(transferStatus);
 			}
@@ -388,9 +392,15 @@ public abstract class AbstractConveyorCallable implements
 				conveyorService.getConveyorCallbackListener()
 						.overallStatusCallback(transferStatus);
 			}
-			if (transferStatus.getTransferState() == TransferState.OVERALL_COMPLETION) {
+
+			/*
+			 * signal a completion if it's not a callback that is informational
+			 * or indicates startup
+			 */
+			if (doComplete) {
 				doCompletionSequence();
 			}
+
 		}
 
 	}

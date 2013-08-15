@@ -1229,12 +1229,36 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				newIrodsParentDirectory, transferStatusCallbackListener,
 				transferControlBlock);
 
-		// send status callback that indicates completion
+		/**
+		 * Send an overall status callback. If the state is cancelled, see if it
+		 * was cancelled due to too many errors, in which case it is called a
+		 * failure
+		 */
 		if (transferStatusCallbackListener != null) {
 			if (transferControlBlock.isCancelled()
 					|| transferControlBlock.isPaused()) {
-				// on pause or cancel, no completion is sent
-				log.info("no overall completion callback is sent, as the transfer was paused or cancelled");
+
+				TransferState transferState;
+
+				if (transferControlBlock
+						.shouldTransferBeAbandonedDueToNumberOfErrors()) {
+					log.warn("transfer state is failure");
+					transferState = TransferState.FAILURE;
+				} else {
+					log.info("transferState is cancelled");
+					transferState = TransferState.CANCELLED;
+				}
+
+				TransferStatus status = TransferStatus.instance(
+						TransferType.PUT, sourceFile.getAbsolutePath(),
+						newIrodsParentDirectory.getAbsolutePath(), "",
+						transferControlBlock.getTotalBytesToTransfer(),
+						transferControlBlock.getTotalBytesTransferredSoFar(),
+						transferControlBlock.getTotalFilesTransferredSoFar(),
+						transferControlBlock.getTotalFilesToTransfer(),
+						transferState, getIRODSAccount().getHost(),
+						getIRODSAccount().getZone());
+				transferStatusCallbackListener.overallStatusCallback(status);
 			} else {
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),

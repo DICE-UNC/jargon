@@ -288,8 +288,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public void setBusyForAnOperation() throws ConveyorBusyException {
-		// log.debug("setBusyForOperation()... current status:{}",
-		// runningStatus);
+
 		synchronized (statusSynchronizingObject) {
 			if (runningStatus == RunningStatus.BUSY) {
 				// log.debug("will return busy exception");
@@ -364,6 +363,12 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		return currentTransferAttempt;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorExecutorService#
+	 * getNumberFilesTransferredSoFarInCurrentTransfer()
+	 */
 	@Override
 	public synchronized int getNumberFilesTransferredSoFarInCurrentTransfer() {
 		if (currentCallable == null) {

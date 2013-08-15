@@ -161,4 +161,14 @@ public class ConfigurationProperty implements Serializable {
 		this.updatedAt = updatedAt;
 	}
 
+	/**
+	 * Set the property value to an int
+	 * 
+	 * @param i
+	 */
+	public void setPropertyValue(int i) {
+		this.propertyValue = String.valueOf(i);
+
+	}
+
 }

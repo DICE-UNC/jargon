@@ -16,11 +16,11 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	}
 
 	/**
-	 * Submit a user-defined rule for processing (analagous to running irule).
+	 * Submit a user-defined rule for processing (analogous to running irule).
 	 * Note that this method will, if running on iRODS 3.0 or higher, add the @external
 	 * flag, which is explained below. The @external flag is used when
-	 * processing rules in the new rule format, and is not in effect effect (or
-	 * causes any harm) if executing a 'classic' style rule.
+	 * processing rules in the new rule format, and is not in effect (or causes
+	 * any harm) if executing a 'classic' style rule.
 	 * <p/>
 	 * The difference between having @external not having it is how the rule
 	 * engine interprets string input parameters. For external, the input
