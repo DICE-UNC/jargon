@@ -12,7 +12,6 @@ import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
-import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
@@ -62,9 +61,10 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		for (TransferAttempt attempt : merged.getTransferAttempts()) {
 			attempt.getAttemptStatus();
 
-			for (TransferItem item : attempt.getTransferItems()) {
-				item.getSourceFileAbsolutePath();
-			}
+			/*
+			 * for (TransferItem item : attempt.getTransferItems()) {
+			 * item.getSourceFileAbsolutePath(); }
+			 */
 
 		}
 		return merged;
@@ -108,7 +108,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferState(
-			final TransferStateEnum... transferState) throws TransferDAOException {
+			final TransferStateEnum... transferState)
+			throws TransferDAOException {
 		log.debug("entering findByTransferState(TransferState...)");
 
 		try {
@@ -138,7 +139,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferState(final int maxResults,
-			final TransferStateEnum... transferState) throws TransferDAOException {
+			final TransferStateEnum... transferState)
+			throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferState...)");
 		try {
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
@@ -168,7 +170,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Transfer> findByTransferStatus(final int maxResults,
-			final TransferStatusEnum... transferStatus) throws TransferDAOException {
+			final TransferStatusEnum... transferStatus)
+			throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferStatus...)");
 
 		try {
@@ -340,10 +343,12 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 
 			log.debug("delete transfer items sql:{}", sb.toString());
 
-			int rows = super.getHibernateTemplate().bulkUpdate(
-					sb.toString(),
-					new Object[] { TransferStateEnum.COMPLETE,
-							TransferStateEnum.CANCELLED, TransferStatusEnum.OK });
+			int rows = super.getHibernateTemplate()
+					.bulkUpdate(
+							sb.toString(),
+							new Object[] { TransferStateEnum.COMPLETE,
+									TransferStateEnum.CANCELLED,
+									TransferStatusEnum.OK });
 			log.debug("deleted items count= {}", rows);
 
 			sb = new StringBuilder();
@@ -351,10 +356,12 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 
 			log.debug("delete transfers sql:{}", sb.toString());
 
-			rows = super.getHibernateTemplate().bulkUpdate(
-					sb.toString(),
-					new Object[] { TransferStateEnum.COMPLETE,
-							TransferStateEnum.CANCELLED, TransferStatusEnum.OK });
+			rows = super.getHibernateTemplate()
+					.bulkUpdate(
+							sb.toString(),
+							new Object[] { TransferStateEnum.COMPLETE,
+									TransferStateEnum.CANCELLED,
+									TransferStatusEnum.OK });
 
 			log.debug("deleted transfers count= {}", rows);
 
