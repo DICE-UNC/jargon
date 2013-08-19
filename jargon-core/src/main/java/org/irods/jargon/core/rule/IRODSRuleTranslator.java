@@ -102,7 +102,9 @@ public class IRODSRuleTranslator {
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
-		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText, "\n");
+		String trimmedRule = ruleAsPlainText.trim();
+
+		StringTokenizer tokens = new StringTokenizer(trimmedRule, "\n");
 		List<String> tokenLines = new ArrayList<String>();
 
 		while (tokens.hasMoreElements()) {
@@ -114,7 +116,7 @@ public class IRODSRuleTranslator {
 		if (tokenLines.size() < 3) {
 			log.error(
 					"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
-					ruleAsPlainText);
+					trimmedRule);
 			throw new JargonRuleException(
 					"Rule requires at least 3 lines for body, input, and output parameters");
 		}

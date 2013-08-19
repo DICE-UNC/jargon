@@ -64,15 +64,19 @@ public class ScratchFileUtils {
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
 						+ pathUnderScratch);
+		
 		// if exists, delete it
 		if (scratchDir.exists()) {
 			removeFiles(scratchDir);
+			scratchDir.delete();
 
 		}
 
+
+		scratchDir.delete();
 		scratchDir.mkdirs();
 	}
-
+	
 	private void removeFiles(final File file) {
 		if (file.isDirectory()) {
 			File[] files = file.listFiles();
