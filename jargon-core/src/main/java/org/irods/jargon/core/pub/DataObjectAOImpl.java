@@ -1300,6 +1300,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						lengthFromIrodsResponse, irodsFileLength,
 						transferControlBlock, transferStatusCallbackListener,
 						clientSideAction);
+				this.getIRODSProtocol().operationComplete(l1descInx);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -1307,8 +1308,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						thisFileTransferOptions, transferControlBlock,
 						transferStatusCallbackListener);
 			}
-
-			this.getIRODSProtocol().operationComplete(l1descInx);
 
 			if (thisFileTransferOptions != null
 					&& thisFileTransferOptions

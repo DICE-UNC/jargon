@@ -639,15 +639,18 @@ public class RuleProcessingAOImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsFileName);
 		File sourceFile = new File(putFileName);
 
-		// put the file first to set up the overwrite
+		TransferControlBlock tcb = accessObjectFactory
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(sourceFile, targetFile, null, null);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("testClientAction||msiDataObjPut(");
+		builder.append("testClientAction||msiDataObjPut(\"");
 		builder.append(targetIrodsFileName);
-		builder.append(",null,");
+		builder.append("\",null,");
 		builder.append("\"localPath=");
 		builder.append(putFileName);
 		builder.append("++++destRescName=");
@@ -851,7 +854,7 @@ public class RuleProcessingAOImplTest {
 		dto.putOperation(sourceFile, targetFile, null, null);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("testClientAction||msiDataObjGet(");
+		builder.append("testClientAction||writeString(\"stdout\", \"hi there before\")##msiDataObjGet(");
 		builder.append(testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH));
@@ -860,9 +863,9 @@ public class RuleProcessingAOImplTest {
 		builder.append(",");
 		builder.append(absPath);
 		builder.append(testFileGetName);
-		builder.append(",*status)|nop\n");
+		builder.append(",*status)##writeString(\"stdout\",\"hi there after\")|nop\n");
 		builder.append("*A=null\n");
-		builder.append("*ruleExecOut");
+		builder.append("ruleExecOut");
 
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);

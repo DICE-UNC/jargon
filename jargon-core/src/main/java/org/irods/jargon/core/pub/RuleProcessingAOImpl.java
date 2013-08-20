@@ -345,14 +345,41 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		boolean wasClientAction = processIndividualParameters(irodsRuleResult,
 				parametersLength, outputParameters);
 
+		/*
+		 * Rule processing may produce multiple output messges. These messages
+		 * may include commands to do client-side operations, such as gets and
+		 * puts. The gets and puts go through the same code paths as those in
+		 * DataTransferOperations, with special flags that allow smooth
+		 * operation in this special use case.
+		 * 
+		 * Note that 'operation complete' messages are sent when certain steps
+		 * are encountered, such as client side actions. Below, Jargon accounts
+		 * for the potential multiple read/write sequences that occur to process
+		 * each step in the rule execution, looking for more output parameters
+		 * in the form of client side actions, logged messages, or other output
+		 * parameters.
+		 * 
+		 * 
+		 * The loop will keep processing until all client side actions are
+		 * complete.
+		 */
+
 		while (wasClientAction) {
 			log.info("get additional information for subsequent responses");
 
 			Tag subsequentResultTag = this.operationComplete(0);
 
-			// shouldn't happen..just to be sure
+			/*
+			 * Per comment above, read and discard intermediate status protocol
+			 * messages, looking for more parms
+			 */
+
 			if (subsequentResultTag == null) {
-				throw new JargonException("no response to operComplete");
+				subsequentResultTag = this.getIRODSProtocol().readMessage();
+			}
+
+			if (subsequentResultTag == null) {
+				break;
 			}
 
 			/*
@@ -366,7 +393,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 					IRODSConstants.paramLen).getIntValue();
 
 			if (parametersLength == 0) {
-				subsequentResultTag = this.getIRODSProtocol().readMessage();
+				break;
 			}
 
 			parametersLength = subsequentResultTag.getTag(
@@ -776,7 +803,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						localPath);
 	}
 
-	private Tag clientSidePutAction(final String irodsFileAbsolutePath,
+	private void clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
 			final boolean force, final int nbrThreads) throws JargonException {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
@@ -807,7 +834,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
 				localFile, irodsFile, transferControlBlock);
 		log.debug("client side put action was successful");
-		return this.operationComplete(0); // FIXME: error status?
 
 	}
 

@@ -1,6 +1,6 @@
  myTestRule  {
  writeString("stdout", "before transfer");
- msiDataObjGet(*SourceFile,"localPath=*localPath++++rescName=test1-resc++++forceFlag=",*status)
+ msiDataObjGet(*SourceFile,"localPath=*localPath++++rescName=test1-resc++++forceFlag=",*status);
  writeString("stdout", "after transfer");
  writeString("stderr", "Error:blah");
 }
