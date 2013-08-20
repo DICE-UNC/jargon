@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -101,8 +102,9 @@ public interface IRODSAccessObject {
 	 * 
 	 * @param status
 	 *            <code>int</code> with the operation complete status to send
+	 * @return {@link Tag} with any response (could be null)
 	 * @throws JargonException
 	 */
-	void operationComplete(int status) throws JargonException;
+	Tag operationComplete(int status) throws JargonException;
 
 }

@@ -37,6 +37,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
+import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter.OutputParamType;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.rule.JargonRuleException;
@@ -84,6 +85,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	public static final String BUF_LEN = "buflen";
 	public static final String OBJ_PATH = "objPath";
 	public static final String RULE_EXEC_OUT = "ruleExecOut";
+	public static final String RULE_EXEC_ERROR_OUT = "ruleExecErrorOut";
 
 	private static final Object DEST_RESC_NAME = "rescName";
 
@@ -301,6 +303,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response,
 				irodsRule);
+
 		log.debug("processing end of rule execution by reading message");
 
 		return irodsRuleExecResult;
@@ -323,21 +326,61 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			return ruleResult;
 		}
 
+		Map<String, IRODSRuleExecResultOutputParameter> outputParameters = new HashMap<String, IRODSRuleExecResultOutputParameter>();
+
 		// if result was null, it was returned as an empty response, otherwise,
 		// I proceed to parse out the result
+
+		/*
+		 * I will loop through and accumulate output parameters while I
+		 * encounter client side actions, and then I will return the accumulated
+		 * set to the caller after sending an op complete
+		 */
 
 		int parametersLength = irodsRuleResult.getTag(IRODSConstants.paramLen)
 				.getIntValue();
 
 		log.debug("I have {} parameters from the rule", parametersLength);
 
-		Map<String, IRODSRuleExecResultOutputParameter> outputParameters = processIndividualParameters(
-				irodsRuleResult, parametersLength);
+		boolean wasClientAction = processIndividualParameters(irodsRuleResult,
+				parametersLength, outputParameters);
+
+		while (wasClientAction) {
+			log.info("get additional information for subsequent responses");
+
+			Tag subsequentResultTag = this.operationComplete(0);
+
+			// shouldn't happen..just to be sure
+			if (subsequentResultTag == null) {
+				throw new JargonException("no response to operComplete");
+			}
+
+			/*
+			 * this read may be another client side op, if there are parameters
+			 * in this tag, then don't read again, iRODS is a bit funny about
+			 * this, and doesn't seem consistent, so I'm taking a flexible
+			 * approach to processing tags in this sequence
+			 */
+
+			parametersLength = subsequentResultTag.getTag(
+					IRODSConstants.paramLen).getIntValue();
+
+			if (parametersLength == 0) {
+				subsequentResultTag = this.getIRODSProtocol().readMessage();
+			}
+
+			parametersLength = subsequentResultTag.getTag(
+					IRODSConstants.paramLen).getIntValue();
+			log.debug("I have {} parameters from subsequent rule messages",
+					parametersLength);
+			wasClientAction = processIndividualParameters(subsequentResultTag,
+					parametersLength, outputParameters);
+		}
+
 		IRODSRuleExecResult irodsRuleExecResult = IRODSRuleExecResult.instance(
 				irodsRule, outputParameters);
 
 		log.info("execute result: {}", irodsRuleExecResult);
-
 		return irodsRuleExecResult;
 
 	}
@@ -471,18 +514,25 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	}
 
 	/**
+	 * Process a response from a rule invocation, accumulate any output
+	 * parameters encountered, then
+	 * 
+	 * @param rulesTag
 	 * @param parametersLength
+	 * @param irodsRuleOutputParameters
 	 * @return
+	 * @throws JargonException
 	 */
-	private Map<String, IRODSRuleExecResultOutputParameter> processIndividualParameters(
-			final Tag rulesTag, final int parametersLength)
+	private boolean processIndividualParameters(
+			final Tag rulesTag,
+			final int parametersLength,
+			final Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters)
 			throws JargonException {
 
 		String label;
 		String type;
 		Object value;
-
-		Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters = new HashMap<String, IRODSRuleExecResultOutputParameter>();
+		boolean wasClientAction = false;
 
 		for (int i = 0; i < parametersLength; i++) {
 			Tag msParam = rulesTag.getTag(IRODSConstants.MsParam_PI, i);
@@ -496,12 +546,17 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			log.debug("parm type: {}", type);
 			log.debug("value: {}", value);
 
-			if (label.equals(CL_PUT_ACTION) || label.equals("CL_GET_ACTION")) {
+			if (label.equals(CL_PUT_ACTION) || label.equals(CL_GET_ACTION)) {
 				// for recording a client side action
+				wasClientAction = true;
 				irodsRuleOutputParameters.put(
 						label,
 						(processRuleResponseWithClientSideActionTag(label,
 								type, value, msParam)));
+
+			} else if (label.equals(RULE_EXEC_OUT)) {
+				irodsRuleOutputParameters.putAll(this
+						.extractStringFromExecCmdOut(msParam));
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
@@ -509,7 +564,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("rule operation complete");
-		return irodsRuleOutputParameters;
+		return wasClientAction;
 
 	}
 
@@ -522,14 +577,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		log.debug("value: {}", value);
 		log.debug("tag: {}", msParam.getStringValue());
 
-		// FIXME: mcc, check out the intent here
-		if (type.equals(EXEC_CMD_OUT_PI)) {
-		}
-
 		return IRODSRuleExecResultOutputParameter.instance(label,
 				IRODSRuleExecResultOutputParameter.OutputParamType.STRING,
 				value);
-
 	}
 
 	/**
@@ -543,8 +593,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			return parameterTag.getTag(INT_PI).getTag(MY_INT).getIntValue();
 		} else if (type.equals(BUF_LEN_PI)) {
 			return parameterTag.getTag(BIN_BYTES_BUF_PI).getTag(BUF).getValue();
-		} else if (type.equals(EXEC_CMD_OUT_PI)) {
-			return extractStringFromExecCmdOut(parameterTag);
 		} else if (type.equals(STR_PI)) {
 			return parameterTag.getTag(STR_PI).getTag(MY_STR).getStringValue();
 		} else {
@@ -557,8 +605,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 * @return
 	 * @throws JargonException
 	 */
-	private Object extractStringFromExecCmdOut(final Tag parameterTag)
-			throws JargonException {
+	private Map<String, IRODSRuleExecResultOutputParameter> extractStringFromExecCmdOut(
+			final Tag parameterTag) throws JargonException {
+
+		Map<String, IRODSRuleExecResultOutputParameter> resultMap = new HashMap<String, IRODSRuleExecResultOutputParameter>();
+
 		Tag exec = parameterTag.getTag(EXEC_CMD_OUT_PI);
 
 		// there should be 3 tags, 0 is buf, 1 is empty, 2 is status
@@ -577,20 +628,46 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 					"invalid status in response ExecCmdOut_PI tag:" + status);
 		}
 
+		String result;
 		Tag bufTag = exec.getTag(BIN_BYTES_BUF_PI, 0).getTag(BUF);
-
-		String results;
-
 		if (bufTag != null) {
 			String base64Encoded = bufTag.getStringValue();
-
 			byte[] decoded = Base64.fromString(base64Encoded);
-			results = new String(decoded);
+			String buf = new String(decoded);
+			int zeroIdx = buf.indexOf('\0');
+			if (zeroIdx == -1) {
+				result = buf;
+			} else {
+				result = buf.substring(0, zeroIdx);
+			}
 		} else {
-			results = "";
+			result = "";
 		}
 
-		return results;
+		IRODSRuleExecResultOutputParameter param = IRODSRuleExecResultOutputParameter
+				.instance(RULE_EXEC_OUT, OutputParamType.STRING, result);
+		resultMap.put(RULE_EXEC_OUT, param);
+
+		Tag errTag = exec.getTag(BIN_BYTES_BUF_PI, 1).getTag(BUF);
+		if (errTag != null) {
+			String base64Encoded = errTag.getStringValue();
+			byte[] decoded = Base64.fromString(base64Encoded);
+			String buf = new String(decoded);
+			int zeroIdx = buf.indexOf('\0');
+			if (zeroIdx == -1) {
+				result = buf;
+			} else {
+				result = buf.substring(0, zeroIdx);
+			}
+		} else {
+			result = "";
+		}
+
+		param = IRODSRuleExecResultOutputParameter.instance(
+				RULE_EXEC_ERROR_OUT, OutputParamType.STRING, result);
+		resultMap.put(RULE_EXEC_ERROR_OUT, param);
+
+		return resultMap;
 	}
 
 	/**
@@ -605,17 +682,21 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 *             retained note on this method... should check intInfo if ==
 	 *             SYS_SVR_TO_CLI_MSI_REQUEST 99999995
 	 *             /*lib/core/include/rodsDef.h
-	 * 
-	 *             // this is the return value for the rcExecMyRule call
-	 *             indicating the // server is requesting the client to client
-	 *             to perform certain task #define SYS_SVR_TO_CLI_MSI_REQUEST
-	 *             99999995 #define SYS_SVR_TO_CLI_COLL_STAT 99999996 #define
-	 *             SYS_CLI_TO_SVR_COLL_STAT_REPLY 99999997
-	 * 
-	 *             // definition for iRods server to client action request from
-	 *             a microservice. // these definitions are put in the "label"
-	 *             field of MsParam
-	 * 
+	 *             <p/>
+	 *             this is the return value for the rcExecMyRule call indicating
+	 *             theserver is requesting the client to client to perform
+	 *             certain task
+	 *             <p/>
+	 *             #define SYS_SVR_TO_CLI_MSI_REQUEST 99999995
+	 *             <p/>
+	 *             #define SYS_SVR_TO_CLI_COLL_STAT 99999996
+	 *             <p/>
+	 *             #define SYS_CLI_TO_SVR_COLL_STAT_REPLY 99999997
+	 *             <p/>
+	 *             definition for iRods server to client action request from a
+	 *             microservice. These definitions are put in the "label" field
+	 *             of MsParam
+	 *             <p/>
 	 *             #define CL_PUT_ACTION "CL_PUT_ACTION" #define CL_GET_ACTION
 	 *             "CL_GET_ACTION" #define CL_ZONE_OPR_INX "CL_ZONE_OPR_INX"
 	 */
@@ -656,7 +737,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		String resourceName = kvpMap.get(DEST_RESC_NAME);
 		if (resourceName == null) {
-			resourceName = "";
+			resourceName = kvpMap.get("destRescName");
+			if (resourceName == null) {
+				resourceName = "";
+			}
 		}
 		log.info("resourceName:{}", resourceName);
 
@@ -692,7 +776,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 						localPath);
 	}
 
-	private void clientSidePutAction(final String irodsFileAbsolutePath,
+	private Tag clientSidePutAction(final String irodsFileAbsolutePath,
 			final File localFile, final String resourceName,
 			final boolean force, final int nbrThreads) throws JargonException {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) this
@@ -723,6 +807,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		dataObjectAO.putLocalDataObjectToIRODSForClientSideRuleOperation(
 				localFile, irodsFile, transferControlBlock);
 		log.debug("client side put action was successful");
+		return this.operationComplete(0); // FIXME: error status?
+
 	}
 
 	private void clientSideGetAction(final String irodsFileAbsolutePath,
@@ -754,13 +840,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		transferOptions.setMaxThreads(nbrThreads);
 
-		int status = dataObjectAO
-				.irodsDataObjectGetOperationForClientSideAction(irodsFile,
-						localFile, transferOptions);
-
-		this.operationComplete(status);
+		dataObjectAO.irodsDataObjectGetOperationForClientSideAction(irodsFile,
+				localFile, transferOptions);
 
 		log.debug("client side get action was successful");
+
 	}
 
 }

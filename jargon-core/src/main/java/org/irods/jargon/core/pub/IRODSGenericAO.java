@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.OperationComplete;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -171,9 +172,9 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
 	 */
 	@Override
-	public void operationComplete(final int status) throws JargonException {
+	public Tag operationComplete(final int status) throws JargonException {
 		OperationComplete operationComplete = OperationComplete
 				.instance(status);
-		getIRODSProtocol().irodsFunction(operationComplete);
+		return getIRODSProtocol().irodsFunction(operationComplete);
 	}
 }

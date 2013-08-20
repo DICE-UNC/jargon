@@ -454,7 +454,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <p/>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
 	 * option is set to ask the callback listener, then the
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
@@ -1308,6 +1308,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						transferStatusCallbackListener);
 			}
 
+			this.getIRODSProtocol().operationComplete(l1descInx);
+
 			if (thisFileTransferOptions != null
 					&& thisFileTransferOptions
 							.isComputeAndVerifyChecksumAfterTransfer()) {
@@ -1326,10 +1328,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				}
 			}
 
-			log.info("looking for executable to set flag on local file");
-			if (irodsFileToGet.canExecute()) {
-				log.info("execute set on local file");
-				localFileToHoldData.setExecutable(true);
+			if (!clientSideAction) {
+				log.info("looking for executable to set flag on local file");
+
+				if (irodsFileToGet.canExecute()) {
+					log.info("execute set on local file");
+					localFileToHoldData.setExecutable(true);
+				}
 			}
 
 		} catch (Exception e) {
@@ -1368,6 +1373,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final boolean clientSideAction) throws JargonException {
+
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
 		int port = message.getTag(IRODSConstants.PortList_PI)
@@ -2937,9 +2943,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("absolute path: {}", dataObjectAbsolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyDataObjectMetadata(
-						dataObjectAbsolutePath, currentAvuData,
-						newAvuData);
+				.instanceForModifyDataObjectMetadata(dataObjectAbsolutePath,
+						currentAvuData, newAvuData);
 
 		log.debug("sending avu request");
 

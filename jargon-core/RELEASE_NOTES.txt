@@ -50,6 +50,10 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1635] ttl parameter in PAM missing
 **Added TTL to pam packing instruction, and added to the jargon.properties as pam.time.to.live.in.seconds=1209600 as a default
 
+*[#1641] [iROD-Chat:10574] Fwd: Porting rules to Jargon 
+**Added processing for extended rule output, including splitting out rule stdOut and errorOut to ruleExecOut and ruleExecErrorOut output parameters
+**Improved client side action processing for get and put operations, which were skipping some returned parameters, and did not gracefully handle multiple files
+
 
 
 ==Features==

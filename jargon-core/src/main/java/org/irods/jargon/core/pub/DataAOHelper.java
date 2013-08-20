@@ -357,13 +357,20 @@ public final class DataAOHelper extends AOHelper {
 
 		// get an input stream from the irodsFile
 		BufferedOutputStream localFileOutputStream;
+
 		try {
-			localFileOutputStream = new BufferedOutputStream(
-					new FileOutputStream(localFileToHoldData)); // FIXME: set
-																// buffer size
-																// for file
-																// output stream
-																// jargon.io.local.output.stream.buffer.size
+
+			if (irodsProtocol.getPipelineConfiguration()
+					.getLocalFileOutputStreamBufferSize() <= 0) {
+
+				localFileOutputStream = new BufferedOutputStream(
+						new FileOutputStream(localFileToHoldData));
+			} else {
+				localFileOutputStream = new BufferedOutputStream(
+						new FileOutputStream(localFileToHoldData),
+						irodsProtocol.getPipelineConfiguration()
+								.getLocalFileOutputStreamBufferSize());
+			}
 		} catch (FileNotFoundException e) {
 			log.error(
 					"FileNotFoundException when trying to create a new file for the local output stream for {}",
@@ -768,6 +775,7 @@ public final class DataAOHelper extends AOHelper {
 					localFileToHoldData.getAbsolutePath(), e);
 			throw e;
 		} finally {
+
 			irodsFile.closeGivenDescriptor(fd);
 		}
 
@@ -882,8 +890,6 @@ public final class DataAOHelper extends AOHelper {
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-				// .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-				// .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
@@ -910,10 +916,6 @@ public final class DataAOHelper extends AOHelper {
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		entry.setPathOrName(row.getColumn(1));
-		// entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-		// .getColumn(2)));
-		// entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-		// .getColumn(3)));
 		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
 				.getColumn(2)));
 		entry.setDataSize(IRODSDataConversionUtil
