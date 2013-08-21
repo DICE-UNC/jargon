@@ -269,6 +269,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 					.getDefaultStorageResource());
 			gridAccount.setDefaultPath(irodsAccount.getHomeDirectory());
 			gridAccount.setAuthScheme(irodsAccount.getAuthenticationScheme());
+			gridAccount.setPort(irodsAccount.getPort());
 		} catch (JargonException e) {
 			log.error("error encrypting password with pass phrase", e);
 			throw new ConveyorExecutionException(e);
