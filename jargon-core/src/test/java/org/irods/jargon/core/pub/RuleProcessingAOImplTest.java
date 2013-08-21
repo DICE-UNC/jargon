@@ -981,6 +981,140 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * Bug [#1641] [iROD-Chat:10574] Fwd: Porting rules to Jargon
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	// ignore and test as possible irods bug
+	public void testPutGetInterleavedBug1641() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		irodsFileSystem.closeAndEatExceptions();
+		String testFileName = "testPutGetInterleavedBug1641.txt";
+		String testFileGetName = "testPutGetInterleavedBug1641Get.txt";
+		String testFileName1 = "testPutGetInterleavedBug1641F2.txt";
+		String testFileGetName1 = "testPutGetInterleavedBug1641GetF2.txt";
+		String testPutFileName = "testPutGetInterleavedBug1641PutFile.txt";
+
+		String absPathReturn = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName;
+		String absPathReturn1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName1;
+		String absPathPut = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testPutFileName;
+
+		FileGenerator.generateFileOfFixedLengthGivenName(scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH),
+				testPutFileName, 32);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+		String absPath1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath1 = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath1, testFileName1,
+						100);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String putTargetFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH)
+				+ "/" + testPutFileName;
+
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		File sourceFile = new File(scratchFileAbsolutePath);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
+
+		File sourceFile1 = new File(scratchFileAbsolutePath1);
+		IRODSFile targetFile1 = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName1);
+
+		dto.putOperation(sourceFile1, targetFile1, null, tcb);
+
+		String ruleFile = "/rules/testRuleBug1641MutlipleGetsAndPuts.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for *dataObject
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile1",
+				'"' + targetFile.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath1",
+				'"' + absPathReturn + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile2",
+				'"' + targetFile1.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath2",
+				'"' + absPathReturn1 + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*DestFile",
+				'"' + putTargetFile + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*putLocalSource",
+				'"' + absPathPut + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*DestResource",
+				'"' + irodsAccount.getDefaultStorageResource() + '"'));
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
+
+		File return1File = new File(absPathReturn);
+		Assert.assertTrue("didn't get first file", return1File.exists());
+
+		File return2File = new File(absPathReturn1);
+		Assert.assertTrue("didn't get second file", return2File.exists());
+
+		IRODSFile putFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(putTargetFile);
+		Assert.assertTrue("did not find put file", putFile.exists());
+
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+
+		Assert.assertNotNull("null execOut", execOut);
+
+		String destFile = result.getOutputParameterResults().get("*DestFile")
+				.getResultObject().toString();
+
+		Assert.assertNotNull("null destFile", destFile);
+	}
+
 	@Test
 	public void testExecuteRequestClientActionGetFileParallel()
 			throws Exception {
