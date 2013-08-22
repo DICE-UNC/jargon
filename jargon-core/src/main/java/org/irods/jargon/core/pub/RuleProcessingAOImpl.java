@@ -391,13 +391,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 			parametersLength = subsequentResultTag.getTag(
 					IRODSConstants.paramLen).getIntValue();
-
-			if (parametersLength == 0) {
-				break;
-			}
-
-			parametersLength = subsequentResultTag.getTag(
-					IRODSConstants.paramLen).getIntValue();
 			log.debug("I have {} parameters from subsequent rule messages",
 					parametersLength);
 			wasClientAction = processIndividualParameters(subsequentResultTag,
