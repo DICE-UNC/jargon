@@ -986,7 +986,7 @@ public class RuleProcessingAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	// ignore and test as possible irods bug
 	public void testPutGetInterleavedBug1641() throws Exception {
 
