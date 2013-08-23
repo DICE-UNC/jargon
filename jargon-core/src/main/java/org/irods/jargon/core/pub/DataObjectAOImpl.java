@@ -3059,8 +3059,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		UserFilePermission userFilePermission = getPermissionViaGenQuery(
 				dataName, userName, absPath);
 
-		UserFilePermission groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
-				dataName, userName, objStat, absPath);
+		// be tolerant if the specific query facility is not available.  FIXME: add to cache.this is a patch
+		UserFilePermission groupFilePermission;
+		try {
+			groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
+					dataName, userName, objStat, absPath);
+		} catch (Exception e) {
+			log.error("error in getting group permission, see bug 1655");
+			return userFilePermission;
+		}
 
 		return scoreAndReturnHighestPermission(userFilePermission,
 				groupFilePermission);
