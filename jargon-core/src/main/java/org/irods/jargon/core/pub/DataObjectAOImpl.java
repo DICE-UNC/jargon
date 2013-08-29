@@ -3014,64 +3014,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * listPermissionsForDataObjectForUserName(java.lang.String,
-	 * java.lang.String, java.lang.String)
-	 */
-	@Override
-	public UserFilePermission getPermissionForDataObjectForUserName(
-			final String irodsCollectionAbsolutePath, final String dataName,
-			final String userName) throws JargonException {
-
-		if (irodsCollectionAbsolutePath == null
-				|| irodsCollectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
-		}
-
-		if (dataName == null || dataName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty dataName");
-		}
-
-		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userName");
-		}
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-
-		log.info("listPermissionsForDataObjectForUserName path: {}",
-				irodsCollectionAbsolutePath);
-		log.info("dataName: {}", irodsCollectionAbsolutePath);
-		log.info("userName:{}", userName);
-
-		ObjStat objStat = this
-				.getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
-
-		/*
-		 * User may have permission via a direct user permission, or may have a
-		 * group level permission, check both and get the highest value
-		 */
-
-		UserFilePermission userFilePermission = getPermissionViaGenQuery(
-				dataName, userName, absPath);
-
-		// be tolerant if the specific query facility is not available.  FIXME: add to cache.this is a patch
-		UserFilePermission groupFilePermission;
-		try {
-			groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
-					dataName, userName, objStat, absPath);
-		} catch (Exception e) {
-			log.error("error in getting group permission, see bug 1655");
-			return userFilePermission;
-		}
-
-		return scoreAndReturnHighestPermission(userFilePermission,
-				groupFilePermission);
-	}
+	
 
 	/**
 	 * Get permission value via specific query for qroup based permissions
@@ -3294,7 +3237,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
 	 * (java.lang.String, java.lang.String)
 	 */
-	@Override
+	@Override 
 	public UserFilePermission getPermissionForDataObjectForUserName(
 			final String irodsAbsolutePath, final String userName)
 			throws JargonException {
@@ -3314,13 +3257,65 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+		ObjStat objStat = this
+				.getObjectStatForAbsolutePath(irodsAbsolutePath);
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(resolveAbsolutePathGivenObjStat(objStat));
 
-		return getPermissionForDataObjectForUserName(
-				collName.getCollectionParent(), collName.getChildName(),
-				userName);
+		/*
+		 * User may have permission via a direct user permission, or may have a
+		 * group level permission, check both and get the highest value
+		 */
 
+		UserFilePermission userFilePermission = getPermissionViaGenQuery(
+				irodsFile.getName(), userName, irodsFile.getParent());
+
+		// be tolerant if the specific query facility is not available.  FIXME: add to cache.this is a patch
+		UserFilePermission groupFilePermission;
+		try {
+			groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
+					irodsFile.getName(), userName, objStat, irodsFile.getParent());
+		} catch (Exception e) {
+			log.error("error in getting group permission, see bug 1655");
+			return userFilePermission;
+		}
+
+		return scoreAndReturnHighestPermission(userFilePermission,
+				groupFilePermission);
+
+	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * listPermissionsForDataObjectForUserName(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public UserFilePermission getPermissionForDataObjectForUserName(
+			final String irodsCollectionAbsolutePath, final String dataName,
+			final String userName) throws JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
+		}
+
+		if (dataName == null || dataName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append('/');
+		sb.append(dataName);
+		
+		return this.getPermissionForDataObjectForUserName(sb.toString(),  userName);
 	}
 
 	/**
