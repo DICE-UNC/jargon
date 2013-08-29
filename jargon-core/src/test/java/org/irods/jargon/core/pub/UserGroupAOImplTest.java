@@ -69,7 +69,12 @@ public class UserGroupAOImplTest {
 				.instance(irodsSession);
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
-		UserGroup expectedUserGroup = userGroupAO.findByName("rodsadmin");
+		UserGroup expectedUserGroup = userGroupAO
+				.findByName(testingPropertiesHelper.getTestProperties()
+						.getProperty(
+								TestingPropertiesHelper.IRODS_USER_GROUP_KEY));
+		Assert.assertNotNull("no user group set up for this test",
+				expectedUserGroup);
 		UserGroup actualUserGroup = userGroupAO.find(expectedUserGroup
 				.getUserGroupId());
 		irodsSession.closeSession();
@@ -113,11 +118,13 @@ public class UserGroupAOImplTest {
 				.instance(irodsSession);
 		UserGroupAO userGroupAO = accessObjectFactory
 				.getUserGroupAO(irodsAccount);
-		UserGroup userGroup = userGroupAO.findByName("rodsadmin");
+		UserGroup userGroup = userGroupAO.findByName((String) testingProperties
+				.get(TestingPropertiesHelper.IRODS_USER_GROUP_KEY));
 		irodsSession.closeSession();
 		Assert.assertNotNull("no user group returned", userGroup);
-		Assert.assertEquals("unexpected user group", "rodsadmin",
-				userGroup.getUserGroupName());
+		Assert.assertEquals("unexpected user group", testingProperties
+				.get(TestingPropertiesHelper.IRODS_USER_GROUP_KEY), userGroup
+				.getUserGroupName());
 
 	}
 
@@ -153,7 +160,8 @@ public class UserGroupAOImplTest {
 		StringBuilder query = new StringBuilder();
 		query.append(RodsGenQueryEnum.COL_USER_GROUP_NAME.getName());
 		query.append(" = '");
-		query.append("rodsadmin");
+		query.append(testingProperties
+				.get(TestingPropertiesHelper.IRODS_USER_GROUP_KEY));
 		query.append("'");
 
 		List<UserGroup> userGroup = userGroupAO.findWhere(query.toString());
