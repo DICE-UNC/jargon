@@ -1,5 +1,5 @@
 package org.irods.jargon.core.utils;
 public final class JargonVersion {
  public static String VERSION="b964-SNAPSHOT";
- public static String BUILD_TIME="20130821-1619";
+ public static String BUILD_TIME="20130822-1207";
 }
