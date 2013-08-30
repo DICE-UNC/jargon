@@ -1577,7 +1577,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
 				absPath);
 
-		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(getIRODSAccount());
+
+		if (!specificQueryAO.isSupportsSpecificQuery()) {
 			log.info("no specific query support, so just return null");
 			return null;
 		}
@@ -1590,9 +1593,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				"listUserACLForCollectionViaGroup", arguments, 0, zone);
-
-		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
-				.getSpecificQueryAO(getIRODSAccount());
 
 		SpecificQueryResultSet specificQueryResultSet;
 		UserFilePermission userFilePermission = null;

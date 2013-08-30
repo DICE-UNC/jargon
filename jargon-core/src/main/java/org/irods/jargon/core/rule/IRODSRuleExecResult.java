@@ -80,13 +80,35 @@ public class IRODSRuleExecResult {
 	 *         value (not null) if no output was found.
 	 */
 	public String getRuleExecOut() {
-		Object outputObject = getOutputParameterResults().get("ruleExecOut")
-				.getResultObject();
-		if (outputObject == null) {
-			return ("");
-		} else {
-			return (String) outputObject;
-		}
+		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
+				.get("ruleExecOut");
+		if (execOut == null)
+			return "";
+
+		Object outputObject = execOut.getResultObject();
+		if (outputObject == null)
+			return "";
+		String out = (String) outputObject;
+		return out;
 	}
 
+	/**
+	 * Return the standard error from the rule invocation, this is a short-cut
+	 * to getting the ruleExecOut from the output parameters.
+	 * 
+	 * @return <code>String</code> with the rule exec err. This will be a blank
+	 *         value (not null) if no output was found.
+	 */
+	public String getRuleExecErr() {
+		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
+				.get("ruleExecErrorOut");
+		if (execOut == null)
+			return "";
+
+		Object outputObject = execOut.getResultObject();
+		if (outputObject == null)
+			return "";
+		String out = (String) outputObject;
+		return out;
+	}
 }

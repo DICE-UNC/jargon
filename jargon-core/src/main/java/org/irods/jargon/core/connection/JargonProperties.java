@@ -316,14 +316,24 @@ public interface JargonProperties {
 	 *         falling back to genquery
 	 */
 	boolean isUsingSpecificQueryForCollectionListingsWithPermissions();
-	
-	
+
 	/**
-	 * Indicates whether a specific query (listUserACLForDataObjViaGroup) is available and can be used to
-	 * check the user access rights for a user who has access via a group.  This is so methods like <code>IRODSFile.canRead()</code> will work
-	 * even though a user does not have explicit permissions, and is a member of a group that has access instead.
+	 * Indicates whether a specific query (listUserACLForDataObjViaGroup) is
+	 * available and can be used to check the user access rights for a user who
+	 * has access via a group. This is so methods like
+	 * <code>IRODSFile.canRead()</code> will work even though a user does not
+	 * have explicit permissions, and is a member of a group that has access
+	 * instead.
+	 * 
 	 * @return
 	 */
 	boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup();
+
+	/**
+	 * Get the time to live (in seconds) for PAM generated passwords
+	 * 
+	 * @return <code>int</code> with the PAM time to live, in secords
+	 */
+	int getPAMTimeToLive();
 
 }

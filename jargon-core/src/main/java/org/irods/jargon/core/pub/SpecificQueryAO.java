@@ -321,4 +321,15 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	boolean isSpecificQueryToBeBypassed() throws JargonException;
 
+	/**
+	 * This is something of an overhead for the 3.0 release of eIRODS, check to
+	 * see if I have specific query support. This needs to be done by actually
+	 * trying a specific query. This should only be done once if the jargon
+	 * properties are set to cache discovered server properties.
+	 * 
+	 * @return <code>boolean</code> if I support specific query
+	 * @throws JargonException
+	 */
+	boolean isSupportsSpecificQuery() throws JargonException;
+
 }

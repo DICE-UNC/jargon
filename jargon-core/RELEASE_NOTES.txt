@@ -1,14 +1,11 @@
 *'''Project''': Jargon-core API
-
-*'''Date''': XX/XX/XX
-*'''Release Version''': 1182-workflow
-*'''git tag''': 1182-workflow
+*'''Date''': 
+*'''Release Version''': 3.3.2 development
+*'''git tag''': 
 
 ==News==
 
-
-Release of Jargon, representing the iRODS 3.3.2 release snapshot
-
+Development branch for 3.3.2 release
 
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
@@ -49,10 +46,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1182] add support for workflows
 **Added jargon-workflow library and initial support for workflow objects
-
-
-
- 
- ==Features==
-
 

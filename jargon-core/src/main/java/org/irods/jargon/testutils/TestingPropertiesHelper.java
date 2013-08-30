@@ -41,7 +41,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_ADMIN_USER_KEY = "test.irods.admin";
 	public static String IRODS_ADMIN_PASSWORD_KEY = "test.irods.admin.password";
 	public static String IRODS_RESOURCE_GROUP_KEY = "test.resource.group";
-	public static String IRODS_USER_GROUP_KEY = "test.user.group";
+	public static String IRODS_USER_GROUP_KEY = "jargon.test.user.group";
 	public static String IRODS_TEST_FEDERATED_ZONE_KEY = "test.option.federated.zone";
 	public static String IRODS_TEST_OPTION_KERBEROS_KEY = "test.option.kerberos";
 	public static String IRODS_TEST_OPTION_REG_FILESYSTEM = "test.option.exercise.filesystem.reg";

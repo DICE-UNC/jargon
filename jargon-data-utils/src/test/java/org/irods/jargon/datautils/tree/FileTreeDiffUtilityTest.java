@@ -17,6 +17,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
@@ -1043,6 +1044,12 @@ public class FileTreeDiffUtilityTest {
 							.nextElement();
 					FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) fileTreeNode
 							.getUserObject();
+
+					Assert.assertEquals("nodes out of synch", LocalFileUtils
+							.normalizePath(child.getAbsolutePath()),
+							fileTreeDiffEntry
+									.getCollectionAndDataObjectListingEntry()
+									.getFormattedAbsolutePath());
 					Assert.assertEquals(
 							"node is not a no-diff directory entry",
 							FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF,

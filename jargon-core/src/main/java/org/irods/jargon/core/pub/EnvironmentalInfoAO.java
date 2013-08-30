@@ -80,6 +80,12 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 
 	/**
 	 * Check (by version) whether this server can run specific (SQL) query
+	 * <p/>
+	 * Note that there is some difficulty with using this method from eIRODS
+	 * 3.0. See [#1663] iRODS environment shows 'rods3.0' as version
+	 * <p/>
+	 * For EIRODS3.0, it is recommended to use the
+	 * SpecificQueryAO.isSupportsSpecificQuery method
 	 * 
 	 * @return <code>boolean</code> that will be <code>true</code> if I can run
 	 *         specific query

@@ -2,7 +2,6 @@ package org.irods.jargon.testutils.filemanip;
 
 import java.util.Properties;
 
-import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
@@ -26,7 +25,6 @@ public class FileGeneratorTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		new AssertionHelper();
 	}
 
 	@Test
