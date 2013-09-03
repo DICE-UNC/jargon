@@ -10,9 +10,12 @@ import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
+import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
@@ -132,7 +135,7 @@ public class ConveyorServiceFunctionalTests {
 				transfer, irodsAccount);
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
-				conveyorService, -1);
+				conveyorService, TRANSFER_TIMEOUT);
 
 		List<Transfer> transfers = conveyorService.getQueueManagerService()
 				.listAllTransfersInQueue();
@@ -163,4 +166,96 @@ public class ConveyorServiceFunctionalTests {
 				.getErrorMessage().isEmpty());
 	}
 
+	@Test
+	public void testReplicateDataObjectsInCollection() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		ConfigurationProperty maxErrors = new ConfigurationProperty();
+		maxErrors
+				.setPropertyKey(ConfigurationPropertyConstants.MAX_ERRORS_BEFORE_CANCEL_KEY);
+		maxErrors.setPropertyValue(5);
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				maxErrors);
+
+		String rootCollection = "testReplicateDataObjectsInCollection";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testReplicateDataObjectsInCollection", 2, 5, 2,
+						"testFile", ".txt", 10, 5, 100, 2000);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		TransferControlBlock tcb = irodsFileSystem.getIrodsSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		dto.putOperation(localFile, destFile, null, tcb);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setResourceName(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		transfer.setTransferType(TransferType.REPLICATE);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		Assert.assertEquals("did not get complete status",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 1 attempt", 1, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
+		Assert.assertEquals(TransferStatusEnum.OK, attempt.getAttemptStatus());
+
+	}
 }
