@@ -3600,7 +3600,10 @@ public class DataObjectAOImplTest {
 		// log in as the group user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, irodsAccount.getPassword());
+						testingProperties,
+						testUser,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);

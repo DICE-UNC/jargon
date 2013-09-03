@@ -176,7 +176,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 			sb.append(pathOrName);
 		} else {
 			sb.append(parentPath);
-			sb.append('/');
+			sb.append("/");
 			sb.append(pathOrName);
 		}
 

@@ -596,6 +596,13 @@ public class BasicQueueManagerServiceImpl extends
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#getNextTransferItems
+	 * (long, int, int)
+	 */
 	@Override
 	public List<TransferItem> getNextTransferItems(final long transferId,
 			final int start, final int length)
@@ -607,7 +614,7 @@ public class BasicQueueManagerServiceImpl extends
 			throw new IllegalArgumentException("invalid transferId");
 		}
 		try {
-			items = transferAttemptDAO.findNextTransferItems(transferId, start,
+			items = transferAttemptDAO.listTransferItemsInTransferAttempt(transferId, start,
 					length);
 		} catch (TransferDAOException e) {
 			log.error("exception retrieving transfer items", e);

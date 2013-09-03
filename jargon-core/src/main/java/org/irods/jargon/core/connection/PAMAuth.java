@@ -112,8 +112,12 @@ public class PAMAuth extends AuthMechanism {
 
 		// send pam auth request
 
+		int pamTimeToLive = irodsCommands.getIrodsSession()
+				.getJargonProperties().getPAMTimeToLive();
+
 		PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
-				irodsAccount.getUserName(), irodsAccount.getPassword());
+				irodsAccount.getUserName(), irodsAccount.getPassword(),
+				pamTimeToLive);
 		Tag response = secureIRODSCommands.irodsFunction(pamAuthRequestInp);
 
 		if (response == null) {

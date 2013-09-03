@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -19,6 +20,7 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileWriter;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -84,8 +86,9 @@ public class RuleProcessingAOImplTest {
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertEquals("irodsRule did not have original string",
 				ruleString, result.getIrodsRule().getRuleAsOriginalText());
 		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
@@ -222,8 +225,9 @@ public class RuleProcessingAOImplTest {
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
 				ruleFile, null, RuleProcessingType.EXTERNAL);
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertNotNull("null execOut", execOut);
 
 	}
@@ -284,8 +288,9 @@ public class RuleProcessingAOImplTest {
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
 				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertNotNull("null execOut", execOut);
 
 	}
@@ -341,8 +346,9 @@ public class RuleProcessingAOImplTest {
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromIRODSFile(
 				irodsRuleFileAsFile.getAbsolutePath(), null,
 				RuleProcessingType.EXTERNAL);
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertNotNull("null execOut", execOut);
 
 	}
@@ -403,8 +409,9 @@ public class RuleProcessingAOImplTest {
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromIRODSFile(
 				irodsRuleFileAsFile.getAbsolutePath(), null,
 				RuleProcessingType.CLASSIC);
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertNotNull("null execOut", execOut);
 
 	}
@@ -436,8 +443,9 @@ public class RuleProcessingAOImplTest {
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 
-		String execOut = (String) result.getOutputParameterResults()
-				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject();
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
 		Assert.assertEquals("irodsRule did not have original string",
 				ruleString, result.getIrodsRule().getRuleAsOriginalText());
 		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
@@ -494,9 +502,9 @@ public class RuleProcessingAOImplTest {
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 
 		Assert.assertNotNull("did not get a response", result);
-		// Assert.assertEquals("did not get results for each output parameter",
-		// 5,
-		// result.getOutputParameterResults().size());
+
+		Assert.assertEquals("did not get results for each output parameter", 6,
+				result.getOutputParameterResults().size());
 
 		String conditionValue = (String) result.getOutputParameterResults()
 				.get("*Condition").getResultObject();
@@ -644,17 +652,22 @@ public class RuleProcessingAOImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsFileName);
 		File sourceFile = new File(putFileName);
 
-		// put the file first to set up the overwrite
+		TransferControlBlock tcb = accessObjectFactory
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
-		dto.putOperation(sourceFile, targetFile, null, null);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("testClientAction||msiDataObjPut(");
+		builder.append("testClientAction||msiDataObjPut(\"");
 		builder.append(targetIrodsFileName);
-		builder.append(",null,");
+		builder.append("\",null,");
 		builder.append("\"localPath=");
 		builder.append(putFileName);
+		builder.append("++++destRescName=");
+		builder.append(irodsAccount.getDefaultStorageResource());
 		builder.append("++++numThreads=-1++++forceFlag=\"");
 		builder.append(",*status)|nop\n");
 		builder.append("*A=null\n");
@@ -834,6 +847,8 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		File localTarget = new File(absPath, testFileGetName);
+		localTarget.delete();
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -852,7 +867,7 @@ public class RuleProcessingAOImplTest {
 		dto.putOperation(sourceFile, targetFile, null, null);
 
 		StringBuilder builder = new StringBuilder();
-		builder.append("testClientAction||msiDataObjGet(");
+		builder.append("testClientAction||writeString(\"stdout\", \"hi there before\")##msiDataObjGet(");
 		builder.append(testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH));
@@ -861,9 +876,9 @@ public class RuleProcessingAOImplTest {
 		builder.append(",");
 		builder.append(absPath);
 		builder.append(testFileGetName);
-		builder.append(",*status)|nop\n");
+		builder.append(",*status)##writeString(\"stdout\",\"hi there after\")|nop\n");
 		builder.append("*A=null\n");
-		builder.append("*ruleExecOut");
+		builder.append("ruleExecOut");
 
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
@@ -877,6 +892,242 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	/**
+	 * Bug [#1641] [iROD-Chat:10574] Fwd: Porting rules to Jargon
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testExecuteRequestMultipleClientActionGetFileBug1641()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		irodsFileSystem.closeAndEatExceptions();
+		String testFileName = "testExecuteRequestMultipleClientActionGetFileBug1641.txt";
+		String testFileGetName = "testExecuteRequestMultipleClientActionGetFileBug1641Get.txt";
+		String testFileName1 = "testExecuteRequestMultipleClientActionGetFileBug1641F2.txt";
+		String testFileGetName1 = "testExecuteRequestMultipleClientActionGetFileBug1641GetF2.txt";
+
+		String absPathReturn = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName;
+		String absPathReturn1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName1;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+		String absPath1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath1 = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath1, testFileName1,
+						100);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		// put the file
+
+		File sourceFile = new File(scratchFileAbsolutePath);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
+
+		File sourceFile1 = new File(scratchFileAbsolutePath1);
+		IRODSFile targetFile1 = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName1);
+
+		dto.putOperation(sourceFile1, targetFile1, null, tcb);
+
+		String ruleFile = "/rules/testRuleBug1641MutlipleGets.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for *dataObject
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile1",
+				'"' + targetFile.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath1",
+				'"' + absPathReturn + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile2",
+				'"' + targetFile1.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath2",
+				'"' + absPathReturn1 + '"'));
+
+		ruleProcessingAO.executeRuleFromResource(ruleFile, inputOverrides,
+				RuleProcessingType.EXTERNAL);
+
+		File return1File = new File(absPathReturn);
+		Assert.assertTrue("didn't get first file", return1File.exists());
+
+		File return2File = new File(absPathReturn1);
+		Assert.assertTrue("didn't get second file", return2File.exists());
+
+	}
+
+	/**
+	 * Bug [#1641] [iROD-Chat:10574] Fwd: Porting rules to Jargon
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	// ignore and test as possible irods bug
+	public void testPutGetInterleavedBug1641() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		irodsFileSystem.closeAndEatExceptions();
+		String testFileName = "testPutGetInterleavedBug1641.txt";
+		String testFileGetName = "testPutGetInterleavedBug1641Get.txt";
+		String testFileName1 = "testPutGetInterleavedBug1641F2.txt";
+		String testFileGetName1 = "testPutGetInterleavedBug1641GetF2.txt";
+		String testPutFileName = "testPutGetInterleavedBug1641PutFile.txt";
+
+		String absPathReturn = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName;
+		String absPathReturn1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName1;
+		String absPathPut = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testPutFileName;
+
+		FileGenerator.generateFileOfFixedLengthGivenName(scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH),
+				testPutFileName, 32);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+		String absPath1 = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath1 = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath1, testFileName1,
+						100);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String putTargetFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH)
+				+ "/" + testPutFileName;
+
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+
+		File sourceFile = new File(scratchFileAbsolutePath);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
+
+		File sourceFile1 = new File(scratchFileAbsolutePath1);
+		IRODSFile targetFile1 = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName1);
+
+		dto.putOperation(sourceFile1, targetFile1, null, tcb);
+
+		String ruleFile = "/rules/testRuleBug1641MutlipleGetsAndPuts.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for *dataObject
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile1",
+				'"' + targetFile.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath1",
+				'"' + absPathReturn + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile2",
+				'"' + targetFile1.getAbsolutePath() + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath2",
+				'"' + absPathReturn1 + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*DestFile",
+				'"' + putTargetFile + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*putLocalSource",
+				'"' + absPathPut + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*DestResource",
+				'"' + irodsAccount.getDefaultStorageResource() + '"'));
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
+
+		File return1File = new File(absPathReturn);
+		Assert.assertTrue("didn't get first file", return1File.exists());
+
+		File return2File = new File(absPathReturn1);
+		Assert.assertTrue("didn't get second file", return2File.exists());
+
+		IRODSFile putFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(putTargetFile);
+		Assert.assertTrue("did not find put file", putFile.exists());
+
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+
+		Assert.assertNotNull("null execOut", execOut);
+
+		String destFile = result.getOutputParameterResults().get("*DestFile")
+				.getResultObject().toString();
+
+		Assert.assertNotNull("null destFile", destFile);
+	}
+
 	@Test
 	public void testExecuteRequestClientActionGetFileParallel()
 			throws Exception {
@@ -888,6 +1139,8 @@ public class RuleProcessingAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						32 * 1024 * 1024);
 
+		File getTargetFile = new File(absPath, testFileGetName);
+		getTargetFile.delete();
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -935,6 +1188,79 @@ public class RuleProcessingAOImplTest {
 
 	}
 
+	@Test
+	public void testExecuteRequestClientActionGetFileParallelBug1641AddMessages()
+			throws Exception {
+		String testFileName = "testExecuteRequestClientActionGetFileParallelBug1641AddMessages.txt";
+		String testFileGetName = "testExecuteRequestClientActionGetFileParallelBug1641AddMessagesGet.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String scratchFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+
+		File getTargetFile = new File(absPath, testFileGetName);
+		getTargetFile.delete();
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String absPathReturn = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH)
+				+ testFileGetName;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		// put the file
+
+		File sourceFile = new File(scratchFileAbsolutePath);
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		TransferControlBlock tcb = accessObjectFactory
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
+		dto.putOperation(sourceFile, targetFile, null, tcb);
+
+		String ruleFile = "/rules/testParallelGetWithStdoutBug1641.r";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory
+				.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for *dataObject
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*SourceFile", '"'
+				+ targetFile.getAbsolutePath() + "/" + testFileName + '"'));
+		inputOverrides.add(new IRODSRuleParameter("*localPath",
+				'"' + absPathReturn + '"'));
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				ruleFile, inputOverrides, RuleProcessingType.EXTERNAL);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + testFileGetName);
+
+		String execOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+
+		Assert.assertNotNull("null execOut", execOut);
+
+		String errorOut = result.getOutputParameterResults()
+				.get(RuleProcessingAOImpl.RULE_EXEC_ERROR_OUT)
+				.getResultObject().toString();
+
+		Assert.assertNotNull("null execErrorOut", errorOut);
+
+	}
+
 	/**
 	 * [#630] execute msiDataObjGet via Jargon Test a get operation with a file
 	 * above the parallel txfr max with -1 in num threads
@@ -946,8 +1272,11 @@ public class RuleProcessingAOImplTest {
 			throws Exception {
 		String testFileName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicated.txt";
 		String testFileGetName = "testExecuteRequestClientActionGetFileParallelNoThreadsIndicatedReturned.txt";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(
-				IRODS_TEST_SUBDIR_PATH).trim();
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		File scratchDir = new File(absPath);
+		scratchDir.delete();
 		String scratchFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
 						32 * 1024 * 1024);

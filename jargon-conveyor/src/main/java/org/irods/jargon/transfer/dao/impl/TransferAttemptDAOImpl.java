@@ -1,10 +1,10 @@
 package org.irods.jargon.transfer.dao.impl;
 
 import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.HibernateException;
 import org.hibernate.criterion.Restrictions;
-
 import org.irods.jargon.transfer.dao.TransferAttemptDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -22,8 +22,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  */
 public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 		TransferAttemptDAO {
-    
-        private static final Logger log = LoggerFactory
+
+	private static final Logger log = LoggerFactory
 			.getLogger(TransferItemDAOImpl.class);
 
 	/*
@@ -108,26 +108,35 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 
 	}
 
-        
-        @Override
-	public List<TransferItem> findNextTransferItems(
-			final Long id, final int start, final int length) throws TransferDAOException {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.TransferAttemptDAO#findNextTransferItems
+	 * (java.lang.Long, int, int)
+	 */
+	@Override
+	public List<TransferItem> listTransferItemsInTransferAttempt(
+			final Long transferAttemptId, final int start, final int length)
+			throws TransferDAOException {
 		log.debug("entering findNextTransferItems(Long, int, int)");
-                
-                Transfer transfer = (Transfer) this.getSessionFactory()
-				.getCurrentSession().get(Transfer.class, id);
-                Long attemptId = transfer.getTransferAttempts().get(0).getId();
+
+		if (transferAttemptId == null) {
+			throw new IllegalArgumentException(
+					"null or empty transfer attempt id");
+		}
 
 		try {
-                        Criteria criteria = this.getSessionFactory().getCurrentSession()
-					.createCriteria(TransferItem.class);
-                        criteria.setFirstResult(start);
-                        criteria.setMaxResults(length);
-			List ls = criteria.createCriteria("transferAttempt").add(
-					Restrictions.eq("id", attemptId)).list();
-			//criteria.addOrder(Order.asc("transferredAt"));
+			Criteria criteria = this.getSessionFactory().getCurrentSession()
+					.createCriteria(TransferItem.class)
+					.createCriteria("transferAttempt")
+					.add(Restrictions.eq("id", transferAttemptId))
+					.setFirstResult(start).setMaxResults(length);
 
-                        return ls;
+			@SuppressWarnings("unchecked")
+			List<TransferItem> ls = (List<TransferItem>) criteria.list();
+
+			return ls;
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);

@@ -168,23 +168,24 @@ public final class ParallelGetTransferThread extends
 	 */
 	private void processingLoopForGetData(final RandomAccessFile local)
 			throws JargonException {
-		log.info("reading header info...");
+		// log.info("reading header info...");
 
 		// read the header
 		int operation = readInt();
-		log.info("   operation:{}", operation);
+		// log.info("   operation:{}", operation);
 
 		// read the flags
+		@SuppressWarnings("unused")
 		int flags = readInt();
-		log.info("   flags:{}", flags);
+		// log.info("   flags:{}", flags);
 
 		// Where to seek into the data
 		long offset = readLong();
-		log.info("   offset:{}", offset);
+		// log.info("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-		log.info("   length:{}", length);
+		// log.info("   length:{}", length);
 
 		// Holds all the data for transfer
 		byte[] buffer = null;
@@ -219,21 +220,22 @@ public final class ParallelGetTransferThread extends
 				}
 
 				log.debug("reading....");
+
 				read = getIn().read(
 						buffer,
 						0,
 						Math.min(ConnectionConstants.OUTPUT_BUFFER_LENGTH,
 								(int) length));
-				log.debug("read={}", read);
+				// log.debug("read={}", read);
 
 				if (read > 0) {
 					length -= read;
-					log.debug("length left after read={}", length);
+					// log.debug("length left after read={}", length);
 					if (length == 0) {
-						log.debug("length == 0, write the buffer, then get another header");
+						// log.debug("length == 0, write the buffer, then get another header");
 
 						local.write(buffer, 0, read);
-						log.debug("buffer written to file");
+						// log.debug("buffer written to file");
 
 						/*
 						 * Make an intra-file status call-back if a listener is
@@ -248,23 +250,23 @@ public final class ParallelGetTransferThread extends
 													.instanceForReceive(read));
 						}
 
-						log.debug("parallel transfer read next header");
+						// log.debug("parallel transfer read next header");
 						// read the next header
 						operation = readInt();
-						log.debug("   operation:{}", operation);
+						// log.debug("   operation:{}", operation);
 						flags = readInt();
-						log.debug("   flags:{}", flags);
+						// log.debug("   flags:{}", flags);
 						offset = readLong();
-						log.debug("   offset:{}", offset);
+						// log.debug("   offset:{}", offset);
 						length = readLong();
-						log.debug("   length:{}", length);
+						// log.debug("   length:{}", length);
 
 						if (operation == DONE_OPR) {
-							log.debug("    done...received done flag in operation");
+							// log.debug("    done...received done flag in operation");
 							break;
 						}
 
-						log.debug("seeking to new offset");
+						// log.debug("seeking to new offset");
 						local.seek(offset);
 
 					} else if (length < 0) {
@@ -272,7 +274,7 @@ public final class ParallelGetTransferThread extends
 						log.error(msg);
 						throw new JargonException(msg);
 					} else {
-						log.debug("length > 0, write what I have and read more...");
+						// log.debug("length > 0, write what I have and read more...");
 
 						local.write(buffer, 0, read);
 						/*
@@ -287,7 +289,7 @@ public final class ParallelGetTransferThread extends
 											ConnectionProgressStatus
 													.instanceForReceive(read));
 						}
-						log.debug("buffer written to file");
+						// log.debug("buffer written to file");
 
 					}
 				} else {
@@ -324,7 +326,7 @@ public final class ParallelGetTransferThread extends
 		} else if (offset > 0) {
 			try {
 				local.seek(offset);
-				log.debug("seek completed");
+				// log.debug("seek completed");
 			} catch (IOException e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());

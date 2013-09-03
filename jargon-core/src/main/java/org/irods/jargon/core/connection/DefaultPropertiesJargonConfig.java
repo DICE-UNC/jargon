@@ -387,13 +387,26 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsBoolean("use.specific.query.for.collection.listings");
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#isUsingSpecQueryForDataObjPermissionsForUserInGroup()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
 	@Override
 	public boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup() {
 		return verifyPropExistsAndGetAsBoolean("use.specquery.for.dataobj.permissions.for.user.in.group");
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
+	 */
+	@Override
+	public int getPAMTimeToLive() {
+		return verifyPropExistsAndGetAsInt("pam.time.to.live.in.seconds");
 	}
 
 }

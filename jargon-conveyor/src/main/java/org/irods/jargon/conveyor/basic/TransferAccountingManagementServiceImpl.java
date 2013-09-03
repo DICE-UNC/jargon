@@ -314,6 +314,7 @@ public class TransferAccountingManagementServiceImpl extends
 		transferItem.setTargetFileAbsolutePath(transferStatus
 				.getTargetFileAbsolutePath());
 		transferItem.setTransferredAt(currentDate);
+		transferItem.setLengthInBytes(transferStatus.getBytesTransfered());
 
 		try {
 			transferItem.setTransferAttempt(localTransferAttempt);

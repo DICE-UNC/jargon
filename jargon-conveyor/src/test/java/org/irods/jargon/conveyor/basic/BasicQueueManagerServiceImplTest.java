@@ -162,10 +162,11 @@ public class BasicQueueManagerServiceImplTest {
 
 		TransferAttempt attempt = attempts[0];
 		Assert.assertNotNull("transfer attempt not persisted", attempt.getId());
-		TransferItem items[] = new TransferItem[attempt.getTransferItems()
-				.size()];
-		items = attempt.getTransferItems().toArray(items);
-		Assert.assertEquals("should be 2 items", 2, items.length);
+
+		List<TransferItem> items = conveyorService.getQueueManagerService()
+				.getNextTransferItems(attempt.getId(), 0, 1000);
+
+		Assert.assertEquals("should be 2 items", 2, items.size());
 
 	}
 
@@ -266,10 +267,10 @@ public class BasicQueueManagerServiceImplTest {
 		TransferAttempt attempt = attempts[1];
 		Assert.assertNotNull("transfer restart attempt not persisted",
 				attempt.getId());
-		TransferItem items[] = new TransferItem[attempt.getTransferItems()
-				.size()];
-		items = attempt.getTransferItems().toArray(items);
-		Assert.assertEquals("should be n items", totFiles, items.length);
+		List<TransferItem> items = conveyorService.getQueueManagerService()
+				.getNextTransferItems(attempt.getId(), 0, 1000);
+
+		Assert.assertEquals("should be n items", totFiles, items.size());
 
 		int i = 1;
 		for (TransferItem item : items) {

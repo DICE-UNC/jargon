@@ -32,7 +32,7 @@ public interface TransferItemDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<TransferItem> findErrorItemsByTransferId(Long id)
+	public List<TransferItem> findErrorItemsByTransferAttemptId(Long id)
 			throws TransferDAOException;
 
 	/**
@@ -47,7 +47,7 @@ public interface TransferItemDAO {
 	 * @param transferId
 	 * @return
 	 */
-	public List<TransferItem> findAllItemsForTransferByTransferId(
+	public List<TransferItem> findAllItemsForTransferByTransferAttemptId(
 			Long transferId) throws TransferDAOException;
         
 }

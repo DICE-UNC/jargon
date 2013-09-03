@@ -32,7 +32,8 @@
 </dependency>
   </dependencies>
   <description>Utilities to stream http/s data into iRODS files</description>
-  	<build>
+
+  <build>
 		<plugins>
 			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
