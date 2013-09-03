@@ -254,15 +254,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	}
 
-	@Override
-	public void init() {
-
-		log.info("init()");
-
-		if (this.getConfigurationService() == null) {
-			throw new ConveyorRuntimeException(
-					"null configurationService, dependency was not set");
-		}
+	private void startQueueTimerTask() {
+		/*
+		 * Since I'm starting, look for any currently processing transactions
+		 * and reset them to 'enqueued'
+		 */
 
 		log.info("creating timer task to trigger queue actions");
 
@@ -276,7 +272,33 @@ public class ConveyorServiceImpl implements ConveyorService {
 		queueTimer = new Timer();
 		queueTimer.scheduleAtFixedRate(queueSchedulerTimerTask, 10000, 120000);
 		log.info("timer scheduled");
-		// timer.scheduleAtFixedRate(synchPeriodicScheduler, 10000, 30000);
+	}
+
+	@Override
+	public void init() {
+
+		log.info("init()");
+
+		if (this.getConfigurationService() == null) {
+			throw new ConveyorRuntimeException(
+					"null configurationService, dependency was not set");
+		}
+
+		try {
+			this.getConveyorExecutorService().setBusyForAnOperation();
+			log.info("checking for any transactions that were set to processing, and reset them to enqueued...");
+			this.getQueueManagerService().preprocessQueueAtStartup();
+			log.info("preprocessing done, unlock the queue");
+			this.getConveyorExecutorService().setOperationCompleted();
+			startQueueTimerTask();
+		} catch (ConveyorBusyException e) {
+			log.error("cannot lock queue for initialization!", e);
+			throw new ConveyorRuntimeException("cannot lock queue for init", e);
+		} catch (ConveyorExecutionException e) {
+			log.error("cannot process queue for initialization!", e);
+			throw new ConveyorRuntimeException("cannot process queue for init",
+					e);
+		}
 
 	}
 

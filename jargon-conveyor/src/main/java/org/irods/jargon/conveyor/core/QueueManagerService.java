@@ -215,17 +215,26 @@ public interface QueueManagerService {
 	void addTransferAttemptToTransfer(long transferId,
 			TransferAttempt transferAttempt) throws TransferNotFoundException,
 			ConveyorExecutionException;
-        
-        /**
-	 * Given an id and a start and max number of results return a list of 
-         * <code>TransferItems</code> for the specified transfer id.
+
+	/**
+	 * Given an id and a start and max number of results return a list of
+	 * <code>TransferItems</code> for the specified transfer id.
 	 * 
 	 * @param transferId
 	 *            <code>long</code> with the transfer id
 	 * @return {@link TransferItems} list.
 	 * @throws ConveyorExecutionException
 	 */
-	List<TransferItem> getNextTransferItems(final long transferId, int start, int length)
-			throws ConveyorExecutionException;
+	List<TransferItem> getNextTransferItems(final long transferId, int start,
+			int length) throws ConveyorExecutionException;
+
+	/**
+	 * At startup of the conveyor service, preprocess the queue looking for any
+	 * transfers that were marked as processing. This should be called before
+	 * normal queue processing begins.
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	void preprocessQueueAtStartup() throws ConveyorExecutionException;
 
 }

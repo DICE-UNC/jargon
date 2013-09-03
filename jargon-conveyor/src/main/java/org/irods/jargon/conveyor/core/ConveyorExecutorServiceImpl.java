@@ -347,6 +347,15 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 * QueueStatus up to the listener (e.g. the iDrop gui).
 	 */
 	private void notifyCallbackListenerOfChangeInStatus() {
+
+		// in initial spring wiring the conveyor service may be null while
+		// bootstrapping runs.
+
+		if (conveyorService == null) {
+			log.info("in bootstrap sequence, ignore callback");
+			return;
+		}
+
 		ConveyorCallbackListener listener = conveyorService
 				.getConveyorCallbackListener();
 		if (listener != null) {

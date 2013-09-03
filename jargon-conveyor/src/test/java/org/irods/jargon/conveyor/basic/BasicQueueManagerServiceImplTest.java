@@ -392,4 +392,107 @@ public class BasicQueueManagerServiceImplTest {
 				.getGlobalExceptionStackTrace().isEmpty());
 
 	}
+
+	@Test
+	public void testProcessQueueOnStartupWithProcessingTransaction()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		ConfigurationProperty logRestart = new ConfigurationProperty();
+		logRestart
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_RESTART_FILES);
+		logRestart.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logRestart);
+
+		String rootCollection = "testProcessQueueOnStartupWithProcessingTransaction";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		GridAccount gridAccount = conveyorService.getGridAccountService()
+				.findGridAccountByIRODSAccount(irodsAccount);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setLocalAbsolutePath(localFile.getAbsolutePath());
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setTransferState(TransferStateEnum.PROCESSING);
+		transfer.setGridAccount(gridAccount);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+
+		conveyorService.getQueueManagerService().saveOrUpdateTransfer(transfer);
+
+		TransferAttempt attemptThatWasProcessing = new TransferAttempt();
+		attemptThatWasProcessing.setAttemptStatus(TransferStatusEnum.OK);
+		conveyorService.getQueueManagerService().addTransferAttemptToTransfer(
+				transfer.getId(), attemptThatWasProcessing);
+
+		// now simulate startup
+		conveyorService.getQueueManagerService().preprocessQueueAtStartup();
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Assert.assertEquals("should be 1 transfer..maybe test cleanup is bad",
+				1, transfers.size());
+		transfer = transfers.get(0);
+
+		transfer = conveyorService.getQueueManagerService()
+				.initializeGivenTransferByLoadingChildren(transfer);
+
+		Assert.assertFalse("did not create a transfer attempt", transfer
+				.getTransferAttempts().isEmpty());
+
+		// I'll get a warning because there are no files, but it shows it was
+		// enqueued and processed
+		Assert.assertEquals(
+				"did not get warning status, it shold have been marked enqueued and subsequently dequeued and processed",
+				TransferStateEnum.COMPLETE, transfer.getTransferState());
+
+		TransferAttempt attempts[] = new TransferAttempt[transfer
+				.getTransferAttempts().size()];
+		attempts = transfer.getTransferAttempts().toArray(attempts);
+		Assert.assertEquals("should be 2 attempts", 2, attempts.length);
+
+		TransferAttempt attempt = attempts[0];
+		Assert.assertEquals("did not set status to error",
+				TransferStatusEnum.ERROR, attempt.getAttemptStatus());
+		Assert.assertNotNull("did not set message", attempt.getErrorMessage());
+
+		attempt = attempts[1];
+		// this is warning because there were no files in the test
+		Assert.assertEquals(
+				"did not set status to warning (meaining it was enqueued and processed",
+				TransferStatusEnum.WARNING, attempt.getAttemptStatus());
+		Assert.assertNotNull("did not set message", attempt.getErrorMessage());
+
+	}
 }

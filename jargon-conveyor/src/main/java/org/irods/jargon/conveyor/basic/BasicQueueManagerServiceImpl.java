@@ -68,6 +68,51 @@ public class BasicQueueManagerServiceImpl extends
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#preprocessQueueAtStartup
+	 * ()
+	 */
+	@Override
+	public void preprocessQueueAtStartup() throws ConveyorExecutionException {
+
+		log.info("preprocessQueueAtStartup()");
+		List<Transfer> transfers = listAllTransfersInQueue();
+
+		for (Transfer transfer : transfers) {
+			if (transfer.getTransferState() == TransferStateEnum.PROCESSING) {
+				log.info(
+						"found a processing transfer, set it to enqueued and restart it:{}",
+						transfer);
+
+				try {
+					TransferAttempt lastAttempt = transferAttemptDAO
+							.findLastTransferAttemptForTransferByTransferId(transfer
+									.getId());
+					log.info("have last attempt, will mark as error:{}");
+					ConveyorExecutionException conveyorException = new ConveyorExecutionException(
+							"Transfer was processing upon restart, set to failure to re-enqueue");
+					this.getConveyorService()
+							.getTransferAccountingManagementService()
+							.updateTransferAttemptWithConveyorException(
+									lastAttempt, conveyorException);
+					log.info("marked...now restart");
+					this.enqueueRestartOfTransferOperation(transfer.getId());
+
+				} catch (TransferDAOException e) {
+					log.error("exception getting last attempt for transfer:{}",
+							transfer, e);
+					throw new ConveyorExecutionException(
+							"unable to process transfer", e);
+				}
+
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
 	 * enqueueRestartOfTransferOperation(long)
 	 */
@@ -431,6 +476,7 @@ public class BasicQueueManagerServiceImpl extends
 				log.error("cannot find transfer to cancel");
 				throw new TransferNotFoundException("unable to find transfer");
 			}
+
 		} catch (TransferDAOException e) {
 			log.error("error in dao finding transfer attempt by id");
 			throw new ConveyorExecutionException(e);
@@ -614,8 +660,8 @@ public class BasicQueueManagerServiceImpl extends
 			throw new IllegalArgumentException("invalid transferId");
 		}
 		try {
-			items = transferAttemptDAO.listTransferItemsInTransferAttempt(transferId, start,
-					length);
+			items = transferAttemptDAO.listTransferItemsInTransferAttempt(
+					transferId, start, length);
 		} catch (TransferDAOException e) {
 			log.error("exception retrieving transfer items", e);
 			throw new ConveyorExecutionException(
