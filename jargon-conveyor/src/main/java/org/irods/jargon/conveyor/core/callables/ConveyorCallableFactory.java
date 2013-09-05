@@ -6,12 +6,17 @@ package org.irods.jargon.conveyor.core.callables;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
 public class ConveyorCallableFactory {
+
+	private final Logger log = LoggerFactory
+			.getLogger(ConveyorCallableFactory.class);
 
 	public ConveyorCallableFactory() {
 	}
@@ -31,12 +36,22 @@ public class ConveyorCallableFactory {
 			final ConveyorService conveyorService)
 			throws ConveyorExecutionException {
 
+		log.info("instanceCallableForOperation()");
+
 		if (transferAttempt == null) {
 			throw new IllegalArgumentException("transferAttempt is null");
 		}
 
 		if (conveyorService == null) {
 			throw new IllegalArgumentException("conveyorService is null");
+		}
+
+		log.info("transferAttempt for callable:{}", transferAttempt);
+
+		if (transferAttempt.getTransfer() == null) {
+			log.error("no transfer in transfer attempt");
+			throw new ConveyorExecutionException(
+					"no transfer found for given transfer attempt");
 		}
 
 		switch (transferAttempt.getTransfer().getTransferType()) {

@@ -27,7 +27,6 @@ import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,7 +166,7 @@ public class ConveyorServiceFunctionalTests {
 				.getErrorMessage().isEmpty());
 	}
 
-	@Ignore
+	@Test
 	// BUG [#1672] double free or corruption caused by replication of collection
 	// (it has long paths, btw) on iRODS 3.3
 	public void testReplicateDataObjectsInCollection() throws Exception {

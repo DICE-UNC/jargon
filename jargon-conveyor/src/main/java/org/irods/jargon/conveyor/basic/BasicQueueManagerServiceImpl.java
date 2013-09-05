@@ -326,6 +326,16 @@ public class BasicQueueManagerServiceImpl extends
 						transfer);
 			}
 
+			/*
+			 * This is really an edge case that came up in initial testing with
+			 * bad data, just leaving it in for now MC
+			 */
+			if (transfer.getTransferType() == null) {
+				log.error("invalid or null transfer type!");
+				throw new ConveyorExecutionException(
+						"unknown or null transfer type in database!");
+			}
+
 			transferAttempt.setAttemptStart(new Timestamp(System
 					.currentTimeMillis()));
 			transfer.setTransferState(TransferStateEnum.PROCESSING);
