@@ -54,6 +54,53 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorExecutorService#requestPause()
+	 */
+	@Override
+	public void requestPause() throws ConveyorExecutionException {
+		log.info("requestPause");
+
+		synchronized (statusSynchronizingObject) {
+			this.setRunningStatus(RunningStatus.PAUSED_BUSY);
+
+		}
+
+		log.info("attempting to pause if there is a running transfer");
+		synchronized (this) {
+			if (this.currentTransferAttempt != null) {
+				log.info("there is a transfer to cancel");
+				requestCancel(this.currentTransferAttempt);
+			}
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorExecutorService#requestResumeFromPause
+	 * ()
+	 */
+	@Override
+	public void requestResumeFromPause() throws ConveyorExecutionException {
+		log.info("requestResumeFromPause()");
+
+		synchronized (statusSynchronizingObject) {
+			this.setRunningStatus(RunningStatus.IDLE);
+
+			log.info("release next item to process if available");
+
+			synchronized (this) {
+				conveyorService.getQueueManagerService().dequeueNextOperation();
+			}
+		}
+	}
+
 	public void requestCancel(final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		if (transferAttempt == null) {

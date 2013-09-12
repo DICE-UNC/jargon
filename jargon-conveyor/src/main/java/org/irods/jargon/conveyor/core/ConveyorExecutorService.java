@@ -133,4 +133,20 @@ public interface ConveyorExecutorService {
 	 */
 	int getNumberFilesTransferredSoFarInCurrentTransfer();
 
+	/**
+	 * Request that the conveyor service pauses. This will cause a cancellation
+	 * of any currently running process too. The queue will halt until unpause
+	 * is called.
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	void requestPause() throws ConveyorExecutionException;
+
+	/**
+	 * Unpause the queue and release the next item.
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	void requestResumeFromPause() throws ConveyorExecutionException;
+
 }
