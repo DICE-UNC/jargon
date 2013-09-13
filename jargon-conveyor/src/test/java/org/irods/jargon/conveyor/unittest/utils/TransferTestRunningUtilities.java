@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.unittest.utils;
 
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.RunningStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
@@ -55,7 +56,10 @@ public class TransferTestRunningUtilities {
 			}
 
 			try {
-
+				if (conveyorService.getConveyorExecutorService()
+						.getRunningStatus() == RunningStatus.PAUSED) {
+					break;
+				}
 				conveyorService.getConveyorExecutorService()
 						.setBusyForAnOperation();
 				conveyorService.getConveyorExecutorService()

@@ -7,6 +7,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConfigurationPropertyConstants;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.RunningStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.unittest.utils.TransferTestRunningUtilities;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -164,6 +165,74 @@ public class ConveyorServiceFunctionalTests {
 				attempt.getAttemptStatus());
 		Assert.assertFalse("should have an error message", attempt
 				.getErrorMessage().isEmpty());
+	}
+
+	@Test
+	public void testPutThenPause() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		ConfigurationProperty maxErrors = new ConfigurationProperty();
+		maxErrors
+				.setPropertyKey(ConfigurationPropertyConstants.MAX_ERRORS_BEFORE_CANCEL_KEY);
+		maxErrors.setPropertyValue(5);
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				maxErrors);
+
+		String rootCollection = "testPutThenPause";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "testPutThenPause", 4, 6,
+						4, "testFile", ".txt", 10, 5, 100, 2000);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		Transfer transfer = new Transfer();
+		transfer.setIrodsAbsolutePath(destFile.getAbsolutePath());
+		transfer.setLocalAbsolutePath(localFile.getAbsolutePath());
+		transfer.setTransferType(TransferType.PUT);
+
+		conveyorService.getQueueManagerService().enqueueTransferOperation(
+				transfer, irodsAccount);
+
+		Thread.sleep(2000);
+
+		conveyorService.getConveyorExecutorService().requestPause();
+
+		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
+				conveyorService, TRANSFER_TIMEOUT);
+
+		List<Transfer> transfers = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers in queue", transfers.isEmpty());
+		Transfer lastTransfer = transfers.get(0);
+		Assert.assertEquals("should be a cancelled transfer",
+				TransferStateEnum.CANCELLED, lastTransfer.getTransferState());
+		Assert.assertEquals("should be paused", RunningStatus.PAUSED,
+				conveyorService.getConveyorExecutorService().getRunningStatus());
 	}
 
 	@Test

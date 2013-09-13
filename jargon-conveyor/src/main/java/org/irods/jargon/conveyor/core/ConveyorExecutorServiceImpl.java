@@ -65,7 +65,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		log.info("requestPause");
 
 		synchronized (statusSynchronizingObject) {
-			this.setRunningStatus(RunningStatus.PAUSED_BUSY);
+			this.setRunningStatus(RunningStatus.PAUSED);
 
 		}
 
@@ -299,7 +299,8 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	public void setOperationCompleted() {
 		log.info("setOperationCompleted()");
 		synchronized (statusSynchronizingObject) {
-			if (runningStatus == RunningStatus.PAUSED_BUSY) {
+			if (runningStatus == RunningStatus.PAUSED_BUSY
+					|| runningStatus == RunningStatus.PAUSED) {
 				log.info("setting paused");
 				setRunningStatus(RunningStatus.PAUSED);
 			} else {

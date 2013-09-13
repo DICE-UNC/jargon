@@ -11,6 +11,7 @@ import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.RunningStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.conveyor.core.QueueManagerService;
@@ -291,6 +292,12 @@ public class BasicQueueManagerServiceImpl extends
 		log.info("dequeueNextOperation()");
 
 		try {
+			if (getConveyorExecutorService().getRunningStatus() == RunningStatus.PAUSED
+					|| getConveyorExecutorService().getRunningStatus() == RunningStatus.PAUSED_BUSY) {
+				log.info("paused, do not dequeue");
+				return;
+			}
+
 			getConveyorExecutorService().setBusyForAnOperation();
 		} catch (ConveyorBusyException e) {
 			log.info("busy, ignore..");

@@ -30,9 +30,6 @@ public interface ConveyorExecutorService {
 	 */
 	TransferAttempt getCurrentTransferAttempt();
 
-	void requestCancel(final TransferAttempt transferAttempt)
-			throws ConveyorExecutionException;
-
 	public enum ErrorStatus {
 		OK, WARNING, ERROR
 	}
@@ -40,6 +37,16 @@ public interface ConveyorExecutorService {
 	public enum RunningStatus {
 		IDLE, PAUSED, BUSY, PAUSED_BUSY
 	}
+
+	/**
+	 * Request to cancel the running of the given transfer attempt
+	 * 
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} to be cancelled
+	 * @throws ConveyorExecutionException
+	 */
+	void requestCancel(final TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
 
 	/***
 	 * Given a properly configured transfer attempt, execute the transfer and
@@ -91,7 +98,7 @@ public interface ConveyorExecutorService {
 	 * @throws ConveyorBusyException
 	 *             if the queue is busy
 	 */
-	public abstract void setBusyForAnOperation() throws ConveyorBusyException;
+	void setBusyForAnOperation() throws ConveyorBusyException;
 
 	/**
 	 * This method releases the queue from a busy or 'busy and paused' status
@@ -104,12 +111,33 @@ public interface ConveyorExecutorService {
 	 */
 	void setOperationCompleted();
 
+	/**
+	 * Set the status of the conveyor, this is used by listeners that want to
+	 * show the current state.
+	 * 
+	 * @param runningStatus
+	 */
 	void setRunningStatus(final RunningStatus runningStatus);
 
+	/**
+	 * Set the status that signals the state of the conveyor (idle, busy, etc)
+	 * 
+	 * @return
+	 */
 	RunningStatus getRunningStatus();
 
+	/**
+	 * Set the error status
+	 * 
+	 * @param errorStatus
+	 */
 	void setErrorStatus(final ErrorStatus errorStatus);
 
+	/**
+	 * Get any error status for the overall conveyor
+	 * 
+	 * @return
+	 */
 	ErrorStatus getErrorStatus();
 
 	/**
@@ -143,7 +171,7 @@ public interface ConveyorExecutorService {
 	void requestPause() throws ConveyorExecutionException;
 
 	/**
-	 * Unpause the queue and release the next item.
+	 * Un-pause the queue and release the next item.
 	 * 
 	 * @throws ConveyorExecutionException
 	 */
