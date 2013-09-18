@@ -2040,6 +2040,63 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 		log.info("replication complete");
 	}
+	
+	
+	public void replicateIrodsDataObjectAsynchronously(String irodsCollectionAbsolutePath, final String fileName,
+			final String resourceName, final int delayInMinutes) throws JargonException {
+		
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+		
+		if (delayInMinutes <= 0) {
+			throw new IllegalArgumentException("delay in minutes must be > 0");
+		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		log.info("fileName:{}", fileName);
+		log.info("resourceName:{}", resourceName);
+		log.info("delayInMinutes:{}", delayInMinutes);
+		
+		if (!getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException(
+					"service not available on servers prior to rods3.0");
+		}
+
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append("/");
+		sb.append(fileName);
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
+				MiscIRODSUtils.wrapStringInQuotes(sb.toString())));
+
+	
+			irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
+					MiscIRODSUtils.wrapStringInQuotes(resourceName)));
+		
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				"/rules/rulemsiDataObjReplAsynch.r", irodsRuleParameters,
+				RuleProcessingType.EXTERNAL);
+		log.info("result of action:{}", result.getRuleExecOut().trim());
+		
+	}
 
 	/**
 	 * Copy a file from one iRODS location to another. This is the preferred
@@ -2487,9 +2544,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		/*
-		 * Handle soft links by munging the path
-		 */
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -3692,7 +3746,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String irodsCollectionAbsolutePath, final String fileName,
 			final String resourceName, final int numberOfCopiesToKeep,
 			final int replicaNumberToDelete, final boolean asIRODSAdmin)
-			throws JargonException {
+			throws DataNotFoundException, JargonException {
 		log.info("trimDataObjectReplicasInResourceGroup");
 
 		if (irodsCollectionAbsolutePath == null
@@ -3778,5 +3832,57 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("result of action:{}", result.getRuleExecOut().trim());
 
 	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<DataObject> listReplicationsForFile(
+			String collectionAbsPath, final String fileName
+			) throws  JargonException {
+
+		log.info("listReplicationsForFile");
+
+		if (collectionAbsPath == null || collectionAbsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collection");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty filename");
+		}
+
+		if (collectionAbsPath.endsWith("/")) {
+			collectionAbsPath = collectionAbsPath.substring(0,
+					collectionAbsPath.length() - 1);
+		}
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, collectionAbsPath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, fileName);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(100);
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			
+			return DataAOHelper.buildListFromResultSet(resultSet);
+		} catch (Exception e) {
+			log.error("error querying for replicas", e);
+			throw new JargonException(
+					"error querying for file replicas", e);
+		}
+	}
+	
+	
 
 }

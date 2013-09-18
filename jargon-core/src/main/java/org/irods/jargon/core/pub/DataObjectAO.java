@@ -1003,11 +1003,23 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param numberOfCopiesToKeep <code>int</code> with the optional (leave -1 if not specified) number of copies to retain
 	 * @param replicaNumberToDelete <code>int</code> with a specific replica number to trim (leave as -1 if not specified)
 	 * @param asIRODSAdmin <code>boolean</code> to process the given action as the rodsAdmin
+	 * @throws DataNotFoundException if the data object is not found
 	 * @throws JargonException
 	 */
 	void trimDataObjectReplicas(String irodsCollectionAbsolutePath,
 			String fileName, String resourceName, int numberOfCopiesToKeep,
 			int replicaNumberToDelete, boolean asIRODSAdmin)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * List all data object replicas
+	 * 
+	 * @param collectionAbsPath  <code>String</code> with the absolute path to the iRODS parent collection
+	 * @param fileName  <code>String</code> with the file name of the data object to be trimmed
+	 * @return <code>List</code> of {@link DataObject} for each replica
+	 * @throws JargonException
+	 */
+	List<DataObject> listReplicationsForFile(String collectionAbsPath,
+			String fileName) throws JargonException;
 
 }
