@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
 *'''Date''': 
-*'''Release Version''': 3.3.1.1
-*'''git tag''': 3.3.1.1
+*'''Release Version''': 3.3.2-SNAPSHOT
+*'''git tag''': 3.3.2-SNAPSHOT
 
 ==News==
 
@@ -37,7 +37,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 ==Bug Fixes==
 
 
-
+[#1635] ttl parameter in PAM missing
+**Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
 
 ==Features==
 
