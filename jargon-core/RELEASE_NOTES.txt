@@ -38,6 +38,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1606] inconsistent objstat semantics for mounted collections
 **Added an overhead to this iRODS bug where an objStat for a file in a mounted collecton always returns an objStat even if the file exists.  This is filed under iRODS, but the force overwrite logic was changed in a bug overhead to always use force when putting to a mounted collection, and we'll wait for an iRODS fix.
 
+[#1635] ttl parameter in PAM missing
+**Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
 
 ==Features==
 

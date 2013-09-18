@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.utils;
 
-import com.sun.tools.xjc.reader.xmlschema.bindinfo.BIConversion.Static;
 
 /**
  * Helper methods for dealing with rules
