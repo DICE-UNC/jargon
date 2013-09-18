@@ -2846,19 +2846,12 @@ public class DataObjectAOImplTest {
 				computedChecksum.length() > 0);
 	}
 
-	/**
-	 * Bug [#1394] -511017 in testReplicateToResourceGroup
-	 * https://code.renci.org
-	 * /gf/project/jargon/tracker/?action=TrackerItemEdit&tracker_item_id
-	 * =1394&start=25
-	 * 
-	 * @throws Exception
-	 */
-	@Ignore
+	@Test
 	public final void testReplicateToResourceGroup() throws Exception {
 		// generate a local scratch file
 
 		String testFileName = "testReplicateToResourceGroup.txt";
+		String testDir = "testReplicateToResourceGroup";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
@@ -2866,7 +2859,8 @@ public class DataObjectAOImplTest {
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDir);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -2879,6 +2873,8 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
+		irodsFile.reset();
+		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
@@ -5010,4 +5006,512 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.isUserHasAccess("file", "");
 	}
+
+	@Test
+	public final void testListReplicationsForFileInResGroup() throws Exception {
+
+		String testFileName = "testListReplicationsForFileInResGroup.txt";
+		String testDir = "testListReplicationsForFileInResGroup";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.deleteWithForceOption();
+		irodsFile.reset();
+		irodsFile.mkdirs();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameOrig, targetIrodsCollection, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
+				null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO
+				.replicateIrodsDataObjectToAllResourcesInResourceGroup(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+
+		List<DataObject> resources = dataObjectAO
+				.listReplicationsForFileInResGroup(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+
+		Assert.assertEquals(1, resources.size());
+
+	}
+
+	@Test
+	public final void testListReplicationsForFileInResGroupNonExistent()
+			throws Exception {
+
+		String testFileName = "testListReplicationsForFileInResGroup.txt";
+		String testDir = "testListReplicationsForFileInResGroup";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.deleteWithForceOption();
+		irodsFile.reset();
+		irodsFile.mkdirs();
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		List<DataObject> resources = dataObjectAO
+				.listReplicationsForFileInResGroup(targetIrodsCollection,
+						testFileName, "bogus name");
+
+		Assert.assertEquals(0, resources.size());
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testListReplicationsForFileInResGroupNullCollection()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.listReplicationsForFileInResGroup(null, "blah",
+				"bogus name");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testListReplicationsForFileInResGroupBlankFile()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO
+				.listReplicationsForFileInResGroup("coll", "", "bogus name");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testListReplicationsForFileInResGroupNullRescGroup()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.listReplicationsForFileInResGroup("coll", "xxx", null);
+	}
+
+	@Test
+	public final void testGetTotalNumberOfReplsForDataObject() throws Exception {
+
+		String testFileName = "testGetTotalNumberOfReplsForDataObject.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count two replicas", 2, replicas);
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testGetTotalNumberOfReplsForDataObjectNullCollection()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.getTotalNumberOfReplsForDataObject(null, "blah");
+
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public final void testGetTotalNumberOfReplsForDataObjectBlankFile()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.getTotalNumberOfReplsForDataObject("coll", "");
+
+	}
+
+	@Test
+	public final void testCountReplicationsForFileInResGroup() throws Exception {
+
+		String testFileName = "testCountReplicationsForFileInResGroup.txt";
+		String testDir = "testCountReplicationsForFileInResGroup";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.deleteWithForceOption();
+		irodsFile.reset();
+		irodsFile.mkdirs();
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameOrig, targetIrodsCollection, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
+				null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO
+				.replicateIrodsDataObjectToAllResourcesInResourceGroup(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+
+		int nbrRepls = dataObjectAO
+				.getTotalNumberOfReplsInResourceGroupForDataObject(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+
+		Assert.assertEquals(1, nbrRepls);
+
+	}
+
+	@Test
+	public final void testTrimReplicasForDataObjectByResourceName()
+			throws Exception {
+
+		String testFileName = "testTrimReplicasForDataObject.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count two replicas", 2, replicas);
+
+		dataObjectAO
+				.trimDataObjectReplicas(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						1, -1, false);
+
+		replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count one replica, should have trimmed 1",
+				1, replicas);
+
+	}
+
+	@Test
+	public final void testTrimReplicasForDataObjectByResourceNameInvalid()
+			throws Exception {
+
+		String testFileName = "testTrimReplicasForDataObjectByResourceNameInvalid.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count two replicas", 2, replicas);
+
+		dataObjectAO.trimDataObjectReplicas(targetIrodsCollection,
+				testFileName, "invalid resource name", -1, -1, false);
+
+		replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("should not have trimed anything", 2, replicas);
+
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public final void testTrimReplicasForDataObjectInvalidFileName()
+			throws Exception {
+
+		String testFileName = "testTrimReplicasForDataObjectInvalidFileName.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO
+				.trimDataObjectReplicas(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						-1, -1, false);
+
+	}
+
+	@Test
+	public final void testTrimReplicasForDataObjectByReplicaNumber()
+			throws Exception {
+
+		String testFileName = "testTrimReplicasForDataObjectByReplicaNumber.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		// List<Resource>
+		// resourcdataObjectAO.listFileResources(targetIrodsCollection + '/' +
+		// testFileName);
+		
+		List<DataObject> replicas = dataObjectAO.listReplicationsForFile(targetIrodsCollection, testFileName);
+
+		Assert.assertEquals("did not count two replicas", 2, replicas.size());
+		
+		DataObject firstDataObject = replicas.get(0);
+		
+		dataObjectAO
+				.trimDataObjectReplicas(
+						targetIrodsCollection,
+						testFileName,
+						"",
+						1, firstDataObject.getDataReplicationNumber(), false);
+
+		int ctr = dataObjectAO.getTotalNumberOfReplsForDataObject(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count one replica, should have trimmed 1",
+				1, ctr);
+
+	}
+
+	@Test
+	public final void testListReplicasForDataObject() throws Exception {
+
+		String testFileName = "testListReplicasForDataObject.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		List<DataObject> replicatedObjs = dataObjectAO.listReplicationsForFile(
+				targetIrodsCollection, testFileName);
+		Assert.assertEquals("did not count two replicas", 2,
+				replicatedObjs.size());
+
+	}
+
+	@Test
+	public final void testListReplicasForDataObjectNotFound() throws Exception {
+
+		String testFileName = "testListReplicasForDataObjectNotFOund.txt";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.listReplicationsForFile(targetIrodsCollection,
+				testFileName);
+
+	}
+
 }
