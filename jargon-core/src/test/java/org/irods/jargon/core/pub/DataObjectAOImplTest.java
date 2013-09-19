@@ -2430,6 +2430,45 @@ public class DataObjectAOImplTest {
 		Assert.assertFalse("no query result returned", result.isEmpty());
 		Assert.assertEquals(testFileName, result.get(0).getDataName());
 	}
+	
+	@Test
+	public final void testReplicateAsynch() throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testReplicateAsynch.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
+
+		irodsFile.reset();
+		irodsFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+		File localFile = new File(fileNameOrig);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
+		
+		dataObjectAO.replicateIrodsDataObjectAsynchronously(targetIrodsCollection, testFileName, testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), 1);
+
+	
+		// I won't wait, just make sure it runs without error
+	}
+
 
 	@Test
 	public final void testReplicate() throws Exception {

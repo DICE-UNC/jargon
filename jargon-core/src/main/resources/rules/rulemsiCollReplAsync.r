@@ -1,4 +1,4 @@
-rulemsiDataObjReplAsynch {
+rulemsiCollReplAsynch {
 #Input parameters are:
 #  Data Object path
 #  Optional flags in form keyword=value
@@ -20,8 +20,8 @@ rulemsiDataObjReplAsynch {
 #  The file /tempZone/home/rods/sub1/foo3 is replicated onto resource testResc
 	  
 	delay (*DelayInfo) {
-		msiDataObjRepl(*SourceFile,"destRescName=*Resource",*Status);
-		writeLine("stdout","The file *SourceFile is replicated onto resource *Resource");
+		msiCollRepl(*SourceFile,"destRescName=*Resource",*Status);
+		writeLine("stdout","The collection *SourceFile is replicated onto resource *Resource");
 	}
   
   }

@@ -64,6 +64,7 @@ import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.Overheaded;
+import org.irods.jargon.core.utils.RuleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -2040,11 +2041,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 		log.info("replication complete");
 	}
+
 	
-	
-	public void replicateIrodsDataObjectAsynchronously(String irodsCollectionAbsolutePath, final String fileName,
-			final String resourceName, final int delayInMinutes) throws JargonException {
-		
+	@Override
+	public void replicateIrodsDataObjectAsynchronously(
+			final String irodsCollectionAbsolutePath, final String fileName,
+			final String resourceName, final int delayInMinutes)
+			throws JargonException {
+
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -2058,7 +2062,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (resourceName == null || resourceName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourceName");
 		}
-		
+
 		if (delayInMinutes <= 0) {
 			throw new IllegalArgumentException("delay in minutes must be > 0");
 		}
@@ -2067,7 +2071,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("fileName:{}", fileName);
 		log.info("resourceName:{}", resourceName);
 		log.info("delayInMinutes:{}", delayInMinutes);
-		
+
 		if (!getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			throw new JargonException(
@@ -2087,15 +2091,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
 				MiscIRODSUtils.wrapStringInQuotes(sb.toString())));
 
-	
-			irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
-					MiscIRODSUtils.wrapStringInQuotes(resourceName)));
-		
+		irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
+				MiscIRODSUtils.wrapStringInQuotes(resourceName)));
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*DelayInfo", RuleUtils
+				.buildDelayParamForMinutes(delayInMinutes)));
+
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
-				"/rules/rulemsiDataObjReplAsynch.r", irodsRuleParameters,
+				"/rules/rulemsiDataObjReplAsync.r", irodsRuleParameters,
 				RuleProcessingType.EXTERNAL);
 		log.info("result of action:{}", result.getRuleExecOut().trim());
-		
+
 	}
 
 	/**
@@ -3732,13 +3738,27 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
-	 * General method to trim replicas for a resource or resource group.  Check the parameter notes carefully.
-	 * @param irodsCollectionAbsolutePath <code>String</code> with the absolute path to the iRODS parent collection
-	 * @param fileName <code>String</code> with the file name of the data object to be trimmed
-	 * @param resourceName <code>String</code> with the optional (blank if not specified) replica resource to trim
-	 * @param numberOfCopiesToKeep <code>int</code> with the optional (leave -1 if not specified) number of copies to retain
-	 * @param replicaNumberToDelete <code>int</code> with a specific replica number to trim (leave as -1 if not specified)
-	 * @param asIRODSAdmin <code>boolean</code> to process the given action as the rodsAdmin
+	 * General method to trim replicas for a resource or resource group. Check
+	 * the parameter notes carefully.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            collection
+	 * @param fileName
+	 *            <code>String</code> with the file name of the data object to
+	 *            be trimmed
+	 * @param resourceName
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            replica resource to trim
+	 * @param numberOfCopiesToKeep
+	 *            <code>int</code> with the optional (leave -1 if not specified)
+	 *            number of copies to retain
+	 * @param replicaNumberToDelete
+	 *            <code>int</code> with a specific replica number to trim (leave
+	 *            as -1 if not specified)
+	 * @param asIRODSAdmin
+	 *            <code>boolean</code> to process the given action as the
+	 *            rodsAdmin
 	 * @throws JargonException
 	 */
 	@Override
@@ -3832,14 +3852,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("result of action:{}", result.getRuleExecOut().trim());
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang.String, java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang
+	 * .String, java.lang.String)
 	 */
 	@Override
-	public List<DataObject> listReplicationsForFile(
-			String collectionAbsPath, final String fileName
-			) throws  JargonException {
+	public List<DataObject> listReplicationsForFile(String collectionAbsPath,
+			final String fileName) throws JargonException {
 
 		log.info("listReplicationsForFile");
 
@@ -3874,15 +3897,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
-			
+
 			return DataAOHelper.buildListFromResultSet(resultSet);
 		} catch (Exception e) {
 			log.error("error querying for replicas", e);
-			throw new JargonException(
-					"error querying for file replicas", e);
+			throw new JargonException("error querying for file replicas", e);
 		}
 	}
-	
-	
 
 }
