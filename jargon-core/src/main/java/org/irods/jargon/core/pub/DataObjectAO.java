@@ -1022,4 +1022,16 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	List<DataObject> listReplicationsForFile(String collectionAbsPath,
 			String fileName) throws JargonException;
 
+	/**
+	 * Replicate the given data object using a delayed execution
+	 * @param irodsCollectionAbsolutePath  <code>String</code> with the absolute path to the iRODS parent collection
+	 * @param fileName  <code>String</code> with the file name of the data object to be trimmed
+	 * @param resourceName <code>String</code> with the optional (blank if not specified) replica resource to trim
+	 * @param delayInMinutes <code>int</code> with the number of minutes to delay the replication, will put on the deferred rule execution queue
+	 * @throws JargonException
+	 */
+	void replicateIrodsDataObjectAsynchronously(
+			String irodsCollectionAbsolutePath, String fileName,
+			String resourceName, int delayInMinutes) throws JargonException;
+
 }

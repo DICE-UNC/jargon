@@ -23,9 +23,9 @@ public class RuleUtils {
 		}
 		
 		StringBuilder sbBuilder = new StringBuilder();
-		sbBuilder.append("<PLUSET>");
+		sbBuilder.append("\"<PLUSET>");
 		sbBuilder.append(delayInMinutes);
-		sbBuilder.append("m</PLUSET><EF>24h</EF>");
+		sbBuilder.append("m</PLUSET><EF>24h</EF>\"");
 		return sbBuilder.toString();
 	}
 
