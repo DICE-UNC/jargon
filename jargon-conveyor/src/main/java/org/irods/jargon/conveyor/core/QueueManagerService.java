@@ -218,14 +218,14 @@ public interface QueueManagerService {
 
 	/**
 	 * Given an id and a start and max number of results return a list of
-	 * <code>TransferItems</code> for the specified transfer id.
+	 * <code>TransferItems</code> for the specified transfer attempt id.
 	 * 
-	 * @param transferId
-	 *            <code>long</code> with the transfer id
+	 * @param transferAttemptId
+	 *            <code>long</code> with the transfer attempt
 	 * @return {@link TransferItems} list.
 	 * @throws ConveyorExecutionException
 	 */
-	List<TransferItem> getNextTransferItems(final long transferId, int start,
+	List<TransferItem> getNextTransferItems(final long transferAttemptId, int start,
 			int length) throws ConveyorExecutionException;
 
 	/**

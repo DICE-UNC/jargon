@@ -667,18 +667,18 @@ public class BasicQueueManagerServiceImpl extends
 	 * (long, int, int)
 	 */
 	@Override
-	public List<TransferItem> getNextTransferItems(final long transferId,
+	public List<TransferItem> getNextTransferItems(final long transferAttemptId,
 			final int start, final int length)
 			throws ConveyorExecutionException {
 		List<TransferItem> items = null;
 
 		log.info("getNextTransferItems");
-		if (transferId <= 0) {
+		if (transferAttemptId <= 0) {
 			throw new IllegalArgumentException("invalid transferId");
 		}
 		try {
 			items = transferAttemptDAO.listTransferItemsInTransferAttempt(
-					transferId, start, length);
+					transferAttemptId, start, length);
 		} catch (TransferDAOException e) {
 			log.error("exception retrieving transfer items", e);
 			throw new ConveyorExecutionException(
