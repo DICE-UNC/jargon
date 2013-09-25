@@ -226,4 +226,14 @@ public interface TransferAccountingManagementService {
 	Transfer prepareTransferForResubmit(final long transferId)
 			throws ConveyorExecutionException, RejectedTransferException;
 
+	/**
+	 * Indicates that successful transfers are logged. This delegates to the
+	 * configuration service settings.
+	 * 
+	 * @return <code>boolean</code> that indicates that successful transfer are
+	 *         logged
+	 * @throws ConveyorExecutionException
+	 */
+	boolean isLogSuccessfulTransfers() throws ConveyorExecutionException;
+
 }

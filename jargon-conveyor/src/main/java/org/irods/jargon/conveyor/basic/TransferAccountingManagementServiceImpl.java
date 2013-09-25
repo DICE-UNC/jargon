@@ -284,8 +284,8 @@ public class TransferAccountingManagementServiceImpl extends
 
 		localTransferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
-		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
-				.getTotalFilesTransferredSoFar());
+		localTransferAttempt.setTotalFilesTransferredSoFar(localTransferAttempt
+				.getTotalFilesTransferredSoFar() + 1);
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
 		localTransferAttempt.setUpdatedAt(currentDate);
@@ -368,6 +368,8 @@ public class TransferAccountingManagementServiceImpl extends
 		Date currentDate = new Date(currentTime);
 		localTransferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
 		localTransferAttempt.setUpdatedAt(currentDate);
+		localTransferAttempt.setTotalFilesErrorSoFar(localTransferAttempt
+				.getTotalFilesErrorSoFar() + 1);
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
@@ -390,8 +392,9 @@ public class TransferAccountingManagementServiceImpl extends
 					.stackTraceToString(transferStatus.getTransferException()));
 		}
 
+		localTransferAttempt.getTransferItems().add(transferItem);
+
 		try {
-			localTransferAttempt.getTransferItems().add(transferItem);
 			transferAttemptDAO.save(localTransferAttempt);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
@@ -663,6 +666,8 @@ public class TransferAccountingManagementServiceImpl extends
 
 		Transfer transfer = localTransferAttempt.getTransfer();
 
+		log.info("transfer for update:{}", transfer);
+
 		transfer.setLastTransferStatus(transferStatusEnum);
 		transfer.setTransferState(transferState);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -671,6 +676,8 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setAttemptStatus(transferStatusEnum);
 		localTransferAttempt.setUpdatedAt(localTransferAttempt.getAttemptEnd());
 		localTransferAttempt.setErrorMessage(errorMessage);
+
+		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
 			transferDAO.save(transfer);
@@ -760,6 +767,9 @@ public class TransferAccountingManagementServiceImpl extends
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
 			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
+
+		log.info("updateTransferAfterRestartFileSkipped()");
+
 		TransferAttempt localTransferAttempt;
 		try {
 			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
@@ -777,27 +787,33 @@ public class TransferAccountingManagementServiceImpl extends
 
 		long currentTime = System.currentTimeMillis();
 		Date currentDate = new Date(currentTime);
-		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
-				.getTotalFilesTransferredSoFar());
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
 		localTransferAttempt.setUpdatedAt(currentDate);
+		localTransferAttempt.setTotalFilesSkippedSoFar(localTransferAttempt
+				.getTotalFilesSkippedSoFar() + 1);
+		log.info("total skipped so far:{}",
+				localTransferAttempt.getTotalFilesSkippedSoFar());
 
-		if (!getConfigurationService()
-				.getCachedConveyorConfigurationProperties()
-				.isLogSuccessfulTransfers()
-				&& getConfigurationService()
-						.getCachedConveyorConfigurationProperties()
-						.isRecordRestartFiles()) {
-			log.info("not logging restart...update transfer attempt with counts");
-			try {
-				transferAttemptDAO.save(localTransferAttempt);
-				return;
-			} catch (TransferDAOException e) {
-				throw new ConveyorExecutionException(
-						"error saving transfer attempt", e);
-			}
+		try {
+			transferAttemptDAO.save(localTransferAttempt);
+			log.info("transfer attempt was saved");
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", e);
 		}
+
+		if (!(getConfigurationService()
+				.getCachedConveyorConfigurationProperties()
+				.isLogSuccessfulTransfers() && getConfigurationService()
+				.getCachedConveyorConfigurationProperties()
+				.isRecordRestartFiles())) {
+			log.info("not logging restart...update transfer attempt with counts");
+			return;
+
+		}
+
+		log.info("logging restart, log transfer item");
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
@@ -951,6 +967,19 @@ public class TransferAccountingManagementServiceImpl extends
 		}
 
 		return transfer;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * isLogSuccessfulTransfers()
+	 */
+	@Override
+	public boolean isLogSuccessfulTransfers() throws ConveyorExecutionException {
+		return this.getConfigurationService()
+				.getCachedConveyorConfigurationProperties()
+				.isLogSuccessfulTransfers();
 	}
 
 }

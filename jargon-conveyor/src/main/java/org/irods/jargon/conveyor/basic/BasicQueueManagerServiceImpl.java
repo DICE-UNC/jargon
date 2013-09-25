@@ -105,7 +105,6 @@ public class BasicQueueManagerServiceImpl extends
 					throw new ConveyorExecutionException(
 							"unable to process transfer", e);
 				}
-
 			}
 		}
 
@@ -667,8 +666,8 @@ public class BasicQueueManagerServiceImpl extends
 	 * (long, int, int)
 	 */
 	@Override
-	public List<TransferItem> getNextTransferItems(final long transferAttemptId,
-			final int start, final int length)
+	public List<TransferItem> getNextTransferItems(
+			final long transferAttemptId, final int start, final int length)
 			throws ConveyorExecutionException {
 		List<TransferItem> items = null;
 

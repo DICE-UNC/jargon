@@ -12,6 +12,7 @@ import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
@@ -202,6 +203,19 @@ public abstract class AbstractConveyorCallable implements
 			 */
 			markTransferAsAnExceptionWhenProcessingCall(je);
 			return new ConveyorExecutionFuture();
+                        
+                        
+                        } catch (JargonRuntimeException je) {
+			log.info(
+					"jargon runtime exception processing transfer, mark the transfer as an error and release the queue",
+					je);
+
+			/*
+			 * The following will call doCompletionSequence() in the finally to
+			 * release the queue
+			 */
+			markTransferAsAnExceptionWhenProcessingCall(je);
+			return new ConveyorExecutionFuture();
 
 		} catch (Exception ex) {
 
@@ -218,16 +232,17 @@ public abstract class AbstractConveyorCallable implements
 					"unhandled exception during transfer process", ex);
 		}
 	}
-
+        
+        
 	/**
 	 * When an exception occurs setting up the transfer in the call, mark the
 	 * transfer as an exception and set error statuses. If the transfer cannot
 	 * be updated, bubble the exception back up to the callback listener.
 	 * 
 	 * @param je
-	 *            {@link JargonException} that should be handled in the transfer
+	 *            {@link Exception} that should be handled in the transfer
 	 */
-	private void markTransferAsAnExceptionWhenProcessingCall(JargonException je) {
+	private void markTransferAsAnExceptionWhenProcessingCall(Exception je) {
 		log.info("markTransferAsAnExceptionWhenProcessingCall");
 		try {
 			this.getConveyorService()

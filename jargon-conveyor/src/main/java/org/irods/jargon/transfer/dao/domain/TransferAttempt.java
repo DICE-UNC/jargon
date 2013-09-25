@@ -78,6 +78,12 @@ public class TransferAttempt implements Serializable {
 	@Column(name = "total_files_transferred_so_far")
 	private int totalFilesTransferredSoFar = 0;
 
+	@Column(name = "total_files_skipped_so_far")
+	private int totalFilesSkippedSoFar = 0;
+
+	@Column(name = "total_files_error_so_far")
+	private int totalFilesErrorSoFar = 0;
+
 	@OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
 	@OrderBy("sequenceNumber")
 	@LazyCollection(LazyCollectionOption.EXTRA)
@@ -264,6 +270,53 @@ public class TransferAttempt implements Serializable {
 	 */
 	public void setSequenceNumber(long attemptSequenceNumber) {
 		this.sequenceNumber = attemptSequenceNumber;
+	}
+
+	/**
+	 * Handy method to compute the time of the transfer. This will return 0 if
+	 * the transfer has not started, or is yet to complete.
+	 * 
+	 * @return
+	 */
+	public long computeTotalTimeInMillis() {
+
+		// if still running or not run, just return zero
+		if (getAttemptStart() == null || getAttemptEnd() == null) {
+			return 0;
+		}
+
+		return getAttemptEnd().getTime() - getAttemptStart().getTime();
+
+	}
+
+	/**
+	 * @return the totalFilesSkippedSoFar
+	 */
+	public int getTotalFilesSkippedSoFar() {
+		return totalFilesSkippedSoFar;
+	}
+
+	/**
+	 * @param totalFilesSkippedSoFar
+	 *            the totalFilesSkippedSoFar to set
+	 */
+	public void setTotalFilesSkippedSoFar(int totalFilesSkippedSoFar) {
+		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
+	}
+
+	/**
+	 * @return the totalFilesErrorSoFar
+	 */
+	public int getTotalFilesErrorSoFar() {
+		return totalFilesErrorSoFar;
+	}
+
+	/**
+	 * @param totalFilesErrorSoFar
+	 *            the totalFilesErrorSoFar to set
+	 */
+	public void setTotalFilesErrorSoFar(int totalFilesErrorSoFar) {
+		this.totalFilesErrorSoFar = totalFilesErrorSoFar;
 	}
 
 }

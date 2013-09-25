@@ -255,4 +255,22 @@ public class Transfer implements Serializable {
 		this.resourceName = resourceName;
 	}
 
+	/**
+	 * Handy method to compute the total time across all transfers.
+	 * <p/>
+	 * Note that it is the responsibility of the caller to ensure that the
+	 * transfer attempts for this transfer have been initialized.
+	 */
+	public long computeTotalTransferTime() {
+
+		long totalTime = 0;
+
+		for (TransferAttempt transferAttempt : this.getTransferAttempts()) {
+			totalTime += transferAttempt.computeTotalTimeInMillis();
+		}
+
+		return totalTime;
+
+	}
+
 }

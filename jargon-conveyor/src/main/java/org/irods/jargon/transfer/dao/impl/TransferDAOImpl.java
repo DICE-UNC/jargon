@@ -46,6 +46,19 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		this.getSessionFactory().getCurrentSession().saveOrUpdate(transfer);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.TransferDAO#merge(org.irods.jargon.transfer
+	 * .dao.domain.Transfer)
+	 */
+	@Override
+	public void merge(final Transfer transfer) throws TransferDAOException {
+		logger.info("entering merge(Transfer)");
+		this.getSessionFactory().getCurrentSession().merge(transfer);
+	}
+
 	@Override
 	public Transfer initializeChildrenForTransfer(final Transfer transfer)
 			throws TransferDAOException {
@@ -231,7 +244,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			Criteria criteria = this.getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.addOrder(Order.desc("createdAt"));
-			criteria.setFetchMode("synchronization", FetchMode.JOIN);
+			// criteria.setFetchMode("synchronization", FetchMode.JOIN);
+			// criteria.setFetchMode("transferAttempts", FetchMode.JOIN);
 			return criteria.list();
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);

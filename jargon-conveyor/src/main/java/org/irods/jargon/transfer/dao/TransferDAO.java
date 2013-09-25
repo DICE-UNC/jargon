@@ -42,8 +42,8 @@ public interface TransferDAO {
 	 * @return
 	 * @throws TransferDAOException
 	 */
-	public List<Transfer> findByTransferState(TransferStateEnum... transferState)
-			throws TransferDAOException;
+	public List<Transfer> findByTransferState(
+			TransferStateEnum... transferState) throws TransferDAOException;
 
 	/**
 	 * 
@@ -122,5 +122,15 @@ public interface TransferDAO {
 	 */
 	Transfer initializeChildrenForTransfer(Transfer transfer)
 			throws TransferDAOException;
+
+	/**
+	 * Do a merge of the transfer
+	 * 
+	 * @param transfer
+	 *            {@link Transfer} that will be re-attached to a session via
+	 *            merge, and then initialized via Hibernate
+	 * @throws TransferDAOException
+	 */
+	void merge(Transfer transfer) throws TransferDAOException;
 
 }
