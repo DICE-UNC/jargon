@@ -74,6 +74,7 @@ public class ConveyorServiceFunctionalTests {
 				.getIRODSAccessObjectFactory());
 		conveyorService.getQueueManagerService().purgeAllFromQueue();
 		conveyorService.getGridAccountService().resetPassPhraseAndAccounts();
+		conveyorService.getConveyorExecutorService().requestResumeFromPause();
 
 	}
 
@@ -218,7 +219,9 @@ public class ConveyorServiceFunctionalTests {
 		conveyorService.getQueueManagerService().enqueueTransferOperation(
 				transfer, irodsAccount);
 
-		Thread.sleep(2000);
+		while (conveyorService.getConveyorExecutorService().getRunningStatus() == RunningStatus.IDLE) {
+			Thread.sleep(1000);
+		}
 
 		conveyorService.getConveyorExecutorService().requestPause();
 
@@ -246,6 +249,8 @@ public class ConveyorServiceFunctionalTests {
 		conveyorService.getGridAccountService()
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
 		conveyorService.cancelQueueTimerTask();
+		conveyorService.getConveyorExecutorService().requestResumeFromPause();
+
 		ConfigurationProperty logSuccessful = new ConfigurationProperty();
 		logSuccessful
 				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);

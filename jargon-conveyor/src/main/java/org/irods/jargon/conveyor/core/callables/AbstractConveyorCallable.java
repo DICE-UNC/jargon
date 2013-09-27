@@ -193,6 +193,12 @@ public abstract class AbstractConveyorCallable implements
 			processCallForThisTransfer(transferControlBlock, irodsAccount);
 			return new ConveyorExecutionFuture();
 		} catch (JargonException je) {
+
+			if (this.getTransferControlBlock().isCancelled()) {
+				log.info("cancelled, return future and proceed");
+				return new ConveyorExecutionFuture();
+			}
+
 			log.info(
 					"jargon exception processing transfer, mark the transfer as an error and release the queue",
 					je);
@@ -205,6 +211,12 @@ public abstract class AbstractConveyorCallable implements
 			return new ConveyorExecutionFuture();
 
 		} catch (JargonRuntimeException je) {
+
+			if (this.getTransferControlBlock().isCancelled()) {
+				log.info("cancelled, return future and proceed");
+				return new ConveyorExecutionFuture();
+			}
+
 			log.info(
 					"jargon runtime exception processing transfer, mark the transfer as an error and release the queue",
 					je);
@@ -396,7 +408,7 @@ public abstract class AbstractConveyorCallable implements
 			} else if (transferStatus.getTransferState() == TransferState.CANCELLED) {
 				doComplete = true;
 				log.error("transfer cancelled, this will be handled by the conveyor execution service, and the callback here will be ignored");
-				// processOverallCompletionOfTransferWithCancel(transferStatus);
+				processOverallCompletionOfTransferWithCancel(transferStatus);
 			}
 		} catch (ConveyorExecutionException ex) {
 			throw new JargonException(ex.getMessage(), ex.getCause());
@@ -575,6 +587,22 @@ public abstract class AbstractConveyorCallable implements
 							transferStatus, getTransferAttempt());
 
 		}
+	}
+
+	/**
+	 * Handle a cancel from the overall status
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void processOverallCompletionOfTransferWithCancel(
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		log.info("processOverallCompletionOfTransferWithFailure");
+		conveyorService.getConveyorExecutorService().setErrorStatus(
+				ErrorStatus.OK);
+		getConveyorService().getTransferAccountingManagementService()
+				.updateTransferAfterCancellation(transferAttempt);
 	}
 
 	/**
