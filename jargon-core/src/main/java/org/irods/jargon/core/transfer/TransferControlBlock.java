@@ -143,12 +143,29 @@ public interface TransferControlBlock {
 	int getTotalFilesTransferredSoFar();
 
 	/**
+	 * Get the total of files transferred, minus any files transferred by
+	 * skipping
+	 * 
+	 * @return
+	 */
+	int getActualFilesTransferredWithoutSkippedSoFar();
+
+	/**
 	 * Increment the count of files that have been transferred so far and return
 	 * that amount (to avoid act-then-check)
 	 * 
 	 * @return incremented value from control block
 	 */
 	int incrementFilesTransferredSoFar();
+
+	/**
+	 * Increment the count of files that have been skipped so far in restarting
+	 * and return that amount (to avoid act-then-check). This simultaneously
+	 * increments the total files too.
+	 * 
+	 * @return incremented value from control block
+	 */
+	int incrementFilesSkippedSoFar();
 
 	/**
 	 * Get the total number of bytes (for all files) transferred so far
@@ -223,5 +240,19 @@ public interface TransferControlBlock {
 	 *            be the last 'good' path in a prior transfer
 	 */
 	void setRestartAbsolutePath(String restartAbsolutePath);
+
+	/**
+	 * Get the number of files skipped during the restart process
+	 * 
+	 * @return <code>int</code> with the number of files skipped so far
+	 */
+	int getTotalFilesSkippedSoFar();
+
+	/**
+	 * Set the number of files skipped during processing
+	 * 
+	 * @param totalFilesSkippedSoFar
+	 */
+	void setTotalFilesSkippedSoFar(int totalFilesSkippedSoFar);
 
 }

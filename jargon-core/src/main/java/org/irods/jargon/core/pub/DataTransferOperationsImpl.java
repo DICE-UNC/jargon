@@ -485,6 +485,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 								operativeTransferControlBlock
 										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
+								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
@@ -517,6 +519,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							operativeTransferControlBlock
 									.getTotalFilesTransferredSoFar(),
 							operativeTransferControlBlock
+									.getTotalFilesSkippedSoFar(),
+							operativeTransferControlBlock
 									.getTotalFilesToTransfer(),
 							TransferState.OVERALL_COMPLETION, getIRODSAccount()
 									.getHost(), getIRODSAccount().getZone());
@@ -536,7 +540,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				TransferStatus status = TransferStatus
 						.instance(TransferType.GET, irodsSourceFile
 								.getAbsolutePath(), targetLocalFile
-								.getAbsolutePath(), "", 0, 0, 0,
+								.getAbsolutePath(), "", 0, 0, 0, 0,
 								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
@@ -555,7 +559,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				TransferStatus status = TransferStatus
 						.instance(TransferType.GET, irodsSourceFile
 								.getAbsolutePath(), targetLocalFile
-								.getAbsolutePath(), "", 0, 0, 0,
+								.getAbsolutePath(), "", 0, 0, 0, 0,
 								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
@@ -638,25 +642,17 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final JargonException je) throws JargonException {
 		log.error("exception in transfer", je);
 
-		int totalFiles = 0;
-		int totalFilesSoFar = 0;
-
-		if (transferControlBlock != null) {
-			transferControlBlock.reportErrorInTransfer();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
-			totalFilesSoFar = transferControlBlock
-					.getTotalFilesTransferredSoFar();
-		}
-
 		if (transferStatusCallbackListener != null) {
 			log.warn("exception will be passed back to existing callback listener");
 
 			TransferStatus status = TransferStatus.instanceForException(
 					TransferType.GET, irodsSourceFile.getAbsolutePath(),
-					targetLocalFile.getAbsolutePath(), "", targetLocalFile
-							.length(), targetLocalFile.length(),
-					totalFilesSoFar, totalFiles, je, getIRODSAccount()
-							.getHost(), getIRODSAccount().getZone());
+					targetLocalFile.getAbsolutePath(), "",
+					targetLocalFile.length(), targetLocalFile.length(),
+					transferControlBlock.getTotalFilesTransferredSoFar(),
+					transferControlBlock.getTotalFilesSkippedSoFar(),
+					transferControlBlock.getTotalFilesToTransfer(), je,
+					getIRODSAccount().getHost(), getIRODSAccount().getZone());
 
 			transferStatusCallbackListener.statusCallback(status);
 
@@ -965,6 +961,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
+								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
@@ -986,6 +984,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
 										.getTotalBytesTransferredSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
@@ -1121,15 +1121,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		log.error("exception in transfer", je);
 
-		int totalFiles = 0;
-		int totalFilesSoFar = 0;
-
-		if (transferControlBlock != null) {
-			transferControlBlock.reportErrorInTransfer();
-			totalFiles = transferControlBlock.getTotalFilesToTransfer();
-			totalFilesSoFar = transferControlBlock
-					.getTotalFilesTransferredSoFar();
-		}
+		transferControlBlock.reportErrorInTransfer();
 
 		if (transferStatusCallbackListener != null) {
 			log.warn("exception will be passed back to existing callback listener");
@@ -1137,7 +1129,10 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			TransferStatus status = TransferStatus.instanceForException(
 					TransferType.PUT, sourceFile.getAbsolutePath(),
 					targetIrodsFile.getAbsolutePath(), "", sourceFile.length(),
-					sourceFile.length(), totalFilesSoFar, totalFiles, je,
+					sourceFile.length(),
+					transferControlBlock.getTotalFilesTransferredSoFar(),
+					transferControlBlock.getTotalFilesSkippedSoFar(),
+					transferControlBlock.getTotalFilesToTransfer(), je,
 					getIRODSAccount().getHost(), getIRODSAccount().getZone());
 
 			transferStatusCallbackListener.statusCallback(status);
@@ -1211,6 +1206,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							.getTotalBytesToTransfer(), transferControlBlock
 							.getTotalBytesTransferredSoFar(),
 					transferControlBlock.getTotalFilesTransferredSoFar(),
+					transferControlBlock.getTotalFilesSkippedSoFar(),
 					transferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
 							.getHost(), getIRODSAccount().getZone());
@@ -1255,6 +1251,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						transferControlBlock.getTotalBytesToTransfer(),
 						transferControlBlock.getTotalBytesTransferredSoFar(),
 						transferControlBlock.getTotalFilesTransferredSoFar(),
+						transferControlBlock.getTotalFilesSkippedSoFar(),
 						transferControlBlock.getTotalFilesToTransfer(),
 						transferState, getIRODSAccount().getHost(),
 						getIRODSAccount().getZone());
@@ -1266,6 +1263,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						transferControlBlock.getTotalBytesToTransfer(),
 						transferControlBlock.getTotalBytesTransferredSoFar(),
 						transferControlBlock.getTotalFilesTransferredSoFar(),
+						transferControlBlock.getTotalFilesSkippedSoFar(),
 						transferControlBlock.getTotalFilesToTransfer(),
 						TransferState.OVERALL_COMPLETION, getIRODSAccount()
 								.getHost(), getIRODSAccount().getZone());
@@ -1332,6 +1330,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
+								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
@@ -1357,6 +1357,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							operativeTransferControlBlock
 									.getTotalFilesTransferredSoFar(),
 							operativeTransferControlBlock
+									.getTotalFilesSkippedSoFar(),
+							operativeTransferControlBlock
 									.getTotalFilesToTransfer(),
 							TransferState.OVERALL_COMPLETION, this
 									.getIRODSAccount().getHost(), this
@@ -1379,6 +1381,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 											.getTotalBytesTransferredSoFar(),
 									operativeTransferControlBlock
 											.getTotalFilesTransferredSoFar(),
+									operativeTransferControlBlock
+											.getTotalFilesSkippedSoFar(),
 									operativeTransferControlBlock
 											.getTotalFilesToTransfer(), e, this
 											.getIRODSAccount().getHost(), this
@@ -1411,6 +1415,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
+								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
@@ -1433,6 +1439,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
@@ -1484,7 +1492,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("to target file:{}", irodsTargetFileAbsolutePath);
 		log.info(" to target resource: {}", targetResource);
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+		TransferControlBlock operativeTransferControlBlock = this
+				.buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 
 		/*
 		 * If a callback listener is given, make sure there is a transfer
@@ -1602,7 +1611,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("to target file:{}", irodsTargetFile);
 		log.info(" to target resource: {}", irodsTargetFile.getResource());
 
-		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
+		TransferControlBlock operativeTransferControlBlock = this
+				.buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 
 		/*
 		 * If a callback listener is given, make sure there is a transfer
@@ -1669,6 +1679,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
 							.getTotalFilesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
 							.getHost(), getIRODSAccount().getZone());
@@ -1697,6 +1708,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
 										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
@@ -1753,6 +1766,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
 							.getTotalFilesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
 							.getHost(), getIRODSAccount().getZone());
@@ -1773,6 +1787,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
 							.getTotalFilesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_COMPLETION, getIRODSAccount()
 							.getHost(), getIRODSAccount().getZone());
@@ -1791,15 +1806,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final String irodsFileAbsolutePath,
 			final TransferControlBlock operativeTransferControlBlock)
 			throws JargonException {
-		if (operativeTransferControlBlock != null) {
-			IRODSAccessObjectFactory irodsAccessObjectFactory = getIRODSAccessObjectFactory();
-			CollectionAO collectionAO = irodsAccessObjectFactory
-					.getCollectionAO(getIRODSAccount());
-			int fileCount = collectionAO
-					.countAllFilesUnderneathTheGivenCollection(irodsFileAbsolutePath);
-			log.info("replication operation for {} files)", fileCount);
-			operativeTransferControlBlock.setTotalFilesToTransfer(fileCount);
-		}
+		IRODSAccessObjectFactory irodsAccessObjectFactory = getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = irodsAccessObjectFactory
+				.getCollectionAO(getIRODSAccount());
+		int fileCount = collectionAO
+				.countAllFilesUnderneathTheGivenCollection(irodsFileAbsolutePath);
+		log.info("replication operation for {} files)", fileCount);
+		operativeTransferControlBlock.setTotalFilesToTransfer(fileCount);
+
 	}
 
 	/**

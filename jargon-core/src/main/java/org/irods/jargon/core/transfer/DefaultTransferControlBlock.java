@@ -33,6 +33,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	private boolean paused = false;
 	private int maximumErrorsBeforeCanceling = MAX_ERROR_DEFAULT;
 	private int errorCount = 0;
+	private int totalFilesSkippedSoFar = 0;
 	private int totalFilesToTransfer = 0;
 	private int totalFilesTransferredSoFar = 0;
 	/**
@@ -352,6 +353,20 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * incrementFilesSkippedSoFar()
+	 */
+	@Override
+	public int incrementFilesSkippedSoFar() {
+		synchronized (this) {
+			totalFilesTransferredSoFar++;
+			return ++totalFilesSkippedSoFar;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.TransferControlBlock#getTransferOptions()
 	 */
@@ -449,6 +464,42 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		synchronized (this) {
 			this.restartAbsolutePath = restartAbsolutePath;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalFilesSkippedSoFar
+	 * ()
+	 */
+	@Override
+	public synchronized int getTotalFilesSkippedSoFar() {
+		return totalFilesSkippedSoFar;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalFilesSkippedSoFar
+	 * (int)
+	 */
+	@Override
+	public synchronized void setTotalFilesSkippedSoFar(
+			int totalFilesSkippedSoFar) {
+		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getActualFilesTransferredWithoutSkippedSoFar()
+	 */
+	@Override
+	public int getActualFilesTransferredWithoutSkippedSoFar() {
+		return this.totalFilesTransferredSoFar - this.totalFilesSkippedSoFar;
 	}
 
 }

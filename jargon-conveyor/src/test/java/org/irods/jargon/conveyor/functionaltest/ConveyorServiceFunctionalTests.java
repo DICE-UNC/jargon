@@ -245,6 +245,7 @@ public class ConveyorServiceFunctionalTests {
 				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
 		conveyorService.getGridAccountService()
 				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		conveyorService.cancelQueueTimerTask();
 		ConfigurationProperty logSuccessful = new ConfigurationProperty();
 		logSuccessful
 				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);

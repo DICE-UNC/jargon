@@ -41,6 +41,20 @@ public class TransferStatus {
 	private final long totalSize;
 	private final long bytesTransfered;
 	private final int totalFilesTransferredSoFar;
+
+	/**
+	 * Skipped files during restart are counted in total files, so this number
+	 * reflects the number of files skipped in the total. Subtract this number
+	 * for the total transferred so far to get the actual files transferred in
+	 * this transfer attempt.
+	 * <p/>
+	 * This is done so that any progress bar for a restarted transfer hides the
+	 * skipping process and just appears to proceed normally, while apps that
+	 * have more sophisticated accounting can do the delta to get a breakout
+	 * number
+	 * 
+	 */
+	private final int totalFilesSkippedSoFar;
 	private final int totalFilesToTransfer;
 	private final Exception transferException;
 	private final boolean intraFileStatusReport;
@@ -65,6 +79,9 @@ public class TransferStatus {
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
+	 * @param totalFilesSkippedSoFar
+	 *            <code>int<code> with the total files skipped if this is a
+	 *            restart, including this status callback
 	 * @param totalFilesToTransfer
 	 *            <code>int</code> with the total files involved in this
 	 *            operation
@@ -81,15 +98,15 @@ public class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final TransferState transferState,
-			final String transferHost, final String transferZone)
-			throws JargonException {
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
+			final TransferState transferState, final String transferHost,
+			final String transferZone) throws JargonException {
 
 		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, transferState, null, false, transferHost,
-				transferZone);
+				totalFilesSkippedSoFar, totalFilesToTransfer, transferState,
+				null, false, transferHost, transferZone);
 
 	}
 
@@ -112,6 +129,9 @@ public class TransferStatus {
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
+	 * @param totalFilesSkipedSoFar
+	 *            <code>int<code> with the total files skipped in restarting,
+	 *            including this status callback
 	 * @param totalFilesToTransfer
 	 *            <code>int</code> with the total files involved in this
 	 *            operation
@@ -131,15 +151,15 @@ public class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final TransferState transferState,
-			final String transferHost, final String transferZone)
-			throws JargonException {
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
+			final TransferState transferState, final String transferHost,
+			final String transferZone) throws JargonException {
 
 		return new TransferStatus(transferType, TransferType.SYNCH,
 				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
 				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, transferState, null, false, transferHost,
-				transferZone);
+				totalFilesSkippedSoFar, totalFilesToTransfer, transferState,
+				null, false, transferHost, transferZone);
 
 	}
 
@@ -176,7 +196,7 @@ public class TransferStatus {
 			final long bytesTransfered) throws JargonException {
 
 		return new TransferStatus(transferType, null, "", "", "", totalSize,
-				bytesTransfered, 0, 0, TransferState.IN_PROGRESS_START_FILE,
+				bytesTransfered, 0, 0, 0, TransferState.IN_PROGRESS_START_FILE,
 				null, true, "", "");
 	}
 
@@ -200,6 +220,9 @@ public class TransferStatus {
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
+	 * @param totalFilesSkippedSoFar
+	 *            <code>int<code> with the total files skipped in restarting,
+	 *            including this status callback
 	 * @param totalFilesToTransfer
 	 *            <code>int</code> with the total files involved in this
 	 *            operation
@@ -218,15 +241,16 @@ public class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final Exception exception,
-			final String transferHost, final String transferZone)
-			throws JargonException {
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
+			final Exception exception, final String transferHost,
+			final String transferZone) throws JargonException {
 
 		return new TransferStatus(transferType, null, sourceFileAbsolutePath,
 				targetFileAbsolutePath, targetResource, totalSize,
 				bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.FAILURE, exception, false,
-				transferHost, transferZone);
+				totalFilesSkippedSoFar, totalFilesToTransfer,
+				TransferState.FAILURE, exception, false, transferHost,
+				transferZone);
 
 	}
 
@@ -241,6 +265,7 @@ public class TransferStatus {
 	 * @param totalSize
 	 * @param bytesTransfered
 	 * @param totalFilesTransferredSoFar
+	 * @param totalFileSkippedSoFar
 	 * @param totalFilesToTransfer
 	 * @param exception
 	 * @param transferHost
@@ -256,15 +281,16 @@ public class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransfered,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final Exception exception,
-			final String transferHost, final String transferZone)
-			throws JargonException {
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
+			final Exception exception, final String transferHost,
+			final String transferZone) throws JargonException {
 
 		return new TransferStatus(transferType, TransferType.SYNCH,
 				sourceFileAbsolutePath, targetFileAbsolutePath, targetResource,
 				totalSize, bytesTransfered, totalFilesTransferredSoFar,
-				totalFilesToTransfer, TransferState.FAILURE, exception, false,
-				transferHost, transferZone);
+				totalFilesSkippedSoFar, totalFilesToTransfer,
+				TransferState.FAILURE, exception, false, transferHost,
+				transferZone);
 
 	}
 
@@ -294,6 +320,8 @@ public class TransferStatus {
 		sb.append(bytesTransfered);
 		sb.append("\n   totalFilesTransferredSoFar:");
 		sb.append(totalFilesTransferredSoFar);
+		sb.append("\n   totalFilesSkippedSoFar:");
+		sb.append(totalFilesSkippedSoFar);
 		sb.append("\n   totalFilesToTransfer:");
 		sb.append(totalFilesToTransfer);
 		sb.append("\n   transferException:");
@@ -318,6 +346,7 @@ public class TransferStatus {
 	 * @param totalSize
 	 * @param bytesTransferred
 	 * @param totalFilesTransferredSoFar
+	 * @param totalFilesSkippedSoFar
 	 * @param totalFilesToTransfer
 	 * @param transferState
 	 * @param transferException
@@ -330,7 +359,8 @@ public class TransferStatus {
 			final String targetFileAbsolutePath, final String targetResource,
 			final long totalSize, final long bytesTransferred,
 			final int totalFilesTransferredSoFar,
-			final int totalFilesToTransfer, final TransferState transferState,
+			final int totalFilesSkippedSoFar, final int totalFilesToTransfer,
+			final TransferState transferState,
 			final Exception transferException,
 			final boolean intraFileStatusReport, final String transferHost,
 			final String transferZone) throws JargonException {
@@ -393,11 +423,12 @@ public class TransferStatus {
 		this.targetFileAbsolutePath = targetFileAbsolutePath;
 		this.targetResource = targetResource;
 		this.totalSize = totalSize;
-		bytesTransfered = bytesTransferred;
+		this.bytesTransfered = bytesTransferred;
 		this.transferState = transferState;
 		this.transferException = transferException;
 		this.totalFilesToTransfer = totalFilesToTransfer;
 		this.totalFilesTransferredSoFar = totalFilesTransferredSoFar;
+		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
 		this.intraFileStatusReport = intraFileStatusReport;
 		this.transferHost = transferHost;
 		this.transferZone = transferZone;
@@ -464,6 +495,13 @@ public class TransferStatus {
 	 */
 	public String getTransferZone() {
 		return transferZone;
+	}
+
+	/**
+	 * @return the totalFilesSkippedSoFar
+	 */
+	public int getTotalFilesSkippedSoFar() {
+		return totalFilesSkippedSoFar;
 	}
 
 }

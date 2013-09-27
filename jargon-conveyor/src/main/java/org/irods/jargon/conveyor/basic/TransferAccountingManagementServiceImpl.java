@@ -284,8 +284,10 @@ public class TransferAccountingManagementServiceImpl extends
 
 		localTransferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
-		localTransferAttempt.setTotalFilesTransferredSoFar(localTransferAttempt
-				.getTotalFilesTransferredSoFar() + 1);
+		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
+				.getTotalFilesTransferredSoFar());
+		localTransferAttempt.setTotalFilesSkippedSoFar(transferStatus
+				.getTotalFilesSkippedSoFar());
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
 		localTransferAttempt.setUpdatedAt(currentDate);
@@ -790,8 +792,10 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
 		localTransferAttempt.setUpdatedAt(currentDate);
-		localTransferAttempt.setTotalFilesSkippedSoFar(localTransferAttempt
-				.getTotalFilesSkippedSoFar() + 1);
+		localTransferAttempt.setTotalFilesSkippedSoFar(transferStatus
+				.getTotalFilesSkippedSoFar());
+		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
+				.getTotalFilesTransferredSoFar());
 		log.info("total skipped so far:{}",
 				localTransferAttempt.getTotalFilesSkippedSoFar());
 

@@ -147,4 +147,16 @@ public interface ConveyorService {
 	 */
 	void init();
 
+	/**
+	 * Cancel the timer task that periodically checks the queue. It can be
+	 * started again using the <code>startQueueTimerTask</code> method.
+	 */
+	void cancelQueueTimerTask();
+
+	/**
+	 * Start the timer task that periodically checks the queue. It can be
+	 * cancelled through the <code>cancelQueueTimerTask</code> method.
+	 */
+	void startQueueTimerTask();
+
 }

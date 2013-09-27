@@ -225,8 +225,9 @@ public class TransferAccountingManagementServiceImplTest {
 						transfer.getIrodsAbsolutePath(), transfer
 								.getLocalAbsolutePath(), transfer
 								.getGridAccount().getDefaultResource(), 0L, 0L,
-						0, 0, TransferState.FAILURE, transfer.getGridAccount()
-								.getHost(), transfer.getGridAccount().getZone());
+						0, 0, 0, TransferState.FAILURE, transfer
+								.getGridAccount().getHost(), transfer
+								.getGridAccount().getZone());
 
 		transferAccountingManagementService.updateTransferAfterOverallFailure(
 				overallStatus, transferAttemptExecution);
@@ -281,7 +282,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -320,7 +321,7 @@ public class TransferAccountingManagementServiceImplTest {
 				TransferStatus.TransferType.GET, transfer
 						.getIrodsAbsolutePath(), transfer
 						.getLocalAbsolutePath(), transfer.getGridAccount()
-						.getDefaultResource(), 0L, 0L, 0, 0, myException,
+						.getDefaultResource(), 0L, 0L, 0, 0, 0, myException,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService.updateTransferAfterOverallFailure(
@@ -464,7 +465,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -473,7 +474,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 		TransferStatus overallSuccess = TransferStatus
 				.instance(TransferStatus.TransferType.PUT, "/", "/", "", 1L,
-						1L, 1, 1,
+						1L, 1, 0, 1,
 						TransferStatus.TransferState.OVERALL_COMPLETION,
 						"host", "zone");
 
@@ -534,7 +535,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -543,7 +544,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 		TransferStatus overallSuccess = TransferStatus
 				.instance(TransferStatus.TransferType.PUT, "/", "/", "", 1L,
-						1L, 1, 1,
+						1L, 1, 0, 1,
 						TransferStatus.TransferState.OVERALL_COMPLETION,
 						"host", "zone");
 
@@ -612,7 +613,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 		TransferStatus overallSuccess = TransferStatus
 				.instance(TransferStatus.TransferType.PUT, "/", "/", "", 1L,
-						1L, 1, 1,
+						1L, 1, 0, 1,
 						TransferStatus.TransferState.OVERALL_COMPLETION,
 						"host", "zone");
 
@@ -680,7 +681,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -689,7 +690,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 		TransferStatus overallSuccess = TransferStatus
 				.instance(TransferStatus.TransferType.PUT, "/", "/", "", 1L,
-						1L, 1, 1,
+						1L, 1, 0, 1,
 						TransferStatus.TransferState.OVERALL_COMPLETION,
 						"host", "zone");
 
@@ -754,7 +755,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -822,7 +823,7 @@ public class TransferAccountingManagementServiceImplTest {
 				.prepareTransferForExecution(transferAttempt.getTransfer());
 		TransferStatus status = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, "/local/1.txt", "/path", "",
-				100L, 100L, 1, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
+				100L, 100L, 1, 0, 2, TransferState.IN_PROGRESS_COMPLETE_FILE,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
@@ -861,7 +862,7 @@ public class TransferAccountingManagementServiceImplTest {
 				TransferStatus.TransferType.GET, transfer
 						.getIrodsAbsolutePath(), transfer
 						.getLocalAbsolutePath(), transfer.getGridAccount()
-						.getDefaultResource(), 0L, 0L, 0, 0, myException,
+						.getDefaultResource(), 0L, 0L, 0, 0, 0, myException,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService.updateTransferAfterOverallFailure(
@@ -902,7 +903,7 @@ public class TransferAccountingManagementServiceImplTest {
 
 		// now show skipping the first file
 		status = TransferStatus.instance(TransferStatus.TransferType.PUT,
-				"/local/1.txt", "/path", "", 100L, 100L, 1, 2,
+				"/local/1.txt", "/path", "", 100L, 100L, 1, 0, 2,
 				TransferState.RESTARTING, irodsAccount.getHost(),
 				irodsAccount.getZone());
 
@@ -978,7 +979,7 @@ public class TransferAccountingManagementServiceImplTest {
 				TransferStatus.TransferType.GET, transfer
 						.getIrodsAbsolutePath(), transfer
 						.getLocalAbsolutePath(), transfer.getGridAccount()
-						.getDefaultResource(), 0L, 0L, 0, 0, myException,
+						.getDefaultResource(), 0L, 0L, 0, 0, 0, myException,
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService

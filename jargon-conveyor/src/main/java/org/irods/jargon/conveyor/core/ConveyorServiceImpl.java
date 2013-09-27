@@ -254,7 +254,17 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	}
 
-	private void startQueueTimerTask() {
+	@Override
+	public synchronized void cancelQueueTimerTask() {
+		log.info("cancelQueueTimerTask()");
+		if (queueTimer != null) {
+			queueTimer.cancel();
+			queueTimer = null;
+		}
+	}
+
+	@Override
+	public synchronized void startQueueTimerTask() {
 		/*
 		 * Since I'm starting, look for any currently processing transactions
 		 * and reset them to 'enqueued'

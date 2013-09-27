@@ -203,9 +203,8 @@ public abstract class AbstractConveyorCallable implements
 			 */
 			markTransferAsAnExceptionWhenProcessingCall(je);
 			return new ConveyorExecutionFuture();
-                        
-                        
-                        } catch (JargonRuntimeException je) {
+
+		} catch (JargonRuntimeException je) {
 			log.info(
 					"jargon runtime exception processing transfer, mark the transfer as an error and release the queue",
 					je);
@@ -232,8 +231,7 @@ public abstract class AbstractConveyorCallable implements
 					"unhandled exception during transfer process", ex);
 		}
 	}
-        
-        
+
 	/**
 	 * When an exception occurs setting up the transfer in the call, mark the
 	 * transfer as an exception and set error statuses. If the transfer cannot
@@ -242,7 +240,7 @@ public abstract class AbstractConveyorCallable implements
 	 * @param je
 	 *            {@link Exception} that should be handled in the transfer
 	 */
-	private void markTransferAsAnExceptionWhenProcessingCall(Exception je) {
+	private void markTransferAsAnExceptionWhenProcessingCall(final Exception je) {
 		log.info("markTransferAsAnExceptionWhenProcessingCall");
 		try {
 			this.getConveyorService()
