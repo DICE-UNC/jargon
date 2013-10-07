@@ -1135,7 +1135,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					transferControlBlock.getTotalFilesToTransfer(), je,
 					getIRODSAccount().getHost(), getIRODSAccount().getZone());
 
-			transferStatusCallbackListener.statusCallback(status);
+			transferStatusCallbackListener.overallStatusCallback(status);
 
 		} else {
 			log.warn("exception will be re-thrown, as there is no status callback listener");
