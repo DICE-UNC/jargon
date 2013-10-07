@@ -530,9 +530,11 @@ final class TransferOperationsHelper {
 					transferStatusCallbackListener, transferControlBlock);
 		} catch (JargonException je) {
 
-			processRecursivePutException(fileInSourceCollection,
-					transferStatusCallbackListener, newSubCollection,
-					transferControlBlock, je);
+			if (!transferControlBlock.isCancelled()) {
+				processRecursivePutException(fileInSourceCollection,
+						transferStatusCallbackListener, newSubCollection,
+						transferControlBlock, je);
+			}
 
 		} catch (Exception e) {
 
