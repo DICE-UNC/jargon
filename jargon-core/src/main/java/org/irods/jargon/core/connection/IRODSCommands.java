@@ -1718,9 +1718,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 		if (this.getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.3")) {
-			return true;
-		} else {
 			return false;
+		} else {
+			return true;
 		}
 	}
 
