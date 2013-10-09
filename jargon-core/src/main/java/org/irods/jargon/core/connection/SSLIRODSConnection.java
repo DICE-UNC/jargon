@@ -33,15 +33,7 @@ final class SSLIRODSConnection extends IRODSConnection {
 
 	protected void endSSLConnection() throws JargonException {
 		log.info("endSSLConnecton()");
-		/*
-		 * try { // TODO: do I close, what about the streams? test and see...
-		 * underlyingIRODSConnection.getConnection().close(); } catch
-		 * (IOException e) { log.error("error closing sslConnection", e);
-		 * this.obliterateConnectionAndDiscardErrors(); throw new
-		 * JargonException
-		 * ("exception shutting down SSL processing, connection is abandoned");
-		 * };
-		 */
+
 	}
 
 }
