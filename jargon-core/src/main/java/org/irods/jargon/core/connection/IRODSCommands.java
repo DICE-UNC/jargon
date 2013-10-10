@@ -1724,4 +1724,19 @@ public class IRODSCommands implements IRODSManagedConnection {
 		}
 	}
 
+	/**
+	 * @return the irodsServerProperties
+	 */
+	synchronized IRODSServerProperties getIrodsServerProperties() {
+		return irodsServerProperties;
+	}
+
+	/**
+	 * @param irodsServerProperties the irodsServerProperties to set
+	 */
+	synchronized void setIrodsServerProperties(
+			IRODSServerProperties irodsServerProperties) {
+		this.irodsServerProperties = irodsServerProperties;
+	}
+
 }
