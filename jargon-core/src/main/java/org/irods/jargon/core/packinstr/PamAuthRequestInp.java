@@ -58,8 +58,8 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty password");
 		}
 
-		if (pamTimeToLive <= 0) {
-			throw new IllegalArgumentException("pamTimeToLive <= 0");
+		if (pamTimeToLive < 0) {
+			throw new IllegalArgumentException("pamTimeToLive < 0");
 		}
 
 		this.userName = userName;

@@ -48,7 +48,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean usingDiscoveredServerPropertiesCache = true;
 	private boolean usingSpecificQueryForCollectionListingsWithPermissions = true;
 	private boolean usingSpecQueryForDataObjPermissionsForUserInGroup = false;
-	private int pamTimeToLive = 1209600;
+	private int pamTimeToLive = 0;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of

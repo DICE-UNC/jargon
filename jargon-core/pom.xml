@@ -93,6 +93,7 @@
 									test.irods.port=${jargon.test.irods.port}
 									test.irods.zone=${jargon.test.irods.zone}
 									jargon.test.kerberos.user=${jargon.test.kerberos.user}
+									jargon.test.user.group=${jargon.test.user.group}
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}

@@ -21,6 +21,7 @@ import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -143,6 +144,8 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
+	@Overheaded
+	// BUG [#1663] iRODS environment shows 'rods3.0' as version
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
 		if (this.getIRODSServerProperties()

@@ -132,6 +132,7 @@ public class IRODSFileFactoryImplTest {
 		Assert.assertNotNull(irodsFile);
 	}
 
+	// FIXME: ignore for eirods3
 	@Test(expected = JargonException.class)
 	public final void testCreateOutStreamFromFileNotExists() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
