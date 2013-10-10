@@ -58,6 +58,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_PAM_PASSWORD_KEY = "jargon.test.pam.password";
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
+	public static String IRODS_TEST_OPTION_EIRODS = "test.option.eirods";
 
 	/**
 	 * Return the given property (by key) as an int
@@ -924,6 +925,20 @@ public class TestingPropertiesHelper {
 	 */
 	public boolean isTestStrictACL(final Properties testingProperties) {
 		String val = (String) testingProperties.get("test.option.strictACL");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+	
+	/**
+	 * Are we testing eirods?
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestEirods(final Properties testingProperties) {
+		String val = (String) testingProperties.get(TestingPropertiesHelper.IRODS_TEST_OPTION_EIRODS);
 		if (val == null) {
 			return false;
 		} else {

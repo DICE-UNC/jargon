@@ -30,6 +30,7 @@ public class EnvironmentalInfoAccessor {
 			throw new JargonException("irods protocol is not connected");
 		}
 		this.irodsProtocol = irodsProtocol;
+		init();
 
 	}
 
@@ -93,6 +94,30 @@ public class EnvironmentalInfoAccessor {
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;
+	}
+	
+	public void init() throws JargonException {
+		getIRODSServerProperties();
+	}
+
+	public String getLoadedRules() {
+		DiscoveredServerPropertiesCache cache = getDiscoveredServerPropertiesCache();
+		// if null, go ahead and grab props
+		
+		
+		
+		
+		
+	}
+	
+	/**
+	 * Get the cache of discovered props, note it can be null
+	 * @return
+	 */
+	private DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
+		return irodsProtocol
+				.getIrodsSession()
+				.getDiscoveredServerPropertiesCache();
 	}
 
 }

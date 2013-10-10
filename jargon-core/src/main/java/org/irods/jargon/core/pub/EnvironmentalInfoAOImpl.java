@@ -108,6 +108,17 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public String showLoadedRules() throws JargonException {
 		log.info("showLoadedRules");
+		
+		
+		log.info("check if cached...");
+		
+		String loadedRules = this.environmentalInfoAccessor.getLoadedRules();
+		
+		
+		
+		
+		
+		
 		StringBuilder sb = new StringBuilder(
 				"showLoadedRules||msiAdmShowIRB(null)|nop\n");
 		sb.append("null\n");
@@ -138,6 +149,16 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		return isStrict;
 	}
 
+	public boolean isEirods() throws JargonException {
+		
+		log.info("isErods()");
+		return false;
+		
+	}
+	
+	
+	
+	
 	/*
 	 * (non-Javadoc)
 	 * 
