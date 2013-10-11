@@ -3340,6 +3340,12 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccountRods);
 
+		
+		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
+		rodsCollectionAO.setAccessPermissionReadAsAdmin(irodsAccount.getZone(),
+				targetIrodsCollection,testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY) , true);
+		
 		rodsDataObjectAO
 				.setAccessPermissionOwnInAdminMode(
 						"",
