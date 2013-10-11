@@ -433,4 +433,9 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("pam.time.to.live.in.seconds");
 	}
 
+	@Override
+	public boolean isForcePamFlush() {
+		return verifyPropExistsAndGetAsBoolean("force.pam.flush");
+	}
+
 }

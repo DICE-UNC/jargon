@@ -40,6 +40,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 [#1635] ttl parameter in PAM missing
 **Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
 
+*[#1726] need to add back flushes for 3.2 compatability
+**add a force.pam.flush jargon property for pre 3.3 servers
+
 ==Features==
 
 
