@@ -126,6 +126,7 @@ public class SettableJargonProperties implements JargonProperties {
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
 		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
+		this.setForcePamFlush(jargonProperties.isForcePamFlush());
 	}
 
 	/*
