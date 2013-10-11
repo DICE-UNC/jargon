@@ -1916,7 +1916,8 @@ public class DataObjectAOImplTest {
 
 		String getFileName = "returnedTestGetFileGTParallelMaxNoParallelInOptions.doc";
 		String getResultLocalPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/return")
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ "/return")
 				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
@@ -1957,9 +1958,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
 				transferControlBlock, transferStatusCallbackListener);
 
-		Assert.assertTrue("local file that was returned does not exist", localFile.exists());
-		Assert.assertEquals("local file wrong length", testFileLen, localFile.length());
-		
+		Assert.assertTrue("local file that was returned does not exist",
+				localFile.exists());
+		Assert.assertEquals("local file wrong length", testFileLen,
+				localFile.length());
 
 	}
 
@@ -3602,7 +3604,10 @@ public class DataObjectAOImplTest {
 		// log in as the group user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, irodsAccount.getPassword());
+						testingProperties,
+						testUser,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);

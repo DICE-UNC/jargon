@@ -93,6 +93,7 @@
 									test.irods.port=${jargon.test.irods.port}
 									test.irods.zone=${jargon.test.irods.zone}
 									jargon.test.kerberos.user=${jargon.test.kerberos.user}
+									jargon.test.user.group=${jargon.test.user.group}
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
@@ -105,6 +106,7 @@
 									test.option.federated.zone=${test.option.federated.zone}
 									test.option.kerberos=${test.option.kerberos}
 									test.option.pam=${test.option.pam}
+									test.option.eirods=${test.option.eirods}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}

@@ -372,10 +372,19 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					messageLength, errorLength, byteStringLength, intInfo));
 
+			if (this.isPamFlush()) {
+				log.info("doing extra pam flush for iRODS 3.2");
+				irodsConnection.flush();
+			}
+
 			irodsConnection.send(message);
 
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
+				if (this.isPamFlush()) {
+					log.info("doing extra pam flush for iRODS 3.2 after byte send");
+					irodsConnection.flush();
+				}
 			}
 
 			irodsConnection.flush();
@@ -1694,6 +1703,40 @@ public class IRODSCommands implements IRODSManagedConnection {
 	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
 		this.getIrodsConnection().getConnection().close();
 		this.getIrodsConnection().setConnected(false);
+	}
+
+	/**
+	 * Check server version and see if I need extra flushes for SSL processing
+	 * (for PAM). This is needed for PAM pre iRODS 3.3.
+	 * 
+	 * @return
+	 */
+	private boolean isPamFlush() {
+		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
+			return false;
+		}
+
+		if (this.getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.3")) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
+	 * @return the irodsServerProperties
+	 */
+	synchronized IRODSServerProperties getIrodsServerProperties() {
+		return irodsServerProperties;
+	}
+
+	/**
+	 * @param irodsServerProperties the irodsServerProperties to set
+	 */
+	synchronized void setIrodsServerProperties(
+			IRODSServerProperties irodsServerProperties) {
+		this.irodsServerProperties = irodsServerProperties;
 	}
 
 }

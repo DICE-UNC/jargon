@@ -278,7 +278,8 @@ public class IRODSRuleTranslator {
 
 		StringTokenizer outputParmsTokenizer = null;
 
-		outputParmsTokenizer = new StringTokenizer(outputAttributesLine, "%");
+		outputParmsTokenizer = new StringTokenizer(
+				outputAttributesLine.replaceAll(",", "%"), "%");
 
 		while (outputParmsTokenizer.hasMoreTokens()) {
 			outputAttributes.add(processOutputParmsToken(outputParmsTokenizer

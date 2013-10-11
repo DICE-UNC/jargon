@@ -1,11 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': 
-*'''Release Version''': 3.3.2 snapshot
-*'''git tag''': 3.3.2-snapshot
+*'''Release Version''': 3.3.2-SNAPSHOT
+*'''git tag''': 3.3.2-SNAPSHOT
 
 ==News==
 
-Release of Jargon, representing the iRODS 3.3.2 release snapshot
+Bug Fix release of Jargon, following up the 3.3.1 general release
 
 
 =======
@@ -36,26 +36,12 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-*[#1575] fix missing space in jargon_specquery.sh for ilsLACollections
 
-*[#1618] performance issue with extra flushes in IRODSCommands
-**restructured the flush() commands in IRODSCommands to improve stream performance
-
-*[#1626] order by missing in list data obj acl causing permissions to be off
-**Add explicit order by to specific queries in jargon_specquery.sh and update unit tests for listings with permissions
-
-*[#1628] intermittent -528036 errors on delete of collections
-**Added overhead for iRODS bug with intermittent deletes of collections in unit test running (added overhead to IRODSTestSetupUtilities)
-
-*[#1635] ttl parameter in PAM missing
-**Added TTL to pam packing instruction, and added to the jargon.properties as pam.time.to.live.in.seconds=1209600 as a default
-
-*[#1641] [iROD-Chat:10574] Fwd: Porting rules to Jargon 
-**Added processing for extended rule output, including splitting out rule stdOut and errorOut to ruleExecOut and ruleExecErrorOut output parameters
-**Improved client side action processing for get and put operations, which were skipping some returned parameters, and did not gracefully handle multiple files
-
-
+[#1635] ttl parameter in PAM missing
+**Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
 
 ==Features==
 
 
+*[#1603] EIRODS 3.0 compatability 
+**Started preliminary work running tests and tweaking code for eIRODS3.0.  Work in progress.

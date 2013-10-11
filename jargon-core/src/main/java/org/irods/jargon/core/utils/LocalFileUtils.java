@@ -64,6 +64,26 @@ public class LocalFileUtils {
 	}
 
 	/**
+	 * Normalize any Windows paths from \ separators to / separators
+	 * 
+	 * @param inPath
+	 * @return
+	 */
+	public static String normalizePath(final String inPath) {
+
+		if (inPath == null) {
+			throw new IllegalArgumentException("null inPath");
+		}
+
+		// if not windows path dont bother
+		if (File.separatorChar != '\\') {
+			return inPath;
+		}
+
+		return inPath.replaceAll("\\\\", "/");
+	}
+
+	/**
 	 * Parse a file name to get the stuff before last '.' character to treat as
 	 * the file name
 	 * 
