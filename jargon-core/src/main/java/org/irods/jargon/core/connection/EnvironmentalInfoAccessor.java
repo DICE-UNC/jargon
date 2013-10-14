@@ -83,7 +83,8 @@ public class EnvironmentalInfoAccessor {
 				.getStringValue();
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
-		if (irodsProtocol.getIrodsSession() != null) {
+		
+		if (irodsProtocol.getIrodsSession() != null) {	
 			irodsProtocol
 					.getIrodsSession()
 					.getDiscoveredServerPropertiesCache()

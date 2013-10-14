@@ -335,5 +335,6 @@ public interface JargonProperties {
 	 * @return <code>int</code> with the PAM time to live, in secords
 	 */
 	int getPAMTimeToLive();
+	
 
 }

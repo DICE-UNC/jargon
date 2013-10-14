@@ -741,7 +741,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				.retrieveValue(
 						this.getIRODSAccount().getHost(),
 						this.getIRODSAccount().getZone(),
-						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
+						DiscoveredServerPropertiesCache.SPECIFIC_QUERIES_SUPPORTED);
 
 		if (support == null) {
 			log.info("I don't know if I support specific query, so do some checks and arrive at a conclusion");
@@ -802,7 +802,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				.cacheAProperty(
 						this.getIRODSAccount().getHost(),
 						this.getIRODSAccount().getZone(),
-						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED,
+						DiscoveredServerPropertiesCache.SPECIFIC_QUERIES_SUPPORTED,
 						supportString);
 	}
 

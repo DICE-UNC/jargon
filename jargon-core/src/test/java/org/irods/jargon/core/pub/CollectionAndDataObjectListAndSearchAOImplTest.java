@@ -304,6 +304,13 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+		
+		if (isStrict) {
+			return;
+		}
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -729,6 +736,14 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+		
+		if (isStrict) {
+			return;
+		}
+		
 		IRODSFile irodsFile = null;
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -1096,6 +1111,13 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+		
+		if (isStrict) {
+			return;
+		}
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

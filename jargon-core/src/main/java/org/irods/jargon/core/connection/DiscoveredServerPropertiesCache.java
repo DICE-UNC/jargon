@@ -46,7 +46,11 @@ public class DiscoveredServerPropertiesCache {
 	/*
 	 * basic properties that can be cached
 	 */
-	public static final String JARGON_SPECIFIC_QUERIES_SUPPORTED = "jargonSpecificQueriesSupported";
+	public static final String SPECIFIC_QUERIES_SUPPORTED = "jargonSpecificQueriesSupported";
+	public static final String SERVER_EIRODS = "eirods";
+	public static final String 	STRICT_ACLS = "strictAcls";
+	public static final String LOADED_RULES = "loadedRules";
+
 
 	public static final String IS_TRUE = "true";
 	public static final String IS_FALSE = "false";

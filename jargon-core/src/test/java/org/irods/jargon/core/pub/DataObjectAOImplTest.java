@@ -3801,6 +3801,14 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+		
+		if (isStrict) {
+			return;
+		}
+		
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -4319,9 +4327,12 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+		
+		if (isStrict) {
+			return;
+		}
 
 		IRODSServerProperties irodsServerProperties = environmentalInfoAO
 				.getIRODSServerProperties();
