@@ -377,14 +377,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
 			}
-			
+
 			irodsConnection.flush();
 
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);
 			throw new JargonException(e);
 		} catch (IOException e) {
-			log.error("ioexception", e);
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 
@@ -471,6 +471,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("ioexception", e);
+			disconnectWithIOException();
+
 			throw new JargonException(e);
 		}
 
@@ -556,6 +558,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("ioexception", e);
+			disconnectWithIOException();
+
 			throw new JargonException(e);
 		}
 
@@ -610,6 +614,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
+			disconnectWithIOException();
+
 			throw new JargonException(e);
 		}
 
@@ -652,6 +658,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
+			disconnectWithIOException();
+
 			throw new JargonException(e);
 		}
 	}
@@ -713,6 +721,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
+			disconnectWithIOException();
+
 			throw new JargonException(e);
 		}
 	}
@@ -764,6 +774,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 		headerBuilder.append("</MsgHeader_PI>");
 
 		String header = headerBuilder.toString();
+
+		log.debug("header:{}", header);
 
 		byte[] temp;
 		try {
@@ -883,6 +895,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
+				disconnectWithIOException();
+
 				throw new JargonException(e);
 			}
 		}
@@ -921,6 +935,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
+				disconnectWithIOException();
+
 				throw new JargonException(e);
 			}
 
@@ -967,7 +983,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 		Tag errorTag;
@@ -1116,7 +1132,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.read(header, 0, length);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 
@@ -1138,15 +1154,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 					ConnectionConstants.HEADER_INT_LENGTH);
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
-			e.printStackTrace();
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 		return org.irods.jargon.core.utils.Host.castToInt(headerInt);
@@ -1159,15 +1174,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.read(body, 0, length);
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			e.printStackTrace();
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 		try {
@@ -1234,12 +1249,18 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnection.flush();
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
+				disconnectWithIOException();
+
 				throw new JargonException(e);
 			} catch (InterruptedIOException e) {
 				log.error("interrupted io", e);
+				disconnectWithIOException();
+
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
+				disconnectWithIOException();
+
 				throw new JargonException(e);
 			} finally {
 				log.debug("finally, shutdown is being called on the given connection");
@@ -1356,6 +1377,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			irodsConnection.sendInNetworkOrder(value);
 		} catch (IOException e) {
+			disconnectWithIOException();
 			throw new JargonException(e);
 		}
 	}
@@ -1609,7 +1631,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	/**
 	 * @return the pipelineConfiguration
 	 */
-	protected synchronized PipelineConfiguration getPipelineConfiguration() {
+	public synchronized PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;
 	}
 

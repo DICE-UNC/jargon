@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -21,6 +22,7 @@ import org.irods.jargon.core.query.QueryResultProcessingUtils;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,19 +32,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	private static final String EXECUTING_SQUERY_PI = "executing specific query PI";
 	public static final Logger log = LoggerFactory
 			.getLogger(SpecificQueryAOImpl.class);
-	private final EnvironmentalInfoAO environmentalInfoAO;
 
 	protected SpecificQueryAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws SpecificQueryException,
 			JargonException {
 		super(irodsSession, irodsAccount);
-		environmentalInfoAO = getIRODSAccessObjectFactory()
-				.getEnvironmentalInfoAO(getIRODSAccount());
-		if (!environmentalInfoAO.isAbleToRunSpecificQuery()) {
-			log.error("cannot run specific query on this iRODS version");
-			throw new SpecificQueryException(
-					"specific query not supported on this iRODS server");
-		}
 	}
 
 	/*
@@ -96,9 +90,10 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				"listQueryByAliasLike", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
-			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, getJargonProperties()
-							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -177,9 +172,10 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				"findQueryByAlias", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
-			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, getJargonProperties()
-							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, this.getJargonProperties()
+							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -412,13 +408,21 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	 * 
 	 * @param specificQuery
 	 * @param maxRows
+	 * @param justTryWithoutSupportCheck
+	 *            <code>boolean</code> that indicates that checks for support
+	 *            for specific query should be bypassed. This is used to test
+	 *            support by trying, which is an overhead because eIRODS version
+	 *            numbers are off
 	 * @return
 	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
+	@Overheaded
+	// BUG [#1663] iRODS environment shows 'rods3.0' as version
 	private SpecificQueryResultSet executeSpecificQueryUsingAliasWithoutAliasLookup(
-			final SpecificQuery specificQuery, final int maxRows)
+			final SpecificQuery specificQuery, final int maxRows,
+			final boolean justTryWithoutSupportCheck)
 			throws DataNotFoundException, JargonException, JargonQueryException {
 		log.info("executeSpecificQueryUsingAlias()");
 
@@ -426,7 +430,9 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null specific query");
 		}
 
-		checkSupportForSpecificQuery();
+		if (!justTryWithoutSupportCheck) {
+			checkSupportForSpecificQuery();
+		}
 
 		/*
 		 * look up the alias and get the column names and number of arguments
@@ -687,14 +693,47 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.SpecificQueryAO#isSupportsSpecificQuery()
+	 */
+	@Override
+	public boolean isSupportsSpecificQuery() throws JargonException {
+		return !isSpecificQueryToBeBypassed();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.SpecificQueryAO#isSpecificQueryToBeBypassed()
+	 */
+	@Overheaded
+	// BUG [#1663] iRODS environment shows 'rods3.0' as version
 	@Override
 	public boolean isSpecificQueryToBeBypassed() throws JargonException {
 
-		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
-			return true;
+		/*
+		 * Per the overhead comment, the eIRODS 3.0 server advertises as
+		 * "rods3.0". This is an issue because it makes the server appear to be
+		 * an older version of iRODS. In order to assess specific query support,
+		 * I'll look for at least rods3.0, then check by attempting to do a
+		 * specific query. The results of this attempt are cached so I only do
+		 * that once per server
+		 */
+
+		if (this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+			log.info("by versin number I know I support specific query");
+			return false;
 		}
 
-		if (getIRODSSession().isUsingDynamicServerPropertiesCache()) {
+
+		// I know I need to check, but if I'm not caching, then don't bother, as
+		// it's a lot of overhead. This is a cross-dependency in the jargon
+		// properties, but so be it
+
+		if (!this.getIRODSSession().isUsingDynamicServerPropertiesCache()) {
 			return false;
 		}
 
@@ -706,15 +745,66 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
 
 		if (support == null) {
-			return false;
-		}
+			log.info("I don't know if I support specific query, so do some checks and arrive at a conclusion");
 
-		if (support.equals(DiscoveredServerPropertiesCache.IS_FALSE)) {
+			IRODSServerProperties irodsServerProperties = this
+					.getIRODSServerProperties();
+
+			log.info("got server properties:{}", irodsServerProperties);
+
+			if (irodsServerProperties
+					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+				log.info("I am at least RODS 3.0, but I may be eIRODS..so try a query");
+
+				List<String> arguments = new ArrayList<String>();
+				arguments.add("ls");
+
+				SpecificQuery specificQuery = SpecificQuery.instanceArguments(
+						"findQueryByAlias", arguments, 0, this
+								.getIRODSAccount().getZone());
+
+				try {
+					this.executeSpecificQueryUsingAliasWithoutAliasLookup(
+							specificQuery, this.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax(), true);
+					markSupport(true);
+					log.info("I will not bypass specific query");
+					return false;
+				} catch (JargonQueryException e) {
+					markSupport(false);
+					log.info("I will bypass specific query");
+					return false;
+				}
+			} else {
+				log.info("I know it's not supported, not even rods3.0...cache this knowledge");
+				markSupport(false);
+				return true;
+			}
+
+		} else if (support.equals(DiscoveredServerPropertiesCache.IS_FALSE)) {
 			return true;
 		} else {
 			return false;
 		}
 
+	}
+
+	private void markSupport(final boolean isSupported) {
+
+		String supportString;
+		if (isSupported) {
+			supportString = DiscoveredServerPropertiesCache.IS_TRUE;
+		} else {
+			supportString = DiscoveredServerPropertiesCache.IS_FALSE;
+		}
+
+		this.getIRODSSession()
+				.getDiscoveredServerPropertiesCache()
+				.cacheAProperty(
+						this.getIRODSAccount().getHost(),
+						this.getIRODSAccount().getZone(),
+						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED,
+						supportString);
 	}
 
 	/**

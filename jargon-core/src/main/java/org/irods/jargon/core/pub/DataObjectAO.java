@@ -961,4 +961,77 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 */
 	DataObject findById(int id) throws FileNotFoundException, JargonException;
 
+	/**
+	 * List the replicas of a file in a given resource gorup
+	 * @param collectionAbsPath  <code>String</code> with the absolute path for the irods parent collection
+	 * @param fileName  <code>String</code> with the data object file name
+	 * @param resourceGroupName  <code>String</code> with the resource group name
+	 * @return <code>List</code> of {@link DataObject} for replicas in the given resource group
+	 * @throws JargonException
+	 */
+	List<DataObject> listReplicationsForFileInResGroup(
+			String collectionAbsPath, String fileName, String resourceGroupName)
+			throws JargonException;
+
+	/**
+	 * Get the total number of replicas for the given data object
+	 * @param collection <code>String</code> with the absolute path for the irods parent collection
+	 * @param fileName  <code>String</code> with the data object file name
+	 * @return
+	 * @throws JargonException
+	 */
+	int getTotalNumberOfReplsForDataObject(String collection, String fileName)
+			throws JargonException;
+
+	/**
+	 * Get the total number of replicas for the given data object in the given resource group
+	 * @param collection <code>String</code> with the absolute path for the irods parent collection
+	 * @param fileName  <code>String</code> with the data object file name
+	 * @param resourceGroupName  <code>String</code> with the resource group name
+	 * @return
+	 * @throws JargonException
+	 */
+	int getTotalNumberOfReplsInResourceGroupForDataObject(
+			String irodsAbsolutePath, String fileName, String resourceGroupName)
+			throws JargonException;
+
+	/**
+	 * General method to trim replicas for a resource or resource group.  Check the parameter notes carefully.
+	 * @param irodsCollectionAbsolutePath <code>String</code> with the absolute path to the iRODS parent collection
+	 * @param fileName <code>String</code> with the file name of the data object to be trimmed
+	 * @param resourceName <code>String</code> with the optional (blank if not specified) replica resource to trim
+	 * @param numberOfCopiesToKeep <code>int</code> with the optional (leave -1 if not specified) number of copies to retain
+	 * @param replicaNumberToDelete <code>int</code> with a specific replica number to trim (leave as -1 if not specified)
+	 * @param asIRODSAdmin <code>boolean</code> to process the given action as the rodsAdmin
+	 * @throws DataNotFoundException if the data object is not found
+	 * @throws JargonException
+	 */
+	void trimDataObjectReplicas(String irodsCollectionAbsolutePath,
+			String fileName, String resourceName, int numberOfCopiesToKeep,
+			int replicaNumberToDelete, boolean asIRODSAdmin)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * List all data object replicas
+	 * 
+	 * @param collectionAbsPath  <code>String</code> with the absolute path to the iRODS parent collection
+	 * @param fileName  <code>String</code> with the file name of the data object to be trimmed
+	 * @return <code>List</code> of {@link DataObject} for each replica
+	 * @throws JargonException
+	 */
+	List<DataObject> listReplicationsForFile(String collectionAbsPath,
+			String fileName) throws JargonException;
+
+	/**
+	 * Replicate the given data object using a delayed execution
+	 * @param irodsCollectionAbsolutePath  <code>String</code> with the absolute path to the iRODS parent collection
+	 * @param fileName  <code>String</code> with the file name of the data object to be trimmed
+	 * @param resourceName <code>String</code> with the optional (blank if not specified) replica resource to trim
+	 * @param delayInMinutes <code>int</code> with the number of minutes to delay the replication, will put on the deferred rule execution queue
+	 * @throws JargonException
+	 */
+	void replicateIrodsDataObjectAsynchronously(
+			String irodsCollectionAbsolutePath, String fileName,
+			String resourceName, int delayInMinutes) throws JargonException;
+
 }

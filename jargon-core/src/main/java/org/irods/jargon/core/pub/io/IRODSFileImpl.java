@@ -567,13 +567,13 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			for (String element : directory) {
 				if (!firstPath) {
-					pathBuilder.append(PATH_SEPARATOR);
+					pathBuilder.append("/");
 				}
 				pathBuilder.append(element);
 				firstPath = false;
 			}
 
-			pathBuilder.append(PATH_SEPARATOR);
+			pathBuilder.append("/");
 			pathBuilder.append(getName());
 			builtPath = pathBuilder.toString();
 		} else {

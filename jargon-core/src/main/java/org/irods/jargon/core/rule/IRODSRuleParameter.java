@@ -60,8 +60,8 @@ public class IRODSRuleParameter {
 		this(null, null, STR_PI);
 	}
 
-	public IRODSRuleParameter(final int value) {
-		this(null, Integer.valueOf(value), INT_PI);
+	public IRODSRuleParameter(final String name,final int value) {
+		this(name, Integer.valueOf(value), INT_PI);
 	}
 
 	public IRODSRuleParameter(final String value) {

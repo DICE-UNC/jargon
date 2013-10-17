@@ -19,6 +19,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	private final String userName;
 	private final String password;
+	private final int pamTimeToLive;
 
 	/**
 	 * Instance method creates a PAM auth request given a user name and password
@@ -27,11 +28,13 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the user name for PAM
 	 * @param password
 	 *            <code>String</code> with the PAM password
+	 * @param pamTimeToLive
+	 *            <code>int</code> with the pam time to live in seconds
 	 * @return <code>PamAuthRequestInp</code>
 	 */
 	public static PamAuthRequestInp instance(final String userName,
-			final String password) {
-		return new PamAuthRequestInp(userName, password);
+			final String password, final int pamTimeToLive) {
+		return new PamAuthRequestInp(userName, password, pamTimeToLive);
 	}
 
 	/**
@@ -41,8 +44,12 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the user name for PAM
 	 * @param password
 	 *            <code>String</code> with the PAM password
+	 * @param pamTimeToLive
+	 *            <code>int</code> with the pam time to live in seconds
 	 */
-	private PamAuthRequestInp(final String userName, final String password) {
+	private PamAuthRequestInp(final String userName, final String password,
+			final int pamTimeToLive) {
+
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userId");
 		}
@@ -51,9 +58,15 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null or empty password");
 		}
 
+		if (pamTimeToLive < 0) {
+			throw new IllegalArgumentException("pamTimeToLive < 0");
+		}
+
 		this.userName = userName;
 		this.password = password;
-		setApiNumber(PAM_API_NBR);
+
+		this.pamTimeToLive = pamTimeToLive;
+		this.setApiNumber(PAM_API_NBR);
 
 	}
 
@@ -69,6 +82,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 		Tag message = new Tag(PI_TAG);
 		message.addTag("pamUser", userName);
 		message.addTag("pamPassword", password);
+		message.addTag("timeToLive", pamTimeToLive);
 		return message;
 	}
 

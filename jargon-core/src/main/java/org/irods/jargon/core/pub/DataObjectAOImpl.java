@@ -26,6 +26,7 @@ import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -48,6 +49,8 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
@@ -61,6 +64,7 @@ import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.core.utils.Overheaded;
+import org.irods.jargon.core.utils.RuleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -456,7 +460,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <p/>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
 	 * option is set to ask the callback listener, then the
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
@@ -1325,6 +1329,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						lengthFromIrodsResponse, irodsFileLength,
 						transferControlBlock, transferStatusCallbackListener,
 						clientSideAction);
+				getIRODSProtocol().operationComplete(l1descInx);
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -1351,10 +1356,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				}
 			}
 
-			log.info("looking for executable to set flag on local file");
-			if (irodsFileToGet.canExecute()) {
-				log.info("execute set on local file");
-				localFileToHoldData.setExecutable(true);
+			if (!clientSideAction) {
+				log.info("looking for executable to set flag on local file");
+
+				if (irodsFileToGet.canExecute()) {
+					log.info("execute set on local file");
+					localFileToHoldData.setExecutable(true);
+				}
 			}
 
 		} catch (Exception e) {
@@ -1393,6 +1401,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final boolean clientSideAction) throws JargonException {
+
 		final String host = message.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.hostAddr).getStringValue();
 		int port = message.getTag(IRODSConstants.PortList_PI)
@@ -1640,7 +1649,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
 				.instanceForAddDataObjectMetadata(absPath, avuData);
@@ -1721,7 +1730,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		StringBuilder sb = new StringBuilder(absPath);
 		sb.append("/");
@@ -1775,7 +1784,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
 				.instanceForDeleteDataObjectMetadata(absPath, avuData);
@@ -2031,6 +2040,68 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw je;
 		}
 		log.info("replication complete");
+	}
+
+	
+	@Override
+	public void replicateIrodsDataObjectAsynchronously(
+			final String irodsCollectionAbsolutePath, final String fileName,
+			final String resourceName, final int delayInMinutes)
+			throws JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
+		if (delayInMinutes <= 0) {
+			throw new IllegalArgumentException("delay in minutes must be > 0");
+		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		log.info("fileName:{}", fileName);
+		log.info("resourceName:{}", resourceName);
+		log.info("delayInMinutes:{}", delayInMinutes);
+
+		if (!getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException(
+					"service not available on servers prior to rods3.0");
+		}
+
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append("/");
+		sb.append(fileName);
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
+				MiscIRODSUtils.wrapStringInQuotes(sb.toString())));
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
+				MiscIRODSUtils.wrapStringInQuotes(resourceName)));
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*DelayInfo", RuleUtils
+				.buildDelayParamForMinutes(delayInMinutes)));
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				"/rules/rulemsiDataObjReplAsync.r", irodsRuleParameters,
+				RuleProcessingType.EXTERNAL);
+		log.info("result of action:{}", result.getRuleExecOut().trim());
+
 	}
 
 	/**
@@ -2397,7 +2468,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absPath, userName,
@@ -2445,7 +2516,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(false, zone, absPath,
@@ -2482,9 +2553,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		/*
 		 * Handle soft links by munging the path
 		 */
-		/*
-		 * Handle soft links by munging the path
-		 */
 
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
@@ -2496,7 +2564,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absPath, userName,
@@ -2592,7 +2660,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(false, zone, absPath,
 						userName, ModAccessControlInp.WRITE_PERMISSION);
@@ -2639,7 +2707,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.OWN_PERMISSION);
@@ -2686,7 +2754,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermissionInAdminMode(false, zone, absPath,
 						userName, ModAccessControlInp.OWN_PERMISSION);
@@ -2732,7 +2800,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetPermission(false, zone, absPath, userName,
 						ModAccessControlInp.NULL_PERMISSION);
@@ -2781,7 +2849,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"The special collection type does not support this operation");
 		}
 
-		String absPath = this.resolveAbsolutePathGivenObjStat(objStat);
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(absPath);
@@ -3151,66 +3219,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.DataObjectAO#
-	 * listPermissionsForDataObjectForUserName(java.lang.String,
-	 * java.lang.String, java.lang.String)
-	 */
-	@Override
-	public UserFilePermission getPermissionForDataObjectForUserName(
-			final String irodsCollectionAbsolutePath, final String dataName,
-			final String userName) throws JargonException {
-
-		if (irodsCollectionAbsolutePath == null
-				|| irodsCollectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
-		}
-
-		if (dataName == null || dataName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty dataName");
-		}
-
-		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userName");
-		}
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-
-		log.info("listPermissionsForDataObjectForUserName path: {}",
-				irodsCollectionAbsolutePath);
-		log.info("dataName: {}", irodsCollectionAbsolutePath);
-		log.info("userName:{}", userName);
-
-		ObjStat objStat = getObjectStatForAbsolutePath(irodsCollectionAbsolutePath);
-
-		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
-			log.info(
-					"objStat indicates collection type that does not support this operation:{}",
-					objStat);
-			throw new OperationNotSupportedForCollectionTypeException(
-					"The special collection type does not support this operation");
-		}
-
-		String absPath = resolveAbsolutePathGivenObjStat(objStat);
-
-		/*
-		 * User may have permission via a direct user permission, or may have a
-		 * group level permission, check both and get the highest value
-		 */
-
-		UserFilePermission userFilePermission = getPermissionViaGenQuery(
-				dataName, userName, absPath);
-
-		UserFilePermission groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
-				dataName, userName, objStat, absPath);
-
-		return scoreAndReturnHighestPermission(userFilePermission,
-				groupFilePermission);
-	}
-
 	/**
 	 * Get permission value via specific query for qroup based permissions
 	 * 
@@ -3222,18 +3230,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws JargonException
 	 */
 	private UserFilePermission getPermissionViaSpecQueryAsGroupMember(
-			final String dataName, final String userName, ObjStat objStat,
-			String absPath) throws JargonException {
+			final String dataName, final String userName,
+			final ObjStat objStat, final String absPath) throws JargonException {
 		log.info("see if there is a permission based on group membership...");
 		UserFilePermission permissionViaGroup = null;
 
-		if (this.getJargonProperties()
+		if (getJargonProperties()
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
 			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
 			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
 					userName, MiscIRODSUtils.getZoneInPath(absPath),
-					objStat.determineAbsolutePathBasedOnCollTypeInObjectStat()
-							+ "/" + dataName);
+					objStat.determineAbsolutePathBasedOnCollTypeInObjectStat());
 			return permissionViaGroup;
 		} else {
 			log.info("no group membership data found, not using specific query");
@@ -3242,7 +3249,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission getPermissionViaGenQuery(final String dataName,
-			final String userName, String absPath) throws JargonException {
+			final String userName, final String absPath) throws JargonException {
 		UserFilePermission userFilePermission = null;
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
@@ -3293,10 +3300,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
-		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
-				absPath);
+		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(absPath);
 
-		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+		SpecificQueryAO specificQueryAO = getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(getIRODSAccount());
+
+		if (!specificQueryAO.isSupportsSpecificQuery()) {
 			log.info("no specific query support, so just return null");
 			return null;
 		}
@@ -3310,9 +3319,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				"listUserACLForDataObjViaGroup", arguments, 0, zone);
-
-		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
-				.getSpecificQueryAO(getIRODSAccount());
 
 		SpecificQueryResultSet specificQueryResultSet;
 		UserFilePermission userFilePermission = null;
@@ -3429,6 +3435,68 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFileInResGroup
+	 * (java.lang.String, java.lang.String, java.lang.String)
+	 */
+	@Override
+	public List<DataObject> listReplicationsForFileInResGroup(
+			String collectionAbsPath, final String fileName,
+			final String resourceGroupName) throws JargonException {
+
+		log.info("listReplicationsForFileInResGroup");
+
+		if (collectionAbsPath == null || collectionAbsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collection");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty filename");
+		}
+
+		if (resourceGroupName == null || resourceGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resgroup");
+		}
+
+		if (collectionAbsPath.endsWith("/")) {
+			collectionAbsPath = collectionAbsPath.substring(0,
+					collectionAbsPath.length() - 1);
+		}
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, collectionAbsPath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, fileName)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_D_RESC_GROUP_NAME,
+							QueryConditionOperators.EQUAL, resourceGroupName);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(100);
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+			return DataAOHelper.buildListFromResultSet(resultSet);
+		} catch (Exception e) {
+			log.error("Error executing Query getReplicationsForFile() for "
+					+ collectionAbsPath + "/" + fileName + " " + e.getMessage()
+					+ e.getStackTrace());
+			throw new JargonException(
+					"error querying for files in resource group", e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
 	 * (java.lang.String, java.lang.String)
 	 */
@@ -3462,13 +3530,67 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
+				resolveAbsolutePathGivenObjStat(objStat));
 
-		return getPermissionForDataObjectForUserName(
-				collName.getCollectionParent(), collName.getChildName(),
+		/*
+		 * User may have permission via a direct user permission, or may have a
+		 * group level permission, check both and get the highest value
+		 */
+
+		UserFilePermission userFilePermission = getPermissionViaGenQuery(
+				irodsFile.getName(), userName, irodsFile.getParent());
+
+		// be tolerant if the specific query facility is not available. FIXME:
+		// add to cache.this is a patch
+		UserFilePermission groupFilePermission;
+		try {
+			groupFilePermission = getPermissionViaSpecQueryAsGroupMember(
+					irodsFile.getName(), userName, objStat,
+					irodsFile.getParent());
+		} catch (Exception e) {
+			log.error("error in getting group permission, see bug 1655");
+			return userFilePermission;
+		}
+
+		return scoreAndReturnHighestPermission(userFilePermission,
+				groupFilePermission);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * listPermissionsForDataObjectForUserName(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public UserFilePermission getPermissionForDataObjectForUserName(
+			final String irodsCollectionAbsolutePath, final String dataName,
+			final String userName) throws JargonException {
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
+		}
+
+		if (dataName == null || dataName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty dataName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append('/');
+		sb.append(dataName);
+
+		return this.getPermissionForDataObjectForUserName(sb.toString(),
 				userName);
-
 	}
 
 	/**
@@ -3556,6 +3678,231 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("has permision? {}", hasPermission);
 		return hasPermission;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#getTotalNumberOfReplsForDataObject
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public int getTotalNumberOfReplsForDataObject(
+			final String irodsAbsolutePath, final String fileName)
+			throws JargonException {
+
+		log.info("getTotalNumberOfReplsForDataObject()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		List<Resource> totalres;
+		totalres = getResourcesForDataObject(irodsAbsolutePath, fileName);
+
+		return totalres.size();
+
+	}
+
+	@Override
+	public int getTotalNumberOfReplsInResourceGroupForDataObject(
+			final String irodsAbsolutePath, final String fileName,
+			final String resourceGroupName) throws JargonException {
+
+		log.info("getTotalNumberOfReplsInResourceGroupForDataObject()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (resourceGroupName == null || resourceGroupName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty resourceGroupName");
+		}
+
+		List<DataObject> totalres;
+		totalres = listReplicationsForFileInResGroup(irodsAbsolutePath,
+				fileName, resourceGroupName);
+
+		return totalres.size();
+
+	}
+
+	/**
+	 * General method to trim replicas for a resource or resource group. Check
+	 * the parameter notes carefully.
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            collection
+	 * @param fileName
+	 *            <code>String</code> with the file name of the data object to
+	 *            be trimmed
+	 * @param resourceName
+	 *            <code>String</code> with the optional (blank if not specified)
+	 *            replica resource to trim
+	 * @param numberOfCopiesToKeep
+	 *            <code>int</code> with the optional (leave -1 if not specified)
+	 *            number of copies to retain
+	 * @param replicaNumberToDelete
+	 *            <code>int</code> with a specific replica number to trim (leave
+	 *            as -1 if not specified)
+	 * @param asIRODSAdmin
+	 *            <code>boolean</code> to process the given action as the
+	 *            rodsAdmin
+	 * @throws JargonException
+	 */
+	@Override
+	public void trimDataObjectReplicas(
+			final String irodsCollectionAbsolutePath, final String fileName,
+			final String resourceName, final int numberOfCopiesToKeep,
+			final int replicaNumberToDelete, final boolean asIRODSAdmin)
+			throws DataNotFoundException, JargonException {
+		log.info("trimDataObjectReplicasInResourceGroup");
+
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (resourceName == null) {
+			throw new IllegalArgumentException("null resourceName");
+		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		log.info("fileName:{}", fileName);
+		log.info("resourceName:{}", resourceName);
+
+		log.info("numberOfCopiesToKeep:{}", numberOfCopiesToKeep);
+		log.info("replicaNumberToDelete:{}", replicaNumberToDelete);
+		log.info("asIRODSAdmin:{}", asIRODSAdmin);
+
+		if (!getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException(
+					"service not available on servers prior to rods3.0");
+		}
+
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(irodsCollectionAbsolutePath);
+		sb.append("/");
+		sb.append(fileName);
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
+				MiscIRODSUtils.wrapStringInQuotes(sb.toString())));
+
+		if (resourceName.isEmpty()) {
+			irodsRuleParameters.add(new IRODSRuleParameter("*StorageResource",
+					MiscIRODSUtils.wrapStringInQuotes("null")));
+		} else {
+			irodsRuleParameters.add(new IRODSRuleParameter("*StorageResource",
+					MiscIRODSUtils.wrapStringInQuotes(resourceName)));
+		}
+
+		if (replicaNumberToDelete > -1) {
+			irodsRuleParameters.add(new IRODSRuleParameter("*ReplicaNumber",
+					MiscIRODSUtils.wrapStringInQuotes(String
+							.valueOf(replicaNumberToDelete))));
+
+		} else {
+			irodsRuleParameters.add(new IRODSRuleParameter("*ReplicaNumber",
+					MiscIRODSUtils.wrapStringInQuotes("null")));
+		}
+
+		if (numberOfCopiesToKeep > -1) {
+			irodsRuleParameters.add(new IRODSRuleParameter("*KeepReplicas",
+					MiscIRODSUtils.wrapStringInQuotes(String
+							.valueOf(numberOfCopiesToKeep))));
+		} else {
+			irodsRuleParameters.add(new IRODSRuleParameter("*KeepReplicas",
+					MiscIRODSUtils.wrapStringInQuotes("null")));
+		}
+
+		if (asIRODSAdmin) {
+			irodsRuleParameters.add(new IRODSRuleParameter("*IRODSAdminFlag",
+					MiscIRODSUtils.wrapStringInQuotes(String
+							.valueOf(asIRODSAdmin))));
+		} else {
+			irodsRuleParameters.add(new IRODSRuleParameter("*IRODSAdminFlag",
+					MiscIRODSUtils.wrapStringInQuotes("null")));
+		}
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				"/rules/trimDataObject.r", irodsRuleParameters,
+				RuleProcessingType.EXTERNAL);
+		log.info("result of action:{}", result.getRuleExecOut().trim());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang
+	 * .String, java.lang.String)
+	 */
+	@Override
+	public List<DataObject> listReplicationsForFile(String collectionAbsPath,
+			final String fileName) throws JargonException {
+
+		log.info("listReplicationsForFile");
+
+		if (collectionAbsPath == null || collectionAbsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty collection");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty filename");
+		}
+
+		if (collectionAbsPath.endsWith("/")) {
+			collectionAbsPath = collectionAbsPath.substring(0,
+					collectionAbsPath.length() - 1);
+		}
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+		IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+
+		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, collectionAbsPath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, fileName);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(100);
+
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
+			return DataAOHelper.buildListFromResultSet(resultSet);
+		} catch (Exception e) {
+			log.error("error querying for replicas", e);
+			throw new JargonException("error querying for file replicas", e);
+		}
 	}
 
 }

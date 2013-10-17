@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
@@ -39,11 +40,14 @@ import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.FederationEnabled;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
+import org.irods.jargon.core.utils.RuleUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -1577,7 +1581,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
 				absPath);
 
-		if (!this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
+				.getSpecificQueryAO(getIRODSAccount());
+
+		if (!specificQueryAO.isSupportsSpecificQuery()) {
 			log.info("no specific query support, so just return null");
 			return null;
 		}
@@ -1590,9 +1597,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		SpecificQuery specificQuery = SpecificQuery.instanceArguments(
 				"listUserACLForCollectionViaGroup", arguments, 0, zone);
-
-		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
-				.getSpecificQueryAO(getIRODSAccount());
 
 		SpecificQueryResultSet specificQueryResultSet;
 		UserFilePermission userFilePermission = null;
@@ -1840,6 +1844,61 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("has permision? {}", hasPermission);
 		return hasPermission;
+	}
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#replicateCollectionAsynchronously(java.lang.String, java.lang.String, int)
+	 */
+	@Override
+	public void replicateCollectionAsynchronously(
+			final String irodsCollectionAbsolutePath,
+			final String resourceName, final int delayInMinutes)
+			throws JargonException {
+
+		log.info("replicateCollectionAsynchronously()");
+		
+		if (irodsCollectionAbsolutePath == null
+				|| irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsCollectionAbsolutePath");
+		}
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
+		if (delayInMinutes <= 0) {
+			throw new IllegalArgumentException("delay in minutes must be > 0");
+		}
+
+		log.info("irodsCollectionAbsolutePath:{}", irodsCollectionAbsolutePath);
+		log.info("resourceName:{}", resourceName);
+		log.info("delayInMinutes:{}", delayInMinutes);
+
+		if (!getIRODSServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException(
+					"service not available on servers prior to rods3.0");
+		}
+
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(getIRODSAccount());
+
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
+				MiscIRODSUtils.wrapStringInQuotes(irodsCollectionAbsolutePath)));
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
+				MiscIRODSUtils.wrapStringInQuotes(resourceName)));
+
+		irodsRuleParameters.add(new IRODSRuleParameter("*DelayInfo", RuleUtils
+				.buildDelayParamForMinutes(delayInMinutes)));
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
+				"/rules/rulemsiCollReplAsync.r", irodsRuleParameters,
+				RuleProcessingType.EXTERNAL);
+		log.info("result of action:{}", result.getRuleExecOut().trim());
+
 	}
 
 }
