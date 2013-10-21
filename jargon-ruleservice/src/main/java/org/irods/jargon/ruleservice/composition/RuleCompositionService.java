@@ -1,5 +1,8 @@
 package org.irods.jargon.ruleservice.composition;
 
+import java.util.List;
+
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
@@ -35,11 +38,26 @@ public interface RuleCompositionService {
 	 *            <code>String</code> with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @return {@link Rule} that represents the parsed iRODS rule
+	 * @throws FileNotFoundException if the rule file cannot be found
 	 * @throws MissingOrInvalidRuleException
 	 *             if the rule is empty
 	 * @throws JargonException
 	 */
 	Rule loadRuleFromIrods(String absolutePathToRuleFile)
-			throws MissingOrInvalidRuleException, JargonException;
+			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
+
+	/**
+	 * Given a rule in primate string values, store as a rule in the given iRODS file.  This will handle overwrites.
+	 * @param ruleAbsolutePath    <code>String</code> with an iRODS absolute path to a rules
+	 *            file appropriate for 'new format' rules in iRODS.
+	 * @param ruleBody   <code>String</code> with a valid iRODS rule body (without the input or output sections)
+	 * @param inputParameters <code>List<String></code> with the input parameters of the rule in simple string name=value format, without wrapping quotes
+	 * @param outputParameters <code>List<String></code> with the output parameters of the rule in simple string format
+	 * @return {@link Rule} which is the parsed version of the given rule
+	 * @throws JargonException
+	 */
+	Rule storeRuleFromParts(String ruleAbsolutePath, String ruleBody,
+			List<String> inputParameters, List<String> outputParameters)
+			throws JargonException;
 
 }

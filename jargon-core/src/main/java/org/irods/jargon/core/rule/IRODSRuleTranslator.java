@@ -50,11 +50,14 @@ public class IRODSRuleTranslator {
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
-		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText, "\n");
+		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText.trim(), "\n");
 		List<String> tokenLines = new ArrayList<String>();
 
 		while (tokens.hasMoreElements()) {
-			tokenLines.add(tokens.nextToken());
+			String token = (String) tokens.nextElement();
+			if (!token.trim().isEmpty()) {
+				tokenLines.add(token);
+			}
 		}
 
 		String ruleBody = processRuleBody(tokenLines);
