@@ -189,6 +189,21 @@ public class IRODSRuleParameter {
 	public Object getValue() {
 		return value;
 	}
+	
+	/**
+	 * Return the value with leading and trailing quotes stripped out
+	 * @return
+	 */
+	public String getValueAsStringWithQuotesStripped() {
+		int initQuote = getStringValue().indexOf('"');
+		int finalQuote = getStringValue().lastIndexOf('"');
+		
+		if (initQuote > -1 && finalQuote > -1) {
+			return getStringValue().substring(initQuote + 1, finalQuote);
+		} else {
+			return getStringValue();
+		}
+	}
 
 	public Tag createMsParamArray() {
 
