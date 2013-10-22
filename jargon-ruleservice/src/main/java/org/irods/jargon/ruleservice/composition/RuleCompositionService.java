@@ -38,26 +38,91 @@ public interface RuleCompositionService {
 	 *            <code>String</code> with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @return {@link Rule} that represents the parsed iRODS rule
-	 * @throws FileNotFoundException if the rule file cannot be found
+	 * @throws FileNotFoundException
+	 *             if the rule file cannot be found
 	 * @throws MissingOrInvalidRuleException
 	 *             if the rule is empty
 	 * @throws JargonException
 	 */
 	Rule loadRuleFromIrods(String absolutePathToRuleFile)
-			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
+			throws FileNotFoundException, MissingOrInvalidRuleException,
+			JargonException;
 
 	/**
-	 * Given a rule in primate string values, store as a rule in the given iRODS file.  This will handle overwrites.
-	 * @param ruleAbsolutePath    <code>String</code> with an iRODS absolute path to a rules
+	 * Given a rule in primative string values, store as a rule in the given
+	 * iRODS file. This will handle overwrites.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
-	 * @param ruleBody   <code>String</code> with a valid iRODS rule body (without the input or output sections)
-	 * @param inputParameters <code>List<String></code> with the input parameters of the rule in simple string name=value format, without wrapping quotes
-	 * @param outputParameters <code>List<String></code> with the output parameters of the rule in simple string format
+	 * @param ruleBody
+	 *            <code>String</code> with a valid iRODS rule body (without the
+	 *            input or output sections)
+	 * @param inputParameters
+	 *            <code>List<String></code> with the input parameters of the
+	 *            rule in simple string name=value format, without wrapping
+	 *            quotes
+	 * @param outputParameters
+	 *            <code>List<String></code> with the output parameters of the
+	 *            rule in simple string format
 	 * @return {@link Rule} which is the parsed version of the given rule
 	 * @throws JargonException
 	 */
 	Rule storeRuleFromParts(String ruleAbsolutePath, String ruleBody,
 			List<String> inputParameters, List<String> outputParameters)
 			throws JargonException;
+
+	/**
+	 * Given a rule in {@link Rule} format, serialize and store in iRODS
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file appropriate for 'new format' rules in iRODS.
+	 * @param rule
+	 *            {@link Rule} to serialize and store
+	 * @return {@link Rule} that has been stored
+	 * @throws JargonException
+	 */
+	Rule storeRule(String ruleAbsolutePath, Rule rule) throws JargonException;
+
+	/**
+	 * Given the name of an input parameter (with the leading * included),
+	 * delete it from the rule input parameter list and store back in iRODS.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file appropriate for 'new format' rules in iRODS.
+	 * @param parameterToDelete
+	 *            <code>String</code> with the name of the parameter, with the
+	 *            leading * character (e.g. *Flags), this input parameter will
+	 *            be deleted from the rule. If the parameter is missing, then no
+	 *            action will be taken.
+	 * @return {@link Rule} reflecting the state of the rule after any updates.
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	Rule deleteInputParameterFromRule(String ruleAbsolutePath,
+			String parameterToDelete) throws FileNotFoundException,
+			JargonException;
+
+	/**
+	 * Given the name of an output parameter (with the leading * included),
+	 * delete it from the rule output parameter list and store back in iRODS.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file appropriate for 'new format' rules in iRODS.
+	 * @param parameterToDelete
+	 *            <code>String</code> with the name of the output parameter,
+	 *            with the leading * character (e.g. *Flags), this input
+	 *            parameter will be deleted from the rule. If the parameter is
+	 *            missing, then no action will be taken.
+	 * @return {@link Rule} reflecting the state of the rule after any updates.
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	Rule deleteOutputParameterFromRule(String ruleAbsolutePath,
+			String parameterToDelete) throws FileNotFoundException,
+			JargonException;
 
 }
