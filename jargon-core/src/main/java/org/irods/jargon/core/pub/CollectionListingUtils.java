@@ -82,7 +82,7 @@ class CollectionListingUtils {
 		 * various conditions
 		 */
 
-		if (collectionAndDataObjectListAndSearchAO.getJargonProperties()
+		if (!collectionAndDataObjectListAndSearchAO.getJargonProperties()
 				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
 			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
 			throw new FileNotFoundException("the collection cannot be found");
