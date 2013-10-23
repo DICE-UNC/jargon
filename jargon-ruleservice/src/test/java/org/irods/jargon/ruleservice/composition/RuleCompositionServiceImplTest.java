@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileWriter;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -207,6 +208,57 @@ public class RuleCompositionServiceImplTest {
 					.getInputParameters().get(i).getStringValue(), actual
 					.getInputParameters().get(i).getStringValue());
 		}
+	}
+
+	@Test
+	public void testExecuteRuleFromParts() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiGetIcatTime.r";
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService.parseStringIntoRule(ruleString);
+
+		List<String> inputParameters = new ArrayList<String>();
+		List<String> outputParameters = new ArrayList<String>();
+
+		StringBuilder sb;
+
+		for (IRODSRuleParameter parm : rule.getInputParameters()) {
+			sb = new StringBuilder();
+			sb.append(parm.getUniqueName());
+			sb.append("=");
+			sb.append(parm.getStringValue());
+			inputParameters.add(sb.toString());
+		}
+
+		for (IRODSRuleParameter parm : rule.getOutputParameters()) {
+			outputParameters.add(parm.getUniqueName());
+		}
+		IRODSRuleExecResult execResult = ruleCompositionService
+				.executeRuleFromParts(rule.getRuleBody(), inputParameters,
+						outputParameters);
+
+		Assert.assertNotNull("null result returned", execResult);
+
 	}
 
 	@Test

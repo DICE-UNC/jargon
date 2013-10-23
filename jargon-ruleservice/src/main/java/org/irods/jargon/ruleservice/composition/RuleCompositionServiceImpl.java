@@ -13,11 +13,13 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileReader;
 import org.irods.jargon.core.rule.IRODSRule;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.service.AbstractJargonService;
@@ -201,6 +203,10 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			throw new IllegalArgumentException("null or empty ruleAbsolutePath");
 		}
 
+		if (ruleBody == null || ruleBody.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleBody");
+		}
+
 		if (inputParameters == null) {
 			throw new IllegalArgumentException("null inputParameters");
 		}
@@ -212,6 +218,33 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		log.info("ruleAbsolutePath:{}", ruleAbsolutePath);
 		log.info("inputParameters:{}", inputParameters);
 		log.info("outputParameters:{}", outputParameters);
+
+		String ruleAsString = buildRuleStringFromParts(ruleBody,
+				inputParameters, outputParameters);
+		IRODSFile irodsFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
+						ruleAbsolutePath);
+
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
+				.getStream2StreamAO(getIrodsAccount());
+		try {
+			stream2StreamAO.streamBytesToIRODSFile(ruleAsString
+					.getBytes(getIrodsAccessObjectFactory()
+							.getJargonProperties().getEncoding()), irodsFile);
+		} catch (UnsupportedEncodingException e) {
+			log.error("unsupported encoding streaming to file", e);
+			throw new JargonException("error writing rule file", e);
+		}
+
+		log.info("rule stored:{}", ruleAsString);
+
+		return parseStringIntoRule(ruleAsString);
+
+	}
+
+	private String buildRuleStringFromParts(final String ruleBody,
+			final List<String> inputParameters,
+			final List<String> outputParameters) {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(ruleBody);
@@ -248,24 +281,44 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		sb.append("\n");
 
 		String ruleAsString = sb.toString();
-		IRODSFile irodsFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						ruleAbsolutePath);
+		return ruleAsString;
+	}
 
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(getIrodsAccount());
-		try {
-			stream2StreamAO.streamBytesToIRODSFile(ruleAsString
-					.getBytes(getIrodsAccessObjectFactory()
-							.getJargonProperties().getEncoding()), irodsFile);
-		} catch (UnsupportedEncodingException e) {
-			log.error("unsupported encoding streaming to file", e);
-			throw new JargonException("error writing rule file", e);
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
+	 * executeRuleFromParts(java.lang.String, java.util.List, java.util.List)
+	 */
+	@Override
+	public IRODSRuleExecResult executeRuleFromParts(final String ruleBody,
+			final List<String> inputParameters,
+			final List<String> outputParameters) throws JargonException {
+
+		if (ruleBody == null || ruleBody.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleBody");
 		}
 
-		log.info("rule stored:{}", ruleAsString);
+		if (inputParameters == null) {
+			throw new IllegalArgumentException("null inputParameters");
+		}
 
-		return parseStringIntoRule(ruleAsString);
+		if (outputParameters == null) {
+			throw new IllegalArgumentException("null outputParameters");
+		}
+
+		log.info("ruleBody:{}", ruleBody);
+		log.info("inputParameters:{}", inputParameters);
+		log.info("outputParameters:{}", outputParameters);
+
+		String ruleAsString = buildRuleStringFromParts(ruleBody,
+				inputParameters, outputParameters);
+
+		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory
+				.getRuleProcessingAO(getIrodsAccount());
+
+		log.info("getting ready to submit rule:{}", ruleAsString);
+		return ruleProcessingAO.executeRule(ruleAsString);
 
 	}
 

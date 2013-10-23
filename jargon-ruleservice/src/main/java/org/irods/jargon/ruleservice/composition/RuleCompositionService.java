@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.rule.IRODSRuleExecResult;
 
 /**
  * Interface defines an enhanced service for dealing with rules. Specifically,
@@ -124,5 +125,26 @@ public interface RuleCompositionService {
 	Rule deleteOutputParameterFromRule(String ruleAbsolutePath,
 			String parameterToDelete) throws FileNotFoundException,
 			JargonException;
+
+	/**
+	 * Given a rule in primative string values, execute the rule in iRODS.
+	 * 
+	 * @param ruleBody
+	 *            <code>String</code> with a valid iRODS rule body (without the
+	 *            input or output sections)
+	 * @param inputParameters
+	 *            <code>List<String></code> with the input parameters of the
+	 *            rule in simple string name=value format, without wrapping
+	 *            quotes
+	 * @param outputParameters
+	 *            <code>List<String></code> with the output parameters of the
+	 *            rule in simple string format
+	 * @return {@link IRODSRuleExecResult} with the output parameters from the
+	 *         rule execution
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleFromParts(String ruleBody,
+			List<String> inputParameters, List<String> outputParameters)
+			throws JargonException;
 
 }
