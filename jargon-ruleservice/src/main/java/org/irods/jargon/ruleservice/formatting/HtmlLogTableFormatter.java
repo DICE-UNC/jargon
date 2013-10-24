@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.ruleservice.formatting;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
 /**
  * Class to format stdout or stderror as an HTML table
  * 
@@ -10,6 +13,27 @@ package org.irods.jargon.ruleservice.formatting;
  * 
  */
 public class HtmlLogTableFormatter {
+
+	/**
+	 * Given an exception, print the stack trace as a formatted HTML table
+	 * usable in bootsrap2
+	 * 
+	 * @param exception
+	 * @return <code>String</code> representing an HTML table for bootstrap2
+	 */
+	public static String formatStackTraceAsBootstrap2Table(
+			final Exception exception) {
+
+		if (exception == null) {
+			throw new IllegalArgumentException("null exception");
+		}
+
+		StringWriter sw = new StringWriter();
+		PrintWriter pw = new PrintWriter(sw);
+		exception.printStackTrace(pw);
+		return formatAsBootstrap2Table(sw.toString(), "Stack Trace");
+
+	}
 
 	/**
 	 * Given a set of log data (which is delimited by the carriage returns, and
