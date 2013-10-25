@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -37,6 +38,111 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	public static final Logger log = LoggerFactory
 			.getLogger(RuleCompositionServiceImpl.class);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
+	 * addInputParameterToRule(java.lang.String, java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public Rule addInputParameterToRule(final String ruleAbsolutePath,
+			final String parameterName, final String parameterValue)
+			throws FileNotFoundException, DuplicateDataException,
+			JargonException {
+
+		log.info("addInputParameterToRule()");
+
+		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleAbsolutePath");
+		}
+
+		if (parameterName == null || parameterName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parameterName");
+		}
+
+		if (parameterValue == null || parameterValue.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parameterValue");
+		}
+
+		Rule currentRule = loadRuleFromIrods(ruleAbsolutePath);
+		log.info("found current rule, recompose by deleting input parameter and reformatting");
+
+		List<IRODSRuleParameter> newParms = new ArrayList<IRODSRuleParameter>();
+
+		for (int i = 0; i < currentRule.getInputParameters().size(); i++) {
+			if (currentRule.getInputParameters().get(i).getUniqueName()
+					.equals(parameterName)) {
+				log.error("duplicate input parameter");
+				throw new DuplicateDataException("duplicate input parameter");
+			} else {
+				newParms.add(currentRule.getInputParameters().get(i));
+			}
+		}
+
+		IRODSRuleParameter newParam = new IRODSRuleParameter(parameterName,
+				parameterValue);
+
+		newParms.add(newParam);
+
+		currentRule.setInputParameters(newParms);
+
+		log.info("added parameter...now store the rule");
+		storeRule(ruleAbsolutePath, currentRule);
+		log.info("parameter add completed");
+		return currentRule;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
+	 * addOutputParameterToRule(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Rule addOutputParameterToRule(final String ruleAbsolutePath,
+			final String parameterName) throws FileNotFoundException,
+			DuplicateDataException, JargonException {
+
+		log.info("addOutputParameterToRule()");
+
+		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleAbsolutePath");
+		}
+
+		if (parameterName == null || parameterName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parameterName");
+		}
+
+		Rule currentRule = loadRuleFromIrods(ruleAbsolutePath);
+		log.info("found current rule, recompose by deleting input parameter and reformatting");
+
+		List<IRODSRuleParameter> newParms = new ArrayList<IRODSRuleParameter>();
+
+		for (int i = 0; i < currentRule.getOutputParameters().size(); i++) {
+			if (currentRule.getOutputParameters().get(i).getUniqueName()
+					.equals(parameterName)) {
+				log.error("duplicate output parameter");
+				throw new DuplicateDataException("duplicate output parameter");
+			} else {
+				newParms.add(currentRule.getOutputParameters().get(i));
+			}
+		}
+
+		IRODSRuleParameter newParam = new IRODSRuleParameter(parameterName, "");
+
+		newParms.add(newParam);
+
+		currentRule.setOutputParameters(newParms);
+
+		log.info("added parameter...now store the rule");
+		storeRule(ruleAbsolutePath, currentRule);
+		log.info("parameter add completed");
+		return currentRule;
+
+	}
 
 	/*
 	 * (non-Javadoc)

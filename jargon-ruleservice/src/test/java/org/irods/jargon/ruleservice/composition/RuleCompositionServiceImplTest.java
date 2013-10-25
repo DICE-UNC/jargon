@@ -9,6 +9,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -660,4 +661,188 @@ public class RuleCompositionServiceImplTest {
 		ruleCompositionService.parseStringIntoRule(ruleString);
 
 	}
+
+	@Test
+	public void testAddInputParameterToRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiDataObjChksum.r";
+		String irodsRuleFile = "testAddInputParameterToRule.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService.parseStringIntoRule(ruleString);
+
+		ruleCompositionService.storeRule(irodsRuleFileAsFile.getAbsolutePath(),
+				rule);
+
+		String newParamName = "*NewParam";
+		String newParamValue = "1";
+
+		int nbrBefore = rule.getInputParameters().size();
+
+		Rule actual = ruleCompositionService.addInputParameterToRule(
+				irodsRuleFileAsFile.getAbsolutePath(), newParamName,
+				newParamValue);
+
+		Assert.assertNotNull("null rule returned", actual);
+
+		Assert.assertEquals("expected 1 new param", nbrBefore + 1, actual
+				.getInputParameters().size());
+
+		boolean foundNew = false;
+
+		for (int i = 0; i < actual.getInputParameters().size(); i++) {
+			if (actual.getInputParameters().get(i).getUniqueName()
+					.equals(newParamName)) {
+				foundNew = true;
+				break;
+			}
+		}
+
+		Assert.assertTrue("did not find new parameter", foundNew);
+
+	}
+
+	@Test(expected = DuplicateDataException.class)
+	public void testAddDuplicateInputParameterToRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiDataObjChksum.r";
+		String irodsRuleFile = "testAddDuplicateInputParameterToRule.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService.parseStringIntoRule(ruleString);
+
+		ruleCompositionService.storeRule(irodsRuleFileAsFile.getAbsolutePath(),
+				rule);
+
+		String newParamName = "*NewParam";
+		String newParamValue = "1";
+
+		ruleCompositionService.addInputParameterToRule(
+				irodsRuleFileAsFile.getAbsolutePath(), newParamName,
+				newParamValue);
+		ruleCompositionService.addInputParameterToRule(
+				irodsRuleFileAsFile.getAbsolutePath(), newParamName,
+				newParamValue);
+
+	}
+
+	@Test
+	public void testAddOutputParameterToRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiDataObjChksum.r";
+		String irodsRuleFile = "testAddOutputParameterToRule.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService.parseStringIntoRule(ruleString);
+
+		ruleCompositionService.storeRule(irodsRuleFileAsFile.getAbsolutePath(),
+				rule);
+
+		String newParamName = "*NewParam";
+
+		int nbrBefore = rule.getOutputParameters().size();
+
+		Rule actual = ruleCompositionService.addOutputParameterToRule(
+				irodsRuleFileAsFile.getAbsolutePath(), newParamName);
+
+		Assert.assertNotNull("null rule returned", actual);
+
+		Assert.assertEquals("expected 1 new param", nbrBefore + 1, actual
+				.getOutputParameters().size());
+
+		boolean foundNew = false;
+
+		for (int i = 0; i < actual.getOutputParameters().size(); i++) {
+			if (actual.getOutputParameters().get(i).getUniqueName()
+					.equals(newParamName)) {
+				foundNew = true;
+				break;
+			}
+		}
+
+		Assert.assertTrue("did not find new parameter", foundNew);
+
+	}
+
 }

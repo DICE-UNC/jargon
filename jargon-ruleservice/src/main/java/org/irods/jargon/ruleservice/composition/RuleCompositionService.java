@@ -2,6 +2,7 @@ package org.irods.jargon.ruleservice.composition;
 
 import java.util.List;
 
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
@@ -146,5 +147,45 @@ public interface RuleCompositionService {
 	IRODSRuleExecResult executeRuleFromParts(String ruleBody,
 			List<String> inputParameters, List<String> outputParameters)
 			throws JargonException;
+
+	/**
+	 * Add the given input parameter to the iRODS rule.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file to which the parameter will be added
+	 * @param parameterName
+	 *            <code>String</code> with the name of the new parameter
+	 * @param parameterValue
+	 *            <code>String</code> with the value for the new parameter
+	 * @return {@link Rule} as updated
+	 * @throws FileNotFoundException
+	 *             if the iRODS rule file is missing
+	 * @throws DuplicateDataException
+	 *             if the parameter already exists
+	 * @throws JargonException
+	 */
+	Rule addInputParameterToRule(String ruleAbsolutePath, String parameterName,
+			String parameterValue) throws FileNotFoundException,
+			DuplicateDataException, JargonException;
+
+	/**
+	 * Add the given output parameter to the iRODS rule.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file to which the parameter will be added
+	 * @param parameterName
+	 *            <code>String</code> with the name of the new parameter
+	 * @return {@link Rule} as updated
+	 * @throws FileNotFoundException
+	 *             if the iRODS rule file is missing
+	 * @throws DuplicateDataException
+	 *             if the parameter already exists
+	 * @throws JargonException
+	 */
+	Rule addOutputParameterToRule(String ruleAbsolutePath, String parameterName)
+			throws FileNotFoundException, DuplicateDataException,
+			JargonException;
 
 }
