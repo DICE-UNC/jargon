@@ -44,8 +44,14 @@ class RuleParsingUtils {
 		// have parms to process..split at equal sign
 		int idx = parameter.indexOf('=');
 		if (idx == -1) {
-			throw new IllegalArgumentException(
-					"missing equal sign in given input parameter");
+
+			if (parameter.toUpperCase().indexOf("NULL") > -1) {
+				return null;
+			} else {
+
+				throw new IllegalArgumentException(
+						"missing equal sign in given input parameter");
+			}
 		}
 
 		if (idx + 1 == parameter.length()) {

@@ -845,4 +845,137 @@ public class RuleCompositionServiceImplTest {
 
 	}
 
+	@Test
+	public void testParseMsiAclPolicyRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiAclPolicy.r";
+		String irodsRuleFile = "testParseMsiAclPolicyRule.r";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+		IRODSFileWriter irodsFileWriter = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFileWriter(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		char[] buff = new char[1024];
+		StringReader reader = new StringReader(ruleString);
+
+		int len = 0;
+		while ((len = reader.read(buff)) > -1) {
+			irodsFileWriter.write(buff, 0, len);
+		}
+
+		irodsFileWriter.close();
+		reader.close();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService
+				.loadRuleFromIrods(targetIrodsCollection + "/" + irodsRuleFile);
+
+		Assert.assertNotNull("null rule", rule);
+
+		Assert.assertFalse("empty rule body", rule.getRuleBody().isEmpty());
+		Assert.assertTrue("not empty input parms", rule.getInputParameters()
+				.isEmpty());
+		Assert.assertTrue("not empty output parms", rule.getOutputParameters()
+				.isEmpty());
+
+	}
+
+	@Test
+	public void testParseQueensRule() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/nqueens.r";
+		String irodsRuleFile = "testParseQueensRule.r";
+		String irodsRuleFile2 = "testParseQueensRule2.r";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+		IRODSFile irodsRuleFileAsFile = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		irodsRuleFileAsFile.deleteWithForceOption();
+		IRODSFileWriter irodsFileWriter = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFileWriter(
+						targetIrodsCollection + "/" + irodsRuleFile);
+		char[] buff = new char[1024];
+		StringReader reader = new StringReader(ruleString);
+
+		int len = 0;
+		while ((len = reader.read(buff)) > -1) {
+			irodsFileWriter.write(buff, 0, len);
+		}
+
+		irodsFileWriter.close();
+		reader.close();
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService
+				.loadRuleFromIrods(targetIrodsCollection + "/" + irodsRuleFile);
+
+		Assert.assertNotNull("null rule", rule);
+
+		Assert.assertFalse("empty rule body", rule.getRuleBody().isEmpty());
+		Assert.assertTrue("expected empty input parms", rule
+				.getInputParameters().isEmpty());
+		Assert.assertFalse("empty output parms", rule.getOutputParameters()
+				.isEmpty());
+
+		// round trip
+
+		irodsRuleFileAsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(
+				targetIrodsCollection + "/" + irodsRuleFile2);
+		irodsRuleFileAsFile.deleteWithForceOption();
+
+		ruleCompositionService.storeRule(irodsRuleFileAsFile.getAbsolutePath(),
+				rule);
+		Rule actual = ruleCompositionService
+				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
+		Assert.assertNotNull("could not reload rule after round trip", actual);
+
+	}
+
 }
