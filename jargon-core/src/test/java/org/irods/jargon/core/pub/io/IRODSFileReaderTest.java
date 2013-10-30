@@ -11,6 +11,7 @@ import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -75,14 +76,13 @@ public class IRODSFileReaderTest {
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
-
-		fileNameAndPath.append(testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -93,7 +93,7 @@ public class IRODSFileReaderTest {
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dto.putOperation(
-				fileNameAndPath.toString(),
+				localFileName,
 				targetIrodsCollection,
 				testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
