@@ -414,6 +414,24 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeRuleFromDelayedExecQueue
+	 * (int)
+	 */
+	@Override
+	public void purgeRuleFromDelayedExecQueue(final int queueId)
+			throws JargonException {
+		log.info("purgeRuleFromDelayedExecQueue()");
+		RuleExecDelInp ruleExecDelInp = null;
+		log.info("deleting rule with id:{}", queueId);
+		ruleExecDelInp = RuleExecDelInp.instanceForDeleteRule(String
+				.valueOf(queueId));
+		getIRODSProtocol().irodsFunction(ruleExecDelInp);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeAllDelayedExecQueue()
 	 */
 	@Override

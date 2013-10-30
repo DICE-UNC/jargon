@@ -52,3 +52,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1182] add support for workflows
 **Added jargon-workflow library and initial support for workflow objects
 
+*[#1458] rule editor for user rules in idrop-web
+**Added jargon-ruleservice to support interactive editing and composition of rules in interfaces.  Additional fixes in rule processing and parsing based on new use cases and testing.
+
+
+*[#1776] add rule queue processing views
+**Added code to delete selected rule from queue and expanded testing
