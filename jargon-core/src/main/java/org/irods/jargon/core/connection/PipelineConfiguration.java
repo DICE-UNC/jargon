@@ -30,6 +30,7 @@ public class PipelineConfiguration {
 	private final boolean reconnect;
 	private final long reconnectTimeInMillis;
 	private final boolean instrument;
+	private final boolean forcePamFlush;
 
 	/**
 	 * Static initializer method will derive an immutable
@@ -72,6 +73,7 @@ public class PipelineConfiguration {
 		this.reconnectTimeInMillis = jargonProperties
 				.getReconnectTimeInMillis();
 		this.defaultEncoding = jargonProperties.getEncoding();
+		this.forcePamFlush = jargonProperties.isForcePamFlush();
 	}
 
 	@Override
@@ -102,6 +104,8 @@ public class PipelineConfiguration {
 		sb.append(reconnect);
 		sb.append("\n   reconnect time in millis:");
 		sb.append(reconnectTimeInMillis);
+		sb.append("\n   forcePamFlush:");
+		sb.append(forcePamFlush);
 		return sb.toString();
 	}
 
@@ -199,6 +203,13 @@ public class PipelineConfiguration {
 	 */
 	public synchronized long getReconnectTimeInMillis() {
 		return reconnectTimeInMillis;
+	}
+
+	/**
+	 * @return the forcePamFlush
+	 */
+	synchronized boolean isForcePamFlush() {
+		return forcePamFlush;
 	}
 
 }

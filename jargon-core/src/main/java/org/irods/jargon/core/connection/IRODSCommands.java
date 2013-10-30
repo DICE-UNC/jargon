@@ -1712,15 +1712,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @return
 	 */
 	private boolean isPamFlush() {
+	
+		
 		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
 			return false;
 		}
 
-		if (this.getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.3")) {
-			return false;
-		} else {
+
+		if (this.pipelineConfiguration.isForcePamFlush()) {
 			return true;
+		} else {
+			return false;
 		}
 	}
 
