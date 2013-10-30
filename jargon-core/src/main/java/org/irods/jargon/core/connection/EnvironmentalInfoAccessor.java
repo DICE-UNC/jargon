@@ -84,7 +84,8 @@ public class EnvironmentalInfoAccessor {
 				.getStringValue();
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
-		if (irodsProtocol.getIrodsSession() != null) {
+		
+		if (irodsProtocol.getIrodsSession() != null) {	
 			irodsProtocol
 					.getIrodsSession()
 					.getDiscoveredServerPropertiesCache()
@@ -100,15 +101,6 @@ public class EnvironmentalInfoAccessor {
 		getIRODSServerProperties();
 	}
 
-	public String getLoadedRules() {
-		DiscoveredServerPropertiesCache cache = getDiscoveredServerPropertiesCache();
-		// if null, go ahead and grab props
-		
-		
-		
-		
-		
-	}
 	
 	/**
 	 * Get the cache of discovered props, note it can be null

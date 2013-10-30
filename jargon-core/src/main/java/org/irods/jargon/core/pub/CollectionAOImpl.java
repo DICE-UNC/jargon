@@ -150,7 +150,20 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		if (caseInsensitive) {
-			if (!getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+			
+			/*
+			 * It's a long story, but I need to check if this is eirods, otherwise I may not properly comprehend
+			 * if case-insensitive queries are supported
+			 */
+
+			EnvironmentalInfoAO environmentalInfoAO = this
+					.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+							getIRODSAccount());
+			boolean isEirods = environmentalInfoAO.isEirods();
+
+			if (isEirods) {
+				log.info("this is eirods, case insensitive is supported");
+			} else if (!getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
 				throw new JargonException(
 						"case insensitive queries not supported on this iRODS version");
 			}

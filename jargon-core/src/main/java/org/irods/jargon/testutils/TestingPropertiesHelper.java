@@ -675,6 +675,42 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
+	
+	/**
+	 * Handy method to give, from the root IRODS collection, a full path to a
+	 * given collection in the IRODS test scratch area on IRODS for the rods user
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> that define test behavior
+	 * @param collectionPathBelowScratch
+	 *            <code>String</code> with no leading '/' that defines the
+	 *            desired path underneath the IRODS scratch directory
+	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 *         path for an IRODS collection
+	 * @throws TestingUtilsException
+	 * @throws URISyntaxException
+	 */
+	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
+
+		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_ZONE_KEY));
+		pathBuilder.append("/home/");
+		pathBuilder.append("rods");
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_SCRATCH_DIR_KEY));
+		pathBuilder.append('/');
+		pathBuilder.append(collectionPathBelowScratch);
+		return pathBuilder.toString();
+	}
 
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
@@ -896,7 +932,7 @@ public class TestingPropertiesHelper {
 			return Boolean.parseBoolean(val);
 		}
 	}
-
+	
 	/**
 	 * Check if tests depending on a federated zone should be run. The federated
 	 * zone must be configured as described in the test-scripts/fedTestSetup.txt

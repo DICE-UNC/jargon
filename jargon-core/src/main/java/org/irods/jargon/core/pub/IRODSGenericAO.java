@@ -92,6 +92,12 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	@Override
 	public final IRODSServerProperties getIRODSServerProperties()
 			throws JargonException {
+		
+		/*
+		 * I need to force a check if this is eirods here. Note that the actual value will be cached
+		 * in the DiscoveredServerPropertiesCache, so this only takes place 
+		 */
+	
 		return getIRODSSession().currentConnection(getIRODSAccount())
 				.getIRODSServerProperties();
 	}

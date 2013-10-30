@@ -1306,10 +1306,13 @@ public class IRODSFileSystemAOImplTest {
 
 	@Test
 	public final void testPhysicalMove() throws Exception {
-		// generate a local scratch file
 		String testFileName = "testPhysicalMove.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
+				8);
+		
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
