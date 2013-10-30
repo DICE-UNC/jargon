@@ -621,6 +621,11 @@ public class RemoteExecuteServiceImplTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
+		
+		if (props.isEirods()) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);

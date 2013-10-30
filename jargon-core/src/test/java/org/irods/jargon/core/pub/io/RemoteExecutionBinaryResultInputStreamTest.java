@@ -75,6 +75,10 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
+		
+		if (props.isEirods()) {
+			return;
+		}
 
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
@@ -127,6 +131,10 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 		if (!props
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+		
+		if (props.isEirods()) {
 			return;
 		}
 
