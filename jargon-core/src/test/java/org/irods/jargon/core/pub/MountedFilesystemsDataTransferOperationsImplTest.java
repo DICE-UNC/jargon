@@ -280,7 +280,7 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		}
 
 		String rootCollection = "testCopyFromMountedToIrods";
-		String copyCollectionSubdir = "MountedFileSystemsDataTansferOperationsImplTestCopyTarget";
+		String copyCollectionSubdir = "testCopyFromMountedToIrodsCopyTarget";
 
 		String copyTargetCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

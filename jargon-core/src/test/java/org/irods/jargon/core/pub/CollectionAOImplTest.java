@@ -2029,8 +2029,8 @@ public class CollectionAOImplTest {
 				.listPermissionsForCollection(targetIrodsCollection);
 		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		Assert.assertEquals("did not find the two permissions", 2,
-				userFilePermissions.size());
+		Assert.assertFalse("did not find permissions",
+				userFilePermissions.isEmpty());
 
 		boolean secondaryUserFound = false;
 		for (UserFilePermission permission : userFilePermissions) {
@@ -2276,7 +2276,7 @@ public class CollectionAOImplTest {
 		Assert.assertFalse("metadata not retrieved", metadata.isEmpty());
 
 	}
-	
+
 	@Test
 	public void testReplicateCollectionWithTwoFilesAsynch() throws Exception {
 
@@ -2308,12 +2308,17 @@ public class CollectionAOImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		
-		collectionAO.replicateCollectionAsynchronously(irodsCollectionRootAbsolutePath, testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY), 1);
-	
+
+		collectionAO
+				.replicateCollectionAsynchronously(
+						irodsCollectionRootAbsolutePath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						1);
+
 		// just lookign for clean submit of delay exec rule....
 	}
 

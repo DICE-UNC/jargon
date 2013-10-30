@@ -45,51 +45,7 @@ public class IRODSRuleTranslator {
 			final String ruleAsPlainText) throws JargonRuleException,
 			JargonException {
 
-		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
-			throw new IllegalArgumentException("null or empty rule text");
-		}
-
-		log.info("translating rule: {}", ruleAsPlainText);
-		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText.trim(),
-				"\n");
-		List<String> tokenLines = new ArrayList<String>();
-
-		while (tokens.hasMoreElements()) {
-			String token = (String) tokens.nextElement();
-			if (!token.trim().isEmpty()) {
-				tokenLines.add(token);
-			}
-		}
-
-		RuleCharacteristics ruleCharacteristics = processRuleBody(tokenLines);
-
-		if (ruleCharacteristics == null) {
-			throw new JargonRuleException("unable to parse rule");
-		}
-		// process the rule attributes, as they exist
-
-		List<IRODSRuleParameter> inputParameters;
-		if (ruleCharacteristics.getInputLineIndex() != -1) {
-			inputParameters = processRuleInputAttributesLine(tokenLines
-					.get(ruleCharacteristics.getInputLineIndex()));
-		} else {
-			inputParameters = new ArrayList<IRODSRuleParameter>();
-		}
-
-		List<IRODSRuleParameter> outputParameters;
-		if (ruleCharacteristics.getInputLineIndex() != -1) {
-
-			outputParameters = processRuleOutputAttributesLine(tokenLines
-					.get(ruleCharacteristics.getOutputLineIndex()));
-		} else {
-			outputParameters = new ArrayList<IRODSRuleParameter>();
-		}
-
-		IRODSRule irodsRule = IRODSRule.instance(ruleAsPlainText,
-				inputParameters, outputParameters,
-				ruleCharacteristics.getRuleBody());
-
-		return irodsRule;
+		return translatePlainTextRuleIntoIRODSRule(ruleAsPlainText, null);
 	}
 
 	/**
@@ -114,46 +70,84 @@ public class IRODSRuleTranslator {
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
+
 		String trimmedRule = ruleAsPlainText.trim();
 
+		boolean newFormatRule = IRODSRuleTranslator
+				.isUsingNewRuleSyntax(trimmedRule);
 		StringTokenizer tokens = new StringTokenizer(trimmedRule, "\n");
 		List<String> tokenLines = new ArrayList<String>();
 
 		while (tokens.hasMoreElements()) {
-			tokenLines.add(tokens.nextToken());
+			String token = (String) tokens.nextElement();
+			if (!token.trim().isEmpty()) {
+				tokenLines.add(token);
+			}
 		}
 
-		RuleCharacteristics ruleCharacteristics = processRuleBody(tokenLines);
+		List<IRODSRuleParameter> inputParameters;
+		List<IRODSRuleParameter> outputParameters;
+		IRODSRule irodsRule;
 
-		if (ruleCharacteristics == null) {
-			log.error("no content in the rule body");
-			throw new JargonRuleException("empty rule body");
+		if (newFormatRule) {
+			log.info("parsing in new format");
+			RuleCharacteristics ruleCharacteristics = processRuleBodyNewFormat(tokenLines);
+
+			if (ruleCharacteristics == null) {
+				throw new JargonRuleException("unable to parse rule");
+			}
+			// process the rule attributes, as they exist
+
+			if (ruleCharacteristics.getInputLineIndex() != -1) {
+				inputParameters = processRuleInputAttributesLine(tokenLines
+						.get(ruleCharacteristics.getInputLineIndex()));
+			} else {
+				inputParameters = new ArrayList<IRODSRuleParameter>();
+			}
+
+			if (overrideInputParameters != null) {
+				log.info("will override parameters");
+				inputParameters = collateOverridesIntoInputParameters(
+						overrideInputParameters, inputParameters);
+			}
+
+			if (ruleCharacteristics.getInputLineIndex() != -1) {
+
+				outputParameters = processRuleOutputAttributesLine(tokenLines
+						.get(ruleCharacteristics.getOutputLineIndex()));
+			} else {
+				outputParameters = new ArrayList<IRODSRuleParameter>();
+			}
+
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
+					outputParameters, ruleCharacteristics.getRuleBody());
+		} else {
+			log.info("parsing in old format");
+			if (tokenLines.size() < 3) {
+				log.error(
+						"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
+						trimmedRule);
+				throw new JargonRuleException(
+						"Rule requires at least 3 lines for body, input, and output parameters");
+			}
+
+			// process the rule attributes, line above last
+			inputParameters = processRuleInputAttributesLine(tokenLines
+					.get(tokenLines.size() - 2));
+
+			if (overrideInputParameters != null) {
+				log.info("will override parameters");
+				inputParameters = collateOverridesIntoInputParameters(
+						overrideInputParameters, inputParameters);
+			}
+
+			outputParameters = processRuleOutputAttributesLine(tokenLines
+					.get(tokenLines.size() - 1));
+
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
+					outputParameters, processRuleBodyOldFormat(tokenLines));
+
 		}
-
-		if (tokenLines.size() < 3) {
-			log.error(
-					"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
-					trimmedRule);
-			throw new JargonRuleException(
-					"Rule requires at least 3 lines for body, input, and output parameters");
-		}
-
-		// process the rule attributes, line above last
-		List<IRODSRuleParameter> inputParameters = processRuleInputAttributesLine(tokenLines
-				.get(tokenLines.size() - 2));
-
-		if (overrideInputParameters != null) {
-			log.info("will override parameters");
-			inputParameters = collateOverridesIntoInputParameters(
-					overrideInputParameters, inputParameters);
-		}
-
-		List<IRODSRuleParameter> outputParameters = processRuleOutputAttributesLine(tokenLines
-				.get(tokenLines.size() - 1));
-
-		IRODSRule irodsRule = IRODSRule.instance(ruleAsPlainText,
-				inputParameters, outputParameters,
-				ruleCharacteristics.getRuleBody());
 
 		return irodsRule;
 	}
@@ -235,7 +229,8 @@ public class IRODSRuleTranslator {
 	 * @param tokens
 	 * @return
 	 */
-	static RuleCharacteristics processRuleBody(final List<String> tokenLines) {
+	static RuleCharacteristics processRuleBodyNewFormat(
+			final List<String> tokenLines) {
 
 		// work backword to find input and output lines
 
@@ -277,6 +272,29 @@ public class IRODSRuleTranslator {
 		ruleCharacteristics.setRuleBody(total.toString());
 
 		return ruleCharacteristics;
+	}
+
+	/**
+	 * @param tokens
+	 * @return
+	 */
+	static String processRuleBodyOldFormat(final List<String> tokenLines) {
+		StringBuilder total = new StringBuilder();
+		// if formatting error, such as only one line, below breaks
+		int ctr = 0;
+		for (String line : tokenLines) {
+
+			if (ctr == tokenLines.size() - 2) {
+				break;
+			}
+
+			total.append(line);
+			total.append("\n");
+			ctr++;
+		}
+
+		// find the rule
+		return total.toString();
 	}
 
 	/**

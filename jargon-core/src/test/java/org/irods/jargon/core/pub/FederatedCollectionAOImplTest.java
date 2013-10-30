@@ -222,8 +222,8 @@ public class FederatedCollectionAOImplTest {
 				.listPermissionsForCollection(targetIrodsCollection);
 		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		Assert.assertEquals("did not find the three permissions", 3,
-				userFilePermissions.size());
+		Assert.assertFalse("did not find the permissions",
+				userFilePermissions.isEmpty());
 
 		boolean foundCrossZone = false;
 

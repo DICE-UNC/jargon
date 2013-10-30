@@ -475,8 +475,8 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		CollectionAndDataObjectListingEntry entry = listed.get(0);
 		Assert.assertEquals(targetIrodsCollection, entry.getParentPath());
 		Assert.assertEquals(sourceIrodsCollection, entry.getSpecialObjectPath());
-		Assert.assertEquals("did not get both expected permissions", 2, entry
-				.getUserFilePermission().size());
+		Assert.assertFalse("did not get both expected permissions", entry
+				.getUserFilePermission().isEmpty());
 
 	}
 

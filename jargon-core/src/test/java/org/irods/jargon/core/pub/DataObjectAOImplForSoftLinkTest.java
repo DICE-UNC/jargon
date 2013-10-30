@@ -187,8 +187,8 @@ public class DataObjectAOImplForSoftLinkTest {
 						+ testFileName);
 		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		Assert.assertEquals("did not find the two permissions", 2,
-				userFilePermissions.size());
+		Assert.assertFalse("did not find the permissions",
+				userFilePermissions.isEmpty());
 
 		boolean foundIt = false;
 		for (UserFilePermission permission : userFilePermissions) {
