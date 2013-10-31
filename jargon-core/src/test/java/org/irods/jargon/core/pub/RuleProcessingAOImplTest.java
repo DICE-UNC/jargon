@@ -439,7 +439,7 @@ public class RuleProcessingAOImplTest {
 
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
-		String ruleString = "ListAvailableMS||delayExec(<PLUSET>1m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
+		String ruleString = "ListAvailableMS||delayExec(<PLUSET>2m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 

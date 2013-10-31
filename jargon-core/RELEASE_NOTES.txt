@@ -19,6 +19,7 @@ Jargon-core consists of the following libraries
 * jargon-transfer - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
+* jargon-ruleservice - services for interactive composition and execution of rules
 
 
 ==Requirements==
