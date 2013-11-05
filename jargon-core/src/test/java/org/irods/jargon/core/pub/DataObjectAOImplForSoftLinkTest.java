@@ -188,8 +188,8 @@ public class DataObjectAOImplForSoftLinkTest {
 						+ testFileName);
 		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
-		Assert.assertEquals("did not find the two permissions", 2,
-				userFilePermissions.size());
+		Assert.assertTrue("did not find the two permissions",
+				userFilePermissions.size() >= 2);
 
 		boolean foundIt = false;
 		for (UserFilePermission permission : userFilePermissions) {
@@ -668,13 +668,13 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		
+
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-		
+
 		if (props.isEirods()) {
 			return;
 		}
@@ -713,7 +713,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-	
+
 		dataObjectAO.setAccessPermissionRead("", sourceIrodsCollection + "/"
 				+ testFileName, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
