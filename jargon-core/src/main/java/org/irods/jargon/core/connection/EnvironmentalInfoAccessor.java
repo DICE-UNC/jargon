@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class EnvironmentalInfoAccessor {
 
 	private IRODSCommands irodsProtocol = null;
-	private Logger log = LoggerFactory
+	private final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAccessor.class);
 
 	public EnvironmentalInfoAccessor(final IRODSCommands irodsProtocol)
@@ -84,8 +84,8 @@ public class EnvironmentalInfoAccessor {
 				.getStringValue();
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
-		
-		if (irodsProtocol.getIrodsSession() != null) {	
+
+		if (irodsProtocol.getIrodsSession() != null) {
 			irodsProtocol
 					.getIrodsSession()
 					.getDiscoveredServerPropertiesCache()
@@ -96,20 +96,9 @@ public class EnvironmentalInfoAccessor {
 		}
 		return props;
 	}
-	
+
 	public void init() throws JargonException {
 		getIRODSServerProperties();
-	}
-
-	
-	/**
-	 * Get the cache of discovered props, note it can be null
-	 * @return
-	 */
-	private DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
-		return irodsProtocol
-				.getIrodsSession()
-				.getDiscoveredServerPropertiesCache();
 	}
 
 }

@@ -28,9 +28,12 @@ public class IRODSServerProperties {
 	private boolean eirods = false;
 
 	/**
-	 * THis is a supplemental flag that indicates whether a server is eirods.  This is done separately due to the fact
-	 * that it cannot be obtained at the time the server properties are obtained.  It is currently derived by inspecting the 
-	 * actual core.re file.  It is needed in subsequent determinations this class does for version comparisons
+	 * This is a supplemental flag that indicates whether a server is eIRODS.
+	 * This is done separately due to the fact that it cannot be obtained at the
+	 * time the server properties are obtained. It is currently derived by
+	 * inspecting the actual core.re file. It is needed in subsequent
+	 * determinations this class does for version comparisons
+	 * 
 	 * @return <code>true</code> if the given server is an eIRODS servers
 	 */
 	public synchronized boolean isEirods() {
@@ -109,7 +112,7 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
-		
+
 		if (this.isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
@@ -126,7 +129,7 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsTickets() {
 		boolean supports = false;
-		
+
 		if (this.isEirods()) {
 			supports = false;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
@@ -144,7 +147,7 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
-		
+
 		if (this.isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {

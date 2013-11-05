@@ -379,6 +379,11 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		log.debug("status from remoteexec response:{}", status);
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
+			
+			if (this.getIrodsCommands().getIRODSServerProperties().isEirods()) {
+				log.error("unable to stream large files in eirods");
+				throw new UnsupportedOperationException("eIRODS does not currently support large result streaming from execCmd");
+			}
 
 			InputStream piData = new java.io.ByteArrayInputStream(
 					Base64.fromString(buffer.toString()));

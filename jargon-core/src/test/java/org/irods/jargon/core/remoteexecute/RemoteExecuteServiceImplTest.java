@@ -621,7 +621,7 @@ public class RemoteExecuteServiceImplTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
+
 		if (props.isEirods()) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
@@ -650,6 +650,46 @@ public class RemoteExecuteServiceImplTest {
 
 		Assert.assertEquals("did not get expected data length", testLen,
 				result.length());
+
+	}
+
+	@Test(expected = UnsupportedOperationException.class)
+	public final void testExecuteExecStreamTestScriptWithStreamingOnLargeResultWillCauseStreamingForEirods()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
+			return;
+		}
+
+		// threshold is 1M, this is 2M
+		int testLen = 2097152;
+
+		String cmd = "test_execstream.py";
+		String args = String.valueOf(testLen);
+		String host = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isEirods()) {
+			irodsFileSystem.closeAndEatExceptions();
+			return;
+		}
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		CollectionAOImpl collectionAOImpl = (CollectionAOImpl) collectionAO;
+		IRODSCommands irodsCommands = collectionAOImpl.getIRODSProtocol();
+		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
+				.instance(irodsCommands, cmd, args, host);
+
+		remoteExecuteService.executeAndStream();
 
 	}
 

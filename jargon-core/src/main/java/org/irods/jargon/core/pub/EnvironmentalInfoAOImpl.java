@@ -46,8 +46,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 				getIRODSSession().currentConnection(getIRODSAccount()));
 	}
-	
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -57,14 +56,16 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
 			throws JargonException {
-		
+
 		/*
-		 * Note here that getting the server properties includes establishing that the server is eirods.  Eirods
-		 * is discovered by evaluating the rule base, this is cached in the setEirods() method, so it doesn't have
-		 * to call iRODS each time.  
+		 * Note here that getting the server properties includes establishing
+		 * that the server is eirods. Eirods is discovered by evaluating the
+		 * rule base, this is cached in the setEirods() method, so it doesn't
+		 * have to call iRODS each time.
 		 */
 
-		IRODSServerProperties props = environmentalInfoAccessor.getIRODSServerProperties();
+		IRODSServerProperties props = environmentalInfoAccessor
+				.getIRODSServerProperties();
 		props.setEirods(isEirods());
 		return props;
 	}
@@ -163,7 +164,9 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isEirods()
 	 */
 	@Override
@@ -189,8 +192,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		log.info("saving in cache and server properties");
 
-		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS,
-				"true");
+		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS, "true");
 		IRODSServerProperties props = this.getIRODSServerProperties();
 		props.setEirods(eirods);
 		this.getIRODSSession()
@@ -200,8 +202,6 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		return eirods;
 
 	}
-	
-	
 
 	/*
 	 * (non-Javadoc)
@@ -228,8 +228,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		log.info("is strict ACLs?: {}", isStrict);
 
-		storeValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS,
-				"true");
+		storeValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS, "true");
 		return isStrict;
 	}
 
@@ -243,11 +242,11 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	// BUG [#1663] iRODS environment shows 'rods3.0' as version
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
-		
+
 		if (this.isEirods()) {
 			return true;
 		}
-		
+
 		if (this.getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;
