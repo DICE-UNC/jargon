@@ -2040,7 +2040,7 @@ public class CollectionAOImplTest {
 		Assert.assertNotNull("got a null userFilePermissions",
 				userFilePermissions);
 		Assert.assertTrue("did not find the two permissions",
-				userFilePermissions.size() > 2);
+				userFilePermissions.size() >= 2);
 
 		boolean secondaryUserFound = false;
 		for (UserFilePermission permission : userFilePermissions) {
