@@ -68,6 +68,10 @@ public class ResourceAOTest {
 	@Test
 	public final void testListResourceAndResourceGroupNames() throws Exception {
 
+		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
+			return;
+		}
+		
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 

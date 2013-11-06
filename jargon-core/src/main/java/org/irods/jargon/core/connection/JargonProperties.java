@@ -335,5 +335,13 @@ public interface JargonProperties {
 	 * @return <code>int</code> with the PAM time to live, in secords
 	 */
 	int getPAMTimeToLive();
+	
+
+	/**
+	 * Force additional flushes during PAM authorization.  This is typically turned off
+	 * because it introduces performance overhead.  It is useful when using PAM prior to iRODS 3.3.
+	 * @return
+	 */
+	boolean isForcePamFlush();
 
 }

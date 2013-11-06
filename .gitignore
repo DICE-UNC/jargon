@@ -12,7 +12,8 @@ target
 bin
 *.war
 *.log
-*/nbactions.xml
+*/nbactions.xml  
 nbactions.xml
-*/testing.properties
+testing.properties
 */test-output
+JargonVersion.java

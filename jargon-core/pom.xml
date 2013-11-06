@@ -2,7 +2,7 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>3.3.2-SNAPSHOT</version>
+		<version>3.3.1.1-SNAPSHOT</version>
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.irods.jargon</groupId>
@@ -99,6 +99,7 @@
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
 									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
+									test.option.eirods=${test.option.eirods}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.distributed.resources=${test.option.distributed.resources}
 									test.option.registration=${test.option.registration}
@@ -106,6 +107,7 @@
 									test.option.federated.zone=${test.option.federated.zone}
 									test.option.kerberos=${test.option.kerberos}
 									test.option.pam=${test.option.pam}
+									test.option.eirods=${test.option.eirods}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}

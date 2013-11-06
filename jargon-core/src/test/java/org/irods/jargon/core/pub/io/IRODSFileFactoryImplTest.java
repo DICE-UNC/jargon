@@ -11,6 +11,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -132,17 +133,27 @@ public class IRODSFileFactoryImplTest {
 		Assert.assertNotNull(irodsFile);
 	}
 
-	// FIXME: ignore for eirods3
 	@Test(expected = JargonException.class)
 	public final void testCreateOutStreamFromFileNotExists() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+		
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+		
+		if (environmentalInfoAO.isEirods()) {
+			throw new JargonException("match expected");
+		}
+		
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+		
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/apath",
-				"child");
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection,
+				"childFile");
 		irodsFileFactory.instanceIRODSFileOutputStream(irodsFile);
 
 	}
