@@ -5,7 +5,6 @@ package org.irods.jargon.datautils.pagination;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.datautils.pagination.PagingStatus;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -63,7 +62,8 @@ public class PagingStatusTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.datautils.pagination.PagingStatus#getNextIndex()}.
+	 * {@link org.irods.jargon.datautils.pagination.PagingStatus#getNextIndex()}
+	 * .
 	 */
 	@Test
 	public void testGetNextIndex() {

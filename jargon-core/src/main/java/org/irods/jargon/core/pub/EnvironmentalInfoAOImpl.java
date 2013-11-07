@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
+import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessor;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -21,7 +22,6 @@ import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
-import org.irods.jargon.core.utils.Overheaded;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +56,17 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
 			throws JargonException {
 
-		return environmentalInfoAccessor.getIRODSServerProperties();
+		/*
+		 * Note here that getting the server properties includes establishing
+		 * that the server is eirods. Eirods is discovered by evaluating the
+		 * rule base, this is cached in the setEirods() method, so it doesn't
+		 * have to call iRODS each time.
+		 */
+
+		IRODSServerProperties props = environmentalInfoAccessor
+				.getIRODSServerProperties();
+		props.setEirods(isEirods());
+		return props;
 	}
 
 	/*
@@ -108,6 +118,16 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public String showLoadedRules() throws JargonException {
 		log.info("showLoadedRules");
+
+		String loadedRules = findValueInCache(DiscoveredServerPropertiesCache.RULE_BASE);
+
+		if (loadedRules != null) {
+			log.info("cache hit");
+			return loadedRules;
+		}
+
+		log.info("cache miss");
+
 		StringBuilder sb = new StringBuilder(
 				"showLoadedRules||msiAdmShowIRB(null)|nop\n");
 		sb.append("null\n");
@@ -116,7 +136,66 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 				.getRuleProcessingAO(getIRODSAccount());
 		IRODSRuleExecResult result = ruleProcessingAO
 				.executeRule(sb.toString());
-		return result.getRuleExecOut();
+		loadedRules = result.getRuleExecOut();
+
+		storeValueInCache(DiscoveredServerPropertiesCache.RULE_BASE,
+				loadedRules);
+
+		log.info("cached loaded rules");
+		return loadedRules;
+
+	}
+
+	private void storeValueInCache(final String key, final String value) {
+		getIRODSSession().getDiscoveredServerPropertiesCache().cacheAProperty(
+				getIRODSAccount().getHost(), getIRODSAccount().getZone(), key,
+				value);
+	}
+
+	private String findValueInCache(final String key) {
+		log.info("checking cache for loaded rules");
+		return getIRODSSession().getDiscoveredServerPropertiesCache()
+				.retrieveValue(getIRODSAccount().getHost(),
+						getIRODSAccount().getZone(), key);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isEirods()
+	 */
+	@Override
+	public boolean isEirods() throws JargonException {
+
+		log.info("isEirods()");
+
+		String isEirods = findValueInCache(DiscoveredServerPropertiesCache.EIRODS);
+
+		if (isEirods != null) {
+			return Boolean.valueOf(isEirods);
+		}
+
+		log.info("cache miss");
+
+		String coreRules = showLoadedRules();
+		boolean eirods = false;
+		if (coreRules.indexOf("isEiRODS") > -1) {
+			eirods = true;
+		}
+
+		log.info("is eirods?: {}", eirods);
+
+		log.info("saving in cache and server properties");
+
+		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS, "true");
+		IRODSServerProperties props = getIRODSServerProperties();
+		props.setEirods(eirods);
+		getIRODSSession().getDiscoveredServerPropertiesCache()
+				.cacheIRODSServerProperties(getIRODSAccount().getHost(),
+						getIRODSAccount().getZone(), props);
+		return eirods;
+
 	}
 
 	/*
@@ -127,6 +206,15 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isStrictACLs() throws JargonException {
 		log.info("isSrictACLs()");
+
+		String strictAcls = findValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS);
+
+		if (strictAcls != null) {
+			return Boolean.valueOf(strictAcls);
+		}
+
+		log.info("cache miss");
+
 		String coreRules = showLoadedRules();
 		boolean isStrict = false;
 		if (coreRules.indexOf("STRICT") > -1) {
@@ -135,6 +223,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		log.info("is strict ACLs?: {}", isStrict);
 
+		storeValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS, "true");
 		return isStrict;
 	}
 
@@ -144,11 +233,12 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
-	@Overheaded
-	// BUG [#1663] iRODS environment shows 'rods3.0' as version
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
-		if (getIRODSServerProperties()
+
+		if (isEirods()) {
+			return true;
+		} else if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;
 		} else {

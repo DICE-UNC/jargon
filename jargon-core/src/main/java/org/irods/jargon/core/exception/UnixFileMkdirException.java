@@ -18,30 +18,30 @@ public class UnixFileMkdirException extends JargonException {
 	 */
 	private static final long serialVersionUID = 9091779739237845919L;
 
-	public UnixFileMkdirException(String message,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileMkdirException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileMkdirException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileMkdirException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileMkdirException(String message, Throwable cause) {
+	public UnixFileMkdirException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public UnixFileMkdirException(String message) {
+	public UnixFileMkdirException(final String message) {
 		super(message);
 	}
 
-	public UnixFileMkdirException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileMkdirException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileMkdirException(Throwable cause) {
+	public UnixFileMkdirException(final Throwable cause) {
 		super(cause);
 	}
 

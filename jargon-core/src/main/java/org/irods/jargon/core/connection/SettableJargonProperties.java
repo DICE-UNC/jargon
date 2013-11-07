@@ -731,7 +731,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            the usingSpecQueryForDataObjPermissionsForUserInGroup to set
 	 */
 	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
-			boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
+			final boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
 		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
@@ -755,14 +755,16 @@ public class SettableJargonProperties implements JargonProperties {
 		this.pamTimeToLive = pamTimeToLive;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
 	 */
 	@Override
 	public synchronized boolean isForcePamFlush() {
 		return forcePamFlush;
 	}
-	
+
 	public synchronized void setForcePamFlush(final boolean forcePamFlush) {
 		this.forcePamFlush = forcePamFlush;
 	}

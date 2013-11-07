@@ -50,7 +50,9 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 		log.info("getUploadsDirectory()");
 		String homeDirectory = getUploadsDirName();
 		log.info("home directory is set to:{}", homeDirectory);
-		IRODSFile homeDirFile = this.getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount).instanceIRODSFile(homeDirectory);
+		IRODSFile homeDirFile = this.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(homeDirectory);
 		log.info("making uploads directory if it does not exist");
 		if (!homeDirFile.exists()) {
 			homeDirFile.mkdirs();
@@ -58,16 +60,22 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 		homeDirFile.reset();
 		return homeDirFile;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory()
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory
+	 * ()
 	 */
 	@Override
 	public void deleteUploadsDirectory() throws JargonException {
 		log.info("deleteUploadsDirectory()");
 		String homeDirectory = getUploadsDirName();
 		log.info("home directory is set to:{}", homeDirectory);
-		IRODSFile homeDirFile = this.getIrodsAccessObjectFactory().getIRODSFileFactory(irodsAccount).instanceIRODSFile(homeDirectory);
+		IRODSFile homeDirFile = this.getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(homeDirectory);
 		homeDirFile.deleteWithForceOption();
 		log.info("deleted");
 	}

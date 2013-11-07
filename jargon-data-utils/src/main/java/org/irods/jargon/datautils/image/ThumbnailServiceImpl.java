@@ -116,17 +116,20 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 			throw new IllegalArgumentException(
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
-		
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.getIrodsAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
-		
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
+
 		String myPath;
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			myPath = objStat.getObjectPath();
 		} else {
 			myPath = irodsAbsolutePathToGenerateThumbnailFor;
 		}
-		
+
 		File targetTempFile = createWorkingDirectoryImageFile(workingDirectory,
 				irodsAbsolutePathToGenerateThumbnailFor);
 
@@ -219,11 +222,12 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 
 		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
 				irodsAbsolutePathToGenerateThumbnailFor);
-		
-		
-		
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.getIrodsAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(irodsAccount);
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
+				.getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
 		log.info("objStat for photo:{}", objStat);
 		String myPath;
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
@@ -231,9 +235,8 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		} else {
 			myPath = irodsAbsolutePathToGenerateThumbnailFor;
 		}
-		
+
 		log.info("using path:{}", myPath);
-		
 
 		// get Base64 Encoded data from a rule invocation, this represents the
 		// generated thumbnail

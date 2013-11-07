@@ -172,15 +172,16 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	private void addPublicAccessForADataObject(final String irodsAbsolutePath,
 			final FilePermissionEnum filePermissionForTargetPath,
 			final FilePermissionEnum optionalFilePermissionForParentCollection,
-			ObjStat objStat) throws JargonException, IllegalArgumentException {
+			final ObjStat objStat) throws JargonException,
+			IllegalArgumentException {
 		// if no permission to the data object, set to the provided
 		UserFilePermission userFilePermission = dataObjectAO
 				.getPermissionForDataObjectForUserName(irodsAbsolutePath,
 						getAnonymousUserName());
 		if (userFilePermission == null
 				|| userFilePermission.getFilePermissionEnum()
-				.getPermissionNumericValue() < filePermissionForTargetPath
-				.getPermissionNumericValue()) {
+						.getPermissionNumericValue() < filePermissionForTargetPath
+						.getPermissionNumericValue()) {
 			log.info("replace permission value with higher given value");
 
 			if (filePermissionForTargetPath == FilePermissionEnum.NONE
@@ -188,17 +189,14 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 				throw new IllegalArgumentException(
 						"cannot set permission to null or none here");
 			} else if (filePermissionForTargetPath == FilePermissionEnum.READ) {
-				dataObjectAO.setAccessPermissionRead(
-						irodsAccount.getZone(), objStat.getAbsolutePath(),
-						this.getAnonymousUserName());
+				dataObjectAO.setAccessPermissionRead(irodsAccount.getZone(),
+						objStat.getAbsolutePath(), this.getAnonymousUserName());
 			} else if (filePermissionForTargetPath == FilePermissionEnum.WRITE) {
-				dataObjectAO.setAccessPermissionWrite(
-						irodsAccount.getZone(), objStat.getAbsolutePath(),
-						this.getAnonymousUserName());
+				dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(),
+						objStat.getAbsolutePath(), this.getAnonymousUserName());
 			} else if (filePermissionForTargetPath == FilePermissionEnum.OWN) {
 				dataObjectAO.setAccessPermissionOwn(irodsAccount.getZone(),
-						objStat.getAbsolutePath(),
-						this.getAnonymousUserName());
+						objStat.getAbsolutePath(), this.getAnonymousUserName());
 			}
 
 			// if optional permission for target not specified, make it
@@ -224,22 +222,20 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 			String parentPath = dataObjectFile.getParent();
 
 			if (operativeFilePermission == FilePermissionEnum.READ) {
-				collectionAO.setAccessPermissionRead(
-						irodsAccount.getZone(), parentPath,
-						this.getAnonymousUserName(), true);
+				collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
+						parentPath, this.getAnonymousUserName(), true);
 			} else if (operativeFilePermission == FilePermissionEnum.WRITE) {
-				collectionAO.setAccessPermissionWrite(
-						irodsAccount.getZone(), parentPath,
-						this.getAnonymousUserName(), true);
+				collectionAO.setAccessPermissionWrite(irodsAccount.getZone(),
+						parentPath, this.getAnonymousUserName(), true);
 			} else if (operativeFilePermission == FilePermissionEnum.OWN) {
 				collectionAO.setAccessPermissionOwn(irodsAccount.getZone(),
 						parentPath, this.getAnonymousUserName(), true);
 			}
-			
+
 			log.info("setting inheritance bit...");
 			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
 					parentPath, true);
-			
+
 		}
 	}
 
@@ -252,14 +248,15 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	 */
 	private void addPublicAccessForACollection(final String irodsAbsolutePath,
 			final FilePermissionEnum filePermissionForTargetPath,
-			ObjStat objStat) throws JargonException, IllegalArgumentException {
+			final ObjStat objStat) throws JargonException,
+			IllegalArgumentException {
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(irodsAbsolutePath,
 						getAnonymousUserName());
 		if (userFilePermission == null
 				|| userFilePermission.getFilePermissionEnum()
-				.getPermissionNumericValue() < filePermissionForTargetPath
-				.getPermissionNumericValue()) {
+						.getPermissionNumericValue() < filePermissionForTargetPath
+						.getPermissionNumericValue()) {
 			log.info("replace permission value with higher given value");
 
 			if (filePermissionForTargetPath == FilePermissionEnum.NONE
@@ -267,17 +264,17 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 				throw new IllegalArgumentException(
 						"cannot set permission to null or none here");
 			} else if (filePermissionForTargetPath == FilePermissionEnum.READ) {
-				collectionAO.setAccessPermissionRead(
-						irodsAccount.getZone(), objStat.getAbsolutePath(),
-						this.getAnonymousUserName(), true);
+				collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
+						objStat.getAbsolutePath(), this.getAnonymousUserName(),
+						true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.WRITE) {
-				collectionAO.setAccessPermissionWrite(
-						irodsAccount.getZone(), objStat.getAbsolutePath(),
-						this.getAnonymousUserName(), true);
+				collectionAO.setAccessPermissionWrite(irodsAccount.getZone(),
+						objStat.getAbsolutePath(), this.getAnonymousUserName(),
+						true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.OWN) {
 				collectionAO.setAccessPermissionOwn(irodsAccount.getZone(),
-						objStat.getAbsolutePath(),
-						this.getAnonymousUserName(), true);
+						objStat.getAbsolutePath(), this.getAnonymousUserName(),
+						true);
 			}
 			log.info("setting inheritance bit...");
 			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),

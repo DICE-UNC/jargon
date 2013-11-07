@@ -3,7 +3,7 @@ package org.irods.jargon.datautils.sharing;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -50,9 +50,9 @@ public class AnonymousAccessServiceImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-
 	@Test
-	public final void testIsAnonymousAccessSetUpForDataObjectWithAnonymousAccess() throws Exception {
+	public final void testIsAnonymousAccessSetUpForDataObjectWithAnonymousAccess()
+			throws Exception {
 		String testFileName = "testIsAnonymousAccessSetUpForDataObjectWithAnonymousAccess.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -70,7 +70,9 @@ public class AnonymousAccessServiceImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
-		DataTransferOperations dto = irodsFileSystem.getIRODSAccessObjectFactory().getDataTransferOperations(irodsAccount);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
 		dto.putOperation(sourceFile, irodsFile, null, null);
 
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
@@ -82,7 +84,7 @@ public class AnonymousAccessServiceImplTest {
 				.isAnonymousAccessSetUp(irodsFile.getAbsolutePath() + "/"
 						+ testFileName);
 
-		TestCase.assertTrue("did not have expected access", hasAccess);
+		Assert.assertTrue("did not have expected access", hasAccess);
 	}
 
 	@Test(expected = FileNotFoundException.class)
@@ -102,9 +104,8 @@ public class AnonymousAccessServiceImplTest {
 
 		AnonymousAccessService anonymousAccessService = new AnonymousAccessServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
-		anonymousAccessService
-				.isAnonymousAccessSetUp(irodsFile.getAbsolutePath() + "/"
-						+ testFileName);
+		anonymousAccessService.isAnonymousAccessSetUp(irodsFile
+				.getAbsolutePath() + "/" + testFileName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -147,11 +148,10 @@ public class AnonymousAccessServiceImplTest {
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		anonymousAccessService.setAnonymousUserName(null);
 		anonymousAccessService.isAnonymousAccessSetUp(irodsFile
-				.getAbsolutePath() + "/"
-				+ testFileName);
+				.getAbsolutePath() + "/" + testFileName);
 
 	}
-	
+
 	/**
 	 * Test read access set on collection and data object
 	 * 
@@ -174,8 +174,8 @@ public class AnonymousAccessServiceImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(
+				irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
@@ -197,7 +197,7 @@ public class AnonymousAccessServiceImplTest {
 		boolean hasAccess = anonymousAccessService
 				.isAnonymousAccessSetUp(targetFileName);
 
-		TestCase.assertTrue("anonymous access not set", hasAccess);
+		Assert.assertTrue("anonymous access not set", hasAccess);
 
 		// make sure read and inheritance on collection
 
@@ -206,15 +206,15 @@ public class AnonymousAccessServiceImplTest {
 		boolean inheritance = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("inheritance not set on parent collection",
+		Assert.assertTrue("inheritance not set on parent collection",
 				inheritance);
 
 		hasAccess = anonymousAccessService
 				.isAnonymousAccessSetUp(targetIrodsCollection);
 
-		TestCase.assertTrue("collection does not have read access", hasAccess);
+		Assert.assertTrue("collection does not have read access", hasAccess);
 
-		TestCase.assertTrue("did not have expected access", hasAccess);
+		Assert.assertTrue("did not have expected access", hasAccess);
 	}
 
 	/**
@@ -268,8 +268,8 @@ public class AnonymousAccessServiceImplTest {
 				.getPermissionForDataObject(targetFileName,
 						IRODSAccount.PUBLIC_USERNAME, "");
 
-		TestCase.assertTrue("anonymous access not set", hasAccess);
-		TestCase.assertTrue("not write on data object",
+		Assert.assertTrue("anonymous access not set", hasAccess);
+		Assert.assertTrue("not write on data object",
 				permission == FilePermissionEnum.WRITE);
 
 		// make sure read and inheritance on collection
@@ -279,17 +279,17 @@ public class AnonymousAccessServiceImplTest {
 		boolean inheritance = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("inheritance not set on parent collection",
+		Assert.assertTrue("inheritance not set on parent collection",
 				inheritance);
 
 		permission = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, IRODSAccount.PUBLIC_USERNAME, "");
 
-		TestCase.assertTrue("not read", permission == FilePermissionEnum.WRITE);
+		Assert.assertTrue("not read", permission == FilePermissionEnum.WRITE);
 
-		TestCase.assertTrue("collection does not have write access", hasAccess);
+		Assert.assertTrue("collection does not have write access", hasAccess);
 
-		TestCase.assertTrue("did not have expected access", hasAccess);
+		Assert.assertTrue("did not have expected access", hasAccess);
 	}
 
 	/**
@@ -343,8 +343,8 @@ public class AnonymousAccessServiceImplTest {
 				.getPermissionForDataObject(targetFileName,
 						IRODSAccount.PUBLIC_USERNAME, "");
 
-		TestCase.assertTrue("anonymous access not set", hasAccess);
-		TestCase.assertTrue("not own on data object",
+		Assert.assertTrue("anonymous access not set", hasAccess);
+		Assert.assertTrue("not own on data object",
 				permission == FilePermissionEnum.OWN);
 
 		// make sure read and inheritance on collection
@@ -354,17 +354,17 @@ public class AnonymousAccessServiceImplTest {
 		boolean inheritance = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("inheritance not set on parent collection",
+		Assert.assertTrue("inheritance not set on parent collection",
 				inheritance);
 
 		permission = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, IRODSAccount.PUBLIC_USERNAME, "");
 
-		TestCase.assertTrue("not own", permission == FilePermissionEnum.OWN);
+		Assert.assertTrue("not own", permission == FilePermissionEnum.OWN);
 
-		TestCase.assertTrue("collection does not have own access", hasAccess);
+		Assert.assertTrue("collection does not have own access", hasAccess);
 
-		TestCase.assertTrue("did not have expected access", hasAccess);
+		Assert.assertTrue("did not have expected access", hasAccess);
 	}
 
 	/**
@@ -399,14 +399,14 @@ public class AnonymousAccessServiceImplTest {
 		boolean inheritance = collectionAO
 				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
 
-		TestCase.assertTrue("inheritance not set on parent collection",
+		Assert.assertTrue("inheritance not set on parent collection",
 				inheritance);
 
 		FilePermissionEnum permission = collectionAO
 				.getPermissionForCollection(targetIrodsCollection,
 						IRODSAccount.PUBLIC_USERNAME, "");
 
-		TestCase.assertTrue("not write", permission == FilePermissionEnum.WRITE);
+		Assert.assertTrue("not write", permission == FilePermissionEnum.WRITE);
 
 	}
 

@@ -35,22 +35,26 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(
-				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
+				irodsAccount, irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
 		Assert.assertNotNull("null factory", factory);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testConnectionCreatingPoolableObjectFactoryNullAccount() {
 		IRODSAccount irodsAccount = null;
-		 new ConnectionCreatingPoolableObjectFactory(
-					irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());	}
+		new ConnectionCreatingPoolableObjectFactory(irodsAccount,
+				irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
+	}
 
 	@Test
 	public void testMakeObject() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		ConnectionCreatingPoolableObjectFactory factory =  new ConnectionCreatingPoolableObjectFactory(
-				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
+		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(
+				irodsAccount, irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
 		Object conn = factory.makeObject();
 		Assert.assertNotNull("null connection returned", conn);
 		boolean isCommand = conn instanceof IRODSCommands;

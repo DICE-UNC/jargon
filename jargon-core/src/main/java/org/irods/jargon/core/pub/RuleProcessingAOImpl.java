@@ -203,9 +203,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		 * style rules
 		 */
 
+		boolean newFormatRule = IRODSRuleTranslator
+				.isUsingNewRuleSyntax(irodsRuleAsString);
+
+		log.info("is new format rule:{}", newFormatRule);
+
 		if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
-				&& IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString)) {
+				&& newFormatRule) {
 
 			log.debug("adding @external to the rule body");
 			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
@@ -367,7 +372,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		while (wasClientAction) {
 			log.info("get additional information for subsequent responses");
 
-			Tag subsequentResultTag = this.operationComplete(0);
+			Tag subsequentResultTag = operationComplete(0);
 
 			/*
 			 * Per comment above, read and discard intermediate status protocol
@@ -375,7 +380,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			 */
 
 			if (subsequentResultTag == null) {
-				subsequentResultTag = this.getIRODSProtocol().readMessage();
+				subsequentResultTag = getIRODSProtocol().readMessage();
 			}
 
 			if (subsequentResultTag == null) {
@@ -403,6 +408,24 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		log.info("execute result: {}", irodsRuleExecResult);
 		return irodsRuleExecResult;
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeRuleFromDelayedExecQueue
+	 * (int)
+	 */
+	@Override
+	public void purgeRuleFromDelayedExecQueue(final int queueId)
+			throws JargonException {
+		log.info("purgeRuleFromDelayedExecQueue()");
+		RuleExecDelInp ruleExecDelInp = null;
+		log.info("deleting rule with id:{}", queueId);
+		ruleExecDelInp = RuleExecDelInp.instanceForDeleteRule(String
+				.valueOf(queueId));
+		getIRODSProtocol().irodsFunction(ruleExecDelInp);
 	}
 
 	/*
@@ -575,8 +598,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 								type, value, msParam)));
 
 			} else if (label.equals(RULE_EXEC_OUT)) {
-				irodsRuleOutputParameters.putAll(this
-						.extractStringFromExecCmdOut(msParam));
+				irodsRuleOutputParameters
+						.putAll(extractStringFromExecCmdOut(msParam));
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));

@@ -171,7 +171,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 		// if it is a query it will remove all matching queries whether or not a
 		// unique alias
 		// is supplied!
-		if (action == SQ_RM) {
+		if (action.equals(SQ_RM)) {
 			// check to see if this is remove by alias - if so put alias name in
 			// arg2
 			if (arg2.equals(BLANK)) {

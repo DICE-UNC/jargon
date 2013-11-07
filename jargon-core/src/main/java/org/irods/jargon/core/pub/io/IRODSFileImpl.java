@@ -409,7 +409,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
-			
+
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}

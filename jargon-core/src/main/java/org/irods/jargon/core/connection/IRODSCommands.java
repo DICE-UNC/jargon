@@ -1711,12 +1711,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @return
 	 */
 	private boolean isPamFlush() {
-	
-		
+
 		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
 			return false;
 		}
-
 
 		if (this.pipelineConfiguration.isForcePamFlush()) {
 			return true;
@@ -1733,10 +1731,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * @param irodsServerProperties the irodsServerProperties to set
+	 * @param irodsServerProperties
+	 *            the irodsServerProperties to set
 	 */
 	synchronized void setIrodsServerProperties(
-			IRODSServerProperties irodsServerProperties) {
+			final IRODSServerProperties irodsServerProperties) {
 		this.irodsServerProperties = irodsServerProperties;
 	}
 

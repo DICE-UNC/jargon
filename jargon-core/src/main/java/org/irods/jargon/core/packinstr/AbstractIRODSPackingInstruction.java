@@ -98,7 +98,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 *            {@link SpecColInfo} parameter holding object
 	 * @return {@Tag} representation of the SpecColl_PI tag
 	 */
-	protected Tag createSpecCollTag(SpecColInfo specColInfo) {
+	protected Tag createSpecCollTag(final SpecColInfo specColInfo) {
 
 		if (specColInfo == null) {
 			throw new IllegalArgumentException("null specColInfo");

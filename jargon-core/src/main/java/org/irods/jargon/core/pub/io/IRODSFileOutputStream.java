@@ -85,7 +85,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 		if (irodsFile.exists()) {
 			log.info("deleting file, as this stream operation is overwriting");
-			irodsFile.delete();
+			irodsFile.deleteWithForceOption();
 			irodsFile.reset();
 		}
 

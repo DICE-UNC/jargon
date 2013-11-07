@@ -6,9 +6,6 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
-import org.irods.jargon.datautils.pagination.PagingActions;
-import org.irods.jargon.datautils.pagination.PagingAnalyser;
-import org.irods.jargon.datautils.pagination.PagingIndexEntry;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -17,13 +14,13 @@ public class PagingAnalyserTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 	}
-	
+
 	/**
 	 * 
 	 * 10000 files, 5000 page size, on first page
 	 * 
 	 */
-	
+
 	@Test
 	public void testBuild10000RowsFirstPage5000PageSize() {
 		List<IRODSDomainObject> irodsDomainObjects = new ArrayList<IRODSDomainObject>();
@@ -44,33 +41,19 @@ public class PagingAnalyserTest {
 		Assert.assertNotNull("null pagingActions", pagingActions);
 
 		/*
-		 * PagingActions
-	 minValue:0
-	 maxValue:10000
-	 pageSize:5000[PagingIndexEntry:
-	 indexType:INDEX
-	 representation:1
-	 index:0
-	 current:true, PagingIndexEntry:
-	 indexType:INDEX
-	 representation:2
-	 index:5000
-	 current:false, PagingIndexEntry:
-	 indexType:NEXT
-	 representation:>
-	 index:5000
-	 current:false, PagingIndexEntry:
-	 indexType:LAST
-	 representation:>>
-	 index:5000
-	 current:false]
+		 * PagingActions minValue:0 maxValue:10000
+		 * pageSize:5000[PagingIndexEntry: indexType:INDEX representation:1
+		 * index:0 current:true, PagingIndexEntry: indexType:INDEX
+		 * representation:2 index:5000 current:false, PagingIndexEntry:
+		 * indexType:NEXT representation:> index:5000 current:false,
+		 * PagingIndexEntry: indexType:LAST representation:>> index:5000
+		 * current:false]
 		 */
-		
+
 		Assert.assertNotNull("null pagingActions", pagingActions);
 
 		Assert.assertEquals("did not get the expected 4 pages", 4,
 				pagingActions.getPagingIndexEntries().size());
-
 
 		// index 1
 		Assert.assertEquals("expected index of 1 should be an index type",
@@ -94,7 +77,7 @@ public class PagingAnalyserTest {
 				pagingActions.getPagingIndexEntries().get(1).getIndex());
 		Assert.assertFalse("should not be current", pagingActions
 				.getPagingIndexEntries().get(1).isCurrent());
-		
+
 		// next should point to index 2 values
 		Assert.assertEquals("prev type expected",
 				PagingIndexEntry.IndexType.NEXT, pagingActions
@@ -112,15 +95,13 @@ public class PagingAnalyserTest {
 						.getRepresentation());
 		Assert.assertEquals("expected index of last should start at 5000",
 				5000, pagingActions.getPagingIndexEntries().get(3).getIndex());
-	
+
 	}
-	
-	
-	
 
 	/**
 	 * be on 4th page of a 3000 record set with page size of 500 page1 = 0-499
-	 * page2 = 500-999 page3 = 1000-1499 page4 = 1500-1999 page5=2000-2499 page6=2500-3000
+	 * page2 = 500-999 page3 = 1000-1499 page4 = 1500-1999 page5=2000-2499
+	 * page6=2500-3000
 	 */
 	@Test
 	public void testBuildPagingActionsFromListOfIRODSDomainObjects() {
@@ -257,8 +238,7 @@ public class PagingAnalyserTest {
 						irodsDomainObjects, 5500);
 		Assert.assertNotNull("null pagingActions", pagingActions);
 	}
-	
-	
+
 	/**
 	 * be on a 1 page set, no pagination, no indexes should be there
 	 */
@@ -275,9 +255,10 @@ public class PagingAnalyserTest {
 				.buildPagingActionsFromListOfIRODSDomainObjects(
 						irodsDomainObjects, 5000);
 		Assert.assertNotNull("null pagingActions", pagingActions);
-		Assert.assertEquals("should be no indexes here", 0, pagingActions.getPagingIndexEntries().size());
+		Assert.assertEquals("should be no indexes here", 0, pagingActions
+				.getPagingIndexEntries().size());
 	}
-	
+
 	@Test
 	public void testGetCurrentWhenOnPage4() {
 		List<IRODSDomainObject> irodsDomainObjects = new ArrayList<IRODSDomainObject>();

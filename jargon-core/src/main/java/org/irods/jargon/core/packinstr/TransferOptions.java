@@ -308,7 +308,7 @@ public class TransferOptions {
 	 * @param putOption
 	 *            the putOption to set
 	 */
-	public void setPutOption(PutOptions putOption) {
+	public void setPutOption(final PutOptions putOption) {
 		this.putOption = putOption;
 	}
 

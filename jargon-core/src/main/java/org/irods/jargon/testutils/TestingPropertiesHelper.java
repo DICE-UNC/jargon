@@ -62,6 +62,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_PAM_PASSWORD_KEY = "jargon.test.pam.password";
 	public static String IRODS_CONFIRM_TESTING_TRUE = "true";
 	public static String IRODS_CONFIRM_TESTING_FALSE = "false";
+	public static String IRODS_TEST_OPTION_EIRODS = "test.option.eirods";
 
 	/**
 	 * Return the given property (by key) as an int
@@ -681,6 +682,43 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
+	 * given collection in the IRODS test scratch area on IRODS for the rods
+	 * user
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> that define test behavior
+	 * @param collectionPathBelowScratch
+	 *            <code>String</code> with no leading '/' that defines the
+	 *            desired path underneath the IRODS scratch directory
+	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 *         path for an IRODS collection
+	 * @throws TestingUtilsException
+	 * @throws URISyntaxException
+	 */
+	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
+
+		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_ZONE_KEY));
+		pathBuilder.append("/home/");
+		pathBuilder.append("rods");
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_SCRATCH_DIR_KEY));
+		pathBuilder.append('/');
+		pathBuilder.append(collectionPathBelowScratch);
+		return pathBuilder.toString();
+	}
+
+	/**
+	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS on the
 	 * configured federated zone.
 	 * 
@@ -978,6 +1016,22 @@ public class TestingPropertiesHelper {
 	 */
 	public boolean isTestStrictACL(final Properties testingProperties) {
 		String val = (String) testingProperties.get("test.option.strictACL");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Are we testing eirods?
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestEirods(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get(TestingPropertiesHelper.IRODS_TEST_OPTION_EIRODS);
 		if (val == null) {
 			return false;
 		} else {

@@ -45,39 +45,7 @@ public class IRODSRuleTranslator {
 			final String ruleAsPlainText) throws JargonRuleException,
 			JargonException {
 
-		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
-			throw new IllegalArgumentException("null or empty rule text");
-		}
-
-		log.info("translating rule: {}", ruleAsPlainText);
-		StringTokenizer tokens = new StringTokenizer(ruleAsPlainText, "\n");
-		List<String> tokenLines = new ArrayList<String>();
-
-		while (tokens.hasMoreElements()) {
-			tokenLines.add(tokens.nextToken());
-		}
-
-		String ruleBody = processRuleBody(tokenLines);
-
-		if (tokenLines.size() < 3) {
-			log.error(
-					"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
-					ruleAsPlainText);
-			throw new JargonRuleException(
-					"Rule requires at least 3 lines for body, input, and output parameters");
-		}
-
-		// process the rule attributes, line above last
-		List<IRODSRuleParameter> inputParameters = processRuleInputAttributesLine(tokenLines
-				.get(tokenLines.size() - 2));
-
-		List<IRODSRuleParameter> outputParameters = processRuleOutputAttributesLine(tokenLines
-				.get(tokenLines.size() - 1));
-
-		IRODSRule irodsRule = IRODSRule.instance(ruleAsPlainText,
-				inputParameters, outputParameters, ruleBody);
-
-		return irodsRule;
+		return translatePlainTextRuleIntoIRODSRule(ruleAsPlainText, null);
 	}
 
 	/**
@@ -102,40 +70,84 @@ public class IRODSRuleTranslator {
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
+
 		String trimmedRule = ruleAsPlainText.trim();
 
+		boolean newFormatRule = IRODSRuleTranslator
+				.isUsingNewRuleSyntax(trimmedRule);
 		StringTokenizer tokens = new StringTokenizer(trimmedRule, "\n");
 		List<String> tokenLines = new ArrayList<String>();
 
 		while (tokens.hasMoreElements()) {
-			tokenLines.add(tokens.nextToken());
+			String token = (String) tokens.nextElement();
+			if (!token.trim().isEmpty()) {
+				tokenLines.add(token);
+			}
 		}
 
-		String ruleBody = processRuleBody(tokenLines);
+		List<IRODSRuleParameter> inputParameters;
+		List<IRODSRuleParameter> outputParameters;
+		IRODSRule irodsRule;
 
-		if (tokenLines.size() < 3) {
-			log.error(
-					"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
-					trimmedRule);
-			throw new JargonRuleException(
-					"Rule requires at least 3 lines for body, input, and output parameters");
+		if (newFormatRule) {
+			log.info("parsing in new format");
+			RuleCharacteristics ruleCharacteristics = processRuleBodyNewFormat(tokenLines);
+
+			if (ruleCharacteristics == null) {
+				throw new JargonRuleException("unable to parse rule");
+			}
+			// process the rule attributes, as they exist
+
+			if (ruleCharacteristics.getInputLineIndex() != -1) {
+				inputParameters = processRuleInputAttributesLine(tokenLines
+						.get(ruleCharacteristics.getInputLineIndex()));
+			} else {
+				inputParameters = new ArrayList<IRODSRuleParameter>();
+			}
+
+			if (overrideInputParameters != null) {
+				log.info("will override parameters");
+				inputParameters = collateOverridesIntoInputParameters(
+						overrideInputParameters, inputParameters);
+			}
+
+			if (ruleCharacteristics.getInputLineIndex() != -1) {
+
+				outputParameters = processRuleOutputAttributesLine(tokenLines
+						.get(ruleCharacteristics.getOutputLineIndex()));
+			} else {
+				outputParameters = new ArrayList<IRODSRuleParameter>();
+			}
+
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
+					outputParameters, ruleCharacteristics.getRuleBody());
+		} else {
+			log.info("parsing in old format");
+			if (tokenLines.size() < 3) {
+				log.error(
+						"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
+						trimmedRule);
+				throw new JargonRuleException(
+						"Rule requires at least 3 lines for body, input, and output parameters");
+			}
+
+			// process the rule attributes, line above last
+			inputParameters = processRuleInputAttributesLine(tokenLines
+					.get(tokenLines.size() - 2));
+
+			if (overrideInputParameters != null) {
+				log.info("will override parameters");
+				inputParameters = collateOverridesIntoInputParameters(
+						overrideInputParameters, inputParameters);
+			}
+
+			outputParameters = processRuleOutputAttributesLine(tokenLines
+					.get(tokenLines.size() - 1));
+
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
+					outputParameters, processRuleBodyOldFormat(tokenLines));
+
 		}
-
-		// process the rule attributes, line above last
-		List<IRODSRuleParameter> inputParameters = processRuleInputAttributesLine(tokenLines
-				.get(tokenLines.size() - 2));
-
-		if (overrideInputParameters != null) {
-			log.info("will override parameters");
-			inputParameters = collateOverridesIntoInputParameters(
-					overrideInputParameters, inputParameters);
-		}
-
-		List<IRODSRuleParameter> outputParameters = processRuleOutputAttributesLine(tokenLines
-				.get(tokenLines.size() - 1));
-
-		IRODSRule irodsRule = IRODSRule.instance(ruleAsPlainText,
-				inputParameters, outputParameters, ruleBody);
 
 		return irodsRule;
 	}
@@ -217,7 +229,56 @@ public class IRODSRuleTranslator {
 	 * @param tokens
 	 * @return
 	 */
-	static String processRuleBody(final List<String> tokenLines) {
+	static RuleCharacteristics processRuleBodyNewFormat(
+			final List<String> tokenLines) {
+
+		// work backword to find input and output lines
+
+		if (tokenLines.size() == 0) {
+			return null;
+		}
+
+		// input and output lines may be at the end
+
+		int tokenInput = -1;
+		int tokenOutput = -1;
+		int lastRowOfRule = tokenLines.size();
+
+		for (int i = tokenLines.size() - 1; i >= 0; i--) {
+			if (tokenLines.get(i).toUpperCase().startsWith("OUTPUT")) {
+				tokenOutput = i;
+			} else if (tokenLines.get(i).toUpperCase().startsWith("INPUT")) {
+				tokenInput = i;
+			} else {
+				lastRowOfRule = i;
+				break;
+			}
+		}
+
+		StringBuilder total = new StringBuilder();
+		// if formatting error, such as only one line, below breaks
+		for (int i = 0; i <= lastRowOfRule; i++) {
+
+			total.append(tokenLines.get(i));
+			total.append("\n");
+		}
+
+		// find the rule
+
+		RuleCharacteristics ruleCharacteristics = new RuleCharacteristics();
+		ruleCharacteristics.setInputLineIndex(tokenInput);
+		ruleCharacteristics.setOutputLineIndex(tokenOutput);
+		ruleCharacteristics.setLastLineOfBody(lastRowOfRule);
+		ruleCharacteristics.setRuleBody(total.toString());
+
+		return ruleCharacteristics;
+	}
+
+	/**
+	 * @param tokens
+	 * @return
+	 */
+	static String processRuleBodyOldFormat(final List<String> tokenLines) {
 		StringBuilder total = new StringBuilder();
 		// if formatting error, such as only one line, below breaks
 		int ctr = 0;
@@ -372,8 +433,15 @@ public class IRODSRuleTranslator {
 		}
 
 		while (inputParmsTokenizer.hasMoreTokens()) {
-			inputAttributes.add(processInputParmsToken(inputParmsTokenizer
-					.nextToken()));
+
+			IRODSRuleParameter param = processInputParmsToken(inputParmsTokenizer
+					.nextToken());
+
+			if (param != null) {
+				inputAttributes.add(param);
+
+			}
+
 		}
 		return inputAttributes;
 	}
@@ -397,6 +465,10 @@ public class IRODSRuleTranslator {
 
 		RuleInputParameter param = RuleParsingUtils
 				.parseInputParameterForNameAndValue(nextToken);
+
+		if (param == null) {
+			return null;
+		}
 
 		if (param.getParamName().indexOf(SPLAT) == -1) {
 			throw new JargonRuleException(
@@ -441,4 +513,44 @@ public class IRODSRuleTranslator {
 		return isNew;
 
 	}
+}
+
+class RuleCharacteristics {
+	private String ruleBody = "";
+	private int lastLineOfBody = -1;
+	private int inputLineIndex = -1;
+	private int outputLineIndex = -1;
+
+	public String getRuleBody() {
+		return ruleBody;
+	}
+
+	public void setRuleBody(final String ruleBody) {
+		this.ruleBody = ruleBody;
+	}
+
+	public int getLastLineOfBody() {
+		return lastLineOfBody;
+	}
+
+	public void setLastLineOfBody(final int lastLineOfBody) {
+		this.lastLineOfBody = lastLineOfBody;
+	}
+
+	public int getInputLineIndex() {
+		return inputLineIndex;
+	}
+
+	public void setInputLineIndex(final int inputLineIndex) {
+		this.inputLineIndex = inputLineIndex;
+	}
+
+	public int getOutputLineIndex() {
+		return outputLineIndex;
+	}
+
+	public void setOutputLineIndex(final int outputLineIndex) {
+		this.outputLineIndex = outputLineIndex;
+	}
+
 }

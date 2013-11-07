@@ -28,32 +28,42 @@ public class TempPasswordCachingProtocolManager extends
 	private final IRODSAccount irodsAccount;
 	private final IRODSSession irodsSession;
 	private final IRODSProtocolManager baseProtocolManager;
-	
+
 	private GenericObjectPool objectPool = null;
 
 	private Logger log = LoggerFactory
 			.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
-	 * Create a protocol manager that will cache a single temporary connection in a pool for reuse.  This is because temp passwords are one-time only.  This allows
-	 * client applications to (somewhat) transparently simulate the ability to get a connection on-demand.  This is used in idrop-lite, for example.
-	 * @param irodsAccount {@link IRODSAccount} for the underlying cached account
-	 * @param irodsSession {@link IRODSSession} that is used to obtain the account
-	 * @param baseProtocolManager {@link IRODSProtocolManager} that gets the actual connected account that is subsequently cached
+	 * Create a protocol manager that will cache a single temporary connection
+	 * in a pool for reuse. This is because temp passwords are one-time only.
+	 * This allows client applications to (somewhat) transparently simulate the
+	 * ability to get a connection on-demand. This is used in idrop-lite, for
+	 * example.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for the underlying cached account
+	 * @param irodsSession
+	 *            {@link IRODSSession} that is used to obtain the account
+	 * @param baseProtocolManager
+	 *            {@link IRODSProtocolManager} that gets the actual connected
+	 *            account that is subsequently cached
 	 * @throws JargonException
 	 */
-	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount, final IRODSSession irodsSession, final IRODSProtocolManager baseProtocolManager)
+	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount,
+			final IRODSSession irodsSession,
+			final IRODSProtocolManager baseProtocolManager)
 			throws JargonException {
 		super();
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		if (irodsSession == null) {
 			throw new IllegalArgumentException("null irodsSession");
 		}
-		
+
 		if (baseProtocolManager == null) {
 			throw new IllegalArgumentException("null baseProtocolManager");
 		}
@@ -75,8 +85,8 @@ public class TempPasswordCachingProtocolManager extends
 	 */
 	@Override
 	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
-			throws JargonException {
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSSession irodsSession) throws JargonException {
 		try {
 			IRODSCommands command = (IRODSCommands) objectPool.borrowObject();
 			command.setIrodsProtocolManager(this);
@@ -159,6 +169,5 @@ public class TempPasswordCachingProtocolManager extends
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
 	}
-
 
 }

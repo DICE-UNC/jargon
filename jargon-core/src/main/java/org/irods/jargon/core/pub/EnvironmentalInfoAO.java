@@ -93,4 +93,13 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
 
+	/**
+	 * Checks if the given server is eIRODS. Note that the result will be
+	 * cached, and will be available in iRODS server properties
+	 * 
+	 * @return
+	 * @throws JargonException
+	 */
+	boolean isEirods() throws JargonException;
+
 }
