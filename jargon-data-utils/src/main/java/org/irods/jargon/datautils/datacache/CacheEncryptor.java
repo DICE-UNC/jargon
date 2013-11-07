@@ -13,7 +13,7 @@ import javax.crypto.spec.PBEParameterSpec;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 
-class CacheEncryptor {
+public class CacheEncryptor {
 	Cipher ecipher;
 	Cipher dcipher;
 
@@ -24,7 +24,7 @@ class CacheEncryptor {
 	// Iteration count
 	int iterationCount = 19;
 
-	CacheEncryptor(final String passPhrase) {
+	public CacheEncryptor(final String passPhrase) {
 		try {
 			// Create the key
 			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt,
@@ -59,7 +59,7 @@ class CacheEncryptor {
 		}
 	}
 
-	protected byte[] encrypt(final byte[] data) throws JargonException {
+	public byte[] encrypt(final byte[] data) throws JargonException {
 		try {
 			// Encrypt
 			byte[] enc = ecipher.doFinal(data);
@@ -72,7 +72,7 @@ class CacheEncryptor {
 		}
 	}
 
-	protected byte[] decrypt(final byte[] data) throws JargonException {
+	public byte[] decrypt(final byte[] data) throws JargonException {
 		try {
 			// Decrypt
 			byte[] decoded = dcipher.doFinal(data);
@@ -84,6 +84,59 @@ class CacheEncryptor {
 					"IllegalBlockSizeException decrypting data", e);
 		}
 
+	}
+
+	/**
+	 * Takes a single String as an argument and returns an Encrypted version of
+	 * that String.
+	 * 
+	 * @param str
+	 *            String to be encrypted
+	 * @return <code>String</code> Encrypted version of the provided String
+	 */
+	@SuppressWarnings("restriction")
+	public String encrypt(String str) throws JargonException {
+		try {
+			// Encode the string into bytes using utf-8
+			byte[] utf8 = str.getBytes("UTF8");
+
+			// Encrypt
+			byte[] enc = ecipher.doFinal(utf8);
+
+			// Encode bytes to base64 to get a string
+			return new sun.misc.BASE64Encoder().encode(enc);
+
+		} catch (Exception e) {
+			throw new JargonException(e);
+		}
+
+	}
+
+	/**
+	 * Takes a encrypted String as an argument, decrypts and returns the
+	 * decrypted String.
+	 * 
+	 * @param str
+	 *            Encrypted String to be decrypted
+	 * @return <code>String</code> Decrypted version of the provided String
+	 */
+	@SuppressWarnings("restriction")
+	public String decrypt(String str) throws JargonException {
+
+		try {
+
+			// Decode base64 to get bytes
+			byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
+
+			// Decrypt
+			byte[] utf8 = dcipher.doFinal(dec);
+
+			// Decode using utf-8
+			return new String(utf8, "UTF8");
+
+		} catch (Exception e) {
+			throw new JargonException(e);
+		}
 	}
 
 }

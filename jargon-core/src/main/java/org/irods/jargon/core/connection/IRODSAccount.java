@@ -10,8 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Representation of an identity on IRODS. Contains info similar to that
- * contained in the .irodsEnv file. The main account attributes are immutable,
- * but certain elements are mutable as they may be updated during processing.
+ * contained in the .irodsEnv file.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -21,10 +20,6 @@ public class IRODSAccount implements Serializable {
 	private static final long serialVersionUID = 8627989693793656697L;
 	public static final String IRODS_JARGON_RELEASE_NUMBER = "rods3.2";
 	public static final String IRODS_API_VERSION = "d";
-
-	public enum AuthScheme {
-		STANDARD, GSI, KERBEROS, PAM
-	}
 
 	public static final boolean defaultObfuscate = false;
 	public static final String PUBLIC_USERNAME = "anonymous";
@@ -68,6 +63,69 @@ public class IRODSAccount implements Serializable {
 			final String defaultStorageResource) throws JargonException {
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource, userName, zone);
+	}
+
+	/**
+	 * Creates an object to hold iRODS account information. All parameters need
+	 * to be initialized to use this initializer. Note that this instance method
+	 * will set the auth scheme
+	 * 
+	 * @param host
+	 *            the iRODS server domain name
+	 * @param port
+	 *            the port on the iRODS server
+	 * @param userName
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @param homeDirectory
+	 *            home directory on the iRODS
+	 * @param zone
+	 *            the IRODS zone
+	 * @param defaultStorageResource
+	 *            default storage resource
+	 * @param authenticationScheme
+	 *            authenticationScheme to use
+	 */
+	public static IRODSAccount instance(final String host, final int port,
+			final String userName, final String password,
+			final String homeDirectory, final String zone,
+			final String defaultStorageResource,
+			final AuthScheme authenticationScheme) throws JargonException {
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("host is null or empty");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (password == null) {
+			throw new IllegalArgumentException("password is null");
+		}
+
+		if (homeDirectory == null) {
+			throw new IllegalArgumentException("homeDirectory is null");
+		}
+
+		if (zone == null || zone.isEmpty()) {
+			throw new IllegalArgumentException("zone is null or empty");
+		}
+
+		if (defaultStorageResource == null) {
+			throw new IllegalArgumentException("defaultStorageResource is null");
+		}
+
+		IRODSAccount irodsAccount = new IRODSAccount(host, port, userName,
+				password, homeDirectory, zone, defaultStorageResource);
+
+		if (authenticationScheme == null) {
+			throw new IllegalArgumentException("null authenticationScheme");
+		}
+
+		irodsAccount.setAuthenticationScheme(authenticationScheme);
+		return irodsAccount;
 	}
 
 	/**

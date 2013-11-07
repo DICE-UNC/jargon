@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.PropertyUtils;
 
 /**
  * Reference class that parses the default Jargon properties (jargon.properties)
@@ -98,12 +99,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	private String verifyPropExistsAndGetAsString(final String propKey) {
-		String propVal = ((String) jargonProperties.get(propKey)).trim();
-		if (propVal == null) {
-			throw new IllegalArgumentException(propKey
-					+ " not set in jargon.properties");
-		}
-		return propVal;
+		return PropertyUtils.verifyPropExistsAndGetAsString(jargonProperties, propKey);
 	}
 
 	/**
@@ -112,36 +108,16 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * @throws JargonException
 	 */
 	private int verifyPropExistsAndGetAsInt(final String propKey) {
-
-		String propVal = verifyPropExistsAndGetAsString(propKey);
-
-		try {
-			return Integer.parseInt(propVal);
-		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("prop " + propKey
-					+ "did not result in an int value, was:" + propVal);
-		}
+		return PropertyUtils.verifyPropExistsAndGetAsInt(jargonProperties, propKey);
 
 	}
 
 	private boolean verifyPropExistsAndGetAsBoolean(final String propKey) {
-
-		String propVal = verifyPropExistsAndGetAsString(propKey);
-		return Boolean.parseBoolean(propVal);
-
+		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties, propKey);
 	}
 
 	private long verifyPropExistsAndGetAsLong(final String propKey) {
-
-		String propVal = verifyPropExistsAndGetAsString(propKey);
-
-		try {
-			return Long.parseLong(propVal);
-		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException("prop " + propKey
-					+ "did not result in a long value, was:" + propVal);
-		}
-
+		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties, propKey);
 	}
 
 	/*

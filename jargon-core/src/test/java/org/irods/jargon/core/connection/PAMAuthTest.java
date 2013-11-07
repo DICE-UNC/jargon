@@ -4,7 +4,6 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -70,13 +69,13 @@ public class PAMAuthTest {
 		Assert.assertNotNull("no authenticating account",
 				authResponse.getAuthenticatingIRODSAccount());
 		Assert.assertEquals("did not set authenticating account to PAM type",
-				IRODSAccount.AuthScheme.PAM, authResponse
-						.getAuthenticatingIRODSAccount()
-						.getAuthenticationScheme());
+				AuthScheme.PAM, authResponse
+
+				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
 		Assert.assertNotNull("no authenticated account",
 				authResponse.getAuthenticatedIRODSAccount());
 		Assert.assertEquals("did not set authenticated account to std type",
-				IRODSAccount.AuthScheme.STANDARD, authResponse
+				AuthScheme.STANDARD, authResponse
 						.getAuthenticatedIRODSAccount()
 						.getAuthenticationScheme());
 		Assert.assertNotNull("did not set auth startup response",

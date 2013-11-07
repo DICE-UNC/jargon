@@ -13,9 +13,9 @@ iadmin mkuser test3 rodsuser
 
 iadmin moduser test3 password test
 
-iadmin mkresc test1-resc "unix file system" cache localhost "/opt/iRODS/iRODS3.2/Vault1"
+iadmin mkresc test1-resc "unix file system" cache centos6.irods.renci.org "/opt/irods/irods/Vault1"
 
-iadmin mkresc test1-resc2 "unix file system" cache localhost "/opt/iRODS/iRODS3.2/Vault2"
+iadmin mkresc test1-resc2 "unix file system" cache localhost "/opt/irods/irods/Vault2"
 
 iadmin atrg testResourceGroup test1-resc2
 

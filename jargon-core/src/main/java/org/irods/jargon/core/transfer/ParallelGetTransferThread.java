@@ -210,7 +210,14 @@ public final class ParallelGetTransferThread extends
 
 			while (length > 0) {
 
-				// log.debug("reading....");
+				if (Thread.interrupted()) {
+					throw new IOException(
+
+					"interrupted, consider connection corrupted and return IOException to clear");
+				}
+
+				log.debug("reading....");
+
 				read = getIn().read(
 						buffer,
 						0,

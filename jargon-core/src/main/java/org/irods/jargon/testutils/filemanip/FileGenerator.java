@@ -206,6 +206,9 @@ public class FileGenerator {
 		}
 
 		int range = max - min;
+		if (range <= 0) {
+			range = 2;
+		}
 		Random generator = new Random();
 		return min + generator.nextInt(range);
 	}
