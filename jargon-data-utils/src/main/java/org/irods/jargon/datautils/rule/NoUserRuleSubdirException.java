@@ -7,7 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class NoUserRuleSubdirException extends JargonException {
 
@@ -16,7 +16,7 @@ public class NoUserRuleSubdirException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public NoUserRuleSubdirException(String message) {
+	public NoUserRuleSubdirException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +24,14 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public NoUserRuleSubdirException(String message, Throwable cause) {
+	public NoUserRuleSubdirException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public NoUserRuleSubdirException(Throwable cause) {
+	public NoUserRuleSubdirException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,8 +40,8 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public NoUserRuleSubdirException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -49,8 +49,8 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public NoUserRuleSubdirException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,8 +58,8 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(String message,
-			int underlyingIRODSExceptionCode) {
+	public NoUserRuleSubdirException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

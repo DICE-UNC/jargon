@@ -723,9 +723,10 @@ public class MiscIRODSUtils {
 		return sb.toString();
 
 	}
-	
+
 	/**
 	 * Wrap the given string in " characters and return it
+	 * 
 	 * @param string
 	 * @return
 	 */
@@ -733,13 +734,13 @@ public class MiscIRODSUtils {
 		if (string == null) {
 			throw new IllegalArgumentException("null string");
 		}
-		
+
 		StringBuilder sBuilder = new StringBuilder();
 		sBuilder.append("\"");
 		sBuilder.append(string);
 		sBuilder.append("\"");
 		return sBuilder.toString();
-		
+
 	}
 
 }

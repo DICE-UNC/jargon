@@ -267,6 +267,11 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
+
+		if (environmentalInfoAO.isEirods()) {
+			return;
+		}
+
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 

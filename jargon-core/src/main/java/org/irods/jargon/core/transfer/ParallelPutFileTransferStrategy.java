@@ -132,8 +132,9 @@ public final class ParallelPutFileTransferStrategy extends
 				executorService = Executors.newFixedThreadPool(numberOfThreads);
 				transferWithExecutor(executorService);
 			} finally {
-				if (executorService != null)
+				if (executorService != null) {
 					executorService.shutdown();
+				}
 			}
 		} else {
 			log.info("transfer via executor");

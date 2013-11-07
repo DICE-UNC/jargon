@@ -1,12 +1,11 @@
 *'''Project''': Jargon-core API
 *'''Date''': 
-*'''Release Version''': 3.3.2 development
+*'''Release Version''': 3.3.3-SNAPSHOT
 *'''git tag''': 
 
 ==News==
 
-Development branch for 3.3.2 release
-
+Development branch for 3.3.3 release
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
@@ -26,7 +25,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3
+*Jargon supports iRODS 2.5 through iRODS 3.3, as well as eIRODS 3.0.1 beta
 
 ==Libraries==
 
@@ -36,16 +35,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-*[#1606] inconsistent objstat semantics for mounted collections
-**Added an overhead to this iRODS bug where an objStat for a file in a mounted collecton always returns an objStat even if the file exists.  This is filed under iRODS, but the force overwrite logic was changed in a bug overhead to always use force when putting to a mounted collection, and we'll wait for an iRODS fix.
-
-[#1635] ttl parameter in PAM missing
-**Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
-
-*[#1726] need to add back flushes for 3.2 compatability
-**add a force.pam.flush jargon property for pre 3.3 servers
-
 ==Features==
+
 
 *[#605] add mso object support
 **CollectionAndDataObjectListAndSearchAO now supports mounted collection types
@@ -55,7 +46,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1458] rule editor for user rules in idrop-web
 **Added jargon-ruleservice to support interactive editing and composition of rules in interfaces.  Additional fixes in rule processing and parsing based on new use cases and testing.
-
 
 *[#1776] add rule queue processing views
 **Added code to delete selected rule from queue and expanded testing

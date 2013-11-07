@@ -13,7 +13,7 @@ import java.util.Date;
  */
 public class IRODSServerProperties {
 
-	public static final String JARGON_VERSION = "2.2";
+	public static final String JARGON_VERSION = "3.3";
 
 	public enum IcatEnabled {
 		ICAT_ENABLED, NO_ICAT
@@ -25,6 +25,24 @@ public class IRODSServerProperties {
 	private final String relVersion;
 	private final String apiVersion;
 	private final String rodsZone;
+	private boolean eirods = false;
+
+	/**
+	 * This is a supplemental flag that indicates whether a server is eIRODS.
+	 * This is done separately due to the fact that it cannot be obtained at the
+	 * time the server properties are obtained. It is currently derived by
+	 * inspecting the actual core.re file. It is needed in subsequent
+	 * determinations this class does for version comparisons
+	 * 
+	 * @return <code>true</code> if the given server is an eIRODS servers
+	 */
+	public synchronized boolean isEirods() {
+		return eirods;
+	}
+
+	public synchronized void setEirods(final boolean eirods) {
+		this.eirods = eirods;
+	}
 
 	public static IRODSServerProperties instance(final IcatEnabled icatEnabled,
 			final int serverBootTime, final String relVersion,
@@ -94,7 +112,10 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
-		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+
+		if (this.isEirods()) {
+			supports = true;
+		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
 		}
 		return supports;
@@ -108,7 +129,10 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsTickets() {
 		boolean supports = false;
-		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+
+		if (this.isEirods()) {
+			supports = false;
+		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
 		}
 		return supports;
@@ -137,7 +161,10 @@ public class IRODSServerProperties {
 	 */
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
-		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
+
+		if (this.isEirods()) {
+			supports = true;
+		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;
 		}
 		return supports;
@@ -197,6 +224,10 @@ public class IRODSServerProperties {
 		builder.append(tabOver);
 		builder.append("zone:");
 		builder.append(rodsZone);
+		builder.append(ret);
+		builder.append(tabOver);
+		builder.append("eirods:");
+		builder.append(eirods);
 		builder.append(ret);
 
 		return builder.toString();

@@ -2,7 +2,7 @@
 
 # test script that will print an arbitrary buffer of randomish data based on the length given in the argument.
 # this script is meant to test streaming from remote execution, and is used in jargon unit testing of remote execution
-# author: mike conway - DICE
+# author: harry  - DICE
 
 
 import sys

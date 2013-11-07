@@ -1753,6 +1753,16 @@ public class CollectionAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
+
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -2031,6 +2041,8 @@ public class CollectionAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the two permissions",
+				userFilePermissions.size() >= 2);
 
 		boolean secondaryUserFound = false;
 		for (UserFilePermission permission : userFilePermissions) {

@@ -321,6 +321,8 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find the three permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the three permissions",
+				userFilePermissions.size() >= 3);
 
 		for (UserFilePermission userFilePermission : userFilePermissions) {
 			if (userFilePermission
@@ -414,6 +416,8 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find the permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the three permissions",
+				userFilePermissions.size() >= 3);
 
 		for (UserFilePermission userFilePermission : userFilePermissions) {
 			if (userFilePermission

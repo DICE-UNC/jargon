@@ -171,7 +171,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				entries.isEmpty());
 		CollectionAndDataObjectListingEntry entry = entries
 				.get(entries.size() - 1);
-
 		Assert.assertTrue("should be last result", entry.isLastResult());
 
 	}
@@ -299,6 +298,15 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
+
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
@@ -404,6 +412,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		for (CollectionAndDataObjectListingEntry actualEntry : entries) {
 			Assert.assertFalse("did not find permissions", actualEntry
 					.getUserFilePermission().isEmpty());
+			Assert.assertTrue("did not get both expected permissions",
+					actualEntry.getUserFilePermission().size() >= 2);
 		}
 
 	}
@@ -723,6 +733,16 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
+
 		IRODSFile irodsFile = null;
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -859,6 +879,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 					resultEntry.getDataSize());
 			Assert.assertFalse("should be permissions for file", resultEntry
 					.getUserFilePermission().isEmpty());
+			Assert.assertTrue("should be two permissions for file", resultEntry
+					.getUserFilePermission().size() >= 2);
 		}
 
 	}
@@ -991,6 +1013,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		for (CollectionAndDataObjectListingEntry entry : entries) {
 			Assert.assertFalse("did not have permissions", entry
 					.getUserFilePermission().isEmpty());
+			Assert.assertTrue("did not have the two permissions", entry
+					.getUserFilePermission().size() >= 2);
 		}
 
 	}
@@ -1074,6 +1098,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		for (CollectionAndDataObjectListingEntry entry : entries) {
 			Assert.assertFalse("did not have the permissions", entry
 					.getUserFilePermission().isEmpty());
+			Assert.assertTrue("did not have the two permissions", entry
+					.getUserFilePermission().size() >= 2);
 		}
 
 	}
@@ -1089,6 +1115,15 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -1154,6 +1189,8 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		for (CollectionAndDataObjectListingEntry entry : entries) {
 			Assert.assertFalse("did not find permissions", entry
 					.getUserFilePermission().isEmpty());
+			Assert.assertTrue("did not have the two permissions", entry
+					.getUserFilePermission().size() >= 2);
 		}
 
 	}
@@ -1202,7 +1239,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		int ctr = actual
 				.countDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
-		Assert.assertEquals(count * 2, ctr);
+		Assert.assertTrue(ctr >= count);
 
 	}
 

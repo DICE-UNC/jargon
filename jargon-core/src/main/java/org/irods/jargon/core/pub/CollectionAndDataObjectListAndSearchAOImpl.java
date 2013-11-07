@@ -767,7 +767,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		String effectiveAbsolutePath = objStat
 				.determineAbsolutePathBasedOnCollTypeInObjectStat();
 
-		// TODO: check using right objPath
 		List<String> arguments = new ArrayList<String>(3);
 		arguments.add(effectiveAbsolutePath);
 		arguments.add(String.valueOf(getJargonProperties()

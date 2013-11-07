@@ -17,33 +17,38 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Implementation of an object that iterates over an iRODS collection, listing child objects in a paging aware fashion
+ * Implementation of an object that iterates over an iRODS collection, listing
+ * child objects in a paging aware fashion
  * 
  * @author Mike Conway DICE (www.irods.org)
- *
+ * 
  */
 public class CollectionIteratorAOImpl extends IRODSGenericAO {
-	
+
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionIteratorAOImpl.class);
-	
+
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	private final CollectionListingUtils collectionListingUtils;
 
-
 	/**
-	 * Protected constructor, use the {@link IRODSAccessObjectFactory} to obtain this object
+	 * Protected constructor, use the {@link IRODSAccessObjectFactory} to obtain
+	 * this object
+	 * 
 	 * @param irodsSession
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected CollectionIteratorAOImpl(IRODSSession irodsSession,
-			IRODSAccount irodsAccount) throws JargonException {
+	protected CollectionIteratorAOImpl(final IRODSSession irodsSession,
+			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.collectionAndDataObjectListAndSearchAO = this.getIRODSAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		this.collectionListingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
+		this.collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		this.collectionListingUtils = new CollectionListingUtils(
+				collectionAndDataObjectListAndSearchAO);
 	}
-	
+
 	public PagingAwareCollectionListing retrivePagingAwareCollectionListing(
 			final String absolutePathToParent) throws FileNotFoundException,
 			JargonException {
@@ -63,10 +68,12 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 		ObjStat objStat = null;
 
 		try {
-			objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePathToParent);
+			objStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(absolutePathToParent);
 		} catch (FileNotFoundException fnf) {
 			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
-			entries = collectionListingUtils.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
+			entries = collectionListingUtils
+					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 			pagingAwareCollectionListing
 					.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
@@ -82,8 +89,8 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		List<CollectionAndDataObjectListingEntry> queriedEntries = collectionListingUtils.listCollectionsUnderPath(
-				objStat, 0);
+		List<CollectionAndDataObjectListingEntry> queriedEntries = collectionListingUtils
+				.listCollectionsUnderPath(objStat, 0);
 
 		/*
 		 * characterize the collections listing by looking at the returned data
@@ -107,7 +114,8 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 							queriedEntries);
 		}
 
-		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(objStat, 0);
+		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(
+				objStat, 0);
 
 		/*
 		 * characterize the data objects listing

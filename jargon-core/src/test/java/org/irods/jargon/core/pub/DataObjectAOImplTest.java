@@ -3382,6 +3382,17 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getDataObjectAO(irodsAccountRods);
 
+		CollectionAO rodsCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAO(irodsAccountRods);
+		rodsCollectionAO
+				.setAccessPermissionReadAsAdmin(
+						irodsAccount.getZone(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
 		rodsDataObjectAO
 				.setAccessPermissionOwnInAdminMode(
 						"",
@@ -3835,6 +3846,16 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
+
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
@@ -3902,6 +3923,8 @@ public class DataObjectAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the two permissions",
+				userFilePermissions.size() >= 2);
 
 		boolean foundIt = false;
 		for (UserFilePermission permission : userFilePermissions) {
@@ -3977,6 +4000,8 @@ public class DataObjectAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find  permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the two permissions",
+				userFilePermissions.size() >= 2);
 
 		boolean foundIt = false;
 		for (UserFilePermission permission : userFilePermissions) {
@@ -4088,6 +4113,8 @@ public class DataObjectAOImplTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find  permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the 3 permissions",
+				userFilePermissions.size() >= 3);
 
 	}
 
@@ -4356,6 +4383,11 @@ public class DataObjectAOImplTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
+		boolean isStrict = environmentalInfoAO.isStrictACLs();
+
+		if (isStrict) {
+			return;
+		}
 
 		IRODSServerProperties irodsServerProperties = environmentalInfoAO
 				.getIRODSServerProperties();

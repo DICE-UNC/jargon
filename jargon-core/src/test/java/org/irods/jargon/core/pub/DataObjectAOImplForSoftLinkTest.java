@@ -8,6 +8,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -189,6 +190,8 @@ public class DataObjectAOImplForSoftLinkTest {
 				userFilePermissions);
 		Assert.assertFalse("did not find the permissions",
 				userFilePermissions.isEmpty());
+		Assert.assertTrue("did not find the two permissions",
+				userFilePermissions.size() >= 2);
 
 		boolean foundIt = false;
 		for (UserFilePermission permission : userFilePermissions) {
@@ -668,6 +671,16 @@ public class DataObjectAOImplForSoftLinkTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
+			return;
+		}
+
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
@@ -702,6 +715,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
 		dataObjectAO.setAccessPermissionRead("", sourceIrodsCollection + "/"
 				+ testFileName, testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));

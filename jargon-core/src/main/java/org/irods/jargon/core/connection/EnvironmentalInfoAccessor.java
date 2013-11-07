@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 public class EnvironmentalInfoAccessor {
 
 	private IRODSCommands irodsProtocol = null;
-	private Logger log = LoggerFactory
+	private final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAccessor.class);
 
 	public EnvironmentalInfoAccessor(final IRODSCommands irodsProtocol)
@@ -30,6 +30,7 @@ public class EnvironmentalInfoAccessor {
 			throw new JargonException("irods protocol is not connected");
 		}
 		this.irodsProtocol = irodsProtocol;
+		init();
 
 	}
 
@@ -83,6 +84,7 @@ public class EnvironmentalInfoAccessor {
 				.getStringValue();
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
+
 		if (irodsProtocol.getIrodsSession() != null) {
 			irodsProtocol
 					.getIrodsSession()
@@ -93,6 +95,10 @@ public class EnvironmentalInfoAccessor {
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;
+	}
+
+	public void init() throws JargonException {
+		getIRODSServerProperties();
 	}
 
 }
