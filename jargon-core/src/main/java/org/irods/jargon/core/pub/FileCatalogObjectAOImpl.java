@@ -314,20 +314,22 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 * @return {@link UserFilePermission} that is the highest level, or
 	 *         <code>null</code> if no permissions found
 	 */
-	protected UserFilePermission scoreAndReturnHighestPermission(UserFilePermission userFilePermission, UserFilePermission groupFilePermission) {
+	protected UserFilePermission scoreAndReturnHighestPermission(
+			final UserFilePermission userFilePermission,
+			final UserFilePermission groupFilePermission) {
 		int userScore = -1;
 		int groupScore = -1;
-	
+
 		if (userFilePermission != null) {
 			userScore = userFilePermission.getFilePermissionEnum()
 					.getPermissionNumericValue();
 		}
-	
+
 		if (groupFilePermission != null) {
 			groupScore = groupFilePermission.getFilePermissionEnum()
 					.getPermissionNumericValue();
 		}
-	
+
 		if (userScore >= groupScore && userScore > -1) {
 			log.info("user file permission greater, using this:{}",
 					userFilePermission);

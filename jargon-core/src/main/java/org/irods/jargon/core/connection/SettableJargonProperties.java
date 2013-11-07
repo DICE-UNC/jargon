@@ -49,6 +49,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean usingSpecificQueryForCollectionListingsWithPermissions = true;
 	private boolean usingSpecQueryForDataObjPermissionsForUserInGroup = false;
 	private int pamTimeToLive = 0;
+	private boolean forcePamFlush = false;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -123,6 +124,7 @@ public class SettableJargonProperties implements JargonProperties {
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
 		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
+		this.setForcePamFlush(jargonProperties.isForcePamFlush());
 	}
 
 	/*
@@ -729,7 +731,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *            the usingSpecQueryForDataObjPermissionsForUserInGroup to set
 	 */
 	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
-			boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
+			final boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
 		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
@@ -751,6 +753,20 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	public synchronized void setPAMTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
+	 */
+	@Override
+	public synchronized boolean isForcePamFlush() {
+		return forcePamFlush;
+	}
+
+	public synchronized void setForcePamFlush(final boolean forcePamFlush) {
+		this.forcePamFlush = forcePamFlush;
 	}
 
 }

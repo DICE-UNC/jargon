@@ -3,9 +3,7 @@ package org.irods.jargon.core.pub;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -724,87 +722,13 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		 */
 
 		if (this.getIRODSServerProperties().isSupportsSpecificQuery()) {
-			log.info("by versin number I know I support specific query");
+			log.info("by version number I know I support specific query");
 			return false;
-		}
 
-
-		// I know I need to check, but if I'm not caching, then don't bother, as
-		// it's a lot of overhead. This is a cross-dependency in the jargon
-		// properties, but so be it
-
-		if (!this.getIRODSSession().isUsingDynamicServerPropertiesCache()) {
-			return false;
-		}
-
-		String support = getIRODSSession()
-				.getDiscoveredServerPropertiesCache()
-				.retrieveValue(
-						getIRODSAccount().getHost(),
-						getIRODSAccount().getZone(),
-						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED);
-
-		if (support == null) {
-			log.info("I don't know if I support specific query, so do some checks and arrive at a conclusion");
-
-			IRODSServerProperties irodsServerProperties = this
-					.getIRODSServerProperties();
-
-			log.info("got server properties:{}", irodsServerProperties);
-
-			if (irodsServerProperties
-					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
-				log.info("I am at least RODS 3.0, but I may be eIRODS..so try a query");
-
-				List<String> arguments = new ArrayList<String>();
-				arguments.add("ls");
-
-				SpecificQuery specificQuery = SpecificQuery.instanceArguments(
-						"findQueryByAlias", arguments, 0, this
-								.getIRODSAccount().getZone());
-
-				try {
-					this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-							specificQuery, this.getJargonProperties()
-									.getMaxFilesAndDirsQueryMax(), true);
-					markSupport(true);
-					log.info("I will not bypass specific query");
-					return false;
-				} catch (JargonQueryException e) {
-					markSupport(false);
-					log.info("I will bypass specific query");
-					return false;
-				}
-			} else {
-				log.info("I know it's not supported, not even rods3.0...cache this knowledge");
-				markSupport(false);
-				return true;
-			}
-
-		} else if (support.equals(DiscoveredServerPropertiesCache.IS_FALSE)) {
+		} else {
 			return true;
-		} else {
-			return false;
 		}
 
-	}
-
-	private void markSupport(final boolean isSupported) {
-
-		String supportString;
-		if (isSupported) {
-			supportString = DiscoveredServerPropertiesCache.IS_TRUE;
-		} else {
-			supportString = DiscoveredServerPropertiesCache.IS_FALSE;
-		}
-
-		this.getIRODSSession()
-				.getDiscoveredServerPropertiesCache()
-				.cacheAProperty(
-						this.getIRODSAccount().getHost(),
-						this.getIRODSAccount().getZone(),
-						DiscoveredServerPropertiesCache.JARGON_SPECIFIC_QUERIES_SUPPORTED,
-						supportString);
 	}
 
 	/**

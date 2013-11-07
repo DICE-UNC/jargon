@@ -25,13 +25,15 @@ public class IRODSAccount implements Serializable {
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 
-	private String host = "";
-	private int port = 0;
-	private String zone = "";
-	private String userName = "";
-	private String password = "";
-	private String defaultStorageResource = "";
-	private String homeDirectory = "";
+	private final String host;
+	private final int port;
+	private String userZone;
+	private String userName;
+	private final String proxyZone;
+	private final String proxyName;
+	private String password;
+	private String defaultStorageResource;
+	private String homeDirectory;
 
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
@@ -59,38 +61,14 @@ public class IRODSAccount implements Serializable {
 			final String userName, final String password,
 			final String homeDirectory, final String zone,
 			final String defaultStorageResource) throws JargonException {
-
-		if (host == null || host.isEmpty()) {
-			throw new IllegalArgumentException("host is null or empty");
-		}
-
-		if (userName == null || userName.isEmpty()) {
-			throw new IllegalArgumentException("null or empty userName");
-		}
-
-		if (password == null) {
-			throw new IllegalArgumentException("password is null");
-		}
-
-		if (homeDirectory == null) {
-			throw new IllegalArgumentException("homeDirectory is null");
-		}
-
-		if (zone == null || zone.isEmpty()) {
-			throw new IllegalArgumentException("zone is null or empty");
-		}
-
-		if (defaultStorageResource == null) {
-			throw new IllegalArgumentException("defaultStorageResource is null");
-		}
-
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
-				zone, defaultStorageResource);
+				zone, defaultStorageResource, userName, zone);
 	}
-	
+
 	/**
 	 * Creates an object to hold iRODS account information. All parameters need
-	 * to be initialized to use this initializer.  Note that this instance method will set the auth scheme
+	 * to be initialized to use this initializer. Note that this instance method
+	 * will set the auth scheme
 	 * 
 	 * @param host
 	 *            the iRODS server domain name
@@ -107,12 +85,13 @@ public class IRODSAccount implements Serializable {
 	 * @param defaultStorageResource
 	 *            default storage resource
 	 * @param authenticationScheme
-	 * 				authenticationScheme to use
+	 *            authenticationScheme to use
 	 */
 	public static IRODSAccount instance(final String host, final int port,
 			final String userName, final String password,
 			final String homeDirectory, final String zone,
-			final String defaultStorageResource, final AuthScheme authenticationScheme) throws JargonException {
+			final String defaultStorageResource,
+			final AuthScheme authenticationScheme) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -138,13 +117,13 @@ public class IRODSAccount implements Serializable {
 			throw new IllegalArgumentException("defaultStorageResource is null");
 		}
 
-		IRODSAccount irodsAccount =  new IRODSAccount(host, port, userName, password, homeDirectory,
-				zone, defaultStorageResource);
-		
+		IRODSAccount irodsAccount = new IRODSAccount(host, port, userName,
+				password, homeDirectory, zone, defaultStorageResource);
+
 		if (authenticationScheme == null) {
 			throw new IllegalArgumentException("null authenticationScheme");
 		}
-		
+
 		irodsAccount.setAuthenticationScheme(authenticationScheme);
 		return irodsAccount;
 	}
@@ -208,16 +187,90 @@ public class IRODSAccount implements Serializable {
 
 	}
 
+	/**
+	 * Creates an object to hold iRODS account information for a proxied user.
+	 * All parameters need to be initialized to use this initializer.
+	 * 
+	 * @param host
+	 *            the iRODS server domain name
+	 * @param port
+	 *            the port on the iRODS server
+	 * @param userName
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @param homeDirectory
+	 *            home directory on the iRODS
+	 * @param userZone
+	 *            the IRODS zone of the user
+	 * @param defaultStorageResource
+	 *            default storage resource
+	 * @param proxyName
+	 *            the name of the user's proxy
+	 * @param proxyZone
+	 *            the zone where the proxy is authenticated
+	 */
+	public static IRODSAccount instanceWithProxy(final String host,
+			final int port, final String userName, final String password,
+			final String homeDirectory, final String userZone,
+			final String defaultStorageResource, final String proxyName,
+			final String proxyZone) {
+		return new IRODSAccount(host, port, userName, password, homeDirectory,
+				userZone, defaultStorageResource, proxyName, proxyZone);
+	}
+
 	public IRODSAccount(final String host, final int port,
 			final String userName, final String password,
-			final String homeDirectory, final String zone,
+			final String homeDirectory, final String userZone,
 			final String defaultStorageResource) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
+		this.proxyName = userName;
 		this.password = password;
 		this.homeDirectory = homeDirectory;
-		this.zone = zone;
+		this.userZone = userZone;
+		this.proxyZone = userZone;
+		this.defaultStorageResource = defaultStorageResource;
+	}
+
+	private IRODSAccount(final String host, final int port,
+			final String userName, final String password,
+			final String homeDirectory, final String userZone,
+			final String defaultStorageResource, final String proxyName,
+			final String proxyZone) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("host is null or empty");
+		}
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+		if (proxyName == null || proxyName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty proxy name");
+		}
+		if (password == null) {
+			throw new IllegalArgumentException("password is null");
+		}
+		if (homeDirectory == null) {
+			throw new IllegalArgumentException("homeDirectory is null");
+		}
+		if (userZone == null || userZone.isEmpty()) {
+			throw new IllegalArgumentException("user zone is null or empty");
+		}
+		if (proxyZone == null || proxyZone.isEmpty()) {
+			throw new IllegalArgumentException("proxy zone is null or empty");
+		}
+		if (defaultStorageResource == null) {
+			throw new IllegalArgumentException("defaultStorageResource is null");
+		}
+		this.host = host;
+		this.port = port;
+		this.userName = userName;
+		this.proxyName = proxyName;
+		this.password = password;
+		this.homeDirectory = homeDirectory;
+		this.userZone = userZone;
+		this.proxyZone = proxyZone;
 		this.defaultStorageResource = defaultStorageResource;
 	}
 
@@ -243,7 +296,7 @@ public class IRODSAccount implements Serializable {
 	 * @return the iRODS zone.
 	 */
 	public String getZone() {
-		return zone;
+		return userZone;
 	}
 
 	/**
@@ -342,6 +395,24 @@ public class IRODSAccount implements Serializable {
 		return userName;
 	}
 
+	/**
+	 * Returns the name of the user's proxy
+	 * 
+	 * @return the proxy name
+	 */
+	public final String getProxyName() {
+		return proxyName;
+	}
+
+	/**
+	 * Returns the name of the zone where the proxy user is authenticated
+	 * 
+	 * @return the zone name
+	 */
+	public final String getProxyZone() {
+		return proxyZone;
+	}
+
 	public String getPassword() {
 		return password;
 	}
@@ -412,7 +483,7 @@ public class IRODSAccount implements Serializable {
 	 *            the zone to set
 	 */
 	public void setZone(final String zone) {
-		this.zone = zone;
+		this.userZone = zone;
 	}
 
 	/**

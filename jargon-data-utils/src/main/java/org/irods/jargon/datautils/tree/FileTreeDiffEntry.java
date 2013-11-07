@@ -22,8 +22,8 @@ public class FileTreeDiffEntry {
 	private final String absPathOppositeFile;
 	private final String checksumThisFile;
 	private final String checksumOppositeFile;
-	private  boolean resolved = false;
-	
+	private boolean resolved = false;
+
 	/**
 	 * Optional field that can be filled in post tree generation that rolls up
 	 * diffs in children, usually through a tree post-processing phase
@@ -97,9 +97,9 @@ public class FileTreeDiffEntry {
 			final long timestampRhsFile) {
 		return new FileTreeDiffEntry(diffType,
 				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				lengthRhsFile, timestampRhsFile,"","");
+				lengthRhsFile, timestampRhsFile, "", "");
 	}
-	
+
 	/**
 	 * Static instance method creates a new immutable entry
 	 * 
@@ -115,8 +115,11 @@ public class FileTreeDiffEntry {
 	 * @param lengthRhsFile
 	 *            <code>long</code> with the length of the right hand side file,
 	 *            or 0
-	 *  @param checksumThisFile <code>String</code> with the checksum of the current file
-	 *  @param checksumOppositeFile <code>String</code> with the checksum of the corresponding file
+	 * @param checksumThisFile
+	 *            <code>String</code> with the checksum of the current file
+	 * @param checksumOppositeFile
+	 *            <code>String</code> with the checksum of the corresponding
+	 *            file
 	 * @param timestampRhsFile
 	 *            <code>long</code> with the timestamp of the right hand side
 	 *            file, or 0
@@ -126,17 +129,20 @@ public class FileTreeDiffEntry {
 			final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
 			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile, final String checksumThisFile, final String checksumOppositeFile) {
+			final long timestampRhsFile, final String checksumThisFile,
+			final String checksumOppositeFile) {
 		return new FileTreeDiffEntry(diffType,
 				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				lengthRhsFile, timestampRhsFile,checksumThisFile,checksumOppositeFile);
+				lengthRhsFile, timestampRhsFile, checksumThisFile,
+				checksumOppositeFile);
 	}
 
 	private FileTreeDiffEntry(
 			final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
 			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile, final String checksumThisFile, final String checksumOppositeFile) {
+			final long timestampRhsFile, final String checksumThisFile,
+			final String checksumOppositeFile) {
 
 		if (diffType == null) {
 			throw new IllegalArgumentException("null diffType");
@@ -155,15 +161,14 @@ public class FileTreeDiffEntry {
 			throw new IllegalArgumentException("negative timestampRhsFile");
 		}
 
-		if (absolutePathOppositeFile == null
-				) {
+		if (absolutePathOppositeFile == null) {
 			throw new IllegalArgumentException("null  absolutepathOppositeFile");
 		}
-		
+
 		if (checksumThisFile == null) {
 			throw new IllegalArgumentException("null checksumThisFile");
 		}
-		
+
 		if (checksumOppositeFile == null) {
 			throw new IllegalArgumentException("null checksumOppositeFile");
 		}
@@ -228,7 +233,7 @@ public class FileTreeDiffEntry {
 	 * @param countOfDiffsInChildren
 	 *            the countOfDiffsInChildren to set
 	 */
-	public void setCountOfDiffsInChildren(int countOfDiffsInChildren) {
+	public void setCountOfDiffsInChildren(final int countOfDiffsInChildren) {
 		this.countOfDiffsInChildren = countOfDiffsInChildren;
 	}
 
@@ -265,9 +270,10 @@ public class FileTreeDiffEntry {
 	}
 
 	/**
-	 * @param resolved the resolved to set
+	 * @param resolved
+	 *            the resolved to set
 	 */
-	public void setResolved(boolean resolved) {
+	public void setResolved(final boolean resolved) {
 		this.resolved = resolved;
 	}
 

@@ -6,6 +6,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -41,6 +42,16 @@ public class ResourceGroupAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
+			return;
+		}
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

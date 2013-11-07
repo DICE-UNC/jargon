@@ -154,7 +154,22 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		if (caseInsensitive) {
-			if (!getIRODSServerProperties().isSupportsCaseInsensitiveQueries()) {
+
+			/*
+			 * It's a long story, but I need to check if this is eirods,
+			 * otherwise I may not properly comprehend if case-insensitive
+			 * queries are supported
+			 */
+
+			EnvironmentalInfoAO environmentalInfoAO = this
+					.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+							getIRODSAccount());
+			boolean isEirods = environmentalInfoAO.isEirods();
+
+			if (isEirods) {
+				log.info("this is eirods, case insensitive is supported");
+			} else if (!getIRODSServerProperties()
+					.isSupportsCaseInsensitiveQueries()) {
 				throw new JargonException(
 						"case insensitive queries not supported on this iRODS version");
 			}
@@ -1555,7 +1570,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission getPermissionViaSpecQueryAsGroupMember(
-			String userName, ObjStat objStat, String absPath)
+			final String userName, final ObjStat objStat, final String absPath)
 			throws JargonException {
 		log.info("see if there is a permission based on group membership...");
 		UserFilePermission permissionViaGroup = null;
@@ -1574,7 +1589,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
-			String userName, String zone, String absPath)
+			final String userName, final String zone, final String absPath)
 			throws JargonException {
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
@@ -1646,7 +1661,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission getPermissionViaGenQuery(final String userName,
-			String absPath) throws JargonException {
+			final String absPath) throws JargonException {
 		UserFilePermission userFilePermission;
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);
@@ -1845,9 +1860,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("has permision? {}", hasPermission);
 		return hasPermission;
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#replicateCollectionAsynchronously(java.lang.String, java.lang.String, int)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#replicateCollectionAsynchronously
+	 * (java.lang.String, java.lang.String, int)
 	 */
 	@Override
 	public void replicateCollectionAsynchronously(
@@ -1856,7 +1875,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 
 		log.info("replicateCollectionAsynchronously()");
-		
+
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1885,8 +1904,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
 
-		irodsRuleParameters.add(new IRODSRuleParameter("*SourceFile",
-				MiscIRODSUtils.wrapStringInQuotes(irodsCollectionAbsolutePath)));
+		irodsRuleParameters
+				.add(new IRODSRuleParameter("*SourceFile", MiscIRODSUtils
+						.wrapStringInQuotes(irodsCollectionAbsolutePath)));
 
 		irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
 				MiscIRODSUtils.wrapStringInQuotes(resourceName)));

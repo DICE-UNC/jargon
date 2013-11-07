@@ -465,7 +465,8 @@
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
-		<module>jargon-workflow</module>
 		<module>jargon-conveyor</module>
+		<module>jargon-workflow</module>
+		<module>jargon-ruleservice</module>
 	</modules>
 </project>

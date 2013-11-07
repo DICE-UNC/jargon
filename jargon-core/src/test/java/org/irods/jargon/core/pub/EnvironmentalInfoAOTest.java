@@ -89,6 +89,21 @@ public class EnvironmentalInfoAOTest {
 	}
 
 	@Test
+	public void testShowLoadedRulesTriggerCache() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		String ruleVal = environmentalInfoAO.showLoadedRules();
+		ruleVal = environmentalInfoAO.showLoadedRules();
+		Assert.assertNotNull("rule data missing", ruleVal);
+	}
+
+	@Test
 	public void testIsStrictACLs() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -164,6 +179,52 @@ public class EnvironmentalInfoAOTest {
 
 		Assert.assertTrue("did not find any microservices",
 				microservices.size() > 0);
+
+	}
+
+	@Test
+	public void testIsEirodsWhenIsEirods() throws Exception {
+
+		if (!testingPropertiesHelper.isTestEirods(testingProperties)) {
+			return;
+		}
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		Assert.assertTrue("expected eirods", props.isEirods());
+
+	}
+
+	@Test
+	public void testIsEirodsWhenNotEirods() throws Exception {
+
+		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
+			return;
+		}
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		Assert.assertFalse("expected not eirods", props.isEirods());
 
 	}
 

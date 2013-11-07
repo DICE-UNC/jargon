@@ -1,11 +1,24 @@
 *'''Project''': Jargon-core API
+<<<<<<< HEAD
 *'''Date''': xx/xx/xx
 *'''Release Version''': x.x.x transfer engine upgrade
 *'''git tag''': 964-grid-memory
 
 ==News==
 
+=======
+*'''Date''': 
+*'''Release Version''': 3.3.3-SNAPSHOT
+*'''git tag''': 
 
+==News==
+
+Development branch for 3.3.3 release
+<<<<<<< HEAD
+>>>>>>> development
+
+=======
+>>>>>>> development
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
@@ -17,14 +30,18 @@ Jargon-core consists of the following libraries
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
+<<<<<<< HEAD
 * jargon-conveyor - transfer management and automation
+=======
+* jargon-ruleservice - services for interactive composition and execution of rules
+>>>>>>> development
 
 
 ==Requirements==
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3
+*Jargon supports iRODS 2.5 through iRODS 3.3, as well as eIRODS 3.0.1 beta
 
 ==Libraries==
 
@@ -34,6 +51,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 =======
 *[#1606] inconsistent objstat semantics for mounted collections
@@ -49,4 +67,24 @@ Note that the following bug and feature requests are logged in GForge with relat
 **refactor of database to include grid memory
 **conveyor framework
  
+=======
+==Features==
 
+
+*[#605] add mso object support
+**CollectionAndDataObjectListAndSearchAO now supports mounted collection types
+
+*[#1182] add support for workflows
+**Added jargon-workflow library and initial support for workflow objects
+>>>>>>> development
+
+*[#1458] rule editor for user rules in idrop-web
+<<<<<<< HEAD
+**Added enhanced rule execution code
+
+=======
+**Added jargon-ruleservice to support interactive editing and composition of rules in interfaces.  Additional fixes in rule processing and parsing based on new use cases and testing.
+
+*[#1776] add rule queue processing views
+**Added code to delete selected rule from queue and expanded testing
+>>>>>>> development

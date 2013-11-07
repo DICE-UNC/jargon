@@ -877,9 +877,15 @@ public interface CollectionAO extends FileCatalogObjectAO {
 
 	/**
 	 * Replicate the given collection asynchronously (via delayed exec rule).
-	 * @param irodsCollectionAbsolutePath   <code>String</code> with the absolute path for the collection
-	 * @param resourceName   <code>String</code> with the resource to which the data will be replicated
-	 * @param delayInMinutes <code>int</code> with the number of minutes to delay the execution
+	 * 
+	 * @param irodsCollectionAbsolutePath
+	 *            <code>String</code> with the absolute path for the collection
+	 * @param resourceName
+	 *            <code>String</code> with the resource to which the data will
+	 *            be replicated
+	 * @param delayInMinutes
+	 *            <code>int</code> with the number of minutes to delay the
+	 *            execution
 	 * @throws JargonException
 	 */
 	void replicateCollectionAsynchronously(String irodsCollectionAbsolutePath,

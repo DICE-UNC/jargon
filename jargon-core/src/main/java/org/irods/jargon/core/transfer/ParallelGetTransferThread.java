@@ -174,10 +174,7 @@ public final class ParallelGetTransferThread extends
 		int operation = readInt();
 		// log.info("   operation:{}", operation);
 
-		// read the flags
-		@SuppressWarnings("unused")
-		int flags = readInt();
-		// log.info("   flags:{}", flags);
+		readInt();
 
 		// Where to seek into the data
 		long offset = readLong();
@@ -253,8 +250,7 @@ public final class ParallelGetTransferThread extends
 						// log.debug("parallel transfer read next header");
 						// read the next header
 						operation = readInt();
-						// log.debug("   operation:{}", operation);
-						flags = readInt();
+						readInt();
 						// log.debug("   flags:{}", flags);
 						offset = readLong();
 						// log.debug("   offset:{}", offset);

@@ -439,7 +439,7 @@ public class RuleProcessingAOImplTest {
 
 		RuleProcessingAO ruleProcessingAO = accessObjectFactory
 				.getRuleProcessingAO(irodsAccount);
-		String ruleString = "ListAvailableMS||delayExec(<PLUSET>1m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
+		String ruleString = "ListAvailableMS||delayExec(<PLUSET>2m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString);
 
@@ -1519,10 +1519,9 @@ public class RuleProcessingAOImplTest {
 		Assert.assertNotNull("did not get a response", result);
 	}
 
-	@Ignore
+	@Test
 	public void testListAllDelayedRuleExecutions() throws Exception {
 
-		// TODO: purge, add 2
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1530,23 +1529,35 @@ public class RuleProcessingAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getRuleProcessingAO(irodsAccount);
 
+		ruleProcessingAO.purgeAllDelayedExecQueue();
+
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
+
 		List<DelayedRuleExecution> delayedRuleExecutions = ruleProcessingAO
 				.listAllDelayedRuleExecutions(0);
-		irodsFileSystem.close();
 		Assert.assertTrue("did not find delayedRuleExecutions",
-				delayedRuleExecutions.size() > 0);
+				delayedRuleExecutions.size() == 2);
+		ruleProcessingAO.purgeAllDelayedExecQueue();
 	}
 
-	@Ignore
+	@Test
 	public void testPurgeAllDelayedRuleExecutions() throws Exception {
-
-		// TODO: purge, add1, purge, test
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		RuleProcessingAO ruleProcessingAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getRuleProcessingAO(irodsAccount);
+
+		ruleProcessingAO.purgeAllDelayedExecQueue();
+
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
 
 		int countPurged = ruleProcessingAO.purgeAllDelayedExecQueue();
 		Assert.assertTrue("nothing purged", countPurged > 0);
@@ -1583,6 +1594,55 @@ public class RuleProcessingAOImplTest {
 				.getResultObject();
 		Assert.assertNotNull("null out", out);
 
+	}
+
+	@Test
+	public void testDeleteRuleExecution() throws Exception {
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		RuleProcessingAO ruleProcessingAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(irodsAccount);
+
+		ruleProcessingAO.purgeAllDelayedExecQueue();
+
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
+		ruleProcessingAO.executeRuleFromResource("/rules/ruleHelloWithDelay.r",
+				null, RuleProcessingType.EXTERNAL);
+
+		List<DelayedRuleExecution> delayedRuleExecutions = ruleProcessingAO
+				.listAllDelayedRuleExecutions(0);
+
+		Assert.assertEquals("did not get a delayed exec in listing", 2,
+				delayedRuleExecutions.size());
+
+		DelayedRuleExecution actual = delayedRuleExecutions.get(0);
+		ruleProcessingAO.purgeRuleFromDelayedExecQueue(actual.getId());
+
+		delayedRuleExecutions = ruleProcessingAO
+				.listAllDelayedRuleExecutions(0);
+
+		Assert.assertEquals("did not get one less delayed exec in listing", 1,
+				delayedRuleExecutions.size());
+
+	}
+
+	@Test
+	public void testDeleteNonExistentRuleExecution() throws Exception {
+
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		RuleProcessingAO ruleProcessingAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getRuleProcessingAO(irodsAccount);
+
+		ruleProcessingAO.purgeAllDelayedExecQueue();
+
+		ruleProcessingAO.purgeRuleFromDelayedExecQueue(1);
 	}
 
 }

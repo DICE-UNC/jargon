@@ -7,18 +7,21 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
  * Represents a file that contains a user rule
- * @author  Mike Conway - DICE (www.irods.org)
- *
+ * 
+ * @author Mike Conway - DICE (www.irods.org)
+ * 
  */
 public class UserRuleDefinition extends IRODSDomainObject {
-	
-	public enum RuleAproposTo  {COLLECTION, DATA_OBJECT, ANY}
+
+	public enum RuleAproposTo {
+		COLLECTION, DATA_OBJECT, ANY
+	}
+
 	private String ruleName = "";
 	private String ruleAbsolutePath = "";
 	private String ruleDescription = "";
 	private RuleAproposTo ruleAproposTo = RuleAproposTo.ANY;
-	
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -33,23 +36,28 @@ public class UserRuleDefinition extends IRODSDomainObject {
 		sb.append(ruleAproposTo);
 		return sb.toString();
 	}
-	
+
 	public String getRuleName() {
 		return ruleName;
 	}
-	public void setRuleName(String ruleName) {
+
+	public void setRuleName(final String ruleName) {
 		this.ruleName = ruleName;
 	}
+
 	public String getRuleAbsolutePath() {
 		return ruleAbsolutePath;
 	}
-	public void setRuleAbsolutePath(String ruleAbsolutePath) {
+
+	public void setRuleAbsolutePath(final String ruleAbsolutePath) {
 		this.ruleAbsolutePath = ruleAbsolutePath;
 	}
+
 	public String getRuleDescription() {
 		return ruleDescription;
 	}
-	public void setRuleDescription(String ruleDescription) {
+
+	public void setRuleDescription(final String ruleDescription) {
 		this.ruleDescription = ruleDescription;
 	}
 
@@ -57,7 +65,7 @@ public class UserRuleDefinition extends IRODSDomainObject {
 		return ruleAproposTo;
 	}
 
-	public void setRuleAproposTo(RuleAproposTo ruleAproposTo) {
+	public void setRuleAproposTo(final RuleAproposTo ruleAproposTo) {
 		this.ruleAproposTo = ruleAproposTo;
 	}
 

@@ -2201,7 +2201,7 @@ public class TicketAdminServiceImplTest {
 
 	// TODO: change this to InvalidHostException (-855000) when that gets
 	// implemented
-	@Test(expected = JargonException.class)
+	@Ignore
 	public void testAddTicketHostRestrictionForTicketExistsInvalidHost()
 			throws Exception {
 
@@ -2402,7 +2402,7 @@ public class TicketAdminServiceImplTest {
 
 	// TODO: change this to InvalidHostException (-855000) when that gets
 	// implemented
-	@Test(expected = JargonException.class)
+	@Ignore
 	public void testRemoveTicketHostRestrictionForTicketExistsInvalidHost()
 			throws Exception {
 

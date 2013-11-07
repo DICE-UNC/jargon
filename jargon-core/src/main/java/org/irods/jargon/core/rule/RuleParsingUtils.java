@@ -25,7 +25,9 @@ class RuleParsingUtils {
 	/**
 	 * Given a rule input parameter value which has already been separated from
 	 * other input parameters by the , or % delimiter, separate into parameter
-	 * name and parameter value. This essentially splits on the first '=' sign.
+	 * name and parameter value. This essentially splits on the first '=' sign. <br/>
+	 * This routine will trim the param names and strip leading $ in the value
+	 * that typically mark interactive variables
 	 * 
 	 * @param parameter
 	 *            <code>String<code> which should reflect an individual rule parameter in *parmName=parmValue format
@@ -42,8 +44,14 @@ class RuleParsingUtils {
 		// have parms to process..split at equal sign
 		int idx = parameter.indexOf('=');
 		if (idx == -1) {
-			throw new IllegalArgumentException(
-					"missing equal sign in given input parameter");
+
+			if (parameter.toUpperCase().indexOf("NULL") > -1) {
+				return null;
+			} else {
+
+				throw new IllegalArgumentException(
+						"missing equal sign in given input parameter");
+			}
 		}
 
 		if (idx + 1 == parameter.length()) {
@@ -53,8 +61,20 @@ class RuleParsingUtils {
 			new RuleInputParameter(parameter.substring(0, idx), "");
 		}
 
-		return new RuleInputParameter(parameter.substring(0, idx),
-				parameter.substring(idx + 1));
+		String paramName = parameter.substring(0, idx).trim();
+		String paramVal = parameter.substring(idx + 1);
+
+		if (paramVal.isEmpty()) {
+			throw new IllegalArgumentException("emptyParamVal");
+		}
+
+		// strip $ leading char as interactive
+
+		if (paramVal.charAt(0) == '$') {
+			paramVal = paramVal.substring(1);
+		}
+
+		return new RuleInputParameter(paramName, paramVal);
 	}
 
 }

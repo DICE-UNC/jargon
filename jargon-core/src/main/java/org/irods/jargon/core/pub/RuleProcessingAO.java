@@ -180,4 +180,16 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 			RuleProcessingType ruleProcessingType) throws JargonRuleException,
 			JargonException;
 
+	/**
+	 * Delete selected rule from the delayed execution queue.
+	 * <p/>
+	 * This method will silently ignore a rule not on the queue
+	 * 
+	 * @param queueId
+	 *            <code>int</code> with an id that relates to a stored rule to
+	 *            be removed
+	 * @throws JargonException
+	 */
+	void purgeRuleFromDelayedExecQueue(int queueId) throws JargonException;
+
 }

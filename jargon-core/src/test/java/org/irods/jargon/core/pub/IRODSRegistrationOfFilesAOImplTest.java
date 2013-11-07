@@ -73,7 +73,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalCollectionRecursivelyToIRODS()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -118,7 +121,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test
 	public final void testRegisterPhysicalDataFileToIRODS() throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -157,8 +163,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSTwiceNoForce()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			throw new DuplicateDataException(
 					"throw to get expected while skipping");
 		}
@@ -198,8 +206,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test(expected = JargonException.class)
 	public final void testRegisterPhysicalDataFileToIRODSWhenCollection()
 			throws Exception {
-
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			throw new JargonException("throw to honor expected error");
 
 		}
@@ -228,8 +238,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test(expected = IllegalArgumentException.class)
 	public final void testRegisterPhysicalDataFileToIRODSWhenResourceIsBlank()
 			throws Exception {
-
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 
 			throw new IllegalArgumentException(
 					"throw to get expected exception..skipping");
@@ -264,7 +276,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSLocalFileMissing()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 
 			throw new DataNotFoundException(
 					"throw to get expected exception..skipping");
@@ -300,10 +315,11 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSIRODSParentMissing()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
-
-			throw new DataNotFoundException(
-					"throw to get expected exception..skipping");
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
+			throw new DataNotFoundException("honor expected");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -339,7 +355,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSRegisterChecksum()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -393,7 +412,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSWithVerifyLocalChecksum()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -451,7 +473,11 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test
 	public final void testUnregisterButDoNotDeletePhysicalFile()
 			throws Exception {
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -534,7 +560,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testRegisterPhysicalDataFileToIRODSAsAReplica()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -626,7 +655,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	public final void testUnregisterPhysicalCollectionRecursively()
 			throws Exception {
 
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			return;
 		}
 
@@ -682,8 +714,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	@Test(expected = CollectionNotEmptyException.class)
 	public final void testUnregisterPhysicalCollectionNoRecursive()
 			throws Exception {
-
-		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
+		if (testingPropertiesHelper.isTestRegistration(testingProperties)
+				&& testingPropertiesHelper
+						.isTestFileSystemMountLocal(testingProperties)) {
+		} else {
 			throw new CollectionNotEmptyException("throwing to match expected");
 		}
 

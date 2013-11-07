@@ -1,6 +1,5 @@
 package org.irods.jargon.datautils.pagination;
 
-
 /**
  * Represents the status of a paged set of data. Convenience methods for
  * understanding the paging status are provided. This is an immutable,
@@ -37,8 +36,7 @@ class PagingStatus {
 	 * The size of pages requested from the source
 	 */
 	private final int pageSize;
-	
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -57,36 +55,45 @@ class PagingStatus {
 	}
 
 	/**
-	 * Public constructor creates immutable representation of the paging status of the current page
-	 * @param startingIndex <code>int</code> offset into the total results that this page represents, the index of
-	 * the first row in the page
-	 * @param endingIndex <code>int</code>   index of the last row in the page
-	 * @param lastEntry <code>boolean</code>  indicates that the last row in the page is the last row for all pages
-	 * @param totalEntries <code>int</code> 
-	 * total number of results in all pages. This may not be available, in
-	 * which case, it should be zero.
-	 * @param pageSize <code>int</code> size of pages requested from the source
+	 * Public constructor creates immutable representation of the paging status
+	 * of the current page
+	 * 
+	 * @param startingIndex
+	 *            <code>int</code> offset into the total results that this page
+	 *            represents, the index of the first row in the page
+	 * @param endingIndex
+	 *            <code>int</code> index of the last row in the page
+	 * @param lastEntry
+	 *            <code>boolean</code> indicates that the last row in the page
+	 *            is the last row for all pages
+	 * @param totalEntries
+	 *            <code>int</code> total number of results in all pages. This
+	 *            may not be available, in which case, it should be zero.
+	 * @param pageSize
+	 *            <code>int</code> size of pages requested from the source
 	 */
 	public PagingStatus(final int startingIndex, final int endingIndex,
 			final boolean lastEntry, final int totalEntries, final int pageSize) {
 
-		
 		if (startingIndex < 0) {
-			throw new IllegalArgumentException("starting index must be 0 or greater");
+			throw new IllegalArgumentException(
+					"starting index must be 0 or greater");
 		}
-		
+
 		if (endingIndex < 0) {
-			throw new IllegalArgumentException("ending index must be 0 or greater");
+			throw new IllegalArgumentException(
+					"ending index must be 0 or greater");
 		}
-		
+
 		if (totalEntries < 0) {
-			throw new IllegalArgumentException("totalEntries must be 0 or greater");
+			throw new IllegalArgumentException(
+					"totalEntries must be 0 or greater");
 		}
-		
+
 		if (pageSize < 1) {
 			throw new IllegalArgumentException("pageSize must be 1 or greater");
 		}
-		
+
 		this.startingIndex = startingIndex;
 		this.endingIndex = endingIndex;
 		lastEntryIsLast = lastEntry;
@@ -137,9 +144,10 @@ class PagingStatus {
 	public boolean isPagesAfter() {
 		return lastEntryIsLast == false;
 	}
-	
+
 	/**
 	 * Get a count of the total number of pages that can be displayed
+	 * 
 	 * @return
 	 */
 	public int computeExpectedNumberOfPages() {
@@ -205,6 +213,7 @@ class PagingStatus {
 
 	/**
 	 * Get the number of results in each page
+	 * 
 	 * @return
 	 */
 	public int getPageSize() {
@@ -213,6 +222,7 @@ class PagingStatus {
 
 	/**
 	 * Return the first index represented by the current page of data
+	 * 
 	 * @return
 	 */
 	public int getStartingIndex() {

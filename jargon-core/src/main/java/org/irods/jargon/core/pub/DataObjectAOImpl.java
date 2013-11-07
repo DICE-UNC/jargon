@@ -2042,7 +2042,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("replication complete");
 	}
 
-	
 	@Override
 	public void replicateIrodsDataObjectAsynchronously(
 			final String irodsCollectionAbsolutePath, final String fileName,

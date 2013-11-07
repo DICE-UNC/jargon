@@ -1,9 +1,9 @@
 package org.irods.jargon.datautils.sharing;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
-
 
 /**
  * Interface to a service object that presents handy methods for managing

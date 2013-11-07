@@ -5,13 +5,14 @@ package org.irods.jargon.datautils.rule;
 
 /**
  * Configuration info for user rule services
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class UserRuleServiceConfiguration {
-	
+
 	public static final String RULE_SUBDIR_NAME = ".irods/userRules";
-	
+
 	/**
 	 * Subdirectory used for storing user rules
 	 */
@@ -22,10 +23,10 @@ public class UserRuleServiceConfiguration {
 		return ruleSubdirName;
 	}
 
-	public void setRuleSubdirName(String ruleSubdirName) {
+	public void setRuleSubdirName(final String ruleSubdirName) {
 		this.ruleSubdirName = ruleSubdirName;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder("userRuleServiceConfiguration");
@@ -40,7 +41,7 @@ public class UserRuleServiceConfiguration {
 		return createIfMissing;
 	}
 
-	public void setCreateIfMissing(boolean createIfMissing) {
+	public void setCreateIfMissing(final boolean createIfMissing) {
 		this.createIfMissing = createIfMissing;
 	}
 

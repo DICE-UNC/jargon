@@ -18,30 +18,30 @@ public class UnixFileRenameException extends JargonException {
 	 */
 	private static final long serialVersionUID = -3454704694291976996L;
 
-	public UnixFileRenameException(String message,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileRenameException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileRenameException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileRenameException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileRenameException(String message, Throwable cause) {
+	public UnixFileRenameException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	public UnixFileRenameException(String message) {
+	public UnixFileRenameException(final String message) {
 		super(message);
 	}
 
-	public UnixFileRenameException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UnixFileRenameException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	public UnixFileRenameException(Throwable cause) {
+	public UnixFileRenameException(final Throwable cause) {
 		super(cause);
 	}
 
