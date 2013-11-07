@@ -5,7 +5,7 @@
 
 ==News==
 
-Development branch for 3.3.2 release
+Development branch for 3.3.3 release
 
 =======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
@@ -51,4 +51,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1182] add support for workflows
 **Added jargon-workflow library and initial support for workflow objects
+
+*[#1458] rule editor for user rules in idrop-web
+**Added enhanced rule execution code
 
