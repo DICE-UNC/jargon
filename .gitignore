@@ -16,6 +16,6 @@ bin
 *.log
 */nbactions.xml
 nbactions.xml
-**/testing.properties
+testing.properties
 */test-output
 **/JargonVersion.java
