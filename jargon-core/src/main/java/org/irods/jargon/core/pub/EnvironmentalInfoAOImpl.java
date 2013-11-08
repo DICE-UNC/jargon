@@ -192,7 +192,8 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		log.info("saving in cache and server properties");
 
-		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS, "true");
+		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS,
+				String.valueOf(eirods));
 		IRODSServerProperties props = this.getIRODSServerProperties();
 		props.setEirods(eirods);
 		this.getIRODSSession()
