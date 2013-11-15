@@ -12,5 +12,6 @@ public class MiscSvrInfo {
 	public static final String API_VERSION_TAG = "apiVersion";
 	public static final String RODS_ZONE_TAG = "rodsZone";
 	public static final int API_NBR = 700;
+	public static final String COOKIE_TAG = "cookie";
 
 }

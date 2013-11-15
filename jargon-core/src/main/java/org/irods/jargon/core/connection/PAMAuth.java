@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.IRODSAccount.AuthScheme;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.SSLEndInp;
 import org.irods.jargon.core.packinstr.SSLStartInp;
@@ -108,8 +109,9 @@ public class PAMAuth extends AuthMechanism {
 				irodsCommands.getPipelineConfiguration(),
 				irodsCommands.getAuthResponse(),
 				irodsCommands.getAuthMechanism(), sslIRODSConnection);
-		
-		secureIRODSCommands.setIrodsServerProperties(irodsCommands.getIrodsServerProperties());
+
+		secureIRODSCommands.setIrodsServerProperties(irodsCommands
+				.getIrodsServerProperties());
 
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
@@ -118,10 +120,19 @@ public class PAMAuth extends AuthMechanism {
 		int pamTimeToLive = irodsCommands.getIrodsSession()
 				.getJargonProperties().getPAMTimeToLive();
 
-		PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
-				irodsAccount.getUserName(), irodsAccount.getPassword(),
-				pamTimeToLive);
-		Tag response = secureIRODSCommands.irodsFunction(pamAuthRequestInp);
+		Tag response = null;
+		if (secureIRODSCommands.getIrodsServerProperties().isEirods()) {
+			log.info("using eirods pluggable pam auth request");
+			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
+					irodsAccount.getUserName(), irodsAccount.getPassword(),
+					pamTimeToLive);
+		} else {
+			log.info("using normal irods pam auth request");
+			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
+					irodsAccount.getUserName(), irodsAccount.getPassword(),
+					pamTimeToLive);
+			response = secureIRODSCommands.irodsFunction(pamAuthRequestInp);
+		}
 
 		if (response == null) {
 			throw new JargonException("null response from pamAuthRequest");

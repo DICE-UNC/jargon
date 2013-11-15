@@ -57,17 +57,17 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
 			throws JargonException {
 
-		/*
-		 * Note here that getting the server properties includes establishing
-		 * that the server is eirods. Eirods is discovered by evaluating the
-		 * rule base, this is cached in the setEirods() method, so it doesn't
-		 * have to call iRODS each time.
-		 */
-
 		IRODSServerProperties props = environmentalInfoAccessor
 				.getIRODSServerProperties();
-		props.setEirods(isEirods());
 		return props;
+	}
+
+	private boolean isEirods() throws JargonException {
+		if (this.getIRODSServerProperties().isEirods()) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/*
@@ -161,46 +161,6 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 				.getDiscoveredServerPropertiesCache()
 				.retrieveValue(this.getIRODSAccount().getHost(),
 						this.getIRODSAccount().getZone(), key);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isEirods()
-	 */
-	@Override
-	public boolean isEirods() throws JargonException {
-
-		log.info("isEirods()");
-
-		String isEirods = findValueInCache(DiscoveredServerPropertiesCache.EIRODS);
-
-		if (isEirods != null) {
-			return Boolean.valueOf(isEirods);
-		}
-
-		log.info("cache miss");
-
-		String coreRules = showLoadedRules();
-		boolean eirods = false;
-		if (coreRules.indexOf("isEiRODS") > -1) {
-			eirods = true;
-		}
-
-		log.info("is eirods?: {}", eirods);
-
-		log.info("saving in cache and server properties");
-
-		storeValueInCache(DiscoveredServerPropertiesCache.EIRODS,
-				String.valueOf(eirods));
-		IRODSServerProperties props = this.getIRODSServerProperties();
-		props.setEirods(eirods);
-		this.getIRODSSession()
-				.getDiscoveredServerPropertiesCache()
-				.cacheIRODSServerProperties(this.getIRODSAccount().getHost(),
-						this.getIRODSAccount().getZone(), props);
-		return eirods;
 
 	}
 

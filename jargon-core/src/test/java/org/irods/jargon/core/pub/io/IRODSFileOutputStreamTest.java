@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -703,17 +704,20 @@ public class IRODSFileOutputStreamTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-			
-		
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
-		
-		if (environmentalInfoAO.isEirods()) {
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
-		
 		IRODSFile targetCollection = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetCollection.deleteWithForceOption();

@@ -10,6 +10,7 @@ import junit.framework.Assert;
 import junit.framework.TestCase;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -124,7 +125,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -194,10 +198,12 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
-
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 		String targetIrodsCollection = testingPropertiesHelper
@@ -262,8 +268,11 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
-			throw new CatNoAccessException("thrown for expectations");
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
+			throw new CatNoAccessException("expected");
 		}
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -319,7 +328,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -393,10 +405,12 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
-
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -467,7 +481,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
@@ -714,7 +731,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -809,7 +829,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -1019,7 +1042,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -1101,7 +1127,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -1183,7 +1212,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			return;
 		}
 
@@ -1389,7 +1421,10 @@ public class TicketClientOperationsImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
 			throw new OverwriteException("thrown for expectations");
 		}
 

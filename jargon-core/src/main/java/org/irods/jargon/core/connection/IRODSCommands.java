@@ -96,6 +96,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	private boolean inRestartMode = false;
 	private boolean closeConnectionOnFinalizer = true;
 	private IRODSSession irodsSession = null;
+	public static final int EIRODS_MIN = 301;
+	public static final int EIRODS_MAX = 301;
 	/**
 	 * authResponse contains
 	 */
@@ -253,6 +255,16 @@ public class IRODSCommands implements IRODSManagedConnection {
 				this);
 		irodsServerProperties = environmentalInfoAccessor
 				.getIRODSServerProperties();
+
+		// add startup response cookie info indicating if eirods
+		int cookie = Integer.parseInt(authResponse.getStartupResponse()
+				.getCookie());
+
+		if (cookie >= EIRODS_MIN && cookie <= EIRODS_MAX) {
+			log.info("setting to eirods based on cookie value");
+			irodsServerProperties.setEirods(true);
+		}
+
 		log.info(irodsServerProperties.toString());
 
 		// see if I need the reconnect process running in the background to
@@ -1712,12 +1724,10 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * @return
 	 */
 	private boolean isPamFlush() {
-	
-		
+
 		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
 			return false;
 		}
-
 
 		if (this.pipelineConfiguration.isForcePamFlush()) {
 			return true;
@@ -1734,7 +1744,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	/**
-	 * @param irodsServerProperties the irodsServerProperties to set
+	 * @param irodsServerProperties
+	 *            the irodsServerProperties to set
 	 */
 	synchronized void setIrodsServerProperties(
 			IRODSServerProperties irodsServerProperties) {

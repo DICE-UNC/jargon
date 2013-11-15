@@ -35,7 +35,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-
 [#1635] ttl parameter in PAM missing
 **Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
 
@@ -48,3 +47,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1603] EIRODS 3.0 compatability 
 **Version detection and base compatability with eIRODS 3.0.1 beta release.  
+
+*[#1796] pluggable auth support for eirods
+**Added new auth plugin scheme support starting with PAM authentication for eIRODS

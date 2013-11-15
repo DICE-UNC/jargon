@@ -213,7 +213,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public UserAO getUserAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
 		return new UserAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -228,8 +227,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new UserGroupAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -258,8 +255,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public QuotaAO getQuotaAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new QuotaAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -274,8 +269,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public IRODSGenQueryExecutor getIRODSGenQueryExecutor(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new IRODSGenQueryExecutorImpl(irodsSession, irodsAccount);
 	}
 
@@ -290,8 +283,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public ZoneAO getZoneAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new ZoneAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -305,8 +296,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public ResourceAO getResourceAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new ResourceAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -321,8 +310,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public ResourceGroupAO getResourceGroupAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new ResourceGroupAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -337,8 +324,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public IRODSFileSystemAO getIRODSFileSystemAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new IRODSFileSystemAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -353,8 +338,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public IRODSFileFactory getIRODSFileFactory(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new IRODSFileFactoryImpl(irodsSession, irodsAccount);
 	}
 
@@ -369,8 +352,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public CollectionAO getCollectionAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new CollectionAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -385,8 +366,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public DataObjectAO getDataObjectAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new DataObjectAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -401,8 +380,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public DataObjectAuditAO getDataObjectAuditAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new DataObjectAuditAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -417,8 +394,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public CollectionAuditAO getCollectionAuditAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new CollectionAuditAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -451,8 +426,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public DataTransferOperations getDataTransferOperations(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new DataTransferOperationsImpl(irodsSession, irodsAccount);
 	}
 
@@ -467,8 +440,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public BulkFileOperationsAO getBulkFileOperationsAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new BulkFileOperationsAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -483,8 +454,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new RemoteExecutionOfCommandsAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -499,8 +468,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new CollectionAndDataObjectListAndSearchAOImpl(irodsSession,
 				irodsAccount);
 	}
@@ -516,8 +483,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public SimpleQueryExecutorAO getSimpleQueryExecutorAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new SimpleQueryExecutorAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -532,8 +497,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public Stream2StreamAO getStream2StreamAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new Stream2StreamAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -548,8 +511,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public MountedCollectionAO getMountedCollectionAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new MountedCollectionAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -564,8 +525,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public ProtocolExtensionPoint getProtocolExtensionPoint(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new ProtocolExtensionPointImpl(irodsSession, irodsAccount);
 	}
 
@@ -580,8 +539,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(
 			final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new IRODSRegistrationOfFilesAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -649,8 +606,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 							DiscoveredServerPropertiesCache.EIRODS) == null) {
 
 				log.info("need to cache and update isEirods");
-				EnvironmentalInfoAO environmentalInfoAO = getEnvironmentalInfoAO(irodsAccount);
-				environmentalInfoAO.isEirods();
+				getEnvironmentalInfoAO(irodsAccount);
 			}
 		}
 
@@ -697,8 +653,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	public SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount)
 			throws JargonException {
 		checkIrodsSessionSet();
-		initializeIrodsServerProperties(irodsAccount);
-
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
 	}
 
@@ -722,14 +676,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	@Override
 	public boolean isUsingDynamicServerPropertiesCache() {
 		return getIrodsSession().isUsingDynamicServerPropertiesCache();
-	}
-
-	private void initializeIrodsServerProperties(final IRODSAccount irodsAccount)
-			throws JargonException {
-		EnvironmentalInfoAO environmentalInfoAO = getEnvironmentalInfoAO(irodsAccount);
-		// TODO: this might need later refactoring....some props like eIRODS
-		// presently are not available until fully connected
-		environmentalInfoAO.isEirods();
 	}
 
 }
