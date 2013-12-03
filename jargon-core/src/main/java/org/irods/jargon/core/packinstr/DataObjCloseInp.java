@@ -56,7 +56,7 @@ public class DataObjCloseInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag message = new Tag("authPlugReqInp_PI", new Tag[] {
+		Tag message = new Tag(PI_TAG, new Tag[] {
 				new Tag(L1_DESC_INX, getFileDescriptor()),
 				new Tag(BYTES_WRITTEN, getBytesWritten()) });
 		return message;

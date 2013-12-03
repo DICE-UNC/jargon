@@ -679,7 +679,7 @@ public class RemoteExecuteServiceImplTest {
 
 		if (!props.isEirods()) {
 			irodsFileSystem.closeAndEatExceptions();
-			return;
+			throw new UnsupportedOperationException("match expects");
 		}
 
 		CollectionAO collectionAO = irodsFileSystem
