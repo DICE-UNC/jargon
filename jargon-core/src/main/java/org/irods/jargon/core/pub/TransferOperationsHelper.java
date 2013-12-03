@@ -1020,8 +1020,8 @@ final class TransferOperationsHelper {
 							TransferType.COPY, fileInSourceCollection
 									.getAbsolutePath(),
 							targetIrodsFileAbsolutePath, targetResource,
-							fileInSourceCollection.length(),
-							fileInSourceCollection.length(),
+							0L,
+							0L,
 							transferControlBlock
 									.getTotalFilesTransferredSoFar(),
 							transferControlBlock.getTotalFilesSkippedSoFar(),

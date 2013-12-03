@@ -2194,7 +2194,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
 				irodsSourceFile.getAbsolutePath(),
 				myTargetFile.getAbsolutePath(), irodsTargetFile.getResource(),
-				myTargetFile.length(), force);
+				irodsSourceFile.length(), force);
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjCopyInp);
