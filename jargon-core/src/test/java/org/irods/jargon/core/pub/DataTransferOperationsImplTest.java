@@ -27,6 +27,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImple
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,6 +35,7 @@ import org.junit.Test;
 public class DataTransferOperationsImplTest {
 
 	private static Properties testingProperties = new Properties();
+	private static JargonProperties jargonOriginalProperties = null;
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "DataTransferOperationsImplTest";
@@ -48,6 +50,7 @@ public class DataTransferOperationsImplTest {
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
+		jargonOriginalProperties = settableJargonProperties;
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -67,6 +70,13 @@ public class DataTransferOperationsImplTest {
 	@AfterClass
 	public static void afterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Before
+	public void before() throws Exception {
+		// be sure that normal parallel stuff is set up
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				jargonOriginalProperties);
 	}
 
 	@Test
@@ -358,6 +368,53 @@ public class DataTransferOperationsImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
 		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+	}
+
+	/**
+	 * Bug [#1837] timeout on put using 3.3.2-SNAPSHOT
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testPutOneFileNoParallelBug1837() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutOneFileNoParallelBug1837.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				jargonOriginalProperties);
+		props.setMaxParallelThreads(0);
+		props.setUseParallelTransfer(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// set jargon properties for no parallel
 
 		// now put the file
 
