@@ -14,8 +14,12 @@ target
 bin
 *.war
 *.log
-*/nbactions.xml
+*/nbactions.xml  
 nbactions.xml
 testing.properties
 */test-output
 JargonVersion.java
+<<<<<<< HEAD
+=======
+
+>>>>>>> master

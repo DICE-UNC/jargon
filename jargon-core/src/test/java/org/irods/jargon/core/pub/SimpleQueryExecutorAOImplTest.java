@@ -84,12 +84,12 @@ public class SimpleQueryExecutorAOImplTest {
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
 
-		if (environmentalInfoAO.isEirods()) {
-			return;
-		}
-
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
+			return;
+		}
 
 		// test is only valid for post 2.4.1
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {

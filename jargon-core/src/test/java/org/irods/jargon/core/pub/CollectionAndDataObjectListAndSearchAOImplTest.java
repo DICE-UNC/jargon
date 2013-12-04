@@ -2021,6 +2021,78 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 	@Test
 	/**
+	 * Obtain an entry at the given valid abs path that is a data object
+	 * @throws Exception
+	 */
+	public void testCollectionAndDataObjectListingEntryForDataObject2dot09gig()
+			throws Exception {
+
+		String testFileName = "testCollectionAndDataObjectListingEntryForDataObject2dot09gig.txt";
+		String testSubdir = "testCollectionAndDataObjectListingEntryForDataObject2dot09gig";
+		long fileSize = (long) (2.09 * 1024 * 1024 * 1024);
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, fileSize);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, true);
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		ObjStat objStat = listAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertNotNull("null objStat returned", objStat);
+		CollectionAndDataObjectListingEntry entry = listAndSearchAO
+				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection
+						+ "/" + testFileName);
+
+		Assert.assertEquals("wrong path", objStat.getAbsolutePath(),
+				entry.getFormattedAbsolutePath());
+		Assert.assertEquals("wrong length", objStat.getObjSize(),
+				entry.getDataSize());
+		Assert.assertEquals("wrong created", objStat.getCreatedAt(),
+				entry.getCreatedAt());
+		Assert.assertEquals("wrong modified", objStat.getModifiedAt(),
+				entry.getModifiedAt());
+		Assert.assertEquals("wrong objType",
+				CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT,
+				entry.getObjectType());
+
+		IRODSFile actualFile = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(entry.getFormattedAbsolutePath());
+		Assert.assertEquals("file has wrong length", fileSize,
+				actualFile.length());
+
+		List<CollectionAndDataObjectListingEntry> entries = listAndSearchAO
+				.listDataObjectsUnderPathWithPermissions(targetIrodsCollection,
+						0);
+		Assert.assertFalse("did not get listing using specific query",
+				entries.isEmpty());
+
+		entry = entries.get(0);
+		Assert.assertEquals("wrong length", objStat.getObjSize(),
+				entry.getDataSize());
+
+	}
+
+	@Test
+	/**
 	 * objStat for normal iRODS collection
 	 */
 	public void testObjectStatForCollection() throws Exception {

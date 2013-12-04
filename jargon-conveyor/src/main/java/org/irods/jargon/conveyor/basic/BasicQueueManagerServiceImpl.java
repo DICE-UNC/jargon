@@ -174,7 +174,7 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
-		evaluateTransferForExecution(existingTransfer);
+		//evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForResubmit(transferId);

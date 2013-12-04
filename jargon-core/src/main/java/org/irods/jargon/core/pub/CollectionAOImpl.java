@@ -161,12 +161,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			 * queries are supported
 			 */
 
-			EnvironmentalInfoAO environmentalInfoAO = this
-					.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-							getIRODSAccount());
-			boolean isEirods = environmentalInfoAO.isEirods();
-
-			if (isEirods) {
+			if (this.getIRODSServerProperties().isEirods()) {
 				log.info("this is eirods, case insensitive is supported");
 			} else if (!getIRODSServerProperties()
 					.isSupportsCaseInsensitiveQueries()) {
