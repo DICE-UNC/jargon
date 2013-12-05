@@ -318,7 +318,7 @@ public abstract class AbstractConveyorCallable implements
 	@Override
 	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		log.info("put status callback:{}", transferStatus);
+		log.info("status callback:{}", transferStatus);
 		try {
 			if (transferStatus.getTransferState() == TransferState.SUCCESS
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {

@@ -484,6 +484,9 @@ public class BasicQueueManagerServiceImpl extends
 	@Override
 	public void cancelTransfer(final long transferId)
 			throws TransferNotFoundException, ConveyorExecutionException {
+            
+              
+      
 		TransferAttempt transferAttemptToCancel;
 		try {
 			transferAttemptToCancel = transferAttemptDAO
@@ -500,9 +503,10 @@ public class BasicQueueManagerServiceImpl extends
 
 		// check state of transfer attempt
 		if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
-
+                    
+                        TransferAttempt current = getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt();
 			// check to see if this is the currently processing transfer attempt
-			if (transferAttemptToCancel.getId().longValue() == getConveyorService()
+			if (current != null && transferAttemptToCancel.getId().longValue() == getConveyorService()
 					.getConveyorExecutorService().getCurrentTransferAttempt()
 					.getId().longValue()) {
 				log.info("matched currently running transfer attempt - cancelling transfer");

@@ -350,10 +350,6 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 					.equals(ConfigurationPropertyConstants.MAX_ERRORS_BEFORE_CANCEL_KEY)) {
 				cachedProps.setMaxErrorsBeforeCancel(property
 						.propertyValueAsInt());
-			} else if (property.getPropertyKey().equals(
-					ConfigurationPropertyConstants.LOG_RESTART_FILES)) {
-				cachedProps.setRecordRestartFiles(property
-						.propertyValueAsBoolean());
 			}
 		}
 

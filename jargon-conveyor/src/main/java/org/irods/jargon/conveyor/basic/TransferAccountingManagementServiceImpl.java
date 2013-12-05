@@ -23,6 +23,8 @@ import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -224,7 +226,6 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setUpdatedAt(transferAttempt.getCreatedAt());
 
 		try {
-			transferDAO.save(transfer);
 			transfer.getTransferAttempts().add(transferAttempt);
 			transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
@@ -462,9 +463,9 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setUpdatedAt(localTransferAttempt.getAttemptEnd());
 
 		try {
-			log.error("saving transfer data via DAO");
+			log.info("saving transfer data via DAO");
+                        transferAttemptDAO.save(localTransferAttempt);
 			transferDAO.save(transfer);
-			transferAttemptDAO.save(localTransferAttempt);
 		} catch (TransferDAOException ex) {
 			log.error("transferDAO exception saving data", ex);
 			throw new ConveyorExecutionException(
@@ -611,8 +612,9 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setErrorMessage(WARNING_CANCELLED_MESSAGE);
 
 		try {
+                        transferAttemptDAO.save(localTransferAttempt);
 			transferDAO.save(transfer);
-			transferAttemptDAO.save(localTransferAttempt);
+			
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -682,8 +684,8 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
+                        transferAttemptDAO.save(localTransferAttempt);
 			transferDAO.save(transfer);
-			transferAttemptDAO.save(localTransferAttempt);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -747,8 +749,8 @@ public class TransferAccountingManagementServiceImpl extends
 				.stackTraceToString(transferStatus.getTransferException()));
 
 		try {
-			transferDAO.save(transfer);
-			transferAttemptDAO.save(localTransferAttempt);
+                    transferAttemptDAO.save(localTransferAttempt);	
+                    transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -807,14 +809,11 @@ public class TransferAccountingManagementServiceImpl extends
 					"error saving transfer attempt", e);
 		}
 
-		if (!(getConfigurationService()
+		if (!getConfigurationService()
 				.getCachedConveyorConfigurationProperties()
-				.isLogSuccessfulTransfers() && getConfigurationService()
-				.getCachedConveyorConfigurationProperties()
-				.isRecordRestartFiles())) {
+				.isLogSuccessfulTransfers()) {
 			log.info("not logging restart...update transfer attempt with counts");
 			return;
-
 		}
 
 		log.info("logging restart, log transfer item");
