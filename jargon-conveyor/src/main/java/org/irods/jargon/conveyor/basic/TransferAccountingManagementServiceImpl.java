@@ -227,7 +227,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		try {
 			transfer.getTransferAttempts().add(transferAttempt);
-			transferAttemptDAO.save(transferAttempt);
+			//transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
 			transferDAO.save(transfer);
 			log.info("transfer saved:{}", transfer);
