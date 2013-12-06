@@ -78,6 +78,7 @@ public class ConveyorExecutorServiceImplFunctionalTest {
 		conveyorService.setIrodsAccessObjectFactory(irodsFileSystem
 				.getIRODSAccessObjectFactory());
 		conveyorService.getQueueManagerService().purgeAllFromQueue();
+		conveyorService.getConveyorExecutorService().setOperationCompleted();
 		conveyorService.getGridAccountService().resetPassPhraseAndAccounts();
 
 	}

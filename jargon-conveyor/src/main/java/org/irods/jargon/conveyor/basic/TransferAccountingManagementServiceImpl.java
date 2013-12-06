@@ -23,8 +23,6 @@ import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -130,30 +128,14 @@ public class TransferAccountingManagementServiceImpl extends
 					"transfer does not have an id, it may not be stored in the transfer database");
 		}
 
-		Transfer myTransfer;
-		log.info("looking up transfer..");
-		try {
-			myTransfer = transferDAO.findById(transfer.getId());
-		} catch (TransferDAOException e) {
-			log.error("unable to find transfer for execution", e);
-			throw new ConveyorExecutionException(
-					"unable to find transfer for execution", e);
-		}
-
-		if (myTransfer == null) {
-			log.error("unable to find transfer for execution");
-			throw new ConveyorExecutionException(
-					"unable to find transfer for execution");
-		}
-
-		myTransfer.setLastTransferStatus(TransferStatusEnum.OK);
-		myTransfer.setTransferState(TransferStateEnum.PROCESSING);
-		myTransfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setTransferState(TransferStateEnum.PROCESSING);
+		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 
 		TransferAttempt transferAttempt = null;
 		try {
 			transferAttempt = transferAttemptDAO
-					.findLastTransferAttemptForTransferByTransferId(myTransfer
+					.findLastTransferAttemptForTransferByTransferId(transfer
 							.getId());
 			if (transferAttempt == null) {
 				log.error("couldn't find the transfer attempt in transfer:{}",
@@ -173,10 +155,8 @@ public class TransferAccountingManagementServiceImpl extends
 		transferAttempt.setUpdatedAt(transferAttempt.getAttemptStart());
 
 		try {
-			transferDAO.save(myTransfer);
-			log.info("transfer saved:{}", myTransfer);
-			transferAttemptDAO.save(transferAttempt);
-			log.info("transfer attempt added:{}", transferAttempt);
+			transferDAO.save(transfer);
+			log.info("transfer saved:{}", transfer);
 			return transferAttempt;
 		} catch (TransferDAOException e) {
 			log.error("error saving transfer", e);
@@ -227,7 +207,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		try {
 			transfer.getTransferAttempts().add(transferAttempt);
-			//transferAttemptDAO.save(transferAttempt);
+			// transferAttemptDAO.save(transferAttempt);
 			log.info("transfer attempt added:{}", transferAttempt);
 			transferDAO.save(transfer);
 			log.info("transfer saved:{}", transfer);
@@ -263,70 +243,63 @@ public class TransferAccountingManagementServiceImpl extends
 			throw new IllegalArgumentException("null transferAttempt");
 		}
 
-		TransferAttempt localTransferAttempt;
-		try {
-			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
-					.getId());
-			if (localTransferAttempt == null) {
-				log.error("null tranfer attempt found, cannot update the database");
-				throw new ConveyorExecutionException(
-						"error finding transfer attempt");
-
-			}
-		} catch (TransferDAOException e) {
-			throw new ConveyorExecutionException(
-					"error finding transfer attempt", e);
-		}
 		log.info("updated last good path to:{}",
 				transferStatus.getSourceFileAbsolutePath());
 
 		long currentTime = System.currentTimeMillis();
 		Date currentDate = new Date(currentTime);
 
-		localTransferAttempt.setLastSuccessfulPath(transferStatus
+		transferAttempt.setLastSuccessfulPath(transferStatus
 				.getSourceFileAbsolutePath());
-		localTransferAttempt.setTotalFilesTransferredSoFar(transferStatus
+		transferAttempt.setTotalFilesTransferredSoFar(transferStatus
 				.getTotalFilesTransferredSoFar());
-		localTransferAttempt.setTotalFilesSkippedSoFar(transferStatus
+		transferAttempt.setTotalFilesSkippedSoFar(transferStatus
 				.getTotalFilesSkippedSoFar());
-		localTransferAttempt.setTotalFilesCount(transferStatus
+		transferAttempt.setTotalFilesCount(transferStatus
 				.getTotalFilesToTransfer());
-		localTransferAttempt.setUpdatedAt(currentDate);
+		transferAttempt.setUpdatedAt(currentDate);
 
-		if (!getConfigurationService()
+		if (getConfigurationService()
 				.getCachedConveyorConfigurationProperties()
 				.isLogSuccessfulTransfers()) {
-			log.info("not logging successful transfer...update transfer attempt with counts");
-			try {
-				transferAttemptDAO.save(localTransferAttempt);
-				return;
-			} catch (TransferDAOException e) {
-				throw new ConveyorExecutionException(
-						"error saving transfer attempt", e);
-			}
-		}
 
-		// create transfer item
-		TransferItem transferItem = new TransferItem();
-		transferItem.setSequenceNumber(currentTime);
-		transferItem.setFile(true);
-		transferItem.setTransferType(transferAttempt.getTransfer()
-				.getTransferType());
-		transferItem.setSourceFileAbsolutePath(transferStatus
-				.getSourceFileAbsolutePath());
-		transferItem.setTargetFileAbsolutePath(transferStatus
-				.getTargetFileAbsolutePath());
-		transferItem.setTransferredAt(currentDate);
-		transferItem.setLengthInBytes(transferStatus.getBytesTransfered());
+			// create transfer item
+			TransferItem transferItem = new TransferItem();
+			transferItem.setSequenceNumber(currentTime);
+			transferItem.setFile(true);
+			transferItem.setTransferType(transferAttempt.getTransfer()
+					.getTransferType());
+			transferItem.setSourceFileAbsolutePath(transferStatus
+					.getSourceFileAbsolutePath());
+			transferItem.setTargetFileAbsolutePath(transferStatus
+					.getTargetFileAbsolutePath());
+			transferItem.setTransferredAt(currentDate);
+			transferItem.setLengthInBytes(transferStatus.getBytesTransfered());
+
+			// try {
+			transferItem.setTransferAttempt(transferAttempt);
+			transferAttempt.getTransferItems().add(transferItem);
+
+			/*
+			 * try { transferItemDAO.save(transferItem); } catch
+			 * (TransferDAOException e) { throw new ConveyorExecutionException(
+			 * "error saving transfer attempt", e); }
+			 */
+
+		}
 
 		try {
-			transferItem.setTransferAttempt(localTransferAttempt);
-			localTransferAttempt.getTransferItems().add(transferItem);
-			transferAttemptDAO.save(localTransferAttempt);
-		} catch (TransferDAOException ex) {
+			transferAttemptDAO.save(transferAttempt);
+		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException(
-					"error saving transfer attempt", ex);
+					"error saving transfer attempt", e);
 		}
+
+		// transferAttemptDAO.save(localTransferAttempt);
+		/*
+		 * } catch (TransferDAOException ex) { throw new
+		 * ConveyorExecutionException( "error saving transfer attempt", ex); }
+		 */
 
 	}
 
@@ -336,13 +309,13 @@ public class TransferAccountingManagementServiceImpl extends
 	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
 	 * updateTransferAfterFailedFileTransfer
 	 * (org.irods.jargon.core.transfer.TransferStatus,
-	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
+	 * org.irods.jargon.transfer.dao.domain.TransferAttempt, int)
 	 */
 	@Override
 	public void updateTransferAfterFailedFileTransfer(
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
-			final TransferAttempt transferAttempt)
-			throws ConveyorExecutionException {
+			final TransferAttempt transferAttempt,
+			final int totalFileErrorsSoFar) throws ConveyorExecutionException {
 
 		if (transferStatus == null) {
 			throw new IllegalArgumentException("null transfer status");
@@ -352,32 +325,16 @@ public class TransferAccountingManagementServiceImpl extends
 			throw new IllegalArgumentException("null transfer attempt");
 		}
 
-		TransferAttempt localTransferAttempt;
-		try {
-			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
-					.getId());
-			if (localTransferAttempt == null) {
-				log.error("null transfer attempt found, cannot update the database");
-				throw new ConveyorExecutionException(
-						"error finding transfer attempt");
-
-			}
-		} catch (TransferDAOException e) {
-			throw new ConveyorExecutionException(
-					"error finding transfer attempt", e);
-		}
-
 		long currentTime = System.currentTimeMillis();
 		Date currentDate = new Date(currentTime);
-		localTransferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
-		localTransferAttempt.setUpdatedAt(currentDate);
-		localTransferAttempt.setTotalFilesErrorSoFar(localTransferAttempt
-				.getTotalFilesErrorSoFar() + 1);
+		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
+		transferAttempt.setUpdatedAt(currentDate);
+		transferAttempt.setTotalFilesErrorSoFar(totalFileErrorsSoFar);
 
 		// create transfer item
 		TransferItem transferItem = new TransferItem();
 		transferItem.setSequenceNumber(currentTime);
-		transferItem.setTransferType(localTransferAttempt.getTransfer()
+		transferItem.setTransferType(transferAttempt.getTransfer()
 				.getTransferType());
 		transferItem.setFile(true);
 		transferItem.setSourceFileAbsolutePath(transferStatus
@@ -386,7 +343,7 @@ public class TransferAccountingManagementServiceImpl extends
 				.getTargetFileAbsolutePath());
 		transferItem.setError(true);
 		transferItem.setTransferredAt(currentDate);
-		transferItem.setTransferAttempt(localTransferAttempt);
+		transferItem.setTransferAttempt(transferAttempt);
 
 		if (transferStatus.getTransferException() != null) {
 			transferItem.setErrorMessage(transferStatus.getTransferException()
@@ -395,10 +352,10 @@ public class TransferAccountingManagementServiceImpl extends
 					.stackTraceToString(transferStatus.getTransferException()));
 		}
 
-		localTransferAttempt.getTransferItems().add(transferItem);
+		transferAttempt.getTransferItems().add(transferItem);
 
 		try {
-			transferAttemptDAO.save(localTransferAttempt);
+			transferAttemptDAO.save(transferAttempt);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -445,6 +402,7 @@ public class TransferAccountingManagementServiceImpl extends
 			throw new ConveyorExecutionException(
 					"error finding transfer attempt", e);
 		}
+
 		// log.info("exception:{}", exception);
 
 		Transfer transfer = localTransferAttempt.getTransfer();
@@ -464,7 +422,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		try {
 			log.info("saving transfer data via DAO");
-                        transferAttemptDAO.save(localTransferAttempt);
+			// transferAttemptDAO.save(transferAttempt);
 			transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			log.error("transferDAO exception saving data", ex);
@@ -500,10 +458,11 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterOverallWarningByFileErrorThreshold(
-			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			final TransferStatus transferStatus,
+			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		log.info("updateTransferStatusAfterOverallWarning()");
-		this.transferUpdateOverall(transferStatus, transferAttempt,
+		transferUpdateOverall(transferStatus, transferAttempt,
 				TransferStatusEnum.WARNING, TransferStateEnum.COMPLETE,
 				WARNING_SOME_FAILED_MESSAGE);
 
@@ -519,10 +478,11 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterOverallWarningNoFilesTransferred(
-			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			final TransferStatus transferStatus,
+			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		log.info("updateTransferAfterOverallWarningNoFilesTransferred()");
-		this.transferUpdateOverall(transferStatus, transferAttempt,
+		transferUpdateOverall(transferStatus, transferAttempt,
 				TransferStatusEnum.WARNING, TransferStateEnum.COMPLETE,
 				WARNING_NO_FILES_TRANSFERRED_MESSAGE);
 
@@ -538,10 +498,11 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterOverallFailureByFileErrorThreshold(
-			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			final TransferStatus transferStatus,
+			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		log.info("updateTransferStatusAfterOverallWarning()");
-		this.transferUpdateOverall(transferStatus, transferAttempt,
+		transferUpdateOverall(transferStatus, transferAttempt,
 				TransferStatusEnum.ERROR, TransferStateEnum.COMPLETE,
 				ERROR_SOME_FAILED_MESSAGE);
 
@@ -563,7 +524,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("updateTransferAfterOverallSuccess()");
 
-		this.transferUpdateOverall(transferStatus, transferAttempt,
+		transferUpdateOverall(transferStatus, transferAttempt,
 				TransferStatusEnum.OK, TransferStateEnum.COMPLETE, null);
 	}
 
@@ -575,7 +536,8 @@ public class TransferAccountingManagementServiceImpl extends
 	 * org.irods.jargon.transfer.dao.domain.TransferAttempt)
 	 */
 	@Override
-	public void updateTransferAfterCancellation(TransferAttempt transferAttempt)
+	public void updateTransferAfterCancellation(
+			final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		log.info("updateTransferAfterCancellation()");
 
@@ -612,9 +574,9 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setErrorMessage(WARNING_CANCELLED_MESSAGE);
 
 		try {
-                        transferAttemptDAO.save(localTransferAttempt);
+			transferAttemptDAO.save(localTransferAttempt);
 			transferDAO.save(transfer);
-			
+
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -653,38 +615,34 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferAttempt:{}", transferAttempt);
 		log.info("transferStatus:{}", transferStatus);
 
-		TransferAttempt localTransferAttempt;
-		try {
-			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
-					.getId());
-			if (localTransferAttempt == null) {
-				log.error("null transfer attempt found, cannot update the database");
-				throw new ConveyorExecutionException(
-						"error finding transfer attempt");
-
-			}
-		} catch (TransferDAOException e) {
-			throw new ConveyorExecutionException(
-					"error finding transfer attempt", e);
-		}
-
-		Transfer transfer = localTransferAttempt.getTransfer();
+		/*
+		 * TransferAttempt localTransferAttempt; try { localTransferAttempt =
+		 * transferAttemptDAO.findById(transferAttempt .getId()); if
+		 * (localTransferAttempt == null) {
+		 * log.error("null transfer attempt found, cannot update the database");
+		 * throw new ConveyorExecutionException(
+		 * "error finding transfer attempt");
+		 * 
+		 * } } catch (TransferDAOException e) { throw new
+		 * ConveyorExecutionException( "error finding transfer attempt", e); }
+		 */
+		Transfer transfer = transferAttempt.getTransfer();
 
 		log.info("transfer for update:{}", transfer);
 
 		transfer.setLastTransferStatus(transferStatusEnum);
 		transfer.setTransferState(transferState);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		localTransferAttempt.setAttemptEnd(new Timestamp(System
-				.currentTimeMillis()));
-		localTransferAttempt.setAttemptStatus(transferStatusEnum);
-		localTransferAttempt.setUpdatedAt(localTransferAttempt.getAttemptEnd());
-		localTransferAttempt.setErrorMessage(errorMessage);
+		transferAttempt
+				.setAttemptEnd(new Timestamp(System.currentTimeMillis()));
+		transferAttempt.setAttemptStatus(transferStatusEnum);
+		transferAttempt.setUpdatedAt(transferAttempt.getAttemptEnd());
+		transferAttempt.setErrorMessage(errorMessage);
 
 		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
-                        transferAttemptDAO.save(localTransferAttempt);
+			// transferAttemptDAO.save(localTransferAttempt);
 			transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
@@ -749,8 +707,8 @@ public class TransferAccountingManagementServiceImpl extends
 				.stackTraceToString(transferStatus.getTransferException()));
 
 		try {
-                    transferAttemptDAO.save(localTransferAttempt);	
-                    transferDAO.save(transfer);
+			transferAttemptDAO.save(localTransferAttempt);
+			transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
@@ -898,7 +856,7 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("added new transfer attempt:{}", newTransferAttempt);
 
 		try {
-			transferDAO.save(transfer);
+			transferAttemptDAO.save(newTransferAttempt);
 		} catch (TransferDAOException e) {
 			log.error("error updating transfer for restart", e);
 			throw new ConveyorExecutionException(
@@ -980,7 +938,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public boolean isLogSuccessfulTransfers() throws ConveyorExecutionException {
-		return this.getConfigurationService()
+		return getConfigurationService()
 				.getCachedConveyorConfigurationProperties()
 				.isLogSuccessfulTransfers();
 	}

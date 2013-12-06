@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -84,8 +85,9 @@ public class TransferAttempt implements Serializable {
 	@Column(name = "total_files_error_so_far")
 	private int totalFilesErrorSoFar = 0;
 
-	@OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "transferAttempt", targetEntity = TransferItem.class, fetch = FetchType.LAZY)
 	@OrderBy("sequenceNumber")
+	@Cascade({ CascadeType.ALL })
 	@LazyCollection(LazyCollectionOption.EXTRA)
 	private List<TransferItem> transferItems = new ArrayList<TransferItem>();
 

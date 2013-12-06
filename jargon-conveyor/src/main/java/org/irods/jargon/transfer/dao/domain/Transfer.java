@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -21,6 +20,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 
@@ -78,8 +79,9 @@ public class Transfer implements Serializable {
 	@Column(name = "irods_absolute_path", length = 32672)
 	private String irodsAbsolutePath = "";
 
-	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, cascade = { CascadeType.ALL }, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "transfer", targetEntity = TransferAttempt.class, fetch = FetchType.EAGER)
 	@OrderBy("sequenceNumber")
+	@Cascade({ CascadeType.ALL })
 	@Fetch(FetchMode.SELECT)
 	private List<TransferAttempt> transferAttempts = new ArrayList<TransferAttempt>();
 

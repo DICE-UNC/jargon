@@ -348,7 +348,7 @@ public abstract class AbstractConveyorCallable implements
 					this.getConveyorService()
 							.getTransferAccountingManagementService()
 							.updateTransferAfterFailedFileTransfer(
-									transferStatus, getTransferAttempt());
+									transferStatus, getTransferAttempt(), transferControlBlock.getErrorCount());
 				} catch (ConveyorExecutionException ex) {
 					throw new JargonException(ex.getMessage(), ex.getCause());
 				}

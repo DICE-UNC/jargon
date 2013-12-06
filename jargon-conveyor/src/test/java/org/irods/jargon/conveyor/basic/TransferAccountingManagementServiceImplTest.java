@@ -417,18 +417,6 @@ public class TransferAccountingManagementServiceImplTest {
 				.updateTransferAfterSuccessfulFileTransfer(transferStatus, null);
 	}
 
-	@Test(expected = ConveyorExecutionException.class)
-	public void testUpdateTransferAfterSuccessfulFileTransferInvalidTransferAttempt()
-			throws Exception {
-		TransferAttempt transferAttempt = Mockito.mock(TransferAttempt.class);
-		TransferStatus transferStatus = Mockito.mock(TransferStatus.class);
-		Mockito.when(transferAttempt.getId()).thenReturn(new Long(-1111));
-
-		transferAccountingManagementService
-				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
-						transferAttempt);
-	}
-
 	@Test
 	public void testUpdateTransferAfterOverallSuccess() throws Exception {
 		String testUserName = "user1";
@@ -907,6 +895,7 @@ public class TransferAccountingManagementServiceImplTest {
 				TransferState.RESTARTING, irodsAccount.getHost(),
 				irodsAccount.getZone());
 
+		// HERE!!!!!!
 		transferAccountingManagementService
 				.updateTransferAfterRestartFileSkipped(status, restartAttempt);
 
@@ -983,7 +972,8 @@ public class TransferAccountingManagementServiceImplTest {
 				irodsAccount.getHost(), irodsAccount.getZone());
 
 		transferAccountingManagementService
-				.updateTransferAfterFailedFileTransfer(status, transferAttempt);
+				.updateTransferAfterFailedFileTransfer(status, transferAttempt,
+						1);
 
 		List<TransferItem> transferItems = transferAttempt.getTransferItems();
 		TransferItem failureItem = transferItems.get(0);

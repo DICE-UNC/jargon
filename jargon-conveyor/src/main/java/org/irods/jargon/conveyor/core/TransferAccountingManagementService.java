@@ -59,10 +59,11 @@ public interface TransferAccountingManagementService {
 	 *            {@link TransferStatus} returned from status callback
 	 * @param transferAttempt
 	 *            {@link TransferAttempt} that resulted in the transfer error
+	 * @param totalFileErrorsSoFar <code>int</code> with the total number of errors that have occurred so far
 	 * @throws ConveyorExecutionException
 	 */
 	void updateTransferAfterFailedFileTransfer(TransferStatus transferStatus,
-			TransferAttempt transferAttempt) throws ConveyorExecutionException;
+			TransferAttempt transferAttempt, final int totalFileErrorsSoFar) throws ConveyorExecutionException;
 
 	/**
 	 * Update a transfer due to an error trying to set up and run the transfer

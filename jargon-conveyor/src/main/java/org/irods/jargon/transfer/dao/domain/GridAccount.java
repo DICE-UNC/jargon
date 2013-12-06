@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -18,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.irods.jargon.core.connection.AuthScheme;
@@ -98,7 +99,7 @@ public class GridAccount implements Serializable {
 	@Enumerated(EnumType.STRING)
 	@Column(name = "auth_scheme", nullable = false)
 	private AuthScheme authScheme;
-	
+
 	@Column(name = "preset")
 	private boolean preset;
 
@@ -121,15 +122,17 @@ public class GridAccount implements Serializable {
 	@Column(name = "updated_at", nullable = false)
 	private Date updatedAt;
 
-	@OneToMany(mappedBy = "gridAccount", targetEntity = Transfer.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "gridAccount", targetEntity = Transfer.class, fetch = FetchType.LAZY)
 	@OrderBy("createdAt DESC")
 	@LazyCollection(LazyCollectionOption.TRUE)
-	private Set<Transfer> transfer = new HashSet<Transfer>();
+	@Cascade({ CascadeType.ALL })
+	private final Set<Transfer> transfer = new HashSet<Transfer>();
 
-	@OneToMany(mappedBy = "gridAccount", targetEntity = Synchronization.class, cascade = { CascadeType.ALL }, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "gridAccount", targetEntity = Synchronization.class, fetch = FetchType.LAZY)
 	@OrderBy("name")
 	@LazyCollection(LazyCollectionOption.TRUE)
-	private Set<Synchronization> synchronization = new HashSet<Synchronization>();
+	@Cascade({ CascadeType.ALL })
+	private final Set<Synchronization> synchronization = new HashSet<Synchronization>();
 
 	/**
 	 * @return
@@ -316,7 +319,7 @@ public class GridAccount implements Serializable {
 				&& this.getZone().equals(other.getZone())
 				&& this.getUserName().equals(other.getUserName())
 				&& this.getPassword().equals(other.getPassword()) && this
-				.getAuthScheme() == other.getAuthScheme());
+					.getAuthScheme() == other.getAuthScheme());
 
 	}
 
@@ -342,7 +345,8 @@ public class GridAccount implements Serializable {
 	}
 
 	/**
-	 * @param preset the preset to set
+	 * @param preset
+	 *            the preset to set
 	 */
 	public void setPreset(boolean preset) {
 		this.preset = preset;
