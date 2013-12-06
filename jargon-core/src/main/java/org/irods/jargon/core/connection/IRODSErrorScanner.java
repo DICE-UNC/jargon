@@ -24,6 +24,7 @@ import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.exception.SpecificQueryException;
+import org.irods.jargon.core.exception.UnixFileCreateException;
 import org.irods.jargon.core.exception.UnixFileMkdirException;
 import org.irods.jargon.core.exception.UnixFileRenameException;
 import org.irods.jargon.core.exception.ZoneUnavailableException;
@@ -84,13 +85,23 @@ public class IRODSErrorScanner {
 		} else if (infoValue >= -528036 && infoValue <= -528000) {
 			throw new UnixFileRenameException(
 					"Exception renaming file in file system", infoValue);
-		}
+		} else if (infoValue >= -511000 && infoValue <= -511199) {
+                    throw new UnixFileCreateException("Exception creating file in file system", infoValue);
+                }
 
 		ErrorEnum errorEnum;
 
 		try {
 			log.debug("scanning for info value...");
+                        
+                        try {
+                        
 			errorEnum = ErrorEnum.valueOf(infoValue);
+                        
+                        } catch (IllegalArgumentException iae) {
+                            throw new JargonException("Unknown iRODS exception code recieved", infoValue);
+                        }
+                        
 			log.debug("errorEnum val:{}", errorEnum);
 		} catch (IllegalArgumentException ie) {
 			log.error("error getting error enum value", ie);
