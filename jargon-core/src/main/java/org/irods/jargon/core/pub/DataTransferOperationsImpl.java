@@ -116,8 +116,21 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new JargonException(msg);
 		}
 
-		// make sure the target parent dir exists
-		targetFile.mkdirs();
+		// go ahead and mkdirs for the target directory, just in case, no harm
+		// if it already exists
+
+		// if
+		// (!sourceFile.getAbsolutePath().equals(targetFile.getAbsolutePath()))
+		// {
+		// targetFile.mkdirs();
+		// }
+
+		/*
+		 * if (!sourceFile.getParentFile().getAbsolutePath()
+		 * .equals(targetFile.getParentFile().getAbsolutePath())) {
+		 * log.info("move is to a different parent, so mkdir for the target");
+		 * // make sure the target parent dir exists targetFile.mkdirs(); }
+		 */
 
 		String lastPartOfSourcePath = sourceFile.getName();
 		log.debug(
@@ -125,8 +138,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				lastPartOfSourcePath);
 		StringBuilder sb = new StringBuilder();
 		sb.append(targetFile.getAbsolutePath());
-		sb.append('/');
-		sb.append(lastPartOfSourcePath);
+		if (!sourceFile.getParent().equals(targetFile.getParent())) {
+			sb.append('/');
+			sb.append(lastPartOfSourcePath);
+		}
+
 		String collectionUnderTargetAbsPath = sb.toString();
 
 		if (sourceFile.getAbsolutePath().equals(collectionUnderTargetAbsPath)) {

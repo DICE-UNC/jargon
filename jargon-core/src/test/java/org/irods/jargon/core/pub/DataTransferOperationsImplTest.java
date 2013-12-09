@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.exception.PathTooLongException;
+import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -27,6 +28,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImple
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -34,6 +36,7 @@ import org.junit.Test;
 public class DataTransferOperationsImplTest {
 
 	private static Properties testingProperties = new Properties();
+	private static JargonProperties jargonOriginalProperties = null;
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "DataTransferOperationsImplTest";
@@ -48,6 +51,7 @@ public class DataTransferOperationsImplTest {
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
+		jargonOriginalProperties = settableJargonProperties;
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -67,6 +71,13 @@ public class DataTransferOperationsImplTest {
 	@AfterClass
 	public static void afterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Before
+	public void before() throws Exception {
+		// be sure that normal parallel stuff is set up
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				jargonOriginalProperties);
 	}
 
 	@Test
@@ -373,6 +384,63 @@ public class DataTransferOperationsImplTest {
 						irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+	}
+
+	/**
+	 * Bug [#1837] timeout on put using 3.3.2-SNAPSHOT
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testPutOneFileNoParallelBug1837() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutOneFileNoParallelBug1837.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						32 * 1024 * 1024);
+
+		SettableJargonProperties props = new SettableJargonProperties(
+				jargonOriginalProperties);
+		props.setMaxParallelThreads(0);
+		props.setUseParallelTransfer(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// set jargon properties for no parallel
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		transferOptions.setMaxThreads(0);
+		transferOptions.setUseParallelTransfer(false);
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null,
+				transferControlBlock);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
 				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
@@ -2547,7 +2615,7 @@ public class DataTransferOperationsImplTest {
 
 		IRODSFile targetParent = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		targetParent.mkdirs();
+		// targetParent.mkdirs();
 
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, targetParent.getAbsolutePath());
@@ -2555,66 +2623,76 @@ public class DataTransferOperationsImplTest {
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath + "/"
-						+ rootCollection);
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
 
 		Assert.assertTrue("did not find expected targetcollection",
 				destFile.isDirectory());
 	}
 
-	// see note in release notes...potential bug?
-	@Ignore
-	public void testMoveCollectionWithTwoFilesUnderneathSameParent()
-			throws Exception {
+	@Test
+	public void testMoveCollectionRenameUnderParent() throws Exception {
 
 		// this test case passes if no error, tests code to avoid irods error
 		// -837000
-		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
-		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParentNewTarget";
+		String rootCollection = "testMoveCollectionRenameUnderParent";
 
-		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
+		String lvl1 = "lvl1";
+		String lvl2 = "lvl2";
+		String lvl3 = "lvl3";
 
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ rootCollection + "/" + targetCollection);
-
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
-						1, 1, "testFile", ".txt", 2, 2, 1, 2);
+								+ rootCollection);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
+		IRODSFile dirFile = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+
+		dirFile.mkdirs();
+
+		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
+				lvl1);
+		dirFile.mkdir();
+
+		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
+				lvl2);
+
+		String dirFileLvl2Name = dirFile.getAbsolutePath();
+
+		dirFile.mkdir();
+
+		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
+				lvl3);
+		dirFile.mkdir();
+
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		File localFile = new File(localCollectionAbsolutePath);
 
-		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		// rename lvl2 to lvl2 renamed
 
-		// make the target
+		dataTransferOperationsAO.move(dirFileLvl2Name,
+				irodsCollectionRootAbsolutePath + "/lvl1/lvl2-renamed");
 
-		IRODSFile targetParent = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		targetParent.mkdirs();
+		IRODSFile actualFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath
+						+ "/lvl1/lvl2-renamed");
+		Assert.assertTrue("renamed file does not exist", actualFile.exists());
 
-		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
-				+ rootCollection, targetParent.getAbsolutePath());
+		String[] actualChildren = actualFile.list();
 
-		Assert.assertTrue(true);
+		Assert.assertEquals("should be 1 child", 1, actualChildren.length);
+
+		String actualChildName = actualChildren[0];
+
+		Assert.assertEquals("did not find expected child file", lvl3,
+				actualChildName);
+
 	}
 
 	@Ignore
