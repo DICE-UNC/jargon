@@ -66,9 +66,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAO {
 
 	public static final String ERROR_IN_COLECTION_QUERY = "An error occurred in the query for the collection";
-	private IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
+	private final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
 			getIRODSSession(), getIRODSAccount());
-	private IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
+	private final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 			getIRODSSession(), getIRODSAccount());
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAOImpl.class);
@@ -897,6 +897,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.addSelectAsAgregateGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							SelectFieldTypes.COUNT)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM,
+							QueryConditionOperators.EQUAL, 0)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.LIKE,

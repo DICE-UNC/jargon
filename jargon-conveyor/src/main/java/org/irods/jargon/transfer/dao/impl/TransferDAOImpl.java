@@ -16,7 +16,6 @@ import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.DataAccessException;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
@@ -348,45 +347,17 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	public void purgeSuccessful() throws TransferDAOException {
 		log.debug("entering purgeSuccessful()");
 
-		try {
+		List<Transfer> transfers = this.findAll();
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("delete from TransferItem as item where ");
-			sb.append("item.transfer.id in (");
-			sb.append("select id from Transfer as transfer where transferState = ? or transferState = ? and transferStatus = ?)");
+		for (Transfer transfer : transfers) {
+			if ((transfer.getTransferState() == TransferStateEnum.COMPLETE || transfer
+					.getTransferState() == TransferStateEnum.CANCELLED)
+					&& (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
+				log.info("deleting...{}", transfer);
 
-			log.debug("delete transfer items sql:{}", sb.toString());
-
-			int rows = super.getHibernateTemplate()
-					.bulkUpdate(
-							sb.toString(),
-							new Object[] { TransferStateEnum.COMPLETE,
-									TransferStateEnum.CANCELLED,
-									TransferStatusEnum.OK });
-			log.debug("deleted items count= {}", rows);
-
-			sb = new StringBuilder();
-			sb.append("delete from Transfer  where transferState = ? or transferState = ? and transferStatus = ?");
-
-			log.debug("delete transfers sql:{}", sb.toString());
-
-			rows = super.getHibernateTemplate()
-					.bulkUpdate(
-							sb.toString(),
-							new Object[] { TransferStateEnum.COMPLETE,
-									TransferStateEnum.CANCELLED,
-									TransferStatusEnum.OK });
-
-			log.debug("deleted transfers count= {}", rows);
-
-		} catch (HibernateException e) {
-			log.error("HibernateException", e);
-			throw new TransferDAOException(e);
-		} catch (DataAccessException e) {
-
-			log.error("error in purgeSuccessful()", e);
-			throw new TransferDAOException("Failed purgeSuccessful()", e);
+			}
 		}
+
 	}
 
 	/*

@@ -495,4 +495,50 @@ public class BasicQueueManagerServiceImplTest {
 		Assert.assertNotNull("did not set message", attempt.getErrorMessage());
 
 	}
+
+	@Test
+	public void testPurgeSuccessfulTransfers() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhrase(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_PASSWORD_KEY));
+		conveyorService.getGridAccountService()
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+		ConfigurationProperty logSuccessful = new ConfigurationProperty();
+		logSuccessful
+				.setPropertyKey(ConfigurationPropertyConstants.LOG_SUCCESSFUL_FILES_KEY);
+		logSuccessful.setPropertyValue("true");
+
+		conveyorService.getConfigurationService().addConfigurationProperty(
+				logSuccessful);
+
+		GridAccount gridAccount = conveyorService.getGridAccountService()
+				.findGridAccountByIRODSAccount(irodsAccount);
+
+		Transfer transfer = new Transfer();
+		transfer.setGridAccount(gridAccount);
+		transfer.setIrodsAbsolutePath("irods");
+		transfer.setLocalAbsolutePath("local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
+
+		conveyorService.getQueueManagerService().saveOrUpdateTransfer(transfer);
+		transfer = new Transfer();
+		transfer.setGridAccount(gridAccount);
+
+		transfer.setIrodsAbsolutePath("irods");
+		transfer.setLocalAbsolutePath("local");
+		transfer.setTransferType(TransferType.PUT);
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setTransferState(TransferStateEnum.PROCESSING);
+		conveyorService.getQueueManagerService().saveOrUpdateTransfer(transfer);
+
+		conveyorService.getQueueManagerService().purgeSuccessfulFromQueue();
+
+		List<Transfer> actual = conveyorService.getQueueManagerService()
+				.listAllTransfersInQueue();
+		Assert.assertFalse("no transfers left in queue", actual.isEmpty());
+
+	}
 }

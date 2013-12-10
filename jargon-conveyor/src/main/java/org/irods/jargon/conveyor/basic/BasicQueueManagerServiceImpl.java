@@ -174,7 +174,7 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
-		//evaluateTransferForExecution(existingTransfer);
+		// evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForResubmit(transferId);
@@ -445,6 +445,50 @@ public class BasicQueueManagerServiceImpl extends
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.conveyor.core.QueueManagerService#purgeSuccessfulFromQueue
+	 * ()
+	 */
+	@Override
+	public void purgeSuccessfulFromQueue() throws ConveyorBusyException,
+			ConveyorExecutionException {
+		log.info("purgeSuccessfulFromQueue()");
+
+		log.info("see if conveyor is busy");
+
+		try {
+			getConveyorExecutorService().setBusyForAnOperation();
+		} catch (ConveyorBusyException e) {
+			log.info("conveyor is busy, cannot purge");
+			throw e;
+		}
+
+		log.debug("entering purgeSuccessful()");
+		try {
+			List<Transfer> transfers = transferDAO.findAll();
+
+			for (Transfer transfer : transfers) {
+				if ((transfer.getTransferState() == TransferStateEnum.COMPLETE || transfer
+						.getTransferState() == TransferStateEnum.CANCELLED)
+						&& (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
+					log.info("deleting...{}", transfer);
+					transferDAO.delete(transfer);
+				}
+			}
+
+		} catch (TransferDAOException e) {
+			log.error("jargon exception dequeue operation, will unlock queue");
+			throw new ConveyorExecutionException(e);
+		} finally {
+			getConveyorExecutorService().setOperationCompleted();
+
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.conveyor.core.QueueManagerService#deleteTransferFromQueue
 	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
@@ -484,9 +528,7 @@ public class BasicQueueManagerServiceImpl extends
 	@Override
 	public void cancelTransfer(final long transferId)
 			throws TransferNotFoundException, ConveyorExecutionException {
-            
-              
-      
+
 		TransferAttempt transferAttemptToCancel;
 		try {
 			transferAttemptToCancel = transferAttemptDAO
@@ -503,12 +545,14 @@ public class BasicQueueManagerServiceImpl extends
 
 		// check state of transfer attempt
 		if (transferAttemptToCancel.getTransfer().getTransferState() == TransferStateEnum.PROCESSING) {
-                    
-                        TransferAttempt current = getConveyorService().getConveyorExecutorService().getCurrentTransferAttempt();
+
+			TransferAttempt current = getConveyorService()
+					.getConveyorExecutorService().getCurrentTransferAttempt();
 			// check to see if this is the currently processing transfer attempt
-			if (current != null && transferAttemptToCancel.getId().longValue() == getConveyorService()
-					.getConveyorExecutorService().getCurrentTransferAttempt()
-					.getId().longValue()) {
+			if (current != null
+					&& transferAttemptToCancel.getId().longValue() == getConveyorService()
+							.getConveyorExecutorService()
+							.getCurrentTransferAttempt().getId().longValue()) {
 				log.info("matched currently running transfer attempt - cancelling transfer");
 				getConveyorService().getConveyorExecutorService()
 						.requestCancel(transferAttemptToCancel);

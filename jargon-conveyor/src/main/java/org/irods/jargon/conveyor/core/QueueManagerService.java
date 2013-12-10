@@ -225,8 +225,8 @@ public interface QueueManagerService {
 	 * @return {@link TransferItems} list.
 	 * @throws ConveyorExecutionException
 	 */
-	List<TransferItem> getNextTransferItems(final long transferAttemptId, int start,
-			int length) throws ConveyorExecutionException;
+	List<TransferItem> getNextTransferItems(final long transferAttemptId,
+			int start, int length) throws ConveyorExecutionException;
 
 	/**
 	 * At startup of the conveyor service, preprocess the queue looking for any
@@ -236,5 +236,15 @@ public interface QueueManagerService {
 	 * @throws ConveyorExecutionException
 	 */
 	void preprocessQueueAtStartup() throws ConveyorExecutionException;
+
+	/**
+	 * Purge successfully completed transfers from the queue, leaving error and
+	 * processing transfers
+	 * 
+	 * @throws ConveyorBusyException
+	 * @throws ConveyorExecutionException
+	 */
+	void purgeSuccessfulFromQueue() throws ConveyorBusyException,
+			ConveyorExecutionException;
 
 }
