@@ -555,7 +555,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		TransferAttempt localTransferAttempt;
 		try {
-			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
+			localTransferAttempt = transferAttemptDAO.load(transferAttempt
 					.getId());
 			if (localTransferAttempt == null) {
 				log.error("null transfer attempt found, cannot update the database");
@@ -603,7 +603,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 * @throws ConveyorExecutionException
 	 */
 	private void transferUpdateOverall(final TransferStatus transferStatus,
-			final TransferAttempt transferAttempt,
+			TransferAttempt transferAttempt,
 			final TransferStatusEnum transferStatusEnum,
 			final TransferStateEnum transferState, final String errorMessage)
 			throws ConveyorExecutionException {
@@ -620,6 +620,19 @@ public class TransferAccountingManagementServiceImpl extends
 
 		log.info("transferAttempt:{}", transferAttempt);
 		log.info("transferStatus:{}", transferStatus);
+
+		try {
+			transferAttempt = transferAttemptDAO.load(transferAttempt.getId());
+			if (transferAttempt == null) {
+				log.error("null transfer attempt found, cannot update the database");
+				throw new ConveyorExecutionException(
+						"error finding transfer attempt");
+
+			}
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error finding transfer attempt", e);
+		}
 
 		/*
 		 * TransferAttempt localTransferAttempt; try { localTransferAttempt =
