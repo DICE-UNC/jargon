@@ -320,8 +320,8 @@ public class TransferAccountingManagementServiceImpl extends
 	@Override
 	public void updateTransferAfterFailedFileTransfer(
 			final org.irods.jargon.core.transfer.TransferStatus transferStatus,
-			final TransferAttempt transferAttempt,
-			final int totalFileErrorsSoFar) throws ConveyorExecutionException {
+			TransferAttempt transferAttempt, final int totalFileErrorsSoFar)
+			throws ConveyorExecutionException {
 
 		if (transferStatus == null) {
 			throw new IllegalArgumentException("null transfer status");
@@ -331,36 +331,40 @@ public class TransferAccountingManagementServiceImpl extends
 			throw new IllegalArgumentException("null transfer attempt");
 		}
 
-		long currentTime = System.currentTimeMillis();
-		Date currentDate = new Date(currentTime);
-		transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
-		transferAttempt.setUpdatedAt(currentDate);
-		transferAttempt.setTotalFilesErrorSoFar(totalFileErrorsSoFar);
-
-		// create transfer item
-		TransferItem transferItem = new TransferItem();
-		transferItem.setSequenceNumber(currentTime);
-		transferItem.setTransferType(transferAttempt.getTransfer()
-				.getTransferType());
-		transferItem.setFile(true);
-		transferItem.setSourceFileAbsolutePath(transferStatus
-				.getSourceFileAbsolutePath());
-		transferItem.setTargetFileAbsolutePath(transferStatus
-				.getTargetFileAbsolutePath());
-		transferItem.setError(true);
-		transferItem.setTransferredAt(currentDate);
-		transferItem.setTransferAttempt(transferAttempt);
-
-		if (transferStatus.getTransferException() != null) {
-			transferItem.setErrorMessage(transferStatus.getTransferException()
-					.getMessage());
-			transferItem.setErrorStackTrace(ExceptionUtils
-					.stackTraceToString(transferStatus.getTransferException()));
-		}
-
-		transferAttempt.getTransferItems().add(transferItem);
-
 		try {
+
+			transferAttempt = transferAttemptDAO.load(transferAttempt.getId());
+
+			long currentTime = System.currentTimeMillis();
+			Date currentDate = new Date(currentTime);
+			transferAttempt.setAttemptStatus(TransferStatusEnum.ERROR);
+			transferAttempt.setUpdatedAt(currentDate);
+			transferAttempt.setTotalFilesErrorSoFar(totalFileErrorsSoFar);
+
+			// create transfer item
+			TransferItem transferItem = new TransferItem();
+			transferItem.setSequenceNumber(currentTime);
+			transferItem.setTransferType(transferAttempt.getTransfer()
+					.getTransferType());
+			transferItem.setFile(true);
+			transferItem.setSourceFileAbsolutePath(transferStatus
+					.getSourceFileAbsolutePath());
+			transferItem.setTargetFileAbsolutePath(transferStatus
+					.getTargetFileAbsolutePath());
+			transferItem.setError(true);
+			transferItem.setTransferredAt(currentDate);
+			transferItem.setTransferAttempt(transferAttempt);
+
+			if (transferStatus.getTransferException() != null) {
+				transferItem.setErrorMessage(transferStatus
+						.getTransferException().getMessage());
+				transferItem.setErrorStackTrace(ExceptionUtils
+						.stackTraceToString(transferStatus
+								.getTransferException()));
+			}
+
+			transferAttempt.getTransferItems().add(transferItem);
+
 			transferAttemptDAO.save(transferAttempt);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(

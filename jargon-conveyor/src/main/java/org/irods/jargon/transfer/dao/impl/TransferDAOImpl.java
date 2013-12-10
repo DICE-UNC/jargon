@@ -42,7 +42,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@Override
 	public void save(final Transfer transfer) throws TransferDAOException {
 		logger.info("entering save(Transfer)");
-		this.getSessionFactory().getCurrentSession().saveOrUpdate(transfer);
+		getSessionFactory().getCurrentSession().saveOrUpdate(transfer);
 	}
 
 	/*
@@ -55,7 +55,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@Override
 	public void merge(final Transfer transfer) throws TransferDAOException {
 		logger.info("entering merge(Transfer)");
-		this.getSessionFactory().getCurrentSession().merge(transfer);
+		getSessionFactory().getCurrentSession().merge(transfer);
 	}
 
 	@Override
@@ -67,8 +67,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		}
 
 		log.info("merging transfer");
-		Transfer merged = (Transfer) this.getSessionFactory()
-				.getCurrentSession().merge(transfer);
+		Transfer merged = (Transfer) getSessionFactory().getCurrentSession()
+				.merge(transfer);
 
 		for (TransferAttempt attempt : merged.getTransferAttempts()) {
 			attempt.getAttemptStatus();
@@ -91,8 +91,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	@Override
 	public Transfer findById(final Long id) throws TransferDAOException {
 		logger.debug("entering findById(Long)");
-		return (Transfer) this.getSessionFactory().getCurrentSession()
-				.get(Transfer.class, id);
+		return (Transfer) getSessionFactory().getCurrentSession().get(
+				Transfer.class, id);
 	}
 
 	/*
@@ -105,8 +105,8 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	public Transfer findInitializedById(final Long id)
 			throws TransferDAOException {
 		logger.debug("entering findInitializedById(Long)");
-		Transfer transfer = (Transfer) this.getSessionFactory()
-				.getCurrentSession().get(Transfer.class, id);
+		Transfer transfer = (Transfer) getSessionFactory().getCurrentSession()
+				.get(Transfer.class, id);
 		Hibernate.initialize(transfer);
 		return transfer;
 	}
@@ -125,7 +125,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		log.debug("entering findByTransferState(TransferState...)");
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
 			criteria.addOrder(Order.desc("createdAt"));
@@ -155,7 +155,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			throws TransferDAOException {
 		log.debug("entering findByTransferState(int, TransferState...)");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferState", transferState));
 			criteria.setMaxResults(maxResults);
@@ -187,7 +187,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		log.debug("entering findByTransferState(int, TransferStatus...)");
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.add(Restrictions.in("transferStatus", transferStatus));
 			criteria.setFetchMode("synchronization", FetchMode.JOIN);
@@ -215,7 +215,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 			throws TransferDAOException {
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.setMaxResults(maxResults);
 			criteria.addOrder(Order.desc("createdAt"));
@@ -240,7 +240,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	public List<Transfer> findAll() throws TransferDAOException {
 		log.debug("entering findAll()");
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Transfer.class);
 			criteria.addOrder(Order.desc("createdAt"));
 			// criteria.setFetchMode("synchronization", FetchMode.JOIN);
@@ -347,7 +347,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 	public void purgeSuccessful() throws TransferDAOException {
 		log.debug("entering purgeSuccessful()");
 
-		List<Transfer> transfers = this.findAll();
+		List<Transfer> transfers = findAll();
 
 		for (Transfer transfer : transfers) {
 			if ((transfer.getTransferState() == TransferStateEnum.COMPLETE || transfer
@@ -371,7 +371,7 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 		logger.debug("entering delete()");
 
 		try {
-			this.getSessionFactory().getCurrentSession().delete(transfer);
+			getSessionFactory().getCurrentSession().delete(transfer);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);

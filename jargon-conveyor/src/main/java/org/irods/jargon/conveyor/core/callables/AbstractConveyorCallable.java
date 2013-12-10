@@ -74,7 +74,7 @@ public abstract class AbstractConveyorCallable implements
 			throw new IllegalArgumentException("null gridAccount");
 		}
 
-		return this.getConveyorService().getGridAccountService()
+		return getConveyorService().getGridAccountService()
 				.irodsAccountForGridAccount(gridAccount);
 	}
 
@@ -164,18 +164,14 @@ public abstract class AbstractConveyorCallable implements
 	public final ConveyorExecutionFuture call()
 			throws ConveyorExecutionException {
 
-            
-                        
-            
 		IRODSAccount irodsAccount = null;
 		try {
-                    synchronized(this) {
-			irodsAccount = getConveyorService().getGridAccountService()
-					.irodsAccountForGridAccount(
-							transferAttempt.getTransfer().getGridAccount());
-			this.setTransferControlBlock(this
-					.buildDefaultTransferControlBlock());
-                    }
+			synchronized (this) {
+				irodsAccount = getConveyorService().getGridAccountService()
+						.irodsAccountForGridAccount(
+								transferAttempt.getTransfer().getGridAccount());
+				setTransferControlBlock(buildDefaultTransferControlBlock());
+			}
 
 			/*
 			 * Note that end of transfer success/failure processing will be
@@ -199,7 +195,7 @@ public abstract class AbstractConveyorCallable implements
 			return new ConveyorExecutionFuture();
 		} catch (JargonException je) {
 
-			if (this.getTransferControlBlock().isCancelled()) {
+			if (getTransferControlBlock().isCancelled()) {
 				log.info("cancelled, return future and proceed");
 				return new ConveyorExecutionFuture();
 			}
@@ -217,7 +213,7 @@ public abstract class AbstractConveyorCallable implements
 
 		} catch (JargonRuntimeException je) {
 
-			if (this.getTransferControlBlock().isCancelled()) {
+			if (getTransferControlBlock().isCancelled()) {
 				log.info("cancelled, return future and proceed");
 				return new ConveyorExecutionFuture();
 			}
@@ -235,7 +231,7 @@ public abstract class AbstractConveyorCallable implements
 
 		} catch (Exception ex) {
 
-			if (this.getTransferControlBlock().isCancelled()) {
+			if (getTransferControlBlock().isCancelled()) {
 				log.info("cancelled, return future and proceed");
 				return new ConveyorExecutionFuture();
 			}
@@ -243,7 +239,7 @@ public abstract class AbstractConveyorCallable implements
 			log.error(
 					"*********** unanticipated exception occurred  *************",
 					ex);
-			this.reportConveyerExceptionDuringProcessing(ex);
+			reportConveyerExceptionDuringProcessing(ex);
 			throw new ConveyorExecutionException(
 					"unhandled exception during transfer process", ex);
 		}
@@ -260,26 +256,25 @@ public abstract class AbstractConveyorCallable implements
 	private void markTransferAsAnExceptionWhenProcessingCall(final Exception je) {
 		log.info("markTransferAsAnExceptionWhenProcessingCall");
 		try {
-			this.getConveyorService()
-					.getTransferAccountingManagementService()
+			getConveyorService().getTransferAccountingManagementService()
 					.updateTransferAttemptWithConveyorException(
 							transferAttempt, je);
 		} catch (ConveyorExecutionException e) {
 			log.error(
 					"*********** unanticipated exception occurred  *************",
 					e);
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
 
 		} catch (Exception e) {
 			log.error(
 					"*********** unanticipated exception occurred  *************",
 					e);
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
 
 		} finally {
-			this.doCompletionSequence();
+			doCompletionSequence();
 		}
 
 	}
@@ -310,7 +305,7 @@ public abstract class AbstractConveyorCallable implements
 		return conveyorService.getConfigurationService()
 				.buildDefaultTransferControlBlockBasedOnConfiguration(
 						transferAttempt.getLastSuccessfulPath(),
-						this.getIrodsAccessObjectFactory());
+						getIrodsAccessObjectFactory());
 	}
 
 	/*
@@ -338,26 +333,22 @@ public abstract class AbstractConveyorCallable implements
 				 * create failure item get exception from callback and add to
 				 * item
 				 */
-				try {
-					/*
-					 * Treat as a warning for now, an error will be signaled
-					 * when more than the threshold number of file errors occurs
-					 */
-					this.getConveyorService().getConveyorExecutorService()
-							.setErrorStatus(ErrorStatus.WARNING);
-					this.getConveyorService()
-							.getTransferAccountingManagementService()
-							.updateTransferAfterFailedFileTransfer(
-									transferStatus, getTransferAttempt(), transferControlBlock.getErrorCount());
-				} catch (ConveyorExecutionException ex) {
-					throw new JargonException(ex.getMessage(), ex.getCause());
-				}
+				/*
+				 * Treat as a warning for now, an error will be signaled when
+				 * more than the threshold number of file errors occurs
+				 */
+				getConveyorService().getConveyorExecutorService()
+						.setErrorStatus(ErrorStatus.WARNING);
+				getConveyorService().getTransferAccountingManagementService()
+						.updateTransferAfterFailedFileTransfer(transferStatus,
+								getTransferAttempt(),
+								transferControlBlock.getErrorCount());
 			}
 
 		} catch (ConveyorExecutionException ex) {
-			this.getConveyorService().getConveyorExecutorService()
-					.setErrorStatus(ErrorStatus.ERROR);
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorService().getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.ERROR);
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(ex);
 			throw new JargonException(ex.getMessage(), ex.getCause());
 		}
@@ -472,8 +463,7 @@ public abstract class AbstractConveyorCallable implements
 
 		log.info("updating transfer attempt with an exception");
 		try {
-			this.getConveyorService()
-					.getTransferAccountingManagementService()
+			getConveyorService().getTransferAccountingManagementService()
 					.updateTransferAttemptWithConveyorException(
 							transferAttempt, myException);
 
@@ -484,10 +474,10 @@ public abstract class AbstractConveyorCallable implements
 			 * that some error has occurred
 			 */
 			log.error("*************  exception occurred in conveyor framework,unable to update conveyor database*****  will signal the callback listener");
-			this.getConveyorService().getConveyorCallbackListener()
+			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
-			this.getConveyorService().getConveyorExecutorService()
-					.setErrorStatus(ErrorStatus.ERROR);
+			getConveyorService().getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.ERROR);
 			throw new ConveyorRuntimeException(
 					"unprocessable exception in conveyor, not updated in database",
 					e);
@@ -508,7 +498,7 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	private void doCompletionSequence() {
 		log.info("doCompletionSequence()");
-		this.getConveyorService().getConveyorExecutorService()
+		getConveyorService().getConveyorExecutorService()
 				.setOperationCompleted();
 		log.info("signaling completion so queue manager can dequeue next");
 
@@ -560,7 +550,7 @@ public abstract class AbstractConveyorCallable implements
 		log.info("status was:{}", evaluatedStatus);
 
 		if (evaluatedStatus == TransferStatusEnum.OK) {
-			if (this.getTransferControlBlock().getTotalFilesTransferredSoFar() == 0) {
+			if (getTransferControlBlock().getTotalFilesTransferredSoFar() == 0) {
 				conveyorService.getConveyorExecutorService().setErrorStatus(
 						ErrorStatus.WARNING);
 				getConveyorService().getTransferAccountingManagementService()
@@ -677,7 +667,7 @@ public abstract class AbstractConveyorCallable implements
 	 * @return {@link Transfer}
 	 */
 	protected Transfer getTransfer() {
-		return this.getTransferAttempt().getTransfer();
+		return getTransferAttempt().getTransfer();
 	}
 
 }

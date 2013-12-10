@@ -74,7 +74,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public void setConfigurationService(
-			ConfigurationService configurationService) {
+			final ConfigurationService configurationService) {
 		this.configurationService = configurationService;
 	}
 
@@ -85,8 +85,9 @@ public class ConveyorServiceImpl implements ConveyorService {
 	}
 
 	@Override
-	public void setQueueManagerService(QueueManagerService queueMangerService) {
-		this.queueManagerService = queueMangerService;
+	public void setQueueManagerService(
+			final QueueManagerService queueMangerService) {
+		queueManagerService = queueMangerService;
 	}
 
 	@Override
@@ -95,7 +96,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	}
 
 	@Override
-	public void setFlowManagerService(FlowManagerService flowManagerService) {
+	public void setFlowManagerService(
+			final FlowManagerService flowManagerService) {
 		this.flowManagerService = flowManagerService;
 	}
 
@@ -106,7 +108,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public void setSynchronizationManagerService(
-			SynchronizationManagerService synchronizationManagerService) {
+			final SynchronizationManagerService synchronizationManagerService) {
 		this.synchronizationManagerService = synchronizationManagerService;
 	}
 
@@ -116,7 +118,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	}
 
 	@Override
-	public void setGridAccountService(GridAccountService gridAccountService) {
+	public void setGridAccountService(
+			final GridAccountService gridAccountService) {
 		this.gridAccountService = gridAccountService;
 	}
 
@@ -127,7 +130,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public void setConveyorExecutorService(
-			ConveyorExecutorService conveyorExecutorService) {
+			final ConveyorExecutorService conveyorExecutorService) {
 		this.conveyorExecutorService = conveyorExecutorService;
 	}
 
@@ -151,7 +154,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * .lang.String)
 	 */
 	@Override
-	public void validatePassPhrase(String passPhrase)
+	public void validatePassPhrase(final String passPhrase)
 			throws PassPhraseInvalidException, ConveyorExecutionException {
 		gridAccountService.validatePassPhrase(passPhrase);
 
@@ -178,6 +181,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	/**
 	 * @return the irodsAccessObjectFactory
 	 */
+	@Override
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
 		return irodsAccessObjectFactory;
 	}
@@ -188,7 +192,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	@Override
 	public void setIrodsAccessObjectFactory(
-			IRODSAccessObjectFactory irodsAccessObjectFactory) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 	}
 
@@ -215,7 +219,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	@Override
 	public synchronized void setConveyorCallbackListener(
-			ConveyorCallbackListener conveyorCallbackListener) {
+			final ConveyorCallbackListener conveyorCallbackListener) {
 		this.conveyorCallbackListener = conveyorCallbackListener;
 	}
 
@@ -226,7 +230,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 	@Override
 	public void setTransferAccountingManagementService(
-			TransferAccountingManagementService transferAccountingManagementService) {
+			final TransferAccountingManagementService transferAccountingManagementService) {
 		this.transferAccountingManagementService = transferAccountingManagementService;
 
 	}
@@ -239,8 +243,8 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * (org.irods.jargon.core.transfer.TransferStatusCallbackListener)
 	 */
 	@Override
-	public void registerCallbackListener(ConveyorCallbackListener listener) {
-		this.conveyorCallbackListener = listener;
+	public void registerCallbackListener(final ConveyorCallbackListener listener) {
+		conveyorCallbackListener = listener;
 	}
 
 	/*
@@ -250,7 +254,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	@Override
 	public synchronized QueueStatus getQueueStatus() {
-		return this.getConveyorExecutorService().getQueueStatus();
+		return getConveyorExecutorService().getQueueStatus();
 
 	}
 
@@ -289,17 +293,17 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 		log.info("init()");
 
-		if (this.getConfigurationService() == null) {
+		if (getConfigurationService() == null) {
 			throw new ConveyorRuntimeException(
 					"null configurationService, dependency was not set");
 		}
 
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 			log.info("checking for any transactions that were set to processing, and reset them to enqueued...");
-			this.getQueueManagerService().preprocessQueueAtStartup();
+			getQueueManagerService().preprocessQueueAtStartup();
 			log.info("preprocessing done, unlock the queue");
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 			startQueueTimerTask();
 		} catch (ConveyorBusyException e) {
 			log.error("cannot lock queue for initialization!", e);

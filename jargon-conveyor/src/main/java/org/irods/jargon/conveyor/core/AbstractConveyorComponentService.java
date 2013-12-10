@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.conveyor.core;
 
-
 /**
  * Common abstract superclass for sub-services that are aggregated under the
  * <code>ConveyorService</code>
@@ -23,7 +22,7 @@ public class AbstractConveyorComponentService {
 	}
 
 	public void setConveyorExecutorService(
-			ConveyorExecutorService conveyorExecutorService) {
+			final ConveyorExecutorService conveyorExecutorService) {
 		this.conveyorExecutorService = conveyorExecutorService;
 	}
 

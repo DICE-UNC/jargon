@@ -4,13 +4,15 @@
 package org.irods.jargon.conveyor.basic;
 
 /**
- * Configuration data for the <code>BasicConveyorBootstrapper</code> that will configure the delivered <code>BasicConveyorService</code>.  
- * A simple value object.
+ * Configuration data for the <code>BasicConveyorBootstrapper</code> that will
+ * configure the delivered <code>BasicConveyorService</code>. A simple value
+ * object.
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class ConveyorBootstrapConfiguration {
-	
+
 	private String passPhrase = null;
 	private String databaseURL = null;
 	private String databaseUser = null;
@@ -20,7 +22,7 @@ public class ConveyorBootstrapConfiguration {
 		return passPhrase;
 	}
 
-	public void setPassPhrase(String passPhrase) {
+	public void setPassPhrase(final String passPhrase) {
 		this.passPhrase = passPhrase;
 	}
 
@@ -28,7 +30,7 @@ public class ConveyorBootstrapConfiguration {
 		return databaseURL;
 	}
 
-	public void setDatabaseURL(String databaseURL) {
+	public void setDatabaseURL(final String databaseURL) {
 		this.databaseURL = databaseURL;
 	}
 
@@ -36,7 +38,7 @@ public class ConveyorBootstrapConfiguration {
 		return databaseUser;
 	}
 
-	public void setDatabaseUser(String databaseUser) {
+	public void setDatabaseUser(final String databaseUser) {
 		this.databaseUser = databaseUser;
 	}
 
@@ -44,16 +46,15 @@ public class ConveyorBootstrapConfiguration {
 		return databasePassword;
 	}
 
-	public void setDatabasePassword(String databasePassword) {
+	public void setDatabasePassword(final String databasePassword) {
 		this.databasePassword = databasePassword;
 	}
 
-	
 	/**
 	 * 
 	 */
 	public ConveyorBootstrapConfiguration() {
-		
+
 	}
 
 }

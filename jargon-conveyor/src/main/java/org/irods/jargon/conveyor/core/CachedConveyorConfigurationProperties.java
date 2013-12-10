@@ -30,8 +30,6 @@ public class CachedConveyorConfigurationProperties {
 		return sb.toString();
 	}
 
-	
-
 	/**
 	 * Are successful transfer details logged in the database?
 	 * 
@@ -60,9 +58,8 @@ public class CachedConveyorConfigurationProperties {
 	 * @param maxErrorsBeforeCancel
 	 *            the maxErrorsBeforeCancel to set
 	 */
-	public void setMaxErrorsBeforeCancel(int maxErrorsBeforeCancel) {
+	public void setMaxErrorsBeforeCancel(final int maxErrorsBeforeCancel) {
 		this.maxErrorsBeforeCancel = maxErrorsBeforeCancel;
 	}
-
 
 }

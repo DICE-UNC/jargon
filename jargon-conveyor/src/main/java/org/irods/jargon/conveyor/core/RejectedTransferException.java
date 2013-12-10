@@ -26,14 +26,14 @@ public class RejectedTransferException extends ConveyorExecutionException {
 	/**
 	 * @param arg0
 	 */
-	public RejectedTransferException(String arg0) {
+	public RejectedTransferException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public RejectedTransferException(Throwable arg0) {
+	public RejectedTransferException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -41,7 +41,7 @@ public class RejectedTransferException extends ConveyorExecutionException {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public RejectedTransferException(String arg0, Throwable arg1) {
+	public RejectedTransferException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

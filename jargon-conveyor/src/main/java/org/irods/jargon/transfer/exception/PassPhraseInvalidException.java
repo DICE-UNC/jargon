@@ -18,7 +18,7 @@ public class PassPhraseInvalidException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public PassPhraseInvalidException(String message) {
+	public PassPhraseInvalidException(final String message) {
 		super(message);
 	}
 
@@ -26,14 +26,15 @@ public class PassPhraseInvalidException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public PassPhraseInvalidException(String message, Throwable cause) {
+	public PassPhraseInvalidException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public PassPhraseInvalidException(Throwable cause) {
+	public PassPhraseInvalidException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -42,8 +43,8 @@ public class PassPhraseInvalidException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PassPhraseInvalidException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public PassPhraseInvalidException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -51,8 +52,8 @@ public class PassPhraseInvalidException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PassPhraseInvalidException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public PassPhraseInvalidException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,8 +61,8 @@ public class PassPhraseInvalidException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public PassPhraseInvalidException(String message,
-			int underlyingIRODSExceptionCode) {
+	public PassPhraseInvalidException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

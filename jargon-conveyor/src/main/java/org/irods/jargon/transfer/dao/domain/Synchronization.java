@@ -279,8 +279,7 @@ public class Synchronization {
 	 * @param transfers
 	 *            the transfers to set
 	 */
-	public void setTransfers(
-			final Set<Transfer> transfers) {
+	public void setTransfers(final Set<Transfer> transfers) {
 		this.transfers = transfers;
 	}
 
@@ -321,7 +320,7 @@ public class Synchronization {
 	 * @param gridAccount
 	 *            the gridAccount to set
 	 */
-	public void setGridAccount(GridAccount gridAccount) {
+	public void setGridAccount(final GridAccount gridAccount) {
 		this.gridAccount = gridAccount;
 	}
 

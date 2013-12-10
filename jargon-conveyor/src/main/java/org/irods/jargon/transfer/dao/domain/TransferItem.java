@@ -211,7 +211,7 @@ public class TransferItem implements Serializable {
 	 * @param skipped
 	 *            the skipped to set
 	 */
-	public void setSkipped(boolean skipped) {
+	public void setSkipped(final boolean skipped) {
 		this.skipped = skipped;
 	}
 
@@ -226,7 +226,7 @@ public class TransferItem implements Serializable {
 	 * @param sequenceNumber
 	 *            the sequenceNumber to set
 	 */
-	public void setSequenceNumber(long sequenceNumber) {
+	public void setSequenceNumber(final long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 

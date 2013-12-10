@@ -38,8 +38,8 @@ public class PutConveyorCallable extends AbstractConveyorCallable {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	void processCallForThisTransfer(TransferControlBlock tcb,
-			IRODSAccount irodsAccount) throws ConveyorExecutionException,
+	void processCallForThisTransfer(final TransferControlBlock tcb,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException,
 			JargonException {
 		log.info("processCallForThisTransfer()");
 		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()

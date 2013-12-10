@@ -24,8 +24,8 @@ public class ReplicateConveyorCallable extends AbstractConveyorCallable {
 	private static final Logger log = LoggerFactory
 			.getLogger(PutConveyorCallable.class);
 
-	public ReplicateConveyorCallable(TransferAttempt transferAttempt,
-			ConveyorService conveyorService) {
+	public ReplicateConveyorCallable(final TransferAttempt transferAttempt,
+			final ConveyorService conveyorService) {
 		super(transferAttempt, conveyorService);
 	}
 
@@ -38,8 +38,8 @@ public class ReplicateConveyorCallable extends AbstractConveyorCallable {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	void processCallForThisTransfer(TransferControlBlock tcb,
-			IRODSAccount irodsAccount) throws ConveyorExecutionException,
+	void processCallForThisTransfer(final TransferControlBlock tcb,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException,
 			JargonException {
 		log.info("processCallForThisTransfer()");
 		DataTransferOperations dataTransferOperationsAO = getIrodsAccessObjectFactory()

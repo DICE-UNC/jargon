@@ -32,7 +32,7 @@ public class ConveyorCallableFactory {
 	 *             if a callable cannot be created or some other error occurs
 	 */
 	public AbstractConveyorCallable instanceCallableForOperation(
-			TransferAttempt transferAttempt,
+			final TransferAttempt transferAttempt,
 			final ConveyorService conveyorService)
 			throws ConveyorExecutionException {
 

@@ -51,7 +51,7 @@ public class DomainUtils {
 		return gridAccount;
 
 	}
-	
+
 	/**
 	 * Create an <code>IRODSAccount</code> given a <code>GridAccount</code>
 	 * instance.
@@ -63,18 +63,15 @@ public class DomainUtils {
 	 */
 	public static IRODSAccount irodsAccountFromGridAccount(
 			final GridAccount gridAccount) throws JargonException {
-		
+
 		if (gridAccount == null) {
 			throw new IllegalArgumentException("null gridAccount");
 		}
-		
+
 		IRODSAccount irodsAccount = IRODSAccount.instance(
-				gridAccount.getHost(),
-				gridAccount.getPort(), 
-				gridAccount.getUserName(),
-				gridAccount.getPassword(), 
-				gridAccount.getDefaultPath(),
-				gridAccount.getZone(), 
+				gridAccount.getHost(), gridAccount.getPort(),
+				gridAccount.getUserName(), gridAccount.getPassword(),
+				gridAccount.getDefaultPath(), gridAccount.getZone(),
 				gridAccount.getDefaultResource());
 		irodsAccount.setAuthenticationScheme(gridAccount.getAuthScheme());
 		return irodsAccount;

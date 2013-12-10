@@ -61,6 +61,7 @@ public class ConveyorQueueTimerTask extends TimerTask {
 		}
 
 		try {
+			log.info("timer task firing...dequeue if available");
 			conveyorService.getQueueManagerService().dequeueNextOperation();
 		} catch (ConveyorExecutionException e) {
 			log.error("exception running timer task", e);
@@ -81,7 +82,7 @@ public class ConveyorQueueTimerTask extends TimerTask {
 	 * @param conveyorService
 	 *            the conveyorService to set
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 
@@ -96,7 +97,7 @@ public class ConveyorQueueTimerTask extends TimerTask {
 	 * @param paused
 	 *            the paused to set
 	 */
-	public synchronized void setPaused(boolean paused) {
+	public synchronized void setPaused(final boolean paused) {
 		log.info("set paused to:{}", paused);
 		this.paused = paused;
 	}

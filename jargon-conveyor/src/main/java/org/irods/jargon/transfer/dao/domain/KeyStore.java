@@ -46,7 +46,7 @@ public class KeyStore implements Serializable {
 	 * @param value
 	 *            the value to set
 	 */
-	public void setValue(String value) {
+	public void setValue(final String value) {
 		this.value = value;
 	}
 
@@ -61,7 +61,7 @@ public class KeyStore implements Serializable {
 	 * @param id
 	 *            the id to set
 	 */
-	public void setId(String id) {
+	public void setId(final String id) {
 		this.id = id;
 	}
 

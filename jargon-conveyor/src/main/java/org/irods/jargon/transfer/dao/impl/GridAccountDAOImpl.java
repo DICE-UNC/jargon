@@ -1,4 +1,3 @@
-
 package org.irods.jargon.transfer.dao.impl;
 
 import java.util.List;
@@ -16,7 +15,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
-
 /**
  * DAO for <code>GridAccount</code> managing a cache of iRODS accounts and
  * related configuration.
@@ -30,7 +28,8 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccountDAO {
+public class GridAccountDAOImpl extends HibernateDaoSupport implements
+		GridAccountDAO {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(GridAccountDAOImpl.class);
@@ -50,7 +49,7 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 			throw new IllegalArgumentException("null gridAccount");
 		}
 
-		this.getSessionFactory().getCurrentSession().saveOrUpdate(gridAccount);
+		getSessionFactory().getCurrentSession().saveOrUpdate(gridAccount);
 		logger.info("update successful");
 
 	}
@@ -65,7 +64,7 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 	public List<GridAccount> findAll() throws TransferDAOException {
 		logger.debug("entering findAll()");
 		List<GridAccount> ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(GridAccount.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -93,7 +92,7 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 		}
 
 		GridAccount ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(GridAccount.class);
 			criteria.add(Restrictions.eq("id", id));
@@ -132,7 +131,7 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 		}
 
 		GridAccount ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(GridAccount.class);
 			criteria.add(Restrictions.eq("host", host))
@@ -147,22 +146,27 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 		return ret;
 
 	}
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.transfer.dao.GridAccountDAO#deleteGridAccount(org.irods.jargon.transfer.dao.domain.GridAccount)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.transfer.dao.GridAccountDAO#deleteGridAccount(org.irods
+	 * .jargon.transfer.dao.domain.GridAccount)
 	 */
 	@Override
-	public void deleteGridAccount(final GridAccount gridAccount) throws TransferDAOException {
+	public void deleteGridAccount(final GridAccount gridAccount)
+			throws TransferDAOException {
 		log.debug("entering deleteGridAccount()");
 
 		if (gridAccount == null) {
 			throw new IllegalArgumentException("null gridAccount");
 		}
-		
+
 		log.info("gridAccount:{}", gridAccount);
-		
+
 		try {
-			Session session = this.getSessionFactory().getCurrentSession();
+			Session session = getSessionFactory().getCurrentSession();
 			GridAccount toDelete = (GridAccount) session.merge(gridAccount);
 			session.delete(toDelete);
 			log.info("deleted");
@@ -174,7 +178,6 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 			throw new TransferDAOException("Failed purgeQueue()", e);
 		}
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -214,12 +217,11 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements GridAccou
 	@Override
 	public void delete(final GridAccount gridAccount)
 			throws TransferDAOException {
-		
+
 		logger.debug("delete()");
 
 		try {
-			this.getSessionFactory().getCurrentSession()
-					.delete(gridAccount);
+			getSessionFactory().getCurrentSession().delete(gridAccount);
 		} catch (Exception e) {
 			logger.error("error in delete()", e);
 			throw new TransferDAOException("Failed delete()", e);

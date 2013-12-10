@@ -166,8 +166,8 @@ public class ConfigurationProperty implements Serializable {
 	 * 
 	 * @param i
 	 */
-	public void setPropertyValue(int i) {
-		this.propertyValue = String.valueOf(i);
+	public void setPropertyValue(final int i) {
+		propertyValue = String.valueOf(i);
 
 	}
 

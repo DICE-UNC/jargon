@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.conveyor.core;
 
-
 /**
  * <code>Future</code> result of a <code>ConveyorCallable</code>
  * 

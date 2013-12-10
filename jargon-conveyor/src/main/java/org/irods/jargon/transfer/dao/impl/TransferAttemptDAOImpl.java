@@ -34,11 +34,10 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 * .transfer.dao.domain.TransferAttempt)
 	 */
 	@Override
-	public void save(TransferAttempt transferAttempt)
+	public void save(final TransferAttempt transferAttempt)
 			throws TransferDAOException {
 		logger.info("save()");
-		this.getSessionFactory().getCurrentSession()
-				.saveOrUpdate(transferAttempt);
+		getSessionFactory().getCurrentSession().saveOrUpdate(transferAttempt);
 	}
 
 	/*
@@ -48,17 +47,17 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 * org.irods.jargon.transfer.dao.TransferAttemptDAO#findById(java.lang.Long)
 	 */
 	@Override
-	public TransferAttempt findById(Long id) throws TransferDAOException {
+	public TransferAttempt findById(final Long id) throws TransferDAOException {
 		logger.debug("entering findById(Long)");
-		return (TransferAttempt) this.getSessionFactory().getCurrentSession()
-				.get(TransferAttempt.class, id);
+		return (TransferAttempt) getSessionFactory().getCurrentSession().get(
+				TransferAttempt.class, id);
 	}
 
 	@Override
 	public TransferAttempt load(final Long id) throws TransferDAOException {
 		logger.debug("entering findById(Long)");
-		return (TransferAttempt) this.getSessionFactory().getCurrentSession()
-				.load(TransferAttempt.class, id);
+		return (TransferAttempt) getSessionFactory().getCurrentSession().load(
+				TransferAttempt.class, id);
 	}
 
 	/*
@@ -69,7 +68,7 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 * .transfer.dao.domain.TransferAttempt)
 	 */
 	@Override
-	public void delete(TransferAttempt ea) throws TransferDAOException {
+	public void delete(final TransferAttempt ea) throws TransferDAOException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -81,8 +80,9 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 * (int, org.irods.jargon.transfer.dao.domain.TransferStatus[])
 	 */
 	@Override
-	public List<TransferAttempt> findByTransferAttemptStatus(int maxResults,
-			TransferStatusEnum... transferStatus) throws TransferDAOException {
+	public List<TransferAttempt> findByTransferAttemptStatus(
+			final int maxResults, final TransferStatusEnum... transferStatus)
+			throws TransferDAOException {
 		throw new UnsupportedOperationException("Not supported yet.");
 	}
 
@@ -94,10 +94,10 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 	 */
 	@Override
 	public TransferAttempt findLastTransferAttemptForTransferByTransferId(
-			long transferId) throws TransferDAOException {
+			final long transferId) throws TransferDAOException {
 
-		Transfer transfer = (Transfer) this.getSessionFactory()
-				.getCurrentSession().get(Transfer.class, transferId);
+		Transfer transfer = (Transfer) getSessionFactory().getCurrentSession()
+				.get(Transfer.class, transferId);
 
 		if (transfer == null) {
 			return null;
@@ -134,7 +134,7 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 		}
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class)
 					.createCriteria("transferAttempt")
 					.add(Restrictions.eq("id", transferAttemptId))

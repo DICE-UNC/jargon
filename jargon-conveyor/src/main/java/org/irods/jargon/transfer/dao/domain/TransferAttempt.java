@@ -208,7 +208,7 @@ public class TransferAttempt implements Serializable {
 		sb.append("\n   id:");
 		sb.append(id);
 		sb.append("\n   seq:");
-		sb.append(this.sequenceNumber);
+		sb.append(sequenceNumber);
 		sb.append("\n   attemptStart:");
 		sb.append(attemptStart);
 		sb.append("\n   attemptEnd:");
@@ -240,7 +240,7 @@ public class TransferAttempt implements Serializable {
 	 * @param createdAt
 	 *            the createdAt to set
 	 */
-	public void setCreatedAt(Date createdAt) {
+	public void setCreatedAt(final Date createdAt) {
 		this.createdAt = createdAt;
 	}
 
@@ -255,7 +255,7 @@ public class TransferAttempt implements Serializable {
 	 * @param updatedAt
 	 *            the updatedAt to set
 	 */
-	public void setUpdatedAt(Date updatedAt) {
+	public void setUpdatedAt(final Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
 
@@ -270,8 +270,8 @@ public class TransferAttempt implements Serializable {
 	 * @param sequenceNumber
 	 *            the sequenceNumber to set
 	 */
-	public void setSequenceNumber(long attemptSequenceNumber) {
-		this.sequenceNumber = attemptSequenceNumber;
+	public void setSequenceNumber(final long attemptSequenceNumber) {
+		sequenceNumber = attemptSequenceNumber;
 	}
 
 	/**
@@ -302,7 +302,7 @@ public class TransferAttempt implements Serializable {
 	 * @param totalFilesSkippedSoFar
 	 *            the totalFilesSkippedSoFar to set
 	 */
-	public void setTotalFilesSkippedSoFar(int totalFilesSkippedSoFar) {
+	public void setTotalFilesSkippedSoFar(final int totalFilesSkippedSoFar) {
 		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
 	}
 
@@ -317,7 +317,7 @@ public class TransferAttempt implements Serializable {
 	 * @param totalFilesErrorSoFar
 	 *            the totalFilesErrorSoFar to set
 	 */
-	public void setTotalFilesErrorSoFar(int totalFilesErrorSoFar) {
+	public void setTotalFilesErrorSoFar(final int totalFilesErrorSoFar) {
 		this.totalFilesErrorSoFar = totalFilesErrorSoFar;
 	}
 

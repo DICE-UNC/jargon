@@ -223,7 +223,7 @@ public class Transfer implements Serializable {
 	 * @param gridAccount
 	 *            the gridAccount to set
 	 */
-	public void setGridAccount(GridAccount gridAccount) {
+	public void setGridAccount(final GridAccount gridAccount) {
 		this.gridAccount = gridAccount;
 	}
 
@@ -238,7 +238,7 @@ public class Transfer implements Serializable {
 	 * @param sequenceNumber
 	 *            the sequenceNumber to set
 	 */
-	public void setSequenceNumber(long sequenceNumber) {
+	public void setSequenceNumber(final long sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}
 
@@ -253,7 +253,7 @@ public class Transfer implements Serializable {
 	 * @param resourceName
 	 *            the resourceName to set
 	 */
-	public void setResourceName(String resourceName) {
+	public void setResourceName(final String resourceName) {
 		this.resourceName = resourceName;
 	}
 
@@ -267,7 +267,7 @@ public class Transfer implements Serializable {
 
 		long totalTime = 0;
 
-		for (TransferAttempt transferAttempt : this.getTransferAttempts()) {
+		for (TransferAttempt transferAttempt : getTransferAttempts()) {
 			totalTime += transferAttempt.computeTotalTimeInMillis();
 		}
 

@@ -84,27 +84,7 @@ public class BasicQueueManagerServiceImpl extends
 				log.info(
 						"found a processing transfer, set it to enqueued and restart it:{}",
 						transfer);
-
-				try {
-					TransferAttempt lastAttempt = transferAttemptDAO
-							.findLastTransferAttemptForTransferByTransferId(transfer
-									.getId());
-					log.info("have last attempt, will mark as error:{}");
-					ConveyorExecutionException conveyorException = new ConveyorExecutionException(
-							"Transfer was processing upon restart, set to failure to re-enqueue");
-					this.getConveyorService()
-							.getTransferAccountingManagementService()
-							.updateTransferAttemptWithConveyorException(
-									lastAttempt, conveyorException);
-					log.info("marked...now restart");
-					this.enqueueRestartOfTransferOperation(transfer.getId());
-
-				} catch (TransferDAOException e) {
-					log.error("exception getting last attempt for transfer:{}",
-							transfer, e);
-					throw new ConveyorExecutionException(
-							"unable to process transfer", e);
-				}
+				enqueueRestartOfTransferOperation(transfer.getId());
 			}
 		}
 
@@ -330,16 +310,6 @@ public class BasicQueueManagerServiceImpl extends
 				log.warn(
 						"transfer attempt is not available in the transfer:{}",
 						transfer);
-			}
-
-			/*
-			 * This is really an edge case that came up in initial testing with
-			 * bad data, just leaving it in for now MC
-			 */
-			if (transfer.getTransferType() == null) {
-				log.error("invalid or null transfer type!");
-				throw new ConveyorExecutionException(
-						"unknown or null transfer type in database!");
 			}
 
 			transferAttempt.setAttemptStart(new Timestamp(System

@@ -44,7 +44,7 @@ public class KeyStoreDAOImpl extends HibernateDaoSupport implements KeyStoreDAO 
 		}
 
 		try {
-			this.getSessionFactory().getCurrentSession().saveOrUpdate(keyStore);
+			getSessionFactory().getCurrentSession().saveOrUpdate(keyStore);
 		} catch (Exception e) {
 			logger.error("error in save()", e);
 			throw new TransferDAOException("Failed saveOrUpdate()", e);
@@ -68,7 +68,7 @@ public class KeyStoreDAOImpl extends HibernateDaoSupport implements KeyStoreDAO 
 		}
 
 		KeyStore ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(KeyStore.class);
 			criteria.add(Restrictions.eq("id", id));
@@ -98,7 +98,7 @@ public class KeyStoreDAOImpl extends HibernateDaoSupport implements KeyStoreDAO 
 		}
 
 		try {
-			this.getSessionFactory().getCurrentSession().delete(keyStore);
+			getSessionFactory().getCurrentSession().delete(keyStore);
 		} catch (Exception e) {
 			logger.error("error in delete()", e);
 			throw new TransferDAOException("Failed delete()", e);

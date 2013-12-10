@@ -109,10 +109,10 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 			}
 
 			try {
-				this.getConveyorExecutorService().setBusyForAnOperation();
+				getConveyorExecutorService().setBusyForAnOperation();
 				return replacePassPhrase(passPhrase);
 			} finally {
-				this.getConveyorExecutorService().setOperationCompleted();
+				getConveyorExecutorService().setOperationCompleted();
 			}
 		}
 
@@ -138,12 +138,12 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 			throw new IllegalArgumentException("null passPhrase");
 		}
 
-		String oldPassPhrase = this.getCachedPassPhrase();
+		String oldPassPhrase = getCachedPassPhrase();
 
 		KeyStore keyStore = storeGivenPassPhraseInKeyStoreAndSetAsCached(passPhrase);
 
 		log.info("refreshing cacheEncryptor with the new pass phrase...");
-		cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+		cacheEncryptor = new CacheEncryptor(getCachedPassPhrase());
 
 		log.info("updating stored grid accounts with new pass phrase...");
 		updateStoredGridAccountsForNewPassPhrase(oldPassPhrase, passPhrase);
@@ -211,7 +211,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 		log.info("key store saved");
 		log.info("new key store, consider it validated and cache it");
-		this.cachedPassPhrase = passPhrase;
+		cachedPassPhrase = passPhrase;
 		return keyStore;
 	}
 
@@ -235,7 +235,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 		log.info("irodsAccount:{}", irodsAccount);
 
-		if (!this.isValidated()) {
+		if (!isValidated()) {
 			throw new ConveyorExecutionException(
 					"pass phrase has not been validated");
 		}
@@ -253,7 +253,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		}
 
 		if (cacheEncryptor == null) {
-			cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+			cacheEncryptor = new CacheEncryptor(getCachedPassPhrase());
 		}
 
 		if (gridAccount == null) {
@@ -328,7 +328,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 		synchronized (this) {
 			try {
-				this.getConveyorExecutorService().setBusyForAnOperation();
+				getConveyorExecutorService().setBusyForAnOperation();
 				log.info("looking up existing pass phrase");
 				KeyStore keyStore = keyStoreDAO
 						.findById(KeyStore.KEY_STORE_PASS_PHRASE);
@@ -339,23 +339,23 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 					log.info("keyStore found...");
 					if (!keyStore.getValue().equals(hashOfPassPhrase)) {
 						log.error("pass phrase is invalid");
-						this.cachedPassPhrase = "";
+						cachedPassPhrase = "";
 						throw new PassPhraseInvalidException(
 								"invalid pass phrase");
 					} else {
-						this.cachedPassPhrase = passPhrase;
+						cachedPassPhrase = passPhrase;
 					}
 				}
 
 				log.info("refreshing cacheEncryptor with the new pass phrase...");
-				cacheEncryptor = new CacheEncryptor(this.getCachedPassPhrase());
+				cacheEncryptor = new CacheEncryptor(getCachedPassPhrase());
 
 			} catch (TransferDAOException e) {
 				log.error("error finding pass phrase in key store", e);
 				throw new ConveyorExecutionException(
 						"unable to find pass phrase in key store");
 			} finally {
-				this.getConveyorExecutorService().setOperationCompleted();
+				getConveyorExecutorService().setOperationCompleted();
 			}
 		}
 
@@ -370,7 +370,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 	 * @throws ConveyorExecutionException
 	 */
 	private void updateStoredGridAccountsForNewPassPhrase(
-			String previousPassPhrase, String passPhrase)
+			final String previousPassPhrase, final String passPhrase)
 			throws ConveyorExecutionException {
 		log.info("updateStoredGridAccountsForNewPassPhrase");
 		try {
@@ -460,7 +460,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		}
 		log.info("irodsAccount:{}", irodsAccount);
 
-		if (!this.isValidated()) {
+		if (!isValidated()) {
 			throw new ConveyorExecutionException(
 					"pass phrase has not been validated");
 		}
@@ -496,13 +496,13 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		// lock queue so as not to delete an account involved with a running
 		// transfer, deleting the account would delete the transfer data
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 			gridAccountDAO.delete(gridAccount);
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error deleting account", e);
 		} finally {
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 		}
 	}
 
@@ -542,7 +542,7 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 			throw new IllegalArgumentException("null gridAccount");
 		}
 
-		if (!this.isValidated()) {
+		if (!isValidated()) {
 			throw new ConveyorExecutionException(
 					"pass phrase has not been validated");
 		}
@@ -575,13 +575,13 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		log.info("deleteAllGridAccounts()");
 
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 			gridAccountDAO.deleteAll();
 		} catch (TransferDAOException e) {
 			log.error("exception deleting", e);
 			throw new ConveyorExecutionException("error decrypting account", e);
 		} finally {
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 		}
 
 	}
@@ -602,13 +602,13 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		 * This method alters the cached pass phrase and cache encryptor
 		 */
 		try {
-			this.getConveyorExecutorService().setBusyForAnOperation();
+			getConveyorExecutorService().setBusyForAnOperation();
 			doDeleteAllWithQueueLocked();
 		} catch (TransferDAOException e) {
 			log.error("exception resetting key store and accounts", e);
 			throw new ConveyorExecutionException("error resetting", e);
 		} finally {
-			this.getConveyorExecutorService().setOperationCompleted();
+			getConveyorExecutorService().setOperationCompleted();
 		}
 
 	}
@@ -628,8 +628,8 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 		}
 		// deleted account and other info, clear the pass phrase, it will
 		// need to be reset
-		this.cachedPassPhrase = "";
-		this.cacheEncryptor = null;
+		cachedPassPhrase = "";
+		cacheEncryptor = null;
 	}
 
 	/*

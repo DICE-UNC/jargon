@@ -65,7 +65,7 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 			prop.setUpdatedAt(new Date());
 		}
 
-		this.getSessionFactory().getCurrentSession().saveOrUpdate(prop);
+		getSessionFactory().getCurrentSession().saveOrUpdate(prop);
 	}
 
 	/*
@@ -79,8 +79,8 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 	public ConfigurationProperty findById(final Long id)
 			throws TransferDAOException {
 		log.info("entering findById with id:{}", id);
-		return (ConfigurationProperty) this.getSessionFactory()
-				.getCurrentSession().get(ConfigurationProperty.class, id);
+		return (ConfigurationProperty) getSessionFactory().getCurrentSession()
+				.get(ConfigurationProperty.class, id);
 	}
 
 	/*
@@ -98,7 +98,7 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 		}
 		log.info("findByPropertyKey key=", propertyKey);
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(ConfigurationProperty.class);
 			criteria.add(Restrictions.eq("propertyKey", propertyKey));
 			return (ConfigurationProperty) criteria.uniqueResult();
@@ -120,7 +120,7 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<ConfigurationProperty> findAll() throws TransferDAOException {
-		Criteria criteria = this.getSessionFactory().getCurrentSession()
+		Criteria criteria = getSessionFactory().getCurrentSession()
 				.createCriteria(ConfigurationProperty.class);
 
 		return criteria.list();
@@ -138,8 +138,8 @@ public class ConfigurationPropertyDAOImpl extends HibernateDaoSupport implements
 			throws TransferDAOException {
 		try {
 
-			this.getSessionFactory().getCurrentSession()
-					.delete(configurationProperty);
+			getSessionFactory().getCurrentSession().delete(
+					configurationProperty);
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);
 			throw new TransferDAOException(e);

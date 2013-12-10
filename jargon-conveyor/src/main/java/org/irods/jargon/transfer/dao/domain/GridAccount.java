@@ -185,21 +185,21 @@ public class GridAccount implements Serializable {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		this.authScheme = irodsAccount.getAuthenticationScheme();
-		this.defaultResource = irodsAccount.getDefaultStorageResource();
-		this.createdAt = new Date();
-		this.host = irodsAccount.getHost();
-		this.password = irodsAccount.getPassword();
-		this.port = irodsAccount.getPort();
-		this.updatedAt = this.createdAt;
-		this.userName = irodsAccount.getUserName();
-		this.zone = irodsAccount.getZone();
-		this.defaultPath = irodsAccount.getHomeDirectory();
+		authScheme = irodsAccount.getAuthenticationScheme();
+		defaultResource = irodsAccount.getDefaultStorageResource();
+		createdAt = new Date();
+		host = irodsAccount.getHost();
+		password = irodsAccount.getPassword();
+		port = irodsAccount.getPort();
+		updatedAt = createdAt;
+		userName = irodsAccount.getUserName();
+		zone = irodsAccount.getZone();
+		defaultPath = irodsAccount.getHomeDirectory();
 
 	}
 
 	public Long getId() {
-		return this.id;
+		return id;
 	}
 
 	public void setId(final Long id) {
@@ -207,7 +207,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getHost() {
-		return this.host;
+		return host;
 	}
 
 	public void setHost(final String host) {
@@ -215,7 +215,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public int getPort() {
-		return this.port;
+		return port;
 	}
 
 	public void setPort(final int port) {
@@ -223,7 +223,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getZone() {
-		return this.zone;
+		return zone;
 	}
 
 	public void setZone(final String zone) {
@@ -231,7 +231,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getUserName() {
-		return this.userName;
+		return userName;
 	}
 
 	public void setUserName(final String userName) {
@@ -239,7 +239,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getPassword() {
-		return this.password;
+		return password;
 	}
 
 	public void setPassword(final String password) {
@@ -247,7 +247,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getDefaultResource() {
-		return this.defaultResource;
+		return defaultResource;
 	}
 
 	public void setDefaultResource(final String defaultResource) {
@@ -255,7 +255,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public AuthScheme getAuthScheme() {
-		return this.authScheme;
+		return authScheme;
 	}
 
 	public void setAuthScheme(final AuthScheme authScheme) {
@@ -263,7 +263,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getDefaultPath() {
-		return this.defaultPath;
+		return defaultPath;
 	}
 
 	public void setDefaultPath(final String defaultPath) {
@@ -271,7 +271,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public String getComment() {
-		return this.comment;
+		return comment;
 	}
 
 	public void setComment(final String comment) {
@@ -279,7 +279,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public Date getCreatedAt() {
-		return this.createdAt;
+		return createdAt;
 	}
 
 	public void setCreatedAt(final Date createdAt) {
@@ -287,7 +287,7 @@ public class GridAccount implements Serializable {
 	}
 
 	public Date getUpdatedAt() {
-		return this.updatedAt;
+		return updatedAt;
 	}
 
 	public void setUpdatedAt(final Date updatedAt) {
@@ -300,7 +300,7 @@ public class GridAccount implements Serializable {
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 		if (obj == null) {
 			return false;
 		}
@@ -314,12 +314,12 @@ public class GridAccount implements Serializable {
 		/*
 		 * consider equal if same host/port/zone/user/password
 		 */
-		return (this.getHost().equals(other.getHost())
-				&& this.getPort() == other.getPort()
-				&& this.getZone().equals(other.getZone())
-				&& this.getUserName().equals(other.getUserName())
-				&& this.getPassword().equals(other.getPassword()) && this
-					.getAuthScheme() == other.getAuthScheme());
+		return (getHost().equals(other.getHost())
+				&& getPort() == other.getPort()
+				&& getZone().equals(other.getZone())
+				&& getUserName().equals(other.getUserName())
+				&& getPassword().equals(other.getPassword()) && getAuthScheme() == other
+					.getAuthScheme());
 
 	}
 
@@ -331,10 +331,9 @@ public class GridAccount implements Serializable {
 	@Override
 	public int hashCode() {
 		/* has generated from host/port/zone/user/password/authscheme */
-		return this.getHost().hashCode() + this.getPort()
-				+ this.getZone().hashCode() + this.getUserName().hashCode()
-				+ this.getPassword().hashCode()
-				+ this.getAuthScheme().hashCode();
+		return getHost().hashCode() + getPort() + getZone().hashCode()
+				+ getUserName().hashCode() + getPassword().hashCode()
+				+ getAuthScheme().hashCode();
 	}
 
 	/**
@@ -348,7 +347,7 @@ public class GridAccount implements Serializable {
 	 * @param preset
 	 *            the preset to set
 	 */
-	public void setPreset(boolean preset) {
+	public void setPreset(final boolean preset) {
 		this.preset = preset;
 	}
 

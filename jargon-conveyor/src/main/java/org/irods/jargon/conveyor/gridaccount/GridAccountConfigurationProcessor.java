@@ -106,41 +106,42 @@ public class GridAccountConfigurationProcessor {
 	}
 
 	/**
-	 * Given a <code>String</code> reflecting a line in a preset file, return the associated 
-	 * <code>IRODSAccount</code> if one can be found.  This method will return <code>null</code> if
-	 * the line is blank, or if it is a comment (prepended by a #).
+	 * Given a <code>String</code> reflecting a line in a preset file, return
+	 * the associated <code>IRODSAccount</code> if one can be found. This method
+	 * will return <code>null</code> if the line is blank, or if it is a comment
+	 * (prepended by a #).
 	 * <p/>
 	 * The caller must check for nulls
 	 * 
-	 * @param line <code>String</code> with a line from a serialized file
+	 * @param line
+	 *            <code>String</code> with a line from a serialized file
 	 * @return {@link IRODSAccount} or <code>null</code>
 	 * @throws GridAccountConfigurationException
 	 */
-	private static IRODSAccount buildAccountForLine(String line) throws GridAccountConfigurationException {
-		
+	private static IRODSAccount buildAccountForLine(final String line)
+			throws GridAccountConfigurationException {
+
 		if (line == null || line.isEmpty()) {
 			return null;
 		}
-		
+
 		// lines that start with # are treated as comments and ignored
 		if (line.startsWith(COMMENT)) {
 			return null;
 		}
-		
+
 		String[] elements = line.split("[" + DELIM + "]");
-		
+
 		if (elements.length != 7) {
-			throw new GridAccountConfigurationException("unexpected number of parameters in line");
+			throw new GridAccountConfigurationException(
+					"unexpected number of parameters in line");
 		}
-		
+
 		try {
-			return IRODSAccount.instance(elements[0], 
-					Integer.parseInt(elements[1]), 
-					elements[3], 
-					"", // no password here 
-					elements[6], 
-					elements[2], 
-					elements[5],
+			return IRODSAccount.instance(elements[0],
+					Integer.parseInt(elements[1]), elements[3],
+					"", // no password here
+					elements[6], elements[2], elements[5],
 					AuthScheme.findTypeByString(elements[4]));
 		} catch (NumberFormatException e) {
 			throw new GridAccountConfigurationException(

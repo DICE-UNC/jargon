@@ -29,7 +29,7 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
+	public void statusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
 	}
@@ -41,7 +41,7 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
 	}
@@ -54,7 +54,7 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 */
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
-			String irodsAbsolutePath, boolean isCollection) {
+			final String irodsAbsolutePath, final boolean isCollection) {
 		return CallbackResponse.CANCEL;
 	}
 
@@ -66,7 +66,7 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 * (org.irods.jargon.conveyor.core.QueueStatus)
 	 */
 	@Override
-	public void setQueueStatus(QueueStatus queueStatus) {
+	public void setQueueStatus(final QueueStatus queueStatus) {
 
 	}
 
@@ -77,7 +77,8 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 * signalUnhandledConveyorException(java.lang.Exception)
 	 */
 	@Override
-	public void signalUnhandledConveyorException(Exception conveyorException) {
+	public void signalUnhandledConveyorException(
+			final Exception conveyorException) {
 
 	}
 

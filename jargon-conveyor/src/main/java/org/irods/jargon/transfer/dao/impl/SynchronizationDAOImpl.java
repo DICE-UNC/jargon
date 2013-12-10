@@ -73,12 +73,11 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 		try {
 			if (synchronization.getId() == null) {
 				log.info("not persisted yet, saving");
-				this.getSessionFactory().getCurrentSession()
-						.saveOrUpdate(synchronization);
+				getSessionFactory().getCurrentSession().saveOrUpdate(
+						synchronization);
 			} else {
 				log.info("already persisted, merging");
-				this.getSessionFactory().getCurrentSession()
-						.merge(synchronization);
+				getSessionFactory().getCurrentSession().merge(synchronization);
 			}
 		} catch (Exception e) {
 
@@ -102,7 +101,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 		}
 		log.info("findByName name:{}", name);
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(Synchronization.class);
 			criteria.add(Restrictions.eq("name", name));
 			return (Synchronization) criteria.uniqueResult();
@@ -126,7 +125,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 	public List<Synchronization> findAll() throws TransferDAOException {
 		logger.debug("entering findAll()");
 		List<Synchronization> ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(Synchronization.class);
 			criteria.setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY);
@@ -148,7 +147,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 	public Synchronization findById(final Long id) throws TransferDAOException {
 		logger.debug("entering findById(Long)");
 		Synchronization ret = null;
-		Session session = this.getSessionFactory().getCurrentSession();
+		Session session = getSessionFactory().getCurrentSession();
 		try {
 			Criteria criteria = session.createCriteria(Synchronization.class);
 			criteria.add(Restrictions.eq("id", id));
@@ -175,8 +174,7 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 
 		try {
 
-			this.getSessionFactory().getCurrentSession()
-					.delete(synchronization);
+			getSessionFactory().getCurrentSession().delete(synchronization);
 
 		} catch (Exception e) {
 

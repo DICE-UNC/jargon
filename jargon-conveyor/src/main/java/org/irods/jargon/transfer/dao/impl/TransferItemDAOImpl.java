@@ -34,8 +34,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport implements
 			throws TransferDAOException {
 
 		try {
-			this.getSessionFactory().getCurrentSession()
-					.saveOrUpdate(transferItem);
+			getSessionFactory().getCurrentSession().saveOrUpdate(transferItem);
 		} catch (Exception e) {
 
 			log.error("error in save(TransferItem)", e);
@@ -50,7 +49,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport implements
 		log.debug("entering findErrorItemsByTransferAttemptId(Long)");
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class);
 			criteria.add(Restrictions.eq("error", true));
 			criteria.createCriteria("transferAttempt").add(
@@ -74,7 +73,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport implements
 		log.debug("entering findAllItemsForTransferByTransferAttemptId(Long)");
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class);
 			criteria.createCriteria("transferAttempt").add(
 					Restrictions.eq("id", id));
@@ -96,7 +95,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport implements
 		logger.debug("entering findById(Long)");
 
 		try {
-			Criteria criteria = this.getSessionFactory().getCurrentSession()
+			Criteria criteria = getSessionFactory().getCurrentSession()
 					.createCriteria(TransferItem.class);
 			return (TransferItem) criteria.uniqueResult();
 		} catch (DataAccessResourceFailureException e) {
@@ -115,7 +114,7 @@ public class TransferItemDAOImpl extends HibernateDaoSupport implements
 
 		try {
 
-			this.getSessionFactory().getCurrentSession().delete(transferItem);
+			getSessionFactory().getCurrentSession().delete(transferItem);
 
 		} catch (Exception e) {
 

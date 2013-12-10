@@ -23,14 +23,14 @@ public class TransferNotFoundException extends ConveyorExecutionException {
 	/**
 	 * @param arg0
 	 */
-	public TransferNotFoundException(String arg0) {
+	public TransferNotFoundException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public TransferNotFoundException(Throwable arg0) {
+	public TransferNotFoundException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -38,7 +38,7 @@ public class TransferNotFoundException extends ConveyorExecutionException {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public TransferNotFoundException(String arg0, Throwable arg1) {
+	public TransferNotFoundException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

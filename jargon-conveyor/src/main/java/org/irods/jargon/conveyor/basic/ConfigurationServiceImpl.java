@@ -354,7 +354,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		}
 
 		synchronized (propsLockObject) {
-			this.cachedConveyorConfigurationProperties = cachedProps;
+			cachedConveyorConfigurationProperties = cachedProps;
 		}
 
 	}
@@ -372,7 +372,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		log.info("getCachedConveyorConfigurationProperties");
 		synchronized (propsLockObject) {
 
-			if (this.cachedConveyorConfigurationProperties == null) {
+			if (cachedConveyorConfigurationProperties == null) {
 				log.info("need to initialize configuration properties");
 				updateCachedConveyorConfigurationProperties();
 			}
