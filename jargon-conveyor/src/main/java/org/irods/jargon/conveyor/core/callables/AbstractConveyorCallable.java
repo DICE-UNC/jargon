@@ -31,12 +31,12 @@ import org.springframework.transaction.annotation.Transactional;
  * collaborators, are responsible for:
  * <ul>
  * <li>Running the actual transfer process via Jargon</li>
- * <li>Intercepting any callbacks from the Jargon process, and making the
+ * <li>Intercepting any call-backs from the Jargon process, and making the
  * appropriate updates to the transfer accounting database</li>
  * <li>Catching any not-trapped errors and making a best effort to log, account
  * for them in the accounting database, and notifying the client if any
  * unresolved errors occur</li>
- * <li>Forwarding any callbacks to the client, such as file and intra-file
+ * <li>Forwarding any call-backs to the client, such as file and intra-file
  * updates of transfers</li>
  * <li>Evaluating a transfer at completion for any errors</li>
  * <li>Modifying the error and running status of the execution queue when the
@@ -164,13 +164,18 @@ public abstract class AbstractConveyorCallable implements
 	public final ConveyorExecutionFuture call()
 			throws ConveyorExecutionException {
 
+            
+                        
+            
 		IRODSAccount irodsAccount = null;
 		try {
+                    synchronized(this) {
 			irodsAccount = getConveyorService().getGridAccountService()
 					.irodsAccountForGridAccount(
 							transferAttempt.getTransfer().getGridAccount());
 			this.setTransferControlBlock(this
 					.buildDefaultTransferControlBlock());
+                    }
 
 			/*
 			 * Note that end of transfer success/failure processing will be
@@ -326,11 +331,6 @@ public abstract class AbstractConveyorCallable implements
 			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
 				log.info("file initiation, this is just passed on by conveyor");
 			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
-				/*
-				 * add a property to tell this to log that restart in the
-				 * attempt, otherwise it can be skipped. consider transfer
-				 * 'levels' and where this falls
-				 */
 				updateTransferStateOnRestartFile(transferStatus);
 
 			} else if (transferStatus.getTransferState() == TransferState.FAILURE) {
@@ -671,7 +671,7 @@ public abstract class AbstractConveyorCallable implements
 	}
 
 	/**
-	 * Conveneience method to get the <code>Transfer</code> associated with this
+	 * Convenience method to get the <code>Transfer</code> associated with this
 	 * callable
 	 * 
 	 * @return {@link Transfer}

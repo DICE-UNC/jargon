@@ -229,8 +229,7 @@ public class TransferAccountingManagementServiceImpl extends
 	 */
 	@Override
 	public void updateTransferAfterSuccessfulFileTransfer(
-			final TransferStatus transferStatus,
-			final TransferAttempt transferAttempt)
+			final TransferStatus transferStatus, TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 
 		log.info("updateTransferAfterSuccessfulFileTransfer()");
@@ -241,6 +240,13 @@ public class TransferAccountingManagementServiceImpl extends
 
 		if (transferAttempt == null) {
 			throw new IllegalArgumentException("null transferAttempt");
+		}
+
+		try {
+			transferAttempt = transferAttemptDAO.load(transferAttempt.getId());
+		} catch (TransferDAOException e) {
+			throw new ConveyorExecutionException(
+					"error loading transfer attempt", e);
 		}
 
 		log.info("updated last good path to:{}",

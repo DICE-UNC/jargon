@@ -54,6 +54,13 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 				.get(TransferAttempt.class, id);
 	}
 
+	@Override
+	public TransferAttempt load(final Long id) throws TransferDAOException {
+		logger.debug("entering findById(Long)");
+		return (TransferAttempt) this.getSessionFactory().getCurrentSession()
+				.load(TransferAttempt.class, id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -134,7 +141,7 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 					.setFirstResult(start).setMaxResults(length);
 
 			@SuppressWarnings("unchecked")
-			List<TransferItem> ls = (List<TransferItem>) criteria.list();
+			List<TransferItem> ls = criteria.list();
 
 			return ls;
 		} catch (HibernateException e) {

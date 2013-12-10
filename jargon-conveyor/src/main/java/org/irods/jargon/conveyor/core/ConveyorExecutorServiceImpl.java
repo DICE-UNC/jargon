@@ -4,6 +4,7 @@ import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.callables.AbstractConveyorCallable;
 import org.irods.jargon.conveyor.core.callables.ConveyorCallableFactory;
@@ -30,7 +31,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 
 	private ErrorStatus errorStatus = ErrorStatus.OK;
 	private RunningStatus runningStatus = RunningStatus.IDLE;
-	private Object statusSynchronizingObject = new Object();
+	//private final Object statusSynchronizingObject = new Object();
 	private final ConveyorCallableFactory conveyorCallableFactory = new ConveyorCallableFactory();
 	private Future<ConveyorExecutionFuture> currentTransferFuture = null;
 	private TransferAttempt currentTransferAttempt = null;
@@ -64,13 +65,9 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	public void requestPause() throws ConveyorExecutionException {
 		log.info("requestPause");
 
-		synchronized (statusSynchronizingObject) {
-			this.setRunningStatus(RunningStatus.PAUSED);
-
-		}
-
 		log.info("attempting to pause if there is a running transfer");
 		synchronized (this) {
+                    	this.setRunningStatus(RunningStatus.PAUSED);
 			if (this.currentTransferAttempt != null) {
 				log.info("there is a transfer to cancel");
 				requestCancel(this.currentTransferAttempt);
@@ -90,7 +87,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	public void requestResumeFromPause() throws ConveyorExecutionException {
 		log.info("requestResumeFromPause()");
 
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			this.setRunningStatus(RunningStatus.IDLE);
 
 			log.info("release next item to process if available");
@@ -101,6 +98,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		}
 	}
 
+        @Override
 	public void requestCancel(final TransferAttempt transferAttempt)
 			throws ConveyorExecutionException {
 		if (transferAttempt == null) {
@@ -135,13 +133,30 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			}
 
 			log.info(">>>setting tcb to cancel and then cancelling future...");
+                        
+                        /*
+                         * This is a temporary trap, but getting occ'l npe's on the following statement, need to resolve and remove this check?  MC 
+                         */
+                        
+                        if (currentCallable.getTransferControlBlock() == null) {
+                            
+                            log.warn("*****************************************************\ntransfer control block ref is null!\n*****************************************************\n");
+                        } else {
+                            currentCallable.getTransferControlBlock().setCancelled(true);
+                        }
 
-			currentCallable.getTransferControlBlock().setCancelled(true);
 			currentTransferFuture.cancel(true);
-
-			/*
-			 * no final callback will be sent, as the tcb has cancelled set.
-			 */
+                        
+                        // let the cancel percolate
+                    try {
+                        
+                        Thread.sleep(5000);
+                        /*
+                         * no final callback will be sent, as the tcb has cancelled set.
+                         */
+                    } catch (InterruptedException ex) {
+                       // ignore
+                    }
 
 			this.conveyorService.getTransferAccountingManagementService()
 					.updateTransferAfterCancellation(transferAttempt);
@@ -233,7 +248,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public ErrorStatus getErrorStatus() {
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			return errorStatus;
 		}
 	}
@@ -249,7 +264,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			throw new IllegalArgumentException("null errorStatus");
 		}
 
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			this.errorStatus = errorStatus;
 			notifyCallbackListenerOfChangeInStatus();
 		}
@@ -263,7 +278,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	 */
 	@Override
 	public RunningStatus getRunningStatus() {
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			return runningStatus;
 		}
 	}
@@ -282,7 +297,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			throw new IllegalArgumentException("null runningStatus");
 		}
 
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			this.runningStatus = runningStatus;
 			notifyCallbackListenerOfChangeInStatus();
 		}
@@ -298,7 +313,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	@Override
 	public void setOperationCompleted() {
 		log.info("setOperationCompleted()");
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			if (runningStatus == RunningStatus.PAUSED_BUSY
 					|| runningStatus == RunningStatus.PAUSED) {
 				log.info("setting paused");
@@ -337,7 +352,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	@Override
 	public void setBusyForAnOperation() throws ConveyorBusyException {
 
-		synchronized (statusSynchronizingObject) {
+		synchronized (this) {
 			if (runningStatus == RunningStatus.BUSY) {
 				// log.debug("will return busy exception");
 				throw new ConveyorBusyException(
@@ -407,7 +422,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 		ConveyorCallbackListener listener = conveyorService
 				.getConveyorCallbackListener();
 		if (listener != null) {
-			synchronized (statusSynchronizingObject) {
+			synchronized (this) {
 				listener.setQueueStatus(getQueueStatus());
 			}
 		}
@@ -416,6 +431,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 	/**
 	 * @return the currentTransferAttempt
 	 */
+        @Override
 	public synchronized TransferAttempt getCurrentTransferAttempt() {
 		return currentTransferAttempt;
 	}

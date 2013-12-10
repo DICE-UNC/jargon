@@ -79,4 +79,14 @@ public interface TransferAttemptDAO {
 			final Long transferAttemptId, final int start, final int length)
 			throws TransferDAOException;
 
+	/**
+	 * Do a load of the <code>TransferAttempt</code> to ensure that the object
+	 * is associated with a session
+	 * 
+	 * @param id
+	 * @return
+	 * @throws TransferDAOException
+	 */
+	TransferAttempt load(Long id) throws TransferDAOException;
+
 }
