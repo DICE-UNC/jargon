@@ -156,7 +156,15 @@ public interface ConveyorService {
 	/**
 	 * Start the timer task that periodically checks the queue. It can be
 	 * cancelled through the <code>cancelQueueTimerTask</code> method.
+	 * <p/>
+	 * Calling this method also begins execution of the periodic timer task that
+	 * will run any pending processes and do any periodic activity within the
+	 * conveyor service. This method must be called by the client when ready to
+	 * start processing.
+	 * 
+	 * @throws ConveyorExecutionException
 	 */
-	void startQueueTimerTask();
+	void beginFirstProcessAndRunPeriodicServiceInvocation()
+			throws ConveyorExecutionException;
 
 }

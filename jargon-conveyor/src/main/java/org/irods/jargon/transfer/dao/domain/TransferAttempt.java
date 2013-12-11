@@ -61,6 +61,9 @@ public class TransferAttempt implements Serializable {
 	@Enumerated(EnumType.STRING)
 	private TransferStatusEnum attemptStatus;
 
+	@Column(name = "transfer_attempt_type")
+	private TransferAttemptTypeEnum transferAttemptTypeEnum = TransferAttemptTypeEnum.NORMAL;
+
 	@Column(name = "error_message")
 	private String errorMessage;
 
@@ -319,6 +322,22 @@ public class TransferAttempt implements Serializable {
 	 */
 	public void setTotalFilesErrorSoFar(final int totalFilesErrorSoFar) {
 		this.totalFilesErrorSoFar = totalFilesErrorSoFar;
+	}
+
+	/**
+	 * @return the transferAttemptTypeEnum
+	 */
+	public TransferAttemptTypeEnum getTransferAttemptTypeEnum() {
+		return transferAttemptTypeEnum;
+	}
+
+	/**
+	 * @param transferAttemptTypeEnum
+	 *            the transferAttemptTypeEnum to set
+	 */
+	public void setTransferAttemptTypeEnum(
+			TransferAttemptTypeEnum transferAttemptTypeEnum) {
+		this.transferAttemptTypeEnum = transferAttemptTypeEnum;
 	}
 
 }

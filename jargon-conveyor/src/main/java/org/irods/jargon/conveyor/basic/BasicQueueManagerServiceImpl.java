@@ -81,10 +81,9 @@ public class BasicQueueManagerServiceImpl extends
 
 		for (Transfer transfer : transfers) {
 			if (transfer.getTransferState() == TransferStateEnum.PROCESSING) {
-				log.info(
-						"found a processing transfer, set it to enqueued and restart it:{}",
+				log.info("found a processing transfer, set it to enqueued:{}",
 						transfer);
-				enqueueRestartOfTransferOperation(transfer.getId());
+				reenqueueTransferAtBootstrapTime(transfer.getId());
 			}
 		}
 
@@ -103,6 +102,41 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("enqueueTransferOperation()");
 
+		reenqueueTransfer(transferId);
+
+		log.info("restart enqueued, will trigger the queue");
+		dequeueNextOperation();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.QueueManagerService#
+	 * reenqueueTransferAtBootstrapTime(long)
+	 */
+	@Override
+	public void reenqueueTransferAtBootstrapTime(final long transferId)
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException {
+
+		log.info("reenqueueTransferAtBootstrapTime()");
+
+		reenqueueTransfer(transferId);
+
+		log.info("restart enqueued, queue is not yet triggered...");
+
+	}
+
+	/**
+	 * @param transferId
+	 * @throws TransferNotFoundException
+	 * @throws ConveyorExecutionException
+	 * @throws RejectedTransferException
+	 */
+	private void reenqueueTransfer(final long transferId)
+			throws TransferNotFoundException, ConveyorExecutionException,
+			RejectedTransferException {
 		if (transferId <= 0) {
 			throw new IllegalArgumentException("illegal transferId");
 		}
@@ -120,11 +154,7 @@ public class BasicQueueManagerServiceImpl extends
 		evaluateTransferForExecution(existingTransfer);
 
 		conveyorService.getTransferAccountingManagementService()
-				.prepareTransferForRestart(transferId);
-
-		log.info("restart enqueued, will trigger the queue");
-		dequeueNextOperation();
-
+				.restartProcessingTransferAtStartup(transferId);
 	}
 
 	/*

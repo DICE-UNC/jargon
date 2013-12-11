@@ -240,4 +240,17 @@ public interface TransferAccountingManagementService {
 	 */
 	boolean isLogSuccessfulTransfers() throws ConveyorExecutionException;
 
+	/**
+	 * Indicates the transfer was found as processing at startup time (perhaps
+	 * conveyor was abruptly terminated). The transfer will be restarted and
+	 * marked as restarted at startup time.
+	 * 
+	 * @param transferId
+	 * @return
+	 * @throws ConveyorExecutionException
+	 * @throws RejectedTransferException
+	 */
+	Transfer restartProcessingTransferAtStartup(long transferId)
+			throws ConveyorExecutionException, RejectedTransferException;
+
 }

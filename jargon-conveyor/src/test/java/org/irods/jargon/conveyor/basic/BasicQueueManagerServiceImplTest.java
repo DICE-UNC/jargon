@@ -25,6 +25,7 @@ import org.irods.jargon.transfer.dao.domain.ConfigurationProperty;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferAttemptTypeEnum;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
@@ -454,6 +455,7 @@ public class BasicQueueManagerServiceImplTest {
 
 		// now simulate startup
 		conveyorService.getQueueManagerService().preprocessQueueAtStartup();
+		conveyorService.beginFirstProcessAndRunPeriodicServiceInvocation();
 
 		TransferTestRunningUtilities.waitForTransferToRunOrTimeout(
 				conveyorService, TRANSFER_TIMEOUT);
@@ -483,16 +485,18 @@ public class BasicQueueManagerServiceImplTest {
 		Assert.assertEquals("should be 2 attempts", 2, attempts.length);
 
 		TransferAttempt attempt = attempts[0];
-		Assert.assertEquals("did not set status to error",
-				TransferStatusEnum.ERROR, attempt.getAttemptStatus());
-		Assert.assertNotNull("did not set message", attempt.getErrorMessage());
+		Assert.assertEquals("did not set status to OK", TransferStatusEnum.OK,
+				attempt.getAttemptStatus());
 
 		attempt = attempts[1];
 		// this is warning because there were no files in the test
 		Assert.assertEquals(
 				"did not set status to warning (meaining it was enqueued and processed",
 				TransferStatusEnum.WARNING, attempt.getAttemptStatus());
-		Assert.assertNotNull("did not set message", attempt.getErrorMessage());
+		Assert.assertEquals(
+				"did not set as restarted at startup",
+				TransferAttemptTypeEnum.RESTARTED_PROCESSING_TRANSFER_AT_STARTUP,
+				attempt.getTransferAttemptTypeEnum());
 
 	}
 

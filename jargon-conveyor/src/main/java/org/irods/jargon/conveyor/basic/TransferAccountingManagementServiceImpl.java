@@ -18,6 +18,7 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.TransferItemDAO;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferAttemptTypeEnum;
 import org.irods.jargon.transfer.dao.domain.TransferItem;
 import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
@@ -832,6 +833,29 @@ public class TransferAccountingManagementServiceImpl extends
 	@Override
 	public Transfer prepareTransferForRestart(final long transferId)
 			throws ConveyorExecutionException, RejectedTransferException {
+		return restart(transferId, false);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.TransferAccountingManagementService#
+	 * restartProcessingTransferAtStartup(long)
+	 */
+	@Override
+	public Transfer restartProcessingTransferAtStartup(final long transferId)
+			throws ConveyorExecutionException, RejectedTransferException {
+		return restart(transferId, true);
+	}
+
+	/**
+	 * @param transferId
+	 * @return
+	 * @throws ConveyorExecutionException
+	 * @throws RejectedTransferException
+	 */
+	private Transfer restart(final long transferId, final boolean isAtStartup)
+			throws ConveyorExecutionException, RejectedTransferException {
 		log.info("transferId:{}", transferId);
 		log.info("looking up transfer to restart...");
 
@@ -872,6 +896,15 @@ public class TransferAccountingManagementServiceImpl extends
 		newTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 		newTransferAttempt.setLastSuccessfulPath(lastTransferAttempt
 				.getLastSuccessfulPath());
+
+		if (isAtStartup) {
+			newTransferAttempt
+					.setTransferAttemptTypeEnum(TransferAttemptTypeEnum.RESTARTED_PROCESSING_TRANSFER_AT_STARTUP);
+		} else {
+			newTransferAttempt
+					.setTransferAttemptTypeEnum(TransferAttemptTypeEnum.RESTART);
+		}
+
 		newTransferAttempt.setCreatedAt(currentDate);
 		newTransferAttempt.setUpdatedAt(currentDate);
 		newTransferAttempt.setTransfer(transfer);
@@ -936,6 +969,8 @@ public class TransferAccountingManagementServiceImpl extends
 		TransferAttempt newTransferAttempt = new TransferAttempt();
 		newTransferAttempt.setSequenceNumber(currentTime);
 		newTransferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		newTransferAttempt
+				.setTransferAttemptTypeEnum(TransferAttemptTypeEnum.RESUBMIT);
 		newTransferAttempt.setCreatedAt(currentDate);
 		newTransferAttempt.setUpdatedAt(currentDate);
 		newTransferAttempt.setTransfer(transfer);

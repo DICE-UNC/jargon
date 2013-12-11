@@ -12,7 +12,6 @@ import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.orm.hibernate3.HibernateTemplate;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 /**
@@ -188,15 +187,11 @@ public class GridAccountDAOImpl extends HibernateDaoSupport implements
 	public void deleteAll() throws TransferDAOException {
 		try {
 
-			StringBuilder sb = new StringBuilder();
-			sb.append("delete from GridAccount");
+			List<GridAccount> gridAccounts = findAll();
 
-			log.debug("delete grid account sql:{}", sb.toString());
-
-			HibernateTemplate hibernateTemplate = super.getHibernateTemplate();
-
-			int rows = hibernateTemplate.bulkUpdate(sb.toString());
-			log.debug("deleted grid accounts count of: {}", rows);
+			for (GridAccount gridAccount : gridAccounts) {
+				delete(gridAccount);
+			}
 
 		} catch (HibernateException e) {
 			log.error("HibernateException", e);

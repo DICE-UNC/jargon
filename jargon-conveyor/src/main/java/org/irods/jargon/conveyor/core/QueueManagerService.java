@@ -247,4 +247,20 @@ public interface QueueManagerService {
 	void purgeSuccessfulFromQueue() throws ConveyorBusyException,
 			ConveyorExecutionException;
 
+	/**
+	 * At startup, any processing transfers are reenqueued. This method will
+	 * take a transfer that may be marked as processing and reenqueue it. Note
+	 * that that this method does not trigger a dequeue, rather, it will rely on
+	 * the startup sequence to do this.
+	 * 
+	 * @param transferId
+	 *            <code>long</code> with the transfer id
+	 * @throws TransferNotFoundException
+	 * @throws RejectedTransferException
+	 * @throws ConveyorExecutionException
+	 */
+	void reenqueueTransferAtBootstrapTime(long transferId)
+			throws TransferNotFoundException, RejectedTransferException,
+			ConveyorExecutionException;
+
 }

@@ -156,7 +156,10 @@ public class ConveyorServiceImpl implements ConveyorService {
 	@Override
 	public void validatePassPhrase(final String passPhrase)
 			throws PassPhraseInvalidException, ConveyorExecutionException {
-		gridAccountService.validatePassPhrase(passPhrase);
+		synchronized (this) {
+			log.info("validating pass phrase...");
+			gridAccountService.validatePassPhrase(passPhrase);
+		}
 
 	}
 
@@ -267,8 +270,14 @@ public class ConveyorServiceImpl implements ConveyorService {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#startQueueTimerTask()
+	 */
 	@Override
-	public synchronized void startQueueTimerTask() {
+	public synchronized void beginFirstProcessAndRunPeriodicServiceInvocation()
+			throws ConveyorExecutionException {
 		/*
 		 * Since I'm starting, look for any currently processing transactions
 		 * and reset them to 'enqueued'
@@ -286,8 +295,14 @@ public class ConveyorServiceImpl implements ConveyorService {
 		queueTimer = new Timer();
 		queueTimer.scheduleAtFixedRate(queueSchedulerTimerTask, 10000, 120000);
 		log.info("timer scheduled");
+		queueManagerService.dequeueNextOperation();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#init()
+	 */
 	@Override
 	public void init() {
 
@@ -304,7 +319,6 @@ public class ConveyorServiceImpl implements ConveyorService {
 			getQueueManagerService().preprocessQueueAtStartup();
 			log.info("preprocessing done, unlock the queue");
 			getConveyorExecutorService().setOperationCompleted();
-			startQueueTimerTask();
 		} catch (ConveyorBusyException e) {
 			log.error("cannot lock queue for initialization!", e);
 			throw new ConveyorRuntimeException("cannot lock queue for init", e);
