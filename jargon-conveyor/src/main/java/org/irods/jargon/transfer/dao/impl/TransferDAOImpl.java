@@ -95,6 +95,13 @@ public class TransferDAOImpl extends HibernateDaoSupport implements TransferDAO 
 				Transfer.class, id);
 	}
 
+	@Override
+	public Transfer load(final Long id) throws TransferDAOException {
+		logger.debug("entering load(Long)");
+		return (Transfer) getSessionFactory().getCurrentSession().load(
+				Transfer.class, id);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

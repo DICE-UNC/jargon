@@ -288,30 +288,37 @@ final class TransferOperationsHelper {
 			}
 
 		} catch (JargonException je) {
-			// may re-throw or send back to the call-back listener
-			log.error("exception in transfer", je);
 
-			transferControlBlock.reportErrorInTransfer();
+			if (!transferControlBlock.isCancelled()) {
 
-			if (transferStatusCallbackListener != null) {
-				log.warn("exception will be passed back to existing callback listener");
+				// may re-throw or send back to the call-back listener
+				log.error("exception in transfer", je);
 
-				TransferStatus status = TransferStatus.instanceForException(
-						TransferType.GET, irodsSourceFile.getAbsolutePath(),
-						targetLocalFile.getAbsolutePath(), "", targetLocalFile
-								.length(), targetLocalFile.length(),
-						transferControlBlock.getTotalFilesTransferredSoFar(),
-						transferControlBlock.getTotalFilesSkippedSoFar(),
-						totalFiles, je, dataObjectAO.getIRODSAccount()
-								.getHost(), dataObjectAO.getIRODSAccount()
-								.getZone());
+				transferControlBlock.reportErrorInTransfer();
 
-				transferStatusCallbackListener.statusCallback(status);
+				if (transferStatusCallbackListener != null) {
+					log.warn("exception will be passed back to existing callback listener");
 
-			} else {
-				log.warn("exception will be re-thrown, as there is no status callback listener");
-				throw je;
+					TransferStatus status = TransferStatus
+							.instanceForException(TransferType.GET,
+									irodsSourceFile.getAbsolutePath(),
+									targetLocalFile.getAbsolutePath(), "",
+									targetLocalFile.length(), targetLocalFile
+											.length(), transferControlBlock
+											.getTotalFilesTransferredSoFar(),
+									transferControlBlock
+											.getTotalFilesSkippedSoFar(),
+									totalFiles, je, dataObjectAO
+											.getIRODSAccount().getHost(),
+									dataObjectAO.getIRODSAccount().getZone());
 
+					transferStatusCallbackListener.statusCallback(status);
+
+				} else {
+					log.warn("exception will be re-thrown, as there is no status callback listener");
+					throw je;
+
+				}
 			}
 		}
 	}
@@ -1019,10 +1026,8 @@ final class TransferOperationsHelper {
 					TransferStatus status = TransferStatus.instance(
 							TransferType.COPY, fileInSourceCollection
 									.getAbsolutePath(),
-							targetIrodsFileAbsolutePath, targetResource,
-							0L,
-							0L,
-							transferControlBlock
+							targetIrodsFileAbsolutePath, targetResource, 0L,
+							0L, transferControlBlock
 									.getTotalFilesTransferredSoFar(),
 							transferControlBlock.getTotalFilesSkippedSoFar(),
 							transferControlBlock.getTotalFilesToTransfer(),

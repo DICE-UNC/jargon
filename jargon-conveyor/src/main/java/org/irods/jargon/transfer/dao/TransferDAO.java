@@ -133,4 +133,13 @@ public interface TransferDAO {
 	 */
 	void merge(Transfer transfer) throws TransferDAOException;
 
+	/**
+	 * Load the transfer to ensure it is attached
+	 * 
+	 * @param id
+	 * @return
+	 * @throws TransferDAOException
+	 */
+	Transfer load(Long id) throws TransferDAOException;
+
 }

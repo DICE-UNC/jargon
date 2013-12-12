@@ -626,6 +626,8 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("transferAttempt:{}", transferAttempt);
 		log.info("transferStatus:{}", transferStatus);
 
+		Transfer transfer = null;
+
 		try {
 			transferAttempt = transferAttemptDAO.load(transferAttempt.getId());
 			if (transferAttempt == null) {
@@ -634,6 +636,8 @@ public class TransferAccountingManagementServiceImpl extends
 						"error finding transfer attempt");
 
 			}
+			transfer = transferDAO.load(transferAttempt.getTransfer().getId());
+
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException(
 					"error finding transfer attempt", e);
@@ -650,7 +654,6 @@ public class TransferAccountingManagementServiceImpl extends
 		 * } } catch (TransferDAOException e) { throw new
 		 * ConveyorExecutionException( "error finding transfer attempt", e); }
 		 */
-		Transfer transfer = transferAttempt.getTransfer();
 
 		log.info("transfer for update:{}", transfer);
 
@@ -666,7 +669,7 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
-			// transferAttemptDAO.save(localTransferAttempt);
+			// transferAttemptDAO.save(transferA);
 			transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(

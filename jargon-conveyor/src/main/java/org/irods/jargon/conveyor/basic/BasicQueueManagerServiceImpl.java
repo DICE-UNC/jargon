@@ -151,8 +151,6 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
-		evaluateTransferForExecution(existingTransfer);
-
 		conveyorService.getTransferAccountingManagementService()
 				.restartProcessingTransferAtStartup(transferId);
 	}
@@ -237,7 +235,6 @@ public class BasicQueueManagerServiceImpl extends
 		 * (malformed, duplicate). The evaluate method will throw a rejected
 		 * exception if appropriate
 		 */
-		evaluateTransferForExecution(transfer);
 		long currentTime = System.currentTimeMillis();
 		Date currentDate = new Date(currentTime);
 
@@ -262,18 +259,6 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("transfer added:{}", transfer);
 
-	}
-
-	private void evaluateTransferForExecution(final Transfer transfer)
-			throws RejectedTransferException, ConveyorExecutionException {
-		// FIXME: implement this!
-
-		// check to see if the transfer has already completed successfully
-		if ((transfer.getTransferState() == TransferStateEnum.COMPLETE)
-				&& (transfer.getLastTransferStatus() == TransferStatusEnum.OK)) {
-			log.info("existing transfer found, and it has already completed successfully");
-			throw new RejectedTransferException();
-		}
 	}
 
 	@Override
@@ -556,6 +541,10 @@ public class BasicQueueManagerServiceImpl extends
 				log.info("matched currently running transfer attempt - cancelling transfer");
 				getConveyorService().getConveyorExecutorService()
 						.requestCancel(transferAttemptToCancel);
+			} else {
+				log.info("no current seen, but go ahead and update the database indicating that the transfer is cancelled");
+				conveyorService.getTransferAccountingManagementService()
+						.updateTransferAfterCancellation(current);
 			}
 		}
 	}
