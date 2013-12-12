@@ -193,4 +193,16 @@ public interface GridAccountService {
 	 */
 	boolean isPassPhraseStoredAlready() throws ConveyorExecutionException;
 
+	/**
+	 * Associate the choice for default storage resource with the grid account
+	 * 
+	 * @param resourceName
+	 *            <code>String</code> with a valid resource name, or blank
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} to save
+	 * @throws ConveyorExecutionException
+	 */
+	void rememberDefaultStorageResource(String resourceName,
+			IRODSAccount irodsAccount) throws ConveyorExecutionException;
+
 }

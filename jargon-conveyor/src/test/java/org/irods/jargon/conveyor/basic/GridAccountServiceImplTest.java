@@ -133,6 +133,28 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
+	public final void testRememberResource() throws Exception {
+		String testUserName = "user1";
+		String newResc = "newResc";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, testUserName, testUserName);
+		String passPhrase = "ooogabooga";
+		gridAccountService.validatePassPhrase(passPhrase);
+		gridAccountService
+				.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+		gridAccountService
+				.rememberDefaultStorageResource(newResc, irodsAccount);
+
+		GridAccount actual = gridAccountService
+				.findGridAccountByIRODSAccount(irodsAccount);
+
+		Assert.assertEquals("did not update default resource", newResc,
+				actual.getDefaultResource());
+	}
+
+	@Test
 	public final void testValidatePassPhraseWhenNoneThenRevalidateShouldBeGood()
 			throws Exception {
 		String passPhrase = "ooogabooga";

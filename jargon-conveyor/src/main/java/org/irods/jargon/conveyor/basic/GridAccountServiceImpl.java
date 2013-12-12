@@ -118,6 +118,36 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 	}
 
+	@Override
+	public void rememberDefaultStorageResource(final String resourceName,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException {
+
+		log.info("rememberDefaultStorageResource()");
+
+		if (resourceName == null) {
+			throw new IllegalArgumentException("null resourceName");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		log.info("resourceName:{}", resourceName);
+		log.info("irodsAccount:{}", irodsAccount);
+
+		GridAccount gridAccount = findGridAccountByIRODSAccount(irodsAccount);
+
+		if (gridAccount == null) {
+			log.error("cannot find grid account for irodsAccount:{}",
+					irodsAccount);
+			throw new ConveyorExecutionException(
+					"cannot find grid account for iRODS account");
+		}
+
+		gridAccount.setDefaultResource(resourceName);
+		log.info("default resource name is set");
+	}
+
 	/**
 	 * Replace the current pass phrase with a new one, including resetting all
 	 * stored grid accounts to the new phrase. Note that the queue should be
