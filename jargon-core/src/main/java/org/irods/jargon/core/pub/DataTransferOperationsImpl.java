@@ -519,31 +519,27 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 			// send a status callback that indicates completion
 			if (transferStatusCallbackListener != null) {
-				if (operativeTransferControlBlock.isCancelled()
-						|| operativeTransferControlBlock.isPaused()) {
-					// on pause or cancel, no completion is sent
-					log.info("no overall completion callback is sent, as the transfer was paused or cancelled");
-				} else {
-					TransferStatus status = TransferStatus.instance(
-							TransferType.GET,
-							irodsSourceFile.getAbsolutePath(),
-							targetLocalFileNameForCallbacks.getAbsolutePath(),
-							"", operativeTransferControlBlock
-									.getTotalBytesToTransfer(),
-							operativeTransferControlBlock
-									.getTotalBytesTransferredSoFar(),
-							operativeTransferControlBlock
-									.getTotalFilesTransferredSoFar(),
-							operativeTransferControlBlock
-									.getTotalFilesSkippedSoFar(),
-							operativeTransferControlBlock
-									.getTotalFilesToTransfer(),
-							TransferState.OVERALL_COMPLETION, getIRODSAccount()
-									.getHost(), getIRODSAccount().getZone());
 
-					transferStatusCallbackListener
-							.overallStatusCallback(status);
-				}
+				TransferStatus status = TransferStatus
+						.instance(TransferType.GET, irodsSourceFile
+								.getAbsolutePath(),
+								targetLocalFileNameForCallbacks
+										.getAbsolutePath(), "",
+								operativeTransferControlBlock
+										.getTotalBytesToTransfer(),
+								operativeTransferControlBlock
+										.getTotalBytesTransferredSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesTransferredSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesSkippedSoFar(),
+								operativeTransferControlBlock
+										.getTotalFilesToTransfer(),
+								TransferState.OVERALL_COMPLETION,
+								getIRODSAccount().getHost(), getIRODSAccount()
+										.getZone());
+
+				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 		} else {
 
@@ -1709,30 +1705,20 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		// send status callback that indicates completion of the process
 		if (transferStatusCallbackListener != null) {
-			if (operativeTransferControlBlock.isCancelled()
-					|| operativeTransferControlBlock.isPaused()) {
-				// on pause or cancel, no completion is sent
-				log.info("no overall completion callback is sent, as the transfer was paused or cancelled");
-			} else {
-				TransferStatus status = TransferStatus
-						.instance(TransferType.COPY, sourceFile
-								.getAbsolutePath(), targetFile
-								.getAbsolutePath(), targetResource,
-								operativeTransferControlBlock
-										.getTotalBytesToTransfer(),
-								operativeTransferControlBlock
-										.getTotalBytesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesTransferredSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesSkippedSoFar(),
-								operativeTransferControlBlock
-										.getTotalFilesToTransfer(),
-								TransferState.OVERALL_COMPLETION,
-								getIRODSAccount().getHost(), getIRODSAccount()
-										.getZone());
-				transferStatusCallbackListener.overallStatusCallback(status);
-			}
+
+			TransferStatus status = TransferStatus.instance(TransferType.COPY,
+					sourceFile.getAbsolutePath(), targetFile.getAbsolutePath(),
+					targetResource, operativeTransferControlBlock
+							.getTotalBytesToTransfer(),
+					operativeTransferControlBlock
+							.getTotalBytesTransferredSoFar(),
+					operativeTransferControlBlock
+							.getTotalFilesTransferredSoFar(),
+					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
+					operativeTransferControlBlock.getTotalFilesToTransfer(),
+					TransferState.OVERALL_COMPLETION, getIRODSAccount()
+							.getHost(), getIRODSAccount().getZone());
+			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 	}
 
