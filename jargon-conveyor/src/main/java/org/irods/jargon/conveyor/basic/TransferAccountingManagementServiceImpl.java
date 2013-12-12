@@ -703,7 +703,7 @@ public class TransferAccountingManagementServiceImpl extends
 
 		TransferAttempt localTransferAttempt;
 		try {
-			localTransferAttempt = transferAttemptDAO.findById(transferAttempt
+			localTransferAttempt = transferAttemptDAO.load(transferAttempt
 					.getId());
 			if (localTransferAttempt == null) {
 				log.error("null transfer attempt found, cannot update the database");
@@ -730,13 +730,14 @@ public class TransferAccountingManagementServiceImpl extends
 		localTransferAttempt.setGlobalExceptionStackTrace(ExceptionUtils
 				.stackTraceToString(transferStatus.getTransferException()));
 
-		try {
-			transferAttemptDAO.save(localTransferAttempt);
-			transferDAO.save(transfer);
-		} catch (TransferDAOException ex) {
-			throw new ConveyorExecutionException(
-					"error saving transfer attempt", ex);
-		}
+		/*
+		 * 
+		 * try { transferAttemptDAO.save(localTransferAttempt);
+		 * transferDAO.save(transfer); } catch (TransferDAOException ex) { throw
+		 * new ConveyorExecutionException(
+		 * 
+		 * "error saving transfer attempt", ex); }
+		 */
 
 	}
 

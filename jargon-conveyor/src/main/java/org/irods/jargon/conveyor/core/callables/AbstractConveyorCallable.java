@@ -607,7 +607,11 @@ public abstract class AbstractConveyorCallable implements
 			final TransferAttempt transferAttempt) {
 
 		TransferStatusEnum status;
-		if (transferControlBlock.getErrorCount() > 0
+                if (transferControlBlock.getErrorCount() > 0
+				&& transferControlBlock.getTotalFilesTransferredSoFar() == 0) {
+			log.info("transfer had errors and no files were successful, so mark as an error");
+			status = TransferStatusEnum.ERROR;
+                } else if (transferControlBlock.getErrorCount() > 0
 				&& transferControlBlock.getErrorCount() < transferControlBlock
 						.getMaximumErrorsBeforeCanceling()) {
 			log.info("transfer had errors but below max");
