@@ -711,4 +711,90 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
+	/**
+	 * Bug [#1842] [iROD-Chat:11109] imcoll symlinks across zones
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String fileName = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842.txt";
+		String testSubdir = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842";
+		String mountSubdir = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842SoftLink";
+		int count = 20;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = null;
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// make a symlink in zone1 to the coll in zone2
+
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						zone1Account);
+
+		String softLinkCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ mountSubdir);
+
+		mountedCollectionAO.unmountACollection(softLinkCollection, "");
+
+		mountedCollectionAO.createASoftLink(targetIrodsCollection,
+				softLinkCollection);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(zone1Account);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsUnderPath(softLinkCollection, 0);
+		Assert.assertNotNull(entries);
+		Assert.assertFalse(entries.isEmpty());
+		CollectionAndDataObjectListingEntry entry = entries
+				.get(entries.size() - 1);
+		Assert.assertTrue(entry.isLastResult());
+		Assert.assertEquals(entry.getCount(), entries.size());
+		Assert.assertEquals("did not find all of the entries", count,
+				entries.size());
+
+		// bounce thru and make sure each is a data object with the correct name
+
+		for (CollectionAndDataObjectListingEntry resultEntry : entries) {
+			Assert.assertTrue(
+					"this is not a data object",
+					resultEntry.getObjectType() == CollectionAndDataObjectListingEntry.ObjectType.DATA_OBJECT);
+			Assert.assertTrue("file name not correctly returned", resultEntry
+					.getPathOrName().indexOf(fileName) > -1);
+		}
+
+	}
 }

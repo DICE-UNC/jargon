@@ -858,6 +858,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							RodsGenQueryEnum.COL_DATA_NAME,
 							SelectFieldTypes.COUNT)
 					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM,
+							QueryConditionOperators.EQUAL, 0)
+					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.LIKE,
 							effectiveAbsolutePath.trim() + "%");

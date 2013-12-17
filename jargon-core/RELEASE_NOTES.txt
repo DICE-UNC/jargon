@@ -44,7 +44,14 @@ Note that the following bug and feature requests are logged in GForge with relat
 *[#1840] error doing a rename in idrop
 **error with rename of a folder under a parent adding intermediate directory
 
+*[#1841] pre count of get transfers was counting replicas
+
+*[#1842] [iROD-Chat:11109] imcoll symlinks across zones
+**Added unit tests for creating soft links in federated zone and doing listings in that zone
+
 *Numerous small fixes and improvements since the 3.3.1 release.
+
+
 
 ==Features==
 
