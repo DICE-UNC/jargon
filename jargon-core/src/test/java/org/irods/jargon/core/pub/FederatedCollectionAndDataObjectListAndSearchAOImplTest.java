@@ -738,20 +738,28 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ testSubdir);
-		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+		int length = 300;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, fileName, length);
+		File localFile = new File(localFilePath);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.mkdir();
-		irodsFile.close();
 
-		String myTarget = "";
+		// delete to clean up
+		destFile.deleteWithForceOption();
+		destFile.mkdirs();
 
-		for (int i = 0; i < count; i++) {
-			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
-			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(myTarget);
-			irodsFile.createNewFile();
-			irodsFile.close();
-		}
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
 		IRODSAccount zone1Account = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
