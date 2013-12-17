@@ -274,6 +274,10 @@ public class FederatedDataTransferOperationsImplTest {
 						+ '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
 
+		dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						zone1Account);
+
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				null, null);
 
