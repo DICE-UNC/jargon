@@ -572,6 +572,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				getIRODSSession(), useThisAccount);
+
 		try {
 
 			log.info("opening IRODSFileImpl for:{}", irodsAbsolutePath);

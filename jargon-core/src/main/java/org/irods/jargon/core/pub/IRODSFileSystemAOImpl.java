@@ -29,6 +29,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -906,11 +907,15 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irodsFile is null");
 		}
 
-		DataObjInp dataObjInp = DataObjInp.instanceForOpen(
-				irodsFile.getAbsolutePath(), openFlags);
+		IRODSFileImpl irodsFileImpl = (IRODSFileImpl) irodsFile;
+
+		String absPath = this.resolveAbsolutePathGivenObjStat((irodsFileImpl
+				.initializeObjStatForFile()));
+
+		DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
 
 		if (log.isInfoEnabled()) {
-			log.info("opening file:" + irodsFile.getAbsolutePath());
+			log.info("opening file:" + absPath);
 		}
 
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
@@ -1460,6 +1465,20 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			}
 		}
 
+	}
+
+	private String resolveAbsolutePathGivenObjStat(final ObjStat objStat)
+			throws JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null objStat");
+		}
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+		return MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 	}
 
 }
