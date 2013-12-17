@@ -3,6 +3,8 @@ package org.irods.jargon.core.pub;
 import java.io.File;
 import java.util.Properties;
 
+import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -196,6 +198,89 @@ public class FederatedDataTransferOperationsImplTest {
 
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, returnCompareLocalFile);
+	}
+
+	/**
+	 * Bug [#1842] [iROD-Chat:11109] imcoll symlinks across zones
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetDataObjectViaSoftLinkToAnotherZoneBug1842()
+			throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String fileName = "testGetDataObjectViaSoftLinkToAnotherZoneBug1842.txt";
+		String testSubdir = "testGetDataObjectViaSoftLinkToAnotherZoneBug1842";
+		String mountSubdir = "testGetDataObjectViaSoftLinkToAnotherZoneBug1842SoftLink";
+		String returnedLocalCollection = "testGetDataObjectViaSoftLinkToAnotherZoneBug1842Returned";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		int length = 300;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, fileName, length);
+		File localFile = new File(localFilePath);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+
+		// delete to clean up
+		destFile.deleteWithForceOption();
+		destFile.mkdirs();
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		IRODSAccount zone1Account = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// make a symlink in zone1 to the coll in zone2
+		MountedCollectionAO mountedCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getMountedCollectionAO(
+						zone1Account);
+
+		String softLinkCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ mountSubdir);
+
+		IRODSFile getIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				zone1Account).instanceIRODSFile(softLinkCollection, fileName);
+
+		mountedCollectionAO.unmountACollection(softLinkCollection, "");
+
+		mountedCollectionAO.createASoftLink(targetIrodsCollection,
+				softLinkCollection);
+
+		String returnLocalCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedLocalCollection);
+		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
+
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
+				null, null);
+
+		File returnCompareLocalFile = new File(
+				returnLocalCollectionAbsolutePath, fileName);
+
+		Assert.assertTrue("got file", returnCompareLocalFile.exists());
 	}
 
 }
