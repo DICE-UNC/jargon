@@ -153,4 +153,55 @@ public class TransferAttemptDAOImpl extends HibernateDaoSupport implements
 					"Failed findNextTransferItems(Long, int, int)", e);
 		}
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.transfer.dao.TransferAttemptDAO#
+	 * listTransferItemsInTransferAttempt(java.lang.Long, int, int, boolean,
+	 * boolean)
+	 */
+	@Override
+	public List<TransferItem> listTransferItemsInTransferAttempt(
+			final Long transferAttemptId, final int start, final int length,
+			final boolean showSuccess, final boolean showSkipped)
+			throws TransferDAOException {
+		log.debug("entering findNextTransferItems(Long, int, int, boolean, boolean)");
+
+		if (transferAttemptId == null) {
+			throw new IllegalArgumentException(
+					"null or empty transfer attempt id");
+		}
+
+		try {
+			Criteria criteria = getSessionFactory().getCurrentSession()
+					.createCriteria(TransferItem.class);
+
+			if (showSuccess) {
+				if (!showSkipped) {
+					criteria.add(Restrictions.eq("skipped", false));
+				}
+			} else {
+				criteria.add(Restrictions.eq("error", true));
+			}
+
+			criteria.createCriteria("transferAttempt").add(
+					Restrictions.eq("id", transferAttemptId));
+
+			criteria.setFirstResult(start).setMaxResults(length);
+
+			@SuppressWarnings("unchecked")
+			List<TransferItem> ls = criteria.list();
+
+			return ls;
+		} catch (HibernateException e) {
+			log.error("HibernateException", e);
+			throw new TransferDAOException(e);
+		} catch (Exception e) {
+			log.error("error in findNextTransferItems(Long, int, int)", e);
+			throw new TransferDAOException(
+					"Failed findNextTransferItems(Long, int, int)", e);
+		}
+	}
+
 }

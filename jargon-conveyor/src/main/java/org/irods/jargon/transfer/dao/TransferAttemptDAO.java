@@ -89,4 +89,40 @@ public interface TransferAttemptDAO {
 	 */
 	TransferAttempt load(Long id) throws TransferDAOException;
 
+	/**
+	 * Do a pageable listing of items, allowing selection of the items to show
+	 * by classification. <br/>
+	 * If <code>showSucces</code> is true, then successes AND errors are
+	 * displayed, this is a 'list all' setting. This may be further refined by
+	 * setting <code>showSkipped</code>, which, when true, will show any files
+	 * skipped in the attempt, because of restarting. <br/>
+	 * Note that if <code>showSuccess</code> is false, then skipped files are
+	 * also not shown. This will result in a listing of just error transfer
+	 * items.
+	 * 
+	 * @param transferAttemptId
+	 * @param transferAttemptId
+	 *            <code>long</code> with the id of the
+	 *            <code>TransferAttempt</code> that will be looked up
+	 * @param start
+	 *            <code>int</code> with the start index of the list of
+	 *            <code>TransferItems</code> to return
+	 * @param length
+	 *            <code>int</code> with the max number of
+	 *            <code>TransferItems</code> to return
+	 * @param showSuccess
+	 *            <code>boolean</code> that, when true, will show all items,
+	 *            including errors. When set to false, only error items are
+	 *            returned.
+	 * @param showSkipped
+	 *            <code>boolean</code> that, when true, will show items skipped
+	 *            during a restart. When <code>showSuccess</code> is false, this
+	 *            will have no effect
+	 * @return {@link TransferItems} list
+	 * @throws TransferDAOException
+	 */
+	List<TransferItem> listTransferItemsInTransferAttempt(
+			Long transferAttemptId, int start, int length, boolean showSuccess,
+			boolean showSkipped) throws TransferDAOException;
+
 }
