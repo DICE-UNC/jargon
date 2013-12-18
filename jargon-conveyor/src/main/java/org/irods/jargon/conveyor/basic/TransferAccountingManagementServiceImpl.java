@@ -669,7 +669,7 @@ public class TransferAccountingManagementServiceImpl extends
 		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
-			// transferAttemptDAO.save(transferA);
+			transferAttemptDAO.save(transferAttempt);
 			transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
 			throw new ConveyorExecutionException(
