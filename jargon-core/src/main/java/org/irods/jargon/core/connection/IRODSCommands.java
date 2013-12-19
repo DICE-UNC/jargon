@@ -263,6 +263,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		if (cookie >= EIRODS_MIN && cookie <= EIRODS_MAX) {
 			log.info("setting to eirods based on cookie value");
 			irodsServerProperties.setEirods(true);
+		} else if (irodsServerProperties
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
+			irodsServerProperties.setEirods(true);
 		}
 
 		log.info(irodsServerProperties.toString());
