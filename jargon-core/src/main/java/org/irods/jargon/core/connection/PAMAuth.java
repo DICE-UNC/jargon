@@ -110,9 +110,6 @@ public class PAMAuth extends AuthMechanism {
 				irodsCommands.getAuthResponse(),
 				irodsCommands.getAuthMechanism(), sslIRODSConnection);
 
-		secureIRODSCommands.setIrodsServerProperties(irodsCommands
-				.getIrodsServerProperties());
-
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
 		// send pam auth request
@@ -121,11 +118,13 @@ public class PAMAuth extends AuthMechanism {
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
-		if (secureIRODSCommands.getIrodsServerProperties().isEirods()) {
+		if (startupResponseData.isEirods()) {
 			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getUserName(), irodsAccount.getPassword(),
 					pamTimeToLive);
+			response = secureIRODSCommands.irodsFunction(pi);
+
 		} else {
 			log.info("using normal irods pam auth request");
 			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(

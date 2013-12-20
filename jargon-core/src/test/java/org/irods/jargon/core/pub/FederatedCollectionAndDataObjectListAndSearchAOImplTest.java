@@ -791,7 +791,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.get(entries.size() - 1);
 		Assert.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
-		Assert.assertEquals("did not find all of the entries", count,
+		Assert.assertEquals("did not find all of the entries", 1,
 				entries.size());
 
 		// bounce thru and make sure each is a data object with the correct name

@@ -159,6 +159,8 @@ public class IRODSErrorScanner {
 		case FEDERATED_ZONE_NOT_AVAILABLE:
 			throw new ZoneUnavailableException(
 					"the federated zone is not available");
+		case PAM_AUTH_ERROR:
+			throw new AuthenticationException("PAM authentication error");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

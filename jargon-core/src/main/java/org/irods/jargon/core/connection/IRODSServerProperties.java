@@ -5,6 +5,8 @@ package org.irods.jargon.core.connection;
 
 import java.util.Date;
 
+import org.irods.jargon.core.utils.MiscIRODSUtils;
+
 /**
  * Immutable information on an IRODS Server that a connection is connected to.
  * 
@@ -169,10 +171,17 @@ public class IRODSServerProperties {
 			throw new IllegalArgumentException("null or empty releaseVersion");
 		}
 
-		// The result is a negative integer if this String object
-		// lexicographically precedes the argument string.
-		int compValue = getRelVersion().compareToIgnoreCase(releaseVersion);
-		return compValue >= 0;
+		return MiscIRODSUtils.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+				getRelVersion(), releaseVersion);
+
+		/*
+		 * 
+		 * 
+		 * // The result is a negative integer if this String object //
+		 * lexicographically precedes the argument string. int compValue =
+		 * getRelVersion().compareToIgnoreCase(releaseVersion); return compValue
+		 * >= 0;
+		 */
 
 	}
 

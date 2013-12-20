@@ -1728,11 +1728,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	private boolean isPamFlush() {
 
-		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
-			return false;
-		}
-
-		if (this.pipelineConfiguration.isForcePamFlush()) {
+		if (this.irodsConnection instanceof SSLIRODSConnection) {
+			return true;
+		} else if (this.pipelineConfiguration.isForcePamFlush()) {
 			return true;
 		} else {
 			return false;
