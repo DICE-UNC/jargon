@@ -161,10 +161,10 @@ public class PagingAnalyser {
 		// go for 10 total indexes (make a parameter?). Note page indexes are 1
 		// based
 
-		int currentPage = pagingStatus.getStartingIndex()
-				/ pagingStatus.getPageSize() + 1;
+		int currentPage = Math.round(pagingStatus.getStartingIndex()
+				/ pagingStatus.getPageSize()) + 1;
 		// -1 so that center page is available
-		int pagesInDirection = TOTAL_INDEXES / 2 - 1;
+		int pagesInDirection = Math.round(TOTAL_INDEXES / 2) - 1;
 
 		int excessNext = 0;
 		int nextIndexes = pagesInDirection + currentPage;
