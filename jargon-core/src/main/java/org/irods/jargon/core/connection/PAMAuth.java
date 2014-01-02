@@ -137,8 +137,14 @@ public class PAMAuth extends AuthMechanism {
 			throw new JargonException("null response from pamAuthRequest");
 		}
 
-		String tempPasswordForPam = response.getTag("irodsPamPassword")
-				.getStringValue();
+		String tempPasswordForPam;
+		if (startupResponseData.isEirods()) {
+			tempPasswordForPam = response.getTag("result_").getStringValue();
+		} else {
+			tempPasswordForPam = response.getTag("irodsPamPassword")
+					.getStringValue();
+		}
+
 		if (tempPasswordForPam == null || tempPasswordForPam.isEmpty()) {
 			throw new AuthenticationException(
 					"unable to retrive the temp password resulting from the pam auth response");
