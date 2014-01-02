@@ -13,6 +13,7 @@ import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.BulkAVUOperationResponse.ResultStatus;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -391,6 +392,55 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		return AccessObjectQueryProcessingUtils
 				.buildMetaDataAndDomainDatalistFromResultSet(
 						MetadataDomain.COLLECTION, resultSet);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#addBulkAVUMetadataToCollection
+	 * (java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("addBulkAVUMetadataToCollection()");
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				addAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when adding an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_AVU, value, dnf.getMessage()));
+				continue;
+			} catch (DuplicateDataException dde) {
+				log.error(
+						"DuplicateDataException when adding an AVU, catch and add to response data",
+						dde);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.DUPLICATE_AVU, value, dde.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
 	}
 
 	/*

@@ -392,6 +392,154 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public void testBulkAddAvuMetadata() throws Exception {
+		String testDirName = "testAddAvuMetadataDir";
+		String expectedAttribName = "testBulkAddAvuMetadataattrib1";
+		String expectedAttribValue = "testBulkAddAvuMetadatavalue1";
+
+		String expectedAttribName2 = "testBulkAddAvuMetadataattrib2";
+		String expectedAttribValue2 = "testBulkAddAvuMetadatavalue2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+		listOfAvuData.add(AvuData.instance(expectedAttribName2,
+				expectedAttribValue2, ""));
+
+		List<BulkAVUOperationResponse> responses = collectionAO
+				.addBulkAVUMetadataToCollection(targetIrodsCollection,
+						listOfAvuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQuery(queryElements);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue2));
+
+		result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		Assert.assertNotNull("no responses", responses);
+		Assert.assertFalse("no responses", responses.isEmpty());
+
+		for (BulkAVUOperationResponse response : responses) {
+			Assert.assertEquals("not success",
+					BulkAVUOperationResponse.ResultStatus.OK,
+					response.getResultStatus());
+			Assert.assertNotNull("no avuData in response",
+					response.getAvuData());
+		}
+
+	}
+
+	@Test
+	public void testBulkAddAvuMetadataWithDuplicate() throws Exception {
+		String testDirName = "testAddAvuMetadataDir";
+		String expectedAttribName = "testBulkAddAvuMetadataWithDuplicateattrib1";
+		String expectedAttribValue = "testBulkAddAvuMetadataWithDuplicatevalue1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+
+		List<BulkAVUOperationResponse> responses = collectionAO
+				.addBulkAVUMetadataToCollection(targetIrodsCollection,
+						listOfAvuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQuery(queryElements);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		Assert.assertNotNull("no responses", responses);
+		Assert.assertFalse("no responses", responses.isEmpty());
+		Assert.assertEquals("should be 2 responses", 2, responses.size());
+		Assert.assertEquals("not success",
+				BulkAVUOperationResponse.ResultStatus.OK, responses.get(0)
+						.getResultStatus());
+
+		Assert.assertEquals("did not get the duplicate message",
+				BulkAVUOperationResponse.ResultStatus.DUPLICATE_AVU, responses
+						.get(1).getResultStatus());
+		Assert.assertFalse("did not set a message for the duplicate", responses
+				.get(1).getMessage().isEmpty());
+	}
+
+	@Test
 	public void testAddAvuMetadata() throws Exception {
 		String testDirName = "testAddAvuMetadataDir";
 		String expectedAttribName = "testattrib1";

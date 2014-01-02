@@ -891,4 +891,25 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	void replicateCollectionAsynchronously(String irodsCollectionAbsolutePath,
 			String resourceName, int delayInMinutes) throws JargonException;
 
+	/**
+	 * Convenience method to add a set of AVU metadata. This operation is
+	 * tolerant of individual duplicate AVUs, and will trap those exceptions and
+	 * not throw them. <br/>
+	 * This method will return a collection of individual success or failure for
+	 * each AVU.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path for the collection
+	 * @param avuData
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} with the AVU
+	 *            values to be added to the collection
+	 * @return <code>List</code> of {@link BulkAVUOperationResponse}
+	 * @throws JargonException
+	 *             if an unexpected exception not anticipated by the bulk AVU
+	 *             process occurs
+	 */
+	List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
+			String absolutePath, List<AvuData> avuData) throws JargonException;
+
 }
