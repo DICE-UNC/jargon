@@ -15,7 +15,7 @@ import org.irods.jargon.core.pub.domain.AvuData;
 public class BulkAVUOperationResponse {
 
 	public enum ResultStatus {
-		OK, DUPLICATE_AVU, MISSING_AVU, OTHER_ERROR
+		OK, DUPLICATE_AVU, MISSING_METADATA_TARGET, OTHER_ERROR
 	}
 
 	private AvuData avuData;

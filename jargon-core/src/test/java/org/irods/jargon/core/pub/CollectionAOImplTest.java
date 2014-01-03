@@ -459,12 +459,180 @@ public class CollectionAOImplTest {
 		result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 
+		for (BulkAVUOperationResponse response : responses) {
+			Assert.assertEquals("not success",
+					BulkAVUOperationResponse.ResultStatus.OK,
+					response.getResultStatus());
+			Assert.assertNotNull("no avuData in response",
+					response.getAvuData());
+		}
+
+	}
+
+	@Test
+	public void testBulkDeleteAvuMetadata() throws Exception {
+		String testDirName = "testBulkDeleteAvuMetadata";
+		String expectedAttribName = "testBulkDeleteAvuMetadataattrib1";
+		String expectedAttribValue = "testBulkDeleteAvuMetadatavalue1";
+
+		String expectedAttribName2 = "testBulkDeleteAvuMetadataattrib2";
+		String expectedAttribValue2 = "testBulkDeleteAvuMetadatavalue2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+		listOfAvuData.add(AvuData.instance(expectedAttribName2,
+				expectedAttribValue2, ""));
+
+		List<BulkAVUOperationResponse> responses = collectionAO
+				.addBulkAVUMetadataToCollection(targetIrodsCollection,
+						listOfAvuData);
+
+		// added, now delete the same and observe they are all gone
+
+		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+				targetIrodsCollection, listOfAvuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQuery(queryElements);
+		Assert.assertTrue("should have been deleted", result.isEmpty());
+
+		queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue2));
+
+		Assert.assertTrue("should have been deleted", result.isEmpty());
+
 		Assert.assertNotNull("no responses", responses);
 		Assert.assertFalse("no responses", responses.isEmpty());
 
 		for (BulkAVUOperationResponse response : responses) {
 			Assert.assertEquals("not success",
 					BulkAVUOperationResponse.ResultStatus.OK,
+					response.getResultStatus());
+			Assert.assertNotNull("no avuData in response",
+					response.getAvuData());
+		}
+
+		// check idempotency
+
+		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+				targetIrodsCollection, listOfAvuData);
+
+		Assert.assertNotNull("no responses", responses);
+		Assert.assertFalse("no responses", responses.isEmpty());
+
+		for (BulkAVUOperationResponse response : responses) {
+			Assert.assertEquals("not success",
+					BulkAVUOperationResponse.ResultStatus.OK,
+					response.getResultStatus());
+			Assert.assertNotNull("no avuData in response",
+					response.getAvuData());
+		}
+
+	}
+
+	@Test
+	public void testBulkDeleteAvuMetadataCollMissing() throws Exception {
+		String testDirName = "testBulkDeleteAvuMetadataCollMissing";
+		String expectedAttribName = "testBulkDeleteAvuMetadataattrib1";
+		String expectedAttribValue = "testBulkDeleteAvuMetadatavalue1";
+
+		String expectedAttribName2 = "testBulkDeleteAvuMetadataattrib2";
+		String expectedAttribValue2 = "testBulkDeleteAvuMetadatavalue2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+		listOfAvuData.add(AvuData.instance(expectedAttribName2,
+				expectedAttribValue2, ""));
+
+		List<BulkAVUOperationResponse> responses = collectionAO
+				.addBulkAVUMetadataToCollection(targetIrodsCollection,
+						listOfAvuData);
+
+		// added, now delete the same and observe they are all gone
+
+		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+				targetIrodsCollection, listOfAvuData);
+
+		Assert.assertNotNull("no responses", responses);
+		Assert.assertFalse("no responses", responses.isEmpty());
+
+		for (BulkAVUOperationResponse response : responses) {
+			Assert.assertEquals(
+					"not success",
+					BulkAVUOperationResponse.ResultStatus.MISSING_METADATA_TARGET,
+					response.getResultStatus());
+			Assert.assertNotNull("no avuData in response",
+					response.getAvuData());
+		}
+
+		// check idempotency
+
+		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+				targetIrodsCollection, listOfAvuData);
+
+		Assert.assertNotNull("no responses", responses);
+		Assert.assertFalse("no responses", responses.isEmpty());
+
+		for (BulkAVUOperationResponse response : responses) {
+			Assert.assertEquals(
+					"not success",
+					BulkAVUOperationResponse.ResultStatus.MISSING_METADATA_TARGET,
 					response.getResultStatus());
 			Assert.assertNotNull("no avuData in response",
 					response.getAvuData());

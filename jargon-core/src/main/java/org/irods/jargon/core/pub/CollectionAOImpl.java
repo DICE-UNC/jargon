@@ -422,7 +422,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						"dataNotFoundException when adding an AVU, catch and add to response data",
 						dnf);
 				responses.add(BulkAVUOperationResponse.instance(
-						ResultStatus.MISSING_AVU, value, dnf.getMessage()));
+						ResultStatus.MISSING_METADATA_TARGET, value, dnf.getMessage()));
 				continue;
 			} catch (DuplicateDataException dde) {
 				log.error(
@@ -430,6 +430,48 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						dde);
 				responses.add(BulkAVUOperationResponse.instance(
 						ResultStatus.DUPLICATE_AVU, value, dde.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#deleteBulkAVUMetadataToCollection
+	 * (java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataToCollection(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("deleteBulkAVUMetadataToCollection()");
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				deleteAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when deleti an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_METADATA_TARGET, value, dnf.getMessage()));
 				continue;
 
 			}

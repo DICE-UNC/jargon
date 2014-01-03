@@ -220,10 +220,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            collection
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws DataNotFoundException
+	 *             if the target iRODS collection is missing
 	 * @throws JargonException
 	 */
 	void deleteAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
@@ -910,6 +912,27 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *             process occurs
 	 */
 	List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
+			String absolutePath, List<AvuData> avuData) throws JargonException;
+
+	/**
+	 * Convenience method to delete a set of AVU metadata. This operation is
+	 * tolerant of individual non-existent AVUs, and will trap those exceptions
+	 * and not throw them. <br/>
+	 * This method will return a collection of individual success or failure for
+	 * each AVU.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path for the collection
+	 * @param avuData
+	 *            <code>List</code> of
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData} with the AVU
+	 *            values to be deleted from the collection
+	 * @return <code>List</code> of {@link BulkAVUOperationResponse}
+	 * @throws JargonException
+	 *             if an unexpected exception not anticipated by the bulk AVU
+	 *             process occurs
+	 */
+	List<BulkAVUOperationResponse> deleteBulkAVUMetadataToCollection(
 			String absolutePath, List<AvuData> avuData) throws JargonException;
 
 }
