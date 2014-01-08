@@ -14,7 +14,6 @@ import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.RequestTypes;
-import org.irods.jargon.core.protovalues.XmlProtApis;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,6 +26,7 @@ import org.slf4j.LoggerFactory;
 class GSIAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory.getLogger(GSIAuth.class);
+	private static final int GSI_AUTH_REQUEST_AN = 711;
 
 	/**
 	 * Sends the GSI auth request to iRODS and obtains the server DN. The server
@@ -58,7 +58,7 @@ class GSIAuth extends AuthMechanism {
 			irodsCommands.getIrodsConnection().send(
 					irodsCommands.createHeader(
 							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, XmlProtApis.GSI_AUTH_REQUEST_AN.getApiNumber()));
+							0, GSI_AUTH_REQUEST_AN));
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);

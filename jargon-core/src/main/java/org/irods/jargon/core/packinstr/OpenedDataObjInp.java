@@ -28,6 +28,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	public static final int SEEK_API_NBR = 674;
 	public static final int WRITE_API_NBR = 676;
+	public static final int CLOSE_API_NBR = 673;
 
 	public static final int DEFAULT_OPERATION_TYPE = 0;
 
@@ -67,6 +68,18 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 				length);
 	}
 
+	/**
+	 * Instance for a close operation
+	 * @param fileDescriptor
+	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 * @return
+	 */
+	public static final OpenedDataObjInp instanceForFileClose(
+			final int fileDescriptor) {
+		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0,
+				0L);
+	}
+	
 	private OpenedDataObjInp(final int apiNumber, final long offset,
 			final int fileDescriptor, final int whence, final long length) {
 		if (offset < 0) {

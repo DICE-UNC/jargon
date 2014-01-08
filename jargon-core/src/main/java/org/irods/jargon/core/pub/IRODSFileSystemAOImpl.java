@@ -24,6 +24,7 @@ import org.irods.jargon.core.packinstr.DataObjCloseInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
+import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -1125,13 +1126,18 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					"attempting to close file with no valid descriptor");
 		}
 
+		/*
 		DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
 				fileDescriptor, 0L);
+				*/
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileClose(fileDescriptor);
 
-		Tag response = getIRODSProtocol().irodsFunction(DataObjCloseInp.PI_TAG,
-				dataObjCloseInp.getParsedTags(),
-				DataObjCloseInp.FILE_CLOSE_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(OpenedDataObjInp.PI_TAG,
+				openedDataObjInp.getParsedTags(),
+				openedDataObjInp.getApiNumber());
 
+		// FIXME: look here at FileCloseInp in iRODS, I think this is the correct API
+		
 		if (response != null) {
 			log.warn(
 					"expected null response to close, logged but not an error, received:{}",

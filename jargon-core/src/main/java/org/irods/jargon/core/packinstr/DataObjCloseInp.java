@@ -17,7 +17,7 @@ public class DataObjCloseInp extends AbstractIRODSPackingInstruction {
 
 	public static final String L1_DESC_INX = "l1descInx";
 	public static final String BYTES_WRITTEN = "bytesWritten";
-	public static final int FILE_CLOSE_API_NBR = 605;
+	public static final int FILE_CLOSE_API_NBR = 673;
 
 	private final int fileDescriptor;
 	private final long bytesWritten;

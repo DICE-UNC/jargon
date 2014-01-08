@@ -15,7 +15,6 @@ import org.irods.jargon.core.packinstr.AuthResponseInp;
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
-import org.irods.jargon.core.protovalues.XmlProtApis;
 import org.irods.jargon.core.utils.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +29,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(StandardIRODSAuth.class);
+	private static final int AUTH_REQUEST_AN = 703;
+	private static final int AUTH_RESPONSE_AN = 704;
 
 	/**
 	 * Do the normal iRODS password challenge/response sequence
@@ -50,7 +51,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 			irodsCommands.getIrodsConnection().send(
 					irodsCommands.createHeader(
 							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, XmlProtApis.AUTH_REQUEST_AN.getApiNumber()));
+							0, AUTH_REQUEST_AN));
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
@@ -82,7 +83,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		// should be a header with no body if successful
 		irodsCommands.irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
 				authResponse_PI.getParsedTags(),
-				XmlProtApis.AUTH_RESPONSE_AN.getApiNumber());
+				AUTH_RESPONSE_AN);
 
 		return cachedChallengeValue;
 	}

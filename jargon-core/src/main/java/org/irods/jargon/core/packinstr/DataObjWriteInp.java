@@ -19,7 +19,7 @@ public class DataObjWriteInp extends AbstractIRODSPackingInstruction {
 	public static final String DATA_OBJ_INX = "dataObjInx";
 	public static final String LEN = "len";
 
-	public static final int WRITE_API_NBR = 604;
+	public static final int WRITE_API_NBR = 676;
 	private static Logger log = LoggerFactory.getLogger(DataObjWriteInp.class);
 
 	private final int fileDescriptor;

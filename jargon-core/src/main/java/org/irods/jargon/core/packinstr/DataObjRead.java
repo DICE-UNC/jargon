@@ -21,7 +21,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 	public static final String L1DESCINX = "l1descInx";
 	public static final String LEN = "len";
 
-	public static final int READ_FILE_API_NBR = 603;
+	public static final int READ_FILE_API_NBR = 675;
 	private Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final int fileDescriptor;
