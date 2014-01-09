@@ -441,7 +441,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			} catch (JargonException e) {
 
 				if (e.getUnderlyingIRODSExceptionCode() == -528002) {
-					log.warn("underlying rename error logged and ignored on delete");
+					log.warn("underlying rename error...delete with force option ");
+					return this.deleteWithForceOption();
 				} else {
 
 					log.error(

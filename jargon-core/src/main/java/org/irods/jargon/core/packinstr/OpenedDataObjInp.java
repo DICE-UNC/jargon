@@ -27,6 +27,8 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String BYTES_WRITTEN = "bytesWritten";
 
 	public static final int SEEK_API_NBR = 674;
+	public static final int READ_API_NBR = 675;
+
 	public static final int WRITE_API_NBR = 676;
 	public static final int CLOSE_API_NBR = 673;
 
@@ -62,6 +64,39 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 				whence, 0L);
 	}
 
+	/**
+	 * Create a packing insruction for a file read operation
+	 * 
+	 * @param fileDescriptor
+	 * @param length
+	 * @return
+	 */
+	public static final OpenedDataObjInp instanceForFileRead(
+			final int fileDescriptor, final long length) {
+		return new OpenedDataObjInp(READ_API_NBR, 0L, fileDescriptor, 0, length);
+	}
+
+	/**
+	 * Create a packing instruction for a file write
+	 * 
+	 * @param fileDescriptor
+	 * @param offset
+	 * @param length
+	 * @return
+	 */
+	public static final OpenedDataObjInp instanceForFileWrite(
+			final int fileDescriptor, final long offset, final long length) {
+		return new OpenedDataObjInp(WRITE_API_NBR, offset, fileDescriptor, 0,
+				length);
+	}
+
+	/**
+	 * 
+	 * @param fileDescriptor
+	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 * @param length
+	 * @return
+	 */
 	public static final OpenedDataObjInp instanceForFilePut(
 			final int fileDescriptor, final long length) {
 		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0,
@@ -70,16 +105,16 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance for a close operation
+	 * 
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
 	 * @return
 	 */
 	public static final OpenedDataObjInp instanceForFileClose(
 			final int fileDescriptor) {
-		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0,
-				0L);
+		return new OpenedDataObjInp(CLOSE_API_NBR, 0L, fileDescriptor, 0, 0L);
 	}
-	
+
 	private OpenedDataObjInp(final int apiNumber, final long offset,
 			final int fileDescriptor, final int whence, final long length) {
 		if (offset < 0) {

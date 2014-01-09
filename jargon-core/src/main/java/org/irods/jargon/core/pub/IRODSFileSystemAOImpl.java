@@ -20,7 +20,6 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
-import org.irods.jargon.core.packinstr.DataObjCloseInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
@@ -1127,17 +1126,19 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		/*
-		DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
-				fileDescriptor, 0L);
-				*/
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp.instanceForFileClose(fileDescriptor);
+		 * DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
+		 * fileDescriptor, 0L);
+		 */
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
+				.instanceForFileClose(fileDescriptor);
 
-		Tag response = getIRODSProtocol().irodsFunction(OpenedDataObjInp.PI_TAG,
-				openedDataObjInp.getParsedTags(),
+		Tag response = getIRODSProtocol().irodsFunction(
+				OpenedDataObjInp.PI_TAG, openedDataObjInp.getParsedTags(),
 				openedDataObjInp.getApiNumber());
 
-		// FIXME: look here at FileCloseInp in iRODS, I think this is the correct API
-		
+		// FIXME: look here at FileCloseInp in iRODS, I think this is the
+		// correct API
+
 		if (response != null) {
 			log.warn(
 					"expected null response to close, logged but not an error, received:{}",

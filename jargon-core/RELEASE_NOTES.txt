@@ -55,6 +55,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 *[#1603] EIRODS 3.0 compatability 
 **Version detection and base compatability with eIRODS 3.0.1 beta release.  
+**Removed 2.0.1 compatible packing instructions and replaced with current operations, especially for file operations (read/write/close)
 
 *[#1796] pluggable auth support for eirods
 **Added new auth plugin scheme support starting with PAM authentication for eIRODS
