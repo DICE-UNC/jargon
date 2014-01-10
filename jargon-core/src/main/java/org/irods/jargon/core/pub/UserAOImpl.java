@@ -241,7 +241,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 
 		if (!user.getUserDN().isEmpty()) {
-			this.updateUserDN(user.getName(), user.getUserDN());
+			updateUserDN(user.getName(), user.getUserDN());
 		}
 
 		return findByName(user.getName());
@@ -266,7 +266,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 					OrderByType.ASC).addOrderByGenQueryField(
 					RodsGenQueryEnum.COL_USER_ZONE, OrderByType.ASC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
@@ -352,7 +352,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	@FederationEnabled
 	public User findById(final String userId) throws JargonException,
 			DataNotFoundException {
-		return findByIdInZone(userId, this.getIRODSAccount().getZone());
+		return findByIdInZone(userId, getIRODSAccount().getZone());
 
 	}
 
@@ -380,7 +380,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	public User findByIdInZone(final String userId, final String zone)
 			throws JargonException, DataNotFoundException {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		StringBuilder userQuery = new StringBuilder();
 
 		userQuery.append(UserAOHelper.buildUserSelects());
@@ -540,7 +540,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 							RodsGenQueryEnum.COL_USER_NAME,
 							QueryConditionOperators.LIKE, userQuery.toString());
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(this.getJargonProperties()
+					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 			resultSet = getGenQueryExecutor().executeIRODSQueryAndCloseResult(
 					irodsQuery, 0);
@@ -628,7 +628,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		updatePreChecks(user);
 
-		User currentUser = this.findById(user.getId());
+		User currentUser = findById(user.getId());
 
 		if (!user.getComment().equals(currentUser.getComment())) {
 			log.debug("comment has changed");
@@ -653,19 +653,19 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (!user.getUserDN().equals(currentUser.getUserDN())) {
 			if (user.getUserDN().isEmpty()) {
 				log.info("removing DN");
-				this.removeUserDN(currentUser.getNameWithZone(),
+				removeUserDN(currentUser.getNameWithZone(),
 						currentUser.getUserDN());
 			} else {
 				if (currentUser.getUserDN().isEmpty()) {
 					log.info("add new DN");
-					this.updateUserDN(currentUser.getNameWithZone(),
+					updateUserDN(currentUser.getNameWithZone(),
 							user.getUserDN());
 				} else {
 					log.info("remove old");
-					this.removeUserDN(currentUser.getNameWithZone(),
+					removeUserDN(currentUser.getNameWithZone(),
 							currentUser.getUserDN());
 					log.info("add new");
-					this.updateUserDN(currentUser.getNameWithZone(),
+					updateUserDN(currentUser.getNameWithZone(),
 							user.getUserDN());
 				}
 			}
@@ -689,7 +689,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				.getStringValue();
 		log.info("hash value:{}", responseHashCode);
 		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
-				responseHashCode, this.getIRODSAccount());
+				responseHashCode, getIRODSAccount());
 
 		return tempPassword;
 	}
@@ -708,7 +708,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.info("getTemporaryPasswordForASpecifiedUser()");
 
 		// test is only valid for 3.1+
-		if (!this.getIRODSServerProperties()
+		if (!getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			throw new UnsupportedOperationException(
 					"temp password generation implemented in iRODS 3.1+ only");
@@ -724,7 +724,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 				.getStringValue();
 		log.info("hash value:{}", responseHashCode);
 		String tempPassword = IRODSPasswordUtilities.getHashedPassword(
-				responseHashCode, this.getIRODSAccount());
+				responseHashCode, getIRODSAccount());
 
 		return tempPassword;
 
@@ -789,14 +789,13 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		String randPaddedNewPassword = IRODSPasswordUtilities
 				.padPasswordWithRandomStringData(newPassword);
 
-		String key2 = this.getIRODSProtocol().getAuthResponse()
-				.getChallengeValue();
+		String key2 = getIRODSProtocol().getAuthResponse().getChallengeValue();
 		String derivedChallenge = IRODSPasswordUtilities
 				.deriveHexSubsetOfChallenge(key2);
 		String myKey2 = IRODSPasswordUtilities
 				.obfuscateIRODSPasswordForAdminPasswordChange(
-						randPaddedNewPassword, this.getIRODSAccount()
-								.getPassword(), derivedChallenge);
+						randPaddedNewPassword, getIRODSAccount().getPassword(),
+						derivedChallenge);
 
 		log.info("changeAUserPasswordByAnAdmin for user:{}", userName);
 		GeneralAdminInp adminPI = GeneralAdminInp
@@ -943,7 +942,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.info("userName:{}", userName);
 		log.info("userInfo:{}", userInfo);
 
-		User user = this.findByName(userName);
+		User user = findByName(userName);
 
 		log.info("looked up user:{}", user);
 		user.setInfo(userInfo);
@@ -1027,7 +1026,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 	private IRODSGenQueryExecutor getGenQueryExecutor() throws JargonException {
 		if (irodsGenQueryExecutor == null) {
-			irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+			irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 		}
 

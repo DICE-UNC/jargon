@@ -821,10 +821,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * Find the iRODS <code>Collection</code> with the given primary key in the ICAT
-	 * @param id <code>int</code> with the iRODS primary key
+	 * Find the iRODS <code>Collection</code> with the given primary key in the
+	 * ICAT
+	 * 
+	 * @param id
+	 *            <code>int</code> with the iRODS primary key
 	 * @return {@link Collection} with the given primary key
-	 * @throws DataNotFoundException if the collection is not found
+	 * @throws DataNotFoundException
+	 *             if the collection is not found
 	 * @throws JargonException
 	 */
 	Collection findById(int id) throws DataNotFoundException, JargonException;

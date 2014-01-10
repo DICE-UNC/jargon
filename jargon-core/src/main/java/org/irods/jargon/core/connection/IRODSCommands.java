@@ -148,9 +148,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
-		this.irodsConnection = IRODSConnection.instance(irodsAccount,
+		irodsConnection = IRODSConnection.instance(irodsAccount,
 				irodsConnectionManager, pipelineConfiguration);
-		this.irodsProtocolManager = irodsConnectionManager;
+		irodsProtocolManager = irodsConnectionManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authMechanism = authMechanism;
 		this.irodsSession = irodsSession;
@@ -174,7 +174,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final AuthResponse authResponse, final AuthMechanism authMechanism,
 			final IRODSConnection reconnectedIRODSConnection) {
-		this.irodsConnection = reconnectedIRODSConnection;
+		irodsConnection = reconnectedIRODSConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
@@ -208,7 +208,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			final AuthResponse authResponse, final AuthMechanism authMechanism,
 			final IRODSConnection reconnectedIRODSConnection,
 			final boolean closeConnectionOnFinalizer) {
-		this.irodsConnection = reconnectedIRODSConnection;
+		irodsConnection = reconnectedIRODSConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.authResponse = authResponse;
@@ -241,7 +241,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error(
 					"authentication exception, will close iRODS sockets and streams and re-throw",
 					e);
-			this.disconnectWithIOException();
+			disconnectWithIOException();
 			throw e;
 		}
 
@@ -274,7 +274,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		// renew the connection
 		// this is based on the reconnect property which is in the pipeline
 		// configuration
-		if (this.pipelineConfiguration.isReconnect()) {
+		if (pipelineConfiguration.isReconnect()) {
 			log.info("starting up reconnect service...");
 			reconnectService = Executors.newSingleThreadExecutor();
 			reconnectionManager = ReconnectionManager.instance(this);
@@ -387,7 +387,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					messageLength, errorLength, byteStringLength, intInfo));
 
-			if (this.isPamFlush()) {
+			if (isPamFlush()) {
 				log.info("doing extra pam flush for iRODS 3.2");
 				irodsConnection.flush();
 			}
@@ -396,7 +396,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
-				if (this.isPamFlush()) {
+				if (isPamFlush()) {
 					log.info("doing extra pam flush for iRODS 3.2 after byte send");
 					irodsConnection.flush();
 				}
@@ -1531,10 +1531,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			reconnectedIRODSConnection = IRODSConnection
 					.instanceWithReconnectInfo(irodsAccount,
-							this.getIrodsProtocolManager(),
-							pipelineConfiguration,
+							getIrodsProtocolManager(), pipelineConfiguration,
 							authResponse.getStartupResponse(),
-							this.getIrodsSession());
+							getIrodsSession());
 		} catch (Exception e) {
 			log.debug(
 					"exception on open of reconnect socket, will sleep and try again:{}",
@@ -1648,7 +1647,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
 					getConnectionUri());
 			log.error("**************************************************************************************");
-			this.obliterateConnectionAndDiscardErrors();
+			obliterateConnectionAndDiscardErrors();
 		}
 		super.finalize();
 	}
@@ -1716,8 +1715,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	}
 
 	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
-		this.getIrodsConnection().getConnection().close();
-		this.getIrodsConnection().setConnected(false);
+		getIrodsConnection().getConnection().close();
+		getIrodsConnection().setConnected(false);
 	}
 
 	/**
@@ -1728,9 +1727,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	private boolean isPamFlush() {
 
-		if (this.irodsConnection instanceof SSLIRODSConnection) {
+		if (irodsConnection instanceof SSLIRODSConnection) {
 			return true;
-		} else if (this.pipelineConfiguration.isForcePamFlush()) {
+		} else if (pipelineConfiguration.isForcePamFlush()) {
 			return true;
 		} else {
 			return false;
@@ -1749,7 +1748,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 *            the irodsServerProperties to set
 	 */
 	synchronized void setIrodsServerProperties(
-			IRODSServerProperties irodsServerProperties) {
+			final IRODSServerProperties irodsServerProperties) {
 		this.irodsServerProperties = irodsServerProperties;
 	}
 

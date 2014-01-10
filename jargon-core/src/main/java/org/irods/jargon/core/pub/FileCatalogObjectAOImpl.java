@@ -51,8 +51,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
@@ -89,11 +88,11 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		 */
 
 		if (resourceName.isEmpty()) {
-			IRODSFile fileToGet = this.getIRODSFileFactory().instanceIRODSFile(
+			IRODSFile fileToGet = getIRODSFileFactory().instanceIRODSFile(
 					sourceAbsolutePath);
 			if (fileToGet.isFile()) {
 				log.debug("this is a file, look for resource it is stored on to retrieve host");
-				DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+				DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
 						.getDataObjectAO(getIRODSAccount());
 				List<Resource> resources = dataObjectAO
 						.getResourcesForDataObject(fileToGet.getParent(),
@@ -102,7 +101,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 					return null;
 				} else {
 					// if the file is on the same host, just use this
-					String thisHostName = this.getIRODSAccount().getHost();
+					String thisHostName = getIRODSAccount().getHost();
 					for (Resource resource : resources) {
 						if (resource.getLocation().equals(thisHostName)) {
 							log.info("file replica is on current host:{}",
@@ -168,7 +167,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 */
 	private String evaluateGetHostResponseAndReturnReroutingHost(
 			final DataObjInp dataObjInp) throws JargonException {
-		Tag result = this.getIRODSProtocol().irodsFunction(dataObjInp);
+		Tag result = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		// irods file doesn't exist
 		if (result == null) {
@@ -205,8 +204,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	@Override
 	public ObjStat getObjectStatForAbsolutePath(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		return collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
@@ -264,7 +262,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty fileName");
 		}
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				parentPath, fileName);
 		return retrieveObjStat(irodsFile.getAbsolutePath());
 	}
@@ -316,20 +314,22 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 * @return {@link UserFilePermission} that is the highest level, or
 	 *         <code>null</code> if no permissions found
 	 */
-	protected UserFilePermission scoreAndReturnHighestPermission(UserFilePermission userFilePermission, UserFilePermission groupFilePermission) {
+	protected UserFilePermission scoreAndReturnHighestPermission(
+			final UserFilePermission userFilePermission,
+			final UserFilePermission groupFilePermission) {
 		int userScore = -1;
 		int groupScore = -1;
-	
+
 		if (userFilePermission != null) {
 			userScore = userFilePermission.getFilePermissionEnum()
 					.getPermissionNumericValue();
 		}
-	
+
 		if (groupFilePermission != null) {
 			groupScore = groupFilePermission.getFilePermissionEnum()
 					.getPermissionNumericValue();
 		}
-	
+
 		if (userScore >= groupScore && userScore > -1) {
 			log.info("user file permission greater, using this:{}",
 					userFilePermission);
@@ -341,7 +341,5 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 			return null;
 		}
 	}
-	
-	
 
 }

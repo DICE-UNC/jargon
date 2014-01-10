@@ -41,7 +41,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 					"targetUserName is null or empty");
 		}
 		this.targetUserName = targetUserName;
-		this.setApiNumber(GET_TEMP_PASSWORD_FOR_OTHER_API_NBR);
+		setApiNumber(GET_TEMP_PASSWORD_FOR_OTHER_API_NBR);
 	}
 
 	/*

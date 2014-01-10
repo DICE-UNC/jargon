@@ -104,7 +104,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		 * The call to close below should not really be visible to the caller,
 		 * as subsequent operations will just open a new one!
 		 */
-		this.getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
 		return success;
 
 	}
@@ -146,8 +146,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		log.info("absolutePathToLinkedCollectionToBeCreated:{}",
 				absolutePathToLinkedCollectionToBeCreated);
 
-		CollectionAndDataObjectListAndSearchAO listAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO listAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 
 		log.info("getting objstat for collection to be mounted...");
@@ -188,7 +187,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 			}
 		} catch (FileNotFoundException fnf) {
 			log.info("file was not found, go ahead and create this collection");
-			IRODSFile targetCollection = this.getIRODSFileFactory()
+			IRODSFile targetCollection = getIRODSFileFactory()
 					.instanceIRODSFile(
 							absolutePathToLinkedCollectionToBeCreated);
 			targetCollection.mkdirs();
@@ -200,8 +199,8 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		DataObjInpForMcoll dataObjInp = DataObjInpForMcoll
 				.instanceForSoftLinkMount(
 						absolutePathToTheIRODSCollectionToBeMounted,
-						absolutePathToLinkedCollectionToBeCreated, this
-								.getIRODSAccount().getDefaultStorageResource());
+						absolutePathToLinkedCollectionToBeCreated,
+						getIRODSAccount().getDefaultStorageResource());
 
 		getIRODSProtocol().irodsFunction(dataObjInp);
 

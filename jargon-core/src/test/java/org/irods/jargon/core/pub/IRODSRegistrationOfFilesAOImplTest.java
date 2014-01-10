@@ -69,7 +69,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		if (!testingPropertiesHelper.isTestRegistration(testingProperties)) {
 			return;
 		}
-		
+
 		String rootCollection = "testRegisterPhysicalCollectionRecursivelyToIRODS";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH

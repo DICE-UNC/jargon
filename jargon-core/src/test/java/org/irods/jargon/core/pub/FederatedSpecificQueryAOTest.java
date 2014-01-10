@@ -45,7 +45,6 @@ public class FederatedSpecificQueryAOTest {
 	 */
 	@Test
 	public void testExecuteSpecificQueryLSCrossZone() throws Exception {
-		
 
 		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
 			return;

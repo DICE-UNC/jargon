@@ -53,8 +53,8 @@ final class TransferOperationsHelper {
 			throw new JargonException("null irodsSession or irodsAccount");
 		}
 
-		this.dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
-		this.collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
+		dataObjectAO = new DataObjectAOImpl(irodsSession, irodsAccount);
+		collectionAO = new CollectionAOImpl(irodsSession, irodsAccount);
 		new Stream2StreamAOImpl(irodsSession, irodsAccount);
 
 	}
@@ -156,7 +156,7 @@ final class TransferOperationsHelper {
 							transferControlBlock);
 
 				} else {
-					this.processGetOfSingleFile(
+					processGetOfSingleFile(
 							(IRODSFileImpl) fileInSourceCollection,
 							targetLocalFile, transferStatusCallbackListener,
 							transferControlBlock);
@@ -612,7 +612,7 @@ final class TransferOperationsHelper {
 				}
 
 			} else {
-				this.processReplicationOfSingleFile(
+				processReplicationOfSingleFile(
 						fileInSourceCollection.getAbsolutePath(),
 						targetResource, transferStatusCallbackListener,
 						transferControlBlock);
@@ -896,8 +896,9 @@ final class TransferOperationsHelper {
 			final String irodsFileAbsolutePath,
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock, int totalFiles,
-			int totalFilesSoFar, JargonException e) throws JargonException {
+			final TransferControlBlock transferControlBlock,
+			final int totalFiles, final int totalFilesSoFar,
+			final JargonException e) throws JargonException {
 		// may rethrow or send back to the callback listener
 		log.error("exception in transfer", e);
 
@@ -982,7 +983,7 @@ final class TransferOperationsHelper {
 				targetCollectionName.append("/");
 				targetCollectionName.append(fileInSourceCollection.getName());
 				String targetCollection = targetCollectionName.toString();
-				childTargetFile = this.collectionAO
+				childTargetFile = collectionAO
 						.instanceIRODSFileForCollectionPath(targetCollection);
 				childTargetFile.mkdirs();
 

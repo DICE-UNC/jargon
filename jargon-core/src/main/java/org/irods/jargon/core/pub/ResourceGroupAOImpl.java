@@ -61,14 +61,12 @@ public class ResourceGroupAOImpl extends IRODSGenericAO implements
 							RodsGenQueryEnum.COL_RESC_GROUP_NAME,
 							OrderByType.ASC);
 
-			IRODSGenQueryExecutor irodsGenQueryExecutor = this
-					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-							this.getIRODSAccount());
+			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIRODSAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()), 0);
 		} catch (JargonQueryException e) {

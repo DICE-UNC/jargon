@@ -131,7 +131,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 		this.offset = offset;
 		this.fileDescriptor = fileDescriptor;
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 		this.whence = whence;
 		this.length = length;
 	}

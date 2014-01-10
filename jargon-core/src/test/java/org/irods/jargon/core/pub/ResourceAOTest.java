@@ -71,7 +71,7 @@ public class ResourceAOTest {
 		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
 			return;
 		}
-		
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 

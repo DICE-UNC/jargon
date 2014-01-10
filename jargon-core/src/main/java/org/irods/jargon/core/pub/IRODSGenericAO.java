@@ -168,7 +168,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	@Override
 	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
 			throws JargonException {
-		return this.getIRODSAccessObjectFactory()
+		return getIRODSAccessObjectFactory()
 				.buildTransferOptionsBasedOnJargonProperties();
 	}
 

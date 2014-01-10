@@ -89,8 +89,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				"listQueryByAliasLike", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
-			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this.getJargonProperties()
+			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, getJargonProperties()
 							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
@@ -170,8 +170,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				"findQueryByAlias", arguments, 0, zoneHint);
 		SpecificQueryResultSet resultSet;
 		try {
-			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this.getJargonProperties()
+			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, getJargonProperties()
 							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
@@ -546,7 +546,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		 * an actual query missing error). Treat this as an empty result set
 		 */
 		try {
-			response = this.getIRODSProtocol().irodsFunction(specificQueryInp);
+			response = getIRODSProtocol().irodsFunction(specificQueryInp);
 		} catch (DataNotFoundException e) {
 			log.info("no reults from iRODS, return as an empty result set");
 			return new SpecificQueryResultSet(specificQuery,
@@ -575,7 +575,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				continuation);
 
 		log.info("doing a close for this page...");
-		this.closeResultSet(results);
+		closeResultSet(results);
 		return results;
 
 	}
@@ -631,7 +631,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 		Tag response = null;
 
-		response = this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		response = getIRODSProtocol().irodsFunction(specificQueryInp);
 
 		int continuation = QueryResultProcessingUtils
 				.getContinuationValue(response);
@@ -651,7 +651,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				continuation);
 
 		log.info("doing a close for this page...");
-		this.closeResultSet(results);
+		closeResultSet(results);
 		return results;
 
 	}
@@ -685,7 +685,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryInp specificQueryInp = SpecificQueryInp
 				.instanceForClose(specificQueryResultSet);
 
-		this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		getIRODSProtocol().irodsFunction(specificQueryInp);
 		log.info("specific query closed");
 
 	}
@@ -720,7 +720,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		 * that once per server
 		 */
 
-		if (this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+		if (getIRODSServerProperties().isSupportsSpecificQuery()) {
 			log.info("by version number I know I support specific query");
 			return false;
 		} else {

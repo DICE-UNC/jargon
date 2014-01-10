@@ -398,26 +398,6 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Indicates whether another binary data format object is equal to this. For
-	 * such an object to be equal, it must describe the same byte order and data
-	 * type sizes as this object.
-	 * <P>
-	 * 
-	 * @return true if the objects are equal; false otherwise
-	 */
-	@Override
-	public final boolean equals(final Object obj) {
-		if (super.equals(obj) == false) {
-			return false;
-		}
-		BinaryDataFormat bdf = (BinaryDataFormat) obj;
-		return equals(bdf);
-	}
-
-	// ----------------------------------------------------------------------
-	// Byte Order Methods
-	// ----------------------------------------------------------------------
-	/**
 	 * Selects the byte order for binary data to be Most-significant-Byte-First
 	 * (MBF).
 	 * <P>

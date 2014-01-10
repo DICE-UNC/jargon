@@ -81,7 +81,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 		}
 
 		this.simpleQuery = simpleQuery;
-		this.setApiNumber(apiNbr);
+		setApiNumber(apiNbr);
 
 	}
 

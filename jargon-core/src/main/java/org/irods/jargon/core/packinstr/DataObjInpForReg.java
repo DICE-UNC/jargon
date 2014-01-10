@@ -135,7 +135,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 			}
 		}
 
-		this.physicalFIleAbsolutePath = physicalFileAbsolutePath;
+		physicalFIleAbsolutePath = physicalFileAbsolutePath;
 		this.irodsFileAbsolutePath = irodsFileAbsolutePath;
 		this.resourceGroup = resourceGroup;
 		this.resourceToStoreTo = resourceToStoreTo;
@@ -144,7 +144,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 		this.checksumHandling = checksumHandling;
 		this.registerAsReplica = registerAsReplica;
 		this.localFileChecksumValue = localFileChecksumValue;
-		this.setApiNumber(OBJ_REG_API_NBR);
+		setApiNumber(OBJ_REG_API_NBR);
 	}
 
 	@Override

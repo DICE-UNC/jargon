@@ -20,9 +20,8 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final String message) {
 		super(message);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
-	
 
 	/**
 	 * @param message
@@ -30,7 +29,7 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final String message, final Throwable cause) {
 		super(message, cause);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
 
 	/**
@@ -38,7 +37,7 @@ public class JargonException extends Exception {
 	 */
 	public JargonException(final Throwable cause) {
 		super(cause);
-		this.underlyingIRODSExceptionCode = 0;
+		underlyingIRODSExceptionCode = 0;
 	}
 
 	/**

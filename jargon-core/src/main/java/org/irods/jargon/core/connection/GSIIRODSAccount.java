@@ -84,12 +84,12 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 		this.gssCredential = gssCredential;
 		try {
-			this.distinguishedName = gssCredential.getName().toString();
+			distinguishedName = gssCredential.getName().toString();
 		} catch (GSSException e) {
 			throw new JargonException(
 					"GSSException getting distinguished name", e);
 		}
-		this.setAuthenticationScheme(AuthScheme.GSI);
+		setAuthenticationScheme(AuthScheme.GSI);
 
 	}
 
@@ -162,8 +162,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 				return false;
 			}
 
-			if (!this.getDistinguishedName()
-					.equals(temp.getDistinguishedName())) {
+			if (!getDistinguishedName().equals(temp.getDistinguishedName())) {
 				return false;
 			}
 

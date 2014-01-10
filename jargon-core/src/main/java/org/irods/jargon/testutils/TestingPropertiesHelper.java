@@ -98,7 +98,7 @@ public class TestingPropertiesHelper {
 	 */
 	public int getPortAsInt(final Properties testingProperties)
 			throws TestingUtilsException {
-		return this.getPropertyValueAsInt(testingProperties,
+		return getPropertyValueAsInt(testingProperties,
 				TestingPropertiesHelper.IRODS_PORT_KEY);
 	}
 
@@ -675,10 +675,11 @@ public class TestingPropertiesHelper {
 		pathBuilder.append(collectionPathBelowScratch);
 		return pathBuilder.toString();
 	}
-	
+
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
-	 * given collection in the IRODS test scratch area on IRODS for the rods user
+	 * given collection in the IRODS test scratch area on IRODS for the rods
+	 * user
 	 * 
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
@@ -932,7 +933,7 @@ public class TestingPropertiesHelper {
 			return Boolean.parseBoolean(val);
 		}
 	}
-	
+
 	/**
 	 * Check if tests depending on a federated zone should be run. The federated
 	 * zone must be configured as described in the test-scripts/fedTestSetup.txt
@@ -967,14 +968,16 @@ public class TestingPropertiesHelper {
 			return Boolean.parseBoolean(val);
 		}
 	}
-	
+
 	/**
 	 * Are we testing eirods?
+	 * 
 	 * @param testingProperties
 	 * @return
 	 */
 	public boolean isTestEirods(final Properties testingProperties) {
-		String val = (String) testingProperties.get(TestingPropertiesHelper.IRODS_TEST_OPTION_EIRODS);
+		String val = (String) testingProperties
+				.get(TestingPropertiesHelper.IRODS_TEST_OPTION_EIRODS);
 		if (val == null) {
 			return false;
 		} else {

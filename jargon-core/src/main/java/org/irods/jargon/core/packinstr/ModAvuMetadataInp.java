@@ -279,7 +279,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 		this.actionType = actionType;
 		this.newAvuData = newAvuData;
 
-		this.setApiNumber(MOD_AVU_API_NBR);
+		setApiNumber(MOD_AVU_API_NBR);
 
 	}
 

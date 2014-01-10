@@ -50,8 +50,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(this.getIRODSProtocol(),
-						commandToExecuteWithoutArguments,
+				.instance(getIRODSProtocol(), commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "");
 
 		if (isAbleToStreamLargeResults()) {
@@ -76,8 +75,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instance(this.getIRODSProtocol(),
-						commandToExecuteWithoutArguments,
+				.instance(getIRODSProtocol(), commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, executionHost);
 
 		if (isAbleToStreamLargeResults()) {
@@ -103,8 +101,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
-				.instanceWhenUsingAbsPathToSetCommandArg(
-						this.getIRODSProtocol(),
+				.instanceWhenUsingAbsPathToSetCommandArg(getIRODSProtocol(),
 						commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "",
 						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
@@ -133,8 +130,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
 				.instanceWhenUsingAbsPathToFindExecutionHost(
-						this.getIRODSProtocol(),
-						commandToExecuteWithoutArguments,
+						getIRODSProtocol(), commandToExecuteWithoutArguments,
 						argumentsToPassWithCommand, "",
 						absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn);
 
@@ -153,9 +149,9 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 	 */
 	protected boolean isAbleToStreamLargeResults() throws JargonException {
 
-		if (this.getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isEirods()) {
 			return false;
-		} else if (this.getIRODSServerProperties()
+		} else if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 			return true;
 		} else {

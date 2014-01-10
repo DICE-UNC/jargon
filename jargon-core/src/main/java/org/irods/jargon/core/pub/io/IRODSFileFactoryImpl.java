@@ -50,7 +50,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFile instanceIRODSFile(final String path)
 			throws JargonException {
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		return new IRODSFileImpl(path, irodsFileSystem);
 	}
 
@@ -73,7 +73,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			irodsAccount = IRODSUriUtils.getIRODSAccountFromURI(uri);
 		} catch (JargonException je) {
 			log.info("no account info in URI, use default account");
-			irodsAccount = this.getIRODSAccount();
+			irodsAccount = getIRODSAccount();
 		}
 
 		String fileName = uri.getPath();
@@ -82,7 +82,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		log.debug("fileName: {}", fileName);
 
 		IRODSFileSystemAO irodsFileSystemAO = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), irodsAccount);
+				getIRODSSession(), irodsAccount);
 		return new IRODSFileImpl(uri.getPath(), irodsFileSystemAO);
 	}
 
@@ -110,7 +110,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 
 		// check for blank parent, and "/" as child
 
@@ -141,7 +141,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		return new IRODSFileImpl(parent, child, irodsFileSystem);
 
 	}
@@ -159,7 +159,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			return new IRODSFileOutputStream(file, fileIOOperations);
 		} catch (FileNotFoundException e) {
@@ -193,12 +193,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			 * file.getAbsolutePath()); }
 			 */
 
-			IRODSAccount useThisAccount = this.getIRODSAccount();
+			IRODSAccount useThisAccount = getIRODSAccount();
 			boolean reroute = false;
 
-			if (this.getIRODSServerProperties().isSupportsConnectionRerouting()) {
+			if (getIRODSServerProperties().isSupportsConnectionRerouting()) {
 				log.info("redirects are available, check to see if I need to redirect to a resource server");
-				DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+				DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
 						.getDataObjectAO(getIRODSAccount());
 				String detectedHost = dataObjectAO.getHostForPutOperation(
 						file.getAbsolutePath(), file.getResource());
@@ -217,7 +217,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			}
 
 			FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-					this.getIRODSSession(), useThisAccount);
+					getIRODSSession(), useThisAccount);
 
 			if (reroute) {
 				IRODSFileFactory rerouteFileFactory = getIRODSAccessObjectFactory()
@@ -254,7 +254,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			if (!file.exists()) {
 				log.info("file does not exist, creating a new file");
@@ -289,7 +289,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throws NoResourceDefinedException, JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			if (log.isInfoEnabled()) {
 				log.info("creating IRODSFileImpl for:" + name);
@@ -379,7 +379,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile file) throws JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			return new IRODSFileInputStream(file, fileIOOperations);
 		} catch (FileNotFoundException e) {
@@ -400,7 +400,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile file, final int fd) throws JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			return new IRODSFileInputStream(file, fileIOOperations, fd);
 		} catch (FileNotFoundException e) {
@@ -422,7 +422,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			if (log.isInfoEnabled()) {
 				log.info("opening IRODSFileImpl for:" + name);
@@ -449,7 +449,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile file) throws JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			return new SessionClosingIRODSFileInputStream(file,
 					fileIOOperations);
@@ -471,7 +471,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throws JargonException {
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		try {
 			if (log.isInfoEnabled()) {
 				log.info("opening IRODSFileImpl for:" + name);
@@ -495,12 +495,12 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFileInputStream instanceIRODSFileInputStreamWithRerouting(
 			final String irodsAbsolutePath) throws JargonException {
 
-		IRODSAccount useThisAccount = this.getIRODSAccount();
+		IRODSAccount useThisAccount = getIRODSAccount();
 		boolean reroute = false;
 
-		if (this.getIRODSServerProperties().isSupportsConnectionRerouting()) {
+		if (getIRODSServerProperties().isSupportsConnectionRerouting()) {
 			log.info("redirects are available, check to see if I need to redirect to a resource server");
-			DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+			DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
 					.getDataObjectAO(getIRODSAccount());
 			String detectedHost = dataObjectAO.getHostForGetOperation(
 					irodsAbsolutePath, "");
@@ -517,7 +517,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		}
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), useThisAccount);
+				getIRODSSession(), useThisAccount);
 
 		try {
 
@@ -552,7 +552,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(final String name)
 			throws NoResourceDefinedException, JargonException {
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		log.info("opening IRODSFileImpl for: {}", name);
 		IRODSFile irodsFile = instanceIRODSFile(name);
 
@@ -580,7 +580,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile irodsFile) throws NoResourceDefinedException,
 			JargonException {
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
-				this.getIRODSSession(), this.getIRODSAccount());
+				getIRODSSession(), getIRODSAccount());
 		log.info("opening IRODSFileImpl for: {}", irodsFile.getAbsoluteFile());
 
 		if (!irodsFile.exists()) {

@@ -108,7 +108,7 @@ public class GenQueryProcessor {
 			if (resultSet.isHasMoreRecords()
 					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
 				log.info("auto closing result set");
-				this.closeResults(resultSet);
+				closeResults(resultSet);
 			}
 
 			return resultSet;
@@ -122,7 +122,7 @@ public class GenQueryProcessor {
 			if (resultSet != null // && resultSet.isHasMoreRecords()
 					&& queryCloseBehavior == QueryCloseBehavior.AUTO_CLOSE) {
 				log.info("auto closing result set");
-				this.closeResults(resultSet);
+				closeResults(resultSet);
 			}
 		}
 	}
@@ -182,7 +182,7 @@ public class GenQueryProcessor {
 
 		if (irodsQuery instanceof IRODSGenQuery) {
 			IRODSGenQueryTranslator irodsQueryTranslator = new IRODSGenQueryTranslator(
-					this.irodsCommands.getIRODSServerProperties());
+					irodsCommands.getIRODSServerProperties());
 			translatedIRODSQuery = irodsQueryTranslator
 					.getTranslatedQuery((IRODSGenQuery) irodsQuery);
 

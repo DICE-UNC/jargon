@@ -109,7 +109,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		log.info("userGroupName:{}", userGroupName);
 
-		UserGroup userGroup = this.findByName(userGroupName);
+		UserGroup userGroup = findByName(userGroupName);
 		if (userGroup == null) {
 			log.info("userGroup not found, treat as deleted");
 			return;
@@ -140,7 +140,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		}
 
 		if (userGroup.getZone() == null || userGroup.getZone().isEmpty()) {
-			userGroup.setZone(this.getIRODSAccount().getZone());
+			userGroup.setZone(getIRODSAccount().getZone());
 		}
 
 		log.info("user group:{}", userGroup);
@@ -295,14 +295,12 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 							RodsGenQueryEnum.COL_USER_GROUP_NAME,
 							QueryConditionOperators.EQUAL, userGroupName);
 
-			IRODSGenQueryExecutor irodsGenQueryExecutor = this
-					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-							this.getIRODSAccount());
+			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIRODSAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()), 0);
 		} catch (JargonQueryException e) {
@@ -528,14 +526,12 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
 							QueryConditionOperators.EQUAL, userName);
-			IRODSGenQueryExecutor irodsGenQueryExecutor = this
-					.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-							this.getIRODSAccount());
+			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIRODSAccount());
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIRODSAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()), 0);
 
@@ -657,7 +653,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	private IRODSGenQueryExecutor getGenQueryExecutor() throws JargonException {
 		if (irodsGenQueryExecutor == null) {
-			irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
+			irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 		}
 

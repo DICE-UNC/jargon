@@ -102,7 +102,7 @@ public class EnvironmentalInfoAOTest {
 		ruleVal = environmentalInfoAO.showLoadedRules();
 		Assert.assertNotNull("rule data missing", ruleVal);
 	}
-	
+
 	@Test
 	public void testIsStrictACLs() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
@@ -172,6 +172,8 @@ public class EnvironmentalInfoAOTest {
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			return;
+		} else if (props.isEirods()) {
+			return;
 		}
 
 		List<String> microservices = environmentalInfoAO
@@ -181,16 +183,14 @@ public class EnvironmentalInfoAOTest {
 				microservices.size() > 0);
 
 	}
-	
+
 	@Test
 	public void testIsEirodsWhenIsEirods() throws Exception {
-		
-	
+
 		if (!testingPropertiesHelper.isTestEirods(testingProperties)) {
 			return;
 		}
-		
-		
+
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -202,21 +202,18 @@ public class EnvironmentalInfoAOTest {
 
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-		
+
 		Assert.assertTrue("expected eirods", props.isEirods());
-	
+
 	}
 
-	
 	@Test
 	public void testIsEirodsWhenNotEirods() throws Exception {
-		
-	
+
 		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
 			return;
 		}
-		
-		
+
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -228,10 +225,9 @@ public class EnvironmentalInfoAOTest {
 
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-		
+
 		Assert.assertFalse("expected not eirods", props.isEirods());
-	
+
 	}
 
-	
 }

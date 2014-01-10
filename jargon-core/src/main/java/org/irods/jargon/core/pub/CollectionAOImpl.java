@@ -157,7 +157,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			 * queries are supported
 			 */
 
-			if (this.getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isEirods()) {
 				log.info("this is eirods, case insensitive is supported");
 			} else if (!getIRODSServerProperties()
 					.isSupportsCaseInsensitiveQueries()) {
@@ -1421,7 +1421,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission permission = this.getPermissionForUserName(
+		UserFilePermission permission = getPermissionForUserName(
 				irodsAbsolutePath, userName);
 		if (permission == null) {
 			log.info("no permission found, return 'none'");
@@ -1528,12 +1528,12 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission getPermissionViaSpecQueryAsGroupMember(
-			String userName, ObjStat objStat, String absPath)
+			final String userName, final ObjStat objStat, final String absPath)
 			throws JargonException {
 		log.info("see if there is a permission based on group membership...");
 		UserFilePermission permissionViaGroup = null;
 
-		if (this.getJargonProperties()
+		if (getJargonProperties()
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
 			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
 			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
@@ -1547,14 +1547,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
-			String userName, String zone, String absPath)
+			final String userName, final String zone, final String absPath)
 			throws JargonException {
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
-		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
-				absPath);
+		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(absPath);
 
-		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
+		SpecificQueryAO specificQueryAO = getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(getIRODSAccount());
 
 		if (!specificQueryAO.isSupportsSpecificQuery()) {
@@ -1619,7 +1618,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private UserFilePermission getPermissionViaGenQuery(final String userName,
-			String absPath) throws JargonException {
+			final String absPath) throws JargonException {
 		UserFilePermission userFilePermission;
 		String theUser = MiscIRODSUtils.getUserInUserName(userName);
 		String theZone = MiscIRODSUtils.getZoneInUserName(userName);

@@ -107,7 +107,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		try {
 			openIRODSFile();
-			this.fd = irodsFile.getFileDescriptor();
+			fd = irodsFile.getFileDescriptor();
 		} catch (JargonException e) {
 			final String msg = "JargonException caught in constructor, rethrow as JargonRuntimeException";
 			log.error(msg, e);
@@ -467,7 +467,7 @@ public class IRODSFileInputStream extends InputStream {
 					e);
 			throw new IOException(e);
 		}
-		this.filePointer = 0L;
+		filePointer = 0L;
 	}
 
 }

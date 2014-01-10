@@ -4,10 +4,11 @@
 package org.irods.jargon.core.exception;
 
 /**
- * Exception caused by an invalid argument to a bound SQL query in iRODS. This is the equivalent of
- * the iRODS CAT_INVALID_ARGUMENT -816000
+ * Exception caused by an invalid argument to a bound SQL query in iRODS. This
+ * is the equivalent of the iRODS CAT_INVALID_ARGUMENT -816000
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class InvalidArgumentException extends JargonException {
 
@@ -16,7 +17,7 @@ public class InvalidArgumentException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public InvalidArgumentException(String message) {
+	public InvalidArgumentException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +25,14 @@ public class InvalidArgumentException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public InvalidArgumentException(String message, Throwable cause) {
+	public InvalidArgumentException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public InvalidArgumentException(Throwable cause) {
+	public InvalidArgumentException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,8 +41,8 @@ public class InvalidArgumentException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidArgumentException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidArgumentException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -49,8 +50,8 @@ public class InvalidArgumentException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidArgumentException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InvalidArgumentException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,8 +59,8 @@ public class InvalidArgumentException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InvalidArgumentException(String message,
-			int underlyingIRODSExceptionCode) {
+	public InvalidArgumentException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

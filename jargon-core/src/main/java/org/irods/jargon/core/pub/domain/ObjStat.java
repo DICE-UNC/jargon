@@ -328,10 +328,10 @@ public class ObjStat {
 	public String determineAbsolutePathBasedOnCollTypeInObjectStat() {
 		String effectiveAbsolutePath = null;
 
-		if (this.getSpecColType() == SpecColType.LINKED_COLL) {
-			effectiveAbsolutePath = this.getObjectPath();
+		if (getSpecColType() == SpecColType.LINKED_COLL) {
+			effectiveAbsolutePath = getObjectPath();
 		} else {
-			effectiveAbsolutePath = this.getAbsolutePath();
+			effectiveAbsolutePath = getAbsolutePath();
 		}
 		return effectiveAbsolutePath;
 	}

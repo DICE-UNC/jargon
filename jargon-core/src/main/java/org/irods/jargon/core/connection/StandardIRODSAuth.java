@@ -82,8 +82,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 		// should be a header with no body if successful
 		irodsCommands.irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
-				authResponse_PI.getParsedTags(),
-				AUTH_RESPONSE_AN);
+				authResponse_PI.getParsedTags(), AUTH_RESPONSE_AN);
 
 		return cachedChallengeValue;
 	}

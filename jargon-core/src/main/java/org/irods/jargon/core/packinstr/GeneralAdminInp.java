@@ -324,8 +324,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserDN(String userName,
-			String userDN) throws JargonException {
+	public static GeneralAdminInp instanceForModifyUserDN(
+			final String userName, final String userDN) throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -351,8 +351,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForRemoveUserDN(String userName,
-			String userDN) throws JargonException {
+	public static GeneralAdminInp instanceForRemoveUserDN(
+			final String userName, final String userDN) throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -581,7 +581,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("api type is <= zero");
 		}
 
-		this.setApiNumber(apiNumber);
+		setApiNumber(apiNumber);
 
 		this.arg0 = arg0;
 		this.arg1 = arg1;

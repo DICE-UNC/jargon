@@ -77,11 +77,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throws JargonException {
 		super(irodsSession, irodsAccount);
 		try {
-			this.specificQueryAO = this.getIRODSAccessObjectFactory()
-					.getSpecificQueryAO(getIRODSAccount());
+			specificQueryAO = getIRODSAccessObjectFactory().getSpecificQueryAO(
+					getIRODSAccount());
 		} catch (SpecificQueryException sqe) {
 			log.warn("specific query is not supported on this server");
-			this.specificQueryAO = null;
+			specificQueryAO = null;
 		}
 	}
 
@@ -161,8 +161,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(this
-				.getJargonProperties().getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 
@@ -416,8 +416,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
-	private int queryDataObjectCountsUnderPath(String effectiveAbsolutePath)
-			throws JargonException, DataNotFoundException {
+	private int queryDataObjectCountsUnderPath(
+			final String effectiveAbsolutePath) throws JargonException,
+			DataNotFoundException {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
 
@@ -464,8 +465,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return fileCtr;
 	}
 
-	private int queryCollectionCountsUnderPath(String effectiveAbsolutePath)
-			throws JargonException, DataNotFoundException {
+	private int queryCollectionCountsUnderPath(
+			final String effectiveAbsolutePath) throws JargonException,
+			DataNotFoundException {
 		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
 
@@ -1057,7 +1059,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		List<String> arguments = new ArrayList<String>(3);
 		arguments.add(effectiveAbsolutePath);
-		arguments.add(String.valueOf(this.getJargonProperties()
+		arguments.add(String.valueOf(getJargonProperties()
 				.getMaxFilesAndDirsQueryMax()));
 		arguments.add(String.valueOf(offset));
 
@@ -1093,14 +1095,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("checking to see if I can list via specific query");
 
-		if (this.getJargonProperties()
+		if (getJargonProperties()
 				.isUsingSpecificQueryForCollectionListingsWithPermissions()) {
 
 			log.info("we are using spec query in jargon.properties...");
 
-			if (this.specificQueryAO == null) {
+			if (specificQueryAO == null) {
 				log.info("...we are bypassing spec query...");
-			} else if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+			} else if (specificQueryAO.isSpecificQueryToBeBypassed()) {
 				log.info("...we are bypassing spec query...");
 			} else {
 				log.info("attemting to list via specQuery...");
@@ -1573,14 +1575,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("checking to see if I can list via specific query");
 
-		if (this.getJargonProperties()
+		if (getJargonProperties()
 				.isUsingSpecificQueryForCollectionListingsWithPermissions()) {
 
 			log.info("we are using spec query in jargon.properties...");
 
-			if (this.specificQueryAO == null) {
+			if (specificQueryAO == null) {
 				log.info("...we are bypassing spec query...");
-			} else if (this.specificQueryAO.isSpecificQueryToBeBypassed()) {
+			} else if (specificQueryAO.isSpecificQueryToBeBypassed()) {
 				log.info("...we are bypassing spec query...");
 			} else {
 				log.info("attemting to list via specQuery...");
@@ -1664,7 +1666,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		List<String> arguments = new ArrayList<String>(3);
 		arguments.add(effectiveAbsolutePath);
-		arguments.add(String.valueOf(this.getJargonProperties()
+		arguments.add(String.valueOf(getJargonProperties()
 				.getMaxFilesAndDirsQueryMax()));
 		arguments.add(String.valueOf(offset));
 

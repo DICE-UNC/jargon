@@ -75,7 +75,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
+
 		if (props.isEirods()) {
 			return;
 		}
@@ -133,7 +133,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
-		
+
 		if (props.isEirods()) {
 			return;
 		}

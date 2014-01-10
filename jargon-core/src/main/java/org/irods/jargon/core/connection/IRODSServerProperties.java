@@ -38,7 +38,7 @@ public class IRODSServerProperties {
 		return eirods;
 	}
 
-	public synchronized void setEirods(boolean eirods) {
+	public synchronized void setEirods(final boolean eirods) {
 		this.eirods = eirods;
 	}
 
@@ -111,7 +111,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -128,7 +128,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsTickets() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = false;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -146,7 +146,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;

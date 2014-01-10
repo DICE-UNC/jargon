@@ -197,8 +197,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		String nodeVal;
 		if (objectType == ObjectType.COLLECTION) {
 			nodeVal = MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(this
-							.getPathOrName());
+					.getLastPathComponentForGiveAbsolutePath(getPathOrName());
 		} else {
 			nodeVal = pathOrName;
 		}
@@ -243,7 +242,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	@Override
 	public int compareTo(final CollectionAndDataObjectListingEntry obj) {
-		return this.getFormattedAbsolutePath().compareTo(
+		return getFormattedAbsolutePath().compareTo(
 				(obj).getFormattedAbsolutePath());
 	}
 

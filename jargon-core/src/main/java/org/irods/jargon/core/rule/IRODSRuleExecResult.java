@@ -61,7 +61,7 @@ public class IRODSRuleExecResult {
 		}
 
 		this.irodsRule = irodsRule;
-		this.outputParameterResults = resultParameters;
+		outputParameterResults = resultParameters;
 	}
 
 	public IRODSRule getIrodsRule() {
@@ -82,12 +82,14 @@ public class IRODSRuleExecResult {
 	public String getRuleExecOut() {
 		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
 				.get("ruleExecOut");
-		if (execOut == null)
+		if (execOut == null) {
 			return "";
+		}
 
 		Object outputObject = execOut.getResultObject();
-		if (outputObject == null)
+		if (outputObject == null) {
 			return "";
+		}
 		String out = (String) outputObject;
 		return out;
 	}
@@ -102,12 +104,14 @@ public class IRODSRuleExecResult {
 	public String getRuleExecErr() {
 		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
 				.get("ruleExecErrorOut");
-		if (execOut == null)
+		if (execOut == null) {
 			return "";
+		}
 
 		Object outputObject = execOut.getResultObject();
-		if (outputObject == null)
+		if (outputObject == null) {
 			return "";
+		}
 		String out = (String) outputObject;
 		return out;
 	}

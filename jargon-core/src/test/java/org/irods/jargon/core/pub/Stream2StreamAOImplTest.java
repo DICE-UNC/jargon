@@ -332,15 +332,16 @@ public class Stream2StreamAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-		
-		
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(irodsAccount);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
 		boolean isStrict = environmentalInfoAO.isStrictACLs();
-		
+
 		if (isStrict) {
 			return;
 		}
-		
+
 		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
