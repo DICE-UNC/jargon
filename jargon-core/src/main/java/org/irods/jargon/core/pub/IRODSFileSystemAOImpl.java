@@ -20,10 +20,10 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
-import org.irods.jargon.core.packinstr.DataObjCloseInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.MsgHeader;
+import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -73,10 +73,9 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 
-		irodsGenQueryExecutor = this.getIRODSAccessObjectFactory()
-				.getIRODSGenQueryExecutor(this.getIRODSAccount());
-		collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		irodsGenQueryExecutor = getIRODSAccessObjectFactory()
+				.getIRODSGenQueryExecutor(getIRODSAccount());
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 
 	}
@@ -285,13 +284,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		DataObjectAO dataObjectAO = this.getIRODSAccessObjectFactory()
+		DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
 				.getDataObjectAO(getIRODSAccount());
 
 		log.info("delegating to DataObjectAO");
 		FilePermissionEnum permissionEnum = dataObjectAO
 				.getPermissionForDataObject(irodsFile.getAbsolutePath(),
-						userName, this.getIRODSAccount().getZone());
+						userName, getIRODSAccount().getZone());
 		if (permissionEnum == null) {
 			return FilePermissionEnum.NONE.getPermissionNumericValue();
 		} else {
@@ -337,13 +336,13 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		CollectionAO collectionAO = this.getIRODSAccessObjectFactory()
+		CollectionAO collectionAO = getIRODSAccessObjectFactory()
 				.getCollectionAO(getIRODSAccount());
 
 		log.info("delegating to CollectionAO");
 		FilePermissionEnum permissionEnum = collectionAO
 				.getPermissionForCollection(irodsFile.getAbsolutePath(),
-						userName, this.getIRODSAccount().getZone());
+						userName, getIRODSAccount().getZone());
 		if (permissionEnum == null) {
 			return FilePermissionEnum.NONE.getPermissionNumericValue();
 		} else {
@@ -865,16 +864,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.debug("setting resource to account default:{}", defaultResource);
 
-		// IRODSFile target = this.getIRODSFileFactory().instanceIRODSFile(
-		// absolutePath);
-
-		/*
-		 * IRODSFile parent = (IRODSFile) target.getParentFile(); if
-		 * (!parent.exists()) { log.warn(
-		 * "creating an output stream for parent:{} that does not exist, making parent dirs.."
-		 * , parent.getAbsolutePath()); parent.mkdirs(); }
-		 */
-
 		int fileId = 0;
 
 		try {
@@ -909,7 +898,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		IRODSFileImpl irodsFileImpl = (IRODSFileImpl) irodsFile;
 
-		String absPath = this.resolveAbsolutePathGivenObjStat((irodsFileImpl
+		String absPath = resolveAbsolutePathGivenObjStat((irodsFileImpl
 				.initializeObjStatForFile()));
 
 		DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
@@ -1047,12 +1036,19 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					"attempting to close file with no valid descriptor");
 		}
 
-		DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
-				fileDescriptor, 0L);
+		/*
+		 * DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
+		 * fileDescriptor, 0L);
+		 */
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
+				.instanceForFileClose(fileDescriptor);
 
-		Tag response = getIRODSProtocol().irodsFunction(DataObjCloseInp.PI_TAG,
-				dataObjCloseInp.getParsedTags(),
-				DataObjCloseInp.FILE_CLOSE_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				OpenedDataObjInp.PI_TAG, openedDataObjInp.getParsedTags(),
+				openedDataObjInp.getApiNumber());
+
+		// FIXME: look here at FileCloseInp in iRODS, I think this is the
+		// correct API
 
 		if (response != null) {
 			log.warn(

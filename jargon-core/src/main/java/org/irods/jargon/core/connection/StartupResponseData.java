@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.utils.MiscIRODSUtils;
+
 /**
  * Represents the iRODS server response to the sending of the StartupPack_PI at
  * the initiation of a connection. This information is useful for connection
@@ -23,6 +25,7 @@ public class StartupResponseData {
 	private final int reconnPort;
 	private final String reconnAddr;
 	private final String cookie;
+	private final boolean eirods;
 
 	/**
 	 * Default constructor initializes all of the required fields in response to
@@ -61,6 +64,20 @@ public class StartupResponseData {
 		this.reconnPort = reconnPort;
 		this.reconnAddr = reconnAddr;
 		this.cookie = cookie;
+
+		int intCookie = Integer.parseInt(cookie);
+
+		if (intCookie >= IRODSCommands.EIRODS_MIN
+				&& intCookie <= IRODSCommands.EIRODS_MAX) {
+			eirods = true;
+		} else if (MiscIRODSUtils
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(relVersion,
+						"rods4")) {
+			eirods = true;
+		} else {
+			eirods = false;
+		}
+
 	}
 
 	@Override
@@ -122,6 +139,10 @@ public class StartupResponseData {
 	 */
 	public String getCookie() {
 		return cookie;
+	}
+
+	public boolean isEirods() {
+		return eirods;
 	}
 
 }

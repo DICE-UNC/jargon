@@ -13,9 +13,9 @@ iadmin mkuser test3 rodsuser
 
 iadmin moduser test3 password test
 
-iadmin mkresc test1-resc "unix file system"  localhost:/var/lib/eirods/Vault1
+iadmin mkresc test1-resc "unix file system"  localhost:/var/lib/irods/Vault1
 
-iadmin mkresc test1-resc2 "unix file system"  localhost:/var/lib/eirods/Vault2
+iadmin mkresc test1-resc2 "unix file system"  localhost:/var/lib/irods/Vault2
 
 iadmin mkuser anonymous rodsuser
 

@@ -1716,10 +1716,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Handle soft links by munging the path
 		 */
 
-		/*
-		 * Handle soft links by munging the path
-		 */
-
 		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
@@ -1764,10 +1760,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("deleting avu metadata on dataObject: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
-
-		/*
-		 * Handle soft links by munging the path
-		 */
 
 		ObjStat objStat;
 		try {
@@ -2549,10 +2541,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		/*
-		 * Handle soft links by munging the path
-		 */
-
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
@@ -2645,10 +2633,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		/*
-		 * Handle soft links by munging the path
-		 */
-
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
@@ -2691,10 +2675,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		/*
-		 * Handle soft links by munging the path
-		 */
 
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 

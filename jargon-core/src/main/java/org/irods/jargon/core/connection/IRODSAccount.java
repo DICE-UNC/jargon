@@ -126,6 +126,7 @@ public class IRODSAccount implements Serializable {
 
 		irodsAccount.setAuthenticationScheme(authenticationScheme);
 		return irodsAccount;
+
 	}
 
 	/**
@@ -219,6 +220,24 @@ public class IRODSAccount implements Serializable {
 				userZone, defaultStorageResource, proxyName, proxyZone);
 	}
 
+	/**
+	 * Creates an iRODS account using a constructor
+	 * 
+	 * @param host
+	 *            the iRODS server domain name
+	 * @param port
+	 *            the port on the iRODS server
+	 * @param userName
+	 *            the user name
+	 * @param password
+	 *            the password
+	 * @param homeDirectory
+	 *            home directory on the iRODS
+	 * @param userZone
+	 *            the IRODS zone of the user
+	 * @param defaultStorageResource
+	 *            default storage resource
+	 */
 	public IRODSAccount(final String host, final int port,
 			final String userName, final String password,
 			final String homeDirectory, final String userZone,
@@ -226,11 +245,12 @@ public class IRODSAccount implements Serializable {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
-		this.proxyName = userName;
+
+		proxyName = userName;
 		this.password = password;
 		this.homeDirectory = homeDirectory;
 		this.userZone = userZone;
-		this.proxyZone = userZone;
+		proxyZone = userZone;
 		this.defaultStorageResource = defaultStorageResource;
 	}
 
@@ -483,7 +503,7 @@ public class IRODSAccount implements Serializable {
 	 *            the zone to set
 	 */
 	public void setZone(final String zone) {
-		this.userZone = zone;
+		userZone = zone;
 	}
 
 	/**

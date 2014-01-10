@@ -162,7 +162,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			 * queries are supported
 			 */
 
-			if (this.getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isEirods()) {
 				log.info("this is eirods, case insensitive is supported");
 			} else if (!getIRODSServerProperties()
 					.isSupportsCaseInsensitiveQueries()) {
@@ -422,7 +422,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						"dataNotFoundException when adding an AVU, catch and add to response data",
 						dnf);
 				responses.add(BulkAVUOperationResponse.instance(
-						ResultStatus.MISSING_METADATA_TARGET, value, dnf.getMessage()));
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
 				continue;
 			} catch (DuplicateDataException dde) {
 				log.error(
@@ -471,7 +472,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						"dataNotFoundException when deleti an AVU, catch and add to response data",
 						dnf);
 				responses.add(BulkAVUOperationResponse.instance(
-						ResultStatus.MISSING_METADATA_TARGET, value, dnf.getMessage()));
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
 				continue;
 
 			}
@@ -1553,7 +1555,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission permission = this.getPermissionForUserName(
+		UserFilePermission permission = getPermissionForUserName(
 				irodsAbsolutePath, userName);
 		if (permission == null) {
 			log.info("no permission found, return 'none'");
@@ -1665,7 +1667,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("see if there is a permission based on group membership...");
 		UserFilePermission permissionViaGroup = null;
 
-		if (this.getJargonProperties()
+		if (getJargonProperties()
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup()) {
 			log.info("is set to use specific query for group permissions via isUsingSpecQueryForDataObjPermissionsForUserInGroup()");
 			permissionViaGroup = findPermissionForUserGrantedThroughUserGroup(
@@ -1683,10 +1685,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throws JargonException {
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
-		IRODSFile collFile = this.getIRODSFileFactory().instanceIRODSFile(
-				absPath);
+		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(absPath);
 
-		SpecificQueryAO specificQueryAO = this.getIRODSAccessObjectFactory()
+		SpecificQueryAO specificQueryAO = getIRODSAccessObjectFactory()
 				.getSpecificQueryAO(getIRODSAccount());
 
 		if (!specificQueryAO.isSupportsSpecificQuery()) {

@@ -731,12 +731,8 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		String fileName = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842.txt";
 		String testSubdir = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842";
 		String mountSubdir = "testListDataObjectsUnderPathWhenSoftLinkInAnotherZoneBug1842SoftLink";
-		int count = 20;
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
-
-		IRODSFile irodsFile = null;
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
@@ -795,7 +791,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 				.get(entries.size() - 1);
 		Assert.assertTrue(entry.isLastResult());
 		Assert.assertEquals(entry.getCount(), entries.size());
-		Assert.assertEquals("did not find all of the entries", count,
+		Assert.assertEquals("did not find all of the entries", 1,
 				entries.size());
 
 		// bounce thru and make sure each is a data object with the correct name

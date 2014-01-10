@@ -786,6 +786,9 @@ public final class DataAOHelper extends AOHelper {
 			throw e;
 		} finally {
 
+			// here you know it's a 0 threads so do a file close with the right
+			// index
+
 			irodsFile.closeGivenDescriptor(fd);
 		}
 

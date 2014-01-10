@@ -744,7 +744,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		}
 
 		try {
-			if (this.pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+			if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
 				irodsOutputStream.write(outputBuffer, 0, outputOffset);
 				irodsOutputStream.flush();
 				byte zerByte = (byte) 0;

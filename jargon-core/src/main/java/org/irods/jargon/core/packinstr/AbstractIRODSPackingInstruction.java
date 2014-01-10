@@ -20,6 +20,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public static final String KEY_VAL_PAIR_PI = "KeyValPair_PI";
 	public static final String SS_LEN = "ssLen";
 	public static final String KEYWORD = "keyWord";
+	public static final String COND_INPUT = "condInput";
 	public static final String S_VALUE = "svalue";
 	public static final String INT_PI = "INT_PI";
 	public static final String MY_INT = "myInt";

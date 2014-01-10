@@ -218,13 +218,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			}
 
 			IRODSAccount useThisAccount = getIRODSAccount();
-			/*
-			 * fix for group permissions and re-add else if (!file.canWrite()) {
-			 * log.info("this file is not writeable by the current user {}",
-			 * file.getAbsolutePath()); throw new
-			 * JargonException("file is not writeable:" +
-			 * file.getAbsolutePath()); }
-			 */
 
 			boolean reroute = false;
 

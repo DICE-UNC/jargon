@@ -165,7 +165,7 @@ final class TransferOperationsHelper {
 							transferControlBlock);
 
 				} else {
-					this.processGetOfSingleFile(
+					processGetOfSingleFile(
 							(IRODSFileImpl) fileInSourceCollection,
 							targetLocalFile, transferStatusCallbackListener,
 							transferControlBlock);
@@ -961,6 +961,7 @@ final class TransferOperationsHelper {
 			final int totalFiles, final int totalFilesSoFar,
 			final int totalFilesSkippedSoFar, final JargonException e)
 			throws JargonException {
+
 		log.error("exception in transfer", e);
 
 		if (transferStatusCallbackListener != null) {

@@ -36,7 +36,7 @@ import org.slf4j.LoggerFactory;
 public final class UserGroupAOImpl extends IRODSGenericAO implements
 		UserGroupAO {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private static final char COMMA = ',';
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
@@ -525,7 +525,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 							QueryConditionOperators.EQUAL, groupName.trim())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
+
 							QueryConditionOperators.EQUAL, userName.trim());
+
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 

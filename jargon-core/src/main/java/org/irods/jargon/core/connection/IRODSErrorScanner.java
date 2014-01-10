@@ -86,22 +86,24 @@ public class IRODSErrorScanner {
 			throw new UnixFileRenameException(
 					"Exception renaming file in file system", infoValue);
 		} else if (infoValue >= -511000 && infoValue <= -511199) {
-                    throw new UnixFileCreateException("Exception creating file in file system", infoValue);
-                }
+			throw new UnixFileCreateException(
+					"Exception creating file in file system", infoValue);
+		}
 
 		ErrorEnum errorEnum;
 
 		try {
 			log.debug("scanning for info value...");
-                        
-                        try {
-                        
-			errorEnum = ErrorEnum.valueOf(infoValue);
-                        
-                        } catch (IllegalArgumentException iae) {
-                            throw new JargonException("Unknown iRODS exception code recieved", infoValue);
-                        }
-                        
+
+			try {
+
+				errorEnum = ErrorEnum.valueOf(infoValue);
+
+			} catch (IllegalArgumentException iae) {
+				throw new JargonException(
+						"Unknown iRODS exception code recieved", infoValue);
+			}
+
 			log.debug("errorEnum val:{}", errorEnum);
 		} catch (IllegalArgumentException ie) {
 			log.error("error getting error enum value", ie);
@@ -194,6 +196,8 @@ public class IRODSErrorScanner {
 					"unable to mount collection, potential duplicate mount");
 		case SYS_SPEC_COLL_OBJ_NOT_EXIST:
 			throw new DataNotFoundException("Special collection not found");
+		case PAM_AUTH_ERROR:
+			throw new AuthenticationException("PAM authentication error");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

@@ -74,7 +74,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	protected IRODSFileImpl(final String pathName,
 			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		this("", pathName, irodsFileSystemAO);
-		if (pathName == null || pathName.isEmpty()) {
+		if (pathName.isEmpty()) {
 			throw new JargonException("path name is null or empty");
 		}
 
@@ -92,10 +92,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		if (parent == null) {
 			throw new IllegalArgumentException("null or missing parent name");
-		}
-
-		if (child == null) {
-			throw new IllegalArgumentException("null child name");
 		}
 
 		if (parent.isEmpty() && child.isEmpty()) {
@@ -381,12 +377,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
-			// TODO: clean up after tests
-			// in irods the file must be closed, then opened when doing a create
-			// new
-			// this.close();
-			// this.openKnowingExists();
-			// log.debug("file now closed");
+
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 
@@ -409,7 +400,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);
-
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
@@ -439,7 +429,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			} catch (JargonException e) {
 
 				if (e.getUnderlyingIRODSExceptionCode() == -528002) {
-					log.warn("underlying rename error logged and ignored on delete");
+					log.warn("underlying rename error...delete with force option ");
+					return deleteWithForceOption();
 				} else {
 
 					log.error(

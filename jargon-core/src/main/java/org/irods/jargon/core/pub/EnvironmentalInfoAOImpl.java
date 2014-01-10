@@ -62,7 +62,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	}
 
 	private boolean isEirods() throws JargonException {
-		if (this.getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isEirods()) {
 			return true;
 		} else {
 			return false;
@@ -200,6 +200,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		if (isEirods()) {
 			return true;
+
 		} else if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;

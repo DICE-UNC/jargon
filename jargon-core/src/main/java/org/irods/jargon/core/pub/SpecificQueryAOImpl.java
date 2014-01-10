@@ -89,8 +89,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryResultSet resultSet;
 		try {
 
-			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this.getJargonProperties()
+			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, getJargonProperties()
 							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
@@ -171,8 +171,8 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryResultSet resultSet;
 		try {
 
-			resultSet = this.executeSpecificQueryUsingAliasWithoutAliasLookup(
-					specificQuery, this.getJargonProperties()
+			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
+					specificQuery, getJargonProperties()
 							.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
@@ -576,7 +576,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				continuation);
 
 		log.info("doing a close for this page...");
-		this.closeResultSet(results);
+		closeResultSet(results);
 		return results;
 
 	}
@@ -652,7 +652,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 				continuation);
 
 		log.info("doing a close for this page...");
-		this.closeResultSet(results);
+		closeResultSet(results);
 		return results;
 
 	}
@@ -686,7 +686,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		SpecificQueryInp specificQueryInp = SpecificQueryInp
 				.instanceForClose(specificQueryResultSet);
 
-		this.getIRODSProtocol().irodsFunction(specificQueryInp);
+		getIRODSProtocol().irodsFunction(specificQueryInp);
 		log.info("specific query closed");
 
 	}
@@ -721,7 +721,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		 * that once per server
 		 */
 
-		if (this.getIRODSServerProperties().isSupportsSpecificQuery()) {
+		if (getIRODSServerProperties().isSupportsSpecificQuery()) {
 			log.info("by version number I know I support specific query");
 			return false;
 

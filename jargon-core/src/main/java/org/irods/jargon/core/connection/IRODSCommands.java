@@ -263,6 +263,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 		if (cookie >= EIRODS_MIN && cookie <= EIRODS_MAX) {
 			log.info("setting to eirods based on cookie value");
 			irodsServerProperties.setEirods(true);
+		} else if (irodsServerProperties
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
+			irodsServerProperties.setEirods(true);
 		}
 
 		log.info(irodsServerProperties.toString());
@@ -384,7 +387,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					messageLength, errorLength, byteStringLength, intInfo));
 
-			if (this.isPamFlush()) {
+			if (isPamFlush()) {
 				log.info("doing extra pam flush for iRODS 3.2");
 				irodsConnection.flush();
 			}
@@ -393,7 +396,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 			if (byteStringLength > 0) {
 				irodsConnection.send(bytes, byteOffset, byteStringLength);
-				if (this.isPamFlush()) {
+				if (isPamFlush()) {
 					log.info("doing extra pam flush for iRODS 3.2 after byte send");
 					irodsConnection.flush();
 				}
@@ -1724,11 +1727,9 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 */
 	private boolean isPamFlush() {
 
-		if (!(this.irodsConnection instanceof SSLIRODSConnection)) {
-			return false;
-		}
-
-		if (this.pipelineConfiguration.isForcePamFlush()) {
+		if (irodsConnection instanceof SSLIRODSConnection) {
+			return true;
+		} else if (pipelineConfiguration.isForcePamFlush()) {
 			return true;
 		} else {
 			return false;

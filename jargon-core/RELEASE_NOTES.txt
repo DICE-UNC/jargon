@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
 *'''Date''': xx/xx/xx
-*'''Release Version''': x.x.x transfer engine upgrade
-*'''git tag''': 964-grid-memory
+*'''Release Version''': 3.3.3
+*'''git tag''':
 
 ==News==
 
@@ -48,8 +48,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 **Added unit tests for creating soft links in federated zone and doing listings in that zone
 
 *Numerous small fixes and improvements since the 3.3.1 release.
-
-
 
 ==Features==
 

@@ -149,9 +149,9 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 	 */
 	protected boolean isAbleToStreamLargeResults() throws JargonException {
 
-		if (this.getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isEirods()) {
 			return false;
-		} else if (this.getIRODSServerProperties()
+		} else if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {
 			return true;
 		} else {

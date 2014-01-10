@@ -42,10 +42,9 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 	protected CollectionIteratorAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		this.collectionListingUtils = new CollectionListingUtils(
+		collectionListingUtils = new CollectionListingUtils(
 				collectionAndDataObjectListAndSearchAO);
 	}
 

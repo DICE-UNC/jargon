@@ -5,7 +5,7 @@ import java.util.List;
 
 public enum AuthScheme {
 	STANDARD("STANDARD"), GSI("GSI"), KERBEROS("KERBEROS"), PAM("PAM");
-	
+
 	private String textValue;
 
 	AuthScheme(final String textValue) {

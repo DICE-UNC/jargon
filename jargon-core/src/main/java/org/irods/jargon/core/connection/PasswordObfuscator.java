@@ -23,17 +23,17 @@ import org.irods.jargon.core.utils.Base64;
 
 public class PasswordObfuscator {
 
-	private String string1;
+	private final String string1;
 
 	private static String BYTE_1 = "¤ÈÊ|";
 
-	private double doubleVal = 189.0D;
+	private final double doubleVal = 189.0D;
 
 	private static String BYTE_2 = "Àª´¯";
 
 	private static String BYTE_3 = "vÀÀº¬¬Ê";
 
-	private String byte_4 = "È¬Ê";
+	private final String byte_4 = "È¬Ê";
 
 	private static String BYTE_5 = "²¤¨¸¬ÆÎ|ÑÓÕ";
 
@@ -45,9 +45,9 @@ public class PasswordObfuscator {
 
 	private Cipher cipher2;
 
-	private byte[] byteVal = { -87, -101, -56, 50, 86, 53, -29, 3 };
+	private final byte[] byteVal = { -87, -101, -56, 50, 86, 53, -29, 3 };
 
-	private int intVal = 19;
+	private final int intVal = 19;
 
 	private long longVal;
 
@@ -176,7 +176,7 @@ public class PasswordObfuscator {
 	}
 
 	private String getCredentialFile(final File inputFile) {
-		return credentialFile != null ? inputFile.getName() : credentialFile
+		return credentialFile == null ? inputFile.getName() : credentialFile
 				.getName();
 	}
 

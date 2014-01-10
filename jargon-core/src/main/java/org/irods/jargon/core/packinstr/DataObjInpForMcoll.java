@@ -153,7 +153,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		kvps.add(KeyValuePair.instance("collectionType", collectionType));
 
-		if (this.collectionType.equals(COLL_TYPE_MSSO)) {
+		if (collectionType.equals(COLL_TYPE_MSSO)) {
 			kvps.add(KeyValuePair.instance("dataType", "msso file"));
 		}
 

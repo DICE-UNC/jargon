@@ -241,7 +241,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		}
 
 		if (!user.getUserDN().isEmpty()) {
-			this.updateUserDN(user.getName(), user.getUserDN());
+			updateUserDN(user.getName(), user.getUserDN());
 		}
 
 		return findByName(user.getName());
@@ -654,19 +654,19 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		if (!user.getUserDN().equals(currentUser.getUserDN())) {
 			if (user.getUserDN().isEmpty()) {
 				log.info("removing DN");
-				this.removeUserDN(currentUser.getNameWithZone(),
+				removeUserDN(currentUser.getNameWithZone(),
 						currentUser.getUserDN());
 			} else {
 				if (currentUser.getUserDN().isEmpty()) {
 					log.info("add new DN");
-					this.updateUserDN(currentUser.getNameWithZone(),
+					updateUserDN(currentUser.getNameWithZone(),
 							user.getUserDN());
 				} else {
 					log.info("remove old");
-					this.removeUserDN(currentUser.getNameWithZone(),
+					removeUserDN(currentUser.getNameWithZone(),
 							currentUser.getUserDN());
 					log.info("add new");
-					this.updateUserDN(currentUser.getNameWithZone(),
+					updateUserDN(currentUser.getNameWithZone(),
 							user.getUserDN());
 				}
 			}

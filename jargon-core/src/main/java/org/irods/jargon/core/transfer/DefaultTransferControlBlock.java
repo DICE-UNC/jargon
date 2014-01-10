@@ -487,7 +487,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public synchronized void setTotalFilesSkippedSoFar(
-			int totalFilesSkippedSoFar) {
+			final int totalFilesSkippedSoFar) {
 		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
 	}
 
@@ -499,7 +499,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 */
 	@Override
 	public int getActualFilesTransferredWithoutSkippedSoFar() {
-		return this.totalFilesTransferredSoFar - this.totalFilesSkippedSoFar;
+		return totalFilesTransferredSoFar - totalFilesSkippedSoFar;
 	}
 
 }

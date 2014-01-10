@@ -784,9 +784,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		if (transferOptions == null) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
-		} else if (this.transferOptions.getPutOption() == PutOptions.NORMAL) {
+		} else if (transferOptions.getPutOption() == PutOptions.NORMAL) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
-		} else if (this.transferOptions.getPutOption() == PutOptions.MSSO_FILE) {
+		} else if (transferOptions.getPutOption() == PutOptions.MSSO_FILE) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_MSSO));
 		}
 

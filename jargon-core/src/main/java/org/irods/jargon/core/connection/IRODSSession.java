@@ -12,6 +12,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl.QueryCloseBehavior;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryProcessor;

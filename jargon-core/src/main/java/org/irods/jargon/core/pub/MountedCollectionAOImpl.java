@@ -279,8 +279,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 					"Data not found exception?  Seems to be a bug in iRODS...",
 					dnf);
 			log.warn("overheaded for  [#1634] Strange erroneous DataNotFoundExceptions mounting a file system");
-			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-					.getIRODSAccessObjectFactory()
+			CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 					.getCollectionAndDataObjectListAndSearchAO(
 							getIRODSAccount());
 

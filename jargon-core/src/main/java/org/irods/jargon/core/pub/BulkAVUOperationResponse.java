@@ -76,7 +76,7 @@ public class BulkAVUOperationResponse {
 	 * @param avuData
 	 *            the avuData to set
 	 */
-	public void setAvuData(AvuData avuData) {
+	public void setAvuData(final AvuData avuData) {
 		this.avuData = avuData;
 	}
 
@@ -91,7 +91,7 @@ public class BulkAVUOperationResponse {
 	 * @param resultStatus
 	 *            the resultStatus to set
 	 */
-	public void setResultStatus(ResultStatus resultStatus) {
+	public void setResultStatus(final ResultStatus resultStatus) {
 		this.resultStatus = resultStatus;
 	}
 
@@ -106,7 +106,7 @@ public class BulkAVUOperationResponse {
 	 * @param message
 	 *            the message to set
 	 */
-	public void setMessage(String message) {
+	public void setMessage(final String message) {
 		this.message = message;
 	}
 

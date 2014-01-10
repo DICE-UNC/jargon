@@ -9,9 +9,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.irods.jargon.core.packinstr.DataObjRead;
-import org.irods.jargon.core.packinstr.DataObjWriteInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSGenericAO;
@@ -54,30 +51,30 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 			final int length) throws JargonException {
 
 		if (fd <= 0) {
-			throw new JargonException(
+			throw new IllegalArgumentException(
 					"file is not open, file descriptor was less than zero:"
 							+ fd);
 		}
 
 		if (buffer == null || buffer.length == 0) {
-			throw new JargonException("null or empty buffer");
+			throw new IllegalArgumentException("null or empty buffer");
 		}
 
 		if (offset < 0) {
-			throw new JargonException("offset less than zero");
+			throw new IllegalArgumentException("offset less than zero");
 		}
 
 		if (length <= 0) {
-			throw new JargonException("zero or negative length");
+			throw new IllegalArgumentException("zero or negative length");
 		}
 
 		if (offset > length) {
-			throw new JargonException("offset of:" + offset + " is > length:"
-					+ length);
+			throw new IllegalArgumentException("offset of:" + offset
+					+ " is > length:" + length);
 		}
 
 		if (offset > buffer.length) {
-			throw new JargonException("offset of:" + offset
+			throw new IllegalArgumentException("offset of:" + offset
 					+ " is greater than the buffer length of:" + buffer.length);
 		}
 
@@ -88,12 +85,15 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 					+ offset);
 		}
 
-		DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(fd, length);
+		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
+				.instanceForFileWrite(fd, offset, length);
+		// DataObjWriteInp dataObjWriteInp = DataObjWriteInp.instance(fd,
+		// length);
 
 		Tag message = getIRODSProtocol().irodsFunction(
-				IRODSConstants.RODS_API_REQ, dataObjWriteInp.getParsedTags(),
+				IRODSConstants.RODS_API_REQ, openedDataObjInp.getParsedTags(),
 				null, 0, 0, buffer, offset, length,
-				DataObjWriteInp.WRITE_API_NBR);
+				openedDataObjInp.getApiNumber());
 
 		return message.getTag(IRODSConstants.MsgHeader_PI)
 				.getTag(IRODSConstants.intInfo).getIntValue();
@@ -112,13 +112,15 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		log.info("file read for fd: {}", fd);
 
 		if (fd <= 0) {
-			throw new JargonException("invalid file descriptor");
+			throw new IllegalArgumentException("invalid file descriptor");
 		}
 
-		DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
+		// DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
+		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
+				length);
 		IRODSCommands irodsProtocol = getIRODSProtocol();
 
-		Tag message = irodsProtocol.irodsFunction(dataObjReadPI);
+		Tag message = irodsProtocol.irodsFunction(fileReadInp);
 
 		// Need the total dataSize
 		if (message == null) {
@@ -147,14 +149,13 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		log.info("file read for fd: {}", fd);
 
 		if (fd <= 0) {
-			throw new JargonException("invalid file descriptor");
+			throw new IllegalArgumentException("invalid file descriptor");
 		}
 
+		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
+				length);
 		IRODSCommands irodsProtocol = getIRODSProtocol();
-
-		DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
-
-		Tag message = irodsProtocol.irodsFunction(dataObjReadPI);
+		Tag message = irodsProtocol.irodsFunction(fileReadInp);
 
 		// Need the total dataSize
 		if (message == null) {
@@ -193,13 +194,13 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 				|| whence == SeekWhenceType.SEEK_END) {
 		} else {
 			log.error("Illegal Argument exception, whence value in seek must be SEEK_START, SEEK_CURRENT, or SEEK_END");
-			throw new JargonRuntimeException(
+			throw new IllegalArgumentException(
 					"whence value in seek must be SEEK_START, SEEK_CURRENT, or SEEK_END");
 		}
 
 		if (fd <= 0) {
 			log.error("no valid file handle provided");
-			throw new JargonRuntimeException("no valid file handle provided");
+			throw new IllegalArgumentException("no valid file handle provided");
 		}
 
 		Tag message;

@@ -5,6 +5,8 @@ package org.irods.jargon.core.connection;
 
 import java.util.Date;
 
+import org.irods.jargon.core.utils.MiscIRODSUtils;
+
 /**
  * Immutable information on an IRODS Server that a connection is connected to.
  * 
@@ -29,10 +31,6 @@ public class IRODSServerProperties {
 
 	/**
 	 * This is a supplemental flag that indicates whether a server is eIRODS.
-	 * This is done separately due to the fact that it cannot be obtained at the
-	 * time the server properties are obtained. It is currently derived by
-	 * inspecting the actual core.re file. It is needed in subsequent
-	 * determinations this class does for version comparisons
 	 * 
 	 * @return <code>true</code> if the given server is an eIRODS servers
 	 */
@@ -113,7 +111,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -130,7 +128,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsTickets() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = false;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -162,7 +160,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
 
-		if (this.isEirods()) {
+		if (isEirods()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;
@@ -187,10 +185,17 @@ public class IRODSServerProperties {
 			throw new IllegalArgumentException("null or empty releaseVersion");
 		}
 
-		// The result is a negative integer if this String object
-		// lexicographically precedes the argument string.
-		int compValue = getRelVersion().compareToIgnoreCase(releaseVersion);
-		return compValue >= 0;
+		return MiscIRODSUtils.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+				getRelVersion(), releaseVersion);
+
+		/*
+		 * 
+		 * 
+		 * // The result is a negative integer if this String object //
+		 * lexicographically precedes the argument string. int compValue =
+		 * getRelVersion().compareToIgnoreCase(releaseVersion); return compValue
+		 * >= 0;
+		 */
 
 	}
 

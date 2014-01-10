@@ -140,7 +140,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.selObjType = selObjType;
 		this.specColInfo = specColInfo;
-		this.setApiNumber(QUERY_SPEC_COLL_API_NBR);
+		setApiNumber(QUERY_SPEC_COLL_API_NBR);
 		this.continueInx = continueInx;
 	}
 
@@ -157,7 +157,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 				new Tag(DataObjInp.OPR_TYPE, operationType) });
 
 		if (specColInfo != null) {
-			message.addTag(this.createSpecCollTag(specColInfo));
+			message.addTag(createSpecCollTag(specColInfo));
 		}
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();

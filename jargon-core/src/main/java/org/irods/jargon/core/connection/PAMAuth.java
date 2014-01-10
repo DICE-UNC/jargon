@@ -109,9 +109,6 @@ public class PAMAuth extends AuthMechanism {
 				irodsCommands.getAuthResponse(),
 				irodsCommands.getAuthMechanism(), sslIRODSConnection);
 
-		secureIRODSCommands.setIrodsServerProperties(irodsCommands
-				.getIrodsServerProperties());
-
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
 		// send pam auth request
@@ -120,11 +117,13 @@ public class PAMAuth extends AuthMechanism {
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
-		if (secureIRODSCommands.getIrodsServerProperties().isEirods()) {
+		if (startupResponseData.isEirods()) {
 			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getUserName(), irodsAccount.getPassword(),
 					pamTimeToLive);
+			response = secureIRODSCommands.irodsFunction(pi);
+
 		} else {
 			log.info("using normal irods pam auth request");
 			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
@@ -137,8 +136,14 @@ public class PAMAuth extends AuthMechanism {
 			throw new JargonException("null response from pamAuthRequest");
 		}
 
-		String tempPasswordForPam = response.getTag("irodsPamPassword")
-				.getStringValue();
+		String tempPasswordForPam;
+		if (startupResponseData.isEirods()) {
+			tempPasswordForPam = response.getTag("result_").getStringValue();
+		} else {
+			tempPasswordForPam = response.getTag("irodsPamPassword")
+					.getStringValue();
+		}
+
 		if (tempPasswordForPam == null || tempPasswordForPam.isEmpty()) {
 			throw new AuthenticationException(
 					"unable to retrive the temp password resulting from the pam auth response");

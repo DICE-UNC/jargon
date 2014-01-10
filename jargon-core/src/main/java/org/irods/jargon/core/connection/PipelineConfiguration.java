@@ -68,11 +68,10 @@ public class PipelineConfiguration {
 		inputToOutputCopyBufferByteSize = jargonProperties
 				.getInputToOutputCopyBufferByteSize();
 		instrument = jargonProperties.isInstrument();
-		this.reconnect = jargonProperties.isReconnect();
-		this.reconnectTimeInMillis = jargonProperties
-				.getReconnectTimeInMillis();
-		this.defaultEncoding = jargonProperties.getEncoding();
-		this.forcePamFlush = jargonProperties.isForcePamFlush();
+		reconnect = jargonProperties.isReconnect();
+		reconnectTimeInMillis = jargonProperties.getReconnectTimeInMillis();
+		defaultEncoding = jargonProperties.getEncoding();
+		forcePamFlush = jargonProperties.isForcePamFlush();
 	}
 
 	@Override

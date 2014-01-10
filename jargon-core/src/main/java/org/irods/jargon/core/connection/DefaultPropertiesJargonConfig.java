@@ -99,7 +99,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	private String verifyPropExistsAndGetAsString(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsString(jargonProperties, propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsString(jargonProperties,
+				propKey);
 	}
 
 	/**
@@ -108,16 +109,19 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * @throws JargonException
 	 */
 	private int verifyPropExistsAndGetAsInt(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsInt(jargonProperties, propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsInt(jargonProperties,
+				propKey);
 
 	}
 
 	private boolean verifyPropExistsAndGetAsBoolean(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties, propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties,
+				propKey);
 	}
 
 	private long verifyPropExistsAndGetAsLong(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties, propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties,
+				propKey);
 	}
 
 	/*

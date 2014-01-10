@@ -122,9 +122,9 @@ public class SettableJargonProperties implements JargonProperties {
 		setReconnect(jargonProperties.isReconnect());
 		setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
 				.isDefaultToPublicIfNothingUnderRootWhenListing());
-		this.setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
+		setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
-		this.setForcePamFlush(jargonProperties.isForcePamFlush());
+		setForcePamFlush(jargonProperties.isForcePamFlush());
 	}
 
 	/*
@@ -661,7 +661,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public synchronized boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
-		return this.defaultToPublicIfNothingUnderRootWhenListing;
+		return defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
 	/**
@@ -712,7 +712,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(
 			final boolean useSpecificQuery) {
-		this.usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
+		usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
 
 	/*

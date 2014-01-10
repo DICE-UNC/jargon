@@ -13,12 +13,14 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
+import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataObjectAOImpl;
 import org.irods.jargon.core.pub.DataTransferOperations;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -115,6 +117,17 @@ public class IRODSFileImplTest {
 
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
 				+ testFileName, testUserGroup);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (props.isEirods()) {
+			return;
+		}
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(secondaryIrodsAccount);
 		IRODSFile actual = irodsFileFactory

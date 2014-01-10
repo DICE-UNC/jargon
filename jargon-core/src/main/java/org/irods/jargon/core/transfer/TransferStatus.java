@@ -423,7 +423,7 @@ public class TransferStatus {
 		this.targetFileAbsolutePath = targetFileAbsolutePath;
 		this.targetResource = targetResource;
 		this.totalSize = totalSize;
-		this.bytesTransfered = bytesTransferred;
+		bytesTransfered = bytesTransferred;
 		this.transferState = transferState;
 		this.transferException = transferException;
 		this.totalFilesToTransfer = totalFilesToTransfer;
