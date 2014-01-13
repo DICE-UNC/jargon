@@ -1,10 +1,10 @@
 package org.irods.jargon.core.pub;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
