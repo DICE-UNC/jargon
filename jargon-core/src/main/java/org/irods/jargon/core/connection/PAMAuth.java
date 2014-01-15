@@ -169,28 +169,43 @@ public class PAMAuth extends AuthMechanism {
 		irodsAccountUsingTemporaryIRODSPassword
 				.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		StandardIRODSAuth stdAuth = new StandardIRODSAuth();
-		AuthResponse authResponse = stdAuth.processAuthenticationAfterStartup(
-				irodsAccountUsingTemporaryIRODSPassword, irodsCommands,
-				startupResponseData);
-		// set the original account to the PAM login
+		AuthResponse authResponse =  new AuthResponse();
+		authResponse.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
+		authResponse.setStartupResponse(startupResponseData);
+		authResponse.setSuccessful(true);
 		return authResponse;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.AuthMechanism#
-	 * postConnectionStartupPreAuthentication()
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication(org.irods.jargon.core.connection.IRODSAccount, org.irods.jargon.core.connection.IRODSCommands, org.irods.jargon.core.connection.StartupResponseData)
 	 */
 	@Override
-	protected void postConnectionStartupPreAuthentication()
-			throws JargonException {
+	protected AuthResponse processAfterAuthentication(
+			final AuthResponse authResponse,  IRODSCommands irodsCommands,
+			final StartupResponseData startupResponseData) throws AuthenticationException, JargonException {
+		
+		AuthResponse revisedAuthResponse = null;
+		StandardIRODSAuth standardIRODSAuth = new StandardIRODSAuth();
+		IRODSAccount originalAuthenticatingAccount = authResponse.getAuthenticatingIRODSAccount();
+		if (startupResponseData.isEirods()) {
+				irodsCommands.disconnectWithForce();
+			 irodsCommands = IRODSCommands.instance(authResponse.getAuthenticatedIRODSAccount(), irodsCommands.getIrodsProtocolManager(), irodsCommands.getPipelineConfiguration(), standardIRODSAuth, irodsCommands.getIrodsSession());
+			revisedAuthResponse = irodsCommands.getAuthResponse();
+		} else {
+			revisedAuthResponse = standardIRODSAuth.processAuthenticationAfterStartup(
+					authResponse.getAuthenticatedIRODSAccount(), irodsCommands,
+					startupResponseData);
+			// set the original account to the PAM login
 
-		super.postConnectionStartupPreAuthentication();
-
+		}
+		// the authenticating account should be the account with the PAM
+		// credentials
+		revisedAuthResponse.setAuthenticatingIRODSAccount(originalAuthenticatingAccount);
+		return revisedAuthResponse;
 	}
+
+
 
 }

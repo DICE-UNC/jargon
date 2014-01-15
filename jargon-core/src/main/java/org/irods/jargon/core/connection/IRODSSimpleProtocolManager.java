@@ -84,9 +84,9 @@ public final class IRODSSimpleProtocolManager extends
 	 * (org.irods.jargon.core.connection.IRODSManagedConnection)
 	 */
 	@Override
-	public void returnConnectionWithIoException(
+	public void returnConnectionWithForce(
 			final IRODSManagedConnection irodsConnection) {
-		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
+		log.warn("connection returned with force, will forcefully close and remove from session cache");
 		if (irodsConnection != null) {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
 			try {

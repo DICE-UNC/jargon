@@ -92,31 +92,31 @@ public class IRODSAuthenticationProvider implements AuthenticationProvider {
 				if (e.getMessage().indexOf("-826000") > -1) {
 					log.warn("invalid user/password");
 					irodsProtocolManager
-							.returnConnectionWithIoException(connection);
+							.returnConnectionWithForce(connection);
 					throw new BadCredentialsException(
 							"Unknown user id/password");
 				} else {
 					log.error("authentication service exception", e);
 					irodsProtocolManager
-							.returnConnectionWithIoException(connection);
+							.returnConnectionWithForce(connection);
 					throw new AuthenticationServiceException(
 							"unable to authenticate", e);
 				}
 			} else if (e.getCause() instanceof UnknownHostException) {
 				log.warn("cause is invalid host");
 				irodsProtocolManager
-						.returnConnectionWithIoException(connection);
+						.returnConnectionWithForce(connection);
 				throw new BadCredentialsException("The host is unknown");
 			} else if (e.getCause().getMessage().indexOf("refused") > -1) {
 				log.error("cause is refused or invalid port");
 				irodsProtocolManager
-						.returnConnectionWithIoException(connection);
+						.returnConnectionWithForce(connection);
 				throw new BadCredentialsException(
 						"The host/port is unknown or refusing connection");
 			} else {
 				log.error("authentication service exception", e);
 				irodsProtocolManager
-						.returnConnectionWithIoException(connection);
+						.returnConnectionWithForce(connection);
 				throw new AuthenticationServiceException(
 						"unable to authenticate", e);
 			}

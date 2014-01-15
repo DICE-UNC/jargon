@@ -64,7 +64,36 @@ abstract class AuthMechanism {
 		postConnectionStartupPreAuthentication();
 		AuthResponse authResponse = processAuthenticationAfterStartup(
 				irodsAccount, irodsCommands, startupResponseData);
-		authResponse.setStartupResponse(startupResponseData);
+		authResponse = processAfterAuthentication(authResponse, irodsCommands,
+				startupResponseData);
+		irodsCommands.setAuthResponse(authResponse);
+
+		return authResponse;
+	}
+
+	/**
+	 * Optional method to intercede after authentication has been done. This can
+	 * be used to post-process the authentication step, as in PAM
+	 * authentication, where a temporary password is obtained and swapped under
+	 * the covers
+	 * <p/>
+	 * By default this method does not manipulate the
+	 * 
+	 * @param irodsCommands
+	 *            {@link IRODSCommands} that will be authenticating
+	 * @param authResponse
+	 *            {@link AuthResponse} with the details of the authentication
+	 *            that just happened
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} with iRODS response to startup
+	 *            pack info
+	 * @return
+	 * @throws JargonException
+	 */
+	protected AuthResponse processAfterAuthentication(
+			final AuthResponse authResponse, final IRODSCommands irodsCommands,
+			final StartupResponseData startupResponseData)
+			throws AuthenticationException, JargonException {
 		return authResponse;
 	}
 

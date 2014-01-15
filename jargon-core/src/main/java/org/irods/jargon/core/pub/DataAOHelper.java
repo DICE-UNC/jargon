@@ -602,7 +602,7 @@ public final class DataAOHelper extends AOHelper {
 
 			if (lengthLeftToSend != 0) {
 				log.error("did not send all data");
-				irodsProtocol.disconnectWithIOException();
+				irodsProtocol.disconnectWithForce();
 				throw new JargonException("did not send all data");
 			}
 

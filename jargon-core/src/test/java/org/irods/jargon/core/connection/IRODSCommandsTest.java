@@ -187,7 +187,7 @@ public class IRODSCommandsTest {
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
 		irodsProtocol.setIrodsSession(irodsFileSystem.getIrodsSession());
-		irodsProtocol.disconnectWithIOException();
+		irodsProtocol.disconnectWithForce();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
 	}

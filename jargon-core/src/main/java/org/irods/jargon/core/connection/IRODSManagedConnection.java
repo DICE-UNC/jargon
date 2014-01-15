@@ -42,15 +42,17 @@ public interface IRODSManagedConnection {
 	void obliterateConnectionAndDiscardErrors();
 
 	/**
-	 * Called by a client to signal that some error had occurred in the
-	 * connection, and that the connection should be cleaned up. This should be
+	 * Called by a client to signal that  the connection should be cleaned up. This should be
 	 * called in methods accessing the underlying iRODS socket where a socket or
 	 * i/o exception has occurred, making it unlikely that the normal iRODS
 	 * disconnect sequence will work. This prevents 'hung' connections.
+	 * <p/>
+	 * This is also used in some authentication scenarios where the connection needs to be reset because of multiple connection
+	 * phases, such as pam login.
 	 * 
 	 * @throws JargonException
 	 */
-	void disconnectWithIOException() throws JargonException;
+	void disconnectWithForce() throws JargonException;
 
 	/**
 	 * Get a simple <code>URI</code> format that describes the connection

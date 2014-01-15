@@ -105,9 +105,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 	/**
 	 * note that this field is not final. This is due to the fact that it may be
-	 * altered during initialization to resolve GSI info. The field's setter
-	 * method is not published, and the <code>IRODSAccount</code> is immutable,
-	 * but care should be taken.
+	 * altered during initialization to resolve GSI info.
 	 */
 	private IRODSAccount irodsAccount;
 
@@ -228,7 +226,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		return sb.toString();
 	}
 
-	private void startupConnection(final IRODSAccount irodsAccount)
+	 void startupConnection(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
 
 		/*
@@ -241,11 +239,11 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error(
 					"authentication exception, will close iRODS sockets and streams and re-throw",
 					e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw e;
 		}
 
-		// authenticated.....
+		// authenticated.....HERE!!!!!!!!!
 
 		this.irodsAccount = authResponse.getAuthenticatedIRODSAccount();
 
@@ -408,7 +406,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.error("unsupported encoding", e);
 			throw new JargonException(e);
 		} catch (IOException e) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 
@@ -495,7 +493,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("ioexception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 
 			throw new JargonException(e);
 		}
@@ -582,7 +580,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("ioexception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 
 			throw new JargonException(e);
 		}
@@ -638,7 +636,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 
 			throw new JargonException(e);
 		}
@@ -682,7 +680,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 
 			throw new JargonException(e);
 		}
@@ -745,7 +743,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception sending irods command", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 
 			throw new JargonException(e);
 		}
@@ -919,7 +917,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
-				disconnectWithIOException();
+				disconnectWithForce();
 
 				throw new JargonException(e);
 			}
@@ -959,7 +957,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
-				disconnectWithIOException();
+				disconnectWithForce();
 
 				throw new JargonException(e);
 			}
@@ -1007,7 +1005,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 		Tag errorTag;
@@ -1143,7 +1141,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 					}
 
 				} else if (protoChar == -1) {
-					irodsConnection.disconnectWithIOException();
+					irodsConnection.disconnectWithForce();
 					throw new JargonException(
 							"Server connection lost, due to error");
 				}
@@ -1156,7 +1154,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.read(header, 0, length);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 
@@ -1178,14 +1176,14 @@ public class IRODSCommands implements IRODSManagedConnection {
 					ConnectionConstants.HEADER_INT_LENGTH);
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 		return org.irods.jargon.core.utils.Host.castToInt(headerInt);
@@ -1198,15 +1196,15 @@ public class IRODSCommands implements IRODSManagedConnection {
 			irodsConnection.read(body, 0, length);
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		} catch (InterruptedIOException e) {
 			log.error("interrupted io", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		} catch (IOException e) {
 			log.error("io exception", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 		try {
@@ -1273,17 +1271,17 @@ public class IRODSCommands implements IRODSManagedConnection {
 				irodsConnection.flush();
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
-				disconnectWithIOException();
+				disconnectWithForce();
 
 				throw new JargonException(e);
 			} catch (InterruptedIOException e) {
 				log.error("interrupted io", e);
-				disconnectWithIOException();
+				disconnectWithForce();
 
 				throw new JargonException(e);
 			} catch (IOException e) {
 				log.error("io exception", e);
-				disconnectWithIOException();
+				disconnectWithForce();
 
 				throw new JargonException(e);
 			} finally {
@@ -1351,8 +1349,8 @@ public class IRODSCommands implements IRODSManagedConnection {
 	 * disconnectWithIOException()
 	 */
 	@Override
-	public synchronized void disconnectWithIOException() throws JargonException {
-		irodsProtocolManager.returnConnectionWithIoException(irodsConnection);
+	public synchronized void disconnectWithForce() throws JargonException {
+		irodsProtocolManager.returnConnectionWithForce(irodsConnection);
 
 	}
 
@@ -1401,7 +1399,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 		try {
 			irodsConnection.sendInNetworkOrder(value);
 		} catch (IOException e) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(e);
 		}
 	}
@@ -1553,7 +1551,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.debug(
 					"exception on open of reconnect socket, will sleep and try again:{}",
 					e.getMessage());
-			reconnectedIRODSConnection.disconnectWithIOException();
+			reconnectedIRODSConnection.disconnectWithForce();
 			return false;
 		}
 
@@ -1569,7 +1567,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 
 			if (responseMessage == null) {
 				log.debug("null response from restart procedure, will sleep and try again");
-				reconnectedIRODSConnection.disconnectWithIOException();
+				reconnectedIRODSConnection.disconnectWithForce();
 				return false;
 			}
 
@@ -1589,7 +1587,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			} else if (agentStatus != ReconnectionManager.ProcessingState.PROCESSING_STATE
 					.ordinal()) {
 				log.debug("agent is not in receiving state, so sleep and try again");
-				reconnectedIRODSConnection.disconnectWithIOException();
+				reconnectedIRODSConnection.disconnectWithForce();
 				return false;
 			}
 
@@ -1597,7 +1595,7 @@ public class IRODSCommands implements IRODSManagedConnection {
 			log.debug(
 					"exception on read of reconnect message, will sleep and try again:{}",
 					e.getMessage());
-			reconnectedIRODSConnection.disconnectWithIOException();
+			reconnectedIRODSConnection.disconnectWithForce();
 			return false;
 		}
 
@@ -1750,6 +1748,20 @@ public class IRODSCommands implements IRODSManagedConnection {
 	synchronized void setIrodsServerProperties(
 			final IRODSServerProperties irodsServerProperties) {
 		this.irodsServerProperties = irodsServerProperties;
+	}
+
+	/**
+	 * @param irodsAccount the irodsAccount to set
+	 */
+	synchronized void setIrodsAccount(IRODSAccount irodsAccount) {
+		this.irodsAccount = irodsAccount;
+	}
+
+	/**
+	 * @param authResponse the authResponse to set
+	 */
+	synchronized void setAuthResponse(AuthResponse authResponse) {
+		this.authResponse = authResponse;
 	}
 
 }

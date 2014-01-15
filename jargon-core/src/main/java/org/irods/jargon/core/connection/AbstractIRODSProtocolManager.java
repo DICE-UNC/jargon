@@ -73,7 +73,7 @@ public abstract class AbstractIRODSProtocolManager implements
 	 * (org.irods.jargon.core.connection.IRODSManagedConnection)
 	 */
 	@Override
-	public void returnConnectionWithIoException(
+	public void returnConnectionWithForce(
 			final IRODSManagedConnection irodsConnection) {
 		forcefullyCloseConnectionAndClearFromSession(irodsConnection);
 	}

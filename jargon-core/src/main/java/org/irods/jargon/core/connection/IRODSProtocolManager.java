@@ -48,7 +48,7 @@ public interface IRODSProtocolManager {
 	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection(org.irods.jargon.core.connection.IRODSConnection)
 	 */
 
-	void returnConnectionWithIoException(IRODSManagedConnection irodsConnection);
+	void returnConnectionWithForce(IRODSManagedConnection irodsConnection);
 
 	void destroy() throws JargonException;
 

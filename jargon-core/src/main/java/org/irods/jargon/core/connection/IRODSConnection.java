@@ -428,11 +428,11 @@ public class IRODSConnection implements IRODSManagedConnection {
 	 * disconnectWithIOException()
 	 */
 	@Override
-	public void disconnectWithIOException() {
+	public void disconnectWithForce() {
 
 		log.info("disconnecting...");
 		// disconnect from irods and close
-		irodsProtocolManager.returnConnectionWithIoException(this);
+		irodsProtocolManager.returnConnectionWithForce(this);
 	}
 
 	/*
@@ -543,7 +543,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 			}
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 	}
@@ -579,7 +579,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		if (offset > value.length) {
 			String err = "trying to send a byte buffer from an offset that is out of range";
 			log.error(err);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -587,7 +587,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			// nothing to send, warn and ignore
 			String err = "send length is zero";
 			log.error(err);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -598,7 +598,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		try {
 			send(temp);
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 	}
@@ -619,7 +619,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		try {
 			send(value.getBytes(pipelineConfiguration.getDefaultEncoding()));
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 
@@ -642,7 +642,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			send(bytes);
 			flush();
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 
@@ -717,7 +717,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			return dataSent;
 
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 	}
@@ -748,7 +748,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			}
 
 		} catch (IOException ioe) {
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		}
 
@@ -765,7 +765,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			return (byte) irodsInputStream.read();
 		} catch (IOException ioe) {
 			log.error("io exception reading", ioe);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(ioe);
 		}
 	}
@@ -782,7 +782,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 			return read(value, 0, value.length);
 		} catch (IOException ioe) {
 			log.error("io exception reading", ioe);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new JargonException(ioe);
 		}
 	}
@@ -859,7 +859,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 
 		} catch (IOException ioe) {
 			log.error("io exception reading", ioe);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw ioe;
 		} finally {
 			try {
@@ -892,7 +892,7 @@ public class IRODSConnection implements IRODSManagedConnection {
 		if (value == null) {
 			String err = "no data sent";
 			log.error(err);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -906,14 +906,14 @@ public class IRODSConnection implements IRODSManagedConnection {
 		if (length == 0) {
 			String err = "read length is set to zero";
 			log.error(err);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new IOException(err);
 		}
 
 		int result = 0;
 		if (length + offset > value.length) {
 			log.error("index out of bounds exception, length + offset larger then byte array");
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw new IllegalArgumentException(
 					"length + offset larger than byte array");
 		}
@@ -933,17 +933,17 @@ public class IRODSConnection implements IRODSManagedConnection {
 			return result;
 		} catch (ClosedChannelException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw e;
 
 		} catch (InterruptedIOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw e;
 
 		} catch (IOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithIOException();
+			disconnectWithForce();
 			throw e;
 		}
 	}

@@ -108,7 +108,7 @@ public class IRODSSimpleProtocolManagerTest {
 						.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 						null);
-		irodsConnectionManager.returnConnectionWithIoException(connection);
+		irodsConnectionManager.returnConnectionWithForce(connection);
 		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}
@@ -127,7 +127,7 @@ public class IRODSSimpleProtocolManagerTest {
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 						null);
 		connection.disconnect();
-		irodsConnectionManager.returnConnectionWithIoException(connection);
+		irodsConnectionManager.returnConnectionWithForce(connection);
 		Assert.assertFalse("the connection is not closed after disconnect",
 				connection.isConnected());
 	}

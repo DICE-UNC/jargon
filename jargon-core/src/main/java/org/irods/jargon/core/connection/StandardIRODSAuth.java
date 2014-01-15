@@ -41,6 +41,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 *         returned in the Auth response
 	 * @throws JargonException
 	 */
+	// TODO: move into AuthMechanism as a common method to get the cached challenge
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
 			final IRODSCommands irodsCommands) throws JargonException {
 		if (irodsAccount == null) {
