@@ -2,10 +2,9 @@ package org.irods.jargon.datautils.connection;
 
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool.Config;
-import org.irods.jargon.core.connection.AbstractIRODSProtocolManager;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
-import org.irods.jargon.core.connection.IRODSManagedConnection;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -22,38 +21,47 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TempPasswordCachingProtocolManager extends
-		AbstractIRODSProtocolManager {
+public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	private final IRODSAccount irodsAccount;
 	private final IRODSSession irodsSession;
 	private final IRODSProtocolManager baseProtocolManager;
-	
+
 	private GenericObjectPool objectPool = null;
 
 	private Logger log = LoggerFactory
 			.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
-	 * Create a protocol manager that will cache a single temporary connection in a pool for reuse.  This is because temp passwords are one-time only.  This allows
-	 * client applications to (somewhat) transparently simulate the ability to get a connection on-demand.  This is used in idrop-lite, for example.
-	 * @param irodsAccount {@link IRODSAccount} for the underlying cached account
-	 * @param irodsSession {@link IRODSSession} that is used to obtain the account
-	 * @param baseProtocolManager {@link IRODSProtocolManager} that gets the actual connected account that is subsequently cached
+	 * Create a protocol manager that will cache a single temporary connection
+	 * in a pool for reuse. This is because temp passwords are one-time only.
+	 * This allows client applications to (somewhat) transparently simulate the
+	 * ability to get a connection on-demand. This is used in idrop-lite, for
+	 * example.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for the underlying cached account
+	 * @param irodsSession
+	 *            {@link IRODSSession} that is used to obtain the account
+	 * @param baseProtocolManager
+	 *            {@link IRODSProtocolManager} that gets the actual connected
+	 *            account that is subsequently cached
 	 * @throws JargonException
 	 */
-	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount, final IRODSSession irodsSession, final IRODSProtocolManager baseProtocolManager)
+	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount,
+			final IRODSSession irodsSession,
+			final IRODSProtocolManager baseProtocolManager)
 			throws JargonException {
 		super();
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-		
+
 		if (irodsSession == null) {
 			throw new IllegalArgumentException("null irodsSession");
 		}
-		
+
 		if (baseProtocolManager == null) {
 			throw new IllegalArgumentException("null baseProtocolManager");
 		}
@@ -74,34 +82,17 @@ public class TempPasswordCachingProtocolManager extends
 	 * org.irods.jargon.core.connection.PipelineConfiguration)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
-			throws JargonException {
+	public IRODSMidLevelProtocol getIRODSProtocol(
+			final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSSession irodsSession) throws JargonException {
 		try {
-			IRODSCommands command = (IRODSCommands) objectPool.borrowObject();
+			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool
+					.borrowObject();
 			command.setIrodsProtocolManager(this);
 			return command;
 		} catch (Exception e) {
 			throw new JargonException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#
-	 * returnIRODSConnection
-	 * (org.irods.jargon.core.connection.IRODSManagedConnection)
-	 */
-	@Override
-	public void returnIRODSConnection(
-			final IRODSManagedConnection irodsConnection)
-			throws JargonException {
-		try {
-			objectPool.returnObject(irodsConnection);
-		} catch (Exception e) {
-			log.error("error returning connection", e);
-			throw new JargonException("error returning connection to pool", e);
 		}
 	}
 
@@ -160,5 +151,23 @@ public class TempPasswordCachingProtocolManager extends
 		return irodsAccount;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
+	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
+	 */
+	@Override
+	public void returnIRODSProtocol(
+			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			throws JargonException {
+		try {
+			objectPool.returnObject(abstractIRODSMidLevelProtocol);
+		} catch (Exception e) {
+			log.error("error returning connection", e);
+			throw new JargonException("error returning connection to pool", e);
+		}
+	}
 
 }

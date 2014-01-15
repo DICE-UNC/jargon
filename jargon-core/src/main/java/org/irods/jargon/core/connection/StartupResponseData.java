@@ -67,8 +67,8 @@ public class StartupResponseData {
 
 		int intCookie = Integer.parseInt(cookie);
 
-		if (intCookie >= IRODSCommands.EIRODS_MIN
-				&& intCookie <= IRODSCommands.EIRODS_MAX) {
+		if (intCookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
+				&& intCookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
 			eirods = true;
 		} else if (MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(relVersion,

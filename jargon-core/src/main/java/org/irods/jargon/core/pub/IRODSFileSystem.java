@@ -6,7 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
@@ -86,7 +86,6 @@ public final class IRODSFileSystem {
 	public IRODSFileSystem() throws JargonException {
 		irodsProtocolManager = IRODSSimpleProtocolManager.instance();
 		irodsSession = IRODSSession.instance(irodsProtocolManager);
-		initialize();
 		log.info("IRODSfileSystem is initialized");
 	}
 
@@ -107,7 +106,6 @@ public final class IRODSFileSystem {
 		}
 		this.irodsProtocolManager = irodsProtocolManager;
 		irodsSession = IRODSSession.instance(irodsProtocolManager);
-		initialize();
 		log.info("IRODSfileSystem is initialized");
 
 	}
@@ -216,10 +214,11 @@ public final class IRODSFileSystem {
 	 * other uses, but it is highly recommended that these IRODSCommands are not
 	 * used for any other purpose.
 	 * 
-	 * @return {@link org.irods.jagon.core.connection.IRODSCommands} that
-	 *         represent low-level connection to iRODS (above the socket level)
+	 * @return {@link org.irods.IRODSMidLevelProtocol.core.connection.IRODSCommands}
+	 *         that represent low-level connection to iRODS (above the socket
+	 *         level)
 	 */
-	public Map<String, IRODSCommands> getConnectionMap() {
+	public Map<String, IRODSMidLevelProtocol> getConnectionMap() {
 		return irodsSession.getIRODSCommandsMap();
 
 	}
@@ -254,10 +253,6 @@ public final class IRODSFileSystem {
 	 */
 	public JargonProperties getJargonProperties() {
 		return getIrodsSession().getJargonProperties();
-	}
-
-	private void initialize() throws JargonException {
-		irodsProtocolManager.initialize();
 	}
 
 }

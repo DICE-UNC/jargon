@@ -3,7 +3,7 @@ package org.irods.jargon.core.pub.io;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmdStreamClose;
 import org.irods.jargon.core.packinstr.FileReadInp;
@@ -32,7 +32,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	public static final Logger log = LoggerFactory
 			.getLogger(RemoteExecutionBinaryResultInputStream.class);
 
-	private final IRODSCommands irodsCommands;
+	private final AbstractIRODSMidLevelProtocol irodsCommands;
 	private final int fileDescriptor;
 
 	public int getFileDescriptor() {
@@ -194,7 +194,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * result of the remote execution of an iRODS command.
 	 */
 	public RemoteExecutionBinaryResultInputStream(
-			final IRODSCommands irodsCommands, final int fileDescriptor) {
+			final AbstractIRODSMidLevelProtocol irodsCommands, final int fileDescriptor) {
 		super();
 
 		if (irodsCommands == null) {

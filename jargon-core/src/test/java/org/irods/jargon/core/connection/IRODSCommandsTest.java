@@ -35,7 +35,7 @@ public class IRODSCommandsTest {
 		AuthMechanism authMechanism = new StandardIRODSAuth();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, null);
@@ -51,7 +51,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -84,7 +84,7 @@ public class IRODSCommandsTest {
 		 * .getIRODSServerProperties();
 		 */
 
-		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
+		AbstractIRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory()
 				.getIrodsSession().currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands
 				.getAuthResponse().getStartupResponse();
@@ -122,7 +122,7 @@ public class IRODSCommandsTest {
 		 * .getIRODSServerProperties();
 		 */
 
-		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
+		AbstractIRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory()
 				.getIrodsSession().currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands
 				.getAuthResponse().getStartupResponse();
@@ -148,7 +148,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -164,7 +164,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -182,7 +182,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -199,7 +199,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -217,7 +217,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());
@@ -234,7 +234,7 @@ public class IRODSCommandsTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
+		AbstractIRODSMidLevelProtocol irodsProtocol = IRODSMidLevelProtocol.instance(irodsAccount,
 				irodsConnectionManager, irodsFileSystem.getIrodsSession()
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				authMechanism, irodsFileSystem.getIrodsSession());

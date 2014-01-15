@@ -43,7 +43,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	// TODO: move into AuthMechanism as a common method to get the cached challenge
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
-			final IRODSCommands irodsCommands) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
 		if (irodsAccount == null) {
 			throw new JargonException("irods account is null");
 		}
@@ -93,7 +93,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 * length, and take the md5 of that.
 	 */
 	private String challengeResponse(final String challenge, String password,
-			final IRODSCommands irodsCommands) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
 		// Convert base64 string to a byte array
 		byte[] chal = null;
 		byte[] temp = Base64.fromString(challenge);
@@ -166,7 +166,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
+			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		log.info("authenticate");

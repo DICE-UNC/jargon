@@ -8,7 +8,7 @@ import java.util.Random;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -36,20 +36,21 @@ public class TempPasswordCachingProtocolManagerTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-
 	@Test
 	public void testGetIRODSProtocol() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
+				irodsAccount, irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
 		IRODSSession irodsSession = IRODSSession.instance(manager);
 		Assert.assertNotNull("null manager returned", manager);
-		IRODSCommands commands = manager.getIRODSProtocol(irodsAccount,
+		IRODSMidLevelProtocol commands = manager.getIRODSProtocol(irodsAccount,
 				irodsSession
-						.buildPipelineConfigurationBasedOnJargonProperties(), irodsFileSystem.getIrodsSession());
+						.buildPipelineConfigurationBasedOnJargonProperties(),
+				irodsFileSystem.getIrodsSession());
 		Assert.assertTrue("commands not connected", commands.isConnected());
-		manager.returnIRODSConnection(commands);
+		manager.returnIRODSProtocol(commands);
 		manager.destroy();
 		commands.disconnect();
 	}
@@ -59,7 +60,8 @@ public class TempPasswordCachingProtocolManagerTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
+				irodsAccount, irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
 		IRODSFileSystem irodsFileSystem = new IRODSFileSystem(manager);
 		EnvironmentalInfoAO eAO = irodsFileSystem.getIRODSAccessObjectFactory()
 				.getEnvironmentalInfoAO(irodsAccount);
@@ -75,7 +77,8 @@ public class TempPasswordCachingProtocolManagerTest {
 		final IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
-				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
+				irodsAccount, irodsFileSystem.getIrodsSession(),
+				irodsFileSystem.getIrodsProtocolManager());
 		final IRODSFileSystem irodsFileSystem = new IRODSFileSystem(manager);
 
 		final Random randomGenerator = new Random();

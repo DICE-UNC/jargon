@@ -1,7 +1,6 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,13 +15,12 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE
  */
-public final class IRODSSimpleProtocolManager extends
-		AbstractIRODSProtocolManager {
+public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	private Logger log = LoggerFactory
 			.getLogger(IRODSSimpleProtocolManager.class);
 
-	public static IRODSProtocolManager instance() {
+	public static IRODSSimpleProtocolManager instance() {
 		return new IRODSSimpleProtocolManager();
 	}
 
@@ -30,97 +28,58 @@ public final class IRODSSimpleProtocolManager extends
 		log.info("creating simple protocol manager");
 	}
 
-	/**
-	 * This implementation simply creates a connection to IRODS. This is a live
-	 * connection that represents not only an open socket to the IRODS server,
-	 * but also a 'connected' connection, meaning that the startup and handshake
-	 * activities have been accomplished, leaving the IRODSProtocol in a ready
-	 * state.
-	 * <p/>
-	 * This method also is the 'hook' that would allow alternative login
-	 * methods, such as GSI, to be fully resolved, and all necessary
-	 * transformations to the irodsAccount information will be accomplished when
-	 * this method returns.
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
+	 * (org.irods.jargon.core.connection.IRODSAccount,
+	 * org.irods.jargon.core.connection.PipelineConfiguration,
+	 * org.irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+	public IRODSMidLevelProtocol getIRODSProtocol(
+			final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSSession irodsSession) throws JargonException {
+
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
+		/*
+		 * This implementation simply creates a connection to IRODS. This is a
+		 * live connection that represents not only an open socket to the IRODS
+		 * server, but also a 'connected' connection, meaning that the startup
+		 * and handshake activities have been accomplished, leaving the
+		 * IRODSProtocol in a ready state. <p/> This method also is the 'hook'
+		 * that would allow alternative login methods, such as GSI, to be fully
+		 * resolved, and all necessary transformations to the irodsAccount
+		 * information will be accomplished when this method returns.
+		 */
+
 		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
 
-		IRODSCommands commands = IRODSCommands.instance(irodsAccount, this,
-				pipelineConfiguration, getAuthenticationFactory()
-						.instanceAuthMechanism(irodsAccount), irodsSession);
+		IRODSMidLevelProtocol commands = IRODSMidLevelProtocol.instance(
+				irodsAccount, this, pipelineConfiguration,
+				getAuthenticationFactory().instanceAuthMechanism(irodsAccount),
+				irodsSession);
 		return commands;
 	}
 
-	/**
-	 * A connection is returned to the connection manager. This implementation
-	 * of a connection manager will do a call-back to the
-	 * {@link IRODSManagedConnection } and the connection will be closed. Other
-	 * implementations may return the connection to a pool.
-	 * <p/>
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection
-	 *      (org.irods.jargon.core.connection.IRODSConnection)
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
+	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
-
 	@Override
-	public void returnIRODSConnection(
-			final IRODSManagedConnection irodsConnection)
+	public void returnIRODSProtocol(
+			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException {
-		log.debug("connection returned:{}", irodsConnection);
-		irodsConnection.shutdown();
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#
-	 * returnConnectionWithIoException
-	 * (org.irods.jargon.core.connection.IRODSManagedConnection)
-	 */
-	@Override
-	public void returnConnectionWithForce(
-			final IRODSManagedConnection irodsConnection) {
-		log.warn("connection returned with force, will forcefully close and remove from session cache");
-		if (irodsConnection != null) {
-			irodsConnection.obliterateConnectionAndDiscardErrors();
-			try {
-				if (irodsConnection.getIrodsSession() == null) {
-					log.info("returning connection, no session, so do not discard in session, this can be a normal case in authentication processing, or in areas where a connection is manually done outside of the normal access object factory scheme, otherwise, it might signify a logic error");
-				} else {
-					irodsConnection.getIrodsSession().discardSessionForErrors(
-							irodsConnection.getIrodsAccount());
-				}
-			} catch (JargonException e) {
-				log.error("unable to obliterate connection");
-				throw new JargonRuntimeException(
-						"unable to obliterate connection", e);
-			}
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#destroy()
-	 */
-	@Override
-	public void destroy() throws JargonException {
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.IRODSProtocolManager#initialize()
-	 */
-	@Override
-	public void initialize() throws JargonException {
+		log.debug("abstractIRODSMidLevelProtocol returned:{}",
+				abstractIRODSMidLevelProtocol);
+		abstractIRODSMidLevelProtocol.shutdown();
 
 	}
 

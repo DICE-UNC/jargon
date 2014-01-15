@@ -40,7 +40,7 @@ class GSIAuth extends AuthMechanism {
 	 * @throws JargonException
 	 */
 	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
-			final IRODSCommands irodsCommands) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
 
 		log.info("sendGSIPassword()");
 
@@ -100,7 +100,7 @@ class GSIAuth extends AuthMechanism {
 	 *             If the authentication to the iRODS fails.
 	 */
 	AuthResponse sendGSIAuth(final GSIIRODSAccount irodsAccount,
-			final IRODSCommands irodsCommands) throws AuthenticationException,
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws AuthenticationException,
 			JargonException {
 
 		log.info("sendGSIAuth()");
@@ -215,7 +215,7 @@ class GSIAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
+			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 

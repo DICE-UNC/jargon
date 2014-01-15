@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
@@ -22,7 +22,7 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
  */
 public interface IRODSAccessObject {
 
-	IRODSCommands getIRODSProtocol() throws JargonException;
+	AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException;
 
 	/**
 	 * Get the <code>IRODSSession</code> that provides connections to the iRODS

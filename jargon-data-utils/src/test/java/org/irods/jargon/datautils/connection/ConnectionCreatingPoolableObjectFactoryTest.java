@@ -4,8 +4,9 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.After;
@@ -53,10 +54,10 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 				irodsAccount, irodsFileSystem.getIrodsSession(), irodsFileSystem.getIrodsProtocolManager());
 		Object conn = factory.makeObject();
 		Assert.assertNotNull("null connection returned", conn);
-		boolean isCommand = conn instanceof IRODSCommands;
+		boolean isCommand = conn instanceof IRODSMidLevelProtocol;
 		Assert.assertTrue("did not get a commands", isCommand);
 		factory.destroyObject(conn);
-		IRODSCommands actual = (IRODSCommands) conn;
+		AbstractIRODSMidLevelProtocol actual = (AbstractIRODSMidLevelProtocol) conn;
 		Assert.assertFalse("command not disconnected after destroy",
 				actual.isConnected());
 	}

@@ -45,7 +45,7 @@ public class PAMAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands,
+			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
@@ -104,7 +104,7 @@ public class PAMAuth extends AuthMechanism {
 		SSLIRODSConnection sslIRODSConnection = new SSLIRODSConnection(
 				irodsCommands.getIrodsConnection(), sslSocket);
 
-		IRODSCommands secureIRODSCommands = new IRODSCommands(irodsAccount,
+		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(irodsAccount,
 				irodsCommands.getIrodsProtocolManager(),
 				irodsCommands.getPipelineConfiguration(),
 				irodsCommands.getAuthResponse(),
@@ -183,7 +183,7 @@ public class PAMAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAfterAuthentication(
-			final AuthResponse authResponse,  IRODSCommands irodsCommands,
+			final AuthResponse authResponse,  AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData) throws AuthenticationException, JargonException {
 		
 		AuthResponse revisedAuthResponse = null;
@@ -191,7 +191,7 @@ public class PAMAuth extends AuthMechanism {
 		IRODSAccount originalAuthenticatingAccount = authResponse.getAuthenticatingIRODSAccount();
 		if (startupResponseData.isEirods()) {
 				irodsCommands.disconnectWithForce();
-			 irodsCommands = IRODSCommands.instance(authResponse.getAuthenticatedIRODSAccount(), irodsCommands.getIrodsProtocolManager(), irodsCommands.getPipelineConfiguration(), standardIRODSAuth, irodsCommands.getIrodsSession());
+			 irodsCommands = IRODSMidLevelProtocol.instance(authResponse.getAuthenticatedIRODSAccount(), irodsCommands.getIrodsProtocolManager(), irodsCommands.getPipelineConfiguration(), standardIRODSAuth, irodsCommands.getIrodsSession());
 			revisedAuthResponse = irodsCommands.getAuthResponse();
 		} else {
 			revisedAuthResponse = standardIRODSAuth.processAuthenticationAfterStartup(

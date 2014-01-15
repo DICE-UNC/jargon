@@ -6,7 +6,7 @@ package org.irods.jargon.spring.security;
 import java.net.UnknownHostException;
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSManagedConnection;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -79,11 +79,14 @@ public class IRODSAuthenticationProvider implements AuthenticationProvider {
 		log.debug("doing authentication call to irods for account: {}",
 				irodsAuthToken.getIrodsAccount());
 
-		IRODSManagedConnection connection = null;
+		AbstractIRODSMidLevelProtocol connection = null;
 		try {
 			connection = irodsProtocolManager.getIRODSProtocol(irodsAuthToken
-					.getIrodsAccount(), irodsAccessObjectFactory.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties(), irodsAccessObjectFactory.getIrodsSession());
-			irodsProtocolManager.returnIRODSConnection(connection);
+					.getIrodsAccount(), irodsAccessObjectFactory
+					.getIrodsSession()
+					.buildPipelineConfigurationBasedOnJargonProperties(),
+					irodsAccessObjectFactory.getIrodsSession());
+			irodsProtocolManager.returnIRODSProtocol(connection);
 		} catch (JargonException e) {
 			log.error("unable to authenticate, JargonException", e);
 			e.printStackTrace();
@@ -91,32 +94,27 @@ public class IRODSAuthenticationProvider implements AuthenticationProvider {
 			if (e.getCause() == null) {
 				if (e.getMessage().indexOf("-826000") > -1) {
 					log.warn("invalid user/password");
-					irodsProtocolManager
-							.returnConnectionWithForce(connection);
+					irodsProtocolManager.returnWithForce(connection);
 					throw new BadCredentialsException(
 							"Unknown user id/password");
 				} else {
 					log.error("authentication service exception", e);
-					irodsProtocolManager
-							.returnConnectionWithForce(connection);
+					irodsProtocolManager.returnWithForce(connection);
 					throw new AuthenticationServiceException(
 							"unable to authenticate", e);
 				}
 			} else if (e.getCause() instanceof UnknownHostException) {
 				log.warn("cause is invalid host");
-				irodsProtocolManager
-						.returnConnectionWithForce(connection);
+				irodsProtocolManager.returnWithForce(connection);
 				throw new BadCredentialsException("The host is unknown");
 			} else if (e.getCause().getMessage().indexOf("refused") > -1) {
 				log.error("cause is refused or invalid port");
-				irodsProtocolManager
-						.returnConnectionWithForce(connection);
+				irodsProtocolManager.returnWithForce(connection);
 				throw new BadCredentialsException(
 						"The host/port is unknown or refusing connection");
 			} else {
 				log.error("authentication service exception", e);
-				irodsProtocolManager
-						.returnConnectionWithForce(connection);
+				irodsProtocolManager.returnWithForce(connection);
 				throw new AuthenticationServiceException(
 						"unable to authenticate", e);
 			}

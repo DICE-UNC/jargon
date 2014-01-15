@@ -14,10 +14,10 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-final class SSLIRODSConnection extends IRODSConnection {
+final class SSLIRODSConnection extends IRODSBasicTCPConnection {
 
 	protected SSLIRODSConnection(
-			final IRODSConnection underlyingIRODSConnection,
+			final AbstractConnection underlyingIRODSConnection,
 			final Socket underlyingSocket) throws JargonException {
 		super(underlyingIRODSConnection.getIrodsAccount(),
 				underlyingIRODSConnection.getIrodsProtocolManager(),

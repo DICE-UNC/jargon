@@ -5,10 +5,10 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -1242,7 +1242,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		IRODSCommands irodsProtocol = getIRODSProtocol();
+		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 
 		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
 

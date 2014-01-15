@@ -5,8 +5,8 @@ package org.irods.jargon.core.pub.io;
 
 import java.io.OutputStream;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
@@ -118,7 +118,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		// DataObjRead dataObjReadPI = DataObjRead.instance(fd, length);
 		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
 				length);
-		IRODSCommands irodsProtocol = getIRODSProtocol();
+		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 
 		Tag message = irodsProtocol.irodsFunction(fileReadInp);
 
@@ -154,7 +154,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 
 		OpenedDataObjInp fileReadInp = OpenedDataObjInp.instanceForFileRead(fd,
 				length);
-		IRODSCommands irodsProtocol = getIRODSProtocol();
+		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 		Tag message = irodsProtocol.irodsFunction(fileReadInp);
 
 		// Need the total dataSize

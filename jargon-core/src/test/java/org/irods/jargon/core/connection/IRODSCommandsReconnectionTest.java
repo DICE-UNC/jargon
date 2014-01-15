@@ -52,7 +52,7 @@ public class IRODSCommandsReconnectionTest {
 
 		for (int i = 0; i < nbrTimes; i++) {
 			// connect
-			IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
+			IRODSMidLevelProtocol irodsCommands = testFS.getIRODSAccessObjectFactory()
 					.getIrodsSession().currentConnection(irodsAccount);
 
 			// do something interesting

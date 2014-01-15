@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReconnectionManager implements Callable<Void> {
 
-	private final IRODSCommands irodsCommands;
+	private final IRODSMidLevelProtocol irodsCommands;
 	private Logger log = LoggerFactory.getLogger(ReconnectionManager.class);
 	private long reconnectMillis = 0;
 	private static final long SLEEP_TIME = 1000;
@@ -37,7 +37,7 @@ public class ReconnectionManager implements Callable<Void> {
 	 * @param irodsCommands
 	 * @return
 	 */
-	public static ReconnectionManager instance(final IRODSCommands irodsCommands) {
+	public static ReconnectionManager instance(final IRODSMidLevelProtocol irodsCommands) {
 		return new ReconnectionManager(irodsCommands);
 	}
 
@@ -45,10 +45,10 @@ public class ReconnectionManager implements Callable<Void> {
 	 * Private constructor, use <code>instance()</code> method.
 	 * 
 	 * @param irodsCommands
-	 *            {@link IRODSCommands} that wraps the underlyig connection to
+	 *            {@link IRODSMidLevelProtocol} that wraps the underlyig connection to
 	 *            iRODS
 	 */
-	private ReconnectionManager(final IRODSCommands irodsCommands) {
+	private ReconnectionManager(final IRODSMidLevelProtocol irodsCommands) {
 		if (irodsCommands == null) {
 			throw new IllegalArgumentException("null irodsCommands");
 		}
@@ -94,7 +94,7 @@ public class ReconnectionManager implements Callable<Void> {
 	/**
 	 * @return the irodsCommands
 	 */
-	public IRODSCommands getIrodsCommands() {
+	public AbstractIRODSMidLevelProtocol getIrodsCommands() {
 		return irodsCommands;
 	}
 

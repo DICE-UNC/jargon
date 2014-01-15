@@ -43,7 +43,7 @@ abstract class AuthMechanism {
 	 * connection in the given <code>irodsCommands</code>
 	 * 
 	 * @param irodsCommands
-	 *            {@link IRODSCommands} that will be authenticating
+	 *            {@link IRODSMidLevelProtocol} that will be authenticating
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} with the zone and principle information
 	 * @return {@link AuthResponse} with information about the authentication
@@ -55,7 +55,7 @@ abstract class AuthMechanism {
 	 *             if the authentication proceeded abnormally, not caused by
 	 *             simply being authorized
 	 */
-	protected AuthResponse authenticate(final IRODSCommands irodsCommands,
+	protected AuthResponse authenticate(final AbstractIRODSMidLevelProtocol irodsCommands,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
 		preConnectionStartup();
@@ -80,7 +80,7 @@ abstract class AuthMechanism {
 	 * By default this method does not manipulate the
 	 * 
 	 * @param irodsCommands
-	 *            {@link IRODSCommands} that will be authenticating
+	 *            {@link IRODSMidLevelProtocol} that will be authenticating
 	 * @param authResponse
 	 *            {@link AuthResponse} with the details of the authentication
 	 *            that just happened
@@ -91,7 +91,7 @@ abstract class AuthMechanism {
 	 * @throws JargonException
 	 */
 	protected AuthResponse processAfterAuthentication(
-			final AuthResponse authResponse, final IRODSCommands irodsCommands,
+			final AuthResponse authResponse, final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		return authResponse;
@@ -109,7 +109,7 @@ abstract class AuthMechanism {
 	 *            pack info
 	 */
 	protected abstract AuthResponse processAuthenticationAfterStartup(
-			IRODSAccount irodsAccount, IRODSCommands irodsCommands,
+			IRODSAccount irodsAccount, AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
@@ -122,7 +122,7 @@ abstract class AuthMechanism {
 	 *             if the host cannot be opened or created.
 	 */
 	protected StartupResponseData sendStartupPacket(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands)
+			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
