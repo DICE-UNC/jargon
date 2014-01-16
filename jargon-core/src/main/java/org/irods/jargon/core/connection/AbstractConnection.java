@@ -54,6 +54,16 @@ public abstract class AbstractConnection {
 	 */
 	private int outputOffset = 0;
 
+	/**
+	 * Constructor with account info to set up socket and information about
+	 * buffering and other networking details
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration) {
 		log.info("AbstractConnection()");
@@ -109,8 +119,12 @@ public abstract class AbstractConnection {
 	 * Do an initial (first) connection to iRODS based on account and
 	 * properties. This is differentiated from the <code>reconnect()</code>
 	 * method which is used to periodically renew a socket
+	 * <p/>
+	 * At the successful completion of this method, the networking is created,
+	 * though the handshake and authentication steps remain
 	 * 
 	 * @param irodsAccount
+	 *            {@link IRODSAccount} that contains information on host/port
 	 * @param startupResponseData
 	 *            {@link StartupResponseData} that would carry necessary info to
 	 *            divert the socket to a reconnect host/port. Otherwise, this is

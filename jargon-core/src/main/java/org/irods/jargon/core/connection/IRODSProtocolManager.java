@@ -7,7 +7,20 @@ import org.slf4j.LoggerFactory;
 
 public abstract class IRODSProtocolManager {
 
+	/**
+	 * Factory that will associate an iRODS authentication scheme handler with
+	 * an iRODS authentication scheme in an <code>IRODSAccount</code> when
+	 * logging in.
+	 */
 	private AuthenticationFactory authenticationFactory = new AuthenticationFactoryImpl();
+
+	/**
+	 * Factory that will create a factory that creates the networking layer to
+	 * iRODS based on the settings in jargon.properties
+	 */
+	private IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory;
+
+	private AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory;
 
 	Logger log = LoggerFactory.getLogger(IRODSProtocolManager.class);
 
@@ -18,7 +31,7 @@ public abstract class IRODSProtocolManager {
 	 * @return {@link AuthenticationFactory} that will create objects that can
 	 *         authenticate <code>iRODSAccount</code>s
 	 */
-	public AuthenticationFactory getAuthenticationFactory() {
+	AuthenticationFactory getAuthenticationFactory() {
 		return authenticationFactory;
 	}
 
@@ -81,15 +94,14 @@ public abstract class IRODSProtocolManager {
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
 	 *            other connection options
-	 * @params irodsSession {@link IRODSSession} that will manage this
-	 *         connection and cache information
+	 * @param irodsSession
+	 *            {@link IRODSSession} that will manage this connection and
+	 *            cache information
 	 */
-	public abstract IRODSMidLevelProtocol getIRODSProtocol(
+	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(
 			IRODSAccount irodsAccount,
 			PipelineConfiguration pipelineConfiguration,
 			IRODSSession irodsSession) throws JargonException;
-
-	// here's where the biz happens
 
 	/**
 	 * Called by a client that no longer needs the connection to iRODS. This
@@ -165,6 +177,39 @@ public abstract class IRODSProtocolManager {
 	public void initialize() throws JargonException {
 		log.info("initialize called, does nothing by default");
 
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	IRODSConnectionFactoryProducingFactory getIrodsConnectionFactoryProducingFactory() {
+		return irodsConnectionFactoryProducingFactory;
+	}
+
+	/**
+	 * 
+	 * @param irodsConnectionFactoryProducingFactory
+	 */
+	void setIrodsConnectionFactoryProducingFactory(
+			IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory) {
+		this.irodsConnectionFactoryProducingFactory = irodsConnectionFactoryProducingFactory;
+	}
+
+	/**
+	 * @return the irodsMidLevelProtocolFactory
+	 */
+	public AbstractIRODSMidLevelProtocolFactory getIrodsMidLevelProtocolFactory() {
+		return irodsMidLevelProtocolFactory;
+	}
+
+	/**
+	 * @param irodsMidLevelProtocolFactory
+	 *            the irodsMidLevelProtocolFactory to set
+	 */
+	public void setIrodsMidLevelProtocolFactory(
+			AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
+		this.irodsMidLevelProtocolFactory = irodsMidLevelProtocolFactory;
 	}
 
 	/*

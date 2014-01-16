@@ -25,152 +25,82 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSBasicTCPConnection extends AbstractConnection {
+class IRODSBasicTCPConnection extends AbstractConnection {
+
+	/**
+	 * Default constructor that gives the account and pipeline setup information
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 */
+	IRODSBasicTCPConnection(IRODSAccount irodsAccount,
+			PipelineConfiguration pipelineConfiguration) {
+		super(irodsAccount, pipelineConfiguration);
+	}
 
 	static final Logger log = LoggerFactory
 			.getLogger(IRODSBasicTCPConnection.class);
 
-	/**
-	 * Create an instance of a connection (underlying socket and streams) to
-	 * iRODS
-	 * 
-	 * @param irodsAccount
-	 * @param irodsConnectionManager
-	 * @param pipelineConfiguration
-	 * @return
-	 * @throws JargonException
-	 */
-	static IRODSBasicTCPConnection instance(final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration)
+	protected void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
-		IRODSBasicTCPConnection irodsSimpleConnection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsConnectionManager, pipelineConfiguration,
-				null);
-		irodsSimpleConnection.initializeConnection(irodsAccount, null);
-		return irodsSimpleConnection;
-	}
+		log.info("connect()");
 
-	/**
-	 * Create an instance of a connection (underlying socket and streams) to
-	 * iRODS during a reconnect operation.
-	 * 
-	 * @param irodsAccount
-	 * @param irodsConnectionManager
-	 * @param pipelineConfiguration
-	 * @param irodsSession
-	 * @return
-	 * @throws JargonException
-	 */
-	static IRODSBasicTCPConnection instanceWithReconnectInfo(
-			final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration,
-			final StartupResponseData startupResponseData,
-			final IRODSSession irodsSession) throws JargonException {
-
-		if (irodsSession == null) {
-			throw new IllegalArgumentException(
-					"must have reference to the IRODSSession, it is null");
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		IRODSBasicTCPConnection irodsSimpleConnection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsConnectionManager, pipelineConfiguration,
-				startupResponseData);
-
-		irodsSimpleConnection.setIrodsSession(irodsSession);
-
-		irodsSimpleConnection.initializeConnection(irodsAccount,
-				startupResponseData);
-
-		log.info("created instance with reconnect info, connect status is:{}",
-				irodsSimpleConnection.connected);
-
-		return irodsSimpleConnection;
-	}
-
-	/**
-	 * Protected constructor
-	 * 
-	 * @param irodsAccount
-	 * @param irodsConnectionManager
-	 * @param pipelineConfiguration
-	 * @param startupResponseData
-	 * @throws JargonException
-	 */
-	protected IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration,
-			final StartupResponseData startupResponseData)
-			throws JargonException {
-
-		super(irodsAccount, pipelineConfiguration);
-
-		if (irodsConnectionManager == null) {
-			throw new IllegalArgumentException("null irodsConnectionManager");
+		if (connected) {
+			log.warn("doing connect when already connected!, will bypass connect and proceed");
+			return;
 		}
 
-		irodsProtocolManager = irodsConnectionManager;
+		int attemptCount = 3;
 
-		log.info("pipeline configuration:{}", pipelineConfiguration);
+		for (int i = 0; i < attemptCount; i++) {
+			log.info("connecting socket to agent");
+			try {
 
-		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-			log.info("using internal cache buffer of size:{}",
-					pipelineConfiguration.getInternalCacheBufferSize());
-			outputBuffer = new byte[pipelineConfiguration
-					.getInternalCacheBufferSize()];
-		}
-	}
+				log.info("normal iRODS connection");
+				connection = new Socket(irodsAccount.getHost(),
+						irodsAccount.getPort());
 
-	/**
-	 * Protected constructor allows specification of a <code>Socket</code> which
-	 * will be utilized, and for which input and output streams will be created.
-	 * <p/>
-	 * In particular, this implementation is utilized to handle operations
-	 * against an SSL enabled socket for secure exchange of credentials. In this
-	 * case the owner of the provided socket will be responsible for enabling
-	 * and disabling SSL, this class will simply take the socket as given.
-	 * 
-	 * @param irodsAccount
-	 * @param irodsConnectionManager
-	 * @param pipelineConfiguration
-	 * @param startupResponseData
-	 * @param providedSocket
-	 * @param sslEnabled
-	 *            <code>boolean</code> that indicates whether this is an SSL
-	 *            enabled socket. This is currently really used to disambiguate
-	 *            the constructor signatures.
-	 * @throws JargonException
-	 */
-	protected IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
-			final IRODSProtocolManager irodsConnectionManager,
-			final PipelineConfiguration pipelineConfiguration,
-			final Socket providedSocket, final boolean sslEnabled)
-			throws JargonException {
+				// success, so break out of reconnect loop
+				log.info("connection to socket made...");
+				break;
 
-		super(irodsAccount, pipelineConfiguration);
+			} catch (UnknownHostException e) {
+				log.error(
+						"exception opening socket to:" + irodsAccount.getHost()
+								+ " port:" + irodsAccount.getPort(), e);
+				throw new JargonException(e);
+			} catch (IOException ioe) {
 
-		if (irodsConnectionManager == null) {
-			throw new IllegalArgumentException("null irodsConnectionManager");
+				if (i < attemptCount - 1) {
+					log.error("IOExeption, sleep and attempt a reconnect", ioe);
+					try {
+						Thread.sleep(3000);
+					} catch (InterruptedException e) {
+						// ignore
+					}
+
+				} else {
+
+					log.error(
+							"io exception opening socket to:"
+									+ irodsAccount.getHost() + " port:"
+									+ irodsAccount.getPort(), ioe);
+					throw new JargonException(ioe);
+				}
+			}
+
 		}
 
-		if (providedSocket == null) {
-			throw new IllegalArgumentException("null providedSocket");
-		}
-
-		irodsProtocolManager = irodsConnectionManager;
-
-		log.info("pipeline configuration:{}", pipelineConfiguration);
-		connection = providedSocket;
-		connected = true;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
-
-		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-			log.info("using internal cache buffer of size:{}",
-					pipelineConfiguration.getInternalCacheBufferSize());
-			outputBuffer = new byte[pipelineConfiguration
-					.getInternalCacheBufferSize()];
-		}
+		connected = true;
+		log.info("socket opened successfully");
 	}
 
 	/**
@@ -262,69 +192,6 @@ public class IRODSBasicTCPConnection extends AbstractConnection {
 			throws JargonException {
 		log.info("connect()");
 
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
-		}
-
-		if (connected) {
-			log.warn("doing connect when already connected!, will bypass connect and proceed");
-			return;
-		}
-
-		int attemptCount = 3;
-
-		for (int i = 0; i < attemptCount; i++) {
-			log.info("connecting socket to agent");
-			try {
-				if (startupResponseData == null) {
-					log.info("normal iRODS connection");
-					connection = new Socket(irodsAccount.getHost(),
-							irodsAccount.getPort());
-				} else {
-					log.info("restart iRODS connection");
-					log.info("reconnect host:{}",
-							startupResponseData.getReconnAddr());
-					log.info("reconnection port:{}",
-							startupResponseData.getReconnPort());
-					connection = new Socket(
-							startupResponseData.getReconnAddr(),
-							startupResponseData.getReconnPort());
-				}
-
-				// success, so break out of reconnect loop
-				log.info("connection to socket made...");
-				break;
-
-			} catch (UnknownHostException e) {
-				log.error(
-						"exception opening socket to:" + irodsAccount.getHost()
-								+ " port:" + irodsAccount.getPort(), e);
-				throw new JargonException(e);
-			} catch (IOException ioe) {
-
-				if (i < attemptCount - 1) {
-					log.error("IOExeption, sleep and attempt a reconnect", ioe);
-					try {
-						Thread.sleep(3000);
-					} catch (InterruptedException e) {
-						// ignore
-					}
-
-				} else {
-
-					log.error(
-							"io exception opening socket to:"
-									+ irodsAccount.getHost() + " port:"
-									+ irodsAccount.getPort(), ioe);
-					throw new JargonException(ioe);
-				}
-			}
-
-		}
-
-		setUpSocketAndStreamsAfterConnection(irodsAccount);
-		connected = true;
-		log.info("socket opened successfully");
 	}
 
 	/*

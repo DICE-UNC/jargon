@@ -33,7 +33,7 @@ public class IRODSSimpleConnectionTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSMidLevelProtocol connection = irodsFileSystem
+		AbstractIRODSMidLevelProtocol connection = irodsFileSystem
 				.getIrodsProtocolManager()
 				.getIRODSProtocol(
 						irodsAccount,

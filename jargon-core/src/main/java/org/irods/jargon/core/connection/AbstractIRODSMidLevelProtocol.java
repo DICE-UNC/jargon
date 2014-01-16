@@ -6,17 +6,12 @@ import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.nio.channels.ClosedChannelException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
 import org.irods.jargon.core.packinstr.IRodsPI;
 import org.irods.jargon.core.packinstr.RErrMsg;
-import org.irods.jargon.core.packinstr.ReconnMsg;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.protovalues.RequestTypes;
@@ -26,51 +21,66 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractIRODSMidLevelProtocol {
 
-	protected IRODSBasicTCPConnection irodsConnection;
-	protected IRODSServerProperties irodsServerProperties;
-	protected IRODSProtocolManager irodsProtocolManager;
-	protected final PipelineConfiguration pipelineConfiguration;
-	protected final AuthMechanism authMechanism;
-	protected ExecutorService reconnectService = null;
-	protected ReconnectionManager reconnectionManager = null;
-	protected Future<Void> reconnectionFuture = null;
-	private boolean inRestartMode = false;
-	protected boolean closeConnectionOnFinalizer = true;
-	protected IRODSSession irodsSession = null;
+	private AbstractConnection irodsConnection;
+	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSServerProperties irodsServerProperties;
+	private IRODSSession irodsSession = null;
+
 	public static final int EIRODS_MIN = 301;
 	public static final int EIRODS_MAX = 301;
 
 	Logger log = LoggerFactory.getLogger(AbstractIRODSMidLevelProtocol.class);
 
 	/**
-	 * authResponse contains
+	 * authResponse contains information about the authentication phase,
+	 * including the account used to authenticate, and the actual account
+	 * represented by the connection. These may be two different things, for
+	 * example, in PAM, one can authenticate as a PAM user, but actually connect
+	 * as standard IRODS authentication using a temporary password generated in
+	 * the PAM authentication process.
 	 */
 	protected AuthResponse authResponse = null;
+
 	/**
-	 * note that this field is not final. This is due to the fact that it may be
-	 * altered during initialization to resolve GSI info.
+	 * This account will represent the account information used for the actual
+	 * connection, as specified when the user originally logged in. This is
+	 * broken down into the account presented, and the account actually used in
+	 * the <code>AuthResponse</code> object.
 	 */
 	protected IRODSAccount irodsAccount;
 
 	/**
-	 * Protected constructor called by subclasses
+	 * Create a base instance of the mid level protocol, which may be processed
+	 * through multiple phases before being ready for use.
+	 * <p/>
+	 * The life cycle of this connection is mediated by the
+	 * <code>AbstractIRODSMidLevelProtocolFactory</code> implemenation used, and
+	 * these connections should be obtained from that factory, typically through
+	 * the <code>IRODSProtocolManager</code> implementation that has been
+	 * selected.
 	 * 
-	 * @param authMechanism
-	 * @param pipelineConfiguration
+	 * @param irodsConnection
+	 *            {@link AbstractConnection} that repreents the low level
+	 *            networking connection to the iRODS agent
+	 * @param irodsProtocolManager
+	 *            {@link IRODSProtocolManager} that was the source of this
+	 *            connection, and to which it will be returned when
+	 *            disconnecting.
 	 */
-	protected AbstractIRODSMidLevelProtocol(final AuthMechanism authMechanism,
-			final PipelineConfiguration pipelineConfiguration) {
+	protected AbstractIRODSMidLevelProtocol(
+			final AbstractConnection irodsConnection,
+			final IRODSProtocolManager irodsProtocolManager) {
 
-		if (authMechanism == null) {
-			throw new IllegalArgumentException("null authMechanism");
+		if (irodsConnection == null) {
+			throw new IllegalArgumentException("null irodsConnection");
 		}
 
-		if (pipelineConfiguration == null) {
-			throw new IllegalArgumentException("null pipelineConfiguration");
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
 		}
 
-		this.authMechanism = authMechanism;
-		this.pipelineConfiguration = pipelineConfiguration;
+		this.irodsConnection = irodsConnection;
+		this.irodsProtocolManager = irodsProtocolManager;
 
 	}
 
@@ -198,8 +208,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			int length = 0;
 			String message = irodsPI.getParsedTags();
 			if (message != null) {
-				length = message.getBytes(pipelineConfiguration
-						.getDefaultEncoding()).length;
+				length = message.getBytes(irodsConnection
+						.getPipelineConfiguration().getDefaultEncoding()).length;
 			}
 			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
 					length, 0, byteStreamLength, irodsPI.getApiNumber()));
@@ -280,8 +290,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			int length = 0;
 			String message = irodsPI.getParsedTags();
 			if (message != null) {
-				length = message.getBytes(pipelineConfiguration
-						.getDefaultEncoding()).length;
+				length = message.getBytes(getEncoding()).length;
 			}
 
 			log.debug("message:{}", message);
@@ -341,11 +350,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 
 		try {
-			irodsConnection
-					.send(createHeader(IRODSConstants.RODS_API_REQ, out
-							.getBytes(pipelineConfiguration
-									.getDefaultEncoding()).length, errorLength,
-							byteStreamLength, irodsPI.getApiNumber()));
+			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
+					out.getBytes(getEncoding()).length, errorLength,
+					byteStreamLength, irodsPI.getApiNumber()));
 			irodsConnection.send(out);
 
 			if (byteStreamLength > 0) {
@@ -525,7 +532,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 		byte[] temp;
 		try {
-			temp = header.getBytes(pipelineConfiguration.getDefaultEncoding());
+			temp = header.getBytes(getEncoding());
 		} catch (UnsupportedEncodingException e) {
 			throw new JargonException(e);
 		}
@@ -627,11 +634,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	public synchronized void shutdown() throws JargonException {
-
-		log.info("shutdown()...check if executor service is running for reconnect");
-
-		checkAndShutdownReconnectService();
-
 		log.info("shutting down, need to send disconnect to irods");
 		if (isConnected()) {
 
@@ -778,15 +780,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * @param irodsProtocolManager
-	 *            the irodsProtocolManager to set
-	 */
-	public synchronized void setIrodsProtocolManager(
-			final IRODSProtocolManager irodsProtocolManager) {
-		this.irodsProtocolManager = irodsProtocolManager;
-	}
-
-	/**
 	 * @return the irodsConnection
 	 */
 	public AbstractConnection getIrodsConnection() {
@@ -833,65 +826,10 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * @return the pipelineConfiguration
-	 */
-	public synchronized PipelineConfiguration getPipelineConfiguration() {
-		return pipelineConfiguration;
-	}
-
-	/**
-	 * Allows restart attempts to be made.
-	 * <p/>
-	 * Jargon can emulate the -T connection restart mode of certain iCommands.
-	 * Since Jargon holds a persistent connection the semantics may be slightly
-	 * different then the one-connection-per-operation icommands. For this
-	 * reason, <code>IRODSCommands</code> keeps an <code>inRestartMode</code>
-	 * flag. This method allows restarting to be 'turned on' or 'turned off', so
-	 * that the default behavior may be to not do connection restarts. Then, the
-	 * restart behavior can be turned on by bracketing the operation with the
-	 * restart mode.
-	 * 
-	 * @return the inRestartMode that is <code>true</code> if connection
-	 *         restarting is done
-	 */
-	public synchronized boolean isInRestartMode() {
-		return inRestartMode;
-	}
-
-	/**
-	 * @param inRestartMode
-	 *            the inRestartMode to set <code>true</code> if connection
-	 *            restarting is done
-	 */
-	public synchronized void setInRestartMode(final boolean inRestartMode) {
-		this.inRestartMode = inRestartMode;
-	}
-
-	/**
-	 * Checks used by <code>ReconnectionManager</code> together in one protected
-	 * block
-	 * 
-	 * @return <code>boolean</code> of <code>true</code> if the
-	 *         <code>ReconnectionManager</code> should call
-	 *         <code>reconnect()</code> on this connection. Further checks will
-	 *         be made in the actual <code>reconnect()</code> method.
-	 */
-	protected synchronized boolean isReconnectShouldBeCalled() {
-		return isInRestartMode() && isConnected();
-	}
-
-	/**
 	 * @return the authResponse
 	 */
 	public AuthResponse getAuthResponse() {
 		return authResponse;
-	}
-
-	/**
-	 * @return the authMechanism
-	 */
-	protected synchronized AuthMechanism getAuthMechanism() {
-		return authMechanism;
 	}
 
 	/**
@@ -972,8 +910,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 					String headerString;
 
 					try {
-						headerString = new String(temp,
-								pipelineConfiguration.getDefaultEncoding());
+						headerString = new String(temp, getEncoding());
 					} catch (UnsupportedEncodingException e) {
 						log.error("unsupported encoding");
 						throw new JargonException(e);
@@ -1004,16 +941,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 								System.arraycopy(temp, 0, header, 14, i + 1);
 								try {
 									return Tag.readNextTag(header,
-											pipelineConfiguration
-													.getDefaultEncoding());
+											getEncoding());
 								} catch (UnsupportedEncodingException e) {
 									log.error("Unsupported encoding for:{}",
-											pipelineConfiguration
-													.getDefaultEncoding());
+											getEncoding());
 									throw new JargonException(
 											"Unsupported encoding for:"
-													+ pipelineConfiguration
-															.getDefaultEncoding());
+													+ getEncoding());
 								}
 							}
 						}
@@ -1038,13 +972,11 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 
 		try {
-			return Tag.readNextTag(header,
-					pipelineConfiguration.getDefaultEncoding());
+			return Tag.readNextTag(header, getEncoding());
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:{}",
-					pipelineConfiguration.getDefaultEncoding());
+			log.error("Unsupported encoding for:{}", getEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ pipelineConfiguration.getDefaultEncoding());
+					+ getEncoding());
 		}
 	}
 
@@ -1087,13 +1019,11 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new JargonException(e);
 		}
 		try {
-			return Tag.readNextTag(body, decode,
-					pipelineConfiguration.getDefaultEncoding());
+			return Tag.readNextTag(body, decode, getEncoding());
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:{}",
-					pipelineConfiguration.getDefaultEncoding());
+			log.error("Unsupported encoding for:{}", getEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ pipelineConfiguration.getDefaultEncoding());
+					+ getEncoding());
 		}
 	}
 
@@ -1118,13 +1048,11 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 		Tag errorTag;
 		try {
-			errorTag = Tag.readNextTag(errorMessage,
-					pipelineConfiguration.getDefaultEncoding());
+			errorTag = Tag.readNextTag(errorMessage, getEncoding());
 		} catch (UnsupportedEncodingException e) {
-			log.error("Unsupported encoding for:{}",
-					pipelineConfiguration.getDefaultEncoding());
+			log.error("Unsupported encoding for:{}", getEncoding());
 			throw new JargonException("Unsupported encoding for:"
-					+ pipelineConfiguration.getDefaultEncoding());
+					+ getEncoding());
 		}
 
 		Tag errorPITag = errorTag.getTag(RErrMsg.PI_TAG);
@@ -1162,177 +1090,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * obliterateConnectionAndDiscardErrors()
 	 */
 	public synchronized void obliterateConnectionAndDiscardErrors() {
-		log.info("shutdown()...check if executor service is running for reconnect");
-		checkAndShutdownReconnectService();
 		irodsConnection.obliterateConnectionAndDiscardErrors();
-	}
-
-	/**
-	 * Try and gracefully shut down the reconnect service
-	 */
-	void checkAndShutdownReconnectService() {
-		if (reconnectionFuture != null) {
-			log.info("shutting down executor for reconnect...");
-
-			// just a sanity check, having a reconnect service but no reference
-			// to the 'future' should never happen.
-			if (reconnectionFuture != null) {
-				reconnectionFuture.cancel(true);
-			} else {
-				log.error("I have a reconnect service but no reference to the Future?");
-				throw new JargonRuntimeException(
-						"invalid state of reconnect service, future task is missing but I have the reonnectService");
-			}
-
-			// reconnectService.shutdownNow();
-
-			try {
-
-				if (!reconnectService.awaitTermination(5, TimeUnit.SECONDS)) {
-					reconnectService.shutdownNow();
-					if (!reconnectService.awaitTermination(1, TimeUnit.SECONDS)) {
-						log.error("Pool did not terminate");
-					}
-				}
-			} catch (InterruptedException ie) {
-				reconnectService.shutdownNow();
-				Thread.currentThread().interrupt();
-			}
-		}
-
-	}
-
-	/**
-	 * Reconnect as would be called by the {@link ReconnectionManager}. This is
-	 * only valid if reconnect was set as an option when the startup packet was
-	 * sent to iRODS (by specifying restart in the jargon.properties).
-	 * <p/>
-	 * Note that the methods in <code>IRODSCommands</code> are synchronized,
-	 * such that this reconnect call will occur atomically, and only when other
-	 * operations are not underway.
-	 * <p/>
-	 * Note that reconnects are managed by the {@link ReconnectionManager}, and
-	 * the <code>boolean</code> value returned here will be <code>true</code> if
-	 * the reconnect was made. A <code>false</code> return indicates that the
-	 * reconnect did not happen for 'normal' reasons that would indicate the
-	 * need to sleep and retry.
-	 * <p/>
-	 * See lib/core/src/sockComm.c ~ line 390 for the iRODS client analog to
-	 * this procedure
-	 * 
-	 * @return <code>boolean</code> that will be <code>true</code> if reconnect
-	 *         works, or <code>false</code> if the reconnect management thread
-	 *         should sleep and retry.
-	 * 
-	 * @throws JargonException
-	 */
-	protected synchronized boolean reconnect() throws JargonException {
-		log.info("reconnect() was called");
-
-		if (authResponse.getStartupResponse().getReconnAddr().isEmpty()) {
-			log.error("reconnect was called, but was not specified in the startup pack.  This is some sort of logic error within Jargon!");
-			throw new JargonRuntimeException(
-					"cannot call reconnect if the connection was not started with reconnect option");
-		}
-
-		IRODSBasicTCPConnection reconnectedIRODSConnection;
-		try {
-			reconnectedIRODSConnection = IRODSBasicTCPConnection
-					.instanceWithReconnectInfo(irodsAccount,
-							getIrodsProtocolManager(), pipelineConfiguration,
-							authResponse.getStartupResponse(),
-							getIrodsSession());
-		} catch (Exception e) {
-			log.debug(
-					"exception on open of reconnect socket, will sleep and try again:{}",
-					e.getMessage());
-			return false; // false indicates no success and should sleep and
-							// retry
-		}
-
-		// now reconnect with the provided reconnect information gathered at the
-		// startup pack send
-		ReconnMsg reconnMsg = new ReconnMsg(irodsAccount,
-				authResponse.getStartupResponse());
-		String reconnData = reconnMsg.getParsedTags();
-		try {
-			sendReconnMessage(reconnectedIRODSConnection, reconnData);
-		} catch (Exception e) {
-			log.debug(
-					"exception on open of reconnect socket, will sleep and try again:{}",
-					e.getMessage());
-			reconnectedIRODSConnection.disconnectWithForce();
-			return false;
-		}
-
-		IRODSMidLevelProtocol restartedCommands = new IRODSMidLevelProtocol(
-				irodsAccount, irodsProtocolManager, pipelineConfiguration,
-				authResponse, authMechanism, reconnectedIRODSConnection, false);
-
-		try {
-
-			log.info("reading response from startup message..");
-
-			Tag responseMessage = restartedCommands.readMessage();
-
-			if (responseMessage == null) {
-				log.debug("null response from restart procedure, will sleep and try again");
-				reconnectedIRODSConnection.disconnectWithForce();
-				return false;
-			}
-
-			log.debug("response:{}", responseMessage);
-
-			int agentStatus = responseMessage.getTag("procState").getIntValue();
-			log.debug("proc state for agent:{}", agentStatus);
-
-			if (agentStatus == ReconnectionManager.ProcessingState.RECEIVING_STATE
-					.ordinal()) {
-				/*
-				 * if you get a receiving state from the agent, resend the
-				 * message again, per lib/core/src/procApiRequest.c ~ line 155
-				 */
-				log.debug("agent in receiving state, resend the reconn message");
-				sendReconnMessage(reconnectedIRODSConnection, reconnData);
-			} else if (agentStatus != ReconnectionManager.ProcessingState.PROCESSING_STATE
-					.ordinal()) {
-				log.debug("agent is not in receiving state, so sleep and try again");
-				reconnectedIRODSConnection.disconnectWithForce();
-				return false;
-			}
-
-		} catch (Exception e) {
-			log.debug(
-					"exception on read of reconnect message, will sleep and try again:{}",
-					e.getMessage());
-			reconnectedIRODSConnection.disconnectWithForce();
-			return false;
-		}
-
-		log.info("disconnect current connection and switch with reconnected socket");
-		irodsConnection.shutdown();
-		irodsConnection = reconnectedIRODSConnection;
-
-		log.info("reconnect operation complete... new connection is:{}",
-				reconnectedIRODSConnection);
-		return true;
-	}
-
-	/**
-	 * @param reconnectedIRODSConnection
-	 * @param reconnData
-	 * @throws IOException
-	 * @throws JargonException
-	 */
-	private void sendReconnMessage(
-			final AbstractConnection reconnectedIRODSConnection,
-			final String reconnData) throws IOException, JargonException {
-		log.info("sending reconnect message");
-		reconnectedIRODSConnection.send(createHeader(
-				RequestTypes.RODS_RECONNECT.getRequestType(),
-				reconnData.length(), 0, 0, 0));
-		reconnectedIRODSConnection.send(reconnData);
-		reconnectedIRODSConnection.flush();
 	}
 
 	void processMessageInfoLessThanZero(final int messageLength,
@@ -1344,12 +1102,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			log.debug("throwing away bytes");
 			try {
 				irodsConnection.read(new byte[messageLength], 0, messageLength);
-				Tag.readNextTag(messageByte,
-						pipelineConfiguration.getDefaultEncoding()); // just
-																		// thrown
-																		// away
-																		// for
-																		// now
+				Tag.readNextTag(messageByte, getEncoding());
+
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
 				throw new JargonException(e);
@@ -1406,8 +1160,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			Tag errorTag;
 
 			try {
-				errorTag = Tag.readNextTag(errorMessage,
-						pipelineConfiguration.getDefaultEncoding());
+				errorTag = Tag.readNextTag(errorMessage, getEncoding());
 
 				if (errorTag != null) {
 					log.error("IRODS error occured "
@@ -1419,15 +1172,34 @@ public abstract class AbstractIRODSMidLevelProtocol {
 				}
 
 			} catch (UnsupportedEncodingException e) {
-				log.error("Unsupported encoding for: {}",
-						pipelineConfiguration.getDefaultEncoding());
+				log.error("Unsupported encoding for: {}", getEncoding());
 				throw new JargonException("Unsupported encoding for: "
-						+ pipelineConfiguration.getDefaultEncoding());
+						+ getEncoding());
 			}
 
 		}
 		return additionalMessage;
 
+	}
+
+	/**
+	 * Handy method to get the pipeline configuration, which is derived from the
+	 * jargon properties and describes the various networing and buffering
+	 * options
+	 * 
+	 * @return
+	 */
+	public PipelineConfiguration getPipelineConfiguration() {
+		return irodsConnection.getPipelineConfiguration();
+	}
+
+	/**
+	 * Handy method to get the encoding scheme used
+	 * 
+	 * @return <code>String</code> with the encoding scheme
+	 */
+	public String getEncoding() {
+		return irodsConnection.getPipelineConfiguration().getDefaultEncoding();
 	}
 
 }

@@ -433,9 +433,30 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("pam.time.to.live.in.seconds");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
+	 */
 	@Override
 	public boolean isForcePamFlush() {
 		return verifyPropExistsAndGetAsBoolean("force.pam.flush");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getConnectionFactory()
+	 */
+	@Override
+	public String getConnectionFactory() {
+		String propVal = ((String) jargonProperties.get("connection.factory"));
+		if (propVal == null) {
+			propVal = "tcp";
+		}
+		return propVal;
+
 	}
 
 }

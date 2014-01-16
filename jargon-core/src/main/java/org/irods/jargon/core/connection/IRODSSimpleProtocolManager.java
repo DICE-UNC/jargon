@@ -24,7 +24,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 		return new IRODSSimpleProtocolManager();
 	}
 
-	private IRODSSimpleProtocolManager() {
+	public IRODSSimpleProtocolManager() {
 		log.info("creating simple protocol manager");
 	}
 
@@ -57,13 +57,6 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 		 * information will be accomplished when this method returns.
 		 */
 
-		log.debug("authscheme:{}", irodsAccount.getAuthenticationScheme());
-
-		IRODSMidLevelProtocol commands = IRODSMidLevelProtocol.instance(
-				irodsAccount, this, pipelineConfiguration,
-				getAuthenticationFactory().instanceAuthMechanism(irodsAccount),
-				irodsSession);
-		return commands;
 	}
 
 	/*
