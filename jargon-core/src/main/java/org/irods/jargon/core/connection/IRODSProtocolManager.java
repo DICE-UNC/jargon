@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
@@ -89,6 +90,12 @@ public abstract class IRODSProtocolManager {
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
 	 * 
+	 * <p/>
+	 * Note that this abstract class provides a protected method dedicated to
+	 * creating a fresh protocol layer when this protocol is not originating
+	 * from a pool or cache when invoked. Other variants will just create a new
+	 * protocol layer each time it is asked.
+	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -97,11 +104,18 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsSession
 	 *            {@link IRODSSession} that will manage this connection and
 	 *            cache information
+	 * @return {@link AbstractIRODSMidLevelProtocol} subclass that represents a
+	 *         mid-level api that talks iRODS protocols
+	 * @exception AuthenticationException
+	 *                if the irodsAccount is invalid
+	 * @exception JargonException
+	 *                if a general error occurs
 	 */
 	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(
 			IRODSAccount irodsAccount,
 			PipelineConfiguration pipelineConfiguration,
-			IRODSSession irodsSession) throws JargonException;
+			IRODSSession irodsSession) throws AuthenticationException,
+			JargonException;
 
 	/**
 	 * Called by a client that no longer needs the connection to iRODS. This
@@ -116,6 +130,39 @@ public abstract class IRODSProtocolManager {
 	public abstract void returnIRODSProtocol(
 			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException;
+
+	/**
+	 * Create a fresh protocol (mid level interface to protocol operations)
+	 * based on the underlying jargon.properties
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that tunes the i/o pipeline and
+	 *            other connection options
+	 * @param irodsSession
+	 *            {@link IRODSSession} that will manage this connection and
+	 *            cache information
+	 * @return {@link AbstractIRODSMidLevelProtocol} subclass that represents a
+	 *         mid-level api that talks iRODS protocols
+	 * @exception AuthenticationException
+	 *                if the irodsAccount is invalid
+	 * @exception JargonException
+	 *                if a general error occurs
+	 */
+	protected AbstractIRODSMidLevelProtocol createNewProtocol(
+			final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSSession irodsSession) throws AuthenticationException,
+			JargonException {
+
+		log.debug(
+				"creating a fresh AbstractIRODSMidLevelProtocol for account:{}",
+				irodsAccount);
+
+		return this.getIrodsMidLevelProtocolFactory().instance(irodsSession,
+				irodsAccount, this);
+	}
 
 	/**
 	 * Abandon a connection to iRODS by shutting down the socket, and ensure
@@ -192,7 +239,7 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsConnectionFactoryProducingFactory
 	 */
 	void setIrodsConnectionFactoryProducingFactory(
-			IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory) {
+			final IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory) {
 		this.irodsConnectionFactoryProducingFactory = irodsConnectionFactoryProducingFactory;
 	}
 
@@ -208,7 +255,7 @@ public abstract class IRODSProtocolManager {
 	 *            the irodsMidLevelProtocolFactory to set
 	 */
 	public void setIrodsMidLevelProtocolFactory(
-			AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
+			final AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
 		this.irodsMidLevelProtocolFactory = irodsMidLevelProtocolFactory;
 	}
 

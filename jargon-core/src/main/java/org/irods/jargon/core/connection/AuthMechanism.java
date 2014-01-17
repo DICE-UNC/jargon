@@ -55,7 +55,8 @@ abstract class AuthMechanism {
 	 *             if the authentication proceeded abnormally, not caused by
 	 *             simply being authorized
 	 */
-	protected AuthResponse authenticate(final AbstractIRODSMidLevelProtocol irodsCommands,
+	protected AuthResponse authenticate(
+			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
 		preConnectionStartup();
@@ -91,10 +92,43 @@ abstract class AuthMechanism {
 	 * @throws JargonException
 	 */
 	protected AuthResponse processAfterAuthentication(
-			final AuthResponse authResponse, final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AuthResponse authResponse,
+			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		return authResponse;
+	}
+
+	protected String sendAuthRequestAndGetChallenge() throws JargonException {
+		try {
+			irodsCommands.getIrodsConnection().send(
+					irodsCommands.createHeader(
+							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
+							0, AUTH_REQUEST_AN));
+			irodsCommands.getIrodsConnection().flush();
+		} catch (ClosedChannelException e) {
+			log.error("closed channel", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (InterruptedIOException e) {
+			log.error("interrupted io", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		}
+
+		Tag message = irodsCommands.readMessage(false);
+
+		// Create and send the response
+		String cachedChallengeValue = message.getTag(StartupPack.CHALLENGE)
+				.getStringValue();
+		log.debug("cached challenge response:{}", cachedChallengeValue);
+
+		return cachedChallengeValue;
+
 	}
 
 	/**
@@ -109,7 +143,8 @@ abstract class AuthMechanism {
 	 *            pack info
 	 */
 	protected abstract AuthResponse processAuthenticationAfterStartup(
-			IRODSAccount irodsAccount, AbstractIRODSMidLevelProtocol irodsCommands,
+			IRODSAccount irodsAccount,
+			AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
@@ -122,7 +157,8 @@ abstract class AuthMechanism {
 	 *             if the host cannot be opened or created.
 	 */
 	protected StartupResponseData sendStartupPacket(
-			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands)
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands

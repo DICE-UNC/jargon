@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,25 +39,17 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 * org.irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
-	public IRODSMidLevelProtocol getIRODSProtocol(
+	public AbstractIRODSMidLevelProtocol getIRODSProtocol(
 			final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSSession irodsSession) throws JargonException {
+			final IRODSSession irodsSession) throws AuthenticationException,
+			JargonException {
 
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
-		/*
-		 * This implementation simply creates a connection to IRODS. This is a
-		 * live connection that represents not only an open socket to the IRODS
-		 * server, but also a 'connected' connection, meaning that the startup
-		 * and handshake activities have been accomplished, leaving the
-		 * IRODSProtocol in a ready state. <p/> This method also is the 'hook'
-		 * that would allow alternative login methods, such as GSI, to be fully
-		 * resolved, and all necessary transformations to the irodsAccount
-		 * information will be accomplished when this method returns.
-		 */
-
+		return this.createNewProtocol(irodsAccount, pipelineConfiguration,
+				irodsSession);
 	}
 
 	/*
@@ -68,7 +61,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 */
 	@Override
 	public void returnIRODSProtocol(
-			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException {
 		log.debug("abstractIRODSMidLevelProtocol returned:{}",
 				abstractIRODSMidLevelProtocol);

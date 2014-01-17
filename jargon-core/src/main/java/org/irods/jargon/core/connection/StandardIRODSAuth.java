@@ -41,40 +41,14 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 *         returned in the Auth response
 	 * @throws JargonException
 	 */
-	// TODO: move into AuthMechanism as a common method to get the cached challenge
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
-		if (irodsAccount == null) {
-			throw new JargonException("irods account is null");
-		}
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
+
 		log.info("sending standard irods password");
-		try {
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, AUTH_REQUEST_AN));
-			irodsCommands.getIrodsConnection().flush();
-		} catch (ClosedChannelException e) {
-			log.error("closed channel", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (InterruptedIOException e) {
-			log.error("interrupted io", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		} catch (IOException e) {
-			log.error("io exception", e);
-			e.printStackTrace();
-			throw new JargonException(e);
-		}
-
-		Tag message = irodsCommands.readMessage(false);
-
-		// Create and send the response
-		String cachedChallengeValue = message.getTag(StartupPack.CHALLENGE)
-				.getStringValue();
-		log.debug("cached challenge response:{}", cachedChallengeValue);
-
+		
+		blah
+		
 		String response = challengeResponse(
 				message.getTag(StartupPack.CHALLENGE).getStringValue(),
 				irodsAccount.getPassword(), irodsCommands);
@@ -93,7 +67,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 * length, and take the md5 of that.
 	 */
 	private String challengeResponse(final String challenge, String password,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
 		// Convert base64 string to a byte array
 		byte[] chal = null;
 		byte[] temp = Base64.fromString(challenge);
@@ -166,7 +141,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 		log.info("authenticate");
