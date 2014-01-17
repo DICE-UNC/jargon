@@ -41,6 +41,12 @@ public abstract class AbstractConnection {
 	private IRODSSession irodsSession = null;
 	protected final IRODSAccount irodsAccount;
 	protected final PipelineConfiguration pipelineConfiguration;
+
+	public enum EncryptionType {
+		NONE, SSL_WRAPPED
+	}
+
+	private EncryptionType encryptionType = EncryptionType.NONE;
 	/**
 	 * 4 bytes at the front of the header, outside XML
 	 */
@@ -101,11 +107,12 @@ public abstract class AbstractConnection {
 
 		log.info("opening irods socket");
 
-		connect(irodsAccount, startupResponseData);
+		connect(irodsAccount);
 
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
-		connectionInternalIdentifierBuilder.append(getConnectionUri());
+		connectionInternalIdentifierBuilder.append(irodsAccount.toURI(false)
+				.toASCIIString());
 		connectionInternalIdentifierBuilder.append('/');
 		connectionInternalIdentifierBuilder.append(Thread.currentThread()
 				.getName());
@@ -131,8 +138,7 @@ public abstract class AbstractConnection {
 	 *            set to <code>null</code> and ignored.
 	 * @throws JargonException
 	 */
-	protected abstract void connect(final IRODSAccount irodsAccount,
-			final StartupResponseData startupResponseData)
+	protected abstract void connect(final IRODSAccount irodsAccount)
 			throws JargonException;
 
 	public void disconnectWithForce() {
@@ -140,14 +146,6 @@ public abstract class AbstractConnection {
 		log.info("disconnecting...");
 		// disconnect from irods and close
 		irodsProtocolManager.returnConnectionWithForce(this);
-	}
-
-	/**
-	 * Get a URI that describes the connection FIXME: implement
-	 */
-	public String getConnectionUri() throws JargonException {
-		// eventually build uri from irodsAccount info
-		return "irodsSimpleConnection";
 	}
 
 	public boolean isConnected() {
@@ -642,7 +640,7 @@ public abstract class AbstractConnection {
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
 			log.error("********  connection is:{}, will attempt to disconnect",
-					getConnectionUri());
+					this.connectionInternalIdentifier);
 			log.error("**************************************************************************************");
 			triggerSessionCacheCleanupViaConnection();
 		}
@@ -744,6 +742,28 @@ public abstract class AbstractConnection {
 		irodsProtocolManager.returnConnectionWithForce(this);
 
 		log.info("disconnected");
+	}
+
+	/**
+	 * @return the connectionInternalIdentifier
+	 */
+	public String getConnectionInternalIdentifier() {
+		return connectionInternalIdentifier;
+	}
+
+	/**
+	 * @return the encryptionType
+	 */
+	protected EncryptionType getEncryptionType() {
+		return encryptionType;
+	}
+
+	/**
+	 * @param encryptionType
+	 *            the encryptionType to set
+	 */
+	protected void setEncryptionType(EncryptionType encryptionType) {
+		this.encryptionType = encryptionType;
 	}
 
 }

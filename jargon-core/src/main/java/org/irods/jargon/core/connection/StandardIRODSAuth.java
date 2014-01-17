@@ -1,10 +1,7 @@
 package org.irods.jargon.core.connection;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.UnsupportedEncodingException;
-import java.nio.channels.ClosedChannelException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
@@ -12,8 +9,6 @@ import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
-import org.irods.jargon.core.packinstr.StartupPack;
-import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.utils.Base64;
 import org.slf4j.Logger;
@@ -29,8 +24,6 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(StandardIRODSAuth.class);
-	private static final int AUTH_REQUEST_AN = 703;
-	private static final int AUTH_RESPONSE_AN = 704;
 
 	/**
 	 * Do the normal iRODS password challenge/response sequence
@@ -46,11 +39,10 @@ public class StandardIRODSAuth extends AuthMechanism {
 			throws JargonException {
 
 		log.info("sending standard irods password");
-		
-		blah
-		
-		String response = challengeResponse(
-				message.getTag(StartupPack.CHALLENGE).getStringValue(),
+
+		cachedChallenge = this.sendAuthRequestAndGetChallenge(irodsCommands);
+
+		String response = challengeResponse(cachedChallenge,
 				irodsAccount.getPassword(), irodsCommands);
 		AuthResponseInp authResponse_PI = new AuthResponseInp(
 				irodsAccount.getUserName(), response);
@@ -59,7 +51,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		irodsCommands.irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
 				authResponse_PI.getParsedTags(), AUTH_RESPONSE_AN);
 
-		return cachedChallengeValue;
+		return cachedChallenge;
 	}
 
 	/**
@@ -130,17 +122,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 		return Base64.toString(chal);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.AuthMechanism#
-	 * processAuthenticationAfterStartup
-	 * (org.irods.jargon.core.connection.IRODSAccount,
-	 * org.irods.jargon.core.connection.IRODSCommands,
-	 * org.irods.jargon.core.connection.StartupResponseData)
-	 */
 	@Override
-	protected AuthResponse processAuthenticationAfterStartup(
+	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
@@ -156,7 +139,8 @@ public class StandardIRODSAuth extends AuthMechanism {
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
 		log.info("auth response was:{}", authResponse);
-		return authResponse;
+		irodsCommands.setAuthResponse(authResponse);
+		return irodsCommands;
 	}
 
 }

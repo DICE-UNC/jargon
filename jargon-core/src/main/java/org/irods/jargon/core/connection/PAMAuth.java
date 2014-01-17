@@ -32,20 +32,10 @@ import org.irods.jargon.core.packinstr.Tag;
  */
 public class PAMAuth extends AuthMechanism {
 
-	public static final String AUTH_ORIGINAL_PAM_PASSWORD_KEY = "pam_original_password";
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.AuthMechanism#
-	 * processAuthenticationAfterStartup
-	 * (org.irods.jargon.core.connection.IRODSAccount,
-	 * org.irods.jargon.core.connection.IRODSCommands,
-	 * org.irods.jargon.core.connection.StartupResponseData)
-	 */
 	@Override
-	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
+	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
@@ -101,14 +91,13 @@ public class PAMAuth extends AuthMechanism {
 		}
 		log.debug("ssl handshake successful");
 
-		SSLIRODSConnection sslIRODSConnection = new SSLIRODSConnection(
-				irodsCommands.getIrodsConnection(), sslSocket);
+		log.info("creating secure protcol connection layer");
+		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(
+				irodsAccount, irodsCommands.getPipelineConfiguration(),
+				sslSocket);
 
-		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(irodsAccount,
-				irodsCommands.getIrodsProtocolManager(),
-				irodsCommands.getPipelineConfiguration(),
-				irodsCommands.getAuthResponse(),
-				irodsCommands.getAuthMechanism(), sslIRODSConnection);
+		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
+				secureConnection, irodsCommands.getIrodsProtocolManager());
 
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
@@ -169,43 +158,55 @@ public class PAMAuth extends AuthMechanism {
 		irodsAccountUsingTemporaryIRODSPassword
 				.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		AuthResponse authResponse =  new AuthResponse();
-		authResponse.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+		log.info(
+				"derived and logging in with temporary password from a new agent:{}",
+				irodsAccountUsingTemporaryIRODSPassword);
+
+		AuthResponse authResponse = new AuthResponse();
+		authResponse
+				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
-		return authResponse;
+		irodsCommands.setAuthResponse(authResponse);
+
+		return irodsCommands;
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication(org.irods.jargon.core.connection.IRODSAccount, org.irods.jargon.core.connection.IRODSCommands, org.irods.jargon.core.connection.StartupResponseData)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
+	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,
+	 * org.irods.jargon.core.connection.StartupResponseData)
 	 */
 	@Override
-	protected AuthResponse processAfterAuthentication(
-			final AuthResponse authResponse,  AbstractIRODSMidLevelProtocol irodsCommands,
-			final StartupResponseData startupResponseData) throws AuthenticationException, JargonException {
-		
-		AuthResponse revisedAuthResponse = null;
-		StandardIRODSAuth standardIRODSAuth = new StandardIRODSAuth();
-		IRODSAccount originalAuthenticatingAccount = authResponse.getAuthenticatingIRODSAccount();
-		if (startupResponseData.isEirods()) {
-				irodsCommands.disconnectWithForce();
-			 irodsCommands = IRODSMidLevelProtocol.instance(authResponse.getAuthenticatedIRODSAccount(), irodsCommands.getIrodsProtocolManager(), irodsCommands.getPipelineConfiguration(), standardIRODSAuth, irodsCommands.getIrodsSession());
-			revisedAuthResponse = irodsCommands.getAuthResponse();
-		} else {
-			revisedAuthResponse = standardIRODSAuth.processAuthenticationAfterStartup(
-					authResponse.getAuthenticatedIRODSAccount(), irodsCommands,
-					startupResponseData);
-			// set the original account to the PAM login
+	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
+			AbstractIRODSMidLevelProtocol irodsCommands,
+			StartupResponseData startupResponseData)
+			throws AuthenticationException, JargonException {
 
-		}
-		// the authenticating account should be the account with the PAM
-		// credentials
-		revisedAuthResponse.setAuthenticatingIRODSAccount(originalAuthenticatingAccount);
-		return revisedAuthResponse;
+		IRODSAccount originalAuthenticatingAccount = irodsCommands
+				.getAuthResponse().getAuthenticatingIRODSAccount();
+
+		AbstractIRODSMidLevelProtocol actualProtocol = null;
+
+		irodsCommands.disconnectWithForce();
+
+		actualProtocol = irodsCommands
+				.getIrodsProtocolManager()
+				.getIrodsMidLevelProtocolFactory()
+				.instance(
+						irodsCommands.getIrodsSession(),
+						irodsCommands.getAuthResponse()
+								.getAuthenticatedIRODSAccount(),
+						irodsCommands.getIrodsProtocolManager());
+		actualProtocol.getAuthResponse().setAuthenticatingIRODSAccount(
+				originalAuthenticatingAccount);
+		return actualProtocol;
+
 	}
-
-
 
 }

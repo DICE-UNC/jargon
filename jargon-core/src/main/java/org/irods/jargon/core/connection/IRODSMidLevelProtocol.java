@@ -3,6 +3,7 @@ package org.irods.jargon.core.connection;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
+import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -92,7 +93,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			log.error("********  IRODSCommands is:{}", this);
 			log.error(
 					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
-					getConnectionUri());
+					this.getIrodsConnection().getConnectionInternalIdentifier());
 			log.error("**************************************************************************************");
 			obliterateConnectionAndDiscardErrors();
 		}
@@ -111,8 +112,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @return
 	 */
 	boolean isPamFlush() {
-		// FIXME: do I want an ssl or encrypted flag instead?
-		if (this.getIrodsConnection() instanceof SSLIRODSConnection) {
+		if (this.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
 			return true;
 		} else if (this.getPipelineConfiguration().isForcePamFlush()) {
 			return true;

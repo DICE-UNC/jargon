@@ -19,7 +19,7 @@ public abstract class IRODSProtocolManager {
 	 * Factory that will create a factory that creates the networking layer to
 	 * iRODS based on the settings in jargon.properties
 	 */
-	private IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory;
+	private IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory = new IRODSConnectionFactoryProducingFactory();
 
 	private AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory;
 

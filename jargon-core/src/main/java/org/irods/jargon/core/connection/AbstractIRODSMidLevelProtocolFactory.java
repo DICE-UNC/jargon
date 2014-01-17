@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
@@ -226,12 +225,11 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 				.instanceAuthMechanism(irodsAccount);
 
 		log.info("authenticate...");
-		AuthResponse authResponse = null;
+		AbstractIRODSMidLevelProtocol authenticatedProtocol = null;
 		try {
-			authResponse = authMechanism.authenticate(protocol, irodsAccount);
-			protocol.setIrodsAccount(authResponse
-					.getAuthenticatingIRODSAccount());
-			protocol.setAuthResponse(authResponse);
+			authenticatedProtocol = authMechanism.authenticate(protocol,
+					irodsAccount);
+
 		} catch (AuthenticationException e) {
 			log.error(
 					"authentication exception, will close iRODS connection and re-throw",
@@ -240,7 +238,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			throw e;
 		}
 
-		return null;
+		return authenticatedProtocol;
 
 	}
 }

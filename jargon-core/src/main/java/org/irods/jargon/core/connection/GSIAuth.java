@@ -40,7 +40,8 @@ class GSIAuth extends AuthMechanism {
 	 * @throws JargonException
 	 */
 	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
 
 		log.info("sendGSIPassword()");
 
@@ -85,23 +86,10 @@ class GSIAuth extends AuthMechanism {
 	}
 
 	@SuppressWarnings("resource")
-	/**
-	 * GSI authorization method. Makes a connection to the iRODS using the GSI
-	 * authorization scheme.
-	 * 
-	 * @param account
-	 *            the iRODS connection information
-	 * @param out
-	 *            The output stream from that socket.
-	 * @param in
-	 *            The input stream from that socket.
-	 * @return {@link AuthResponse} with the result of the authentication
-	 * @throws IOException
-	 *             If the authentication to the iRODS fails.
-	 */
-	AuthResponse sendGSIAuth(final GSIIRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands) throws AuthenticationException,
-			JargonException {
+	AbstractIRODSMidLevelProtocol sendGSIAuth(
+			final GSIIRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws AuthenticationException, JargonException {
 
 		log.info("sendGSIAuth()");
 
@@ -172,7 +160,8 @@ class GSIAuth extends AuthMechanism {
 			AuthResponse response = new AuthResponse();
 			response.setAuthenticatingIRODSAccount(originalIrodsAccount);
 			response.setAuthenticatedIRODSAccount(irodsAccount);
-			return response;
+			irodsCommands.setAuthResponse(response);
+			return irodsCommands;
 
 		} catch (GSSException e) {
 			AuthenticationException gsiException = null;
@@ -200,7 +189,6 @@ class GSIAuth extends AuthMechanism {
 			if (defaultCA != null) {
 				cog.setCaCertLocations(defaultCA);
 			}
-
 		}
 	}
 
@@ -214,8 +202,9 @@ class GSIAuth extends AuthMechanism {
 	 * org.irods.jargon.core.connection.StartupResponseData)
 	 */
 	@Override
-	protected AuthResponse processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands,
+	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 

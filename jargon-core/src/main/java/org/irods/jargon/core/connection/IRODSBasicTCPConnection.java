@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.net.ssl.SSLSocket;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,51 @@ import org.slf4j.LoggerFactory;
  */
 class IRODSBasicTCPConnection extends AbstractConnection {
 
+	static final Logger log = LoggerFactory
+			.getLogger(IRODSBasicTCPConnection.class);
+
+	/**
+	 * Default constructor that gives the account and pipeline setup
+	 * information. This constructor is a special case where you already have a
+	 * Socket openened to iRODS, and you want to wrap that socket with the low
+	 * level iRODS semantics. An example use case is when you need to to PAM
+	 * authentication and wrap an existing iRODS connection with an SSL socket.
+	 * <p/>
+	 * This may be updated a bit later when we implement SSL negotiation for
+	 * iRODS 4+.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 * @param socket
+	 *            {@link Socket} being wrapped in this connection, this allows
+	 *            an arbitrary connected socket to be wrapped in low level
+	 *            jargon communication semantics.
+	 * @throws JargonException
+	 */
+	IRODSBasicTCPConnection(IRODSAccount irodsAccount,
+			PipelineConfiguration pipelineConfiguration, Socket socket)
+			throws JargonException {
+
+		super(irodsAccount, pipelineConfiguration);
+
+		if (socket == null) {
+			throw new IllegalArgumentException("null socket");
+		}
+
+		this.connection = socket;
+		setUpSocketAndStreamsAfterConnection(irodsAccount);
+		connected = true;
+
+		if (socket instanceof SSLSocket) {
+			this.setEncryptionType(EncryptionType.SSL_WRAPPED);
+		}
+
+		log.info("socket opened successfully");
+	}
+
 	/**
 	 * Default constructor that gives the account and pipeline setup information
 	 * 
@@ -40,9 +87,6 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			PipelineConfiguration pipelineConfiguration) {
 		super(irodsAccount, pipelineConfiguration);
 	}
-
-	static final Logger log = LoggerFactory
-			.getLogger(IRODSBasicTCPConnection.class);
 
 	protected void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -185,13 +229,6 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			connected = false;
 			log.info("now disconnected");
 		}
-	}
-
-	protected void connect(final IRODSAccount irodsAccount,
-			final StartupResponseData startupResponseData)
-			throws JargonException {
-		log.info("connect()");
-
 	}
 
 	/*

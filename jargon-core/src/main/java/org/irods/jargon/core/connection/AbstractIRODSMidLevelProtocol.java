@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractIRODSMidLevelProtocol {
 
 	private AbstractConnection irodsConnection;
-	private final IRODSProtocolManager irodsProtocolManager;
+	private IRODSProtocolManager irodsProtocolManager;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
 
@@ -625,10 +625,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		return message;
 	}
 
-	public synchronized String getConnectionUri() throws JargonException {
-		return irodsConnection.getConnectionUri();
-	}
-
 	public synchronized boolean isConnected() {
 		return irodsConnection.isConnected();
 	}
@@ -1200,6 +1196,15 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 	public String getEncoding() {
 		return irodsConnection.getPipelineConfiguration().getDefaultEncoding();
+	}
+
+	/**
+	 * @param irodsProtocolManager
+	 *            the irodsProtocolManager to set
+	 */
+	public void setIrodsProtocolManager(
+			IRODSProtocolManager irodsProtocolManager) {
+		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
 }
