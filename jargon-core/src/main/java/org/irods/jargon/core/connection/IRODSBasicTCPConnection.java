@@ -53,9 +53,9 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 *            jargon communication semantics.
 	 * @throws JargonException
 	 */
-	IRODSBasicTCPConnection(IRODSAccount irodsAccount,
-			PipelineConfiguration pipelineConfiguration, Socket socket)
-			throws JargonException {
+	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final Socket socket) throws JargonException {
 
 		super(irodsAccount, pipelineConfiguration);
 
@@ -82,12 +82,15 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that defines the low level
 	 *            connection and networking configuration
+	 * @throws JargonException
 	 */
-	IRODSBasicTCPConnection(IRODSAccount irodsAccount,
-			PipelineConfiguration pipelineConfiguration) {
+	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration)
+			throws JargonException {
 		super(irodsAccount, pipelineConfiguration);
 	}
 
+	@Override
 	protected void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
 		log.info("connect()");

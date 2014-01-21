@@ -160,6 +160,18 @@ public abstract class IRODSProtocolManager {
 				"creating a fresh AbstractIRODSMidLevelProtocol for account:{}",
 				irodsAccount);
 
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
+
 		return this.getIrodsMidLevelProtocolFactory().instance(irodsSession,
 				irodsAccount, this);
 	}
@@ -246,7 +258,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * @return the irodsMidLevelProtocolFactory
 	 */
-	public AbstractIRODSMidLevelProtocolFactory getIrodsMidLevelProtocolFactory() {
+	public synchronized AbstractIRODSMidLevelProtocolFactory getIrodsMidLevelProtocolFactory() {
 		return irodsMidLevelProtocolFactory;
 	}
 
@@ -254,7 +266,7 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsMidLevelProtocolFactory
 	 *            the irodsMidLevelProtocolFactory to set
 	 */
-	public void setIrodsMidLevelProtocolFactory(
+	public synchronized void setIrodsMidLevelProtocolFactory(
 			final AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
 		this.irodsMidLevelProtocolFactory = irodsMidLevelProtocolFactory;
 	}

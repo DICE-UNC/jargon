@@ -13,6 +13,11 @@ import org.slf4j.LoggerFactory;
  * are created, and as such does not need to be thread-safe. A pooled connection
  * manager will need to process getting and returning connections from multiple
  * threads.
+ * <p/>
+ * NOTE: this is somewhat transitional in the way it creates the mid level
+ * protocol manager and initializes itself, this will probably remain for
+ * backwards compatability and another implementation may be created that allows
+ * initialization of all of these factories.
  * 
  * @author Mike Conway - DICE
  */
@@ -48,8 +53,38 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 		log.debug("creating an IRODSSimpleConnection for account:{}",
 				irodsAccount);
 
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
+
+		checkMidLevelProtocolFactory(irodsSession);
 		return this.createNewProtocol(irodsAccount, pipelineConfiguration,
 				irodsSession);
+	}
+
+	/**
+	 * This is an interim fix to initialize the mid level protocol factory
+	 * 
+	 * @throws JargonException
+	 */
+	private synchronized void checkMidLevelProtocolFactory(
+			final IRODSSession irodsSession) throws JargonException {
+		if (this.getIrodsMidLevelProtocolFactory() == null) {
+			IRODSConnectionFactory irodsConnectionFactory = this
+					.getIrodsConnectionFactoryProducingFactory().instance(
+							irodsSession.getJargonProperties());
+
+			this.setIrodsMidLevelProtocolFactory(new IRODSMidLevelProtocolFactory(
+					irodsConnectionFactory, this.getAuthenticationFactory()));
+		}
 	}
 
 	/*

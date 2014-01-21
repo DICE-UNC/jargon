@@ -40,10 +40,23 @@ public class IRODSSimpleConnectionTest {
 						irodsFileSystem
 								.getIrodsSession()
 								.buildPipelineConfigurationBasedOnJargonProperties(),
-						null);
+						irodsFileSystem.getIrodsSession());
 		connection.setIrodsSession(Mockito.mock(IRODSSession.class));
 		connection.disconnect();
 		Assert.assertFalse(connection.isConnected());
+	}
+
+	@Test(expected = IllegalArgumentException.class)
+	public void testOpenAndCloseSimpleConnectionNullSession() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		irodsFileSystem.getIrodsProtocolManager().getIRODSProtocol(
+				irodsAccount,
+				irodsFileSystem.getIrodsSession()
+						.buildPipelineConfigurationBasedOnJargonProperties(),
+				null);
+
 	}
 
 }

@@ -69,9 +69,11 @@ public abstract class AbstractConnection {
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that defines the low level
 	 *            connection and networking configuration
+	 * @throws JargonException
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration) {
+			final PipelineConfiguration pipelineConfiguration)
+			throws JargonException {
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -82,11 +84,11 @@ public abstract class AbstractConnection {
 
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
+		initializeConnection(irodsAccount);
 
 	}
 
-	protected void initializeConnection(final IRODSAccount irodsAccount,
-			final StartupResponseData startupResponseData)
+	protected void initializeConnection(final IRODSAccount irodsAccount)
 			throws JargonException {
 		// connect to irods, do handshake
 		// save the irods startup information to the IRODSServerProperties
@@ -762,7 +764,7 @@ public abstract class AbstractConnection {
 	 * @param encryptionType
 	 *            the encryptionType to set
 	 */
-	protected void setEncryptionType(EncryptionType encryptionType) {
+	protected void setEncryptionType(final EncryptionType encryptionType) {
 		this.encryptionType = encryptionType;
 	}
 
