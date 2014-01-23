@@ -94,7 +94,7 @@ public class PAMAuth extends AuthMechanism {
 		log.info("creating secure protcol connection layer");
 		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(
 				irodsAccount, irodsCommands.getPipelineConfiguration(),
-				sslSocket);
+				irodsCommands.getIrodsProtocolManager(), sslSocket);
 
 		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
 				secureConnection, irodsCommands.getIrodsProtocolManager());
@@ -184,8 +184,8 @@ public class PAMAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
-			AbstractIRODSMidLevelProtocol irodsCommands,
-			StartupResponseData startupResponseData)
+			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
 		IRODSAccount originalAuthenticatingAccount = irodsCommands

@@ -69,10 +69,13 @@ public abstract class AbstractConnection {
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that defines the low level
 	 *            connection and networking configuration
+	 * @param irodsProtocolManager
+	 *            {@link irodsProtocolManager} that requested this connection
 	 * @throws JargonException
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration)
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager)
 			throws JargonException {
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
@@ -82,8 +85,13 @@ public abstract class AbstractConnection {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
 
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
+		}
+
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
+		this.irodsProtocolManager = irodsProtocolManager;
 		initializeConnection(irodsAccount);
 
 	}
@@ -648,13 +656,6 @@ public abstract class AbstractConnection {
 		}
 
 		super.finalize();
-	}
-
-	/**
-	 * @return the irodsProtocolManager
-	 */
-	public IRODSProtocolManager getIrodsProtocolManager() {
-		return irodsProtocolManager;
 	}
 
 	/**

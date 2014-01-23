@@ -21,8 +21,10 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 			.getLogger(IRODSTCPConnectionFactoryImpl.class);
 
 	@Override
-	protected AbstractConnection instance(IRODSAccount irodsAccount,
-			IRODSSession irodsSession) throws JargonException {
+	protected AbstractConnection instance(final IRODSAccount irodsAccount,
+			final IRODSSession irodsSession,
+			final IRODSProtocolManager irodsProtocolManager)
+			throws JargonException {
 
 		log.info("instance()");
 
@@ -33,7 +35,8 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 		IRODSBasicTCPConnection connection = new IRODSBasicTCPConnection(
 				irodsAccount,
 				irodsSession
-						.buildPipelineConfigurationBasedOnJargonProperties());
+						.buildPipelineConfigurationBasedOnJargonProperties(),
+				irodsProtocolManager);
 		return connection;
 	}
 

@@ -29,6 +29,29 @@ import org.slf4j.LoggerFactory;
  */
 class IRODSBasicTCPConnection extends AbstractConnection {
 
+	/**
+	 * Default constructor that gives the account and pipeline setup
+	 * information.
+	 * <p/>
+	 * This may be updated a bit later when we implement SSL negotiation for
+	 * iRODS 4+.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 * @param irodsProtocolManager
+	 *            {@link irodsProtocolManager} that requested this connection
+	 * @throws JargonException
+	 */
+	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager)
+			throws JargonException {
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
+	}
+
 	static final Logger log = LoggerFactory
 			.getLogger(IRODSBasicTCPConnection.class);
 
@@ -47,6 +70,8 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} that defines the low level
 	 *            connection and networking configuration
+	 * @param irodsProtocolManager
+	 *            {@link irodsProtocolManager} that requested this connection
 	 * @param socket
 	 *            {@link Socket} being wrapped in this connection, this allows
 	 *            an arbitrary connected socket to be wrapped in low level
@@ -55,9 +80,10 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final Socket socket) throws JargonException {
+			final IRODSProtocolManager irodsProtocolManager, final Socket socket)
+			throws JargonException {
 
-		super(irodsAccount, pipelineConfiguration);
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
 
 		if (socket == null) {
 			throw new IllegalArgumentException("null socket");
@@ -72,22 +98,6 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		}
 
 		log.info("socket opened successfully");
-	}
-
-	/**
-	 * Default constructor that gives the account and pipeline setup information
-	 * 
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection
-	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration} that defines the low level
-	 *            connection and networking configuration
-	 * @throws JargonException
-	 */
-	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration)
-			throws JargonException {
-		super(irodsAccount, pipelineConfiguration);
 	}
 
 	@Override

@@ -33,11 +33,9 @@ public class IRODSTCPIPMidLevelProtocolTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have been connected",
 				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
@@ -47,11 +45,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testChallengeIsCachedForStandardPassword() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue(
 				"i should have cached the challenge value",
 				irodsProtocol.getAuthResponse().getChallengeValue().length() > 0);
@@ -145,11 +140,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testDisconnect() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		irodsProtocol.disconnect();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
@@ -159,11 +151,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testConnectAnonymous() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have connected",
 				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
@@ -175,11 +164,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testDisconnectWithIOException() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		irodsProtocol.disconnectWithForce();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
@@ -189,11 +175,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testGetIRODSAccount() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		IRODSAccount actualIRODSAccount = irodsProtocol.getIrodsAccount();
 		irodsProtocol.disconnect();
 		Assert.assertEquals(
@@ -205,11 +188,8 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	public void testGetIRODSServerProperties() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AbstractConnection connection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties());
-		AbstractIRODSMidLevelProtocol irodsProtocol = new IRODSMidLevelProtocol(
-				connection, irodsFileSystem.getIrodsProtocolManager());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		IRODSServerProperties irodsServerProperties = irodsProtocol
 				.getIRODSServerProperties();
 		irodsProtocol.disconnect();

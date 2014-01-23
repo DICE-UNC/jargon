@@ -91,7 +91,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 
 		log.info("create connection....");
 		AbstractConnection connection = irodsConnectionFactory.instance(
-				irodsAccount, irodsSession);
+				irodsAccount, irodsSession, irodsProtocolManager);
 
 		AbstractIRODSMidLevelProtocol protocol = this.createInitialProtocol(
 				connection, irodsProtocolManager);
@@ -137,10 +137,12 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @return {@link AbstractIRODSMidLevelProtocol} ready for use. This may or
 	 *         may not be the same protocol implementation passed in to the
 	 *         method
+	 * @throws JargonException
 	 */
 	protected AbstractIRODSMidLevelProtocol decorate(
 			final AbstractIRODSMidLevelProtocol protocol,
-			final IRODSAccount irodsAccount, final IRODSSession irodsSession) {
+			final IRODSAccount irodsAccount, final IRODSSession irodsSession)
+			throws JargonException {
 
 		log.info("decorate()");
 
@@ -155,23 +157,32 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		if (irodsSession == null) {
 			throw new IllegalArgumentException("null irodsSession");
 		}
-		/*
-		 * EnvironmentalInfoAccessor environmentalInfoAccessor = new
-		 * EnvironmentalInfoAccessor( this); irodsServerProperties =
-		 * environmentalInfoAccessor .getIRODSServerProperties();
-		 * 
-		 * // add startup response cookie info indicating if eirods int cookie =
-		 * Integer.parseInt(authResponse.getStartupResponse() .getCookie());
-		 * 
-		 * if (cookie >= EIRODS_MIN && cookie <= EIRODS_MAX) {
-		 * log.info("setting to eirods based on cookie value");
-		 * irodsServerProperties.setEirods(true); } else if
-		 * (irodsServerProperties
-		 * .isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
-		 * irodsServerProperties.setEirods(true); }
-		 * 
-		 * log.info(irodsServerProperties.toString());
-		 */
+
+		// save the account as authenticated (it may be different than what was
+		// presented)
+		protocol.setIrodsAccount(protocol.getAuthResponse()
+				.getAuthenticatedIRODSAccount());
+
+		EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
+				protocol);
+		protocol.setIrodsServerProperties(environmentalInfoAccessor
+				.getIRODSServerProperties());
+
+		// add startup response cookie info indicating if eirods
+		int cookie = Integer.parseInt(protocol.authResponse
+				.getStartupResponse().getCookie());
+
+		if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
+				&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
+			log.info("setting to eirods based on cookie value");
+			protocol.getIrodsServerProperties().setEirods(true);
+		} else if (protocol.getIrodsServerProperties()
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
+			protocol.getIrodsServerProperties().setEirods(true);
+		}
+
+		log.info(protocol.getIrodsServerProperties().toString());
+
 		return protocol;
 
 	}
@@ -202,8 +213,9 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 */
 
 	protected AbstractIRODSMidLevelProtocol authenticate(
-			AbstractIRODSMidLevelProtocol protocol, IRODSAccount irodsAccount,
-			IRODSSession irodsSession, IRODSProtocolManager irodsProtocolManager)
+			final AbstractIRODSMidLevelProtocol protocol,
+			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
+			final IRODSProtocolManager irodsProtocolManager)
 			throws AuthenticationException, JargonException {
 
 		log.info("authenticate()");
