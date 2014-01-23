@@ -89,6 +89,8 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 		try {
 			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool
 					.borrowObject();
+
+			command.setIrodsProtocolManager(this);
 			return command;
 		} catch (Exception e) {
 			throw new JargonException(e);

@@ -40,6 +40,7 @@ public class TempPasswordCachingProtocolManagerTest {
 	public void testGetIRODSProtocol() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
 		TempPasswordCachingProtocolManager manager = new TempPasswordCachingProtocolManager(
 				irodsAccount, irodsFileSystem.getIrodsSession(),
 				irodsFileSystem.getIrodsProtocolManager());
