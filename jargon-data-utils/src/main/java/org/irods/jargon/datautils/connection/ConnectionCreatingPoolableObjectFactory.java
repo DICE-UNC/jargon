@@ -93,7 +93,7 @@ public class ConnectionCreatingPoolableObjectFactory implements
 		}
 		AbstractIRODSMidLevelProtocol irodsCommands = (AbstractIRODSMidLevelProtocol) objectToDestroy;
 		log.info("disconnecting");
-		irodsCommands.shutdown();
+		irodsCommands.disconnect();
 	}
 
 	/*

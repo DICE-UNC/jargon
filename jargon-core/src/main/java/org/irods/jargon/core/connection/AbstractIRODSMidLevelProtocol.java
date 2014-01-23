@@ -629,6 +629,18 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		return irodsConnection.isConnected();
 	}
 
+	/**
+	 * Method to actually disconnect from iRODS (sign off and close the socket).
+	 * This method is typically not called by client API, rather, it is used to
+	 * dispose of methods returned via the <code>disconnect()</code> method
+	 * where the actual shutdown sequence and closing of the connection occurs.
+	 * <p/>
+	 * In other words, always disconnect and let the underlying api call
+	 * 'shutdown'. This method must be public because implementations, such as
+	 * cache and pool connection managers may exist in other packages.
+	 * 
+	 * @throws JargonException
+	 */
 	public synchronized void shutdown() throws JargonException {
 		log.info("shutting down, need to send disconnect to irods");
 		if (isConnected()) {
@@ -1203,7 +1215,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            the irodsProtocolManager to set
 	 */
 	public void setIrodsProtocolManager(
-			IRODSProtocolManager irodsProtocolManager) {
+			final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 

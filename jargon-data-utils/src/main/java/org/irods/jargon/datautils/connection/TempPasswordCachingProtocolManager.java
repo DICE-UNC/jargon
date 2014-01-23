@@ -159,7 +159,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 */
 	@Override
 	public void returnIRODSProtocol(
-			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException {
 		try {
 			objectPool.returnObject(abstractIRODSMidLevelProtocol);

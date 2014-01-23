@@ -62,7 +62,11 @@ public class IRODSTestSetupUtilities {
 			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
-			testScratchFile.delete();
+			try {
+				testScratchFile.delete();
+			} catch (Exception e) {
+				// ignore for now
+			}
 			// testScratchFile.deleteWithForceOption();
 		} catch (JargonRuntimeException e) {
 			if (e.getCause() instanceof UnixFileRenameException) {
