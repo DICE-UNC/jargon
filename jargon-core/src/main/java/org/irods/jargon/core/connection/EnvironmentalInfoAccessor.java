@@ -21,7 +21,8 @@ public class EnvironmentalInfoAccessor {
 	private final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAccessor.class);
 
-	public EnvironmentalInfoAccessor(final AbstractIRODSMidLevelProtocol irodsProtocol)
+	public EnvironmentalInfoAccessor(
+			final AbstractIRODSMidLevelProtocol irodsProtocol)
 			throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
@@ -30,7 +31,6 @@ public class EnvironmentalInfoAccessor {
 			throw new JargonException("irods protocol is not connected");
 		}
 		this.irodsProtocol = irodsProtocol;
-		init();
 
 	}
 
@@ -95,10 +95,6 @@ public class EnvironmentalInfoAccessor {
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;
-	}
-
-	public void init() throws JargonException {
-		getIRODSServerProperties();
 	}
 
 }

@@ -95,6 +95,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 
 		AbstractIRODSMidLevelProtocol protocol = this.createInitialProtocol(
 				connection, irodsProtocolManager);
+		// add a session reference to the protocol.
+		protocol.setIrodsSession(irodsSession);
 
 		log.info("...have connection, now authenticate given the auth scheme in the iRODS account...");
 		protocol = authenticate(protocol, irodsAccount, irodsSession,
@@ -126,7 +128,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * phase the protocol level connection is ready for use by higher-level API
 	 * functions
 	 * 
-	 * @param protocol
+	 * @param irodsMidLevelProtocol
 	 *            connected {@link AbstractIRODSMidLevelProtocol} that has been
 	 *            authenticated
 	 * @param irodsAccount
@@ -140,14 +142,14 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * @throws JargonException
 	 */
 	protected AbstractIRODSMidLevelProtocol decorate(
-			final AbstractIRODSMidLevelProtocol protocol,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession)
 			throws JargonException {
 
 		log.info("decorate()");
 
-		if (protocol == null) {
-			throw new IllegalArgumentException("null protocol");
+		if (irodsMidLevelProtocol == null) {
+			throw new IllegalArgumentException("null irodsMidLevelProtocol");
 		}
 
 		if (irodsAccount == null) {
@@ -158,32 +160,34 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 
-		// save the account as authenticated (it may be different than what was
-		// presented)
-		protocol.setIrodsAccount(protocol.getAuthResponse()
-				.getAuthenticatedIRODSAccount());
+		// do not decorate if the server properties already derived
+		if (irodsMidLevelProtocol.getIrodsServerProperties() == null) {
 
-		EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
-				protocol);
-		protocol.setIrodsServerProperties(environmentalInfoAccessor
-				.getIRODSServerProperties());
+			EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
+					irodsMidLevelProtocol);
+			irodsMidLevelProtocol
+					.setIrodsServerProperties(environmentalInfoAccessor
+							.getIRODSServerProperties());
 
-		// add startup response cookie info indicating if eirods
-		int cookie = Integer.parseInt(protocol.authResponse
-				.getStartupResponse().getCookie());
+			// add startup response cookie info indicating if eirods
+			int cookie = Integer.parseInt(irodsMidLevelProtocol.authResponse
+					.getStartupResponse().getCookie());
 
-		if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
-				&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
-			log.info("setting to eirods based on cookie value");
-			protocol.getIrodsServerProperties().setEirods(true);
-		} else if (protocol.getIrodsServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
-			protocol.getIrodsServerProperties().setEirods(true);
+			if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
+					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
+				log.info("setting to eirods based on cookie value");
+				irodsMidLevelProtocol.getIrodsServerProperties()
+						.setEirods(true);
+			} else if (irodsMidLevelProtocol.getIrodsServerProperties()
+					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
+				irodsMidLevelProtocol.getIrodsServerProperties()
+						.setEirods(true);
+			}
 		}
 
-		log.info(protocol.getIrodsServerProperties().toString());
+		log.info(irodsMidLevelProtocol.getIrodsServerProperties().toString());
 
-		return protocol;
+		return irodsMidLevelProtocol;
 
 	}
 
@@ -235,6 +239,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		log.info("get auth mechanism");
 		AuthMechanism authMechanism = this.getAuthenticationFactory()
 				.instanceAuthMechanism(irodsAccount);
+
+		protocol.setIrodsSession(irodsSession);
 
 		log.info("authenticate...");
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = null;

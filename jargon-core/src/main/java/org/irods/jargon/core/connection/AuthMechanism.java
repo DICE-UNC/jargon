@@ -42,26 +42,26 @@ abstract class AuthMechanism {
 	}
 
 	protected AbstractIRODSMidLevelProtocol authenticate(
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
 		preConnectionStartup();
 		StartupResponseData startupResponseData = sendStartupPacket(
-				irodsAccount, irodsCommands);
+				irodsAccount, irodsMidLevelProtocol);
 		postConnectionStartupPreAuthentication();
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
-				irodsAccount, irodsCommands, startupResponseData);
+				irodsAccount, irodsMidLevelProtocol, startupResponseData);
 		authenticatedProtocol = processAfterAuthentication(
 				authenticatedProtocol, startupResponseData);
 
-		return irodsCommands;
+		return irodsMidLevelProtocol;
 	}
 
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
-		return irodsCommands;
+		return irodsMidLevelProtocol;
 	}
 
 	protected String sendAuthRequestAndGetChallenge(

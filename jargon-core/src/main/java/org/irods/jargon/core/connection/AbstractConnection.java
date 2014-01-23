@@ -118,6 +118,7 @@ public abstract class AbstractConnection {
 		log.info("opening irods socket");
 
 		connect(irodsAccount);
+		this.setConnected(true);
 
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();

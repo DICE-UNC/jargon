@@ -778,6 +778,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 		irodsConnection.setIrodsSession(irodsSession);
+		this.irodsSession = irodsSession;
 	}
 
 	/**

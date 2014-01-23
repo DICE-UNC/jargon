@@ -184,27 +184,28 @@ public class PAMAuth extends AuthMechanism {
 	 */
 	@Override
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		IRODSAccount originalAuthenticatingAccount = irodsCommands
+		IRODSAccount originalAuthenticatingAccount = irodsMidLevelProtocol
 				.getAuthResponse().getAuthenticatingIRODSAccount();
 
 		AbstractIRODSMidLevelProtocol actualProtocol = null;
 
-		irodsCommands.disconnectWithForce();
+		irodsMidLevelProtocol.disconnectWithForce();
 
-		actualProtocol = irodsCommands
+		actualProtocol = irodsMidLevelProtocol
 				.getIrodsProtocolManager()
 				.getIrodsMidLevelProtocolFactory()
 				.instance(
-						irodsCommands.getIrodsSession(),
-						irodsCommands.getAuthResponse()
+						irodsMidLevelProtocol.getIrodsSession(),
+						irodsMidLevelProtocol.getAuthResponse()
 								.getAuthenticatedIRODSAccount(),
-						irodsCommands.getIrodsProtocolManager());
+						irodsMidLevelProtocol.getIrodsProtocolManager());
 		actualProtocol.getAuthResponse().setAuthenticatingIRODSAccount(
 				originalAuthenticatingAccount);
+		actualProtocol.setIrodsAccount(originalAuthenticatingAccount);
 		return actualProtocol;
 
 	}

@@ -140,6 +140,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		authResponse.setSuccessful(true);
 		log.info("auth response was:{}", authResponse);
 		irodsCommands.setAuthResponse(authResponse);
+		irodsCommands.setIrodsAccount(irodsAccount);
 		return irodsCommands;
 	}
 
