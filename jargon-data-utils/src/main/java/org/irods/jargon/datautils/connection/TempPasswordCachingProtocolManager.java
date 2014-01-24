@@ -2,10 +2,9 @@ package org.irods.jargon.datautils.connection;
 
 import org.apache.commons.pool.impl.GenericObjectPool;
 import org.apache.commons.pool.impl.GenericObjectPool.Config;
-import org.irods.jargon.core.connection.AbstractIRODSProtocolManager;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
-import org.irods.jargon.core.connection.IRODSManagedConnection;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -22,8 +21,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class TempPasswordCachingProtocolManager extends
-		AbstractIRODSProtocolManager {
+public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	private final IRODSAccount irodsAccount;
 	private final IRODSSession irodsSession;
@@ -31,7 +29,7 @@ public class TempPasswordCachingProtocolManager extends
 
 	private GenericObjectPool objectPool = null;
 
-	private Logger log = LoggerFactory
+	private final Logger log = LoggerFactory
 			.getLogger(TempPasswordCachingProtocolManager.class);
 
 	/**
@@ -84,34 +82,18 @@ public class TempPasswordCachingProtocolManager extends
 	 * org.irods.jargon.core.connection.PipelineConfiguration)
 	 */
 	@Override
-	public IRODSCommands getIRODSProtocol(final IRODSAccount irodsAccount,
+	public IRODSMidLevelProtocol getIRODSProtocol(
+			final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSSession irodsSession) throws JargonException {
 		try {
-			IRODSCommands command = (IRODSCommands) objectPool.borrowObject();
+			IRODSMidLevelProtocol command = (IRODSMidLevelProtocol) objectPool
+					.borrowObject();
+
 			command.setIrodsProtocolManager(this);
 			return command;
 		} catch (Exception e) {
 			throw new JargonException(e);
-		}
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#
-	 * returnIRODSConnection
-	 * (org.irods.jargon.core.connection.IRODSManagedConnection)
-	 */
-	@Override
-	public void returnIRODSConnection(
-			final IRODSManagedConnection irodsConnection)
-			throws JargonException {
-		try {
-			objectPool.returnObject(irodsConnection);
-		} catch (Exception e) {
-			log.error("error returning connection", e);
-			throw new JargonException("error returning connection to pool", e);
 		}
 	}
 
@@ -168,6 +150,25 @@ public class TempPasswordCachingProtocolManager extends
 	 */
 	public IRODSAccount getIrodsAccount() {
 		return irodsAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
+	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
+	 */
+	@Override
+	public void returnIRODSProtocol(
+			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			throws JargonException {
+		try {
+			objectPool.returnObject(abstractIRODSMidLevelProtocol);
+		} catch (Exception e) {
+			log.error("error returning connection", e);
+			throw new JargonException("error returning connection to pool", e);
+		}
 	}
 
 }

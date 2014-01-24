@@ -1,8 +1,9 @@
 package org.irods.jargon.datautils.connection;
 
 import org.apache.commons.pool.PoolableObjectFactory;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -86,13 +87,14 @@ public class ConnectionCreatingPoolableObjectFactory implements
 	@Override
 	public void destroyObject(final Object objectToDestroy) throws Exception {
 		log.info("destroyObject:{}", objectToDestroy);
-		if (!(objectToDestroy instanceof IRODSCommands)) {
+		if (!(objectToDestroy instanceof IRODSMidLevelProtocol)) {
 			throw new UnsupportedOperationException(
 					"cannot destroy unknown object, expecting an IRODSCommands");
 		}
-		IRODSCommands irodsCommands = (IRODSCommands) objectToDestroy;
+		AbstractIRODSMidLevelProtocol irodsCommands = (AbstractIRODSMidLevelProtocol) objectToDestroy;
+		irodsCommands.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
-		irodsCommands.shutdown();
+		irodsCommands.disconnect();
 	}
 
 	/*

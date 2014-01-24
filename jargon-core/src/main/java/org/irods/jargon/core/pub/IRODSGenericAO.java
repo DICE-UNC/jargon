@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
@@ -121,7 +121,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
-	public final IRODSCommands getIRODSProtocol() throws JargonException {
+	public final AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException {
 		return getIRODSSession().currentConnection(getIRODSAccount());
 	}
 

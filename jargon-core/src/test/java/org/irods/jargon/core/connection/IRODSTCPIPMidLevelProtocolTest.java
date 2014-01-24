@@ -10,7 +10,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class IRODSCommandsTest {
+public class IRODSTCPIPMidLevelProtocolTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -30,15 +30,12 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testIsConnected() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		AuthMechanism authMechanism = new StandardIRODSAuth();
+
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, null);
+
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have been connected",
 				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
@@ -46,17 +43,13 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testChallengeIsCachedForStandardPassword() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
-		Assert.assertTrue("i should have been connected", irodsProtocol
-				.getAuthResponse().getChallengeValue().length() > 0);
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
+		Assert.assertTrue(
+				"i should have cached the challenge value",
+				irodsProtocol.getAuthResponse().getChallengeValue().length() > 0);
 		irodsProtocol.disconnect();
 	}
 
@@ -84,8 +77,9 @@ public class IRODSCommandsTest {
 		 * .getIRODSServerProperties();
 		 */
 
-		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
-				.getIrodsSession().currentConnection(irodsAccount);
+		AbstractIRODSMidLevelProtocol irodsCommands = testFS
+				.getIRODSAccessObjectFactory().getIrodsSession()
+				.currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands
 				.getAuthResponse().getStartupResponse();
 
@@ -122,8 +116,9 @@ public class IRODSCommandsTest {
 		 * .getIRODSServerProperties();
 		 */
 
-		IRODSCommands irodsCommands = testFS.getIRODSAccessObjectFactory()
-				.getIrodsSession().currentConnection(irodsAccount);
+		AbstractIRODSMidLevelProtocol irodsCommands = testFS
+				.getIRODSAccessObjectFactory().getIrodsSession()
+				.currentConnection(irodsAccount);
 		StartupResponseData startupResponseData = irodsCommands
 				.getAuthResponse().getStartupResponse();
 
@@ -143,15 +138,10 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testDisconnect() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		irodsProtocol.disconnect();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
@@ -159,15 +149,10 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testConnectAnonymous() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		Assert.assertTrue("i should have connected",
 				irodsProtocol.isConnected());
 		irodsProtocol.disconnect();
@@ -177,32 +162,21 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testDisconnectWithIOException() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
-		irodsProtocol.setIrodsSession(irodsFileSystem.getIrodsSession());
-		irodsProtocol.disconnectWithIOException();
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
+		irodsProtocol.disconnectWithForce();
 		Assert.assertFalse("i should have disconnected",
 				irodsProtocol.isConnected());
 	}
 
 	@Test
 	public void testGetIRODSAccount() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		IRODSAccount actualIRODSAccount = irodsProtocol.getIrodsAccount();
 		irodsProtocol.disconnect();
 		Assert.assertEquals(
@@ -212,34 +186,14 @@ public class IRODSCommandsTest {
 
 	@Test
 	public void testGetIRODSServerProperties() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
+		AbstractIRODSMidLevelProtocol irodsProtocol = irodsFileSystem
+				.getIrodsSession().currentConnection(irodsAccount);
 		IRODSServerProperties irodsServerProperties = irodsProtocol
 				.getIRODSServerProperties();
 		irodsProtocol.disconnect();
 		Assert.assertNotNull(irodsServerProperties);
-	}
-
-	@Test
-	public void testGetConnectionUri() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		AuthMechanism authMechanism = new StandardIRODSAuth();
-		IRODSCommands irodsProtocol = IRODSCommands.instance(irodsAccount,
-				irodsConnectionManager, irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				authMechanism, irodsFileSystem.getIrodsSession());
-		irodsProtocol.disconnect();
-		Assert.assertNotNull(irodsProtocol.getConnectionUri());
 	}
 
 }

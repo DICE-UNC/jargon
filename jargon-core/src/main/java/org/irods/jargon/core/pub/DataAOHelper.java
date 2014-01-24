@@ -11,9 +11,9 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
@@ -339,7 +339,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	void processNormalGetTransfer(final File localFileToHoldData,
-			final long length, final IRODSCommands irodsProtocol,
+			final long length, final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -445,7 +445,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	void processNormalPutTransfer(final File localFile,
 			final boolean overwrite, final IRODSFile targetFile,
-			final IRODSCommands irodsProtocol,
+			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, FileNotFoundException {
@@ -536,7 +536,7 @@ public final class DataAOHelper extends AOHelper {
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite,
 			final IRODSFile targetFile, final int fd,
-			final IRODSCommands irodsProtocol,
+			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferControlBlock transferControlBlock,
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException, FileNotFoundException {
@@ -612,7 +612,7 @@ public final class DataAOHelper extends AOHelper {
 
 			if (lengthLeftToSend != 0) {
 				log.error("did not send all data");
-				irodsProtocol.disconnectWithIOException();
+				irodsProtocol.disconnectWithForce();
 				throw new JargonException("did not send all data");
 			}
 

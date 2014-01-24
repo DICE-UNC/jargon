@@ -6,7 +6,7 @@ package org.irods.jargon.core.query;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSCommands;
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
@@ -22,14 +22,14 @@ import org.slf4j.LoggerFactory;
  * 
  */
 public class GenQueryProcessor {
-	private final IRODSCommands irodsCommands;
+	private final AbstractIRODSMidLevelProtocol irodsCommands;
 	private static final Logger log = LoggerFactory
 			.getLogger(GenQueryProcessor.class);
 
 	/**
 	 * 
 	 */
-	public GenQueryProcessor(final IRODSCommands irodsCommands) {
+	public GenQueryProcessor(final AbstractIRODSMidLevelProtocol irodsCommands) {
 		if (irodsCommands == null) {
 			throw new IllegalArgumentException("null irodsCommands");
 		}

@@ -4,10 +4,10 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSCommands;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -540,17 +540,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * jargon.properties, this wrapping of the put operation signals that,
 		 * if restarting is on, it should be done for this operation.
 		 */
-		try {
-			getIRODSProtocol().setInRestartMode(true);
-			log.info(">>>>>>>>>>>>>>>>>in reconnect mode if configured in jargon.properties");
-			putCommonProcessingWrappedInConnectionRestart(localFile,
-					irodsFileDestination, ignoreChecks, transferControlBlock,
-					transferStatusCallbackListener);
-		} finally {
-			getIRODSProtocol().setInRestartMode(false);
-			log.info("<<<<<<<<<<<<<<<< out of reconnect mode if configured in jargon.properties");
 
-		}
+		putCommonProcessing(localFile, irodsFileDestination, ignoreChecks,
+				transferControlBlock, transferStatusCallbackListener);
 
 	}
 
@@ -565,17 +557,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws JargonRuntimeException
 	 * @throws OverwriteException
 	 */
-	private void putCommonProcessingWrappedInConnectionRestart(
-			final File localFile, final IRODSFile irodsFileDestination,
-			final boolean ignoreChecks,
+	private void putCommonProcessing(final File localFile,
+			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws DataNotFoundException, JargonException,
 			JargonRuntimeException, OverwriteException {
 
-		log.info(
-				"putCommonProcessingWrappedInConnectionRestart.. restart value:{}",
-				getIRODSProtocol().isInRestartMode());
+		log.info("putCommonProcessing()");
 
 		if (!localFile.exists()) {
 			log.error("put error, local file does not exist: {}",
@@ -1275,7 +1264,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		IRODSCommands irodsProtocol = getIRODSProtocol();
+		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
 
 		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
 
@@ -1321,7 +1310,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// if length == zero, check for multiple thread copy, may still process
 		// as a standard txfr if 0 threads specified
 		try {
-			getIRODSProtocol().setInRestartMode(true);
 			if (lengthFromIrodsResponse == 0) {
 				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
 						irodsFileToGet, localFileToHoldData,
@@ -1368,8 +1356,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (Exception e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
-		} finally {
-			getIRODSProtocol().setInRestartMode(false);
 		}
 
 		return l1descInx;

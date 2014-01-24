@@ -15,6 +15,10 @@ import org.slf4j.LoggerFactory;
 
 abstract class AuthMechanism {
 
+	public static final int AUTH_REQUEST_AN = 703;
+	public static final int AUTH_RESPONSE_AN = 704;
+	public String cachedChallenge = "";
+
 	public static final Logger log = LoggerFactory
 			.getLogger(AuthMechanism.class);
 
@@ -39,61 +43,133 @@ abstract class AuthMechanism {
 	}
 
 	/**
-	 * Take the given account, and perform the authentication step using the
-	 * connection in the given <code>irodsCommands</code>
+	 * Given the initial connection, perform the authentication process. This
+	 * process will return a <code>AbstractIRODSMidLevelProtocol</code>. This
+	 * method will start the connection by sending the auth request, process the
+	 * startup packet, and then call the authentication method of the actual
+	 * auth mechanism implementation.
 	 * 
-	 * @param irodsCommands
-	 *            {@link IRODSCommands} that will be authenticating
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} with the zone and principle information
-	 * @return {@link AuthResponse} with information about the authentication
-	 *         attempt
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a
+	 *         connected, authenticated session with an iRODS agent. Note that
+	 *         the protocol returned may not be the one originally provided,
+	 *         based on the auth method.
+	 * 
 	 * @throws AuthenticationException
-	 *             if the authentication proceeded normally, but the principle
-	 *             could not be authenticated
 	 * @throws JargonException
-	 *             if the authentication proceeded abnormally, not caused by
-	 *             simply being authorized
 	 */
-	protected AuthResponse authenticate(final IRODSCommands irodsCommands,
+	protected AbstractIRODSMidLevelProtocol authenticate(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
 		preConnectionStartup();
 		StartupResponseData startupResponseData = sendStartupPacket(
-				irodsAccount, irodsCommands);
+				irodsAccount, irodsMidLevelProtocol);
 		postConnectionStartupPreAuthentication();
-		AuthResponse authResponse = processAuthenticationAfterStartup(
-				irodsAccount, irodsCommands, startupResponseData);
-		authResponse.setStartupResponse(startupResponseData);
-		return authResponse;
+		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
+				irodsAccount, irodsMidLevelProtocol, startupResponseData);
+		authenticatedProtocol = processAfterAuthentication(
+				authenticatedProtocol, startupResponseData);
+
+		return authenticatedProtocol;
 	}
 
 	/**
-	 * This method is called by the authentication process after the startup
-	 * pack has been sent, and represents the point where custom authentication
-	 * takes place
+	 * This method provides a life cycle hook after the authentication process
+	 * has completed. By default, the method just returns the protocol as passed
+	 * in. In some authentication scenarios, follow on steps may manipulate, or
+	 * even create a different authenticated protocol layer and return that.
+	 * <p/>
+	 * Note that the protocol contains a reference to the {@link AuthResponse}
+	 * that details the authenticating and authenticated accounts and
+	 * identities.
 	 * 
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
 	 * @param irodsAccount
-	 * @param irodsCommands
-	 * @param startupResponseData
-	 *            {@link StartupResponseData} with iRODS response to startup
-	 *            pack info
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a
+	 *         connected, authenticated session with an iRODS agent. Note that
+	 *         the protocol returned may not be the one originally provided,
+	 *         based on the auth method.
+	 * 
+	 * @throws AuthenticationException
+	 * @throws JargonException
 	 */
-	protected abstract AuthResponse processAuthenticationAfterStartup(
-			IRODSAccount irodsAccount, IRODSCommands irodsCommands,
+	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			final StartupResponseData startupResponseData)
+			throws AuthenticationException, JargonException {
+		return irodsMidLevelProtocol;
+	}
+
+	protected String sendAuthRequestAndGetChallenge(
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
+		try {
+			irodsCommands.getIrodsConnection().send(
+					irodsCommands.createHeader(
+							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
+							0, AUTH_REQUEST_AN));
+			irodsCommands.getIrodsConnection().flush();
+		} catch (ClosedChannelException e) {
+			log.error("closed channel", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (InterruptedIOException e) {
+			log.error("interrupted io", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		} catch (IOException e) {
+			log.error("io exception", e);
+			e.printStackTrace();
+			throw new JargonException(e);
+		}
+
+		Tag message = irodsCommands.readMessage(false);
+
+		// Create and send the response
+		String cachedChallengeValue = message.getTag(StartupPack.CHALLENGE)
+				.getStringValue();
+		log.debug("cached challenge response:{}", cachedChallengeValue);
+
+		return cachedChallengeValue;
+
+	}
+
+	/**
+	 * Hook method in the life cycle after the startup packet has been sent,
+	 * encapsulating the actual authentication process.
+	 * <p/>
+	 * This abstract method should be implemented in a subclass authentication
+	 * handler
+	 * 
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} with information from the
+	 *            handshake process
+	 * @return {@link AbstractIRODSMidLevelProtocol}
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
+	protected abstract AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
+			IRODSAccount irodsAccount,
+			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
-	/**
-	 * Handles sending the userinfo connection protocol. First, sends initial
-	 * handshake with IRODS.
-	 * <P>
-	 * 
-	 * @throws IOException
-	 *             if the host cannot be opened or created.
-	 */
 	protected StartupResponseData sendStartupPacket(
-			final IRODSAccount irodsAccount, final IRODSCommands irodsCommands)
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands

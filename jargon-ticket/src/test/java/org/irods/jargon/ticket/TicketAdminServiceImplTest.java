@@ -46,7 +46,9 @@ public class TicketAdminServiceImplTest {
 
 	@Before
 	public void beforeEach() throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
+		if (irodsFileSystem != null) {
+			irodsFileSystem.closeAndEatExceptions();
+		}
 	}
 
 	@BeforeClass

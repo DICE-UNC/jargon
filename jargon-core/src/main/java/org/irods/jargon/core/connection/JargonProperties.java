@@ -154,8 +154,8 @@ public interface JargonProperties {
 	 * https://code.renci.org/gf/
 	 * project/jargon/wiki/?pagename=NormalIOArrangement. Jargon has an internal
 	 * buffer where the various <code>send()</code> methods in
-	 * {@link IRODSConnection} write data to iRODS. In these methods, Jargon
-	 * uses an internal cache buffer for the sends. This has been done
+	 * {@link IRODSBasicTCPConnection} write data to iRODS. In these methods,
+	 * Jargon uses an internal cache buffer for the sends. This has been done
 	 * historically, but the benefits of this cache have not yet been measured.
 	 * Setting this as a parameter to turn off will assist in testing the use of
 	 * the buffer, and the option of eliminating the buffer altogether. return
@@ -166,9 +166,10 @@ public interface JargonProperties {
 
 	/**
 	 * Get the buffer size used for the input stream between Jargon and iRODS
-	 * passed to the <code>send()</code> method of {@link IRODSConnection}. This
-	 * input stream would typically be from a local file that was being sent to
-	 * iRODS, or other such source. The {@link IRODSCommands} object, using the
+	 * passed to the <code>send()</code> method of
+	 * {@link IRODSBasicTCPConnection}. This input stream would typically be
+	 * from a local file that was being sent to iRODS, or other such source. The
+	 * {@link IRODSMidLevelProtocol} object, using the
 	 * <code>irodsFunction</code> method with the <code>InputStream</code>
 	 * parameter, will wrap the given input stream in a
 	 * <code>BufferedInputStream</code> based on the setting of this parameter.
@@ -183,8 +184,8 @@ public interface JargonProperties {
 
 	/**
 	 * Get the size of the buffer used in read/write operations to copy data
-	 * from an input stream to output stream in the {@link IRODSConnection}
-	 * class <code>send()</code> methods.
+	 * from an input stream to output stream in the
+	 * {@link IRODSBasicTCPConnection} class <code>send()</code> methods.
 	 * 
 	 * @return <code>int</code> with the size of the read/write loop buffer
 	 *         jargon.io.input.to.output.copy.byte.buffer.size
@@ -344,5 +345,14 @@ public interface JargonProperties {
 	 * @return
 	 */
 	boolean isForcePamFlush();
+
+	/**
+	 * Get the type of networking layer that will be used in the low level
+	 * connections to iRODS (currently the values are limited to 'tcp'). If no
+	 * property is found, then 'tcp' will be defaulted.
+	 * 
+	 * @return
+	 */
+	String getConnectionFactory();
 
 }

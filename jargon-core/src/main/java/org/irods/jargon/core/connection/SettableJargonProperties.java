@@ -50,6 +50,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean usingSpecQueryForDataObjPermissionsForUserInGroup = false;
 	private int pamTimeToLive = 0;
 	private boolean forcePamFlush = false;
+	private String connectionFactory = "tcp";
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -125,6 +126,7 @@ public class SettableJargonProperties implements JargonProperties {
 		setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 		setForcePamFlush(jargonProperties.isForcePamFlush());
+		this.connectionFactory = jargonProperties.getConnectionFactory();
 	}
 
 	/*
@@ -767,6 +769,33 @@ public class SettableJargonProperties implements JargonProperties {
 
 	public synchronized void setForcePamFlush(final boolean forcePamFlush) {
 		this.forcePamFlush = forcePamFlush;
+	}
+
+	@Override
+	public String getConnectionFactory() {
+		return connectionFactory;
+	}
+
+	public int getPamTimeToLive() {
+		return pamTimeToLive;
+	}
+
+	public void setPamTimeToLive(int pamTimeToLive) {
+		this.pamTimeToLive = pamTimeToLive;
+	}
+
+	public void setUsingDiscoveredServerPropertiesCache(
+			boolean usingDiscoveredServerPropertiesCache) {
+		this.usingDiscoveredServerPropertiesCache = usingDiscoveredServerPropertiesCache;
+	}
+
+	public void setUsingSpecificQueryForCollectionListingsWithPermissions(
+			boolean usingSpecificQueryForCollectionListingsWithPermissions) {
+		this.usingSpecificQueryForCollectionListingsWithPermissions = usingSpecificQueryForCollectionListingsWithPermissions;
+	}
+
+	public void setConnectionFactory(String connectionFactory) {
+		this.connectionFactory = connectionFactory;
 	}
 
 }
