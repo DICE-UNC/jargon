@@ -1,7 +1,7 @@
 *'''Project''': Jargon-core API
-*'''Date''': 
-*'''Release Version''': 3.3.2beta1
-*'''git tag''': 3.3.2beta1
+*'''Date''': 01/24/2014
+*'''Release Version''': 3.3.2-beta2
+*'''git tag''': 3.3.2-beta2
 
 ==News==
 
@@ -25,7 +25,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3, as well as eIRODS 3.0.1 beta
+*Jargon supports iRODS 2.5 through iRODS 3.3, as well as eIRODS 4.0 beta
 
 ==Libraries==
 
