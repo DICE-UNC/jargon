@@ -46,7 +46,9 @@ public class TicketAdminServiceImplTest {
 
 	@Before
 	public void beforeEach() throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
+		if (irodsFileSystem != null) {
+			irodsFileSystem.closeAndEatExceptions();
+		}
 	}
 
 	@BeforeClass
@@ -2200,7 +2202,8 @@ public class TicketAdminServiceImplTest {
 
 	// TODO: change this to InvalidHostException (-855000) when that gets
 	// implemented
-	@Ignore//(expected = JargonException.class)
+	@Ignore
+	// (expected = JargonException.class)
 	public void testAddTicketHostRestrictionForTicketExistsInvalidHost()
 			throws Exception {
 
@@ -2401,7 +2404,8 @@ public class TicketAdminServiceImplTest {
 
 	// TODO: change this to InvalidHostException (-855000) when that gets
 	// implemented
-	@Ignore//expected = JargonException.class)
+	@Ignore
+	// expected = JargonException.class)
 	public void testRemoveTicketHostRestrictionForTicketExistsInvalidHost()
 			throws Exception {
 

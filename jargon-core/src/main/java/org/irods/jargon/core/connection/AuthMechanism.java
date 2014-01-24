@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedChannelException;
 
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.StartupPack;
@@ -41,6 +42,26 @@ abstract class AuthMechanism {
 
 	}
 
+	/**
+	 * Given the initial connection, perform the authentication process. This
+	 * process will return a <code>AbstractIRODSMidLevelProtocol</code>. This
+	 * method will start the connection by sending the auth request, process the
+	 * startup packet, and then call the authentication method of the actual
+	 * auth mechanism implementation.
+	 * 
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a
+	 *         connected, authenticated session with an iRODS agent. Note that
+	 *         the protocol returned may not be the one originally provided,
+	 *         based on the auth method.
+	 * 
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
 	protected AbstractIRODSMidLevelProtocol authenticate(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
@@ -54,9 +75,32 @@ abstract class AuthMechanism {
 		authenticatedProtocol = processAfterAuthentication(
 				authenticatedProtocol, startupResponseData);
 
-		return irodsMidLevelProtocol;
+		return authenticatedProtocol;
 	}
 
+	/**
+	 * This method provides a life cycle hook after the authentication process
+	 * has completed. By default, the method just returns the protocol as passed
+	 * in. In some authentication scenarios, follow on steps may manipulate, or
+	 * even create a different authenticated protocol layer and return that.
+	 * <p/>
+	 * Note that the protocol contains a reference to the {@link AuthResponse}
+	 * that details the authenticating and authenticated accounts and
+	 * identities.
+	 * 
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a
+	 *         connected, authenticated session with an iRODS agent. Note that
+	 *         the protocol returned may not be the one originally provided,
+	 *         based on the auth method.
+	 * 
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
@@ -98,9 +142,28 @@ abstract class AuthMechanism {
 
 	}
 
+	/**
+	 * Hook method in the life cycle after the startup packet has been sent,
+	 * encapsulating the actual authentication process.
+	 * <p/>
+	 * This abstract method should be implemented in a subclass authentication
+	 * handler
+	 * 
+	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol} that is already
+	 *            connected, but not authenticated
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} with information from the
+	 *            handshake process
+	 * @return {@link AbstractIRODSMidLevelProtocol}
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
 	protected abstract AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
 			IRODSAccount irodsAccount,
-			AbstractIRODSMidLevelProtocol irodsCommands,
+			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
