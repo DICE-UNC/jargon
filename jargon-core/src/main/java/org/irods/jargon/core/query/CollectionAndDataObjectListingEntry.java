@@ -39,6 +39,16 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	private String parentPath = "";
 	private String pathOrName = "";
+	/**
+	 * Optional arbitrary string value that can contain a description or special
+	 * note. This can be useful for special types of collection listings
+	 */
+	private String description = "";
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
 	private String specialObjectPath = "";
 	private ObjectType objectType = null;
 	private Date createdAt = null;
@@ -294,5 +304,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public void setSpecialObjectPath(final String specialObjectPath) {
 		this.specialObjectPath = specialObjectPath;
+	}
+
+	public String getDescription() {
+		return description;
 	}
 }
