@@ -122,6 +122,29 @@ public class GridAccount implements Serializable {
 	@Column(name = "updated_at", nullable = false)
 	private Date updatedAt;
 
+	/**
+	 * Run as name
+	 */
+	@Column(name = "run_as_user_name", nullable = true)
+	private String runAsUserName = "";
+
+	/**
+	 * Run as Authentication scheme used for the grid account
+	 */
+	@Enumerated(EnumType.STRING)
+	@Column(name = "auth_scheme", nullable = true)
+	private AuthScheme runAsAuthScheme;
+
+	@Column(name = "auth_date", nullable = true)
+	private Date authDate;
+
+	/**
+	 * iRODS password (note that this is encrypted in the database by a
+	 * user-provided pass-phrase
+	 */
+	@Column(name = "run_as_password", nullable = true)
+	private String runAsPassword = "";
+
 	@OneToMany(mappedBy = "gridAccount", targetEntity = Transfer.class, fetch = FetchType.LAZY)
 	@OrderBy("createdAt DESC")
 	@LazyCollection(LazyCollectionOption.TRUE)
@@ -349,6 +372,66 @@ public class GridAccount implements Serializable {
 	 */
 	public void setPreset(final boolean preset) {
 		this.preset = preset;
+	}
+
+	/**
+	 * @return the runAsUserName
+	 */
+	public String getRunAsUserName() {
+		return runAsUserName;
+	}
+
+	/**
+	 * @param runAsUserName
+	 *            the runAsUserName to set
+	 */
+	public void setRunAsUserName(String runAsUserName) {
+		this.runAsUserName = runAsUserName;
+	}
+
+	/**
+	 * @return the runAsAuthScheme
+	 */
+	public AuthScheme getRunAsAuthScheme() {
+		return runAsAuthScheme;
+	}
+
+	/**
+	 * @param runAsAuthScheme
+	 *            the runAsAuthScheme to set
+	 */
+	public void setRunAsAuthScheme(AuthScheme runAsAuthScheme) {
+		this.runAsAuthScheme = runAsAuthScheme;
+	}
+
+	/**
+	 * @return the authDate
+	 */
+	public Date getAuthDate() {
+		return authDate;
+	}
+
+	/**
+	 * @param authDate
+	 *            the authDate to set
+	 */
+	public void setAuthDate(Date authDate) {
+		this.authDate = authDate;
+	}
+
+	/**
+	 * @return the runAsPassword
+	 */
+	public String getRunAsPassword() {
+		return runAsPassword;
+	}
+
+	/**
+	 * @param runAsPassword
+	 *            the runAsPassword to set
+	 */
+	public void setRunAsPassword(String runAsPassword) {
+		this.runAsPassword = runAsPassword;
 	}
 
 }

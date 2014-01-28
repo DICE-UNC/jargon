@@ -34,25 +34,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Bug Fixes==
 
-[#1635] ttl parameter in PAM missing
-**Fix PAM login errors on iRODS 3.3 due to addition of timeToLive parameter
-
-*[#1726] need to add back flushes for 3.2 compatability
-**add a force.pam.flush jargon property for pre 3.3 servers.  This is set in jargon.properties and is false by default.  If you are running Jargon against iRODS 3.2, you may find that pam operations freeze, and this flag needs to be set to force some extra flushes that were required.  This setting will negatively impact performance so it should be turned off for iRODS 3.3.
-
-*[#1840] error doing a rename in idrop
-**error with rename of a folder under a parent adding intermediate directory
-
-*[#1841] pre count of get transfers was counting replicas
-
-*[#1842] [iROD-Chat:11109] imcoll symlinks across zones
-**Added unit tests for creating soft links in federated zone and doing listings in that zone
-
-*Numerous small fixes and improvements since the 3.3.1 release.
 
 ==Features==
-
-*[#964] grid memory and presets
-**refactor of database to include grid memory
-**conveyor framework
- 
+**[#1850] direct login without grid passphrase mode for shared computer

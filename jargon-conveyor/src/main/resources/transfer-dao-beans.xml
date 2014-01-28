@@ -96,7 +96,7 @@
     <property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   </bean>
   
-  <bean id="conveyorService" class="org.irods.jargon.conveyor.core.ConveyorServiceImpl" init-method="init">
+  <bean id="conveyorService" class="org.irods.jargon.conveyor.core.ConveyorServiceImpl">
   	<property name="conveyorExecutorService" ref="conveyorExecutorService"/>
   	<property name="gridAccountService" ref="gridAccountService"/>
   	<property name="configurationService" ref="configurationService"/> 

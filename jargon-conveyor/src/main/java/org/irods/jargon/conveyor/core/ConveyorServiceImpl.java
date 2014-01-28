@@ -2,7 +2,12 @@ package org.irods.jargon.conveyor.core;
 
 import java.util.Timer;
 
+import javax.naming.AuthenticationException;
+
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
@@ -159,6 +164,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 		synchronized (this) {
 			log.info("validating pass phrase...");
 			gridAccountService.validatePassPhrase(passPhrase);
+			init();
 		}
 
 	}
@@ -326,6 +332,42 @@ public class ConveyorServiceImpl implements ConveyorService {
 			log.error("cannot process queue for initialization!", e);
 			throw new ConveyorRuntimeException("cannot process queue for init",
 					e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#
+	 * validatePassPhraseInTearOffMode
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void validatePassPhraseInTearOffMode(IRODSAccount irodsAccount)
+			throws AuthenticationException, ConveyorExecutionException,
+			JargonException {
+		log.info("validatePassPhraseInTearOffMode");
+		synchronized (this) {
+			log.info("validating given iRODS Account...");
+			if (irodsAccount == null) {
+				throw new IllegalArgumentException("null irodsAccount");
+			}
+
+			gridAccountService.deleteAllGridAccounts();
+
+			log.info("attempting to authenticate the given account:{}",
+					irodsAccount);
+			AuthResponse authResponse = this.getIrodsAccessObjectFactory()
+					.authenticateIRODSAccount(irodsAccount);
+
+			log.info("auth accepted, set the pass phrase to the given password and store the grid Account");
+
+			gridAccountService.validatePassPhrase(irodsAccount.getPassword());
+			gridAccountService
+					.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
+
+			init();
 		}
 
 	}

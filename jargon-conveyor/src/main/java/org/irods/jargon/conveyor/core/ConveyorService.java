@@ -1,5 +1,9 @@
 package org.irods.jargon.conveyor.core;
 
+import javax.naming.AuthenticationException;
+
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 
@@ -51,6 +55,21 @@ public interface ConveyorService {
 	 */
 	void validatePassPhrase(String passPhrase)
 			throws PassPhraseInvalidException, ConveyorExecutionException;
+
+	/**
+	 * Initialize the conveyor service in shared mode. This means that all grid
+	 * accounts are cleared and initialized at start up, all previous transfers
+	 * are cleared, and the app starts in a 'fresh' state, with the account
+	 * information provided, and the
+	 * 
+	 * @param irodsAccount
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 * @throws ConveyorExecutionException
+	 */
+	void validatePassPhraseInTearOffMode(final IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException,
+			ConveyorExecutionException, JargonException;
 
 	/**
 	 * Check to see if this is the first run of the conveyor service by looking
