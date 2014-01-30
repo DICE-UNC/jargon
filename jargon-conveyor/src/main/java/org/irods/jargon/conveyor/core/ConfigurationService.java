@@ -96,7 +96,7 @@ public interface ConfigurationService {
 	 *         if not exists
 	 * @throws ConveyorExecutionException
 	 */
-	ConfigurationProperty findConfigurationServiceByKey(String configurationKey)
+	ConfigurationProperty findConfigurationPropertyByKey(String configurationKey)
 			throws ConveyorExecutionException;
 
 	/**
@@ -133,5 +133,15 @@ public interface ConfigurationService {
 	 */
 	CachedConveyorConfigurationProperties getCachedConveyorConfigurationProperties()
 			throws ConveyorExecutionException;
+
+	/**
+	 * Indicates whether the conveyor service is in 'tear off' mode, which means
+	 * that it initializes fresh each time instead of caching data
+	 * 
+	 * @return <code>boolean</code> of true if the configuration indicates tear
+	 *         off mode
+	 * @throws ConveyorExecutionException
+	 */
+	boolean isInTearOffMode() throws ConveyorExecutionException;
 
 }

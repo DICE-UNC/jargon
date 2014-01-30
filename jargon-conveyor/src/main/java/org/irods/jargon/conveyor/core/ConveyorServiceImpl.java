@@ -2,11 +2,10 @@ package org.irods.jargon.conveyor.core;
 
 import java.util.Timer;
 
-import javax.naming.AuthenticationException;
-
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
@@ -354,19 +353,17 @@ public class ConveyorServiceImpl implements ConveyorService {
 				throw new IllegalArgumentException("null irodsAccount");
 			}
 
-			gridAccountService.deleteAllGridAccounts();
-
 			log.info("attempting to authenticate the given account:{}",
 					irodsAccount);
 			AuthResponse authResponse = this.getIrodsAccessObjectFactory()
 					.authenticateIRODSAccount(irodsAccount);
 
 			log.info("auth accepted, set the pass phrase to the given password and store the grid Account");
+			this.resetConveyorService();
 
 			gridAccountService.validatePassPhrase(irodsAccount.getPassword());
-			gridAccountService
-					.addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount);
-
+			gridAccountService.addOrUpdateGridAccountBasedOnIRODSAccount(
+					irodsAccount, authResponse);
 			init();
 		}
 

@@ -1,8 +1,7 @@
 package org.irods.jargon.conveyor.core;
 
-import javax.naming.AuthenticationException;
-
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;

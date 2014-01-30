@@ -45,8 +45,7 @@ public class GridAccountServiceImplTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-		testingProperties = testingPropertiesLoader.getTestProperties();
+
 	}
 
 	@AfterClass
@@ -314,7 +313,7 @@ public class GridAccountServiceImplTest {
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testReplacePassPhraseNull() throws Exception {
-		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
+		GridAccountService gridAccountServiceTest = new GridAccountServiceImpl();
 		gridAccountServiceTest.changePassPhraseWhenAlreadyValidated(null);
 	}
 

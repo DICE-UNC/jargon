@@ -34,10 +34,29 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 
 	private ConfigurationPropertyDAO configurationPropertyDAO;
 	private CachedConveyorConfigurationProperties cachedConveyorConfigurationProperties = null;
-	private Object propsLockObject = new Object();
+	private final Object propsLockObject = new Object();
+	public static final String TEAR_OFF_MODE = "tear.off.mode";
 
 	private final Logger log = LoggerFactory
 			.getLogger(ConfigurationServiceImpl.class);
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConfigurationService#isInTearOffMode()
+	 */
+	@Override
+	public boolean isInTearOffMode() throws ConveyorExecutionException {
+		ConfigurationProperty property = this
+				.findConfigurationPropertyByKey(TEAR_OFF_MODE);
+		boolean inTearOff = false;
+		if (property != null) {
+			inTearOff = Boolean.parseBoolean(property.getPropertyValue());
+		}
+
+		return inTearOff;
+	}
 
 	/**
 	 * @return the configurationPropertyDAO
@@ -80,7 +99,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 	 * findConfigurationServiceByKey(java.lang.String)
 	 */
 	@Override
-	public ConfigurationProperty findConfigurationServiceByKey(
+	public ConfigurationProperty findConfigurationPropertyByKey(
 			final String configurationKey) throws ConveyorExecutionException {
 		if (configurationKey == null || configurationKey.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -254,7 +273,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 		for (Object key : propertiesToImport.keySet()) {
 			propVal = (String) propertiesToImport.get(key);
 			propKey = (String) key;
-			configurationProperty = findConfigurationServiceByKey(propKey);
+			configurationProperty = findConfigurationPropertyByKey(propKey);
 
 			if (configurationProperty == null) {
 				configurationProperty = new ConfigurationProperty();

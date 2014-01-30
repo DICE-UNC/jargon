@@ -1,8 +1,12 @@
 package org.irods.jargon.conveyor.basic;
 
+import java.util.Properties;
+
 import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.junit.AfterClass;
@@ -25,15 +29,33 @@ public class BasicConveyorServiceTest {
 	public static final String testPassPhrase = "BasicConveyorServiceTest";
 	@Autowired
 	private ConveyorService conveyorService;
+	private static TestingPropertiesHelper testingPropertiesLoader;
+	private static Properties testingProperties;
+	private static IRODSFileSystem irodsFileSystem;
 
+	@SuppressWarnings("static-access")
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
-		testingPropertiesLoader.getTestProperties();
+		testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = irodsFileSystem.instance();
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+	}
+
+	@Test
+	public void testInitializeInTearOffMode() throws Exception {
+		conveyorService.setIrodsAccessObjectFactory(irodsFileSystem
+				.getIRODSAccessObjectFactory());
+		conveyorService.resetConveyorService();
+		IRODSAccount irodsAccount = testingPropertiesLoader
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		conveyorService.validatePassPhraseInTearOffMode(irodsAccount);
+		Assert.assertEquals("did not cache pass phrase", irodsAccount
+				.getPassword(), conveyorService.getGridAccountService()
+				.getCachedPassPhrase());
 	}
 
 	@Test

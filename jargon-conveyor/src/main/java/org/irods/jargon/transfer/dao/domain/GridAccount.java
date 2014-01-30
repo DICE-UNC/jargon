@@ -132,7 +132,7 @@ public class GridAccount implements Serializable {
 	 * Run as Authentication scheme used for the grid account
 	 */
 	@Enumerated(EnumType.STRING)
-	@Column(name = "auth_scheme", nullable = true)
+	@Column(name = "run_as_auth_scheme", nullable = true)
 	private AuthScheme runAsAuthScheme;
 
 	@Column(name = "auth_date", nullable = true)
