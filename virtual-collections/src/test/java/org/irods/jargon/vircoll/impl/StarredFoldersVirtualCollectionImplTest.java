@@ -1,15 +1,18 @@
 package org.irods.jargon.vircoll.impl;
 
-import static org.junit.Assert.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import junit.framework.Assert;
+
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.utils.CollectionAndPath;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
+import org.irods.jargon.usertagging.starring.IRODSStarringService;
 import org.irods.jargon.vircoll.VirtualCollectionContext;
 import org.irods.jargon.vircoll.VirtualCollectionContextImpl;
 import org.junit.Test;
@@ -28,19 +31,32 @@ public class StarredFoldersVirtualCollectionImplTest {
 		VirtualCollectionContext virtualCollectionContext = new VirtualCollectionContextImpl(
 				irodsAccessObjectFactory, irodsAccount);
 
-		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection();
-		virColl.setContext(virtualCollectionContext);
-		virColl.setCollectionParentAbsolutePath("/");
+		IRODSStarringService irodsStarringService = Mockito
+				.mock(IRODSStarringService.class);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
-				.mock(CollectionAndDataObjectListAndSearchAO.class);
+		StarredFoldersVirtualCollection virColl = new StarredFoldersVirtualCollection(
+				irodsStarringService);
+		virColl.setContext(virtualCollectionContext);
 
 		List<IRODSStarredFileOrCollection> results = new ArrayList<IRODSStarredFileOrCollection>();
 		IRODSStarredFileOrCollection starred = new IRODSStarredFileOrCollection(
 				MetadataDomain.COLLECTION, testPath, descr, "bob");
 		results.add(starred);
-		
-		Mockito.when(collection)
+		Mockito.when(irodsStarringService.listStarredCollections(0))
+				.thenReturn(results);
+		List<CollectionAndDataObjectListingEntry> actual = virColl
+				.queryCollections(0);
+		Assert.assertNotNull(actual);
+		Assert.assertFalse(actual.isEmpty());
+		CollectionAndDataObjectListingEntry actualEntry = actual.get(0);
+		CollectionAndPath cp = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(testPath);
+		Assert.assertEquals(cp.getCollectionParent(),
+				actualEntry.getParentPath());
+		Assert.assertEquals(testPath, actualEntry.getPathOrName());
+		Assert.assertEquals(
+				CollectionAndDataObjectListingEntry.ObjectType.COLLECTION,
+				actualEntry.getObjectType());
 
 	}
 }

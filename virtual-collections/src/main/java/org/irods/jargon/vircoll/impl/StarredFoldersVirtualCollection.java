@@ -23,18 +23,25 @@ import org.slf4j.LoggerFactory;
  * @author mikeconway
  * 
  */
-public class StarredFoldersVirtualCollectionImpl extends
-		AbstractVirtualCollection {
+public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 
 	private final IRODSStarringService irodsStarringService;
 
 	static Logger log = LoggerFactory
-			.getLogger(StarredFoldersVirtualCollectionImpl.class);
+			.getLogger(StarredFoldersVirtualCollection.class);
+
+	public static final String DESCRIPTION_KEY = "virtual.collections.starred";
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#store()
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#store()
 	 */
 	@Override
 	public void store() throws JargonException {
@@ -46,6 +53,12 @@ public class StarredFoldersVirtualCollectionImpl extends
 	 * 
 	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#delete()
 	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#delete()
+	 */
 	@Override
 	public void delete() throws JargonException {
 	}
@@ -54,6 +67,13 @@ public class StarredFoldersVirtualCollectionImpl extends
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#queryAll(int)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#queryAll
+	 * (int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> queryAll(int offset)
@@ -74,6 +94,12 @@ public class StarredFoldersVirtualCollectionImpl extends
 	 * 
 	 * @see
 	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryCollections(int)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#
+	 * queryCollections(int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> queryCollections(int offset)
@@ -97,7 +123,9 @@ public class StarredFoldersVirtualCollectionImpl extends
 					.separateCollectionAndPathFromGivenAbsolutePath(coll
 							.getDomainUniqueName());
 			entry.setParentPath(collAndPath.getCollectionParent());
+			entry.setPathOrName(coll.getDomainUniqueName());
 			entry.setDescription(coll.getDescription());
+			entry.setTotalRecords(coll.getTotalRecords());
 			entries.add(entry);
 		}
 
@@ -110,6 +138,12 @@ public class StarredFoldersVirtualCollectionImpl extends
 	 * 
 	 * @see
 	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryDataObjects(int)
+	 */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#
+	 * queryDataObjects(int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
@@ -144,12 +178,12 @@ public class StarredFoldersVirtualCollectionImpl extends
 	 * @param irodsStarringService
 	 *            {@link IRODSStarringService} that is connected to iRODS
 	 */
-	StarredFoldersVirtualCollectionImpl(
-			IRODSStarringService irodsStarringService) {
+	StarredFoldersVirtualCollection(IRODSStarringService irodsStarringService) {
 		super();
 		if (irodsStarringService == null) {
 			throw new IllegalArgumentException("null irodsStarringService");
 		}
 		this.irodsStarringService = irodsStarringService;
+		this.setDescription(DESCRIPTION_KEY);
 	}
 }

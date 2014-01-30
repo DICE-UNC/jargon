@@ -3,9 +3,17 @@
  */
 package org.irods.jargon.vircoll.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
 import org.irods.jargon.usertagging.starring.IRODSStarringServiceImpl;
+import org.irods.jargon.vircoll.AbstractVirtualCollection;
 import org.irods.jargon.vircoll.VirtualCollectionContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory implementation for virtual collections.
@@ -13,7 +21,10 @@ import org.irods.jargon.vircoll.VirtualCollectionContext;
  * @author mikeconway
  * 
  */
-public class VirtualCollectionFactoryImpl {
+public class VirtualCollectionFactoryImpl implements VirtualCollectionFactory {
+
+	static Logger log = LoggerFactory
+			.getLogger(VirtualCollectionFactoryImpl.class);
 
 	/**
 	 * Required dependency on the context for obtaining virtual collections
@@ -35,21 +46,53 @@ public class VirtualCollectionFactoryImpl {
 		this.virtualCollectionContext = virtualCollectionContext;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.vircoll.impl.VirtualCollectionFactory#
+	 * getVirtualCollectionContext()
+	 */
+	@Override
 	public VirtualCollectionContext getVirtualCollectionContext() {
 		return virtualCollectionContext;
 	}
 
-	/**
-	 * Create a virtual collection that actually just wraps an underlying irods
-	 * collection
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param parentPath
-	 *            <code>String</code> with the absolute path to an iRODS parent
-	 *            collection
-	 * @return {@link CollectionBasedVirtualCollection}
+	 * @see org.irods.jargon.vircoll.impl.VirtualCollectionFactory#
+	 * listDefaultUserCollections()
 	 */
+	@Override
+	public List<AbstractVirtualCollection> listDefaultUserCollections() {
+		log.info("listDefaultUserCollections()");
+		assert hasValidState();
+
+		List<AbstractVirtualCollection> virtualCollections = new ArrayList<AbstractVirtualCollection>();
+		// add root
+		virtualCollections.add(instanceCollectionBasedVirtualCollection("/"));
+		// add user dir
+		virtualCollections
+				.add(instanceCollectionBasedVirtualCollection(MiscIRODSUtils
+						.computeHomeDirectoryForIRODSAccount(this.virtualCollectionContext
+								.getIrodsAccount())));
+		// add starred folders
+		virtualCollections.add(instanceStarredFolderVirtualCollection());
+		log.info("done...");
+		return virtualCollections;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.vircoll.impl.VirtualCollectionFactory#
+	 * instanceCollectionBasedVirtualCollection(java.lang.String)
+	 */
+	@Override
 	public CollectionBasedVirtualCollection instanceCollectionBasedVirtualCollection(
 			final String parentPath) {
+		assert hasValidState();
 
 		if (parentPath == null || parentPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty parentPath");
@@ -60,21 +103,31 @@ public class VirtualCollectionFactoryImpl {
 		return coll;
 	}
 
-	/**
-	 * Create a virtual collection of starred files and folders
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param parentPath
-	 * @return
+	 * @see org.irods.jargon.vircoll.impl.VirtualCollectionFactory#
+	 * instanceStarredFolderVirtualCollection()
 	 */
-	public StarredFoldersVirtualCollectionImpl instanceStarredFolderVirtualCollection(
-			final String parentPath) {
+	@Override
+	public StarredFoldersVirtualCollection instanceStarredFolderVirtualCollection() {
+		assert hasValidState();
 
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
 				virtualCollectionContext.getIrodsAccessObjectFactory(),
 				virtualCollectionContext.getIrodsAccount());
-		StarredFoldersVirtualCollectionImpl coll = new StarredFoldersVirtualCollectionImpl(
+		StarredFoldersVirtualCollection coll = new StarredFoldersVirtualCollection(
 				irodsStarringService);
 		coll.setContext(this.getVirtualCollectionContext());
 		return coll;
+	}
+
+	public IRODSAccount getIrodsAccount() {
+		assert hasValidState();
+		return virtualCollectionContext.getIrodsAccount();
+	}
+
+	private boolean hasValidState() {
+		return (virtualCollectionContext != null);
 	}
 }
