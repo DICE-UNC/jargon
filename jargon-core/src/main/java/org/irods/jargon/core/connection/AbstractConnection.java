@@ -92,6 +92,17 @@ public abstract class AbstractConnection {
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.irodsProtocolManager = irodsProtocolManager;
+
+		/*
+		 * If using the custom internal buffer, initialize it
+		 */
+
+		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+			log.info("using internal cache buffer of size:{}",
+					pipelineConfiguration.getInternalCacheBufferSize());
+			outputBuffer = new byte[pipelineConfiguration
+					.getInternalCacheBufferSize()];
+		}
 		initializeConnection(irodsAccount);
 
 	}
