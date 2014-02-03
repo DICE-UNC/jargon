@@ -25,6 +25,9 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 	private final String collectionParentAbsolutePath;
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 
+	public static final String DESCRIPTION_KEY_HOME = "virtual.collections.home";
+	public static final String DESCRIPTION_KEY_ROOT = "virtual.collections.root";
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -36,7 +39,7 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 
 		log.info("query()");
 
-		log.info("offset:{|}", offset);
+		log.info("offset:{}", offset);
 
 		if (collectionParentAbsolutePath == null
 				|| collectionParentAbsolutePath.isEmpty()) {
@@ -98,9 +101,9 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 	public List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
 			throws JargonException {
 
-		log.info("queryCollections()");
+		log.info("queryDataObjects()");
 
-		log.info("offset:{|}", offset);
+		log.info("offset:{}", offset);
 
 		if (collectionParentAbsolutePath == null
 				|| collectionParentAbsolutePath.isEmpty()) {
@@ -115,7 +118,7 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 				.getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(
 						this.getContext().getIrodsAccount());
-		return collectionAndDataObjectListAndSearchAO.listCollectionsUnderPath(
+		return collectionAndDataObjectListAndSearchAO.listDataObjectsUnderPath(
 				collectionParentAbsolutePath, offset);
 
 	}
