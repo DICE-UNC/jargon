@@ -23,6 +23,27 @@ public class CollectionBasedVirtualCollectionTest {
 	public void testQueryAll() {
 		fail("Not yet implemented");
 	}
+	
+	@Test
+	public void testQueryCollectionsNullContext() throws Exception {
+		String testPath = "/a/collection/here";
+		String subColl = "subcoll";
+		IRODSAccount irodsAccount = Mockito.mock(IRODSAccount.class);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+
+		VirtualCollectionContext virtualCollectionContext = null;
+
+		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
+				testPath);
+		virColl.setContext(virtualCollectionContext);
+
+		
+		virColl
+				.queryCollections(0);
+		
+
+	}
 
 	@Test
 	public void testQueryCollections() throws Exception {
@@ -51,6 +72,7 @@ public class CollectionBasedVirtualCollectionTest {
 		entry.setTotalRecords(1);
 
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		entries.add(entry);
 		Mockito.when(
 				collectionAndDataObjectListAndSearchAO
 						.listCollectionsUnderPath(testPath, 0)).thenReturn(
@@ -64,6 +86,13 @@ public class CollectionBasedVirtualCollectionTest {
 				.queryCollections(0);
 		Assert.assertNotNull(actual);
 		Assert.assertFalse(actual.isEmpty());
+		CollectionAndDataObjectListingEntry actualEntry = actual.get(0);
+		Assert.assertEquals("did not set count", entry.getCount(), actualEntry.getCount());
+		Assert.assertEquals("did not set last", entry.isLastResult(), actualEntry.isLastResult());
+		Assert.assertEquals("did not set tot recs", entry.getTotalRecords(), actualEntry.getTotalRecords());
+		Assert.assertEquals("did not set parent", entry.getParentPath(), actualEntry.getParentPath());
+		Assert.assertEquals("did not set pathorname", entry.getPathOrName(), actualEntry.getPathOrName());
+		
 
 	}
 
