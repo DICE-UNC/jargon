@@ -259,6 +259,7 @@ class CollectionListingUtils {
 				.getZone());
 		sb.append("/home");
 		entry.setParentPath(sb.toString());
+		sb.append("/");
 		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
 				.getUserName());
 		entry.setPathOrName(sb.toString());

@@ -150,6 +150,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @return
 	 * @throws JargonException
 	 */
+	@Override
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
