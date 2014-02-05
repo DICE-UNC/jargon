@@ -16,7 +16,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.GridAccountDAO;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
-import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -45,11 +44,8 @@ public class GridAccountServiceImplTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
+		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
 	}
 
 	@Before
@@ -61,7 +57,7 @@ public class GridAccountServiceImplTest {
 	private GridAccountService gridAccountService;
 
 	@Test
-	public final void testAddOrUpdateGridAccountBasedOnIRODSAccountWillBeAdd()
+	public void testAddOrUpdateGridAccountBasedOnIRODSAccountWillBeAdd()
 			throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -82,7 +78,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testAddOrUpdateGridAccountBasedOnIRODSAccountNullAccount()
+	public void testAddOrUpdateGridAccountBasedOnIRODSAccountNullAccount()
 			throws Exception {
 		IRODSAccount irodsAccount = null;
 		String passPhrase = "ooogabooga";
@@ -92,7 +88,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = ConveyorExecutionException.class)
-	public final void testAddOrUpdateGridAccountBasedOnIRODSAccountNotValidated()
+	public void testAddOrUpdateGridAccountBasedOnIRODSAccountNotValidated()
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -109,7 +105,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testAddOrUpdateGridAccountBasedOnIRODSAccountWillBeUpdate()
+	public void testAddOrUpdateGridAccountBasedOnIRODSAccountWillBeUpdate()
 			throws Exception {
 		String testUserName = "user1";
 		String newResc = "newResc";
@@ -132,7 +128,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testRememberResource() throws Exception {
+	public void testRememberResource() throws Exception {
 		String testUserName = "user1";
 		String newResc = "newResc";
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -154,7 +150,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testValidatePassPhraseWhenNoneThenRevalidateShouldBeGood()
+	public void testValidatePassPhraseWhenNoneThenRevalidateShouldBeGood()
 			throws Exception {
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
@@ -163,14 +159,14 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = PassPhraseInvalidException.class)
-	public final void testValidatePassPhraseWhenInvalid() throws Exception {
+	public void testValidatePassPhraseWhenInvalid() throws Exception {
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
 		gridAccountService.validatePassPhrase(passPhrase + "oogaooga");
 	}
 
 	@Test
-	public final void testDeleteGridAccount() throws Exception {
+	public void testDeleteGridAccount() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -187,7 +183,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testDeleteGridAccountNotExists() throws Exception {
+	public void testDeleteGridAccountNotExists() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -200,17 +196,17 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testStorePassPhraseNull() throws Exception {
+	public void testStorePassPhraseNull() throws Exception {
 		gridAccountService.changePassPhraseWhenAlreadyValidated(null);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testStorePassPhraseBlank() throws Exception {
+	public void testStorePassPhraseBlank() throws Exception {
 		gridAccountService.changePassPhraseWhenAlreadyValidated("");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testDeleteGridAccountNullAccount() throws Exception {
+	public void testDeleteGridAccountNullAccount() throws Exception {
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
 		GridAccount gridAccount = null;
@@ -219,7 +215,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testFindGridAccountByIRODSAccountNull() throws Exception {
+	public void testFindGridAccountByIRODSAccountNull() throws Exception {
 		IRODSAccount irodsAccount = null;
 		String passPhrase = "ooogabooga";
 		gridAccountService.validatePassPhrase(passPhrase);
@@ -228,7 +224,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testFindAll() throws Exception {
+	public void testFindAll() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -250,7 +246,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testStorePassPhraseWithAlreadyCachedGridAccounts()
+	public void testStorePassPhraseWithAlreadyCachedGridAccounts()
 			throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -281,8 +277,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = PassPhraseInvalidException.class)
-	public final void testChangePassPhraseWhenNotAlreadyValidated()
-			throws Exception {
+	public void testChangePassPhraseWhenNotAlreadyValidated() throws Exception {
 		String passPhrase = "ooogabooga";
 		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
 		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
@@ -298,27 +293,27 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testValidateNullPassPhrase() throws Exception {
+	public void testValidateNullPassPhrase() throws Exception {
 		GridAccountService gridAccountServiceTest = new GridAccountServiceImpl();
 		gridAccountServiceTest.validatePassPhrase(null);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testValidateBlankPassPhrase() throws Exception {
+	public void testValidateBlankPassPhrase() throws Exception {
 
 		gridAccountService.validatePassPhrase("");
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testReplacePassPhraseNull() throws Exception {
+	public void testReplacePassPhraseNull() throws Exception {
 		GridAccountService gridAccountServiceTest = new GridAccountServiceImpl();
 		gridAccountServiceTest.changePassPhraseWhenAlreadyValidated(null);
 	}
 
 	@Test(expected = ConveyorExecutionException.class)
-	public final void testFindGridAccountForIRODSAccountNotValidated()
+	public void testFindGridAccountForIRODSAccountNotValidated()
 			throws Exception {
 		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
 		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
@@ -336,7 +331,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testFindGridAccountForIRODSAccountNullAccount()
+	public void testFindGridAccountForIRODSAccountNullAccount()
 			throws Exception {
 		GridAccountServiceImpl gridAccountServiceTest = new GridAccountServiceImpl();
 		GridAccountDAO gridAccountDAO = Mockito.mock(GridAccountDAO.class);
@@ -350,7 +345,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testReset() throws Exception {
+	public void testReset() throws Exception {
 		String testUserName = "user1";
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -368,7 +363,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testIsPassPhraseAlreadyStoredWhenAlreadyStored()
+	public void testIsPassPhraseAlreadyStoredWhenAlreadyStored()
 			throws Exception {
 
 		String passPhrase = "ooogabooga";
@@ -379,7 +374,7 @@ public class GridAccountServiceImplTest {
 	}
 
 	@Test
-	public final void testIsPassPhraseAlreadyStoredWhenNotAlreadyStored()
+	public void testIsPassPhraseAlreadyStoredWhenNotAlreadyStored()
 			throws Exception {
 
 		boolean actual = gridAccountService.isPassPhraseStoredAlready();
