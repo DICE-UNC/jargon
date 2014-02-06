@@ -3,6 +3,7 @@ package org.irods.jargon.conveyor.unittest;
 import org.irods.jargon.conveyor.basic.BasicConveyorBootstrapperImplTest;
 import org.irods.jargon.conveyor.basic.BasicConveyorServiceTest;
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImplTest;
+import org.irods.jargon.conveyor.basic.BasicSynchronizationServiceImplTest;
 import org.irods.jargon.conveyor.basic.ConfigurationServiceImplTest;
 import org.irods.jargon.conveyor.basic.GridAccountServiceImplTest;
 import org.irods.jargon.conveyor.basic.TransferAccountingManagementServiceImplTest;
@@ -31,7 +32,8 @@ ConfigurationPropertyDAOTest.class, GridAccountDAOImplTest.class,
 		TransferAccountingManagementServiceImplTest.class,
 		BasicQueueManagerServiceImplTest.class,
 		ConveyorExecutorServiceImplFunctionalTest.class,
-		ConveyorQueueTimerTaskTest.class, ConveyorServiceFunctionalTests.class })
+		ConveyorQueueTimerTaskTest.class, ConveyorServiceFunctionalTests.class,
+		BasicSynchronizationServiceImplTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

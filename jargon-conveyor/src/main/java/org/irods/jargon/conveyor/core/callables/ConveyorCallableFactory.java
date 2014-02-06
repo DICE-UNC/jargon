@@ -65,8 +65,7 @@ public class ConveyorCallableFactory {
 		case COPY:
 			return new CopyConveyorCallable(transferAttempt, conveyorService);
 		case SYNCH:
-			throw new ConveyorExecutionException(
-					"synch transfer not implemented");
+			return new SynchCallable(transferAttempt, conveyorService);
 		default:
 			throw new ConveyorExecutionException(
 					"Unable to create a processor for the given transfer");

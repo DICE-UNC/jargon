@@ -89,7 +89,7 @@ public class Synchronization {
 	private String lastSynchronizationMessage;
 
 	/**
-	 * Enumerated mode of the synchronization (direction of synch)
+	 * Enumerated mode of the synchronization (direction of org.irods.jargon.conveyor.synch)
 	 */
 	@Column(name = "synchronization_mode", nullable = false)
 	@Enumerated(EnumType.STRING)
