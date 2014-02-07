@@ -3,6 +3,7 @@ package org.irods.jargon.conveyor.core;
 import java.util.Timer;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
+import org.irods.jargon.conveyor.synch.SynchComponentFactory;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -67,6 +68,12 @@ public class ConveyorServiceImpl implements ConveyorService {
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	private Timer queueTimer = new Timer();
+
+	/**
+	 * Required dependency on a factory to create synch components
+	 * {@link SynchComponentFactory}
+	 */
+	private SynchComponentFactory synchComponentFactory;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
@@ -367,6 +374,31 @@ public class ConveyorServiceImpl implements ConveyorService {
 			init();
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorService#setSynchComponentFactory
+	 * (org.irods.jargon.conveyor.synch.SynchComponentFactory)
+	 */
+	@Override
+	public void setSynchComponentFactory(
+			SynchComponentFactory synchComponentFactory) {
+		this.synchComponentFactory = synchComponentFactory;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorService#getSynchComponentFactory()
+	 */
+	@Override
+	public SynchComponentFactory getSynchComponentFactory() {
+		return this.synchComponentFactory;
 	}
 
 }

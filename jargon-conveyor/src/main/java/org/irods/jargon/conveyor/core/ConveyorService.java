@@ -1,5 +1,6 @@
 package org.irods.jargon.conveyor.core;
 
+import org.irods.jargon.conveyor.synch.SynchComponentFactory;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -184,5 +185,21 @@ public interface ConveyorService {
 	 */
 	void beginFirstProcessAndRunPeriodicServiceInvocation()
 			throws ConveyorExecutionException;
+
+	/**
+	 * Set the factory used to build components used in the synch process
+	 * 
+	 * @param synchComponentFactory
+	 *            {@link SynchComponentFactory}
+	 */
+	void setSynchComponentFactory(
+			final SynchComponentFactory synchComponentFactory);
+
+	/**
+	 * Get the factory used to build synch components
+	 * 
+	 * @return {@link SynchComponentFactory}
+	 */
+	SynchComponentFactory getSynchComponentFactory();
 
 }

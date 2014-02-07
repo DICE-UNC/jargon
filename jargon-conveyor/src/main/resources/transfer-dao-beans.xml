@@ -121,6 +121,7 @@
 		<property name="synchronizationManagerService" ref="synchronizationManagerService" />
 		<property name="queueManagerService" ref="queueManagerService" />
 		<property name="transferAccountingManagementService" ref="transferAccountingManagementService" />
+		<property name="synchComponentFactory" ref="synchComponentFactory" />
 	</bean>
 
 	<bean id="configurationService"
@@ -145,6 +146,10 @@
 		<property name="transferAttemptDAO" ref="transferAttemptDAO" />
 		<property name="transferItemDAO" ref="transferItemDAO" />
 		<property name="gridAccountService" ref="gridAccountService" />
+	</bean>
+	
+	<bean id="synchComponentFactory" class="org.irods.jargon.conveyor.synch.DefaultSynchComponentFactory">
+	   	<property name="conveyorService" ref="conveyorService" />
 	</bean>
 
 </beans>

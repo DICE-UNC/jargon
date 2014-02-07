@@ -50,7 +50,6 @@ public class SynchCallable extends AbstractConveyorCallable {
 		assert tcb != null;
 		assert irodsAccount != null;
 
-		// FIXME: do some stuff here
 	}
 
 }

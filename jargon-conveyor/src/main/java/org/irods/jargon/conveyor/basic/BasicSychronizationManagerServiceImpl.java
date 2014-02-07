@@ -25,6 +25,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -32,6 +33,7 @@ import org.slf4j.LoggerFactory;
  *         https://code.renci.org/gf/project/jargon/
  * 
  */
+@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class })
 public class BasicSychronizationManagerServiceImpl extends
 		AbstractConveyorComponentService implements
 		SynchronizationManagerService {
