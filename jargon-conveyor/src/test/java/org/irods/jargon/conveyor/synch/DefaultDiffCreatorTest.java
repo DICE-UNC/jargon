@@ -107,7 +107,10 @@ public class DefaultDiffCreatorTest {
 				.findGridAccountByIRODSAccount(irodsAccount);
 
 		AbstractSynchronizingDiffCreator diffCreator = new DefaultDiffCreator(
-				conveyorService);
+				conveyorService,
+				irodsFileSystem
+						.getIRODSAccessObjectFactory()
+						.buildDefaultTransferControlBlockBasedOnJargonProperties());
 
 		Date now = new Date();
 		Synchronization synch = new Synchronization();

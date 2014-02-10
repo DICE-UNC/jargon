@@ -3,9 +3,10 @@
  */
 package org.irods.jargon.conveyor.synch;
 
-import org.irods.jargon.conveyor.core.ConveyorExecutionException;
-import org.irods.jargon.datautils.tree.FileTreeModel;
-import org.irods.jargon.transfer.dao.domain.Transfer;
+import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.transfer.TransferControlBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Process a one-way local to iRODS diff
@@ -16,26 +17,12 @@ import org.irods.jargon.transfer.dao.domain.Transfer;
 public class LocalToIRODSDiffProcessor extends
 		AbstractSynchronizingDiffProcessor {
 
-	/**
-	 * 
-	 */
-	public LocalToIRODSDiffProcessor() {
-		// TODO Auto-generated constructor stub
-	}
+	private static final Logger log = LoggerFactory
+			.getLogger(LocalToIRODSDiffProcessor.class);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.conveyor.synch.AbstractSynchronizingDiffProcessor#
-	 * processDiff(org.irods.jargon.transfer.dao.domain.Transfer,
-	 * org.irods.jargon.datautils.tree.FileTreeModel)
-	 */
-	@Override
-	protected void processDiff(Transfer transfer, FileTreeModel diffModel)
-			throws ConveyorExecutionException {
-
-		// TODO: implement this
-
+	public LocalToIRODSDiffProcessor(ConveyorService conveyorService,
+			TransferControlBlock transferControlBlock) {
+		super(conveyorService, transferControlBlock);
 	}
 
 }

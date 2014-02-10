@@ -7,6 +7,8 @@ import junit.framework.Assert;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.dao.domain.SynchronizationType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -69,5 +71,15 @@ public class DefaultSynchComponentFactoryTest {
 		SynchComponentFactory actual = conveyorService
 				.getSynchComponentFactory();
 		Assert.assertNotNull("synch factory not wired in", actual);
+	}
+
+	@Test
+	public void testGetDiffProcessorForIrodsToLocal() throws Exception {
+		Synchronization synch = new Synchronization();
+		synch.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		LocalToIRODSDiffProcessor processor = (LocalToIRODSDiffProcessor) conveyorService
+				.getSynchComponentFactory().instanceDiffProcessor(synch);
+		Assert.assertNotNull("no processor returned", processor);
+
 	}
 }

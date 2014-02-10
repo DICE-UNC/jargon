@@ -3,6 +3,7 @@ package org.irods.jargon.conveyor.synch;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -31,8 +32,9 @@ public abstract class AbstractSynchronizingDiffCreator extends
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractSynchronizingDiffCreator.class);
 
-	public AbstractSynchronizingDiffCreator(ConveyorService conveyorService) {
-		super(conveyorService);
+	public AbstractSynchronizingDiffCreator(ConveyorService conveyorService,
+			TransferControlBlock transferControlBlock) {
+		super(conveyorService, transferControlBlock);
 	}
 
 	/**
@@ -142,7 +144,7 @@ public abstract class AbstractSynchronizingDiffCreator extends
 	 * @return {@link TransferStatusCallbackListener}
 	 */
 	protected TransferStatusCallbackListener getConfiguredCallbackListener() {
-		TransferStatusCallbackListener listener = this.conveyorService
+		TransferStatusCallbackListener listener = this.getConveyorService()
 				.getConveyorCallbackListener();
 		assert listener != null;
 		return listener;

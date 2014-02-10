@@ -1,5 +1,6 @@
 package org.irods.jargon.conveyor.synch;
 
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 
 public interface SynchComponentFactory {
@@ -10,21 +11,28 @@ public interface SynchComponentFactory {
 	 * 
 	 * @param synchronization
 	 *            {@link Synchronization} that describes the type of diff
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that can signal cancels, among
+	 *            other things
 	 * @return
 	 */
 	public abstract AbstractSynchronizingDiffCreator instanceDiffCreator(
-			Synchronization synchronization);
+			Synchronization synchronization,
+			final TransferControlBlock transferControlBlock);
 
 	/**
 	 * Get an instance of the component that can create an appropriate diff
 	 * model
 	 * 
 	 * @param synchronization
-	 *            {@link Synchronization} that generates the diff to be
-	 *            processed
+	 *            {@link Synchronization} that describes the type of diff
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} that can signal cancels, among
+	 *            other things
 	 * @return
 	 */
 	public abstract AbstractSynchronizingDiffProcessor instanceDiffProcessor(
-			Synchronization synchronization);
+			Synchronization synchronization,
+			final TransferControlBlock transferControlBlock);
 
 }

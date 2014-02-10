@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.synch;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,8 +41,10 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 	}
 
 	/**
+	 * Create an instance with an initialized reference to the conveyor service
+	 * 
 	 * @param conveyorService
-	 *            the conveyorService to set
+	 *            {@link ConveyorService} reference
 	 */
 	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
@@ -56,17 +59,22 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 	 */
 	@Override
 	public AbstractSynchronizingDiffCreator instanceDiffCreator(
-			final Synchronization synchronization) {
+			final Synchronization synchronization,
+			final TransferControlBlock transferControlBlock) {
 
 		log.info("instanceDiffCreator()");
 
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchronization");
 		}
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
 
 		switch (synchronization.getSynchronizationMode()) {
 		case ONE_WAY_LOCAL_TO_IRODS:
-			return new DefaultDiffCreator(this.getConveyorService());
+			return new DefaultDiffCreator(this.getConveyorService(),
+					transferControlBlock);
 		case ONE_WAY_IRODS_TO_LOCAL:
 			throw new UnsupportedOperationException("unsupported synch type");
 		case BI_DIRECTIONAL:
@@ -86,17 +94,23 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 	 */
 	@Override
 	public AbstractSynchronizingDiffProcessor instanceDiffProcessor(
-			final Synchronization synchronization) {
+			final Synchronization synchronization,
+			final TransferControlBlock transferControlBlock) {
 
-		log.info("instanceDiffCreator()");
+		log.info("instanceDiffProcessor()");
 
 		if (synchronization == null) {
 			throw new IllegalArgumentException("null synchronization");
 		}
 
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
 		switch (synchronization.getSynchronizationMode()) {
 		case ONE_WAY_LOCAL_TO_IRODS:
-			return new LocalToIRODSDiffProcessor();
+			return new LocalToIRODSDiffProcessor(this.getConveyorService(),
+					transferControlBlock);
 		case ONE_WAY_IRODS_TO_LOCAL:
 			throw new UnsupportedOperationException("unsupported synch type");
 		case BI_DIRECTIONAL:

@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.core.callables;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.synch.AbstractSynchronizingDiffCreator;
+import org.irods.jargon.conveyor.synch.AbstractSynchronizingDiffProcessor;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -67,12 +68,26 @@ public class SynchCallable extends AbstractConveyorCallable {
 		try {
 			AbstractSynchronizingDiffCreator diffCreator = this
 					.getConveyorService().getSynchComponentFactory()
-					.instanceDiffCreator(synchronization);
+					.instanceDiffCreator(synchronization, tcb);
 			FileTreeModel diffModel = diffCreator.createDiff(getTransfer());
 
-			log.info("have file tree model, now process the diff to resolve it...");
+			log.info("have file tree model, now process the diff to resolve it...get diff processor from factory");
 
-			// blah
+			AbstractSynchronizingDiffProcessor diffProcessor = this
+					.getConveyorService().getSynchComponentFactory()
+					.instanceDiffProcessor(synchronization, tcb);
+
+			log.info("..have diff processor, now invoke...");
+
+			/*
+			 * Note I register this callable as the callback listener, so that
+			 * status updates flow back to this processor
+			 */
+			diffProcessor.execute(this.getTransferAttempt(), diffModel,
+					this);
+
+			log.info("processing complete, send the final callback");
+
 			sendSynchCompleteSuccessful(getTransfer(), synchronization);
 		} catch (Exception e) {
 			log.error("error encountered during synch processing", e);

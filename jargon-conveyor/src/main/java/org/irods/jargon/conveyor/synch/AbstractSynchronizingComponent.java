@@ -1,15 +1,25 @@
 package org.irods.jargon.conveyor.synch;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 
 public class AbstractSynchronizingComponent {
-	public ConveyorService conveyorService;
+	private ConveyorService conveyorService;
+	private TransferControlBlock transferControlBlock;
 
-	public AbstractSynchronizingComponent(final ConveyorService conveyorService) {
+	public AbstractSynchronizingComponent(
+			final ConveyorService conveyorService,
+			final TransferControlBlock transferControlBlock) {
 		if (conveyorService == null) {
 			throw new IllegalArgumentException("null conveyorService");
 		}
+
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+
 		this.conveyorService = conveyorService;
+		this.transferControlBlock = transferControlBlock;
 	}
 
 	/**
@@ -25,5 +35,21 @@ public class AbstractSynchronizingComponent {
 	 */
 	public void setConveyorService(ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
+	}
+
+	/**
+	 * @return the transferControlBlock
+	 */
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	/**
+	 * @param transferControlBlock
+	 *            the transferControlBlock to set
+	 */
+	public void setTransferControlBlock(
+			TransferControlBlock transferControlBlock) {
+		this.transferControlBlock = transferControlBlock;
 	}
 }

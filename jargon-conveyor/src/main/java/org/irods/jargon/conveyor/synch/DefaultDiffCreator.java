@@ -10,6 +10,7 @@ import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtility;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityImpl;
 import org.irods.jargon.datautils.tree.FileTreeModel;
@@ -33,11 +34,9 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 	private static final Logger log = LoggerFactory
 			.getLogger(DefaultDiffCreator.class);
 
-	/**
-	 * @param conveyorService
-	 */
-	public DefaultDiffCreator(ConveyorService conveyorService) {
-		super(conveyorService);
+	public DefaultDiffCreator(ConveyorService conveyorService,
+			TransferControlBlock transferControlBlock) {
+		super(conveyorService, transferControlBlock);
 	}
 
 	/*
@@ -67,11 +66,13 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 
 		log.info("resolving account and obtaining access object factory...");
 		IRODSAccount synchAccount = null;
-		synchAccount = conveyorService.getGridAccountService()
+		synchAccount = getConveyorService().getGridAccountService()
 				.irodsAccountForGridAccount(synchronization.getGridAccount());
 
-		IRODSAccessObjectFactory irodsAccessObjectFactory = conveyorService
+		IRODSAccessObjectFactory irodsAccessObjectFactory = getConveyorService()
 				.getIrodsAccessObjectFactory();
+
+		// FIXME: add tcb and cancel to filetreediffutility
 
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				synchAccount, irodsAccessObjectFactory);
