@@ -25,6 +25,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStateEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -33,7 +34,7 @@ import org.springframework.transaction.annotation.Transactional;
  *         https://code.renci.org/gf/project/jargon/
  * 
  */
-@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class })
+@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class }, propagation = Propagation.REQUIRED)
 public class BasicSychronizationManagerServiceImpl extends
 		AbstractConveyorComponentService implements
 		SynchronizationManagerService {
@@ -58,6 +59,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * listAllSynchronizations()
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<Synchronization> listAllSynchronizations()
 			throws ConveyorExecutionException {
 		log.info("listAllSynchronizations()");
@@ -326,6 +328,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * (long)
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Synchronization findById(long id) throws ConveyorExecutionException {
 		try {
 			return synchronizationDAO.findById(id);

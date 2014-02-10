@@ -31,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
@@ -42,7 +41,7 @@ import org.springframework.transaction.annotation.Transactional;
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
 		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
-@Transactional
+// @Transactional(propagation = Propagation.REQUIRED)
 public class BasicSynchronizationServiceImplTest {
 
 	private static Properties testingProperties = new Properties();
@@ -439,7 +438,7 @@ public class BasicSynchronizationServiceImplTest {
 		synchronization.setLocalSynchDirectory(localFile.getAbsolutePath());
 		synchronization.setName(rootCollection);
 		synchronization
-				.setSynchronizationMode(SynchronizationType.ONE_WAY_IRODS_TO_LOCAL);
+				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronization.setUpdatedAt(now);
 		conveyorService.getSynchronizationManagerService()
 				.addOrUpdateSynchronization(synchronization);

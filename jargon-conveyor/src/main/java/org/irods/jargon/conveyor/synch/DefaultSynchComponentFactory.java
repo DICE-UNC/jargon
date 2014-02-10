@@ -66,7 +66,7 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 
 		switch (synchronization.getSynchronizationMode()) {
 		case ONE_WAY_LOCAL_TO_IRODS:
-			throw new UnsupportedOperationException("unsupported synch type");
+			return new DefaultDiffCreator(this.getConveyorService());
 		case ONE_WAY_IRODS_TO_LOCAL:
 			throw new UnsupportedOperationException("unsupported synch type");
 		case BI_DIRECTIONAL:
@@ -96,7 +96,7 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 
 		switch (synchronization.getSynchronizationMode()) {
 		case ONE_WAY_LOCAL_TO_IRODS:
-			throw new UnsupportedOperationException("unsupported synch type");
+			return new LocalToIRODSDiffProcessor();
 		case ONE_WAY_IRODS_TO_LOCAL:
 			throw new UnsupportedOperationException("unsupported synch type");
 		case BI_DIRECTIONAL:
@@ -106,5 +106,4 @@ public class DefaultSynchComponentFactory implements SynchComponentFactory {
 		}
 
 	}
-
 }

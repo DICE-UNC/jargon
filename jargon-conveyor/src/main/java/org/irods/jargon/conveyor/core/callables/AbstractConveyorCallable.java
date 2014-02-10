@@ -24,7 +24,6 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Abstract super class for a transfer running process. This class, and its
@@ -46,7 +45,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional(noRollbackFor = { JargonException.class }, rollbackFor = { ConveyorExecutionException.class })
+// @Transactional(noRollbackFor = { JargonException.class }, rollbackFor = {
+// ConveyorExecutionException.class })
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
@@ -607,11 +607,11 @@ public abstract class AbstractConveyorCallable implements
 			final TransferAttempt transferAttempt) {
 
 		TransferStatusEnum status;
-                if (transferControlBlock.getErrorCount() > 0
+		if (transferControlBlock.getErrorCount() > 0
 				&& transferControlBlock.getTotalFilesTransferredSoFar() == 0) {
 			log.info("transfer had errors and no files were successful, so mark as an error");
 			status = TransferStatusEnum.ERROR;
-                } else if (transferControlBlock.getErrorCount() > 0
+		} else if (transferControlBlock.getErrorCount() > 0
 				&& transferControlBlock.getErrorCount() < transferControlBlock
 						.getMaximumErrorsBeforeCanceling()) {
 			log.info("transfer had errors but below max");

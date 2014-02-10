@@ -31,6 +31,7 @@ import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.irods.jargon.transfer.dao.domain.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
@@ -39,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class })
+@Transactional(rollbackFor = { ConveyorExecutionException.class }, noRollbackFor = { JargonException.class }, propagation = Propagation.REQUIRED)
 public class BasicQueueManagerServiceImpl extends
 		AbstractConveyorComponentService implements QueueManagerService {
 
@@ -262,6 +263,7 @@ public class BasicQueueManagerServiceImpl extends
 	}
 
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<Transfer> listAllTransfersInQueue()
 			throws ConveyorExecutionException {
 		log.info("listAllTransfersInQueue");
@@ -557,6 +559,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * (org.irods.jargon.transfer.dao.domain.Transfer)
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Transfer initializeGivenTransferByLoadingChildren(
 			final Transfer transfer) throws ConveyorExecutionException {
 		log.info("initializeGivenTransferByLoadingChildren");
@@ -617,6 +620,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * (long)
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public Transfer findTransferByTransferId(final long transferId)
 			throws ConveyorExecutionException {
 		log.info("initializeGivenTransferByLoadingChildren");
@@ -703,6 +707,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * (long, int, int)
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<TransferItem> getNextTransferItems(
 			final long transferAttemptId, final int start, final int length)
 			throws ConveyorExecutionException {
@@ -732,6 +737,7 @@ public class BasicQueueManagerServiceImpl extends
 	 * (java.lang.Long, int, int, boolean, boolean)
 	 */
 	@Override
+	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
 	public List<TransferItem> getNextTransferItems(
 			final Long transferAttemptId, final int start, final int length,
 			final boolean showSuccess, final boolean showSkipped)
