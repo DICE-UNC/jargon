@@ -6,6 +6,7 @@ import junit.framework.Assert;
 
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.SynchronizationType;
@@ -77,8 +78,11 @@ public class DefaultSynchComponentFactoryTest {
 	public void testGetDiffProcessorForIrodsToLocal() throws Exception {
 		Synchronization synch = new Synchronization();
 		synch.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		LocalToIRODSDiffProcessor processor = (LocalToIRODSDiffProcessor) conveyorService
-				.getSynchComponentFactory().instanceDiffProcessor(synch);
+				.getSynchComponentFactory().instanceDiffProcessor(synch, tcb);
 		Assert.assertNotNull("no processor returned", processor);
 
 	}

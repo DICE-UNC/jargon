@@ -6,16 +6,14 @@ import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
-import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;
 import org.irods.jargon.datautils.tree.FileTreeModel;
@@ -29,6 +27,14 @@ import org.slf4j.LoggerFactory;
  * Abstract superclass for a mechanism to take a difference tree model and
  * synchronize between iRODS and the local file system. This can be implemented
  * for different synch strategies.
+ * <p/>
+ * Note that this class keeps instance variables depending on the actual
+ * invocation after object creation, and is not meant to be shared or re-used
+ * for synch operations. A new class should be obtained from the factory for
+ * each synch operation. The caching is done for performance, as there is a
+ * minor expense to resolving the iRODS account and obtaining the hooks to do
+ * actual transfers to iRODS.
+ * 
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
@@ -40,14 +46,24 @@ public abstract class AbstractSynchronizingDiffProcessor {
 	private final ConveyorService conveyorService;
 	private final TransferControlBlock transferControlBlock;
 
+	public static final String BACKUP_PREFIX = "synch-backup";
+
+	/**
+	 * The fields below are initialized on demand with synchronized access
+	 */
+
 	private IRODSAccount irodsAccount = null;
 	private DataTransferOperations dataTransferOperations = null;
+	private TransferStatusCallbackListener transferStatusCallbackListener = null;
 
 	/**
 	 * Create an instance with an initialized reference to the conveyor service
 	 * 
 	 * @param conveyorService
 	 *            {@link ConveyorService} reference
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} instance that allows signalling
+	 *            of cancellation and communication with the calling process
 	 */
 	public AbstractSynchronizingDiffProcessor(ConveyorService conveyorService,
 			final TransferControlBlock transferControlBlock) {
@@ -69,6 +85,12 @@ public abstract class AbstractSynchronizingDiffProcessor {
 	/**
 	 * Given a diff embodied in a <code>FileTreeModel</code>, do necessary
 	 * operations to synchronize between local and iRODS.
+	 * <p/>
+	 * Given a properly calculated diff, do the stuff to bring the source and
+	 * target directories in line. The actual way this synch is resolved depends
+	 * on the implementation of the various 'schedule' methods stubbed out in
+	 * this abstract class. A subclass can implement the stub schedule methods
+	 * to respond to the reported 'diff' state.
 	 * 
 	 * @param TransferAttempt
 	 *            {@link TransferAttempt} of type <code>SYNCH</code>, with a
@@ -78,8 +100,8 @@ public abstract class AbstractSynchronizingDiffProcessor {
 	 *            {@link FileTreeModel} that embodies the diff between local and
 	 *            iRODS
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} that will recieve
-	 *            callbacks on the status of the diff processing
+	 *            {@link TransferStatusCallbackListener} that will receive
+	 *            call-backs on the status of the diff processing
 	 * @throws ConveyorExecutionException
 	 */
 	public void execute(TransferAttempt transferAttempt,
@@ -98,21 +120,19 @@ public abstract class AbstractSynchronizingDiffProcessor {
 					.getSynchronization(), transferStatusCallbackListener);
 
 			synchronized (this) {
-				if (irodsAccount == null) {
-					irodsAccount = this
-							.getConveyorService()
-							.getGridAccountService()
-							.irodsAccountForGridAccount(
-									transferAttempt.getTransfer()
-											.getSynchronization()
-											.getGridAccount());
-				}
+				irodsAccount = this
+						.getConveyorService()
+						.getGridAccountService()
+						.irodsAccountForGridAccount(
+								transferAttempt.getTransfer()
+										.getSynchronization().getGridAccount());
 
-				if (dataTransferOperations == null) {
-					this.dataTransferOperations = this.getConveyorService()
-							.getIrodsAccessObjectFactory()
-							.getDataTransferOperations(irodsAccount);
-				}
+				this.dataTransferOperations = this.getConveyorService()
+						.getIrodsAccessObjectFactory()
+						.getDataTransferOperations(irodsAccount);
+
+				this.transferStatusCallbackListener = transferStatusCallbackListener;
+
 			}
 
 			processDiff((FileTreeNode) diffModel.getRoot(), transferAttempt
@@ -148,13 +168,6 @@ public abstract class AbstractSynchronizingDiffProcessor {
 		transferStatusCallbackListener
 				.overallStatusCallback(overallSynchStartStatus);
 
-	}
-
-	/**
-	 * @return the conveyorService
-	 */
-	public ConveyorService getConveyorService() {
-		return conveyorService;
 	}
 
 	/**
@@ -213,8 +226,8 @@ public abstract class AbstractSynchronizingDiffProcessor {
 			log.debug("local file out of synch with irods {}",
 					fileTreeDiffEntry.getCollectionAndDataObjectListingEntry()
 							.getFormattedAbsolutePath());
-			scheduleLocalToIrodsWithIrodsBackup(diffNode,
-					localRootAbsolutePath, irodsRootAbsolutePath);
+			scheduleMatchedFileOutOfSynch(diffNode, localRootAbsolutePath,
+					irodsRootAbsolutePath);
 		} else if (fileTreeDiffEntry.getDiffType() == DiffType.RIGHT_HAND_PLUS) {
 			log.debug("irods file is new directory {}", fileTreeDiffEntry
 					.getCollectionAndDataObjectListingEntry()
@@ -239,122 +252,8 @@ public abstract class AbstractSynchronizingDiffProcessor {
 	}
 
 	/**
-	 * Move the local file to iRODS with iRODS backed up
+	 * Recurse through children if this is a directory
 	 * 
-	 * @param diffNode
-	 * @param localRootAbsolutePath
-	 * @param irodsRootAbsolutePath
-	 * @throws TransferEngineException
-	 */
-	private void scheduleLocalToIrodsWithIrodsBackup(
-			final FileTreeNode diffNode, final String localRootAbsolutePath,
-			final String irodsRootAbsolutePath)
-			throws ConveyorExecutionException {
-		log.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
-		log.info("scheduleLocalToIrodsWithIrodsBackup for diffNode:{}",
-				diffNode);
-
-		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
-				.getUserObject();
-		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
-				.getCollectionAndDataObjectListingEntry();
-
-		try {
-
-			String targetRelativePath = entry.getFormattedAbsolutePath()
-					.substring(localRootAbsolutePath.length());
-
-			// became
-			// /testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
-
-			IRODSFile targetFile = this
-					.getConveyorService()
-					.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount())
-					.instanceIRODSFile(irodsRootAbsolutePath,
-							targetRelativePath);
-
-			if (targetFile.getName().charAt(0) == '.') {
-				log.debug("no backups of hidden files");
-				return;
-			}
-
-			// became
-			// irods://test1@localhost:1247/test1/home/test1/jargon-scratch/InPlaceSynchronizingDiffProcessorImplTest/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
-
-			log.debug("target file name in iRODS:{}",
-					targetFile.getAbsolutePath());
-
-			/*
-			 * For backup, take the path under the users home directory, remove
-			 * the zone/home/username part, and stick it under
-			 * zone/home/username/backup dir name/...
-			 */
-
-			String pathBelowUserHome = targetFile.getParent().substring(
-					usersHomeRootLength);
-
-			StringBuilder irodsBackupAbsPath = new StringBuilder();
-			irodsBackupAbsPath.append(usersHomeRoot);
-			irodsBackupAbsPath.append(SLASH);
-			irodsBackupAbsPath.append(BACKUP_PREFIX);
-			irodsBackupAbsPath.append(pathBelowUserHome);
-
-			// this became
-			// /test1/home/test1/synch-backup/testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
-
-			String backupFileName = LocalFileUtils
-					.getFileNameWithTimeStampInterposed(targetFile.getName());
-			IRODSFile backupFile = getIRODSFileFactory().instanceIRODSFile(
-					irodsBackupAbsPath.toString(), backupFileName);
-			backupFile.getParentFile().mkdirs();
-			log.debug("backup file name:{}", backupFile.getAbsolutePath());
-
-			targetFile.renameTo(backupFile);
-			log.debug("rename done");
-
-			transferControlBlock.resetTransferData();
-			dataTransferOperations.putOperation(
-					entry.getFormattedAbsolutePath(),
-					targetFile.getAbsolutePath(),
-					irodsAccount.getDefaultStorageResource(), this,
-					transferControlBlock);
-
-		} catch (Exception e) {
-
-			log.error("error in put operation as part of synch", e);
-			transferControlBlock.reportErrorInTransfer();
-
-			if (callbackListener == null) {
-				throw new TransferEngineException(
-						"error occurred in synch, no status callback listener was specified",
-						e);
-
-			} else {
-				try {
-					TransferStatus transferStatus = TransferStatus
-							.instanceForExceptionForSynch(
-									TransferStatus.TransferType.SYNCH,
-									entry.getFormattedAbsolutePath(),
-									irodsRootAbsolutePath,
-									irodsAccount.getDefaultStorageResource(),
-									0L, 0L, 0, 0, e, irodsAccount.getHost(),
-									irodsAccount.getZone());
-					callbackListener.statusCallback(transferStatus);
-				} catch (JargonException e1) {
-					log.error("error building transfer status", e1);
-					throw new JargonRuntimeException(
-							"exception building transfer status", e1);
-				}
-			}
-
-		}
-
-		log.info("put done");
-
-	}
-
-	/**
 	 * @param diffNode
 	 * @param localRootAbsolutePath
 	 * @param irodsRootAbsolutePath
@@ -387,137 +286,108 @@ public abstract class AbstractSynchronizingDiffProcessor {
 		}
 	}
 
-	private void scheduleIrodsToLocal(final FileTreeNode diffNode,
+	/**
+	 * Stub method that should be implemented by subclasses that need to move
+	 * iRODS files to the local file system when out of synch. By default this
+	 * method does nothing.
+	 * 
+	 * @param diffNode
+	 *            {@link FileTreeNode} that represents the diff entry from the
+	 *            comparison phase
+	 * @param localRootAbsolutePath
+	 *            <code>String</code> with the local root directory for the
+	 *            configured synch
+	 * @param irodsRootAbsolutePath
+	 *            <code>String</code> with the irods root directory for the
+	 *            configured synch
+	 * @throws ConveyorExecutionException
+	 */
+	protected void scheduleIrodsToLocal(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath)
 			throws ConveyorExecutionException {
 
-		log.info("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
-
-		log.info("scheduleIrodsToLocal for diffNode:{}", diffNode);
-
-		/*
-		 * the diff node will have the absolute local path of the file, this is
-		 * the source of the get. the iRODS path will be the local path minus
-		 * the local root, appended to the iRODS root
-		 */
-
-		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
-				.getUserObject();
-		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
-				.getCollectionAndDataObjectListingEntry();
-
-		String targetRelativePath;
-		if (entry.getObjectType() == ObjectType.COLLECTION) {
-			targetRelativePath = entry.getParentPath().substring(
-					irodsRootAbsolutePath.length());
-		} else {
-			targetRelativePath = entry.getFormattedAbsolutePath().substring(
-					irodsRootAbsolutePath.length());
-		}
-
-		StringBuilder sb = new StringBuilder(localRootAbsolutePath);
-		sb.append(targetRelativePath);
-
-		log.info("doing a get from irods under target at:{}",
-				targetRelativePath);
-
-		log.warn("get operations not yet implemented!");
+		log.info("scheduleIrodsToLocal() not implemented by default");
 
 	}
 
 	/**
-	 * the node is a local file/collection that needs to be scheduled to move to
-	 * iRODS
+	 * Stub method that should be implemented by subclasses that need to move
+	 * local files to iRODS when out of synch. By default this method does
+	 * nothing.
 	 * 
 	 * @param diffNode
+	 *            {@link FileTreeNode} that represents the diff entry from the
+	 *            comparison phase
 	 * @param localRootAbsolutePath
+	 *            <code>String</code> with the local root directory for the
+	 *            configured synch
 	 * @param irodsRootAbsolutePath
+	 *            <code>String</code> with the irods root directory for the
+	 *            configured synch
+	 * @throws ConveyorExecutionException
 	 */
-	private void scheduleLocalToIrods(final FileTreeNode diffNode,
+	protected void scheduleLocalToIrods(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath)
 			throws ConveyorExecutionException {
-		/*
-		 * the diff node will have the absolute path of the local file, this is
-		 * the source of the put. the irods path will be the local parent
-		 * collection relative path, appended to the local root.
-		 */
 
-		log.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
-		log.info("scheduleLocalToIrods for diffNode:{}", diffNode);
+		log.info("scheduleLocalToIrods() not implemented by default");
 
-		FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
-				.getUserObject();
-		CollectionAndDataObjectListingEntry entry = fileTreeDiffEntry
-				.getCollectionAndDataObjectListingEntry();
+	}
 
-		String targetRelativePath;
-		StringBuilder sb = new StringBuilder(irodsRootAbsolutePath);
-		if (entry.getObjectType() == ObjectType.COLLECTION) {
-			targetRelativePath = entry.getParentPath().substring(
-					localRootAbsolutePath.length());
-			log.info("entry is a collection, setting targetRelativePath to:{}",
-					targetRelativePath);
-			sb.append("/");
-		} else {
+	/*
+	 * private void scheduleIrodsToLocal(final FileTreeNode diffNode, final
+	 * String localRootAbsolutePath, final String irodsRootAbsolutePath) throws
+	 * ConveyorExecutionException {
+	 * 
+	 * log.info("\n\n<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
+	 * 
+	 * log.info("scheduleIrodsToLocal for diffNode:{}", diffNode);
+	 * 
+	 * 
+	 * FileTreeDiffEntry fileTreeDiffEntry = (FileTreeDiffEntry) diffNode
+	 * .getUserObject(); CollectionAndDataObjectListingEntry entry =
+	 * fileTreeDiffEntry .getCollectionAndDataObjectListingEntry();
+	 * 
+	 * String targetRelativePath; if (entry.getObjectType() ==
+	 * ObjectType.COLLECTION) { targetRelativePath =
+	 * entry.getParentPath().substring( irodsRootAbsolutePath.length()); } else
+	 * { targetRelativePath = entry.getFormattedAbsolutePath().substring(
+	 * irodsRootAbsolutePath.length()); }
+	 * 
+	 * StringBuilder sb = new StringBuilder(localRootAbsolutePath);
+	 * sb.append(targetRelativePath);
+	 * 
+	 * log.info("doing a get from irods under target at:{}",
+	 * targetRelativePath);
+	 * 
+	 * log.warn("get operations not yet implemented!");
+	 * 
+	 * }
+	 */
 
-			if (entry.getPathOrName().charAt(0) == '.') {
-				log.debug("no backups of hidden files");
-				return;
-			}
-
-			targetRelativePath = entry.getFormattedAbsolutePath().substring(
-					localRootAbsolutePath.length());
-			log.info("entry is a file, setting targetRelativePath to:{}",
-					targetRelativePath);
-		}
-
-		sb.append(targetRelativePath);
-
-		String putPath = sb.toString();
-
-		log.info("processing a put to irods under target at computed path:{}",
-				putPath);
-
-		try {
-			transferControlBlock.resetTransferData();
-			dataTransferOperations.putOperation(
-					entry.getFormattedAbsolutePath(), putPath,
-					irodsAccount.getDefaultStorageResource(), this,
-					transferControlBlock);
-		} catch (Exception e) {
-
-			log.error("error in put operation as part of synch", e);
-			transferControlBlock.reportErrorInTransfer();
-
-			if (callbackListener == null) {
-				throw new TransferEngineException(
-						"error occurred in synch, no status callback listener was specified",
-						e);
-
-			} else {
-				try {
-					TransferStatus transferStatus = TransferStatus
-							.instanceForExceptionForSynch(
-									TransferStatus.TransferType.SYNCH,
-									entry.getFormattedAbsolutePath(),
-									sb.toString(),
-									irodsAccount.getDefaultStorageResource(),
-									0L, 0L, 0, 0, e, irodsAccount.getHost(),
-									irodsAccount.getZone());
-					callbackListener.statusCallback(transferStatus);
-				} catch (JargonException e1) {
-					log.error("error building transfer status", e1);
-					throw new JargonRuntimeException(
-							"exception building transfer status", e1);
-				}
-			}
-
-		}
-
-		log.info("put done");
-
+	/**
+	 * Stub method when a file exists locally and in iRODS, to be processed by
+	 * the subclass in an appropriate manner. By default this method does
+	 * nothing
+	 * 
+	 * @param diffNode
+	 *            {@link FileTreeNode} that represents the diff entry from the
+	 *            comparison phase
+	 * @param localRootAbsolutePath
+	 *            <code>String</code> with the local root directory for the
+	 *            configured synch
+	 * @param irodsRootAbsolutePath
+	 *            <code>String</code> with the irods root directory for the
+	 *            configured synch
+	 * @throws ConveyorExecutionException
+	 */
+	protected void scheduleMatchedFileOutOfSynch(final FileTreeNode diffNode,
+			final String localRootAbsolutePath,
+			final String irodsRootAbsolutePath)
+			throws ConveyorExecutionException {
+		log.info("scheduleMatchedFileOutOfSynch() not implemented by default");
 	}
 
 	/**
@@ -556,6 +426,59 @@ public abstract class AbstractSynchronizingDiffProcessor {
 	protected synchronized void setDataTransferOperations(
 			DataTransferOperations dataTransferOperations) {
 		this.dataTransferOperations = dataTransferOperations;
+	}
+
+	/**
+	 * @return the conveyorService
+	 */
+	public ConveyorService getConveyorService() {
+		return conveyorService;
+	}
+
+	/**
+	 * @return the transferStatusCallbackListener
+	 */
+	protected synchronized TransferStatusCallbackListener getTransferStatusCallbackListener() {
+		return transferStatusCallbackListener;
+	}
+
+	/**
+	 * @param transferStatusCallbackListener
+	 *            the transferStatusCallbackListener to set
+	 */
+	protected synchronized void setTransferStatusCallbackListener(
+			TransferStatusCallbackListener transferStatusCallbackListener) {
+		this.transferStatusCallbackListener = transferStatusCallbackListener;
+	}
+
+	/**
+	 * Convenience method to simplify obtaining a ref to the irods access object
+	 * factory
+	 * 
+	 * @return
+	 */
+	protected IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
+		return this.getConveyorService().getIrodsAccessObjectFactory();
+	}
+
+	/**
+	 * Convenience method to simplify obtaining a ref to an irods file factory,
+	 * configured with the <code>IRODSAccount</code> used to initialize this
+	 * synch processor
+	 * 
+	 * @return
+	 * @throws ConveyorExecutionException
+	 */
+	protected IRODSFileFactory getIrodsFileFactory()
+			throws ConveyorExecutionException {
+		try {
+			return this.getIrodsAccessObjectFactory().getIRODSFileFactory(
+					getIrodsAccount());
+		} catch (JargonException e) {
+			log.error("cannot obtain irodsFileFactory", e);
+			throw new ConveyorExecutionException(
+					"unable to create an iRODS file factory", e);
+		}
 	}
 
 }

@@ -305,4 +305,18 @@ public interface IRODSFileFactory {
 	SessionClosingIRODSFileOutputStream instanceSessionClosingIRODSFileOutputStream(
 			IRODSFile file) throws NoResourceDefinedException, JargonException;
 
+	/**
+	 * Create a reference to an iRODS file that is the computed user's home
+	 * directory. This uses the normal scheme of /zone/home/username, so it may
+	 * not apply in highly customized iRODS instances.
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the userName that will be used for
+	 *            the home directory
+	 * @return {@link IRODSFile} that is the user home directory
+	 * @throws JargonException
+	 */
+	IRODSFile instanceIRODSFileUserHomeDir(String userName)
+			throws JargonException;
+
 }

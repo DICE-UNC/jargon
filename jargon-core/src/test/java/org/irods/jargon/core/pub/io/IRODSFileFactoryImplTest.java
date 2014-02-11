@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -82,6 +83,24 @@ public class IRODSFileFactoryImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/apath");
 		Assert.assertNotNull(irodsFile);
+	}
+
+	@Test
+	public final void testCreateFileByUserHomeDir() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFileUserHomeDir(irodsAccount.getUserName());
+		Assert.assertNotNull(irodsFile);
+		Assert.assertEquals(MiscIRODSUtils
+				.computeHomeDirectoryForIRODSAccount(irodsAccount), irodsFile
+				.getAbsolutePath());
 	}
 
 	@Test
