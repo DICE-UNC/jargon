@@ -38,7 +38,8 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway - DICE (www.irods.org)
  */
-public abstract class AbstractSynchronizingDiffProcessor {
+public abstract class AbstractSynchronizingDiffProcessor implements
+		TransferStatusCallbackListener {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractSynchronizingDiffProcessor.class);
@@ -479,6 +480,64 @@ public abstract class AbstractSynchronizingDiffProcessor {
 			throw new ConveyorExecutionException(
 					"unable to create an iRODS file factory", e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener#statusCallback
+	 * (org.irods.jargon.core.transfer.TransferStatus)
+	 */
+	@Override
+	public void statusCallback(TransferStatus transferStatus)
+			throws JargonException {
+
+		if (transferStatus.isIntraFileStatusReport()) {
+			// quash
+		} else {
+			this.getTransferStatusCallbackListener().statusCallback(
+					transferStatus);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
+	 */
+	@Override
+	public void overallStatusCallback(TransferStatus transferStatus)
+			throws JargonException {
+
+		log.info(
+				"overall status callback will be quashed, but failures will be sure to have cancel set...{}",
+				transferStatus);
+
+		if (transferStatus.getTransferState() == TransferState.FAILURE) {
+			log.error("failure in underlying transfer:{}", transferStatus);
+			log.info("cancelling for errors...");
+			this.getTransferControlBlock().setCancelled(true);
+			log.info("set cancel in tcb, let synch process terminate");
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.TransferStatusCallbackListener#
+	 * transferAsksWhetherToForceOperation(java.lang.String, boolean)
+	 */
+	@Override
+	public CallbackResponse transferAsksWhetherToForceOperation(
+			String irodsAbsolutePath, boolean isCollection) {
+
+		log.info("overwrite situation, cancel as this shouldn't happen");
+
+		return CallbackResponse.CANCEL;
 	}
 
 }

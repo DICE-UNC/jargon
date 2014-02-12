@@ -93,8 +93,7 @@ public class LocalToIRODSDiffProcessor extends
 			this.getTransferControlBlock().resetTransferData();
 			this.getDataTransferOperations().putOperation(
 					entry.getFormattedAbsolutePath(), putPath,
-					this.getIrodsAccount().getDefaultStorageResource(),
-					this.getTransferStatusCallbackListener(),
+					this.getIrodsAccount().getDefaultStorageResource(), this,
 					this.getTransferControlBlock());
 		} catch (Exception e) {
 
@@ -216,8 +215,7 @@ public class LocalToIRODSDiffProcessor extends
 			this.getDataTransferOperations().putOperation(
 					entry.getFormattedAbsolutePath(),
 					targetFile.getAbsolutePath(),
-					this.getIrodsAccount().getDefaultStorageResource(),
-					this.getTransferStatusCallbackListener(),
+					this.getIrodsAccount().getDefaultStorageResource(), this,
 					this.getTransferControlBlock());
 
 		} catch (Exception e) {

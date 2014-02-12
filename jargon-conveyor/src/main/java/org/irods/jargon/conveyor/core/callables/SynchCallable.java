@@ -63,6 +63,9 @@ public class SynchCallable extends AbstractConveyorCallable {
 
 		assert synchronization != null;
 
+		sendSynchStatusMessage(getTransfer(), synchronization,
+				TransferState.SYNCH_INITIALIZATION);
+
 		log.info("getting diff creation service...");
 
 		try {
@@ -83,12 +86,12 @@ public class SynchCallable extends AbstractConveyorCallable {
 			 * Note I register this callable as the callback listener, so that
 			 * status updates flow back to this processor
 			 */
-			diffProcessor.execute(this.getTransferAttempt(), diffModel,
-					this);
+			diffProcessor.execute(this.getTransferAttempt(), diffModel, this);
 
 			log.info("processing complete, send the final callback");
 
-			sendSynchCompleteSuccessful(getTransfer(), synchronization);
+			sendSynchStatusMessage(getTransfer(), synchronization,
+					TransferState.SYNCH_COMPLETION);
 		} catch (Exception e) {
 			log.error("error encountered during synch processing", e);
 			this.reportConveyerExceptionDuringProcessing(e);
@@ -96,19 +99,20 @@ public class SynchCallable extends AbstractConveyorCallable {
 
 	}
 
-	private void sendSynchCompleteSuccessful(final Transfer transfer,
-			final Synchronization synchronization)
+	private void sendSynchStatusMessage(final Transfer transfer,
+			final Synchronization synchronization,
+			final TransferState transferState)
 			throws ConveyorExecutionException {
 		// make an overall status callback that a synch is initiated
 		TransferStatus overallSynchStartStatus;
 		try {
 			overallSynchStartStatus = TransferStatus.instance(
-					TransferType.SYNCH, synchronization
-							.getLocalSynchDirectory(), synchronization
-							.getIrodsSynchDirectory(), synchronization
-							.getDefaultStorageResource(), 0L, 0L, 0, 0, 0,
-					TransferState.OVERALL_COMPLETION, transfer.getGridAccount()
-							.getHost(), transfer.getGridAccount().getZone());
+					TransferType.SYNCH,
+					synchronization.getLocalSynchDirectory(),
+					synchronization.getIrodsSynchDirectory(),
+					synchronization.getDefaultStorageResource(), 0L, 0L, 0, 0,
+					0, transferState, transfer.getGridAccount().getHost(),
+					transfer.getGridAccount().getZone());
 
 			this.overallStatusCallback(overallSynchStartStatus);
 
@@ -117,4 +121,5 @@ public class SynchCallable extends AbstractConveyorCallable {
 			throw new ConveyorExecutionException("error in synch processing", e);
 		}
 	}
+
 }

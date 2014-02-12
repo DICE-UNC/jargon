@@ -82,17 +82,6 @@ public abstract class AbstractSynchronizingDiffCreator extends
 		// make an overall status callback that a synch is initiated
 		TransferStatus overallSynchStartStatus;
 		try {
-			overallSynchStartStatus = TransferStatus.instance(
-					TransferType.SYNCH, synchronization
-							.getLocalSynchDirectory(), synchronization
-							.getIrodsSynchDirectory(), synchronization
-							.getDefaultStorageResource(), 0L, 0L, 0, 0, 0,
-					TransferState.SYNCH_INITIALIZATION, transfer
-							.getGridAccount().getHost(), transfer
-							.getGridAccount().getZone());
-
-			getConfiguredCallbackListener().overallStatusCallback(
-					overallSynchStartStatus);
 
 			// make an overall status callback that a synch is initiated
 

@@ -385,11 +385,16 @@ public abstract class AbstractConveyorCallable implements
 	@Override
 	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
-		log.info("overall status callback:{}", transferStatus);
+		log.info("overall status callback signalling completion:{}",
+				transferStatus);
 		boolean doComplete = false;
 		try {
 			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 				log.info("overall completion...updating status of transfer...");
+				doComplete = true;
+				processOverallCompletionOfTransfer(transferStatus);
+			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.SYNCH_COMPLETION) {
+				log.info("overall completion of synch...updating status of transfer...");
 				doComplete = true;
 				processOverallCompletionOfTransfer(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.FAILURE) {
