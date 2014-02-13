@@ -544,7 +544,7 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferStatus
 	 * @throws ConveyorExecutionException
 	 */
-	private void processOverallCompletionOfTransfer(
+	protected void processOverallCompletionOfTransfer(
 			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransfer");
@@ -608,8 +608,10 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferAttempt
 	 * @return
 	 */
-	private TransferStatusEnum evaluateTransferErrorsInItemsToSetOverallStatus(
+	protected TransferStatusEnum evaluateTransferErrorsInItemsToSetOverallStatus(
 			final TransferAttempt transferAttempt) {
+
+		assert transferAttempt != null;
 
 		TransferStatusEnum status;
 		if (transferControlBlock.getErrorCount() > 0
@@ -639,7 +641,7 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferStatus
 	 * @throws ConveyorExecutionException
 	 */
-	private void processOverallCompletionOfTransferWithFailure(
+	protected void processOverallCompletionOfTransferWithFailure(
 			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransferWithFailure");

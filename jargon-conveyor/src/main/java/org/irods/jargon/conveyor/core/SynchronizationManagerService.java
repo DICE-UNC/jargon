@@ -6,7 +6,9 @@ package org.irods.jargon.conveyor.core;
 import java.util.List;
 
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
+import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 
 /**
  * Manages synchronizations scheduling.
@@ -91,5 +93,49 @@ public interface SynchronizationManagerService {
 	 */
 	void triggerSynchronizationNow(final Synchronization synchronization)
 			throws RejectedTransferException, ConveyorExecutionException;
+
+	/**
+	 * Given a transfer status that signals the successful completion of a
+	 * synchronization operation, do the necessary updates that account for this
+	 * synch.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} this is a successful synch completion
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} for this synch attempt
+	 * @throws ConveyorExecutionException
+	 */
+	void updateSynchronizationWithSuccessfulCompletion(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
+
+	/**
+	 * Given a transfer status that signals the warning completion of a
+	 * synchronization operation, with errors about the configured threshold, do
+	 * the necessary updates that account for this synch.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} this is a successful synch completion
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} for this synch attempt
+	 * @throws ConveyorExecutionException
+	 */
+	void updateSynchronizationWithWarningCompletion(
+			TransferStatus transferStatus, TransferAttempt transferAttempt)
+			throws ConveyorExecutionException;
+
+	/**
+	 * Given a transfer status that signals the failure completion of a
+	 * synchronization operation do the necessary updates that account for this
+	 * synch.
+	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} this is a successful synch completion
+	 * @param transferAttempt
+	 *            {@link TransferAttempt} for this synch attempt
+	 * @throws ConveyorExecutionException
+	 */
+	void updateSynchronizationWithFailure(TransferStatus transferStatus,
+			TransferAttempt transferAttempt) throws ConveyorExecutionException;
 
 }

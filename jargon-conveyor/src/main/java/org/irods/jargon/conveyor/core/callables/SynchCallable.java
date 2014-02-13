@@ -4,6 +4,7 @@
 package org.irods.jargon.conveyor.core.callables;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.synch.AbstractSynchronizingDiffCreator;
 import org.irods.jargon.conveyor.synch.AbstractSynchronizingDiffProcessor;
@@ -17,6 +18,7 @@ import org.irods.jargon.datautils.tree.FileTreeModel;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.Transfer;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
+import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,6 +121,48 @@ public class SynchCallable extends AbstractConveyorCallable {
 		} catch (JargonException e) {
 			log.error("error creating synch", e);
 			throw new ConveyorExecutionException("error in synch processing", e);
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.callables.AbstractConveyorCallable#
+	 * processOverallCompletionOfTransfer
+	 * (org.irods.jargon.core.transfer.TransferStatus)
+	 */
+	@Override
+	protected void processOverallCompletionOfTransfer(
+			TransferStatus transferStatus) throws ConveyorExecutionException {
+		log.info("processOverallCompletionOfTransfer() subclassed for synch");
+
+		log.info("evaluating transfer status by inspecting items for any file level errors");
+		TransferStatusEnum evaluatedStatus = evaluateTransferErrorsInItemsToSetOverallStatus(this
+				.getTransferAttempt());
+
+		log.info("status was:{}", evaluatedStatus);
+
+		if (evaluatedStatus == TransferStatusEnum.OK) {
+
+			this.getConveyorService().getConveyorExecutorService()
+					.setErrorStatus(ErrorStatus.OK);
+			getConveyorService().getSynchronizationManagerService()
+					.updateSynchronizationWithSuccessfulCompletion(
+							transferStatus, this.getTransferAttempt());
+
+		} else if (evaluatedStatus == TransferStatusEnum.WARNING) {
+			this.getConveyorService().getConveyorExecutorService()
+					.setErrorStatus(ErrorStatus.WARNING);
+			getConveyorService().getSynchronizationManagerService()
+					.updateSynchronizationWithWarningCompletion(transferStatus,
+							this.getTransferAttempt());
+		} else if (evaluatedStatus == TransferStatusEnum.ERROR) {
+			this.getConveyorService().getConveyorExecutorService()
+					.setErrorStatus(ErrorStatus.ERROR);
+			getConveyorService().getTransferAccountingManagementService()
+					.updateTransferAfterOverallFailureByFileErrorThreshold(
+							transferStatus, getTransferAttempt());
+
 		}
 	}
 
