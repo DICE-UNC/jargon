@@ -102,6 +102,13 @@ public class BasicSychronizationManagerServiceImpl extends
 		}
 
 		validateSynchronization(synchronization);
+                                        Date now = new Date();
+                                        
+                                        synchronization.setUpdatedAt(now);
+                                        if (synchronization.getId() == null) {
+                                            synchronization.setCreatedAt(now);
+                                        }
+                
 		try {
 			synchronizationDAO.save(synchronization);
 		} catch (TransferDAOException e) {
