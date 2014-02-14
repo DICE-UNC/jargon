@@ -12,8 +12,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.webmvc.version>3.2.3.RELEASE</spring.webmvc.version>
-		<spring.core.version>3.2.3.RELEASE</spring.core.version>
-		<spring.security.version>3.1.0.RELEASE</spring.security.version>
+		<spring.core.version>3.0.5.RELEASE</spring.core.version>
+		<spring.security.version>3.0.5.RELEASE</spring.security.version>
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
