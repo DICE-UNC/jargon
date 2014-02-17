@@ -636,7 +636,7 @@ public class TransferAccountingManagementServiceImpl extends
 						"error finding transfer attempt");
 
 			}
-			transfer = transferDAO.load(transferAttempt.getTransfer().getId());
+			transfer = transferAttempt.getTransfer();
 
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException(

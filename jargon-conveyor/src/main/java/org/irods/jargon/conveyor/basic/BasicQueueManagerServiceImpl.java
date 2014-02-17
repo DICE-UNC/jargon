@@ -324,9 +324,15 @@ public class BasicQueueManagerServiceImpl extends
 							.getId());
 
 			if (transferAttempt == null) {
-				log.warn(
-						"transfer attempt is not available in the transfer:{}",
+				log.error(
+						"transfer attempt is not available in the transfer:{}, \nwill delete [this is an error recovery step]",
 						transfer);
+                               // transferDAO.delete(transfer);
+                                // FIXME: what to do here?  S
+                                getConveyorExecutorService().setOperationCompleted();
+				return;
+                                
+                               // throw new ConveyorExecutionException("cannot find transfer attempt for transfer");
 			}
 
 			transferAttempt.setAttemptStart(new Timestamp(System
@@ -352,7 +358,7 @@ public class BasicQueueManagerServiceImpl extends
 			getConveyorExecutorService().setOperationCompleted();
 			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(je);
-			dequeueNextOperation();
+			//dequeueNextOperation();
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 
@@ -367,7 +373,7 @@ public class BasicQueueManagerServiceImpl extends
 			getConveyorExecutorService().setOperationCompleted();
 			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
-			dequeueNextOperation();
+			//dequeueNextOperation();
 		}
 	}
 

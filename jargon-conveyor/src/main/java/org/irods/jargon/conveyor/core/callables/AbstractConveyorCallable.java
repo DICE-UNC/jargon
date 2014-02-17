@@ -24,6 +24,7 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Abstract super class for a transfer running process. This class, and its
@@ -45,8 +46,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-// @Transactional(noRollbackFor = { JargonException.class }, rollbackFor = {
-// ConveyorExecutionException.class })
+ @Transactional(noRollbackFor = { JargonException.class }, rollbackFor = {
+ ConveyorExecutionException.class })
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
@@ -536,7 +537,7 @@ public abstract class AbstractConveyorCallable implements
 				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
 						getTransferAttempt());
 	}
-
+ 
 	/**
 	 * A complete with success callback for an entire transfer operation, make
 	 * the necessary updates
@@ -547,7 +548,7 @@ public abstract class AbstractConveyorCallable implements
 	protected void processOverallCompletionOfTransfer(
 			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
-		log.info("processOverallCompletionOfTransfer");
+		log.info("processOverallCompletionOfTransfer default version in AbstractConveyorCallable");
 
 		log.info("evaluating transfer status by inspecting items for any file level errors");
 		TransferStatusEnum evaluatedStatus = evaluateTransferErrorsInItemsToSetOverallStatus(transferAttempt);

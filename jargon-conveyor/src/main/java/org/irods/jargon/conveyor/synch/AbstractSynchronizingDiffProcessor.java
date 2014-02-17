@@ -141,6 +141,8 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 					.getLocalSynchDirectory(), transferAttempt.getTransfer()
 					.getSynchronization().getIrodsSynchDirectory());
 
+			log.info("diff processed, ");
+
 		} catch (JargonException e) {
 			throw new ConveyorExecutionException(e);
 		}

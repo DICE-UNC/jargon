@@ -4,9 +4,11 @@
 package org.irods.jargon.conveyor.basic;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
@@ -19,6 +21,8 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.transfer.dao.SynchronizationDAO;
+import org.irods.jargon.transfer.dao.TransferAttemptDAO;
+import org.irods.jargon.transfer.dao.TransferDAO;
 import org.irods.jargon.transfer.dao.TransferDAOException;
 import org.irods.jargon.transfer.dao.domain.Synchronization;
 import org.irods.jargon.transfer.dao.domain.Transfer;
@@ -46,7 +50,34 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * Injected dependency
 	 */
 	private SynchronizationDAO synchronizationDAO;
+        
+        
+        /**
+         * injected dependency
+         */
+        private TransferDAO transferDAO;
 
+    public TransferDAO getTransferDAO() {
+        return transferDAO;
+    }
+
+    public void setTransferDAO(TransferDAO transferDAO) {
+        this.transferDAO = transferDAO;
+    }
+
+    public TransferAttemptDAO getTransferAttemptDAO() {
+        return transferAttemptDAO;
+    }
+
+    public void setTransferAttemptDAO(TransferAttemptDAO transferAttemptDAO) {
+        this.transferAttemptDAO = transferAttemptDAO;
+    }
+        
+          /**
+         * injected dependency
+         */
+        private TransferAttemptDAO transferAttemptDAO;
+        
 	/**
 	 * Injected dependency
 	 */
@@ -284,9 +315,18 @@ public class BasicSychronizationManagerServiceImpl extends
 		transfer.setResourceName(synchronization.getGridAccount()
 				.getDefaultResource());
 		transfer.setSynchronization(synchronization);
+                synchronization.getTransfers().add(transfer);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setTransferType(TransferType.SYNCH);
 		transfer.setUpdatedAt(now);
+            try {
+     
+                //transferDAO.save(transfer);
+                synchronizationDAO.save(synchronization);
+            } catch (TransferDAOException ex) {
+               log.error("error saving synch", ex);
+               throw new ConveyorExecutionException("error savign synch", ex);
+            }
 
 		log.info("built transfer for synch:{}", transfer);
 
@@ -411,12 +451,19 @@ public class BasicSychronizationManagerServiceImpl extends
 			throw new IllegalArgumentException("null transferAtempt");
 		}
 
-		log.info("delegate update of transfer to accounting management service...");
-		this.getConveyorService()
-				.getTransferAccountingManagementService()
-				.updateTransferAfterOverallSuccess(transferStatus,
-						transferAttempt);
-		Synchronization synchronization = transferAttempt.getTransfer()
+		log.info("update of transfer...");
+                
+                Transfer transfer = transferAttempt.getTransfer();
+                
+		transfer.setLastTransferStatus(TransferStatusEnum.OK);
+		transfer.setTransferState(TransferStateEnum.COMPLETE);
+		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		transferAttempt
+				.setAttemptEnd(new Timestamp(System.currentTimeMillis()));
+		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
+		transferAttempt.setUpdatedAt(transferAttempt.getAttemptEnd());
+		transferAttempt.setErrorMessage("");
+                Synchronization synchronization = transfer
 				.getSynchronization();
 		if (synchronization == null) {
 			throw new ConveyorExecutionException(
@@ -426,12 +473,20 @@ public class BasicSychronizationManagerServiceImpl extends
 		log.info("updating synchronization for this success...");
 		synchronization.setLastSynchronizationStatus(TransferStatusEnum.OK);
 		synchronization.setLastSynchronized(new Date());
+
+		log.info("updated transfer attempt:{}", transferAttempt);
+
 		try {
-			synchronizationDAO.save(synchronization);
-		} catch (TransferDAOException e) {
-			log.info("error saving synchronization");
-			throw new ConveyorExecutionException(e);
+                        synchronizationDAO.save(synchronization);
+			//transferAttemptDAO.save(transferAttempt);
+			//transferDAO.save(transfer);
+		} catch (TransferDAOException ex) {
+                    log.error("transferDAOException on save of transfer data", ex);
+			throw new ConveyorExecutionException(
+					"error saving transfer attempt", ex);
 		}
+                
+       
 
 	}
 
