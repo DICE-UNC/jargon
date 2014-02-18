@@ -53,6 +53,10 @@ public class LocalToIRODSDiffProcessor extends
 		 * collection relative path, appended to the local root.
 		 */
 
+		if (isCancelled()) {
+			return;
+		}
+
 		log.info("\n\n>>>>>>>>>>>>>>>>>>>>>>>>>>\n\n");
 		log.info("scheduleLocalToIrods for diffNode:{}", diffNode);
 

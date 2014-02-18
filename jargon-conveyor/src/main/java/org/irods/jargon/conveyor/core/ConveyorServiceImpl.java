@@ -4,6 +4,7 @@ import java.util.Timer;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
 import org.irods.jargon.conveyor.synch.SynchComponentFactory;
+import org.irods.jargon.conveyor.synch.SynchPeriodicScheduler;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -301,11 +302,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 		queueSchedulerTimerTask.setConveyorService(this);
 		queueSchedulerTimerTask.init();
 
-		// SynchPeriodicScheduler synchPeriodicScheduler = new
-		// SynchPeriodicScheduler(idropCore.getTransferManager(),
-		// idropCore.getIRODSAccessObjectFactory());
+		SynchPeriodicScheduler synchPeriodicScheduler = new SynchPeriodicScheduler(
+				this);
 		queueTimer = new Timer();
 		queueTimer.scheduleAtFixedRate(queueSchedulerTimerTask, 10000, 120000);
+		queueTimer.scheduleAtFixedRate(synchPeriodicScheduler, 20000, 360000);
 		log.info("timer scheduled");
 		queueManagerService.dequeueNextOperation();
 	}

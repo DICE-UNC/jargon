@@ -52,4 +52,13 @@ public class AbstractSynchronizingComponent {
 			TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
+
+	/**
+	 * convenience method checks if this operation is cancelled
+	 * 
+	 * @return <code>boolean</code> indicating that a cancellation was received
+	 */
+	public boolean isCancelled() {
+		return this.getTransferControlBlock().isCancelled();
+	}
 }

@@ -46,6 +46,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 
 	private final ConveyorService conveyorService;
 	private final TransferControlBlock transferControlBlock;
+	private TransferAttempt transferAttempt;
 
 	public static final String BACKUP_PREFIX = "synch-backup";
 
@@ -133,6 +134,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 						.getDataTransferOperations(irodsAccount);
 
 				this.transferStatusCallbackListener = transferStatusCallbackListener;
+				this.transferAttempt = transferAttempt;
 
 			}
 
@@ -168,6 +170,29 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 				TransferState.SYNCH_DIFF_RESOLVE_STEP, synchronization
 						.getGridAccount().getHost(), synchronization
 						.getGridAccount().getZone());
+		transferStatusCallbackListener
+				.overallStatusCallback(overallSynchStartStatus);
+
+	}
+
+/**
+	 * Send a message that we failed due to errors
+	 * 
+	 * @param synchronization {@link Synchronization
+	 * @param transferStatusCallbackListener
+	 * @throws JargonException
+	 */
+	protected void signalFailureCallback(final Synchronization synchronization,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException {
+		// make an overall status callback that a synch is initiated
+
+		TransferStatus overallSynchStartStatus = TransferStatus.instance(
+				TransferType.SYNCH, synchronization.getLocalSynchDirectory(),
+				synchronization.getIrodsSynchDirectory(), synchronization
+						.getDefaultStorageResource(), 0L, 0L, 0, 0, 0,
+				TransferState.FAILURE, synchronization.getGridAccount()
+						.getHost(), synchronization.getGridAccount().getZone());
 		transferStatusCallbackListener
 				.overallStatusCallback(overallSynchStartStatus);
 
@@ -216,6 +241,11 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 			final String irodsRootAbsolutePath,
 			final FileTreeDiffEntry fileTreeDiffEntry)
 			throws ConveyorExecutionException {
+
+		if (isCancelled()) {
+			return;
+		}
+
 		if (fileTreeDiffEntry.getDiffType() == DiffType.DIRECTORY_NO_DIFF) {
 			evaluateDirectoryNode(diffNode, localRootAbsolutePath,
 					irodsRootAbsolutePath, fileTreeDiffEntry);
@@ -278,8 +308,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 		final Enumeration children = diffNode.children();
 		while (children.hasMoreElements()) {
 
-			if (transferControlBlock.isCancelled()
-					|| transferControlBlock.isPaused()) {
+			if (isCancelled()) {
 				log.info("cancelling...");
 				break;
 			}
@@ -520,9 +549,9 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			log.error("failure in underlying transfer:{}", transferStatus);
-			log.info("cancelling for errors...");
-			this.getTransferControlBlock().setCancelled(true);
 			log.info("set cancel in tcb, let synch process terminate");
+			this.signalFailureCallback(this.transferAttempt.getTransfer()
+					.getSynchronization(), transferStatusCallbackListener);
 		}
 
 	}
@@ -540,6 +569,16 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 		log.info("overwrite situation, cancel as this shouldn't happen");
 
 		return CallbackResponse.CANCEL;
+	}
+
+	/**
+	 * Checks for a cancellation
+	 * 
+	 * @return
+	 */
+	protected boolean isCancelled() {
+		return (transferControlBlock.isCancelled() || transferControlBlock
+				.isPaused());
 	}
 
 }

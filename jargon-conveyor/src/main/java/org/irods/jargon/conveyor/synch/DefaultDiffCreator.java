@@ -75,7 +75,8 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 		// FIXME: add tcb and cancel to filetreediffutility
 
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
-				synchAccount, irodsAccessObjectFactory);
+				synchAccount, irodsAccessObjectFactory,
+				this.getTransferControlBlock());
 
 		FileTreeModel diffModel;
 		try {
@@ -87,7 +88,6 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 					e);
 		}
 
-		assert diffModel != null;
 		log.info("diff model obtained:{}", diffModel);
 		return diffModel;
 

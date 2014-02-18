@@ -21,7 +21,6 @@ import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Process a synchronization transfer
@@ -77,6 +76,12 @@ public class SynchCallable extends AbstractConveyorCallable {
 					.instanceDiffCreator(synchronization, tcb);
 			FileTreeModel diffModel = diffCreator.createDiff(getTransfer());
 
+			if (isCancelled()) {
+				log.info("cancellation received");
+				sendSynchStatusMessage(getTransfer(), synchronization,
+						TransferState.CANCELLED);
+			}
+
 			log.info("have file tree model, now process the diff to resolve it...get diff processor from factory");
 
 			AbstractSynchronizingDiffProcessor diffProcessor = this
@@ -91,10 +96,21 @@ public class SynchCallable extends AbstractConveyorCallable {
 			 */
 			diffProcessor.execute(this.getTransferAttempt(), diffModel, this);
 
-			log.info("processing complete, send the final callback");
+			if (isCancelled()) {
+				log.info("cancellation received");
+				log.info("processing complete, send the final callback");
 
-			sendSynchStatusMessage(getTransfer(), synchronization,
-					TransferState.SYNCH_COMPLETION);
+				sendSynchStatusMessage(getTransfer(), synchronization,
+						TransferState.CANCELLED);
+			} else {
+
+				log.info("processing complete, send the final callback");
+
+				sendSynchStatusMessage(getTransfer(), synchronization,
+						TransferState.SYNCH_COMPLETION);
+
+			}
+
 		} catch (Exception e) {
 			log.error("error encountered during synch processing", e);
 			this.reportConveyerExceptionDuringProcessing(e);
@@ -167,4 +183,13 @@ public class SynchCallable extends AbstractConveyorCallable {
 		}
 	}
 
+	/**
+	 * Checks for a cancellation
+	 * 
+	 * @return
+	 */
+	protected boolean isCancelled() {
+		return (this.getTransferControlBlock().isCancelled() || this
+				.getTransferControlBlock().isPaused());
+	}
 }
