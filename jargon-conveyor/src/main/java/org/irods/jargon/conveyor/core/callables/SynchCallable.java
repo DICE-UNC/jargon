@@ -113,6 +113,9 @@ public class SynchCallable extends AbstractConveyorCallable {
 
 		} catch (Exception e) {
 			log.error("error encountered during synch processing", e);
+                        
+                        this.sendSynchStatusMessage(getTransfer(), synchronization, TransferState.FAILURE);
+              
 			this.reportConveyerExceptionDuringProcessing(e);
 		}
 
