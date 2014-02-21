@@ -2310,7 +2310,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
-			final String dataObjectAbsolutePath) throws JargonException {
+			final String dataObjectAbsolutePath) throws FileNotFoundException,
+			JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

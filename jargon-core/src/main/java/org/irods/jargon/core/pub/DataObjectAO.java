@@ -622,10 +622,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            object
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(
-			String dataObjectAbsolutePath) throws JargonException;
+			String dataObjectAbsolutePath) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * This is a special method to modify the Avu value for a given attribute
