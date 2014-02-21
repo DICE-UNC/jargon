@@ -408,6 +408,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("addBulkAVUMetadataToCollection()");
 
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolute path");
+		}
+
 		if (avuData == null || avuData.isEmpty()) {
 			throw new IllegalArgumentException("null or empty avuData");
 		}

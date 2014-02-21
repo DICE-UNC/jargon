@@ -26,6 +26,7 @@ import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.BulkAVUOperationResponse.ResultStatus;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -1589,6 +1590,56 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		final IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				fileAbsolutePath);
 		return irodsFile;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject(java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("addBulkAVUMetadataToDataObject()");
+
+		if (absolutePath == NULL_LOCAL_FILE || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolute path");
+		}
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				addAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when adding an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
+				continue;
+			} catch (DuplicateDataException dde) {
+				log.error(
+						"DuplicateDataException when adding an AVU, catch and add to response data",
+						dde);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.DUPLICATE_AVU, value, dde.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
 	}
 
 	/*

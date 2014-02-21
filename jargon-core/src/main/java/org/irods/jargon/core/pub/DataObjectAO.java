@@ -1081,4 +1081,24 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String irodsCollectionAbsolutePath, String fileName,
 			String resourceName, int delayInMinutes) throws JargonException;
 
+	/**
+	 * Given a list of avu metadata, add all to the data object. A response will
+	 * be returned giving individual success/failure information. For example,
+	 * an attempt to add a duplicate AVU will result in an error entry in the
+	 * response versus a thrown exception.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param avuData
+	 *            <code>List</code> of {@link AvuData} for each AVU to be added.
+	 * @return {@link BulkAVUOperationResponse} with details on the success or
+	 *         failure of the add of each AVU.
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
+	 * @throws JargonException
+	 */
+	List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
+			String absolutePath, List<AvuData> avuData)
+			throws FileNotFoundException, JargonException;
+
 }
