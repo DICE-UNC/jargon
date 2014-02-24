@@ -1592,8 +1592,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return irodsFile;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject(java.lang.String, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject
+	 * (java.lang.String, java.util.List)
 	 */
 	@Override
 	public List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
@@ -1629,6 +1633,49 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						dde);
 				responses.add(BulkAVUOperationResponse.instance(
 						ResultStatus.DUPLICATE_AVU, value, dde.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
+	 * (java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("deleteBulkAVUMetadataFromDataObject()");
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				deleteAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when deleti an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
 				continue;
 
 			}

@@ -512,7 +512,7 @@ public class CollectionAOImplTest {
 
 		// added, now delete the same and observe they are all gone
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
@@ -554,7 +554,7 @@ public class CollectionAOImplTest {
 
 		// check idempotency
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);
@@ -606,7 +606,7 @@ public class CollectionAOImplTest {
 
 		// added, now delete the same and observe they are all gone
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);
@@ -623,7 +623,7 @@ public class CollectionAOImplTest {
 
 		// check idempotency
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);

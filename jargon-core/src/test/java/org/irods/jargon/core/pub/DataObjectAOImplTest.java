@@ -5795,4 +5795,62 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@Test
+	public void testBulkDeleteAVUMetadataFromDataObject() throws Exception {
+		String testFileName = "testBulkDeleteAVUMetadataFromDataObject.txt";
+		String expectedAttribName = "testBulkDeleteAVUMetadataFromDataObject";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedValueName, "");
+		List<AvuData> bulkAvuData = new ArrayList<AvuData>();
+		bulkAvuData.add(avuData);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		List<BulkAVUOperationResponse> response = dataObjectAO
+				.addBulkAVUMetadataToDataObject(targetIrodsDataObject,
+						bulkAvuData);
+
+		// now delete it
+
+		response = dataObjectAO.deleteBulkAVUMetadataFromDataObject(
+				targetIrodsDataObject, bulkAvuData);
+
+		Assert.assertNotNull(response);
+		Assert.assertFalse(response.isEmpty());
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO
+				.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertFalse(dataObjects.size() >= 1);
+	}
+
 }

@@ -1101,4 +1101,23 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String absolutePath, List<AvuData> avuData)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * Given a list of avu metadata, delete all from the data object. A response
+	 * will be returned giving individual success/failure information. Note that
+	 * a delete of a non-existent AVU will be silently ignored
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param avuData
+	 *            <code>List</code> of {@link AvuData} for each AVU to be
+	 *            deleted.
+	 * @return {@link BulkAVUOperationResponse} with details on the success or
+	 *         failure of the delete of each AVU.
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
+	 * @throws JargonException
+	 */
+	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(
+			String absolutePath, List<AvuData> avuData) throws JargonException;
+
 }

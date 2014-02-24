@@ -932,7 +932,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *             if an unexpected exception not anticipated by the bulk AVU
 	 *             process occurs
 	 */
-	List<BulkAVUOperationResponse> deleteBulkAVUMetadataToCollection(
+	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(
 			String absolutePath, List<AvuData> avuData) throws JargonException;
 
 }

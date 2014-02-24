@@ -452,11 +452,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.CollectionAO#deleteBulkAVUMetadataToCollection
+	 * org.irods.jargon.core.pub.CollectionAO#deleteBulkAVUMetadataFromCollection
 	 * (java.lang.String, java.util.List)
 	 */
 	@Override
-	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataToCollection(
+	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(
 			final String absolutePath, final List<AvuData> avuData)
 			throws JargonException {
 
