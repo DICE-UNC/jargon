@@ -58,7 +58,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	/**
 	 * Default constructor that gives the account and pipeline setup
 	 * information. This constructor is a special case where you already have a
-	 * Socket openened to iRODS, and you want to wrap that socket with the low
+	 * Socket opened to iRODS, and you want to wrap that socket with the low
 	 * level iRODS semantics. An example use case is when you need to to PAM
 	 * authentication and wrap an existing iRODS connection with an SSL socket.
 	 * <p/>
@@ -100,6 +100,13 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		log.info("socket opened successfully");
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.AbstractConnection#connect(org.irods
+	 * .jargon.core.connection.IRODSAccount)
+	 */
 	@Override
 	protected void connect(final IRODSAccount irodsAccount)
 			throws JargonException {
