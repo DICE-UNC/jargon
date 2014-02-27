@@ -3,6 +3,7 @@
 *'''Release Version''': 3.3.3
 *'''git tag''':
 
+NOTE: test version for gitHub release of beta of iRODS REST
 
 ==News==
 

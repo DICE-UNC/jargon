@@ -11,6 +11,7 @@ Servers
 .settings
 .classpath
 target
+mvn-repo
 bin
 *.war
 *.log
@@ -19,7 +20,3 @@ nbactions.xml
 testing.properties
 */test-output
 JargonVersion.java
-<<<<<<< HEAD
-=======
-
->>>>>>> master
