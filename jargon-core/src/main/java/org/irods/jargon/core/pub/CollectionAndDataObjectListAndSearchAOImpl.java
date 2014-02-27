@@ -891,6 +891,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		sb.append(getIRODSAccount().getZone());
 		sb.append("/home");
 		entry.setParentPath(sb.toString());
+		sb.append("/");
 		sb.append(getIRODSAccount().getUserName());
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(objStat.getSpecColType());
