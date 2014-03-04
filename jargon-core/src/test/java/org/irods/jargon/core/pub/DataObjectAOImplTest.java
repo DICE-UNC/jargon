@@ -2901,7 +2901,7 @@ public class DataObjectAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
 				null);
 
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
@@ -5661,7 +5661,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
@@ -5787,7 +5787,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.listReplicationsForFile(targetIrodsCollection,
@@ -5852,5 +5852,64 @@ public class DataObjectAOImplTest {
 				.findDomainByMetadataQuery(avuQueryElements);
 		Assert.assertFalse(dataObjects.size() >= 1);
 	}
+	
+	
+	@Test
+	public void testDeleteAllAVUMetadataFromDataObject() throws Exception {
+		String testFileName = "testDeleteAllAVUMetadataFromDataObject.txt";
+		String expectedAttribName = "testDeleteAllAVUMetadataFromDataObject";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedValueName, "");
+		List<AvuData> bulkAvuData = new ArrayList<AvuData>();
+		bulkAvuData.add(avuData);
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		List<BulkAVUOperationResponse> response = dataObjectAO
+				.addBulkAVUMetadataToDataObject(targetIrodsDataObject,
+						bulkAvuData);
+
+		// now delete it
+
+		dataObjectAO.deleteAllAVUForDataObject(targetIrodsDataObject);
+
+		Assert.assertNotNull(response);
+		Assert.assertFalse(response.isEmpty());
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO
+				.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertFalse(dataObjects.size() >= 1);
+	}
+
 
 }

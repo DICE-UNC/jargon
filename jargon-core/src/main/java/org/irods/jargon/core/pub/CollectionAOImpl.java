@@ -542,6 +542,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.debug("metadata added");
 
 	}
+	
+	
 
 	/*
 	 * (non-Javadoc)
@@ -585,6 +587,57 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw je;
 		}
 
+		log.debug("metadata removed");
+	}
+	
+	
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionAO#deleteAllAVUMetadata(java.lang.String)
+	 */
+	@Override
+	public void deleteAllAVUMetadata(final String absolutePath) throws DataNotFoundException,
+			JargonException {
+		
+		log.info("deleteAllAVUMetadata");
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+
+		log.info("absolute path: {}", absolutePath);
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		log.info("absolute path: {}", absolutePath);
+		
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (FileNotFoundException e) {
+			throw new DataNotFoundException(e);
+		}
+		
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			return;
+		}
+
+		List<MetaDataAndDomainData> metadatas;
+		try {
+			metadatas = this.findMetadataValuesForCollection(objStat, 0);
+		} catch (JargonQueryException e) {
+			throw new JargonException(e);
+		}
+		
+		List<AvuData> avusToDelete = new ArrayList<AvuData>();
+		
+		for (MetaDataAndDomainData metadata : metadatas) {
+			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
+		}
+		
+		this.deleteBulkAVUMetadataFromCollection(absolutePath, avusToDelete);
 		log.debug("metadata removed");
 	}
 
@@ -732,15 +785,36 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
 
+		ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
+		return findMetadataValuesForCollection(objStat, partialStartIndex);	
+		
+	}
+	
+	
+	private List<MetaDataAndDomainData> findMetadataValuesForCollection(
+			final ObjStat objStat, final int partialStartIndex)
+			throws FileNotFoundException, JargonException, JargonQueryException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException(
+					"null or empty objStat");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partialStartIndex must be 0 or greater, set to 0 if no offset desired");
+		}
+
+		log.info("find metadata values for collection:{}",
+				objStat);
+		log.info("with partial start of:{}", partialStartIndex);
+
+		
 		String absPath;
-		ObjStat objStat = null;
-		if (collectionAbsolutePath.isEmpty()) {
-			absPath = "";
-		} else {
-			objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
+		
 			absPath = MiscIRODSUtils
 					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		}
+		
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
