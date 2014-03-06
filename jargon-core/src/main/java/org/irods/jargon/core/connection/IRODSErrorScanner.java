@@ -101,7 +101,8 @@ public class IRODSErrorScanner {
 
 			} catch (IllegalArgumentException iae) {
 				throw new JargonException(
-						"Unknown iRODS exception code recieved", infoValue);
+						"Unknown iRODS exception code recieved:" + infoValue,
+						infoValue);
 			}
 
 			log.debug("errorEnum val:{}", errorEnum);

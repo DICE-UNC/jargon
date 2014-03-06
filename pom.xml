@@ -17,6 +17,7 @@
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
+		<sl4j.version>1.6.6</sl4j.version>
 	</properties>
 	<issueManagement>
 		<system>gForge</system>
@@ -272,12 +273,12 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.5.10</version>
+				<version>${sl4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.10</version>
+				<version>${sl4j.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework</groupId>
@@ -345,7 +346,6 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-log4j12</artifactId>
-			<version>1.5.10</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
