@@ -571,6 +571,78 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public void testDeleteAllAvuMetadata() throws Exception {
+		String testDirName = "testDeleteAllAvuMetadata";
+		String expectedAttribName = "testDeleteAllAvuMetadataattrib1";
+		String expectedAttribValue = "testDeleteAllAvuMetadatavalue1";
+
+		String expectedAttribName2 = "testDeleteAllAvuMetadataattrib2";
+		String expectedAttribValue2 = "testDeleteAllAvuMetadatavalue2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+		listOfAvuData.add(AvuData.instance(expectedAttribName2,
+				expectedAttribValue2, ""));
+
+		collectionAO.addBulkAVUMetadataToCollection(targetIrodsCollection,
+				listOfAvuData);
+
+		// added, now delete the same and observe they are all gone
+
+		collectionAO.deleteAllAVUMetadata(targetIrodsCollection);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQuery(queryElements);
+		Assert.assertTrue("should have been deleted", result.isEmpty());
+
+		queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue2));
+
+		Assert.assertTrue("should have been deleted", result.isEmpty());
+
+	}
+
+	@Test
 	public void testBulkDeleteAvuMetadataCollMissing() throws Exception {
 		String testDirName = "testBulkDeleteAvuMetadataCollMissing";
 		String expectedAttribName = "testBulkDeleteAvuMetadataattrib1";

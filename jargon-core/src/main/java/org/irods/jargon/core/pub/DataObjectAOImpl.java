@@ -1819,6 +1819,53 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		addAVUMetadata(sb.toString(), avuData);
 
 	}
+	
+
+	
+	@Override
+	public void deleteAllAVUForDataObject(final String absolutePath) throws DataNotFoundException, JargonException {
+		
+		/*
+		 * There are multiple objsStats being called, need to consolidate this and have methods that can take in a passed in object stat
+		 */
+		
+		log.info("deleteAllAVForDataObject()");
+		
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		log.info("absolute path: {}", absolutePath);
+		
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (FileNotFoundException e) {
+			throw new DataNotFoundException(e);
+		}
+		
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			return;
+		}
+
+		List<MetaDataAndDomainData> metadatas = this.findMetadataValuesForDataObject(objStat);
+		
+		List<AvuData> avusToDelete = new ArrayList<AvuData>();
+		
+		for (MetaDataAndDomainData metadata : metadatas) {
+			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
+		}
+		
+		this.deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
+	
+	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -2420,10 +2467,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(dataObjectAbsolutePath);
-
 		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		return findMetadataValuesForDataObject(objStat);
+	}
+	
+	
+	private List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException(
+					"null or empty objStat");
+		}
+
+		log.info("findMetadataValuesForDataObject: {}", objStat);
+
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
@@ -2434,13 +2494,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		CollectionAndPath collectionAndName = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
+		
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, collName.getCollectionParent(),
-					collName.getChildName());
+					queryElements, collectionAndName.getCollectionParent(),
+					collectionAndName.getChildName());
 		} catch (JargonQueryException e) {
 			log.error("query exception looking up data object:{}",
-					dataObjectAbsolutePath, e);
+					objStat.getAbsolutePath(), e);
 			throw new JargonException(e);
 		}
 	}

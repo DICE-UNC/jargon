@@ -935,4 +935,13 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(
 			String absolutePath, List<AvuData> avuData) throws JargonException;
 
+	/**
+	 * Do a buld delete of all AVUs associated with the collection
+	 * @param absolutePath  <code>String</code> with the absolute path for the collection
+	 * @throws DataNotFoundException if the collection is missing
+	 * @throws JargonException
+	 */
+	void deleteAllAVUMetadata(String absolutePath)
+			throws DataNotFoundException, JargonException;
+
 }

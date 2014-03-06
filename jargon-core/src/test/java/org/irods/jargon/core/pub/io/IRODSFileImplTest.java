@@ -18,7 +18,6 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataObjectAO;
-import org.irods.jargon.core.pub.DataObjectAOImpl;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -106,7 +105,7 @@ public class IRODSFileImplTest {
 		userGroupAO.addUserToGroup(testUserGroup,
 				secondaryIrodsAccount.getUserName(), null);
 
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
