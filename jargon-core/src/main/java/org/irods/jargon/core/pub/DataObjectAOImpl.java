@@ -18,6 +18,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InvalidInputParameterException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
@@ -3976,10 +3977,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					MiscIRODSUtils.wrapStringInQuotes("null")));
 		}
 
+		try {
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
 				"/rules/trimDataObject.r", irodsRuleParameters,
 				RuleProcessingType.EXTERNAL);
 		log.info("result of action:{}", result.getRuleExecOut().trim());
+
+		} catch (InvalidInputParameterException e) {
+			log.warn("invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",e);
+			if (this.getIRODSServerProperties().isEirods()) {
+				log.warn("ignored....is eirods");
+			} else {
+				throw e;
+			}
+		}
 
 	}
 
@@ -4029,6 +4040,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 
 			return DataAOHelper.buildListFromResultSet(resultSet);
+		
+		
 		} catch (Exception e) {
 			log.error("error querying for replicas", e);
 			throw new JargonException("error querying for file replicas", e);
