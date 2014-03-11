@@ -1,21 +1,14 @@
-<<<<<<< HEAD
-Jargon Core API
-
-This is a provisional beta test of migration to gitHub, in support of the beta release of the iRODS REST API
-=======
 *'''Project''': Jargon-core API
 *'''Date''': 01/24/2014
-*'''Release Version''': 3.3.2-SNAPSHOT
-*'''git tag''': 3.3.2-SNAPSHOT
+*'''Release Version''': 3.3.3-SNAPSHOT
+*'''git tag''': 3.3.3-SNAPSHOT
 
 ==News==
 
-Candidate for 3.3.2 release supporting iRODS 4.0 (eIRODS) and iRODS Community 3.3.1
-
-The release of 3.3.2 will mark the transition to GitHub off of code.renci.org, and that code will be deprecated
+Feature release for Jargon 3.3.3
 
 =======
-Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
+Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
 Jargon-core consists of the following libraries
 
@@ -23,16 +16,15 @@ Jargon-core consists of the following libraries
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 * jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
-* jargon-transfer - transfer manager for managing and synchronizing data with iRODS
+* jargon-conveyor - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
-
 
 ==Requirements==
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3, as well as Consortium iRODS 4.0 
+*Jargon supports iRODS 2.5 through iRODS 3.3, as well as eIRODS 4.0 beta
 
 ==Libraries==
 
@@ -40,4 +32,8 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://code.renci.org/gf/project/jargon/tracker/]]
 
->>>>>>> master
+==Bug Fixes==
+
+
+==Features==
+

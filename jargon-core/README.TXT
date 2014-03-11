@@ -1,12 +1,13 @@
 *'''Project''': Jargon-core API
-*'''Date''': xx/xx/xx
-*'''Release Version''': 3.3.3
-*'''git tag''':
-
-NOTE: test version for gitHub release of beta of iRODS REST
+*'''Date''': 01/24/2014
+*'''Release Version''': 3.3.3-SNAPSHOT
+*'''git tag''': 3.3.3-SNAPSHOT
 
 ==News==
 
+Feature release for Jargon 3.3.3
+
+=======
 Please go to [[https://code.renci.org/gf/project/jargon/]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -15,11 +16,9 @@ Jargon-core consists of the following libraries
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 * jargon-security - code for use with Spring security
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
+* jargon-conveyor - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
-* jargon-conveyor - transfer management and automation
-* jargon-ruleservice - services for interactive composition and execution of rules
-
 
 ==Requirements==
 
@@ -37,4 +36,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 
 ==Features==
-**[#1850] direct login without grid passphrase mode for shared computer
+
