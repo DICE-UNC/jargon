@@ -8,7 +8,6 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
@@ -160,13 +159,13 @@ final class TransferOperationsHelper {
 						log.warn("unable to make directories in local file system, log and proceed");
 					}
 
-					recursivelyGet((IRODSFileImpl) fileInSourceCollection,
+					recursivelyGet((IRODSFile) fileInSourceCollection,
 							newSubCollection, transferStatusCallbackListener,
 							transferControlBlock);
 
 				} else {
 					processGetOfSingleFile(
-							(IRODSFileImpl) fileInSourceCollection,
+							(IRODSFile) fileInSourceCollection,
 							targetLocalFile, transferStatusCallbackListener,
 							transferControlBlock);
 				}
@@ -1052,7 +1051,7 @@ final class TransferOperationsHelper {
 						.instanceIRODSFileForCollectionPath(targetCollection);
 				childTargetFile.mkdirs();
 
-				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,
+				recursivelyCopy((IRODSFile) fileInSourceCollection,
 						targetResource, targetCollection,
 						transferStatusCallbackListener, transferControlBlock);
 

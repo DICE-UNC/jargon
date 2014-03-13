@@ -105,7 +105,7 @@ public class IRODSFileImplTest {
 		userGroupAO.addUserToGroup(testUserGroup,
 				secondaryIrodsAccount.getUserName(), null);
 
-		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
+		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
@@ -398,6 +398,26 @@ public class IRODSFileImplTest {
 		Assert.assertFalse("file should not be executable",
 				irodsFile.canExecute());
 
+	}
+
+	@Test
+	public final void testExistsFileWithParentAndBlankChild() throws Exception {
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, "");
+
+		Assert.assertTrue("file should exist", irodsFile.exists());
 	}
 
 	/**

@@ -138,6 +138,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException("both child and parent names are blank");
 		}
 
+		if (child.isEmpty()) {
+			return instanceIRODSFile(parent);
+		}
+
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
 				getIRODSSession(), getIRODSAccount());
 
@@ -167,6 +171,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		if (child == null) {
 			throw new JargonException("child is null");
+		}
+
+		if (child.isEmpty()) {
+			return instanceIRODSFile(parent.getAbsolutePath());
 		}
 
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
