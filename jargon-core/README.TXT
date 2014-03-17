@@ -37,3 +37,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ==Features==
 
+*Significant development of new transfer framework (conveyor) to replace older transfer engine.
+
+*Added capability to compute a SHA1 checksum via streaming to support ModeShape

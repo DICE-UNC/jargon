@@ -1121,14 +1121,33 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String absolutePath, List<AvuData> avuData) throws JargonException;
 
 	/**
-	 * Clear all AVUs from the given data object by doing a bulk delete operation
-	 * @param absolutePath   <code>String</code> with the absolute path to the data object
-	 * @throws DataNotFoundException if the data object is not found
+	 * Clear all AVUs from the given data object by doing a bulk delete
+	 * operation
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @throws DataNotFoundException
+	 *             if the data object is not found
 	 * @throws JargonException
 	 */
 	void deleteAllAVUForDataObject(final String absolutePath)
 			throws DataNotFoundException, JargonException;
 
-	
+	/**
+	 * Utility to stream back an iRODS file and compute a SHA-1 checksum value.
+	 * Note that this requires pulling in the file data via stream so it can be
+	 * expensive to do for large files. Further, this computed checksum is not
+	 * the one stored in iRODS, rather it is computed on the fly. Be aware that
+	 * data has to be read to compute this value, and it can be expensive.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path
+	 * @return <code>byte[]</code> with a SHA-1 checksum value
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	byte[] computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(
+			final String irodsAbsolutePath) throws DataNotFoundException,
+			JargonException;
 
 }

@@ -1,6 +1,11 @@
 package org.irods.jargon.core.pub;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -1819,34 +1824,33 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		addAVUMetadata(sb.toString(), avuData);
 
 	}
-	
 
-	
 	@Override
-	public void deleteAllAVUForDataObject(final String absolutePath) throws DataNotFoundException, JargonException {
-		
+	public void deleteAllAVUForDataObject(final String absolutePath)
+			throws DataNotFoundException, JargonException {
+
 		/*
-		 * There are multiple objsStats being called, need to consolidate this and have methods that can take in a passed in object stat
+		 * There are multiple objsStats being called, need to consolidate this
+		 * and have methods that can take in a passed in object stat
 		 */
-		
+
 		log.info("deleteAllAVForDataObject()");
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
-		
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("absolute path: {}", absolutePath);
-		
+
 		ObjStat objStat;
 		try {
 			objStat = this.retrieveObjStat(absolutePath);
 		} catch (FileNotFoundException e) {
 			throw new DataNotFoundException(e);
 		}
-		
+
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
 					"objStat indicates collection type that does not support this operation:{}",
@@ -1854,18 +1858,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			return;
 		}
 
-		List<MetaDataAndDomainData> metadatas = this.findMetadataValuesForDataObject(objStat);
-		
+		List<MetaDataAndDomainData> metadatas = this
+				.findMetadataValuesForDataObject(objStat);
+
 		List<AvuData> avusToDelete = new ArrayList<AvuData>();
-		
+
 		for (MetaDataAndDomainData metadata : metadatas) {
-			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
+			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(),
+					metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
-		
+
 		this.deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
-	
+
 	}
-	
 
 	/*
 	 * (non-Javadoc)
@@ -2471,19 +2476,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		return findMetadataValuesForDataObject(objStat);
 	}
-	
-	
+
 	private List<MetaDataAndDomainData> findMetadataValuesForDataObject(
 			final ObjStat objStat) throws FileNotFoundException,
 			JargonException {
 
 		if (objStat == null) {
-			throw new IllegalArgumentException(
-					"null or empty objStat");
+			throw new IllegalArgumentException("null or empty objStat");
 		}
 
 		log.info("findMetadataValuesForDataObject: {}", objStat);
-
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
@@ -2494,8 +2496,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
-		CollectionAndPath collectionAndName = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
-		
+		CollectionAndPath collectionAndName = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(objStat
+						.getAbsolutePath());
+
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
 					queryElements, collectionAndName.getCollectionParent(),
@@ -4029,6 +4033,62 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("error querying for replicas", e);
 			throw new JargonException("error querying for file replicas", e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(java.lang.String)
+	 */
+	@Override
+	public byte[] computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(
+			final String irodsAbsolutePath) throws DataNotFoundException,
+			JargonException {
+
+		log.info("computeSHA1ChecksumOfIrodsFileByReadingDataFromStream()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		log.info("get input stream and read to compute sha1");
+		InputStream is = new BufferedInputStream(this.getIRODSFileFactory()
+				.instanceIRODSFileInputStream(irodsAbsolutePath));
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException e) {
+			log.error("unable to get SHA1 message digest", e);
+			throw new JargonException("cannot commute SHA1 checksum", e);
+		}
+
+		byte[] dataBytes = new byte[1024];
+
+		int nread = 0;
+
+		try {
+			while ((nread = is.read(dataBytes)) != -1) {
+				md.update(dataBytes, 0, nread);
+			}
+		} catch (IOException e) {
+			log.error("IO exception computing sha1 checksum", e);
+			throw new JargonException(e.getMessage());
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+
+		byte[] mdbytes = md.digest();
+		log.info("computed");
+		return mdbytes;
+
 	}
 
 }

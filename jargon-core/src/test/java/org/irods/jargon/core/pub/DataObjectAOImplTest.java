@@ -2901,7 +2901,7 @@ public class DataObjectAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
 				null);
 
-		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
+		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
@@ -2918,6 +2918,41 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue("should be at least2 resources for this data object",
 				resources.size() >= 2);
 
+	}
+
+	@Test
+	public final void testComputeSHA1Checksum() throws Exception {
+
+		// generate a local scratch file
+		String testFileName = "testComputeSHA1Checksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 20);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameOrig, targetIrodsCollection, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
+				null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		byte[] sha1Checksum = dataObjectAO
+				.computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(targetIrodsCollection
+						+ "/" + testFileName);
+		Assert.assertNotNull(sha1Checksum);
+		Assert.assertFalse(sha1Checksum.length == 0);
 	}
 
 	@Test
@@ -5661,7 +5696,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
+		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
@@ -5787,7 +5822,7 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		DataObjectAO dataObjectAO = (DataObjectAO) irodsFileSystem
+		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.listReplicationsForFile(targetIrodsCollection,
@@ -5852,8 +5887,7 @@ public class DataObjectAOImplTest {
 				.findDomainByMetadataQuery(avuQueryElements);
 		Assert.assertFalse(dataObjects.size() >= 1);
 	}
-	
-	
+
 	@Test
 	public void testDeleteAllAVUMetadataFromDataObject() throws Exception {
 		String testFileName = "testDeleteAllAVUMetadataFromDataObject.txt";
@@ -5910,6 +5944,5 @@ public class DataObjectAOImplTest {
 				.findDomainByMetadataQuery(avuQueryElements);
 		Assert.assertFalse(dataObjects.size() >= 1);
 	}
-
 
 }
