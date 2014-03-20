@@ -51,6 +51,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int pamTimeToLive = 0;
 	private boolean forcePamFlush = false;
 	private String connectionFactory = "tcp";
+	private ChecksumEncoding checksumEncoding = ChecksumEncoding.DEFAULT;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -127,6 +128,7 @@ public class SettableJargonProperties implements JargonProperties {
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 		setForcePamFlush(jargonProperties.isForcePamFlush());
 		this.connectionFactory = jargonProperties.getConnectionFactory();
+		this.checksumEncoding = jargonProperties.getChecksumEncoding();
 	}
 
 	/*
@@ -795,6 +797,31 @@ public class SettableJargonProperties implements JargonProperties {
 
 	public void setConnectionFactory(String connectionFactory) {
 		this.connectionFactory = connectionFactory;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
+	 */
+	@Override
+	public ChecksumEncoding getChecksumEncoding() {
+		return this.checksumEncoding;
+	}
+
+	/**
+	 * Set the encoding used for computing checksums
+	 * 
+	 * @param checksumEncoding
+	 */
+	public void setChecksumEncoding(final ChecksumEncoding checksumEncoding) {
+		if (checksumEncoding == null) {
+			throw new IllegalArgumentException("null checksumEncoding");
+		}
+
+		this.checksumEncoding = checksumEncoding;
+
 	}
 
 }

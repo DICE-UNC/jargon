@@ -222,6 +222,69 @@ public class LocalFileUtils {
 	}
 
 	/**
+	 * Compute an SHA-256 checksum for a local file given an absolute path
+	 * 
+	 * @param absolutePathToLocalFile
+	 *            <code>String</code> with absolute local file path under
+	 *            scratch (no leading '/')
+	 * @return <code>byte[]</code> with the file's checksum value
+	 * @throws JargonException
+	 */
+	public static byte[] computeSHA256FileCheckSumViaAbsolutePath(
+			final String absolutePathToLocalFile) throws JargonException {
+
+		log.info("computeSHA256FileCheckSumViaAbsolutePath()");
+
+		if (absolutePathToLocalFile == null
+				|| absolutePathToLocalFile.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToLocalFile");
+		}
+
+		FileInputStream file;
+		try {
+			file = new FileInputStream(absolutePathToLocalFile);
+		} catch (FileNotFoundException e1) {
+			throw new JargonException(
+					"error computing checksum, file not found:"
+							+ absolutePathToLocalFile, e1);
+
+		}
+
+		MessageDigest complete;
+		int numRead;
+		BufferedInputStream in = new BufferedInputStream(file);
+		byte[] buffer = new byte[4096];
+
+		try {
+			complete = MessageDigest.getInstance("SHA-256");
+			do {
+				numRead = in.read(buffer);
+				if (numRead > 0) {
+					complete.update(buffer, 0, numRead);
+				}
+			} while (numRead != -1);
+
+			return complete.digest();
+		} catch (NoSuchAlgorithmException e) {
+			throw new JargonException("no such algorithm exception for MD5");
+		} catch (Exception e) {
+			throw new JargonException("Error computing MD5 checksum", e);
+		} finally {
+			try {
+				in.close();
+			} catch (IOException e) {
+				// ignore
+			}
+			try {
+				file.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+	}
+
+	/**
 	 * Compute an MD5 checksum for a local file given an absolute path
 	 * 
 	 * @param absolutePathToLocalFile

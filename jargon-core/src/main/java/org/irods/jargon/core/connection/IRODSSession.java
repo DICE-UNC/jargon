@@ -168,6 +168,8 @@ public class IRODSSession {
 					.isComputeChecksumAfterTransfer());
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
+			transferOptions.setChecksumEncoding(jargonProperties
+					.getChecksumEncoding());
 		}
 
 		log.info("transfer options based on properties:{}", transferOptions);

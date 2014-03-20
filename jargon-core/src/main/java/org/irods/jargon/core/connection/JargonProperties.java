@@ -17,6 +17,23 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
  */
 public interface JargonProperties {
 
+	public enum ChecksumEncoding {
+		DEFAULT, MD5, SHA256
+	};
+
+	/**
+	 * Get the type of checksum that will be used by default when transferring
+	 * files to iRODS
+	 * 
+	 * @return {@link ChecksumEncoding} used in validating file transfers
+	 */
+	ChecksumEncoding getChecksumEncoding();
+
+	/**
+	 * Get the character set encoding used by Jargon
+	 * 
+	 * @return
+	 */
 	String getEncoding();
 
 	/**
