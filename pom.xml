@@ -7,7 +7,7 @@
 	<version>3.3.2-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
-	<url>https://code.renci.org/gf/project/jargon</url>
+	<url>https://github.com/DICE-UNC/jargon</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring.webmvc.version>3.0.5.RELEASE</spring.webmvc.version>
@@ -94,20 +94,15 @@
 	</repositories>
 	<distributionManagement>
 		<repository>
-			<id>renci.repository</id>
-			<name>renci.repository</name>
-			<url>https://ci-dev.renci.org/nexus/content/repositories/releases</url>
+			<id>internal.repo</id>
+			<name>internal.repo</name>
+			<url>file://${git.repo.root}/releases</url>
 		</repository>
 		<snapshotRepository>
-			<id>renci.snapshots</id>
-			<name>renci.snapshots</name>
-			<url>https://ci-dev.renci.org/nexus/content/repositories/snapshots</url>
+			<id>internal.repo.snapshot</id>
+			<name>internal.repo.snapshot</name>
+			<url>file://${git.repo.root}/snapshots</url>
 		</snapshotRepository>
-		<site>
-			<id>renci.site</id>
-			<name>renci.site</name>
-			<url>file:///${user.dir}/target/site-deploy</url>
-		</site>
 	</distributionManagement>
 	<reporting>
 		<plugins>
