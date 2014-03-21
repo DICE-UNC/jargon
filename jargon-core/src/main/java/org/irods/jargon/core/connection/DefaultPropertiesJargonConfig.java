@@ -439,4 +439,34 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
+	 */
+	@Override
+	public ChecksumEncoding getChecksumEncoding() {
+		String propVal = ((String) jargonProperties
+				.get("transfer.checksum.algorithm"));
+
+		ChecksumEncoding checksumEncoding = ChecksumEncoding.DEFAULT;
+
+		if (propVal == null || propVal.isEmpty()) {
+			// default
+		} else if (propVal.equals(ChecksumEncoding.DEFAULT.name())) {
+			checksumEncoding = ChecksumEncoding.DEFAULT;
+		} else if (propVal.equals(ChecksumEncoding.MD5.name())) {
+			checksumEncoding = ChecksumEncoding.MD5;
+		} else if (propVal.equals(ChecksumEncoding.SHA256.name())) {
+			checksumEncoding = ChecksumEncoding.SHA256;
+		} else {
+			throw new IllegalArgumentException(
+					"unknown checksum encoding value:" + propVal);
+		}
+
+		return checksumEncoding;
+
+	}
+
 }
