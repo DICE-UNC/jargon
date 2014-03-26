@@ -152,8 +152,9 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
+                
 		conveyorService.getTransferAccountingManagementService()
-				.restartProcessingTransferAtStartup(transferId);
+				.prepareTransferForRestart(transferId);
 	}
 
 	/*
