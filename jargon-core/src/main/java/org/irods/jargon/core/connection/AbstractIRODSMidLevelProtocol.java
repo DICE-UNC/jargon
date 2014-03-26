@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractIRODSMidLevelProtocol {
 
-	private AbstractConnection irodsConnection;
+	private final AbstractConnection irodsConnection;
 	private IRODSProtocolManager irodsProtocolManager;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
@@ -198,7 +198,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new IllegalArgumentException("null byteStream");
 		}
 
-		log.info("calling irodsFunctionForStreamingToIRODSInFrames");
+		log.debug("calling irodsFunctionForStreamingToIRODSInFrames");
 		log.debug("calling irods function with:{}", irodsPI);
 		log.debug("api number is:{}", irodsPI.getApiNumber());
 
@@ -232,10 +232,10 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new JargonException(e);
 		}
 
-		log.info("reading message from frame send...");
-		log.info("read commented out");
+		log.debug("reading message from frame send...");
+		log.debug("read commented out");
 		readMessage();
-		log.info("message read");
+		log.debug("message read");
 		return dataSent;
 	}
 
@@ -282,7 +282,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new IllegalArgumentException("null byteStream");
 		}
 
-		log.info("calling irods function with streams");
+		log.debug("calling irods function with streams");
 		log.debug("calling irods function with:{}", irodsPI);
 		log.debug("api number is:{}", irodsPI.getApiNumber());
 
@@ -304,7 +304,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 						connectionProgressStatusListener);
 				byteStream.close();
 			} else {
-				log.info("no byte stream data, so flush output");
+				log.debug("no byte stream data, so flush output");
 				irodsConnection.flush();
 			}
 
@@ -318,7 +318,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new JargonException(e);
 		}
 
-		log.info("data sent, getting response");
+		log.debug("data sent, getting response");
 		return readMessage();
 	}
 
@@ -568,7 +568,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 	public synchronized Tag readMessage(final boolean decode)
 			throws JargonException {
-		log.info("reading message from irods");
+		log.debug("reading message from irods");
 		Tag header = readHeader();
 		Tag message = null;
 
@@ -642,10 +642,10 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @throws JargonException
 	 */
 	public synchronized void shutdown() throws JargonException {
-		log.info("shutting down, need to send disconnect to irods");
+		log.debug("shutting down, need to send disconnect to irods");
 		if (isConnected()) {
 
-			log.info("sending disconnect message");
+			log.debug("sending disconnect message");
 			try {
 				irodsConnection.send(createHeader(
 						RequestTypes.RODS_DISCONNECT.getRequestType(), 0, 0, 0,
@@ -688,7 +688,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @throws JargonException
 	 */
 	public synchronized void disconnect() throws JargonException {
-		log.info("closing connection");
+		log.debug("closing connection");
 		irodsProtocolManager.returnIRODSProtocol(this);
 
 	}
@@ -1131,7 +1131,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 		if (info == ErrorEnum.CAT_SUCCESS_BUT_WITH_NO_INFO.getInt()) {
 			// handleSuccessButNoRowsFound(errorLength, info);
-			log.info("success but no info returned from irods");
+			log.debug("success but no info returned from irods");
 		} else {
 			IRODSErrorScanner.inspectAndThrowIfNeeded(info, addlMessage);
 		}

@@ -171,7 +171,7 @@ public class IRODSSession {
 					.getChecksumEncoding());
 		}
 
-		log.info("transfer options based on properties:{}", transferOptions);
+		log.debug("transfer options based on properties:{}", transferOptions);
 
 		return transferOptions;
 	}
@@ -184,7 +184,7 @@ public class IRODSSession {
 	 * @throws JargonException
 	 */
 	public void closeSession() throws JargonException {
-		log.info("closing all irods sessions");
+		log.debug("closing all irods sessions");
 		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
 				.get();
 
@@ -208,7 +208,7 @@ public class IRODSSession {
 	}
 
 	public IRODSSession() {
-		log.info("IRODS Session creation, loading default properties, these may be overridden...");
+		log.debug("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
 			jargonProperties = new DefaultPropertiesJargonConfig();
 		} catch (Exception e) {
@@ -360,7 +360,7 @@ public class IRODSSession {
 	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
-		log.info("addUserInfoForGSIAccount()");
+		log.debug("addUserInfoForGSIAccount()");
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -499,13 +499,13 @@ public class IRODSSession {
 		AbstractIRODSMidLevelProtocol command = irodsProtocols.get(irodsAccount
 				.toString());
 		if (command == null) {
-			log.info("no connection found, ignore");
+			log.debug("no connection found, ignore");
 			return;
 		}
 
-		log.info("disconnecting:{}", command);
+		log.debug("disconnecting:{}", command);
 		command.shutdown();
-		log.info("disconnected...");
+		log.debug("disconnected...");
 
 		irodsProtocols.remove(irodsAccount.toString());
 
@@ -580,16 +580,16 @@ public class IRODSSession {
 	 */
 	public ExecutorService getParallelTransferThreadPool()
 			throws JargonException {
-		log.info("getting the ParallelTransferThreadPool");
+		log.debug("getting the ParallelTransferThreadPool");
 		synchronized (this) {
 
 			if (!jargonProperties.isUseTransferThreadsPool()) {
-				log.info("I am not using the parallel transfer threads pool, return null");
+				log.debug("I am not using the parallel transfer threads pool, return null");
 				return null;
 			}
 
 			if (parallelTransferThreadPool != null) {
-				log.info("returning already created ParallelTransferThreadPool");
+				log.debug("returning already created ParallelTransferThreadPool");
 				return parallelTransferThreadPool;
 			}
 
@@ -598,10 +598,10 @@ public class IRODSSession {
 					* jargonProperties.getMaxParallelThreads();
 			int maxParallelThreads = jargonProperties.getMaxParallelThreads();
 
-			log.info("creating the parallel transfer threads pool");
-			log.info("   max # threads: {}", maxParallelThreads);
+			log.debug("creating the parallel transfer threads pool");
+			log.debug("   max # threads: {}", maxParallelThreads);
 
-			log.info("   pool timeout millis:{}",
+			log.debug("   pool timeout millis:{}",
 					jargonProperties.getTransferThreadPoolTimeoutMillis());
 
 			parallelTransferThreadPool = new ThreadPoolExecutor(
@@ -611,7 +611,7 @@ public class IRODSSession {
 							poolSize),
 					new RejectedParallelThreadExecutionHandler());
 
-			log.info("parallelTransferThreadPool created");
+			log.debug("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
 		}
 	}

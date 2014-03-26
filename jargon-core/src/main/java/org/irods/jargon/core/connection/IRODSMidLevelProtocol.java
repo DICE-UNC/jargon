@@ -157,7 +157,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final int byteOffset, final int byteStringLength, final int intInfo)
 			throws JargonException {
 
-		log.info("calling irods function with byte array");
+		log.debug("calling irods function with byte array");
 		log.debug("calling irods function with:{}", message);
 		log.debug("api number is:{}", intInfo);
 
@@ -181,7 +181,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 							errorLength, byteStringLength, intInfo));
 
 			if (isPamFlush()) {
-				log.info("doing extra pam flush for iRODS 3.2");
+				log.debug("doing extra pam flush for iRODS 3.2");
 				this.getIrodsConnection().flush();
 			}
 
@@ -191,7 +191,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				this.getIrodsConnection().send(bytes, byteOffset,
 						byteStringLength);
 				if (isPamFlush()) {
-					log.info("doing extra pam flush for iRODS 3.2 after byte send");
+					log.debug("doing extra pam flush for iRODS 3.2 after byte send");
 					this.getIrodsConnection().flush();
 				}
 			}
