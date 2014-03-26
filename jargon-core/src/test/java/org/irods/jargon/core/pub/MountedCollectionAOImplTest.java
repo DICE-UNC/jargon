@@ -454,7 +454,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			return;
 		}
 
 		String targetCollectionName = "testCreateAMountedFileSystemPhyPathMissingButUnderConfiguredPath";
@@ -502,7 +502,7 @@ public class MountedCollectionAOImplTest {
 	public void testCreateAndRemoveMountedFileSystem() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			return;
 		}
 
 		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
@@ -547,7 +547,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
@@ -579,7 +579,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
@@ -606,7 +606,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";
@@ -633,7 +633,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -653,7 +653,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -673,7 +673,7 @@ public class MountedCollectionAOImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
-			throw new CollectionNotMountedException("thrown to honor contracts");
+			throw new IllegalArgumentException("thrown to honor contracts");
 		}
 
 		String targetCollectionName = "testCreateAndRemoveMountedFileSystem";

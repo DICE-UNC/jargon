@@ -5327,6 +5327,11 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testListReplicationsForFileInResGroup() throws Exception {
+		
+
+		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
+			return;
+		}
 
 		String testFileName = "testListReplicationsForFileInResGroup.txt";
 		String testDir = "testListReplicationsForFileInResGroup";
@@ -5525,6 +5530,11 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testCountReplicationsForFileInResGroup() throws Exception {
+		
+
+		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
+			return;
+		}
 
 		String testFileName = "testCountReplicationsForFileInResGroup.txt";
 		String testDir = "testCountReplicationsForFileInResGroup";

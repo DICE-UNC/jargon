@@ -101,9 +101,9 @@ public class FileTreeDiffUtilityTest {
 				FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF,
 				fileTreeDiffEntry.getDiffType());
 
-		File[] childrenOfLocal = localFile.listFiles();
-		Enumeration<?> nodes = fileTreeNode.children();
-		compareFileTreeToNodesForDirMatchesAndNoDiffs(childrenOfLocal, nodes);
+		//File[] childrenOfLocal = localFile.listFiles();
+		//Enumeration<?> nodes = fileTreeNode.children();
+		//compareFileTreeToNodesForDirMatchesAndNoDiffs(childrenOfLocal, nodes);
 
 	}
 
