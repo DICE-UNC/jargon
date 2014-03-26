@@ -3,12 +3,12 @@ Jargon Core API
 
 This is a release candidate for the next feature branch of Jargon
 
-#Project: Jargon-core API
-###Date: 03/21/2014
-###Release Version: 3.3.3-RC1
-###git tag: 3.3.3-RC1
+# Project: Jargon-core API
+### Date: 03/21/2014
+### Release Version: 3.3.3-beta1
+### git tag: 3.3.3-beta1
 
-##News
+## News
 
 This version of Jargon is a release candidate for the next feature release of Jargon. This version contains many large and small upgrades in support of 
 
@@ -35,23 +35,45 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
+* jargon-workflow - support for iRODS workflows
 
-##Requirements
+## Requirements
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
 *Jargon supports iRODS 2.5 through iRODS 3.3.1 community, as well as iRODS 4.0 consortium
 
-##Libraries
+## Libraries
 
 Jargon-core uses Maven for dependency management.  See the pom.xml file for references to various dependencies.
 
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
-##Bug Fixes
+## Bug Fixes
 
 =======
-##Features
+## Features
 
-*Significant development of new transfer framework (conveyor) to replace older transfer engine.
-*Added capability to compute a SHA1 checksum via streaming to support ModeShape
+#### Significant development of new transfer framework (conveyor) to replace older transfer engine.
+
+Conveyor is a drop-in framework to manage a persistent queue of transfers with file-by-file accounting. This will be extended in later releases to provide a client-side rule
+engine that can manage pre and post transfer and pre and post file operation workflows on the client side.  Conveyor is embedded within iDrop and can also be easily incorporated
+into other interfaces and tools.
+
+#### Mounted collection support
+
+Support has been added to interact with iRODS mounted collections, including list/read/write operations
+
+#### Support for rule editing and execution from interfaces
+
+Support for interactive rule editing, with extended methods and classes to assist in interactive editing and running of iRODS rules, has been added
+in the jargon-ruleservice project
+
+##### iRODS Workflow support
+
+Basic workflow support has been added in the jargon-workflow subproject to be able to parse and execute iRODS workflows
+
+##### Other Changes
+
+Added capability to compute a SHA1 checksum via streaming to support ModeShape
+
