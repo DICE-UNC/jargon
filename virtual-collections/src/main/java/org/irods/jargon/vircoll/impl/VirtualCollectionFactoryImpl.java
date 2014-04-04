@@ -3,14 +3,9 @@
  */
 package org.irods.jargon.vircoll.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
 import org.irods.jargon.usertagging.starring.IRODSStarringServiceImpl;
-import org.irods.jargon.vircoll.AbstractVirtualCollection;
 import org.irods.jargon.vircoll.VirtualCollectionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,32 +50,6 @@ public class VirtualCollectionFactoryImpl implements VirtualCollectionFactory {
 	@Override
 	public VirtualCollectionContext getVirtualCollectionContext() {
 		return virtualCollectionContext;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.impl.VirtualCollectionFactory#
-	 * listDefaultUserCollections()
-	 */
-	@Override
-	public List<AbstractVirtualCollection> listDefaultUserCollections() {
-		log.info("listDefaultUserCollections()");
-		assert hasValidState();
-
-		List<AbstractVirtualCollection> virtualCollections = new ArrayList<AbstractVirtualCollection>();
-		// add root
-		virtualCollections.add(instanceCollectionBasedVirtualCollection("/"));
-		// add user dir
-		virtualCollections
-				.add(instanceCollectionBasedVirtualCollection(MiscIRODSUtils
-						.computeHomeDirectoryForIRODSAccount(this.virtualCollectionContext
-								.getIrodsAccount())));
-		// add starred folders
-		virtualCollections.add(instanceStarredFolderVirtualCollection());
-		log.info("done...");
-		return virtualCollections;
-
 	}
 
 	/*
