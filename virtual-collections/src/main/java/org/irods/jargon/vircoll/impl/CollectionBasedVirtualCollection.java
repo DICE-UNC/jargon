@@ -3,157 +3,51 @@
  */
 package org.irods.jargon.vircoll.impl;
 
-import java.util.List;
-
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
-import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.vircoll.AbstractVirtualCollection;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
- * Represents a virtual collection that is an actual iRODS collection (parent
- * folders are virtual collections themselves)
+ * Basic definition of a virtual collection that is actually a collection from
+ * the iRODS hierarchy. It's simply an iRODS collection
  * 
- * @author mikeconway
+ * @author Mike Conway - DICE
  * 
  */
 public class CollectionBasedVirtualCollection extends AbstractVirtualCollection {
 
-	private final String collectionParentAbsolutePath;
-	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
-
-	public static final String DESCRIPTION_KEY_HOME = "virtual.collections.home";
-	public static final String DESCRIPTION_KEY_ROOT = "virtual.collections.root";
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#queryAll(int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> queryAll(int offset)
-			throws JargonException {
-
-		log.info("query()");
-
-		log.info("offset:{}", offset);
-
-		if (collectionParentAbsolutePath == null
-				|| collectionParentAbsolutePath.isEmpty()) {
-			throw new JargonException(
-					"no collectionParentAbsolutePath provided");
-		}
-
-		log.info("collection parent:{}", collectionParentAbsolutePath);
-
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getContext()
-				.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getContext().getIrodsAccount());
-		return collectionAndDataObjectListAndSearchAO
-				.listDataObjectsAndCollectionsUnderPath(collectionParentAbsolutePath);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryCollections(int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> queryCollections(int offset)
-			throws JargonException {
-
-		log.info("queryCollections()");
-
-		log.info("offset:{|}", offset);
-
-		if (collectionParentAbsolutePath == null
-				|| collectionParentAbsolutePath.isEmpty()) {
-			throw new JargonException(
-					"no collectionParentAbsolutePath provided");
-		}
-
-		log.info("collection parent:{}", collectionParentAbsolutePath);
-
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getContext()
-				.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getContext().getIrodsAccount());
-		return collectionAndDataObjectListAndSearchAO.listCollectionsUnderPath(
-				collectionParentAbsolutePath, offset);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryDataObjects(int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
-			throws JargonException {
-
-		log.info("queryDataObjects()");
-
-		log.info("offset:{}", offset);
-
-		if (collectionParentAbsolutePath == null
-				|| collectionParentAbsolutePath.isEmpty()) {
-			throw new JargonException(
-					"no collectionParentAbsolutePath provided");
-		}
-
-		log.info("collection parent:{}", collectionParentAbsolutePath);
-
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getContext()
-				.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getContext().getIrodsAccount());
-		return collectionAndDataObjectListAndSearchAO.listDataObjectsUnderPath(
-				collectionParentAbsolutePath, offset);
-
-	}
-
-	public String getCollectionParentAbsolutePath() {
-		return collectionParentAbsolutePath;
-	}
-
-	@Override
-	public void store() throws JargonException {
-		// does nothing
-
-	}
-
-	@Override
-	public void delete() throws JargonException {
-		// does nothing
-
-	}
+	public static final String DESCRIPTION_KEY_HOME = "virtual.collection.description.home";
+	public static final String DESCRIPTION_KEY_ROOT = "virtual.collection.description.root";
+	public static final String DESCRIPTION = "iRODS Collection at a given path";
 
 	/**
-	 * @param collectionParentAbsolutePath
-	 *            <code>String</code> with the parent path of this virtual
-	 *            collection
+	 * Represents the iRODS absolute path that is the parent of this virtual
+	 * collection. This type of virtual collection actually just represents and
+	 * iRODS collection to put it on an equal footing with a collection derived
+	 * from a query
 	 */
-	CollectionBasedVirtualCollection(final String collectionParentAbsolutePath) {
-		super();
+	private String rootPath = "";
 
-		if (collectionParentAbsolutePath == null
-				|| collectionParentAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null collectionParentAbsolutePath");
+	/**
+	 * create an instance of this virtual collection by giving the iRODS parent
+	 * path that will be the root of the collection listing
+	 */
+	public CollectionBasedVirtualCollection(final String rootPath) {
+		if (rootPath == null || rootPath.isEmpty()) {
+			throw new IllegalArgumentException("null root path");
 		}
 
-		this.collectionParentAbsolutePath = collectionParentAbsolutePath;
+		this.rootPath = rootPath;
+		this.setName(rootPath);
+		this.setDescription(DESCRIPTION);
+		this.setI18icon(DEFAULT_ICON_KEY);
+
+	}
+
+	public String getRootPath() {
+		return rootPath;
+	}
+
+	public void setRootPath(String collectionPath) {
+		this.rootPath = collectionPath;
 	}
 
 }

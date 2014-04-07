@@ -11,23 +11,29 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.vircoll.AbstractVirtualCollection;
+import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * Service for listing and maintaining virtual collections. This can discover
- * them, and ask a virtual collection to serialize itself, and is different than
- * getting an operational virtual collection so that it can be queried.
+ * Service for discovring and listing virtual collections (as opposed to listing
+ * their contents). This can discover them, and list them as pojos that are
+ * suitible for listing
  * 
  * @author Mike Conway (DICE)
  * 
  */
-public class VirtualCollectionMaintenanceServiceImpl extends
-		AbstractJargonService implements VirtualCollectionMaintenanceService {
+public class VirtualCollectionDiscoveryServiceImpl extends
+		AbstractJargonService implements VirtualCollectionDiscoveryService {
+
+	private static Logger log = LoggerFactory
+			.getLogger(VirtualCollectionDiscoveryServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public VirtualCollectionMaintenanceServiceImpl(
+	public VirtualCollectionDiscoveryServiceImpl(
 			IRODSAccessObjectFactory irodsAccessObjectFactory,
 			IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
@@ -36,7 +42,7 @@ public class VirtualCollectionMaintenanceServiceImpl extends
 	/**
 	 * 
 	 */
-	public VirtualCollectionMaintenanceServiceImpl() {
+	public VirtualCollectionDiscoveryServiceImpl() {
 	}
 
 	/*
@@ -57,14 +63,13 @@ public class VirtualCollectionMaintenanceServiceImpl extends
 
 		List<AbstractVirtualCollection> virtualCollections = new ArrayList<AbstractVirtualCollection>();
 		// add root
-		virtualCollections.add(instanceCollectionBasedVirtualCollection("/"));
+		virtualCollections.add(new CollectionBasedVirtualCollection("/"));
 		// add user dir
-		virtualCollections
-				.add(instanceCollectionBasedVirtualCollection(MiscIRODSUtils
-						.computeHomeDirectoryForIRODSAccount(this.virtualCollectionContext
-								.getIrodsAccount())));
+		virtualCollections.add(new CollectionBasedVirtualCollection(
+				MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(this
+						.getIrodsAccount())));
 		// add starred folders
-		virtualCollections.add(instanceStarredFolderVirtualCollection());
+		virtualCollections.add(new StarredFoldersVirtualCollection());
 		log.info("done...");
 		return virtualCollections;
 

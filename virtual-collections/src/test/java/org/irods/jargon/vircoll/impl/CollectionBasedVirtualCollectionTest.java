@@ -10,8 +10,6 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
-import org.irods.jargon.vircoll.VirtualCollectionContext;
-import org.irods.jargon.vircoll.VirtualCollectionContextImpl;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -26,12 +24,8 @@ public class CollectionBasedVirtualCollectionTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
-		VirtualCollectionContext virtualCollectionContext = new VirtualCollectionContextImpl(
-				irodsAccessObjectFactory, irodsAccount);
-
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
 				testPath);
-		virColl.setContext(virtualCollectionContext);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
@@ -65,32 +59,15 @@ public class CollectionBasedVirtualCollectionTest {
 				irodsAccessObjectFactory
 						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		List<CollectionAndDataObjectListingEntry> actual = virColl.queryAll(0);
+
+		CollectionBasedVirtualCollectionExecutor executor = new CollectionBasedVirtualCollectionExecutor(
+				virColl, irodsAccessObjectFactory, irodsAccount);
+
+		List<CollectionAndDataObjectListingEntry> actual = executor.queryAll(0);
 
 		Assert.assertNotNull(actual);
 		Assert.assertFalse(actual.isEmpty());
 		Assert.assertEquals(2, actual.size());
-	}
-	
-	@Test
-	public void testQueryCollectionsNullContext() throws Exception {
-		String testPath = "/a/collection/here";
-		String subColl = "subcoll";
-		IRODSAccount irodsAccount = Mockito.mock(IRODSAccount.class);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-
-		VirtualCollectionContext virtualCollectionContext = null;
-
-		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
-				testPath);
-		virColl.setContext(virtualCollectionContext);
-
-		
-		virColl
-				.queryCollections(0);
-		
-
 	}
 
 	@Test
@@ -101,12 +78,8 @@ public class CollectionBasedVirtualCollectionTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
-		VirtualCollectionContext virtualCollectionContext = new VirtualCollectionContextImpl(
-				irodsAccessObjectFactory, irodsAccount);
-
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
 				testPath);
-		virColl.setContext(virtualCollectionContext);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
@@ -131,17 +104,23 @@ public class CollectionBasedVirtualCollectionTest {
 				irodsAccessObjectFactory
 						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		List<CollectionAndDataObjectListingEntry> actual = virColl
+		CollectionBasedVirtualCollectionExecutor executor = new CollectionBasedVirtualCollectionExecutor(
+				virColl, irodsAccessObjectFactory, irodsAccount);
+		List<CollectionAndDataObjectListingEntry> actual = executor
 				.queryCollections(0);
 		Assert.assertNotNull(actual);
 		Assert.assertFalse(actual.isEmpty());
 		CollectionAndDataObjectListingEntry actualEntry = actual.get(0);
-		Assert.assertEquals("did not set count", entry.getCount(), actualEntry.getCount());
-		Assert.assertEquals("did not set last", entry.isLastResult(), actualEntry.isLastResult());
-		Assert.assertEquals("did not set tot recs", entry.getTotalRecords(), actualEntry.getTotalRecords());
-		Assert.assertEquals("did not set parent", entry.getParentPath(), actualEntry.getParentPath());
-		Assert.assertEquals("did not set pathorname", entry.getPathOrName(), actualEntry.getPathOrName());
-		
+		Assert.assertEquals("did not set count", entry.getCount(),
+				actualEntry.getCount());
+		Assert.assertEquals("did not set last", entry.isLastResult(),
+				actualEntry.isLastResult());
+		Assert.assertEquals("did not set tot recs", entry.getTotalRecords(),
+				actualEntry.getTotalRecords());
+		Assert.assertEquals("did not set parent", entry.getParentPath(),
+				actualEntry.getParentPath());
+		Assert.assertEquals("did not set pathorname", entry.getPathOrName(),
+				actualEntry.getPathOrName());
 
 	}
 
@@ -153,12 +132,8 @@ public class CollectionBasedVirtualCollectionTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
-		VirtualCollectionContext virtualCollectionContext = new VirtualCollectionContextImpl(
-				irodsAccessObjectFactory, irodsAccount);
-
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
 				testPath);
-		virColl.setContext(virtualCollectionContext);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
@@ -182,7 +157,9 @@ public class CollectionBasedVirtualCollectionTest {
 				irodsAccessObjectFactory
 						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
-		List<CollectionAndDataObjectListingEntry> actual = virColl
+		CollectionBasedVirtualCollectionExecutor executor = new CollectionBasedVirtualCollectionExecutor(
+				virColl, irodsAccessObjectFactory, irodsAccount);
+		List<CollectionAndDataObjectListingEntry> actual = executor
 				.queryDataObjects(0);
 		Assert.assertNotNull(actual);
 		Assert.assertFalse(actual.isEmpty());

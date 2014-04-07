@@ -13,8 +13,7 @@ import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
-import org.irods.jargon.vircoll.VirtualCollectionContext;
-import org.irods.jargon.vircoll.VirtualCollectionContextImpl;
+import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -22,22 +21,21 @@ public class StarredFoldersVirtualCollectionImplTest {
 
 	@Test
 	public void testQueryCollections() throws Exception {
-		
+
 		String testPath = "/a/collection/here";
 		String descr = "test";
 		IRODSAccount irodsAccount = Mockito.mock(IRODSAccount.class);
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
-		VirtualCollectionContext virtualCollectionContext = new VirtualCollectionContextImpl(
-				irodsAccessObjectFactory, irodsAccount);
-
 		IRODSStarringService irodsStarringService = Mockito
 				.mock(IRODSStarringService.class);
 
-		StarredFoldersVirtualCollection virColl = new StarredFoldersVirtualCollection(
+		StarredFoldersVirtualCollection virColl = new StarredFoldersVirtualCollection();
+
+		StarredFoldersVirtualCollectionExecutor executor = new StarredFoldersVirtualCollectionExecutor(
+				virColl, irodsAccessObjectFactory, irodsAccount,
 				irodsStarringService);
-		virColl.setContext(virtualCollectionContext);
 
 		List<IRODSStarredFileOrCollection> results = new ArrayList<IRODSStarredFileOrCollection>();
 		IRODSStarredFileOrCollection starred = new IRODSStarredFileOrCollection(
@@ -46,7 +44,7 @@ public class StarredFoldersVirtualCollectionImplTest {
 
 		Mockito.when(irodsStarringService.listStarredCollections(0))
 				.thenReturn(results);
-		List<CollectionAndDataObjectListingEntry> actual = virColl
+		List<CollectionAndDataObjectListingEntry> actual = executor
 				.queryCollections(0);
 		Assert.assertNotNull(actual);
 		Assert.assertFalse(actual.isEmpty());

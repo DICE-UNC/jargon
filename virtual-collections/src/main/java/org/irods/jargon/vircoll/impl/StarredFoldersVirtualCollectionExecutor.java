@@ -6,14 +6,17 @@ package org.irods.jargon.vircoll.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
-import org.irods.jargon.vircoll.AbstractVirtualCollection;
+import org.irods.jargon.vircoll.AbstractVirtualCollectionExecutor;
+import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,44 +26,38 @@ import org.slf4j.LoggerFactory;
  * @author mikeconway
  * 
  */
-public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
+public class StarredFoldersVirtualCollectionExecutor extends
+		AbstractVirtualCollectionExecutor<StarredFoldersVirtualCollection> {
 
 	private final IRODSStarringService irodsStarringService;
 
 	static Logger log = LoggerFactory
-			.getLogger(StarredFoldersVirtualCollection.class);
+			.getLogger(StarredFoldersVirtualCollectionExecutor.class);
 
-	public static final String DESCRIPTION_KEY = "virtual.collections.starred";
+	/**
+	 * Create an instance of an executor for starred folders
+	 * 
+	 * @param starredFoldersVirtualCollection
+	 *            {@link StarredFoldersVirtualCollection} that describes the
+	 *            collection
+	 * @param irodsAccessObjectFactory
+	 *            {@link IRODSAccessObjectFactory} used to connect to iRODS
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} with host and login information
+	 */
+	StarredFoldersVirtualCollectionExecutor(
+			final StarredFoldersVirtualCollection starredFoldersVirtualCollection,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount,
+			final IRODSStarringService irodsStarringService) {
+		super(starredFoldersVirtualCollection, irodsAccessObjectFactory,
+				irodsAccount);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#store()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#store()
-	 */
-	@Override
-	public void store() throws JargonException {
+		if (irodsStarringService == null) {
+			throw new IllegalArgumentException("null irodsStarringService");
+		}
 
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#delete()
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#delete()
-	 */
-	@Override
-	public void delete() throws JargonException {
+		this.irodsStarringService = irodsStarringService;
 	}
 
 	/*
@@ -174,16 +171,4 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 		return entries;
 	}
 
-	/**
-	 * @param irodsStarringService
-	 *            {@link IRODSStarringService} that is connected to iRODS
-	 */
-	StarredFoldersVirtualCollection(IRODSStarringService irodsStarringService) {
-		super();
-		if (irodsStarringService == null) {
-			throw new IllegalArgumentException("null irodsStarringService");
-		}
-		this.irodsStarringService = irodsStarringService;
-		this.setDescription(DESCRIPTION_KEY);
-	}
 }

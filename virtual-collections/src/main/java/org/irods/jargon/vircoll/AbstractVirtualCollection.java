@@ -3,13 +3,6 @@
  */
 package org.irods.jargon.vircoll;
 
-import java.util.List;
-
-import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
-
 /**
  * Abstract model of a virtual collection, which is an arbitrary source that can
  * be serialized into an iRODS file, and which produces an 'ils' like listing.
@@ -17,15 +10,43 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * The function of a virtual collection is to break away from reliance on a
  * hierarchical file tree as the sole arrangement of collections.
  * 
- * @author mikeconway
+ * @author Mike Conway - DICE
  * 
  */
 public abstract class AbstractVirtualCollection {
 
-	private String name = "";
-	private String description = "";
+	public static final String DEFAULT_ICON_KEY = "virtual.collection.default.icon";
+
+	/**
+	 * Plain language name for this virtual collection
+	 */
+	private String name = "Collection";
+
+	/**
+	 * Plain language descripton
+	 */
+	private String description = "Collection";
+
+	/**
+	 * TODO: extract to a readable interface? iRODS absolute path to the
+	 * definition for this virtual collection
+	 */
 	private String sourcePath = "";
-	private VirtualCollectionContext context;
+
+	/**
+	 * i18n selector that can be used to name this collection
+	 */
+	private String i18Name = "virtual.collection.default.name";
+
+	/**
+	 * i18n selector that can be used to describe this collection
+	 */
+	private String i18Description = "virtual.collection.default.description";
+
+	/**
+	 * i18n selector that can be mapped to an icon depiction of this collection
+	 */
+	private String i18icon = DEFAULT_ICON_KEY;
 
 	public String getName() {
 		return name;
@@ -51,92 +72,28 @@ public abstract class AbstractVirtualCollection {
 		this.sourcePath = sourcePath;
 	}
 
-	public VirtualCollectionContext getContext() {
-		return context;
-	}
-	
-	/**
-	 * Handy accessor to grab the <code>IRODSAccessObjectFactory</code> used to communicate with irods
-	 * @return
-	 */
-	protected IRODSAccessObjectFactory irodsAccessObjectFactoryFromContext() {
-		if (this.getContext() == null || this.getContext().getIrodsAccessObjectFactory() == null) {
-			throw new IllegalStateException("context or irodsAccessObjectFactory not initialized");
-		}
-		
-		return this.getContext().getIrodsAccessObjectFactory();
-	}
-	
-	/**
-	 * Handy accessor to grab the <code>IRODSAccount</code> used to communicate with irods
-	 * @return
-	 */
-	protected IRODSAccount irodsAccountFromContext() {
-		if (this.getContext() == null || this.getContext().getIrodsAccount() == null) {
-			throw new IllegalStateException("context or irodsAccount not initialized");
-		}
-		
-		return this.getContext().getIrodsAccount();
+	public String getI18Name() {
+		return i18Name;
 	}
 
-	/**
-	 * Save the given abstract virtual collection to the configured sourcePath
-	 * 
-	 * @throws JargonException
-	 */
-	public abstract void store() throws JargonException;
-
-	/**
-	 * Delete the given abstract virtual collection from the configured
-	 * sourcePath
-	 * 
-	 * @throws JargonException
-	 */
-	public abstract void delete() throws JargonException;
-
-	public void setContext(VirtualCollectionContext context) {
-		this.context = context;
+	public void setI18Name(String i18Name) {
+		this.i18Name = i18Name;
 	}
 
-	/**
-	 * Generate a result list based on executing the virtual collection query
-	 * 
-	 * @param offset
-	 *            <code>int</code> with the offset into the result set (paging
-	 *            may not be supported in all subclasses)
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
-	 *         with the result of the query
-	 * @throws JargonException
-	 */
-	public abstract List<CollectionAndDataObjectListingEntry> queryAll(
-			int offset) throws JargonException;
+	public String getI18Description() {
+		return i18Description;
+	}
 
-	/**
-	 * Generate a result list based on executing the virtual collection query for collections that are children of this parent.
-	 * 
-	 * @param offset
-	 *            <code>int</code> with the offset into the result set (paging
-	 *            may not be supported in all subclasses)
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
-	 *         with the result of the query
-	 * @throws JargonException
-	 */
-	public abstract List<CollectionAndDataObjectListingEntry> queryCollections(int offset)
-			throws JargonException;
-	
-	
-	/**
-	 * Generate a result list based on executing the virtual query for data objects that are children of this parent.
-	 * 
-	 * @param offset
-	 *            <code>int</code> with the offset into the result set (paging
-	 *            may not be supported in all subclasses)
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
-	 *         with the result of the query
-	 * @throws JargonException
-	 */
-	public abstract List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
-			throws JargonException;
-	
-	
+	public void setI18Description(String i18Description) {
+		this.i18Description = i18Description;
+	}
+
+	public String getI18icon() {
+		return i18icon;
+	}
+
+	public void setI18icon(String i18icon) {
+		this.i18icon = i18icon;
+	}
+
 }

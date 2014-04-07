@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.irods.jargon.vircoll.AbstractVirtualCollection;
 
-public interface VirtualCollectionMaintenanceService {
+public interface VirtualCollectionDiscoveryService {
 
 	/**
 	 * Create a list of virtual collection types for a user. This will include
