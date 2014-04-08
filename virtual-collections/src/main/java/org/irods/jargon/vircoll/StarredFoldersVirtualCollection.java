@@ -23,7 +23,7 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 	public StarredFoldersVirtualCollection() {
 		this.setName(NAME);
 		this.setDescription(DESCRIPTION);
-		this.setI18icon(DEFAULT_ICON_KEY);
+		this.setI18icon(ICON_KEY);
 		this.setI18Description(DESCRIPTION_KEY);
 		this.setI18Name(NAME_KEY);
 	}
