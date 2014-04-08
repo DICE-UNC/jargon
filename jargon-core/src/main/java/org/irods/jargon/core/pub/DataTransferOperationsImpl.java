@@ -1667,9 +1667,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					"attempt to copy source file to its parent");
 		}
 
-		if (operativeTransferControlBlock != null) {
-			operativeTransferControlBlock.setTotalFilesToTransfer(1);
+		if (operativeTransferControlBlock == null) {
+			throw new IllegalArgumentException(
+					"null operativeTransferControlBlock");
 		}
+
+		operativeTransferControlBlock.setTotalFilesToTransfer(1);
 
 		if (targetFile.isDirectory()) {
 			targetFile = getIRODSFileFactory().instanceIRODSFile(

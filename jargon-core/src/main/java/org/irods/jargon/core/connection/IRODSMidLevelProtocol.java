@@ -68,8 +68,8 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
-	protected IRODSMidLevelProtocol(AbstractConnection irodsConnection,
-			IRODSProtocolManager irodsProtocolManager) {
+	protected IRODSMidLevelProtocol(final AbstractConnection irodsConnection,
+			final IRODSProtocolManager irodsProtocolManager) {
 		super(irodsConnection, irodsProtocolManager);
 	}
 
@@ -86,14 +86,14 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		 * Check if a still-connected agent connection is being finalized, and
 		 * nag in the log, then try and disconnect
 		 */
-		if (this.getIrodsConnection().isConnected()) {
+		if (getIrodsConnection().isConnected()) {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
 			log.error("********  IRODSCommands is:{}", this);
 			log.error(
 					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
-					this.getIrodsConnection().getConnectionInternalIdentifier());
+					getIrodsConnection().getConnectionInternalIdentifier());
 			log.error("**************************************************************************************");
 			obliterateConnectionAndDiscardErrors();
 		}
@@ -112,9 +112,9 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @return
 	 */
 	boolean isPamFlush() {
-		if (this.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
 			return true;
-		} else if (this.getPipelineConfiguration().isForcePamFlush()) {
+		} else if (getPipelineConfiguration().isForcePamFlush()) {
 			return true;
 		} else {
 			return false;
@@ -173,30 +173,29 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			int messageLength = 0;
 
 			if (message != null) {
-				messageLength = message.getBytes(this.getEncoding()).length;
+				messageLength = message.getBytes(getEncoding()).length;
 			}
 
-			this.getIrodsConnection().send(
+			getIrodsConnection().send(
 					createHeader(IRODSConstants.RODS_API_REQ, messageLength,
 							errorLength, byteStringLength, intInfo));
 
 			if (isPamFlush()) {
 				log.debug("doing extra pam flush for iRODS 3.2");
-				this.getIrodsConnection().flush();
+				getIrodsConnection().flush();
 			}
 
-			this.getIrodsConnection().send(message);
+			getIrodsConnection().send(message);
 
 			if (byteStringLength > 0) {
-				this.getIrodsConnection().send(bytes, byteOffset,
-						byteStringLength);
+				getIrodsConnection().send(bytes, byteOffset, byteStringLength);
 				if (isPamFlush()) {
 					log.debug("doing extra pam flush for iRODS 3.2 after byte send");
-					this.getIrodsConnection().flush();
+					getIrodsConnection().flush();
 				}
 			}
 
-			this.getIrodsConnection().flush();
+			getIrodsConnection().flush();
 
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding", e);

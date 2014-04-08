@@ -98,7 +98,7 @@ public class IRODSRuleExecResultOutputParameter {
 	 * @param parameterName
 	 *            the parameterName to set
 	 */
-	public void setParameterName(String parameterName) {
+	public void setParameterName(final String parameterName) {
 		this.parameterName = parameterName;
 	}
 
@@ -106,7 +106,7 @@ public class IRODSRuleExecResultOutputParameter {
 	 * @param outputParamType
 	 *            the outputParamType to set
 	 */
-	public void setOutputParamType(OutputParamType outputParamType) {
+	public void setOutputParamType(final OutputParamType outputParamType) {
 		this.outputParamType = outputParamType;
 	}
 
@@ -114,7 +114,7 @@ public class IRODSRuleExecResultOutputParameter {
 	 * @param resultObject
 	 *            the resultObject to set
 	 */
-	public void setResultObject(Object resultObject) {
+	public void setResultObject(final Object resultObject) {
 		this.resultObject = resultObject;
 	}
 

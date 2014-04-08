@@ -194,7 +194,8 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * result of the remote execution of an iRODS command.
 	 */
 	public RemoteExecutionBinaryResultInputStream(
-			final AbstractIRODSMidLevelProtocol irodsCommands, final int fileDescriptor) {
+			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final int fileDescriptor) {
 		super();
 
 		if (irodsCommands == null) {

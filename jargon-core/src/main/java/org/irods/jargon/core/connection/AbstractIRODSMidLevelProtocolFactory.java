@@ -93,7 +93,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		AbstractConnection connection = irodsConnectionFactory.instance(
 				irodsAccount, irodsSession, irodsProtocolManager);
 
-		AbstractIRODSMidLevelProtocol protocol = this.createInitialProtocol(
+		AbstractIRODSMidLevelProtocol protocol = createInitialProtocol(
 				connection, irodsProtocolManager);
 		// add a session reference to the protocol.
 		protocol.setIrodsSession(irodsSession);
@@ -237,7 +237,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 		}
 
 		log.info("get auth mechanism");
-		AuthMechanism authMechanism = this.getAuthenticationFactory()
+		AuthMechanism authMechanism = getAuthenticationFactory()
 				.instanceAuthMechanism(irodsAccount);
 
 		protocol.setIrodsSession(irodsSession);

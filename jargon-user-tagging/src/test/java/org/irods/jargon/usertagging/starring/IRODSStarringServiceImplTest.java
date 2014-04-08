@@ -74,7 +74,7 @@ public class IRODSStarringServiceImplTest {
 				objStat);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
 						description, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -139,8 +139,8 @@ public class IRODSStarringServiceImplTest {
 				objStat);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath, description,
-						irodsAccount.getUserName(),
+				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
+						description, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);
@@ -257,7 +257,7 @@ public class IRODSStarringServiceImplTest {
 				objStat);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
 						description, irodsAccount.getUserName(),
 						UserTaggingConstants.TAG_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -308,7 +308,7 @@ public class IRODSStarringServiceImplTest {
 				new FileNotFoundException("not found"));
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
 						description, irodsAccount.getUserName(),
 						UserTaggingConstants.TAG_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -506,7 +506,7 @@ public class IRODSStarringServiceImplTest {
 				objStat);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath,
+				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
 						oldDescription, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -563,7 +563,7 @@ public class IRODSStarringServiceImplTest {
 				objStat);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
 						description, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -596,7 +596,7 @@ public class IRODSStarringServiceImplTest {
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.COLLECTION, "1", absolutePath,
+				.instance(MetadataDomain.COLLECTION, "1", absolutePath, 1,
 						description, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
@@ -637,8 +637,8 @@ public class IRODSStarringServiceImplTest {
 		CollectionAO collectionAO = Mockito.mock(CollectionAO.class);
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", absolutePath, description,
-						irodsAccount.getUserName(),
+				.instance(MetadataDomain.DATA, "1", absolutePath, 1,
+						description, irodsAccount.getUserName(),
 						UserTaggingConstants.STAR_AVU_UNIT);
 		List<MetaDataAndDomainData> metadataList = new ArrayList<MetaDataAndDomainData>();
 		metadataList.add(metadataAndDomainData);

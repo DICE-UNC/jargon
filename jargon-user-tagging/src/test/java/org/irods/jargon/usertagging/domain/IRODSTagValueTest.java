@@ -64,7 +64,7 @@ public class IRODSTagValueTest {
 		String expectedTag = "testTag";
 
 		MetaDataAndDomainData metadataAndDomainData = MetaDataAndDomainData
-				.instance(MetadataDomain.DATA, "1", "xxx", expectedTag,
+				.instance(MetadataDomain.DATA, "1", "xxx", 1, expectedTag,
 						expectedUser, UserTaggingConstants.TAG_AVU_UNIT);
 
 		IRODSTagValue actual = new IRODSTagValue(metadataAndDomainData);

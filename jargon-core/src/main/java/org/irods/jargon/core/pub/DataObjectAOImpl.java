@@ -1514,11 +1514,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
 					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
+
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL,
@@ -1612,7 +1615,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("addBulkAVUMetadataToDataObject()");
 
-		if (absolutePath == NULL_LOCAL_FILE || absolutePath.isEmpty()) {
+		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolute path");
 		}
 
@@ -1869,7 +1872,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
 
-		this.deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
+		deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
 
 	}
 
@@ -2003,6 +2006,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
 					.addSelectAsGenQueryValue(
@@ -2450,6 +2455,117 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("fileName: {}", dataObjectFileName);
 			throw new JargonException(e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForDataObjectById(
+			final String dataObjectAbsolutePath, final int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException {
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty dataObjectAbsolutePath");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
+
+		log.info("findMetadataValueForDataObjectById: {}",
+				dataObjectAbsolutePath);
+		log.info("id:{}", id);
+
+		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		return findMetadataValueForDataObjectById(objStat, id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
+	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForDataObjectById(
+			final ObjStat objStat, final int id) throws DataNotFoundException,
+			JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null or empty objStat");
+		}
+
+		log.info("findMetadataValueForDataObjectById: {}", objStat);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new JargonException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		// need to break up the path for the query
+		IRODSFile dataObjectFile = getIRODSFileFactory().instanceIRODSFile(
+				absPath);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
+				null);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							dataObjectFile.getParent())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL,
+							dataObjectFile.getName())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID,
+							QueryConditionOperators.EQUAL, id);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(absPath));
+
+			return DataAOHelper
+					.buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+							resultSet.getFirstResult(), 1);
+
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
+		}
+
 	}
 
 	/*
@@ -3616,9 +3732,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 			return DataAOHelper.buildListFromResultSet(resultSet);
 		} catch (Exception e) {
-			log.error("Error executing Query getReplicationsForFile() for "
-					+ collectionAbsPath + "/" + fileName + " " + e.getMessage()
-					+ e.getStackTrace());
+			log.error("Error executing Query getReplicationsForFile()", e);
 			throw new JargonException(
 					"error querying for files in resource group", e);
 		}
@@ -3978,14 +4092,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		try {
-		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
-				"/rules/trimDataObject.r", irodsRuleParameters,
-				RuleProcessingType.EXTERNAL);
-		log.info("result of action:{}", result.getRuleExecOut().trim());
+			IRODSRuleExecResult result = ruleProcessingAO
+					.executeRuleFromResource("/rules/trimDataObject.r",
+							irodsRuleParameters, RuleProcessingType.EXTERNAL);
+			log.info("result of action:{}", result.getRuleExecOut().trim());
 
 		} catch (InvalidInputParameterException e) {
-			log.warn("invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",e);
-			if (this.getIRODSServerProperties().isEirods()) {
+			log.warn(
+					"invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",
+					e);
+			if (getIRODSServerProperties().isEirods()) {
 				log.warn("ignored....is eirods");
 			} else {
 				throw e;
@@ -4040,8 +4156,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 
 			return DataAOHelper.buildListFromResultSet(resultSet);
-		
-		
+
 		} catch (Exception e) {
 			log.error("error querying for replicas", e);
 			throw new JargonException("error querying for file replicas", e);
@@ -4069,7 +4184,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 
 		log.info("get input stream and read to compute sha1");
-		InputStream is = new BufferedInputStream(this.getIRODSFileFactory()
+		InputStream is = new BufferedInputStream(getIRODSFileFactory()
 				.instanceIRODSFileInputStream(irodsAbsolutePath));
 		MessageDigest md;
 		try {

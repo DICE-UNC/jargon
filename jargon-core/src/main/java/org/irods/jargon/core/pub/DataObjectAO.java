@@ -1150,4 +1150,38 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String irodsAbsolutePath) throws DataNotFoundException,
 			JargonException;
 
+	/**
+	 * Look up an AVU associated with a data object by providing an ObjStat and
+	 * id (the id key of the AVU)
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the data object
+	 * @param id
+	 *            <code>int</code> with the unique key for the AVU attribute
+	 * @return {@link MetaDataAndDomainData} representing that AVU
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 *             if the AVU is not found
+	 */
+	MetaDataAndDomainData findMetadataValueForDataObjectById(ObjStat objStat,
+			int id) throws DataNotFoundException, JargonException;
+
+	/**
+	 * Look up an AVU associated with a data object by providing a path and id
+	 * (the id key of the AVU)
+	 * 
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path for the data object
+	 * @param id
+	 *            <code>int</code> with the unique key for the AVU attribute
+	 * @return {@link MetaDataAndDomainData} representing that AVU
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 *             if the AVU is not found
+	 */
+	MetaDataAndDomainData findMetadataValueForDataObjectById(
+			String dataObjectAbsolutePath, int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException;
+
 }
