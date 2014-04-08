@@ -27,5 +27,4 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 		this.setI18Description(DESCRIPTION_KEY);
 		this.setI18Name(NAME_KEY);
 	}
-
 }
