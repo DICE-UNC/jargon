@@ -20,6 +20,7 @@ import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.FederatedSpecificQueryAOTest;
 import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
+import org.irods.jargon.core.pub.IRODSFileSystemSingletonWrapperTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplBuiilderQueriesTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
@@ -77,7 +78,8 @@ import org.junit.runners.Suite;
 		FederatedSpecificQueryAOTest.class,
 		MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
 		MountedFilesystemsDataTransferOperationsImplTest.class,
-		MountedFilesystemCollectionAOImplTest.class })
+		MountedFilesystemCollectionAOImplTest.class,
+		IRODSFileSystemSingletonWrapperTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
