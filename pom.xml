@@ -5,7 +5,7 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>flowmgr3.3.3-SNAPSHOT</version>
+	<version>3.3.5-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>

@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.conveyor.flowmanager.flow;
 
-import org.irods.jargon.transfer.dao.domain.TransferType;
 
 /**
  * Represents a selector for a flow
@@ -13,9 +12,13 @@ import org.irods.jargon.transfer.dao.domain.TransferType;
  */
 public class Selector {
 
+	public enum FlowActionEnum {
+		ANY, PUT, GET
+	}
+
 	private String hostSelector;
 	private String zoneSelector;
-	private TransferType transferTypeSelector;
+	private FlowActionEnum flowActionEnum;
 
 	/**
 	 * @return the hostSelector
@@ -50,16 +53,16 @@ public class Selector {
 	/**
 	 * @return the transferTypeSelector
 	 */
-	public TransferType getTransferTypeSelector() {
-		return transferTypeSelector;
+	public FlowActionEnum getFlowActionEnum() {
+		return flowActionEnum;
 	}
 
 	/**
 	 * @param transferTypeSelector
 	 *            the transferTypeSelector to set
 	 */
-	public void setTransferTypeSelector(TransferType transferTypeSelector) {
-		this.transferTypeSelector = transferTypeSelector;
+	public void setFlowActionEnum(FlowActionEnum flowActionEnum) {
+		this.flowActionEnum = flowActionEnum;
 	}
 
 }
