@@ -30,22 +30,20 @@ public final class IRODSFileSystemSingletonWrapper implements Serializable {
 	 * @return {@link IRODSFileSystem}
 	 * @throws JargonException
 	 */
-	public static synchronized IRODSFileSystem instance()
-			throws JargonException {
+	public static synchronized IRODSFileSystem instance() {
 		if (irodsFileSystem == null) {
-			irodsFileSystem = IRODSFileSystem.instance();
+			try {
+				irodsFileSystem = IRODSFileSystem.instance();
+			} catch (JargonException e) {
+				throw new JargonRuntimeException("unable to create instance");
+			}
 		}
 
 		return irodsFileSystem;
 	}
 
 	protected Object readResolve() {
-		try {
-			return instance();
-		} catch (JargonException e) {
-			throw new JargonRuntimeException(
-					"cannot create instance when deserializing");
-		}
+		return instance();
 
 	}
 
