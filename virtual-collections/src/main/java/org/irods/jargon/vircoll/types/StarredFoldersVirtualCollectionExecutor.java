@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-package org.irods.jargon.vircoll.impl;
+package org.irods.jargon.vircoll.types;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,15 +16,14 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
 import org.irods.jargon.vircoll.AbstractVirtualCollectionExecutor;
-import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Represents a virtual collection of starred folders
- * 
+ *
  * @author mikeconway
- * 
+ *
  */
 public class StarredFoldersVirtualCollectionExecutor extends
 		AbstractVirtualCollectionExecutor<StarredFoldersVirtualCollection> {
@@ -36,7 +35,7 @@ public class StarredFoldersVirtualCollectionExecutor extends
 
 	/**
 	 * Create an instance of an executor for starred folders
-	 * 
+	 *
 	 * @param starredFoldersVirtualCollection
 	 *            {@link StarredFoldersVirtualCollection} that describes the
 	 *            collection
@@ -45,7 +44,7 @@ public class StarredFoldersVirtualCollectionExecutor extends
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} with host and login information
 	 */
-	StarredFoldersVirtualCollectionExecutor(
+	public StarredFoldersVirtualCollectionExecutor(
 			final StarredFoldersVirtualCollection starredFoldersVirtualCollection,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
@@ -73,7 +72,7 @@ public class StarredFoldersVirtualCollectionExecutor extends
 	 * (int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryAll(int offset)
+	public List<CollectionAndDataObjectListingEntry> queryAll(final int offset)
 			throws JargonException {
 
 		log.info("queryAll()");
@@ -99,8 +98,8 @@ public class StarredFoldersVirtualCollectionExecutor extends
 	 * queryCollections(int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryCollections(int offset)
-			throws JargonException {
+	public List<CollectionAndDataObjectListingEntry> queryCollections(
+			final int offset) throws JargonException {
 
 		List<IRODSStarredFileOrCollection> starred = irodsStarringService
 				.listStarredCollections(offset);
@@ -143,8 +142,8 @@ public class StarredFoldersVirtualCollectionExecutor extends
 	 * queryDataObjects(int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
-			throws JargonException {
+	public List<CollectionAndDataObjectListingEntry> queryDataObjects(
+			final int offset) throws JargonException {
 
 		List<IRODSStarredFileOrCollection> starred = irodsStarringService
 				.listStarredDataObjects(offset);

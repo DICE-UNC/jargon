@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.vircoll;
 
@@ -9,18 +9,18 @@ package org.irods.jargon.vircoll;
  * <p/>
  * The function of a virtual collection is to break away from reliance on a
  * hierarchical file tree as the sole arrangement of collections.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public abstract class AbstractVirtualCollection {
 
 	public static final String DEFAULT_ICON_KEY = "virtual.collection.default.icon";
 
 	/**
-	 * Plain language name for this virtual collection
+	 * Unique name for this virtual collection
 	 */
-	private String name = "Collection";
+	private String uniqueName = "Collection";
 
 	/**
 	 * Plain language descripton
@@ -49,18 +49,18 @@ public abstract class AbstractVirtualCollection {
 	private String i18icon = DEFAULT_ICON_KEY;
 
 	public String getName() {
-		return name;
+		return uniqueName;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setName(final String name) {
+		this.uniqueName = name;
 	}
 
 	public String getDescription() {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -68,7 +68,7 @@ public abstract class AbstractVirtualCollection {
 		return sourcePath;
 	}
 
-	public void setSourcePath(String sourcePath) {
+	public void setSourcePath(final String sourcePath) {
 		this.sourcePath = sourcePath;
 	}
 
@@ -76,7 +76,7 @@ public abstract class AbstractVirtualCollection {
 		return i18Name;
 	}
 
-	public void setI18Name(String i18Name) {
+	public void setI18Name(final String i18Name) {
 		this.i18Name = i18Name;
 	}
 
@@ -84,7 +84,7 @@ public abstract class AbstractVirtualCollection {
 		return i18Description;
 	}
 
-	public void setI18Description(String i18Description) {
+	public void setI18Description(final String i18Description) {
 		this.i18Description = i18Description;
 	}
 
@@ -92,7 +92,7 @@ public abstract class AbstractVirtualCollection {
 		return i18icon;
 	}
 
-	public void setI18icon(String i18icon) {
+	public void setI18icon(final String i18icon) {
 		this.i18icon = i18icon;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.vircoll;
 
@@ -15,18 +15,18 @@ import org.irods.jargon.core.service.AbstractJargonService;
  * Abstract model of a service that can execute operations on a given virtual
  * collection. This means CRUD operations on the virtual collection, as well as
  * execution of the embedded query
- * 
+ *
  * @author mikeconway
- * 
+ *
  */
 public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtualCollection>
-		extends AbstractJargonService {
+extends AbstractJargonService {
 
 	private final T collection;
 
 	/**
 	 * Generate a result list based on executing the virtual collection query
-	 * 
+	 *
 	 * @param offset
 	 *            <code>int</code> with the offset into the result set (paging
 	 *            may not be supported in all subclasses)
@@ -40,7 +40,7 @@ public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtua
 	/**
 	 * Generate a result list based on executing the virtual collection query
 	 * for collections that are children of this parent.
-	 * 
+	 *
 	 * @param offset
 	 *            <code>int</code> with the offset into the result set (paging
 	 *            may not be supported in all subclasses)
@@ -54,7 +54,7 @@ public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtua
 	/**
 	 * Generate a result list based on executing the virtual query for data
 	 * objects that are children of this parent.
-	 * 
+	 *
 	 * @param offset
 	 *            <code>int</code> with the offset into the result set (paging
 	 *            may not be supported in all subclasses)
@@ -67,7 +67,7 @@ public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtua
 
 	/**
 	 * Get the abstract virtual collection associated with this executor
-	 * 
+	 *
 	 * @return {@link AbstractVirtualCollection} subtype
 	 */
 	public T getCollection() {
@@ -78,9 +78,9 @@ public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtua
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	protected AbstractVirtualCollectionExecutor(T collection,
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+	protected AbstractVirtualCollectionExecutor(final T collection,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (collection == null) {

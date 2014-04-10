@@ -10,6 +10,8 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.vircoll.types.CollectionBasedVirtualCollection;
+import org.irods.jargon.vircoll.types.CollectionBasedVirtualCollectionExecutor;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -25,7 +27,7 @@ public class CollectionBasedVirtualCollectionTest {
 				.mock(IRODSAccessObjectFactory.class);
 
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
-				testPath);
+				"blah", testPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
@@ -79,7 +81,7 @@ public class CollectionBasedVirtualCollectionTest {
 				.mock(IRODSAccessObjectFactory.class);
 
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
-				testPath);
+				"foo", testPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
@@ -133,7 +135,7 @@ public class CollectionBasedVirtualCollectionTest {
 				.mock(IRODSAccessObjectFactory.class);
 
 		CollectionBasedVirtualCollection virColl = new CollectionBasedVirtualCollection(
-				testPath);
+				"bar", testPath);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);

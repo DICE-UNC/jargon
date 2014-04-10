@@ -1,16 +1,16 @@
 /**
- * 
+ *
  */
-package org.irods.jargon.vircoll.impl;
+package org.irods.jargon.vircoll.types;
 
 import org.irods.jargon.vircoll.AbstractVirtualCollection;
 
 /**
  * Basic definition of a virtual collection that is actually a collection from
  * the iRODS hierarchy. It's simply an iRODS collection
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class CollectionBasedVirtualCollection extends AbstractVirtualCollection {
 
@@ -30,15 +30,20 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 	 * create an instance of this virtual collection by giving the iRODS parent
 	 * path that will be the root of the collection listing
 	 */
-	public CollectionBasedVirtualCollection(final String rootPath) {
+	public CollectionBasedVirtualCollection(final String uniqueName,
+			final String rootPath) {
 		if (rootPath == null || rootPath.isEmpty()) {
 			throw new IllegalArgumentException("null root path");
 		}
 
+		if (uniqueName == null || uniqueName.isEmpty()) {
+			throw new IllegalArgumentException("null uniqueName");
+		}
+
 		this.rootPath = rootPath;
-		this.setName(rootPath);
-		this.setDescription(DESCRIPTION);
-		this.setI18icon(DEFAULT_ICON_KEY);
+		setName(rootPath);
+		setDescription(DESCRIPTION);
+		setI18icon(DEFAULT_ICON_KEY);
 
 	}
 
@@ -46,8 +51,8 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 		return rootPath;
 	}
 
-	public void setRootPath(String collectionPath) {
-		this.rootPath = collectionPath;
+	public void setRootPath(final String collectionPath) {
+		rootPath = collectionPath;
 	}
 
 }

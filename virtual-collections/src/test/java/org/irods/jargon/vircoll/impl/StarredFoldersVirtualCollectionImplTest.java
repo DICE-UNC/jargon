@@ -13,7 +13,8 @@ import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
-import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
+import org.irods.jargon.vircoll.types.StarredFoldersVirtualCollection;
+import org.irods.jargon.vircoll.types.StarredFoldersVirtualCollectionExecutor;
 import org.junit.Test;
 import org.mockito.Mockito;
 

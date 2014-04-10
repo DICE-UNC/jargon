@@ -1,13 +1,15 @@
 /**
- * 
+ *
  */
-package org.irods.jargon.vircoll;
+package org.irods.jargon.vircoll.types;
+
+import org.irods.jargon.vircoll.AbstractVirtualCollection;
 
 /**
  * Represents a collection of starred files and folders
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 
@@ -21,10 +23,10 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 	 * create an instance of a starred virtual collection
 	 */
 	public StarredFoldersVirtualCollection() {
-		this.setName(NAME);
-		this.setDescription(DESCRIPTION);
-		this.setI18icon(ICON_KEY);
-		this.setI18Description(DESCRIPTION_KEY);
-		this.setI18Name(NAME_KEY);
+		setName(NAME);
+		setDescription(DESCRIPTION);
+		setI18icon(ICON_KEY);
+		setI18Description(DESCRIPTION_KEY);
+		setI18Name(NAME_KEY);
 	}
 }

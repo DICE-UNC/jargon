@@ -1,17 +1,20 @@
-package org.irods.jargon.vircoll.impl;
+package org.irods.jargon.vircoll;
+
+import org.irods.jargon.vircoll.types.CollectionBasedVirtualCollectionExecutor;
+import org.irods.jargon.vircoll.types.StarredFoldersVirtualCollectionExecutor;
 
 /**
  * Represents a factory service that can find and initialize lists of virtual
  * collections, as well as create new instances of a virtual collection type
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public interface VirtualCollectionExecutorFactory {
 
 	/**
 	 * Create a virtual collection of starred files and folders
-	 * 
+	 *
 	 * @param parentPath
 	 * @return
 	 */
@@ -20,7 +23,10 @@ public interface VirtualCollectionExecutorFactory {
 	/**
 	 * Create a virtual collection executor that actually just wraps an
 	 * underlying irods collection
-	 * 
+	 *
+	 * @param uniqueName
+	 *            <code>String</code> with the unique name of the virtual
+	 *            collection
 	 * @param parentPath
 	 *            <code>String</code> with the absolute path to an iRODS parent
 	 *            collection
@@ -28,6 +34,6 @@ public interface VirtualCollectionExecutorFactory {
 	 *         the query to produce the collection listing data
 	 */
 	CollectionBasedVirtualCollectionExecutor instanceCollectionBasedVirtualCollectionExecutor(
-			String parentPath);
+			String uniqueName, String parentPath);
 
 }

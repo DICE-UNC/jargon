@@ -1,7 +1,7 @@
 /**
- * 
+ *
  */
-package org.irods.jargon.vircoll.impl;
+package org.irods.jargon.vircoll.types;
 
 import java.util.List;
 
@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents a virtual collection that is an actual iRODS collection (parent
  * folders are virtual collections themselves)
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class CollectionBasedVirtualCollectionExecutor extends
 		AbstractVirtualCollectionExecutor<CollectionBasedVirtualCollection> {
@@ -32,10 +32,10 @@ public class CollectionBasedVirtualCollectionExecutor extends
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	protected CollectionBasedVirtualCollectionExecutor(
-			CollectionBasedVirtualCollection collection,
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+	public CollectionBasedVirtualCollectionExecutor(
+			final CollectionBasedVirtualCollection collection,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(collection, irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -45,22 +45,19 @@ public class CollectionBasedVirtualCollectionExecutor extends
 	 * @see org.irods.jargon.vircoll.AbstractVirtualCollection#queryAll(int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryAll(int offset)
+	public List<CollectionAndDataObjectListingEntry> queryAll(final int offset)
 			throws JargonException {
 
 		log.info("query()");
 
 		log.info("offset:{}", offset);
 
-		log.info("collection parent:{}", this.getCollection().getRootPath());
+		log.info("collection parent:{}", getCollection().getRootPath());
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-
-		.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getIrodsAccount());
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 		return collectionAndDataObjectListAndSearchAO
-				.listDataObjectsAndCollectionsUnderPath(this.getCollection()
+				.listDataObjectsAndCollectionsUnderPath(getCollection()
 						.getRootPath());
 
 	}
@@ -72,28 +69,25 @@ public class CollectionBasedVirtualCollectionExecutor extends
 	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryCollections(int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryCollections(int offset)
-			throws JargonException {
+	public List<CollectionAndDataObjectListingEntry> queryCollections(
+			final int offset) throws JargonException {
 
 		log.info("queryCollections()");
 
 		log.info("offset:{|}", offset);
 
-		if (this.getCollection().getRootPath() == null
-				|| this.getCollection().getRootPath().isEmpty()) {
+		if (getCollection().getRootPath() == null
+				|| getCollection().getRootPath().isEmpty()) {
 			throw new JargonException(
 					"no collectionParentAbsolutePath provided");
 		}
 
-		log.info("collection parent:{}", this.getCollection().getRootPath());
+		log.info("collection parent:{}", getCollection().getRootPath());
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-
-		.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getIrodsAccount());
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 		return collectionAndDataObjectListAndSearchAO.listCollectionsUnderPath(
-				this.getCollection().getRootPath(), offset);
+				getCollection().getRootPath(), offset);
 
 	}
 
@@ -104,33 +98,30 @@ public class CollectionBasedVirtualCollectionExecutor extends
 	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryDataObjects(int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryDataObjects(int offset)
-			throws JargonException {
+	public List<CollectionAndDataObjectListingEntry> queryDataObjects(
+			final int offset) throws JargonException {
 
 		log.info("queryDataObjects()");
 
 		log.info("offset:{}", offset);
 
-		if (this.getCollection().getRootPath() == null
-				|| this.getCollection().getRootPath().isEmpty()) {
+		if (getCollection().getRootPath() == null
+				|| getCollection().getRootPath().isEmpty()) {
 			throw new JargonException(
 					"no collectionParentAbsolutePath provided");
 		}
 
-		log.info("collection parent:{}", this.getCollection().getRootPath());
+		log.info("collection parent:{}", getCollection().getRootPath());
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-
-		.getIrodsAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(
-						this.getIrodsAccount());
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 		return collectionAndDataObjectListAndSearchAO.listDataObjectsUnderPath(
-				this.getCollection().getRootPath(), offset);
+				getCollection().getRootPath(), offset);
 
 	}
 
 	public String getCollectionParentAbsolutePath() {
-		return this.getCollection().getRootPath();
+		return getCollection().getRootPath();
 	}
 
 }

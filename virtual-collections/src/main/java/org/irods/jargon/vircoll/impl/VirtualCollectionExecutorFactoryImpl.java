@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.vircoll.impl;
 
@@ -8,15 +8,19 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.usertagging.starring.IRODSStarringService;
 import org.irods.jargon.usertagging.starring.IRODSStarringServiceImpl;
-import org.irods.jargon.vircoll.StarredFoldersVirtualCollection;
+import org.irods.jargon.vircoll.VirtualCollectionExecutorFactory;
+import org.irods.jargon.vircoll.types.CollectionBasedVirtualCollection;
+import org.irods.jargon.vircoll.types.CollectionBasedVirtualCollectionExecutor;
+import org.irods.jargon.vircoll.types.StarredFoldersVirtualCollection;
+import org.irods.jargon.vircoll.types.StarredFoldersVirtualCollectionExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Factory implementation for virtual collections.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class VirtualCollectionExecutorFactoryImpl extends AbstractJargonService
 		implements VirtualCollectionExecutorFactory {
@@ -32,16 +36,21 @@ public class VirtualCollectionExecutorFactoryImpl extends AbstractJargonService
 	 */
 	@Override
 	public CollectionBasedVirtualCollectionExecutor instanceCollectionBasedVirtualCollectionExecutor(
-			final String parentPath) {
+			final String uniqueName, final String parentPath) {
+
+		if (uniqueName == null || uniqueName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty uniqueName");
+		}
 
 		if (parentPath == null || parentPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty parentPath");
 		}
+
 		CollectionBasedVirtualCollection coll = new CollectionBasedVirtualCollection(
-				parentPath);
+				uniqueName, parentPath);
 
 		return new CollectionBasedVirtualCollectionExecutor(coll,
-				this.getIrodsAccessObjectFactory(), this.getIrodsAccount());
+				getIrodsAccessObjectFactory(), getIrodsAccount());
 	}
 
 	/*
@@ -54,9 +63,9 @@ public class VirtualCollectionExecutorFactoryImpl extends AbstractJargonService
 	public StarredFoldersVirtualCollectionExecutor instanceStarredFolderVirtualCollection() {
 		StarredFoldersVirtualCollection coll = new StarredFoldersVirtualCollection();
 		IRODSStarringService irodsStarringService = new IRODSStarringServiceImpl(
-				this.getIrodsAccessObjectFactory(), this.getIrodsAccount());
+				getIrodsAccessObjectFactory(), getIrodsAccount());
 		return new StarredFoldersVirtualCollectionExecutor(coll,
-				this.getIrodsAccessObjectFactory(), this.getIrodsAccount(),
+				getIrodsAccessObjectFactory(), getIrodsAccount(),
 				irodsStarringService);
 	}
 
@@ -65,8 +74,8 @@ public class VirtualCollectionExecutorFactoryImpl extends AbstractJargonService
 	 * @param irodsAccount
 	 */
 	public VirtualCollectionExecutorFactoryImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 }
