@@ -6,6 +6,10 @@ package org.irods.jargon.conveyor.flowmanager.flow;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.conveyor.flowmanager.microservice.ConditionMicroservice;
+import org.irods.jargon.conveyor.flowmanager.microservice.ErrorHandlerMicroservice;
+import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
+
 /**
  * Represents a specification for a single flow. This is a workflow chain
  * associated with a selector
@@ -16,49 +20,67 @@ import java.util.List;
 public class FlowSpec {
 
 	private Selector selector = new Selector();
-	private MicroserviceDef condition;
-	private List<MicroserviceDef> preOperationChain = new ArrayList<MicroserviceDef>();
-	private List<MicroserviceDef> preFileChain = new ArrayList<MicroserviceDef>();
-	private List<MicroserviceDef> postFileChain = new ArrayList<MicroserviceDef>();
-	private List<MicroserviceDef> postOperationChain = new ArrayList<MicroserviceDef>();
+	private ConditionMicroservice condition;
+	private List<Microservice> preOperationChain = new ArrayList<Microservice>();
+	private List<Microservice> preFileChain = new ArrayList<Microservice>();
+	private List<Microservice> postFileChain = new ArrayList<Microservice>();
+	private List<Microservice> postOperationChain = new ArrayList<Microservice>();
+	private ErrorHandlerMicroservice errorHandler;
+
 	public Selector getSelector() {
 		return selector;
 	}
+
 	public void setSelector(Selector selector) {
 		this.selector = selector;
 	}
-	public MicroserviceDef getCondition() {
+
+	public ConditionMicroservice getCondition() {
 		return condition;
 	}
-	public void setCondition(MicroserviceDef condition) {
+
+	public void setCondition(ConditionMicroservice condition) {
 		this.condition = condition;
 	}
-	public List<MicroserviceDef> getPreOperationChain() {
+
+	public List<Microservice> getPreOperationChain() {
 		return preOperationChain;
 	}
-	public void setPreOperationChain(List<MicroserviceDef> preOperationChain) {
+
+	public void setPreOperationChain(List<Microservice> preOperationChain) {
 		this.preOperationChain = preOperationChain;
 	}
-	public List<MicroserviceDef> getPreFileChain() {
+
+	public List<Microservice> getPreFileChain() {
 		return preFileChain;
 	}
-	public void setPreFileChain(List<MicroserviceDef> preFileChain) {
+
+	public void setPreFileChain(List<Microservice> preFileChain) {
 		this.preFileChain = preFileChain;
 	}
-	public List<MicroserviceDef> getPostFileChain() {
+
+	public List<Microservice> getPostFileChain() {
 		return postFileChain;
 	}
-	public void setPostFileChain(List<MicroserviceDef> postFileChain) {
+
+	public void setPostFileChain(List<Microservice> postFileChain) {
 		this.postFileChain = postFileChain;
 	}
-	public List<MicroserviceDef> getPostOperationChain() {
+
+	public List<Microservice> getPostOperationChain() {
 		return postOperationChain;
 	}
-	public void setPostOperationChain(List<MicroserviceDef> postOperationChain) {
+
+	public void setPostOperationChain(List<Microservice> postOperationChain) {
 		this.postOperationChain = postOperationChain;
 	}
 
-	
-	
+	public ErrorHandlerMicroservice getErrorHandler() {
+		return errorHandler;
+	}
+
+	public void setErrorHandler(ErrorHandlerMicroservice errorHandler) {
+		this.errorHandler = errorHandler;
+	}
 
 }

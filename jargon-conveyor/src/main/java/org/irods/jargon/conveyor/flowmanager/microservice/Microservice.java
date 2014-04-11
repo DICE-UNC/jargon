@@ -15,7 +15,7 @@ package org.irods.jargon.conveyor.flowmanager.microservice;
  * @author Mike Conway - DICE
  * 
  */
-public abstract class Microservice {
+public class Microservice {
 
 	/**
 	 * Enumeration of the results of an exec step, as returned by the execute()
@@ -23,7 +23,7 @@ public abstract class Microservice {
 	 * 
 	 */
 	public enum ExecResult {
-		CONTINUE, SKIP_THIS_INVOCATION, SKIP_REMAINING_INVOCATIONS, ABORT
+		CONTINUE, SKIP_THIS_CHAIN, END_ALL_CHAINS_NORMALLY, ABORT_AND_TRIGGER_ANY_ERROR_HANDLER
 	}
 
 	/**
@@ -39,6 +39,9 @@ public abstract class Microservice {
 	 * microservices
 	 */
 	private InvocationContext invocationContext;
+
+	public Microservice() {
+	}
 
 	/**
 	 * Gets a reference to the global environment in which this microservice is
@@ -68,11 +71,14 @@ public abstract class Microservice {
 	 * error occurred.
 	 * <p/>
 	 * 
+	 * 
 	 * @return {@link ExecResult} enumeration value that signals handling of
 	 *         further microservices
 	 * @throws MicroserviceException
 	 */
-	public abstract ExecResult execute() throws MicroserviceException;
+	public ExecResult execute() throws MicroserviceException {
+		return ExecResult.CONTINUE;
+	}
 
 	/**
 	 * method that runs after an error occurs. By default, this method will
@@ -91,7 +97,7 @@ public abstract class Microservice {
 	 */
 	public ExecResult errorHandler(final Exception triggeringException,
 			final ExecResult resultFromExecute) throws MicroserviceException {
-		return ExecResult.ABORT;
+		return ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER;
 	}
 
 	/**

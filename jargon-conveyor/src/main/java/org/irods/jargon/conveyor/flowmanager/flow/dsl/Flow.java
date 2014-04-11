@@ -12,18 +12,22 @@ import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
  *
  */
 public class Flow {
-	
-	private FlowSpec flowSpec;
 
 	/**
 	 * 
 	 */
 	private Flow() {
 	}
-	
+
+	/**
+	 * Begin the definition of a flow chain here
+	 * 
+	 * @return
+	 */
 	public static FlowActionSelectorSpecification define() {
 		FlowSpec flowSpec = new FlowSpec();
-		FlowActionSelectorSpecification flowSelectorSpecification = new FlowActionSelectorSpecification(flowSpec);
+		FlowActionSelectorSpecification flowSelectorSpecification = new FlowActionSelectorSpecification(
+				flowSpec);
 		return flowSelectorSpecification;
 	}
 

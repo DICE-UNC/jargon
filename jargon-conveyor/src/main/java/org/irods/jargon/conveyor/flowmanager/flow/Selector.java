@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.conveyor.flowmanager.flow;
 
-
 /**
  * Represents a selector for a flow
  * 
@@ -15,6 +14,8 @@ public class Selector {
 	public enum FlowActionEnum {
 		ANY, PUT, GET
 	}
+
+	public static final String ANY = "*";
 
 	private String hostSelector;
 	private String zoneSelector;
