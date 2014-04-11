@@ -17,6 +17,11 @@
 	</properties>
 	<dependencies>
 		<dependency>
+			<groupId>org.codehaus.groovy</groupId>
+			<artifactId>groovy-all</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
 			<groupId>org.irods.jargon</groupId>
 			<artifactId>jargon-data-utils</artifactId>
 		</dependency>
@@ -176,32 +181,14 @@
 					<debug>true</debug>
 				</configuration>
 			</plugin>
-			<!-- 
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-shade-plugin</artifactId>
-				<version>1.7</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>shade</goal>
-						</goals>
-					</execution>
-
-				</executions>
-				<configuration>
-					<transformer
-						implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-						<resource>META-INF/spring.handlers</resource>
-					</transformer>
-					<transformer
-						implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
-						<resource>META-INF/spring.schemas</resource>
-					</transformer>
-				</configuration>
-			</plugin>
-			 -->
+			<!-- <plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-shade-plugin</artifactId> 
+				<version>1.7</version> <executions> <execution> <phase>package</phase> <goals> 
+				<goal>shade</goal> </goals> </execution> </executions> <configuration> <transformer 
+				implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+				<resource>META-INF/spring.handlers</resource> </transformer> <transformer 
+				implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer"> 
+				<resource>META-INF/spring.schemas</resource> </transformer> </configuration> 
+				</plugin> -->
 		</plugins>
 		<pluginManagement>
 			<plugins>
