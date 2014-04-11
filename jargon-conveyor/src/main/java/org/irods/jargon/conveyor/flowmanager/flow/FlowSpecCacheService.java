@@ -3,7 +3,13 @@
  */
 package org.irods.jargon.conveyor.flowmanager.flow;
 
+import groovy.lang.Binding;
+import groovy.util.GroovyScriptEngine;
+import groovy.util.ResourceException;
+import groovy.util.ScriptException;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,13 +46,21 @@ public class FlowSpecCacheService {
 	 * Scan the library of dsls and add a flowspec for each .groovy file
 	 * 
 	 * @throws FlowSpecConfigurationException
+	 * @throws FlowManagerException
 	 */
-	public synchronized void init() throws FlowSpecConfigurationException {
+	public synchronized void init() throws FlowSpecConfigurationException,
+			FlowManagerException {
 
 		log.info("init()...scan for dsl files");
 
 		for (String flowPath : flowSourceLocalAbsolutePaths) {
 			findFlowsInPath(flowPath);
+		}
+
+		log.info("flows processed");
+
+		if (this.flowSpecs.isEmpty()) {
+			log.warn("No flows configured");
 		}
 
 	}
@@ -57,9 +71,10 @@ public class FlowSpecCacheService {
 	 * 
 	 * @param flowPath
 	 * @throws FlowSpecConfigurationException
+	 * @throws FlowManagerException
 	 */
 	private void findFlowsInPath(String flowPath)
-			throws FlowSpecConfigurationException {
+			throws FlowSpecConfigurationException, FlowManagerException {
 
 		log.info("looking for flows in path:{}", flowPath);
 
@@ -100,9 +115,50 @@ public class FlowSpecCacheService {
 		}
 	}
 
-	private void addGroovyDslToFlowSpecs(File child) {
+	private void addGroovyDslToFlowSpecs(File child)
+			throws FlowManagerException {
 
 		log.info("parsing groovy sript for flow:{}", child);
+
+		/*
+		 * Note here that the specified roots are scanned for any code changes,
+		 * allowing recompile in place if they change
+		 */
+		String[] roots = this.flowSourceLocalAbsolutePaths
+				.toArray(new String[flowSourceLocalAbsolutePaths.size()]);
+		GroovyScriptEngine gse;
+		try {
+			gse = new GroovyScriptEngine(roots);
+			Binding binding = new Binding();
+			log.info("running...{}", child.getName());
+			Object result = gse.run(child.getName(), binding);
+
+			if (result == null) {
+				log.warn("null result, script discarded for:{}", child);
+			} else if (result instanceof FlowSpec) {
+				log.info("adding flow spec for child");
+				this.flowSpecs.add((FlowSpec) result);
+			} else {
+				log.warn("result not flow spec, discarding:{}", child);
+			}
+		} catch (IOException e) {
+			log.error(
+					"groovy error - io exception on startup of GroovyScriptEngine",
+					e);
+			throw new FlowManagerException("io exception starting groovy", e);
+		} catch (ResourceException e) {
+			log.error(
+					"groovy error - resource exception on startup of GroovyScriptEngine",
+					e);
+			throw new FlowManagerException(
+					"resource exception starting groovy", e);
+		} catch (ScriptException e) {
+			log.error(
+					"groovy error - script exception on startup of GroovyScriptEngine",
+					e);
+			throw new FlowManagerException("script exception starting groovy",
+					e);
+		}
 
 	}
 
