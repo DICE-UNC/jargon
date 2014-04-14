@@ -703,7 +703,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				avuData.getValue(), result.get(0).getAvuUnit());
 		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
-	}
+	} 
 
 	/*
 	 * (non-Javadoc)
