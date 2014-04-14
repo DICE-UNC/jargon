@@ -164,8 +164,7 @@ final class TransferOperationsHelper {
 							transferControlBlock);
 
 				} else {
-					processGetOfSingleFile(
-							(IRODSFile) fileInSourceCollection,
+					processGetOfSingleFile((IRODSFile) fileInSourceCollection,
 							targetLocalFile, transferStatusCallbackListener,
 							transferControlBlock);
 				}
@@ -484,15 +483,23 @@ final class TransferOperationsHelper {
 				totalFiles = transferControlBlock.getTotalFilesToTransfer();
 			}
 
+			int filesTransferredSoFar = 0;
+			int filesSkippedSoFar = 0;
+
+			if (transferControlBlock != null) {
+				filesTransferredSoFar = transferControlBlock
+						.getTotalFilesTransferredSoFar();
+				filesSkippedSoFar = transferControlBlock
+						.getTotalFilesSkippedSoFar();
+			}
+
 			TransferStatus status = TransferStatus.instanceForException(
 					TransferType.PUT, fileInSourceCollection.getAbsolutePath(),
-					newIrodsFile.getAbsolutePath(), "",
-					fileInSourceCollection.length(),
-					fileInSourceCollection.length(),
-					transferControlBlock.getTotalFilesTransferredSoFar(),
-					transferControlBlock.getTotalFilesSkippedSoFar(),
-					totalFiles, je, dataObjectAO.getIRODSAccount().getHost(),
-					dataObjectAO.getIRODSAccount().getZone());
+					newIrodsFile.getAbsolutePath(), "", fileInSourceCollection
+							.length(), fileInSourceCollection.length(),
+					filesTransferredSoFar, filesSkippedSoFar, totalFiles, je,
+					dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
+							.getIRODSAccount().getZone());
 
 			log.info("status callback to be sent for error:{}", status);
 			transferStatusCallbackListener.statusCallback(status);

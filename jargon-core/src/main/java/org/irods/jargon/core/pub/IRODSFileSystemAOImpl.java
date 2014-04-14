@@ -895,7 +895,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irodsFile is null");
 		}
 
-		IRODSFile irodsFileImpl = (IRODSFile) irodsFile;
+		IRODSFile irodsFileImpl = irodsFile;
 
 		String absPath = resolveAbsolutePathGivenObjStat((irodsFileImpl
 				.initializeObjStatForFile()));

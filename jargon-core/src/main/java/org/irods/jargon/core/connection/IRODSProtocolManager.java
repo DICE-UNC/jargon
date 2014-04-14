@@ -172,7 +172,7 @@ public abstract class IRODSProtocolManager {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 
-		return this.getIrodsMidLevelProtocolFactory().instance(irodsSession,
+		return getIrodsMidLevelProtocolFactory().instance(irodsSession,
 				irodsAccount, this);
 	}
 

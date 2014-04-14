@@ -35,8 +35,8 @@ public class IRODSMidLevelProtocolFactory extends
 	 *            implementations
 	 */
 	public IRODSMidLevelProtocolFactory(
-			IRODSConnectionFactory irodsConnectionFactory,
-			AuthenticationFactory authenticationFactory) {
+			final IRODSConnectionFactory irodsConnectionFactory,
+			final AuthenticationFactory authenticationFactory) {
 		super(irodsConnectionFactory, authenticationFactory);
 	}
 
@@ -51,8 +51,8 @@ public class IRODSMidLevelProtocolFactory extends
 	 */
 	@Override
 	protected AbstractIRODSMidLevelProtocol createInitialProtocol(
-			AbstractConnection connection,
-			IRODSProtocolManager irodsProtocolManager) {
+			final AbstractConnection connection,
+			final IRODSProtocolManager irodsProtocolManager) {
 		return new IRODSMidLevelProtocol(connection, irodsProtocolManager);
 	}
 

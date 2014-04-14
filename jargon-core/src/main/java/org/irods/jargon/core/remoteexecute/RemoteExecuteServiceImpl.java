@@ -165,9 +165,9 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * Constructor for a remote execution service.
 	 * 
 	 * @param irodsCommands
-	 *            {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} that
-	 *            will be used to send commands to iRODS. The connection is used
-	 *            but not closed or altered.
+	 *            {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
+	 *            that will be used to send commands to iRODS. The connection is
+	 *            used but not closed or altered.
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.

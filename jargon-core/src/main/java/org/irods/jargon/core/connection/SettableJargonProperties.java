@@ -127,8 +127,8 @@ public class SettableJargonProperties implements JargonProperties {
 		setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
 				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 		setForcePamFlush(jargonProperties.isForcePamFlush());
-		this.connectionFactory = jargonProperties.getConnectionFactory();
-		this.checksumEncoding = jargonProperties.getChecksumEncoding();
+		connectionFactory = jargonProperties.getConnectionFactory();
+		checksumEncoding = jargonProperties.getChecksumEncoding();
 	}
 
 	/*
@@ -782,21 +782,21 @@ public class SettableJargonProperties implements JargonProperties {
 		return pamTimeToLive;
 	}
 
-	public void setPamTimeToLive(int pamTimeToLive) {
+	public void setPamTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
 	}
 
 	public void setUsingDiscoveredServerPropertiesCache(
-			boolean usingDiscoveredServerPropertiesCache) {
+			final boolean usingDiscoveredServerPropertiesCache) {
 		this.usingDiscoveredServerPropertiesCache = usingDiscoveredServerPropertiesCache;
 	}
 
 	public void setUsingSpecificQueryForCollectionListingsWithPermissions(
-			boolean usingSpecificQueryForCollectionListingsWithPermissions) {
+			final boolean usingSpecificQueryForCollectionListingsWithPermissions) {
 		this.usingSpecificQueryForCollectionListingsWithPermissions = usingSpecificQueryForCollectionListingsWithPermissions;
 	}
 
-	public void setConnectionFactory(String connectionFactory) {
+	public void setConnectionFactory(final String connectionFactory) {
 		this.connectionFactory = connectionFactory;
 	}
 
@@ -808,7 +808,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	@Override
 	public ChecksumEncoding getChecksumEncoding() {
-		return this.checksumEncoding;
+		return checksumEncoding;
 	}
 
 	/**

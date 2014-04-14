@@ -1218,7 +1218,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		log.info("toFileBasedURL()");
 		StringBuilder sb = new StringBuilder();
 		sb.append("file://");
-		sb.append(this.getAbsolutePath());
+		sb.append(getAbsolutePath());
 
 		try {
 			return new URL(sb.toString());

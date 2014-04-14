@@ -129,7 +129,7 @@ public abstract class AbstractConnection {
 		log.info("opening irods socket");
 
 		connect(irodsAccount);
-		this.setConnected(true);
+		setConnected(true);
 
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
@@ -682,7 +682,7 @@ public abstract class AbstractConnection {
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
 			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
 			log.error("********  connection is:{}, will attempt to disconnect",
-					this.connectionInternalIdentifier);
+					connectionInternalIdentifier);
 			log.error("**************************************************************************************");
 			triggerSessionCacheCleanupViaConnection();
 		}

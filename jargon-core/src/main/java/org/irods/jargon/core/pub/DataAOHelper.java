@@ -312,13 +312,14 @@ public final class DataAOHelper extends AOHelper {
 		sb.append('/');
 		sb.append(row.getColumn(2));
 		String domainUniqueName = sb.toString();
-		String attributeName = row.getColumn(3);
-		String attributeValue = row.getColumn(4);
-		String attributeUnits = row.getColumn(5);
+		int attributeId = Integer.parseInt(row.getColumn(3));
+		String attributeName = row.getColumn(4);
+		String attributeValue = row.getColumn(5);
+		String attributeUnits = row.getColumn(6);
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, domainId, domainUniqueName, attributeName,
-				attributeValue, attributeUnits);
+				MetadataDomain.DATA, domainId, domainUniqueName, attributeId,
+				attributeName, attributeValue, attributeUnits);
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
@@ -339,7 +340,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	void processNormalGetTransfer(final File localFileToHoldData,
-			final long length, final AbstractIRODSMidLevelProtocol irodsProtocol,
+			final long length,
+			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)

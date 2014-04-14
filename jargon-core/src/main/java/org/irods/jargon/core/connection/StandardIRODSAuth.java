@@ -40,7 +40,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 
 		log.info("sending standard irods password");
 
-		cachedChallenge = this.sendAuthRequestAndGetChallenge(irodsCommands);
+		cachedChallenge = sendAuthRequestAndGetChallenge(irodsCommands);
 
 		String response = challengeResponse(cachedChallenge,
 				irodsAccount.getPassword(), irodsCommands);

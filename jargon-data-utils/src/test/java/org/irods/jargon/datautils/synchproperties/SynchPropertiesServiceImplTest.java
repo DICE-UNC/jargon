@@ -82,7 +82,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -209,7 +209,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -274,7 +274,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -336,7 +336,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -399,7 +399,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -564,7 +564,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);
@@ -638,7 +638,7 @@ public class SynchPropertiesServiceImplTest {
 		List<MetaDataAndDomainData> queryResults = new ArrayList<MetaDataAndDomainData>();
 		MetaDataAndDomainData testResult = MetaDataAndDomainData.instance(
 				MetaDataAndDomainData.MetadataDomain.COLLECTION, "1",
-				testIrodsPath, userDevAttrib.toString(),
+				testIrodsPath, 1, userDevAttrib.toString(),
 				anticipatedAvuValue.toString(),
 				SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		queryResults.add(testResult);

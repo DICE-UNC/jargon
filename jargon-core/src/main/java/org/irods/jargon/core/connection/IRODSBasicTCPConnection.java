@@ -89,12 +89,12 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			throw new IllegalArgumentException("null socket");
 		}
 
-		this.connection = socket;
+		connection = socket;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
 		connected = true;
 
 		if (socket instanceof SSLSocket) {
-			this.setEncryptionType(EncryptionType.SSL_WRAPPED);
+			setEncryptionType(EncryptionType.SSL_WRAPPED);
 		}
 
 		log.debug("socket opened successfully");
