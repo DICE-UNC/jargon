@@ -1,9 +1,9 @@
 /**
  * 
  */
-package org.irods.jargon.conveyor.basic;
+package org.irods.jargon.conveyor.flowmanager.flow;
 
-import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
+import org.irods.jargon.conveyor.basic.BasicFlowManagerService;
 import org.irods.jargon.conveyor.flowmanager.flow.Selector.FlowActionEnum;
 import org.irods.jargon.transfer.dao.domain.TransferAttempt;
 import org.irods.jargon.transfer.dao.domain.TransferType;
@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * things
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class SelectorProcessor {
 

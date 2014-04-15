@@ -1,4 +1,4 @@
-package org.irods.jargon.conveyor.basic;
+package org.irods.jargon.conveyor.flowmanager.flow;
 
 import static org.junit.Assert.*;
 

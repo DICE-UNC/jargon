@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * Flow Manager service handles client-side actions and workflows
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class BasicFlowManagerService extends AbstractConveyorComponentService
 		implements FlowManagerService {
@@ -141,6 +141,8 @@ public class BasicFlowManagerService extends AbstractConveyorComponentService
 			}
 
 		}
+
+		return true;
 
 	}
 
