@@ -53,8 +53,7 @@ public class ErrorHandlerSpecification extends FlowSpecDslMicroserviceElement {
 					"error microservice must be subclass of ErrorHandlerMicroservice");
 		}
 
-		this.getFlowSpec().setErrorHandler(
-				(ErrorHandlerMicroservice) microservice);
+		this.getFlowSpec().setErrorHandler(fullyQualifiedMicroserviceClassName);
 		return this.getFlowSpec();
 
 	}

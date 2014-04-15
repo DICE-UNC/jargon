@@ -4,7 +4,6 @@
 package org.irods.jargon.conveyor.flowmanager.flow.dsl;
 
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
-import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 
 /**
  * @author mikeconway
@@ -28,9 +27,8 @@ public class PreFileChainSpecification extends FlowSpecDslMicroserviceElement {
 	public PreFileChainSpecification addPreFileMicroservice(
 			final String microserviceFullyQualifiedClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPreFileChain().add(microservice);
+		this.getFlowSpec().getPreFileChain()
+				.add(microserviceFullyQualifiedClassName);
 		return this;
 
 	}

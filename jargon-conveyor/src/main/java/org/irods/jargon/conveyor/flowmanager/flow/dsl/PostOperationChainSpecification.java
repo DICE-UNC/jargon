@@ -28,7 +28,8 @@ public class PostOperationChainSpecification extends
 
 		Microservice microservice = this
 				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPostOperationChain().add(microservice);
+		this.getFlowSpec().getPostOperationChain()
+				.add(microserviceFullyQualifiedClassName);
 		return this;
 
 	}

@@ -6,13 +6,14 @@ package org.irods.jargon.conveyor.flowmanager.flow;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.conveyor.flowmanager.microservice.ConditionMicroservice;
-import org.irods.jargon.conveyor.flowmanager.microservice.ErrorHandlerMicroservice;
-import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
-
 /**
  * Represents a specification for a single flow. This is a workflow chain
  * associated with a selector
+ * <p/>
+ * Note that the various microservices are expressed as Strings that represent
+ * the fully qualified class name, and these will be validated as the FlowSpecs
+ * are created. The microservice instances are created when each new flow runs
+ * from this information
  * 
  * @author Mike Conway - DICE
  * 
@@ -20,66 +21,112 @@ import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 public class FlowSpec {
 
 	private Selector selector = new Selector();
-	private ConditionMicroservice condition;
-	private List<Microservice> preOperationChain = new ArrayList<Microservice>();
-	private List<Microservice> preFileChain = new ArrayList<Microservice>();
-	private List<Microservice> postFileChain = new ArrayList<Microservice>();
-	private List<Microservice> postOperationChain = new ArrayList<Microservice>();
-	private ErrorHandlerMicroservice errorHandler;
+	private String condition;
+	private List<String> preOperationChain = new ArrayList<String>();
+	private List<String> preFileChain = new ArrayList<String>();
+	private List<String> postFileChain = new ArrayList<String>();
+	private List<String> postOperationChain = new ArrayList<String>();
+	private String errorHandler;
 
-	public Selector getSelector() {
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#clone()
+	 */
+	@Override
+	public synchronized FlowSpec clone() {
+		FlowSpec clone = new FlowSpec();
+		clone.setSelector(selector.clone());
+		clone.setCondition(new String(condition));
+
+		ArrayList<String> clonePreOperationChain = new ArrayList<String>(
+				preOperationChain.size());
+		for (String preop : preOperationChain) {
+			clonePreOperationChain.add(new String(preop));
+		}
+
+		ArrayList<String> clonePreFileChain = new ArrayList<String>(
+				preFileChain.size());
+		for (String preop : preFileChain) {
+			clonePreFileChain.add(new String(preop));
+		}
+
+		ArrayList<String> clonePostFileChain = new ArrayList<String>(
+				postFileChain.size());
+		for (String postop : postFileChain) {
+			clonePostFileChain.add(new String(postop));
+		}
+
+		ArrayList<String> clonePostOpChain = new ArrayList<String>(
+				postOperationChain.size());
+		for (String postop : postOperationChain) {
+			clonePostOpChain.add(new String(postop));
+		}
+
+		clone.setPostFileChain(clonePostFileChain);
+		clone.setPostOperationChain(clonePostOpChain);
+		clone.setPreFileChain(clonePreFileChain);
+		clone.setPreOperationChain(clonePreOperationChain);
+
+		clone.setErrorHandler(new String(errorHandler));
+		return clone;
+
+	}
+
+	public synchronized Selector getSelector() {
 		return selector;
 	}
 
-	public void setSelector(Selector selector) {
+	public synchronized void setSelector(Selector selector) {
 		this.selector = selector;
 	}
 
-	public ConditionMicroservice getCondition() {
+	public synchronized String getCondition() {
 		return condition;
 	}
 
-	public void setCondition(ConditionMicroservice condition) {
+	public synchronized void setCondition(String condition) {
 		this.condition = condition;
 	}
 
-	public List<Microservice> getPreOperationChain() {
+	public synchronized List<String> getPreOperationChain() {
 		return preOperationChain;
 	}
 
-	public void setPreOperationChain(List<Microservice> preOperationChain) {
+	public synchronized void setPreOperationChain(List<String> preOperationChain) {
 		this.preOperationChain = preOperationChain;
 	}
 
-	public List<Microservice> getPreFileChain() {
+	public synchronized List<String> getPreFileChain() {
 		return preFileChain;
 	}
 
-	public void setPreFileChain(List<Microservice> preFileChain) {
+	public synchronized void setPreFileChain(List<String> preFileChain) {
 		this.preFileChain = preFileChain;
 	}
 
-	public List<Microservice> getPostFileChain() {
+	public synchronized List<String> getPostFileChain() {
 		return postFileChain;
 	}
 
-	public void setPostFileChain(List<Microservice> postFileChain) {
+	public synchronized void setPostFileChain(List<String> postFileChain) {
 		this.postFileChain = postFileChain;
 	}
 
-	public List<Microservice> getPostOperationChain() {
+	public synchronized List<String> getPostOperationChain() {
 		return postOperationChain;
 	}
 
-	public void setPostOperationChain(List<Microservice> postOperationChain) {
+	public synchronized void setPostOperationChain(
+			List<String> postOperationChain) {
 		this.postOperationChain = postOperationChain;
 	}
 
-	public ErrorHandlerMicroservice getErrorHandler() {
+	public synchronized String getErrorHandler() {
 		return errorHandler;
 	}
 
-	public void setErrorHandler(ErrorHandlerMicroservice errorHandler) {
+	public synchronized void setErrorHandler(String errorHandler) {
 		this.errorHandler = errorHandler;
 	}
 

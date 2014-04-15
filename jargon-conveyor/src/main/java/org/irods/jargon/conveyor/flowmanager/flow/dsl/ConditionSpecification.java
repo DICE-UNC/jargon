@@ -42,7 +42,7 @@ public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 					"condition microservice must be subclass of ConditionMicroservice");
 		}
 
-		this.getFlowSpec().setCondition((ConditionMicroservice) microservice);
+		this.getFlowSpec().setCondition(fullyQualifiedMicroserviceClassName);
 		return new PreOperationChainSpecification(this.getFlowSpec());
 
 	}

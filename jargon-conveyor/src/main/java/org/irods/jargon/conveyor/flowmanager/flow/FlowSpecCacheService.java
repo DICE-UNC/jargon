@@ -63,6 +63,8 @@ public class FlowSpecCacheService {
 			log.warn("No flows configured");
 		}
 
+		this.flowSpecs = Collections.unmodifiableList(this.flowSpecs);
+
 	}
 
 	/**
@@ -180,6 +182,22 @@ public class FlowSpecCacheService {
 
 		this.flowSourceLocalAbsolutePaths = Collections
 				.unmodifiableList(flowSourceLocalAbsolutePaths);
+	}
+
+	/**
+	 * Get the current set of flow specs. Note that this is an unmodifiable list
+	 * of clones, so they are thread safe once obtained.
+	 * 
+	 * @return
+	 */
+	public synchronized List<FlowSpec> getFlowSpecs() {
+		List<FlowSpec> clonedFlowSpecs = new ArrayList<FlowSpec>();
+
+		for (FlowSpec flowSpec : flowSpecs) {
+			clonedFlowSpecs.add(flowSpec.clone());
+		}
+
+		return Collections.unmodifiableList(clonedFlowSpecs);
 	}
 
 }

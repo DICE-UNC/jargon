@@ -31,7 +31,8 @@ public class PreOperationChainSpecification extends
 
 		Microservice microservice = this
 				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPreOperationChain().add(microservice);
+		this.getFlowSpec().getPreOperationChain()
+				.add(microserviceFullyQualifiedClassName);
 		return this;
 
 	}

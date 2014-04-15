@@ -21,10 +21,19 @@ public class Selector {
 	private String zoneSelector;
 	private FlowActionEnum flowActionEnum;
 
+	@Override
+	public synchronized Selector clone() {
+		Selector clone = new Selector();
+		clone.setFlowActionEnum(flowActionEnum);
+		clone.setHostSelector(new String(hostSelector));
+		clone.setZoneSelector(new String(zoneSelector));
+		return clone;
+	}
+
 	/**
 	 * @return the hostSelector
 	 */
-	public String getHostSelector() {
+	public synchronized String getHostSelector() {
 		return hostSelector;
 	}
 
@@ -32,14 +41,14 @@ public class Selector {
 	 * @param hostSelector
 	 *            the hostSelector to set
 	 */
-	public void setHostSelector(String hostSelector) {
+	public synchronized void setHostSelector(String hostSelector) {
 		this.hostSelector = hostSelector;
 	}
 
 	/**
 	 * @return the zoneSelector
 	 */
-	public String getZoneSelector() {
+	public synchronized String getZoneSelector() {
 		return zoneSelector;
 	}
 
@@ -47,14 +56,14 @@ public class Selector {
 	 * @param zoneSelector
 	 *            the zoneSelector to set
 	 */
-	public void setZoneSelector(String zoneSelector) {
+	public synchronized void setZoneSelector(String zoneSelector) {
 		this.zoneSelector = zoneSelector;
 	}
 
 	/**
 	 * @return the transferTypeSelector
 	 */
-	public FlowActionEnum getFlowActionEnum() {
+	public synchronized FlowActionEnum getFlowActionEnum() {
 		return flowActionEnum;
 	}
 
@@ -62,7 +71,7 @@ public class Selector {
 	 * @param transferTypeSelector
 	 *            the transferTypeSelector to set
 	 */
-	public void setFlowActionEnum(FlowActionEnum flowActionEnum) {
+	public synchronized void setFlowActionEnum(FlowActionEnum flowActionEnum) {
 		this.flowActionEnum = flowActionEnum;
 	}
 

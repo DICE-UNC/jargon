@@ -32,7 +32,8 @@ public class PostFileChainSpecification extends FlowSpecDslMicroserviceElement {
 
 		Microservice microservice = this
 				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPostFileChain().add(microservice);
+		this.getFlowSpec().getPostFileChain()
+				.add(microserviceFullyQualifiedClassName);
 		return this;
 
 	}

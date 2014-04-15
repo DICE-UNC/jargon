@@ -42,10 +42,8 @@ public class FlowProcessor {
 
 	public void init() throws FlowManagerException {
 		log.info("doing init() processing");
-		
-		for (conveyorCallable.getConveyorService().getFlowManagerService().)
-		
-		
+
+		// for (conveyorCallable.getConveyorService().getFlowManagerService().)
 
 	}
 }
