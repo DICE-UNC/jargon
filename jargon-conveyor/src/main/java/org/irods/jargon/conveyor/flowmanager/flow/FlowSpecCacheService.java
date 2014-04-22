@@ -26,12 +26,16 @@ import org.slf4j.LoggerFactory;
  * on each discovered specification
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowSpecCacheService {
 
 	private List<String> flowSourceLocalAbsolutePaths = new ArrayList<String>();
 	private List<FlowSpec> flowSpecs = new ArrayList<FlowSpec>();
+	/**
+	 * Dependency on delimiter, defaults to a , (comma) if not set explicitly
+	 */
+	private final String delimiter = ",";
 
 	private static final Logger log = LoggerFactory
 			.getLogger(FlowSpecCacheService.class);
@@ -165,6 +169,32 @@ public class FlowSpecCacheService {
 	}
 
 	/**
+	 * Alternative setter for dependency on a list of paths, allowing a
+	 * delimited string that represents the list of paths, separated by the
+	 * given delimiter value;
+	 * 
+	 * @param paths
+	 * @param delimiter
+	 */
+	public synchronized void setFlowSourceLocalAbsolutePathsAsDelimitedString(
+			final String paths) {
+		log.info("setFLowSourceLocalAbsolutePathsAsDelimitedString()");
+
+		if (paths == null || paths.isEmpty()) {
+			throw new IllegalArgumentException("null or empty paths");
+		}
+
+		String[] splitPaths = paths.split(delimiter);
+		List<String> pathsList = new ArrayList<String>();
+		for (String path : splitPaths) {
+			pathsList.add(path);
+		}
+
+		setFlowSourceLocalAbsolutePaths(pathsList);
+
+	}
+
+	/**
 	 * Setter for injecting the list of local absolute paths to scan for .groovy
 	 * files that are flow specs.
 	 * <p/>
@@ -198,6 +228,13 @@ public class FlowSpecCacheService {
 		}
 
 		return Collections.unmodifiableList(clonedFlowSpecs);
+	}
+
+	/**
+	 * @return the delimiter
+	 */
+	public synchronized String getDelimiter() {
+		return delimiter;
 	}
 
 }

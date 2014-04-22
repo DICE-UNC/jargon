@@ -445,6 +445,7 @@ public class BasicSynchronizationServiceImplTest {
 
 		Assert.assertNotNull("did not persist", synchronization.getId());
 
+		System.out.println("triggering");
 		conveyorService.getSynchronizationManagerService()
 				.triggerSynchronizationNow(synchronization);
 

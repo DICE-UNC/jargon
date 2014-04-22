@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
+import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.FlowManagerService;
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpecCacheService;
@@ -23,11 +23,15 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  * 
  */
-public class BasicFlowManagerService extends AbstractConveyorComponentService
-		implements FlowManagerService {
+public class BasicFlowManagerService implements FlowManagerService {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicFlowManagerService.class);
+
+	/**
+	 * Required dependency on conveyor service
+	 */
+	private ConveyorService conveyorService;
 
 	/**
 	 * Required dependency on a service to extract a cache of {@link FlowSpec}
@@ -38,7 +42,7 @@ public class BasicFlowManagerService extends AbstractConveyorComponentService
 	/*
 	 * eventually this could be injectable, right now it's just a simple deal
 	 */
-	private SelectorProcessor selectorProcessor = new SelectorProcessor();
+	private final SelectorProcessor selectorProcessor = new SelectorProcessor();
 
 	/*
 	 * (non-Javadoc)
@@ -88,5 +92,20 @@ public class BasicFlowManagerService extends AbstractConveyorComponentService
 
 		return Collections.unmodifiableList(candidateFlowSpecs);
 
+	}
+
+	/**
+	 * @return the conveyorService
+	 */
+	public ConveyorService getConveyorService() {
+		return conveyorService;
+	}
+
+	/**
+	 * @param conveyorService
+	 *            the conveyorService to set
+	 */
+	public void setConveyorService(ConveyorService conveyorService) {
+		this.conveyorService = conveyorService;
 	}
 }
