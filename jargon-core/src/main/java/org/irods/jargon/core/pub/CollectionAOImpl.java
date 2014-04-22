@@ -352,7 +352,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS);
+							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_ID);
 
 			if (!collectionAbsolutePath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
@@ -542,8 +544,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.debug("metadata added");
 
 	}
-	
-	
 
 	/*
 	 * (non-Javadoc)
@@ -589,34 +589,36 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.debug("metadata removed");
 	}
-	
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionAO#deleteAllAVUMetadata(java.lang.String)
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#deleteAllAVUMetadata(java.lang
+	 * .String)
 	 */
 	@Override
-	public void deleteAllAVUMetadata(final String absolutePath) throws DataNotFoundException,
-			JargonException {
-		
+	public void deleteAllAVUMetadata(final String absolutePath)
+			throws DataNotFoundException, JargonException {
+
 		log.info("deleteAllAVUMetadata");
-		
+
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-
 
 		log.info("absolute path: {}", absolutePath);
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("absolute path: {}", absolutePath);
-		
+
 		ObjStat objStat;
 		try {
 			objStat = this.retrieveObjStat(absolutePath);
 		} catch (FileNotFoundException e) {
 			throw new DataNotFoundException(e);
 		}
-		
+
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
 					"objStat indicates collection type that does not support this operation:{}",
@@ -630,14 +632,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (JargonQueryException e) {
 			throw new JargonException(e);
 		}
-		
+
 		List<AvuData> avusToDelete = new ArrayList<AvuData>();
-		
+
 		for (MetaDataAndDomainData metadata : metadatas) {
-			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
+			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(),
+					metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
-		
-		this.deleteBulkAVUMetadataFromCollection(absolutePath, avusToDelete);
+
+		deleteBulkAVUMetadataFromCollection(absolutePath, avusToDelete);
 		log.debug("metadata removed");
 	}
 
@@ -700,7 +703,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				avuData.getValue(), result.get(0).getAvuUnit());
 		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
-	}
+	} 
 
 	/*
 	 * (non-Javadoc)
@@ -786,35 +789,71 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
-		return findMetadataValuesForCollection(objStat, partialStartIndex);	
-		
-	}
-	
-	
-	private List<MetaDataAndDomainData> findMetadataValuesForCollection(
-			final ObjStat objStat, final int partialStartIndex)
-			throws FileNotFoundException, JargonException, JargonQueryException {
+		return findMetadataValuesForCollection(objStat, partialStartIndex);
 
-		if (objStat == null) {
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAO#
+	 * findMetadataValueForCollectionByMetadataId(java.lang.String, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForCollectionByMetadataId(
+			final String collectionAbsolutePath, final int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException {
+
+		log.info("findMetadataValueForCollectionByMetadataId()");
+
+		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
-					"null or empty objStat");
+					"null or empty collectionAbsolutePath");
 		}
 
-		if (partialStartIndex < 0) {
-			throw new IllegalArgumentException(
-					"partialStartIndex must be 0 or greater, set to 0 if no offset desired");
+		if (id < 0) {
+			throw new IllegalArgumentException("id must be 0 or greater");
 		}
 
 		log.info("find metadata values for collection:{}",
-				objStat);
-		log.info("with partial start of:{}", partialStartIndex);
+				collectionAbsolutePath);
+		log.info("with id:{}", id);
 
-		
+		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
+
+		ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
+		return findMetadataValueForCollectionById(objStat, id);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValueForCollectionById
+	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForCollectionById(
+			final ObjStat objStat, final int id) throws DataNotFoundException,
+			JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null or empty objStat");
+		}
+
+		if (id < 0) {
+			throw new IllegalArgumentException("id must be 0 or greater");
+		}
+
+		log.info("find metadata values for collection:{}", objStat);
+		log.info("with id of:{}", id);
+
 		String absPath;
-		
-			absPath = MiscIRODSUtils
-					.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		
+
+		absPath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
@@ -830,6 +869,75 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_ID)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL, absPath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_ID,
+							QueryConditionOperators.EQUAL, id);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(absPath));
+
+			return AccessObjectQueryProcessingUtils
+					.buildMetaDataAndDomainDataFromResultSetRow(
+							MetaDataAndDomainData.MetadataDomain.COLLECTION,
+							resultSet.getFirstResult(), 1);
+
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
+		}
+
+	}
+
+	private List<MetaDataAndDomainData> findMetadataValuesForCollection(
+			final ObjStat objStat, final int partialStartIndex)
+			throws FileNotFoundException, JargonException, JargonQueryException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null or empty objStat");
+		}
+
+		if (partialStartIndex < 0) {
+			throw new IllegalArgumentException(
+					"partialStartIndex must be 0 or greater, set to 0 if no offset desired");
+		}
+
+		log.info("find metadata values for collection:{}", objStat);
+		log.info("with partial start of:{}", partialStartIndex);
+
+		String absPath;
+
+		absPath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+
+		log.info("absPath for querying iCAT:{}", absPath);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_COLL_ATTR_ID)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL, absPath);

@@ -201,7 +201,7 @@ public class IRODSErrorScanner {
 		case PAM_AUTH_ERROR:
 			throw new AuthenticationException("PAM authentication error");
 		case INVALID_INPUT_PARAM:
-				throw new InvalidInputParameterException("Invalid input parameter");
+			throw new InvalidInputParameterException("Invalid input parameter");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

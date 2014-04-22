@@ -2106,6 +2106,63 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+	public final void testFindMetadataValuesForDataObjectById()
+			throws Exception {
+		String testFileName = "testFindMetadataValuesForDataObjectById.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1";
+		String expectedAttribValue = "testmdvalue1";
+		String expectedAttribUnits = "test1mdunits";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		MetaDataAndDomainData expected = result.get(0);
+
+		MetaDataAndDomainData actual = dataObjectAO
+				.findMetadataValueForDataObjectById(targetIrodsCollection + "/"
+						+ testFileName, expected.getAvuId());
+		Assert.assertEquals("did not find avu", expected.getAvuAttribute(),
+				actual.getAvuAttribute());
+
+	}
+
+	@Test
 	public final void testFindMetadataValuesForDataObject() throws Exception {
 		String testFileName = "testFindMetadataValuesForDataObject.dat";
 		String absPath = scratchFileUtils
@@ -5327,7 +5384,6 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testListReplicationsForFileInResGroup() throws Exception {
-		
 
 		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
 			return;
@@ -5530,7 +5586,6 @@ public class DataObjectAOImplTest {
 
 	@Test
 	public final void testCountReplicationsForFileInResGroup() throws Exception {
-		
 
 		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
 			return;

@@ -342,6 +342,11 @@ public class Tag implements Cloneable {
 	}
 
 	@Override
+	public int hashCode() {
+		return getName().hashCode() + getValue().hashCode();
+	}
+
+	@Override
 	public String toString() {
 		return tagName;
 	}
