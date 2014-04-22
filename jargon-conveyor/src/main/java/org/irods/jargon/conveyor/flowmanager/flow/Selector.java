@@ -17,9 +17,9 @@ public class Selector {
 
 	public static final String ANY = "*";
 
-	private String hostSelector;
-	private String zoneSelector;
-	private FlowActionEnum flowActionEnum;
+	private String hostSelector = ANY;
+	private String zoneSelector = ANY;
+	private FlowActionEnum flowActionEnum = FlowActionEnum.ANY;
 
 	@Override
 	public synchronized Selector clone() {

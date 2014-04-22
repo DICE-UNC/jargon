@@ -13,6 +13,7 @@ import org.junit.Test;
 
 public class FlowSpecCacheServiceTest {
 	private static Properties testingProperties = new Properties();
+	@SuppressWarnings("unused")
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "FlowSpecCacheServiceTest";
