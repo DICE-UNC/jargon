@@ -14,9 +14,19 @@ package org.irods.jargon.vircoll;
  *
  */
 public abstract class AbstractVirtualCollection {
+	
+	/**
+	 * The style of paging for this collection
+	 * @author Mike Conway - DICE
+	 *
+	 */
+	public enum PagingStyle { NONE, MIXED, SPLIT_COLLECTIONS_AND_FILES }
 
 	public static final String DEFAULT_ICON_KEY = "virtual.collection.default.icon";
 
+	private PagingStyle pagingStyle = PagingStyle.MIXED;
+	
+	
 	/**
 	 * Unique name for this virtual collection
 	 */
@@ -95,5 +105,14 @@ public abstract class AbstractVirtualCollection {
 	public void setI18icon(final String i18icon) {
 		this.i18icon = i18icon;
 	}
+	
+	public PagingStyle getPagingStyle() {
+		return pagingStyle;
+	}
+
+	public void setPagingStyle(PagingStyle pagingStyle) {
+		this.pagingStyle = pagingStyle;
+	}
+
 
 }

@@ -28,5 +28,7 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 		setI18icon(ICON_KEY);
 		setI18Description(DESCRIPTION_KEY);
 		setI18Name(NAME_KEY);
+		setPagingStyle(PagingStyle.MIXED);
+
 	}
 }

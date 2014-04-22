@@ -44,6 +44,7 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 		setName(rootPath);
 		setDescription(DESCRIPTION);
 		setI18icon(DEFAULT_ICON_KEY);
+		setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
 
 	}
 
