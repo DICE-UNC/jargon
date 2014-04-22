@@ -11,6 +11,7 @@ import org.irods.jargon.conveyor.basic.TransferAccountingManagementServiceImplTe
 import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImplFunctionalTest;
 import org.irods.jargon.conveyor.core.ConveyorExecutorServiceImplTest;
 import org.irods.jargon.conveyor.core.ConveyorQueueTimerTaskTest;
+import org.irods.jargon.conveyor.core.callables.PutConveyorCallableFlowSpecTest;
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpecCacheServiceTest;
 import org.irods.jargon.conveyor.flowmanager.flow.SelectorProcessorTest;
 import org.irods.jargon.conveyor.flowmanager.flow.dsl.FlowTest;
@@ -42,7 +43,8 @@ ConfigurationPropertyDAOTest.class, GridAccountDAOImplTest.class,
 		BasicSynchronizationServiceImplTest.class,
 		DefaultSynchComponentFactoryTest.class, DefaultDiffCreatorTest.class,
 		FlowTest.class, FlowSpecCacheServiceTest.class,
-		SelectorProcessorTest.class, BasicFlowManagerServiceTest.class })
+		SelectorProcessorTest.class, BasicFlowManagerServiceTest.class,
+		PutConveyorCallableFlowSpecTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

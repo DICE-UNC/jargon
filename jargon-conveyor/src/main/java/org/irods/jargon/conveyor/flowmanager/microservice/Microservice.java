@@ -23,7 +23,7 @@ public class Microservice {
 	 * 
 	 */
 	public enum ExecResult {
-		CONTINUE, SKIP_THIS_CHAIN, END_ALL_CHAINS_NORMALLY, ABORT_AND_TRIGGER_ANY_ERROR_HANDLER
+		CONTINUE, SKIP_THIS_CHAIN, TERMINATE_FLOW, ABORT_AND_TRIGGER_ANY_ERROR_HANDLER, TERMINATE_FLOW_FAIL_PRECONDITION
 	}
 
 	/**
@@ -113,6 +113,52 @@ public class Microservice {
 	 */
 	public void setInvocationContext(InvocationContext invocationContext) {
 		this.invocationContext = invocationContext;
+	}
+
+	/**
+	 * Handy method that will evaluate whether the microservice has been
+	 * correctly provisioned. This is validated when the flow manager executes a
+	 * microservice as a nice sanity check.
+	 */
+	public void evaluateContext() {
+		if (this.getContainerEnvironment() == null) {
+			throw new IllegalStateException("null container environment");
+		}
+
+		if (this.getContainerEnvironment().getConveyorService() == null) {
+			throw new IllegalStateException(
+					"null conveyor service in container environment");
+		}
+
+		if (this.getContainerEnvironment().getGlobalConfigurationProperties() == null) {
+			throw new IllegalStateException(
+					"null globalConfigurationProperties in container environment");
+		}
+
+		if (this.getInvocationContext() == null) {
+			throw new IllegalStateException("null invocation context");
+		}
+
+		if (this.getInvocationContext().getIrodsAccount() == null) {
+			throw new IllegalStateException(
+					"null irodsAccount in invocation context");
+		}
+
+		if (this.getInvocationContext().getSharedProperties() == null) {
+			throw new IllegalStateException(
+					"null shared properties in invocation context");
+		}
+
+		if (this.getInvocationContext().getTransferAttempt() == null) {
+			throw new IllegalStateException(
+					"null transferAttempt in invocation context");
+		}
+
+		if (this.getInvocationContext().getTransferControlBlock() == null) {
+			throw new IllegalStateException(
+					"null transferControlBlock in invocation context");
+		}
+
 	}
 
 }

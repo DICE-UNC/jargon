@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
@@ -10,6 +11,8 @@ import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.conveyor.core.FlowManagerService;
+import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -46,8 +49,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
- @Transactional(noRollbackFor = { JargonException.class }, rollbackFor = {
- ConveyorExecutionException.class })
+@Transactional(noRollbackFor = { JargonException.class }, rollbackFor = { ConveyorExecutionException.class })
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
@@ -55,9 +57,13 @@ public abstract class AbstractConveyorCallable implements
 	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 	private TransferControlBlock transferControlBlock;
+	private FlowCoProcessor flowCoProcessor;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractConveyorCallable.class);
+
+	private List<FlowSpec> candidateFlowSpecs = null;
+	private FlowSpec selectedFlowSpec = null;
 
 	/**
 	 * Convenience method to get a <code>IRODSAccount</code> with a decrypted
@@ -109,6 +115,7 @@ public abstract class AbstractConveyorCallable implements
 
 		this.transferAttempt = transferAttempt;
 		this.conveyorService = conveyorService;
+
 	}
 
 	/**
@@ -192,6 +199,12 @@ public abstract class AbstractConveyorCallable implements
 			 * the jargon transfer processes, and are not caught below.
 			 */
 
+			retrieveCandidateFlowSpecs();
+			/*
+			 * initialize the flow co processor. This is done here to avoid
+			 * leaking a this ref from the constructor
+			 */
+			flowCoProcessor = new FlowCoProcessor(this);
 			processCallForThisTransfer(transferControlBlock, irodsAccount);
 			return new ConveyorExecutionFuture();
 		} catch (JargonException je) {
@@ -390,7 +403,10 @@ public abstract class AbstractConveyorCallable implements
 				transferStatus);
 		boolean doComplete = false;
 		try {
-			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
+			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_INITIATION) {
+				// potentially handle any pre proc for operation flow specs
+				handleOverallInitiation(transferStatus);
+			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 				log.info("overall completion...updating status of transfer...");
 				doComplete = true;
 				processOverallCompletionOfTransfer(transferStatus);
@@ -425,6 +441,33 @@ public abstract class AbstractConveyorCallable implements
 
 		}
 
+	}
+
+	/**
+	 * Handle an overall initiation of a transfer operation, signaling any
+	 * flows, etc
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void handleOverallInitiation(TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		log.info("handleOverallInitiation()");
+		if (this.getCandidateFlowSpecs().isEmpty()) {
+			log.info("No flows to inspect");
+			return;
+		}
+
+		// need to loop thru and run a condition on candidate flows
+
+		for (FlowSpec flowSpec : this.candidateFlowSpecs) {
+			boolean runFlow = flowCoProcessor.evaluateCondition(flowSpec);
+			if (runFlow) {
+				log.info("found a flow:{}", runFlow);
+				this.selectedFlowSpec = flowSpec;
+			}
+
+		}
 	}
 
 	@Override
@@ -537,7 +580,7 @@ public abstract class AbstractConveyorCallable implements
 				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
 						getTransferAttempt());
 	}
- 
+
 	/**
 	 * A complete with success callback for an entire transfer operation, make
 	 * the necessary updates
@@ -680,6 +723,60 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	protected Transfer getTransfer() {
 		return getTransferAttempt().getTransfer();
+	}
+
+	/**
+	 * On initiation of a transfer, get any candidate flow specs, selected based
+	 * on properties of the transfer. These will later be evaluated based on
+	 * conditions within the <code>FlowSpec</code>
+	 * 
+	 * @return <code>List</code> of {@link FlowSpec} that are candidates for
+	 *         this transfer attempt. This reflects the flow specs that are
+	 *         cached for this instance
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	private List<FlowSpec> retrieveCandidateFlowSpecs()
+			throws ConveyorExecutionException {
+		log.info("retrieveCandidateFlowSpecs()");
+
+		FlowManagerService flowManagerService = this.conveyorService
+				.getFlowManagerService();
+
+		this.candidateFlowSpecs = flowManagerService
+				.retrieveCandidateFlowSpecs(getTransferAttempt());
+
+		return candidateFlowSpecs;
+
+	}
+
+	/**
+	 * @return the candidateFlowSpecs that are cached, and this will cache them
+	 *         if they have not been obtained already
+	 * @throws ConveyorExecutionException
+	 */
+	protected synchronized List<FlowSpec> getCandidateFlowSpecs()
+			throws ConveyorExecutionException {
+		if (this.candidateFlowSpecs == null) {
+			retrieveCandidateFlowSpecs();
+		}
+		return candidateFlowSpecs;
+	}
+
+	/**
+	 * @param candidateFlowSpecs
+	 *            the candidateFlowSpecs to set
+	 */
+	protected synchronized void setCandidateFlowSpecs(
+			List<FlowSpec> candidateFlowSpecs) {
+		this.candidateFlowSpecs = candidateFlowSpecs;
+	}
+
+	/**
+	 * @return the selectedFlowSpec
+	 */
+	protected FlowSpec getSelectedFlowSpec() {
+		return selectedFlowSpec;
 	}
 
 }
