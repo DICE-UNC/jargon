@@ -13,6 +13,7 @@ import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
 import org.irods.jargon.conveyor.core.FlowManagerService;
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
+import org.irods.jargon.conveyor.flowmanager.microservice.Microservice.ExecResult;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -53,7 +54,6 @@ import org.springframework.transaction.annotation.Transactional;
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
-	// private final Transfer transfer;
 	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 	private TransferControlBlock transferControlBlock;
@@ -466,8 +466,19 @@ public abstract class AbstractConveyorCallable implements
 				log.info("found a flow:{}", runFlow);
 				this.selectedFlowSpec = flowSpec;
 			}
-
 		}
+
+		/*
+		 * If I have a flow spec, run the pre op chain, which will be normal,
+		 * will cause a cancellation, or may abort with an error
+		 */
+		if (this.selectedFlowSpec != null) {
+			log.info("have a flow spec, run any pre flow chain");
+			ExecResult overallResult = this.flowCoProcessor
+					.executePreOperationChain(selectedFlowSpec);
+			log.info("overall result of pre-flow chain is:{}", overallResult);
+		}
+
 	}
 
 	@Override
@@ -533,9 +544,7 @@ public abstract class AbstractConveyorCallable implements
 		} finally {
 			log.info("aftar all possible error handling and notification, I am releasing the queue");
 			doCompletionSequence();
-
 		}
-
 	}
 
 	/**

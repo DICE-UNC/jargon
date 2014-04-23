@@ -28,6 +28,9 @@ class FlowCoProcessor {
 	private final ContainerEnvironment containerEnvironment = new ContainerEnvironment();
 	private final InvocationContext invocationContext = new InvocationContext();
 
+	private static final Logger log = LoggerFactory
+			.getLogger(FlowCoProcessor.class);
+
 	/**
 	 * Constructor for co processor takes the sister
 	 * <code>AbstractConveyorCallable</code> that will be doing operations on
@@ -55,8 +58,89 @@ class FlowCoProcessor {
 
 	}
 
-	private static final Logger log = LoggerFactory
-			.getLogger(FlowCoProcessor.class);
+	/**
+	 * Run the pre-op chain. This can result in (based on the responses from the
+	 * microservices in ExecResult) a cancellation, or an abort of the transfer
+	 * with an error
+	 * 
+	 * @param flowSpec
+	 *            {@link FlowSpec} that was selected
+	 * @return {@link ExecResult} from the microservices
+	 * @throws ConveyorExecutionException
+	 */
+	ExecResult executePreOperationChain(final FlowSpec flowSpec)
+			throws ConveyorExecutionException {
+
+		log.info("executePreOperationChain()");
+
+		if (flowSpec == null) {
+			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		Microservice microservice;
+		ExecResult overallExecResult = ExecResult.CONTINUE;
+		for (String microserviceFqcn : flowSpec.getPreOperationChain()) {
+
+			log.info("pre-op chain microservice:{}", microserviceFqcn);
+			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
+			log.info("invoking next in chain...");
+			try {
+				overallExecResult = microservice.execute();
+			} catch (MicroserviceException e) {
+				/*
+				 * Errors that occur are treated as system or program erros, not
+				 * as recoverable errors that should be reflected in the
+				 * ExecResult
+				 */
+				log.error("error ocurred running a microservice", e);
+				throw new ConveyorExecutionException(
+						"error running microservice", e);
+			}
+
+			if (overallExecResult == ExecResult.CANCEL_OPERATION) {
+				log.info("transfer is being cancelled");
+				callable.getTransferControlBlock().setCancelled(true);
+				break;
+			} else if (overallExecResult == ExecResult.SKIP_THIS_CHAIN) {
+				log.info("skipping rest of chain");
+				break;
+			} else if (overallExecResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+				log.error("abort of operation by execResult of microservice");
+				executeAnyFailureMicroservice(flowSpec);
+				throw new ConveyorExecutionException(
+						"Aborting operation through failure of microservice");
+			} else if (overallExecResult != ExecResult.CONTINUE) {
+				log.error("unexpected exec result for a preop chain:{}",
+						overallExecResult);
+				throw new ConveyorExecutionException("unexpected exec result");
+			}
+		}
+
+		return overallExecResult;
+
+	}
+
+	private void executeAnyFailureMicroservice(FlowSpec flowSpec) {
+
+		log.error("failure stuff no implemented yet");
+		throw new UnsupportedOperationException("implement me!!! please?");
+
+	}
+
+	/**
+	 * Create a microservice from a fully qualified class name and provision it
+	 * with the various context objects
+	 * 
+	 * @param microserviceFqcn
+	 * @return
+	 */
+	private Microservice createAndProvisionChainMicroservice(
+			String microserviceFqcn) {
+		Microservice microservice = this
+				.createMicroserviceInstance(microserviceFqcn);
+		this.provisionMicroservice(microservice);
+		return microservice;
+	}
 
 	/**
 	 * Given a flow, execute any condition microservice and decide whether to
