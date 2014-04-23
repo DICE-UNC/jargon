@@ -21,10 +21,24 @@ import java.util.List;
  */
 public class PagingAwareCollectionListing {
 
+	public enum PagingStyle {
+		NONE, MIXED, SPLIT_COLLECTIONS_AND_FILES
+	}
+
 	/**
-	 * Offset into collections represented by the results
+	 * Represents the paging style supported by the underlying source of the
+	 * listing. For example, the iRODS iCAT treats collections and data objects
+	 * as separate entities with a paging status for each type, while other
+	 * listings might have a single source.
 	 */
-	private int collectionsOffset = 0;
+	private PagingStyle pagingStyle = PagingStyle.MIXED;
+
+	/**
+	 * Offset into collections represented by the results, if the mode is mixed
+	 * (collections and data objects together, this is just the offset into the
+	 * whole mess
+	 */
+	private int offset = 0;
 
 	/**
 	 * Offset into data objects represented by the results
@@ -32,15 +46,16 @@ public class PagingAwareCollectionListing {
 	private int dataObjectsOffset = 0;
 
 	/**
-	 * Count of collections in results, will be 0 if no collections
+	 * In split mode, Count of collections in results, will be 0 if no
+	 * collections. In mixed mode, the total count in results.
 	 */
-	private int collectionsCount = 0;
+	private int count = 0;
 
 	/**
 	 * Total records available in the catalog (may not be available on all
 	 * databases)
 	 */
-	private int collectionsTotalRecords = 0;
+	private int totalRecords = 0;
 
 	/**
 	 * Count of files in results, will be 0 if no files
@@ -88,11 +103,11 @@ public class PagingAwareCollectionListing {
 		StringBuilder sb = new StringBuilder();
 		sb.append("PagingAwareCollectionListing");
 		sb.append("\n\tcollectionOffset:");
-		sb.append(collectionsOffset);
+		sb.append(offset);
 		sb.append("\n\tcollectionsCount:");
-		sb.append(collectionsCount);
+		sb.append(count);
 		sb.append("\n\tcollectionsTotalRecords:");
-		sb.append(collectionsTotalRecords);
+		sb.append(totalRecords);
 		sb.append("\n\tcollectionsComplete:");
 		sb.append(collectionsComplete);
 		sb.append("\n\tdataObjectsOffset:");
@@ -114,12 +129,12 @@ public class PagingAwareCollectionListing {
 	public PagingAwareCollectionListing() {
 	}
 
-	public int getCollectionsOffset() {
-		return collectionsOffset;
+	public int getOffset() {
+		return offset;
 	}
 
-	public void setCollectionsOffset(final int collectionsOffset) {
-		this.collectionsOffset = collectionsOffset;
+	public void setOffset(final int offset) {
+		this.offset = offset;
 	}
 
 	public int getDataObjectsOffset() {
@@ -130,12 +145,12 @@ public class PagingAwareCollectionListing {
 		this.dataObjectsOffset = dataObjectsOffset;
 	}
 
-	public int getCollectionsCount() {
-		return collectionsCount;
+	public int getCount() {
+		return count;
 	}
 
-	public void setCollectionsCount(final int collectionsCount) {
-		this.collectionsCount = collectionsCount;
+	public void setCount(final int count) {
+		this.count = count;
 	}
 
 	public int getDataObjectsCount() {
@@ -179,12 +194,12 @@ public class PagingAwareCollectionListing {
 		this.collectionAndDataObjectListingEntries = collectionAndDataObjectListingEntries;
 	}
 
-	public int getCollectionsTotalRecords() {
-		return collectionsTotalRecords;
+	public int getTotalRecords() {
+		return totalRecords;
 	}
 
-	public void setCollectionsTotalRecords(final int collectionsTotalRecords) {
-		this.collectionsTotalRecords = collectionsTotalRecords;
+	public void setTotalRecords(final int totalRecords) {
+		this.totalRecords = totalRecords;
 	}
 
 	public int getDataObjectsTotalRecords() {
@@ -193,6 +208,14 @@ public class PagingAwareCollectionListing {
 
 	public void setDataObjectsTotalRecords(final int dataObjectsTotalRecords) {
 		this.dataObjectsTotalRecords = dataObjectsTotalRecords;
+	}
+
+	public void setPagingStyle(PagingStyle pagingStyle) {
+		this.pagingStyle = pagingStyle;
+	}
+
+	public PagingStyle getPagingStyle() {
+		return pagingStyle;
 	}
 
 }

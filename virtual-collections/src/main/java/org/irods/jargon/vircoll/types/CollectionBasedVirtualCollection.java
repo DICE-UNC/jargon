@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.vircoll.types;
 
+import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
 import org.irods.jargon.vircoll.AbstractVirtualCollection;
 
 /**

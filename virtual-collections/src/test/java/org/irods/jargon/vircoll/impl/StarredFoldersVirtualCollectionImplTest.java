@@ -6,9 +6,12 @@ import java.util.List;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
@@ -29,6 +32,10 @@ public class StarredFoldersVirtualCollectionImplTest {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
+		JargonProperties jargonProperties = new SettableJargonProperties();
+		Mockito.when(irodsAccessObjectFactory.getJargonProperties())
+				.thenReturn(jargonProperties);
+
 		IRODSStarringService irodsStarringService = Mockito
 				.mock(IRODSStarringService.class);
 
@@ -45,11 +52,13 @@ public class StarredFoldersVirtualCollectionImplTest {
 
 		Mockito.when(irodsStarringService.listStarredCollections(0))
 				.thenReturn(results);
-		List<CollectionAndDataObjectListingEntry> actual = executor
-				.queryCollections(0);
+
+		PagingAwareCollectionListing actual = executor.queryAll(0);
 		Assert.assertNotNull(actual);
-		Assert.assertFalse(actual.isEmpty());
-		CollectionAndDataObjectListingEntry actualEntry = actual.get(0);
+		Assert.assertFalse(actual.getCollectionAndDataObjectListingEntries()
+				.isEmpty());
+		CollectionAndDataObjectListingEntry actualEntry = actual
+				.getCollectionAndDataObjectListingEntries().get(0);
 		CollectionAndPath cp = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(testPath);
 		Assert.assertEquals(cp.getCollectionParent(),

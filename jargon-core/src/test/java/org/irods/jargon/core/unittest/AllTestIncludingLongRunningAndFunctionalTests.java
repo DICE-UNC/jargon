@@ -16,6 +16,6 @@ import org.junit.runners.Suite;
 		ParallelTransferOperationsTest.class,
 		IRODSCommandsFunctionalTest.class,
 		IRODSTenThousandCollectionsTest.class })
-public class AllTestIncludingLongRunningAndFunctionalTests {
+public class AllTestIncludingLongRunningAndFunctionalTests { 
 
 }

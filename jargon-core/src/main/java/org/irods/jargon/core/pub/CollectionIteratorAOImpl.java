@@ -76,7 +76,7 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			pagingAwareCollectionListing
 					.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
-			pagingAwareCollectionListing.setCollectionsCount(entries.size());
+			pagingAwareCollectionListing.setCount(entries.size());
 			return pagingAwareCollectionListing;
 		}
 
@@ -97,16 +97,16 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 		if (queriedEntries.isEmpty()) {
 			log.info("no child collections");
 			pagingAwareCollectionListing.setCollectionsComplete(true);
-			pagingAwareCollectionListing.setCollectionsCount(0);
-			pagingAwareCollectionListing.setCollectionsOffset(0);
+			pagingAwareCollectionListing.setCount(0);
+			pagingAwareCollectionListing.setOffset(0);
 		} else {
 			log.info("adding child collections");
 			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
 					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
+			pagingAwareCollectionListing.setCount(queriedEntries
 					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-					.setCollectionsTotalRecords(queriedEntries.get(0)
+					.setTotalRecords(queriedEntries.get(0)
 							.getTotalRecords());
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(

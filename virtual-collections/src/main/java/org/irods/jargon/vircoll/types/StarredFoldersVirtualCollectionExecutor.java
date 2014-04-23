@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSStarredFileOrCollection;
@@ -21,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Represents a virtual collection of starred folders
- *
+ * 
  * @author mikeconway
- *
+ * 
  */
 public class StarredFoldersVirtualCollectionExecutor extends
 		AbstractVirtualCollectionExecutor<StarredFoldersVirtualCollection> {
@@ -35,7 +36,7 @@ public class StarredFoldersVirtualCollectionExecutor extends
 
 	/**
 	 * Create an instance of an executor for starred folders
-	 *
+	 * 
 	 * @param starredFoldersVirtualCollection
 	 *            {@link StarredFoldersVirtualCollection} that describes the
 	 *            collection
@@ -72,33 +73,22 @@ public class StarredFoldersVirtualCollectionExecutor extends
 	 * (int)
 	 */
 	@Override
-	public List<CollectionAndDataObjectListingEntry> queryAll(final int offset)
+	public PagingAwareCollectionListing queryAll(final int offset)
 			throws JargonException {
 
+		PagingAwareCollectionListing listing = buildInitialPagingAwareCollectionListing();
 		log.info("queryAll()");
-		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		log.info("adding colls");
-		entries.addAll(queryCollections(0));
-		log.info("adding data objectx");
-		entries.addAll(queryDataObjects(0));
-		return entries;
+		this.addAndCharacterizeCollectionListingForSplitListing(listing,
+				queryCollections(0));
+		log.info("adding data objects");
+		this.addAndCharacterizeDataObjectListingForSplitListing(listing,
+				queryDataObjects(0));
+		return listing;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryCollections(int)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#
-	 * queryCollections(int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> queryCollections(
+	private List<CollectionAndDataObjectListingEntry> queryCollections(
 			final int offset) throws JargonException {
 
 		List<IRODSStarredFileOrCollection> starred = irodsStarringService
@@ -129,20 +119,7 @@ public class StarredFoldersVirtualCollectionExecutor extends
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.vircoll.AbstractVirtualCollection#queryDataObjects(int)
-	 */
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.vircoll.impl.StarredFoldersVirtualCollection#
-	 * queryDataObjects(int)
-	 */
-	@Override
-	public List<CollectionAndDataObjectListingEntry> queryDataObjects(
+	private List<CollectionAndDataObjectListingEntry> queryDataObjects(
 			final int offset) throws JargonException {
 
 		List<IRODSStarredFileOrCollection> starred = irodsStarringService

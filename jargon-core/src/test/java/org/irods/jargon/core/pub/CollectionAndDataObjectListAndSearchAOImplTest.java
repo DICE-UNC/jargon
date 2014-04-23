@@ -269,11 +269,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		PagingAwareCollectionListing pagingAwareCollectionListing = actual
 				.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(targetIrodsCollection);
 		Assert.assertEquals(count,
-				pagingAwareCollectionListing.getCollectionsCount());
+				pagingAwareCollectionListing.getCount());
 		Assert.assertEquals(count,
-				pagingAwareCollectionListing.getCollectionsTotalRecords());
+				pagingAwareCollectionListing.getTotalRecords());
 		Assert.assertEquals(0,
-				pagingAwareCollectionListing.getCollectionsOffset());
+				pagingAwareCollectionListing.getOffset());
 		Assert.assertTrue(pagingAwareCollectionListing.isCollectionsComplete());
 		Assert.assertEquals(irodsFileSystem.getJargonProperties()
 				.getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing
@@ -539,11 +539,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		PagingAwareCollectionListing pagingAwareCollectionListing = actual
 				.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(targetIrodsCollection);
 		Assert.assertEquals(0,
-				pagingAwareCollectionListing.getCollectionsCount());
+				pagingAwareCollectionListing.getCount());
 		Assert.assertEquals(0,
-				pagingAwareCollectionListing.getCollectionsTotalRecords());
+				pagingAwareCollectionListing.getTotalRecords());
 		Assert.assertEquals(0,
-				pagingAwareCollectionListing.getCollectionsOffset());
+				pagingAwareCollectionListing.getOffset());
 		Assert.assertTrue(pagingAwareCollectionListing.isCollectionsComplete());
 		Assert.assertEquals(irodsFileSystem.getJargonProperties()
 				.getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing

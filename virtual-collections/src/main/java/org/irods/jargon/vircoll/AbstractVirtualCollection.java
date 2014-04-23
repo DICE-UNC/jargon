@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.vircoll;
 
+import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
+
 /**
  * Abstract model of a virtual collection, which is an arbitrary source that can
  * be serialized into an iRODS file, and which produces an 'ils' like listing.
@@ -20,13 +22,11 @@ public abstract class AbstractVirtualCollection {
 	 * @author Mike Conway - DICE
 	 *
 	 */
-	public enum PagingStyle { NONE, MIXED, SPLIT_COLLECTIONS_AND_FILES }
 
 	public static final String DEFAULT_ICON_KEY = "virtual.collection.default.icon";
 
 	private PagingStyle pagingStyle = PagingStyle.MIXED;
-	
-	
+
 	/**
 	 * Unique name for this virtual collection
 	 */
