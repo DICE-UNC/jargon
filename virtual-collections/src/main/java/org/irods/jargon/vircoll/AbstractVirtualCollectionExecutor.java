@@ -31,6 +31,15 @@ public abstract class AbstractVirtualCollectionExecutor<T extends AbstractVirtua
 	private final T collection;
 
 	/**
+	 * Public constructor so I can mock this, even though this is stupid. Don't
+	 * use this constructor
+	 */
+	public AbstractVirtualCollectionExecutor() {
+		super();
+		collection = null;
+	}
+
+	/**
 	 * Generate a result list based on executing the virtual collection query
 	 * 
 	 * @param offset

@@ -3,13 +3,10 @@
  */
 package org.irods.jargon.vircoll.types;
 
-import java.util.List;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
-import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.vircoll.AbstractVirtualCollectionExecutor;
 import org.slf4j.Logger;
@@ -18,15 +15,22 @@ import org.slf4j.LoggerFactory;
 /**
  * Represents a virtual collection that is an actual iRODS collection (parent
  * folders are virtual collections themselves)
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class CollectionBasedVirtualCollectionExecutor extends
 		AbstractVirtualCollectionExecutor<CollectionBasedVirtualCollection> {
 
 	static Logger log = LoggerFactory
 			.getLogger(CollectionBasedVirtualCollectionExecutor.class);
+
+	/**
+	 * Default constructor necessary to support mocks
+	 */
+	public CollectionBasedVirtualCollectionExecutor() {
+		super();
+	}
 
 	/**
 	 * @param collection
@@ -57,8 +61,9 @@ public class CollectionBasedVirtualCollectionExecutor extends
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
-		return collectionAndDataObjectListAndSearchAO.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(getCollection()
-				.getRootPath());
+		return collectionAndDataObjectListAndSearchAO
+				.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(getCollection()
+						.getRootPath());
 
 	}
 

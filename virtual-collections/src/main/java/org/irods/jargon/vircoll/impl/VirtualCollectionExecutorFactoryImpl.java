@@ -32,6 +32,14 @@ public class VirtualCollectionExecutorFactoryImpl extends AbstractJargonService
 	static Logger log = LoggerFactory
 			.getLogger(VirtualCollectionExecutorFactoryImpl.class);
 
+	/**
+	 * Public constructor necessary (argh) for grails mocking, sorry, don't use
+	 * this
+	 */
+	public VirtualCollectionExecutorFactoryImpl() {
+		super();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
