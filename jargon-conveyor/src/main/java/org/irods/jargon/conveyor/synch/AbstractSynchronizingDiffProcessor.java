@@ -521,8 +521,8 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(TransferStatus transferStatus)
-			throws JargonException {
+	public FileStatusCallbackResponse statusCallback(
+			TransferStatus transferStatus) throws JargonException {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			// quash
@@ -530,6 +530,8 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 			this.getTransferStatusCallbackListener().statusCallback(
 					transferStatus);
 		}
+
+		return FileStatusCallbackResponse.CONTINUE;
 
 	}
 

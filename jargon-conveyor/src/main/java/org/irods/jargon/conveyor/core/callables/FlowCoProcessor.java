@@ -120,7 +120,135 @@ class FlowCoProcessor {
 
 	}
 
-	private void executeAnyFailureMicroservice(FlowSpec flowSpec) {
+	/**
+	 * Run the pre-file operation chain. This can result in (based on the
+	 * responses from the microservices in ExecResult) a cancellation, or an
+	 * abort of the transfer with an error, or ask that this file be excluded
+	 * from the transfer
+	 * 
+	 * @param flowSpec
+	 *            {@link FlowSpec} that was selected
+	 * @return {@link ExecResult} from the microservices
+	 * @throws ConveyorExecutionException
+	 */
+	ExecResult executePreFileChain(final FlowSpec flowSpec)
+			throws ConveyorExecutionException {
+
+		log.info("executePreFileChain()");
+
+		if (flowSpec == null) {
+			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		Microservice microservice;
+		ExecResult overallExecResult = ExecResult.CONTINUE;
+		for (String microserviceFqcn : flowSpec.getPreFileChain()) {
+
+			log.info("pre-file chain microservice:{}", microserviceFqcn);
+			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
+			log.info("invoking next in chain...");
+			try {
+				overallExecResult = microservice.execute();
+			} catch (MicroserviceException e) {
+				/*
+				 * Errors that occur are treated as system or program erros, not
+				 * as recoverable errors that should be reflected in the
+				 * ExecResult
+				 */
+				log.error("error ocurred running a microservice", e);
+				throw new ConveyorExecutionException(
+						"error running microservice", e);
+			}
+
+			if (overallExecResult == ExecResult.CANCEL_OPERATION) {
+				log.info("transfer is being cancelled");
+				callable.getTransferControlBlock().setCancelled(true);
+				break;
+			} else if (overallExecResult == ExecResult.SKIP_THIS_CHAIN) {
+				log.info("skipping rest of chain");
+				break;
+			} else if (overallExecResult == ExecResult.SKIP_THIS_FILE) {
+				log.info("skipping file, and rest of chain");
+				break;
+			} else if (overallExecResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+				log.error("abort of operation by execResult of microservice");
+				executeAnyFailureMicroservice(flowSpec);
+				throw new ConveyorExecutionException(
+						"Aborting operation through failure of microservice");
+			} else if (overallExecResult != ExecResult.CONTINUE) {
+				log.error("unexpected exec result for a preop chain:{}",
+						overallExecResult);
+				throw new ConveyorExecutionException("unexpected exec result");
+			}
+		}
+
+		return overallExecResult;
+
+	}
+
+	/**
+	 * Run the post-file operation chain. This can result in (based on the
+	 * responses from the microservices in ExecResult) a cancellation, or an
+	 * abort of the transfer with an error
+	 * 
+	 * @param flowSpec
+	 *            {@link FlowSpec} that was selected
+	 * @return {@link ExecResult} from the microservices
+	 * @throws ConveyorExecutionException
+	 */
+	ExecResult executePostFileChain(final FlowSpec flowSpec)
+			throws ConveyorExecutionException {
+
+		log.info("executePostFileChain()");
+
+		if (flowSpec == null) {
+			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		Microservice microservice;
+		ExecResult overallExecResult = ExecResult.CONTINUE;
+		for (String microserviceFqcn : flowSpec.getPostFileChain()) {
+
+			log.info("post-file chain microservice:{}", microserviceFqcn);
+			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
+			log.info("invoking next in chain...");
+			try {
+				overallExecResult = microservice.execute();
+			} catch (MicroserviceException e) {
+				/*
+				 * Errors that occur are treated as system or program erros, not
+				 * as recoverable errors that should be reflected in the
+				 * ExecResult
+				 */
+				log.error("error ocurred running a microservice", e);
+				throw new ConveyorExecutionException(
+						"error running microservice", e);
+			}
+
+			if (overallExecResult == ExecResult.CANCEL_OPERATION) {
+				log.info("transfer is being cancelled");
+				callable.getTransferControlBlock().setCancelled(true);
+				break;
+			} else if (overallExecResult == ExecResult.SKIP_THIS_CHAIN) {
+				log.info("skipping rest of chain");
+				break;
+			} else if (overallExecResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+				log.error("abort of operation by execResult of microservice");
+				executeAnyFailureMicroservice(flowSpec);
+				throw new ConveyorExecutionException(
+						"Aborting operation through failure of microservice");
+			} else if (overallExecResult != ExecResult.CONTINUE) {
+				log.error("unexpected exec result for a post file chain:{}",
+						overallExecResult);
+				throw new ConveyorExecutionException("unexpected exec result");
+			}
+		}
+
+		return overallExecResult;
+
+	}
+
+	void executeAnyFailureMicroservice(FlowSpec flowSpec) {
 
 		log.error("failure stuff no implemented yet");
 		throw new UnsupportedOperationException("implement me!!! please?");

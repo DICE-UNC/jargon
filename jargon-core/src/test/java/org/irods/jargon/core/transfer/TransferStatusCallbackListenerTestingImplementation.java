@@ -32,7 +32,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	private boolean cancelEncountered = false;
 	private boolean pauseEncountered = false;
-	private List<TransferStatus> statusCache = new ArrayList<TransferStatus>();
+	private final List<TransferStatus> statusCache = new ArrayList<TransferStatus>();
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
@@ -47,8 +47,8 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	}
 
 	@Override
-	public synchronized void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public synchronized FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) throws JargonException {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			intraFileCallbackCtr++;
@@ -94,6 +94,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 		}
 
 		statusCache.add(transferStatus);
+		return FileStatusCallbackResponse.CONTINUE;
 
 	}
 

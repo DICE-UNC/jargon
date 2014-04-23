@@ -330,15 +330,81 @@ public abstract class AbstractConveyorCallable implements
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) throws JargonException {
 		log.info("status callback:{}", transferStatus);
+
+		FileStatusCallbackResponse response = FileStatusCallbackResponse.CONTINUE;
+
 		try {
 			if (transferStatus.getTransferState() == TransferState.SUCCESS
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
+
+				if (this.selectedFlowSpec != null) {
+					log.info("processing post-file flow");
+					ExecResult execResult = this.flowCoProcessor
+							.executePostFileChain(selectedFlowSpec);
+
+					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+						flowCoProcessor
+								.executeAnyFailureMicroservice(selectedFlowSpec);
+					} else if (execResult == ExecResult.CANCEL_OPERATION) {
+						// cancel is set in coprocessor code
+						log.info("cancelling...");
+
+					} else if (execResult == ExecResult.SKIP_THIS_FILE) {
+						// FIXME: skip file processing?
+						updateTransferStateOnRestartFile(transferStatus);
+
+						// need to decide whether to just skip out and update
+						// here, or whether to let jargon core do it and call
+						// back again?
+						response = FileStatusCallbackResponse.SKIP;
+					} else if (execResult != ExecResult.CONTINUE) {
+						log.error(
+								"unsupported response for a pre-file operation:{}",
+								execResult);
+						throw new ConveyorExecutionException(
+								"unsupported response for a pre-file operation");
+					}
+				}
+
+				// FIXME: how is status updated by a skip, etc? should hti sonly
+				// be for a continue or skip rest of flow?
 				updateTransferStateOnFileCompletion(transferStatus);
+
 			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
 				log.info("file initiation, this is just passed on by conveyor");
+
+				if (this.selectedFlowSpec != null) {
+					log.info("processing pre-file flow");
+					ExecResult execResult = this.flowCoProcessor
+							.executePreFileChain(selectedFlowSpec);
+
+					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+						flowCoProcessor
+								.executeAnyFailureMicroservice(selectedFlowSpec);
+					} else if (execResult == ExecResult.CANCEL_OPERATION) {
+						// cancel is set in coprocessor code
+						log.info("cancelling...");
+
+					} else if (execResult == ExecResult.SKIP_THIS_FILE) {
+						// FIXME: skip file processing?
+						updateTransferStateOnRestartFile(transferStatus);
+
+						// need to decide whether to just skip out and update
+						// here, or whether to let jargon core do it and call
+						// back again?
+						response = FileStatusCallbackResponse.SKIP;
+					} else if (execResult != ExecResult.CONTINUE) {
+						log.error(
+								"unsupported response for a pre-file operation:{}",
+								execResult);
+						throw new ConveyorExecutionException(
+								"unsupported response for a pre-file operation");
+					}
+				}
+
 			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
 				updateTransferStateOnRestartFile(transferStatus);
 
@@ -371,6 +437,8 @@ public abstract class AbstractConveyorCallable implements
 			conveyorService.getConveyorCallbackListener().statusCallback(
 					transferStatus);
 		}
+
+		return response;
 
 	}
 
