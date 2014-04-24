@@ -343,7 +343,8 @@ public abstract class AbstractConveyorCallable implements
 				if (this.selectedFlowSpec != null) {
 					log.info("processing post-file flow");
 					ExecResult execResult = this.flowCoProcessor
-							.executePostFileChain(selectedFlowSpec);
+							.executePostFileChain(selectedFlowSpec,
+									transferStatus);
 
 					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
 						flowCoProcessor
@@ -379,7 +380,8 @@ public abstract class AbstractConveyorCallable implements
 				if (this.selectedFlowSpec != null) {
 					log.info("processing pre-file flow");
 					ExecResult execResult = this.flowCoProcessor
-							.executePreFileChain(selectedFlowSpec);
+							.executePreFileChain(selectedFlowSpec,
+									transferStatus);
 
 					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
 						flowCoProcessor
@@ -529,7 +531,8 @@ public abstract class AbstractConveyorCallable implements
 		// need to loop thru and run a condition on candidate flows
 
 		for (FlowSpec flowSpec : this.candidateFlowSpecs) {
-			boolean runFlow = flowCoProcessor.evaluateCondition(flowSpec);
+			boolean runFlow = flowCoProcessor.evaluateCondition(flowSpec,
+					transferStatus);
 			if (runFlow) {
 				log.info("found a flow:{}", runFlow);
 				this.selectedFlowSpec = flowSpec;
@@ -543,7 +546,7 @@ public abstract class AbstractConveyorCallable implements
 		if (this.selectedFlowSpec != null) {
 			log.info("have a flow spec, run any pre flow chain");
 			ExecResult overallResult = this.flowCoProcessor
-					.executePreOperationChain(selectedFlowSpec);
+					.executePreOperationChain(selectedFlowSpec, transferStatus);
 			log.info("overall result of pre-flow chain is:{}", overallResult);
 		}
 
@@ -854,6 +857,13 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	protected FlowSpec getSelectedFlowSpec() {
 		return selectedFlowSpec;
+	}
+
+	/**
+	 * @return the flowCoProcessor
+	 */
+	FlowCoProcessor getFlowCoProcessor() {
+		return flowCoProcessor;
 	}
 
 }

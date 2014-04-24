@@ -1,5 +1,7 @@
 package org.irods.jargon.conveyor.flowmanager.microservice;
 
+import org.irods.jargon.core.transfer.TransferStatus;
+
 /**
  * 
  */
@@ -71,12 +73,19 @@ public class Microservice {
 	 * error occurred.
 	 * <p/>
 	 * 
-	 * 
+	 * @param transferStatus
+	 *            {@link TransferStatus} that initiates this microservice
 	 * @return {@link ExecResult} enumeration value that signals handling of
 	 *         further microservices
 	 * @throws MicroserviceException
 	 */
-	public ExecResult execute() throws MicroserviceException {
+	public ExecResult execute(final TransferStatus transferStatus)
+			throws MicroserviceException {
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
+		}
+
 		return ExecResult.CONTINUE;
 	}
 

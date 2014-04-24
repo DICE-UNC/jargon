@@ -5,6 +5,7 @@ package org.irods.jargon.conveyor.flowmanager.microservice.builtins;
 
 import org.irods.jargon.conveyor.flowmanager.microservice.ConditionMicroservice;
 import org.irods.jargon.conveyor.flowmanager.microservice.MicroserviceException;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,8 @@ public class AlwaysRunConditionMicroservice extends ConditionMicroservice {
 	 * #execute()
 	 */
 	@Override
-	public ExecResult execute() throws MicroserviceException {
+	public ExecResult execute(final TransferStatus transferStatus)
+			throws MicroserviceException {
 		log.info("execute()");
 		this.evaluateContext();
 		return ExecResult.CONTINUE;

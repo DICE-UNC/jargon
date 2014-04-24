@@ -12,6 +12,7 @@ import org.irods.jargon.conveyor.flowmanager.microservice.InvocationContext;
 import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 import org.irods.jargon.conveyor.flowmanager.microservice.Microservice.ExecResult;
 import org.irods.jargon.conveyor.flowmanager.microservice.MicroserviceException;
+import org.irods.jargon.core.transfer.TransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,16 +66,23 @@ class FlowCoProcessor {
 	 * 
 	 * @param flowSpec
 	 *            {@link FlowSpec} that was selected
+	 * @param transferStatus
+	 *            {@link TransferStatus} that triggers this call
 	 * @return {@link ExecResult} from the microservices
 	 * @throws ConveyorExecutionException
 	 */
-	ExecResult executePreOperationChain(final FlowSpec flowSpec)
+	ExecResult executePreOperationChain(final FlowSpec flowSpec,
+			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 
 		log.info("executePreOperationChain()");
 
 		if (flowSpec == null) {
 			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
 		}
 
 		Microservice microservice;
@@ -85,7 +93,7 @@ class FlowCoProcessor {
 			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
 			log.info("invoking next in chain...");
 			try {
-				overallExecResult = microservice.execute();
+				overallExecResult = microservice.execute(transferStatus);
 			} catch (MicroserviceException e) {
 				/*
 				 * Errors that occur are treated as system or program erros, not
@@ -128,16 +136,23 @@ class FlowCoProcessor {
 	 * 
 	 * @param flowSpec
 	 *            {@link FlowSpec} that was selected
+	 * @param transferStatus
+	 *            {@link TransferStatus} that triggers this call
 	 * @return {@link ExecResult} from the microservices
 	 * @throws ConveyorExecutionException
 	 */
-	ExecResult executePreFileChain(final FlowSpec flowSpec)
+	ExecResult executePreFileChain(final FlowSpec flowSpec,
+			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 
 		log.info("executePreFileChain()");
 
 		if (flowSpec == null) {
 			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
 		}
 
 		Microservice microservice;
@@ -148,7 +163,7 @@ class FlowCoProcessor {
 			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
 			log.info("invoking next in chain...");
 			try {
-				overallExecResult = microservice.execute();
+				overallExecResult = microservice.execute(transferStatus);
 			} catch (MicroserviceException e) {
 				/*
 				 * Errors that occur are treated as system or program erros, not
@@ -193,16 +208,23 @@ class FlowCoProcessor {
 	 * 
 	 * @param flowSpec
 	 *            {@link FlowSpec} that was selected
+	 * @param transferStatus
+	 *            {@link TransferStatus} that triggers this call
 	 * @return {@link ExecResult} from the microservices
 	 * @throws ConveyorExecutionException
 	 */
-	ExecResult executePostFileChain(final FlowSpec flowSpec)
+	ExecResult executePostFileChain(final FlowSpec flowSpec,
+			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 
 		log.info("executePostFileChain()");
 
 		if (flowSpec == null) {
 			throw new IllegalArgumentException("null flowSpec");
+		}
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
 		}
 
 		Microservice microservice;
@@ -213,7 +235,7 @@ class FlowCoProcessor {
 			microservice = createAndProvisionChainMicroservice(microserviceFqcn);
 			log.info("invoking next in chain...");
 			try {
-				overallExecResult = microservice.execute();
+				overallExecResult = microservice.execute(transferStatus);
 			} catch (MicroserviceException e) {
 				/*
 				 * Errors that occur are treated as system or program erros, not
@@ -276,11 +298,16 @@ class FlowCoProcessor {
 	 * 
 	 * @param flowSpec
 	 *            {@link FlowSpec} that will be evaluated
+	 * @param transferStatus
+	 *            {@link TransferStatus} that triggers this call
+	 * 
 	 * @return <code>boolean</code> that will indicate whether the given flow
+	 * 
 	 *         should run
 	 * @throws ConveyorExecutionException
 	 */
-	boolean evaluateCondition(final FlowSpec flowSpec)
+	boolean evaluateCondition(final FlowSpec flowSpec,
+			final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		log.info("evaluateCondition()");
 
@@ -291,6 +318,10 @@ class FlowCoProcessor {
 		if (flowSpec.getCondition().isEmpty()) {
 			log.info("no condition specified, select this one");
 			return true;
+		}
+
+		if (transferStatus == null) {
+			throw new IllegalArgumentException("null transferStatus");
 		}
 
 		log.info("have a condition..evaluate it");
@@ -311,7 +342,7 @@ class FlowCoProcessor {
 		ExecResult result;
 		try {
 			microservice.evaluateContext();
-			result = microservice.execute();
+			result = microservice.execute(transferStatus);
 		} catch (MicroserviceException e) {
 			log.error("microservice exception executing condition", e);
 			throw new ConveyorExecutionException(
@@ -371,6 +402,13 @@ class FlowCoProcessor {
 					"class not found exception creating microservice", e);
 		}
 
+	}
+
+	/**
+	 * @return the invocationContext
+	 */
+	InvocationContext getInvocationContext() {
+		return invocationContext;
 	}
 
 }
