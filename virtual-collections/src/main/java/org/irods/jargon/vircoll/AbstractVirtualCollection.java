@@ -58,12 +58,12 @@ public abstract class AbstractVirtualCollection {
 	 */
 	private String i18icon = DEFAULT_ICON_KEY;
 
-	public String getName() {
+	public String getUniqueName() {
 		return uniqueName;
 	}
 
-	public void setName(final String name) {
-		this.uniqueName = name;
+	public void setUniqueName(final String uniqueName) {
+		this.uniqueName = uniqueName;
 	}
 
 	public String getDescription() {

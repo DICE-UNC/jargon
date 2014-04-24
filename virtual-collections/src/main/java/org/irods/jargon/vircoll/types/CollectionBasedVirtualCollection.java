@@ -9,9 +9,9 @@ import org.irods.jargon.vircoll.AbstractVirtualCollection;
 /**
  * Basic definition of a virtual collection that is actually a collection from
  * the iRODS hierarchy. It's simply an iRODS collection
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class CollectionBasedVirtualCollection extends AbstractVirtualCollection {
 
@@ -42,7 +42,7 @@ public class CollectionBasedVirtualCollection extends AbstractVirtualCollection 
 		}
 
 		this.rootPath = rootPath;
-		setName(rootPath);
+		setUniqueName(uniqueName);
 		setDescription(DESCRIPTION);
 		setI18icon(DEFAULT_ICON_KEY);
 		setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);

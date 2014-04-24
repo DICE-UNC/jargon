@@ -24,7 +24,7 @@ public class StarredFoldersVirtualCollection extends AbstractVirtualCollection {
 	 * create an instance of a starred virtual collection
 	 */
 	public StarredFoldersVirtualCollection() {
-		setName(NAME);
+		setUniqueName(NAME);
 		setDescription(DESCRIPTION);
 		setI18icon(ICON_KEY);
 		setI18Description(DESCRIPTION_KEY);

@@ -35,6 +35,14 @@ public class StarredFoldersVirtualCollectionExecutor extends
 			.getLogger(StarredFoldersVirtualCollectionExecutor.class);
 
 	/**
+	 * No values constructor to make it easier to mock
+	 */
+	public StarredFoldersVirtualCollectionExecutor() {
+		super();
+		irodsStarringService = null;
+	}
+
+	/**
 	 * Create an instance of an executor for starred folders
 	 * 
 	 * @param starredFoldersVirtualCollection
