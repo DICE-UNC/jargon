@@ -123,6 +123,8 @@
 		<property name="queueManagerService" ref="queueManagerService" />
 		<property name="transferAccountingManagementService" ref="transferAccountingManagementService" />
 		<property name="synchComponentFactory" ref="synchComponentFactory" />
+		<property name="flowManagerService" ref="flowManagerService" />
+		
 	</bean>
 
 	<bean id="configurationService"

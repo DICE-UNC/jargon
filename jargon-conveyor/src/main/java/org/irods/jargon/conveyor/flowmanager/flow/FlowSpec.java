@@ -37,7 +37,10 @@ public class FlowSpec {
 	public synchronized FlowSpec clone() {
 		FlowSpec clone = new FlowSpec();
 		clone.setSelector(selector.clone());
-		clone.setCondition(new String(condition));
+
+		if (condition != null) {
+			clone.setCondition(new String(condition));
+		}
 
 		ArrayList<String> clonePreOperationChain = new ArrayList<String>(
 				preOperationChain.size());
@@ -67,8 +70,9 @@ public class FlowSpec {
 		clone.setPostOperationChain(clonePostOpChain);
 		clone.setPreFileChain(clonePreFileChain);
 		clone.setPreOperationChain(clonePreOperationChain);
-
-		clone.setErrorHandler(new String(errorHandler));
+		if (errorHandler != null) {
+			clone.setErrorHandler(new String(errorHandler));
+		}
 		return clone;
 
 	}

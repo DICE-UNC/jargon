@@ -315,6 +315,10 @@ class FlowCoProcessor {
 			throw new IllegalArgumentException("null flowSpec");
 		}
 
+		if (flowSpec.getCondition() == null) {
+			return true;
+		}
+
 		if (flowSpec.getCondition().isEmpty()) {
 			log.info("no condition specified, select this one");
 			return true;

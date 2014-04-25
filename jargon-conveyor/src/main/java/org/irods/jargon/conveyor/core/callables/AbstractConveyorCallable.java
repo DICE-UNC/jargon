@@ -354,12 +354,7 @@ public abstract class AbstractConveyorCallable implements
 						log.info("cancelling...");
 
 					} else if (execResult == ExecResult.SKIP_THIS_FILE) {
-						// FIXME: skip file processing?
-						updateTransferStateOnRestartFile(transferStatus);
-
-						// need to decide whether to just skip out and update
-						// here, or whether to let jargon core do it and call
-						// back again?
+						// a skipped callback will come back from jargon
 						response = FileStatusCallbackResponse.SKIP;
 					} else if (execResult != ExecResult.CONTINUE) {
 						log.error(
@@ -374,7 +369,7 @@ public abstract class AbstractConveyorCallable implements
 				// be for a continue or skip rest of flow?
 				updateTransferStateOnFileCompletion(transferStatus);
 
-			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
+			} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
 				log.info("file initiation, this is just passed on by conveyor");
 
 				if (this.selectedFlowSpec != null) {

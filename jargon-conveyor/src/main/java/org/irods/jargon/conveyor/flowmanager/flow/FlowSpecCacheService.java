@@ -89,7 +89,7 @@ public class FlowSpecCacheService {
 		 * step?
 		 */
 
-		File flowPathFile = new File(flowPath);
+		File flowPathFile = new File(LocalFileUtils.normalizePath(flowPath));
 		if (!flowPathFile.exists()) {
 			log.warn("flow path does not exist:{}", flowPath);
 			return;
