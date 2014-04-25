@@ -513,6 +513,38 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
+			/*
+			 * Check for any cancellation after sending that initial status
+			 * callback to start the get operation
+			 */
+			if (operativeTransferControlBlock.isCancelled()) {
+				log.info("operation has been cancelled");
+
+				if (transferStatusCallbackListener != null) {
+
+					TransferStatus status = TransferStatus.instance(
+							TransferType.GET,
+							irodsSourceFile.getAbsolutePath(),
+							targetLocalFileNameForCallbacks.getAbsolutePath(),
+							"", operativeTransferControlBlock
+									.getTotalBytesToTransfer(),
+							operativeTransferControlBlock
+									.getTotalBytesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesSkippedSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesToTransfer(),
+							TransferState.CANCELLED, getIRODSAccount()
+									.getHost(), getIRODSAccount().getZone());
+					transferStatusCallbackListener
+							.overallStatusCallback(status);
+				}
+
+				return;
+			}
+
 			getOperationWhenSourceFileIsDirectory(irodsSourceFile,
 					targetLocalFile, transferStatusCallbackListener,
 					operativeTransferControlBlock);
@@ -960,7 +992,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.info("computed callbackTargetIrodsPath:{}",
 					callbackTargetIrodsPath);
 
-			// send 0th file status callback that indicates startup
+			/*
+			 * send 0th file status callback that indicates startup
+			 */
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus
 						.instance(TransferType.PUT, sourceFile
@@ -979,6 +1013,37 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 								getIRODSAccount().getHost(), getIRODSAccount()
 										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
+			}
+
+			/*
+			 * Check for a cancellation here before doing the put operation
+			 */
+
+			if (operativeTransferControlBlock.isCancelled()) {
+				log.info("operation has been cancelled");
+
+				if (transferStatusCallbackListener != null) {
+
+					TransferStatus status = TransferStatus.instance(
+							TransferType.PUT, sourceFile.getAbsolutePath(),
+							callbackTargetIrodsPath, "",
+							operativeTransferControlBlock
+									.getTotalBytesToTransfer(),
+							operativeTransferControlBlock
+									.getTotalBytesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesSkippedSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							operativeTransferControlBlock
+									.getTotalFilesToTransfer(),
+							TransferState.CANCELLED, getIRODSAccount()
+									.getHost(), getIRODSAccount().getZone());
+					transferStatusCallbackListener
+							.overallStatusCallback(status);
+				}
+
+				return;
 			}
 
 			transferOperationsHelper.processPutOfSingleFile(sourceFile,
@@ -1223,6 +1288,32 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
 							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
+		}
+
+		/**
+		 * Check for any cancellation that might occur after the initial start
+		 * of operation callback
+		 */
+
+		if (transferControlBlock.isCancelled()) {
+			log.info("operation has been cancelled");
+
+			if (transferStatusCallbackListener != null) {
+
+				TransferStatus status = TransferStatus.instance(
+						TransferType.PUT, sourceFile.getAbsolutePath(),
+						newIrodsParentDirectory.getAbsolutePath(), "",
+						transferControlBlock.getTotalBytesToTransfer(),
+						transferControlBlock.getTotalBytesTransferredSoFar(),
+						transferControlBlock.getTotalFilesSkippedSoFar(),
+						transferControlBlock.getTotalFilesTransferredSoFar(),
+						transferControlBlock.getTotalFilesToTransfer(),
+						TransferState.CANCELLED, getIRODSAccount().getHost(),
+						getIRODSAccount().getZone());
+				transferStatusCallbackListener.overallStatusCallback(status);
+			}
+
+			return;
 		}
 
 		try {

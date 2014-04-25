@@ -17,6 +17,10 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 public class TransferStatusCallbackListenerTestingImplementation implements
 		TransferStatusCallbackListener {
 
+	/**
+	 * Just counts the initial file callbacks no matter what
+	 */
+	private int initCallbackCtr = 0;
 	private int putCallbackCtr = 0;
 	private int getCallbackCtr = 0;
 	private int copyCallbackCtr = 0;
@@ -24,9 +28,15 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	private int replicateCallbackCtr = 0;
 	private int overallCallbackCtr = 0;
 	private int intraFileCallbackCtr = 0;
+	private int skipCtr = 0;
 
 	private int pauseAfter = 0;
 	private int cancelAfter = 0;
+	/**
+	 * flag will cause even files (based on the callback counter) to be sent and
+	 * odd files to be skipped
+	 */
+	private boolean transferThenSkip = false;
 	private TransferControlBlock transferControlBlock = null;
 	private TransferStatusCallbackListener.CallbackResponse forceOption = TransferStatusCallbackListener.CallbackResponse.NO_FOR_ALL;
 
@@ -36,6 +46,16 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	public TransferStatusCallbackListenerTestingImplementation() {
 
+	}
+
+	public TransferStatusCallbackListenerTestingImplementation(
+			final TransferControlBlock transferControlBlock,
+			final int pauseAfter, final int cancelAfter,
+			final boolean transferThenSkip) {
+		this.transferControlBlock = transferControlBlock;
+		this.pauseAfter = pauseAfter;
+		this.cancelAfter = cancelAfter;
+		this.transferThenSkip = transferThenSkip;
 	}
 
 	public TransferStatusCallbackListenerTestingImplementation(
@@ -52,6 +72,21 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			intraFileCallbackCtr++;
+		}
+
+		if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
+			initCallbackCtr++;
+
+			if (initCallbackCtr % 2 == 0) {
+				// even
+			} else {
+				// odd, am I skipping odd?
+
+				if (transferThenSkip) {
+					skipCtr++;
+					return FileStatusCallbackResponse.SKIP;
+				}
+			}
 		}
 
 		if (transferStatus.getTransferType() == TransferType.GET
@@ -181,6 +216,36 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 
 	public void setForceOption(final CallbackResponse forceOption) {
 		this.forceOption = forceOption;
+	}
+
+	/**
+	 * @return the skipCtr
+	 */
+	public int getSkipCtr() {
+		return skipCtr;
+	}
+
+	/**
+	 * @param skipCtr
+	 *            the skipCtr to set
+	 */
+	public void setSkipCtr(int skipCtr) {
+		this.skipCtr = skipCtr;
+	}
+
+	/**
+	 * @return the initCallbackCtr
+	 */
+	public int getInitCallbackCtr() {
+		return initCallbackCtr;
+	}
+
+	/**
+	 * @param initCallbackCtr
+	 *            the initCallbackCtr to set
+	 */
+	public void setInitCallbackCtr(int initCallbackCtr) {
+		this.initCallbackCtr = initCallbackCtr;
 	}
 
 }
