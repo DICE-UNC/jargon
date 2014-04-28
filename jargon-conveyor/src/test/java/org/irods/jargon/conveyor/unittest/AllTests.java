@@ -17,6 +17,7 @@ import org.irods.jargon.conveyor.flowmanager.flow.FlowSpecCacheServiceTest;
 import org.irods.jargon.conveyor.flowmanager.flow.SelectorProcessorTest;
 import org.irods.jargon.conveyor.flowmanager.flow.dsl.FlowTest;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServiceFunctionalTests;
+import org.irods.jargon.conveyor.functionaltest.ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServicePutWithPostFileMetadataFunctionalTest;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServicePutWithSkipFunctionalTest;
 import org.irods.jargon.conveyor.gridaccount.GridAccountConfigurationProcessorTest;
@@ -32,24 +33,33 @@ import org.junit.runners.Suite;
 @RunWith(Suite.class)
 @Suite.SuiteClasses({
 
-ConfigurationPropertyDAOTest.class, GridAccountDAOImplTest.class,
-		KeyStoreDAOImplTest.class, TransferDAOTest.class,
+		ConfigurationPropertyDAOTest.class,
+		GridAccountDAOImplTest.class,
+		KeyStoreDAOImplTest.class,
+		TransferDAOTest.class,
 		ConveyorExecutorServiceImplTest.class,
 		BasicConveyorBootstrapperImplTest.class,
-		GridAccountServiceImplTest.class, BasicConveyorServiceTest.class,
+		GridAccountServiceImplTest.class,
+		BasicConveyorServiceTest.class,
 		GridAccountConfigurationProcessorTest.class,
 		ConfigurationServiceImplTest.class,
 		TransferAccountingManagementServiceImplTest.class,
 		BasicQueueManagerServiceImplTest.class,
 		ConveyorExecutorServiceImplFunctionalTest.class,
-		ConveyorQueueTimerTaskTest.class, ConveyorServiceFunctionalTests.class,
+		ConveyorQueueTimerTaskTest.class,
+		ConveyorServiceFunctionalTests.class,
 		BasicSynchronizationServiceImplTest.class,
-		DefaultSynchComponentFactoryTest.class, DefaultDiffCreatorTest.class,
-		FlowTest.class, FlowSpecCacheServiceTest.class,
-		SelectorProcessorTest.class, BasicFlowManagerServiceTest.class,
-		PutConveyorCallableFlowSpecTest.class, FlowCoProcessorTest.class,
+		DefaultSynchComponentFactoryTest.class,
+		DefaultDiffCreatorTest.class,
+		FlowTest.class,
+		FlowSpecCacheServiceTest.class,
+		SelectorProcessorTest.class,
+		BasicFlowManagerServiceTest.class,
+		PutConveyorCallableFlowSpecTest.class,
+		FlowCoProcessorTest.class,
 		ConveyorServicePutWithSkipFunctionalTest.class,
-		ConveyorServicePutWithPostFileMetadataFunctionalTest.class })
+		ConveyorServicePutWithPostFileMetadataFunctionalTest.class,
+		ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

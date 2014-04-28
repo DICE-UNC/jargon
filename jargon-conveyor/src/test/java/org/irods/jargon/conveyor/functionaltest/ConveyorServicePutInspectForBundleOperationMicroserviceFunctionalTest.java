@@ -36,13 +36,12 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 @ContextConfiguration(locations = { "classpath:transfer-dao-beans.xml",
 		"classpath:transfer-dao-hibernate-spring.cfg.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = false)
-public class ConveyorServicePutWithPostFileMetadataFunctionalTest {
-
+public class ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest {
 	private static Properties testingProperties = new Properties();
 	private static Properties transferProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "ConveyorServicePutWithPostFileMetadataFunctionalTest";
+	public static final String IRODS_TEST_SUBDIR_PATH = "ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 	private static int TRANSFER_TIMEOUT = -1;
@@ -76,7 +75,7 @@ public class ConveyorServicePutWithPostFileMetadataFunctionalTest {
 
 		FlowTestProvisioningUtil.clearAndProvisionTestDslDirecory(
 				transferProperties,
-				"/testFlowDsl/testPutWithPostFileMetadata.groovy");
+				"/testFlowDsl/testPutPassBundleCondition.groovy");
 	}
 
 	@Before
@@ -95,7 +94,7 @@ public class ConveyorServicePutWithPostFileMetadataFunctionalTest {
 	}
 
 	@Test
-	public void testPutWithPostFileMetadata() throws Exception {
+	public void testPutWithPostFileMetadataShouldPass() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		conveyorService.validatePassPhrase(testingProperties
@@ -117,7 +116,7 @@ public class ConveyorServicePutWithPostFileMetadataFunctionalTest {
 		conveyorService.getConfigurationService().addConfigurationProperty(
 				maxErrors);
 
-		String rootCollection = "testPutWithPostFileMetadata";
+		String rootCollection = "testPutWithPostFileMetadataShouldPass";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -129,8 +128,8 @@ public class ConveyorServicePutWithPostFileMetadataFunctionalTest {
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
 						localCollectionAbsolutePath,
-						"testPutWithPostFileMetadata", 4, 6, 4, "testFile",
-						".txt", 10, 5, 1, 2);
+						"testPutWithPostFileMetadataShouldPass", 4, 6, 4,
+						"testFile", ".txt", 10, 5, 1, 2);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);

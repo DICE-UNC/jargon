@@ -101,7 +101,7 @@ public class TreeSummary {
 	/**
 	 * @return the fileSizeSummaryMap
 	 */
-	ConcurrentMap<String, AtomicLong> getFileSizeSummaryMap() {
+	public ConcurrentMap<String, AtomicLong> getFileSizeSummaryMap() {
 		return fileSizeSummaryMap;
 	}
 
@@ -109,7 +109,7 @@ public class TreeSummary {
 	 * @param fileSizeSummaryMap
 	 *            the fileSizeSummaryMap to set
 	 */
-	void setFileSizeSummaryMap(
+	public void setFileSizeSummaryMap(
 			ConcurrentMap<String, AtomicLong> fileSizeSummaryMap) {
 		this.fileSizeSummaryMap = fileSizeSummaryMap;
 	}
@@ -117,22 +117,99 @@ public class TreeSummary {
 	/**
 	 * @return the fileExtensionSummaryMap
 	 */
-	ConcurrentMap<String, AtomicLong> getFileExtensionSummaryMap() {
+	public ConcurrentMap<String, AtomicLong> getFileExtensionSummaryMap() {
 		return fileExtensionSummaryMap;
 	}
 
 	/**
 	 * @return the totalBytes
 	 */
-	long getTotalBytes() {
+	public long getTotalBytes() {
 		return totalBytes;
 	}
 
 	/**
 	 * @return the totalFiles
 	 */
-	long getTotalFiles() {
+	public long getTotalFiles() {
 		return totalFiles;
+	}
+
+	/**
+	 * @return the size10k
+	 */
+	public static String getSize10k() {
+		return SIZE_10K;
+	}
+
+	/**
+	 * @return the size100k
+	 */
+	public static String getSize100k() {
+		return SIZE_100K;
+	}
+
+	/**
+	 * @return the size1m
+	 */
+	public static String getSize1m() {
+		return SIZE_1M;
+	}
+
+	/**
+	 * @return the size32m
+	 */
+	public static String getSize32m() {
+		return SIZE_32M;
+	}
+
+	/**
+	 * @return the size100m
+	 */
+	public static String getSize100m() {
+		return SIZE_100M;
+	}
+
+	/**
+	 * @return the size1gb
+	 */
+	public static String getSize1gb() {
+		return SIZE_1GB;
+	}
+
+	/**
+	 * @return the size10gb
+	 */
+	public static String getSize10gb() {
+		return SIZE_10GB;
+	}
+
+	/**
+	 * @return the size100gb
+	 */
+	public static String getSize100gb() {
+		return SIZE_100GB;
+	}
+
+	/**
+	 * @return the sizeGt100gb
+	 */
+	public static String getSizeGt100gb() {
+		return SIZE_GT_100GB;
+	}
+
+	/**
+	 * @return the minLength
+	 */
+	public long getMinLength() {
+		return minLength;
+	}
+
+	/**
+	 * @return the maxLength
+	 */
+	public long getMaxLength() {
+		return maxLength;
 	}
 
 }
