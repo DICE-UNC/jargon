@@ -353,9 +353,6 @@ public abstract class AbstractConveyorCallable implements
 						// cancel is set in coprocessor code
 						log.info("cancelling...");
 
-					} else if (execResult == ExecResult.SKIP_THIS_FILE) {
-						// a skipped callback will come back from jargon
-						response = FileStatusCallbackResponse.SKIP;
 					} else if (execResult != ExecResult.CONTINUE) {
 						log.error(
 								"unsupported response for a pre-file operation:{}",

@@ -16,7 +16,9 @@ import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest
 import org.irods.jargon.datautils.tree.DiffTreePostProcessorTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityTest;
+import org.irods.jargon.datautils.tree.FileTreeIteratorVisitorInvokerTest;
 import org.irods.jargon.datautils.tree.FileTreeNodeTest;
+import org.irods.jargon.datautils.tree.TreeSummarizingServiceImplTest;
 import org.irods.jargon.datautils.uploads.UploadsServiceImplTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -32,7 +34,9 @@ import org.junit.runners.Suite;
 		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
 		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class,
 		PagingStatusTest.class, PagingAnalyserTest.class,
-		DiffTreePostProcessorTest.class })
+		DiffTreePostProcessorTest.class,
+		FileTreeIteratorVisitorInvokerTest.class,
+		TreeSummarizingServiceImplTest.class })
 public class AllTests {
 
 }

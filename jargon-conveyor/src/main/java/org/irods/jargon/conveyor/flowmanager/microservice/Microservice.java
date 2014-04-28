@@ -90,26 +90,6 @@ public class Microservice {
 	}
 
 	/**
-	 * method that runs after an error occurs. By default, this method will
-	 * return an <code>ExecResult.ABORT</code> status, so if this behavior is
-	 * not desired in your microservice, it can be altered in the subclass
-	 * 
-	 * @param triggeringException
-	 *            <code>Exception</code> that may have occurred,triggering this
-	 *            handler. This may be null
-	 * @param resultFromExecute
-	 *            {2link ExecResult} received from execute method that may be
-	 *            modified by this error handler to derive the final result
-	 * 
-	 * @return {@link ExecResult} after error evaluation and recovery
-	 * @throws MicroserviceException
-	 */
-	public ExecResult errorHandler(final Exception triggeringException,
-			final ExecResult resultFromExecute) throws MicroserviceException {
-		return ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER;
-	}
-
-	/**
 	 * @return the {@link InvocationContext}
 	 */
 	public InvocationContext getInvocationContext() {
