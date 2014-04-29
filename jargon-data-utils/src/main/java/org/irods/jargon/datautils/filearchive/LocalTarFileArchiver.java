@@ -12,9 +12,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.commons.compress.archivers.ArchiveException;
-import org.apache.commons.compress.archivers.ArchiveOutputStream;
 import org.apache.commons.compress.archivers.ArchiveStreamFactory;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.io.IOUtils;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 public class LocalTarFileArchiver extends AbstractArchiver {
 
 	private File tarArchiveFile = null;
-	private ArchiveOutputStream tarArchiveOutputStream = null;
+	private TarArchiveOutputStream tarArchiveOutputStream = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(LocalTarFileArchiver.class);
@@ -104,7 +104,10 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	 */
 	@Override
 	protected void initializeTargetArchive() throws JargonException {
+		log.info("initializeTargetArchive()");
 		tarArchiveFile = new File(this.getTargetFileAbsolutePath());
+		log.info("tar target file:{}", tarArchiveFile.getAbsolutePath());
+
 		if (tarArchiveFile.exists()) {
 			throw new JargonException("tar file already exists");
 		}
@@ -114,10 +117,13 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		try {
 			FileOutputStream fos = new FileOutputStream(tarArchiveFile);
 
-			this.tarArchiveOutputStream = new ArchiveStreamFactory()
+			this.tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()
 					.createArchiveOutputStream(ArchiveStreamFactory.TAR, fos);
+			tarArchiveOutputStream
+					.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
 		} catch (FileNotFoundException e) {
+			log.error("fileNotFoundException initializing target archive", e);
 			throw new JargonException("cannot find target file");
 		} catch (ArchiveException e) {
 			log.error("archiveExcpetion creating archive for tar", e);
