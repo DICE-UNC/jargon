@@ -3,6 +3,7 @@ package org.irods.jargon.datautils.unittest;
 import org.irods.jargon.datautils.connection.ConnectionCreatingPoolableObjectFactoryTest;
 import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerTest;
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
+import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
 import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
 import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
@@ -36,7 +37,7 @@ import org.junit.runners.Suite;
 		PagingStatusTest.class, PagingAnalyserTest.class,
 		DiffTreePostProcessorTest.class,
 		FileTreeIteratorVisitorInvokerTest.class,
-		TreeSummarizingServiceImplTest.class })
+		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class })
 public class AllTests {
 
 }
