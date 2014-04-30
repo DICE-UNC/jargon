@@ -12,14 +12,14 @@ import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
  * is aborted abnormally
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ErrorHandlerSpecification extends FlowSpecDslMicroserviceElement {
 
 	/**
 	 * @param flowSpec
 	 */
-	public ErrorHandlerSpecification(FlowSpec flowSpec) {
+	public ErrorHandlerSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -29,7 +29,7 @@ public class ErrorHandlerSpecification extends FlowSpecDslMicroserviceElement {
 	 * @return
 	 */
 	public FlowSpec endFlowWithoutErrorHandler() {
-		return this.getFlowSpec();
+		return getFlowSpec();
 	}
 
 	/**
@@ -43,8 +43,7 @@ public class ErrorHandlerSpecification extends FlowSpecDslMicroserviceElement {
 	public FlowSpec endFlowWithErrorHandler(
 			final String fullyQualifiedMicroserviceClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(fullyQualifiedMicroserviceClassName);
+		Microservice microservice = createMicroserviceInstance(fullyQualifiedMicroserviceClassName);
 
 		if (microservice instanceof ErrorHandlerMicroservice) {
 			// ok
@@ -53,8 +52,8 @@ public class ErrorHandlerSpecification extends FlowSpecDslMicroserviceElement {
 					"error microservice must be subclass of ErrorHandlerMicroservice");
 		}
 
-		this.getFlowSpec().setErrorHandler(fullyQualifiedMicroserviceClassName);
-		return this.getFlowSpec();
+		getFlowSpec().setErrorHandler(fullyQualifiedMicroserviceClassName);
+		return getFlowSpec();
 
 	}
 }

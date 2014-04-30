@@ -72,7 +72,8 @@ public class BasicFlowManagerService implements FlowManagerService {
 	 */
 	@Override
 	public List<FlowSpec> retrieveCandidateFlowSpecs(
-			TransferAttempt transferAttempt) throws ConveyorExecutionException {
+			final TransferAttempt transferAttempt)
+			throws ConveyorExecutionException {
 
 		log.info("retrieveCandidateFlowSpecs()");
 		if (transferAttempt == null) {
@@ -105,7 +106,7 @@ public class BasicFlowManagerService implements FlowManagerService {
 	 * @param conveyorService
 	 *            the conveyorService to set
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 }

@@ -81,7 +81,7 @@ public class FlowSpec {
 		return selector;
 	}
 
-	public synchronized void setSelector(Selector selector) {
+	public synchronized void setSelector(final Selector selector) {
 		this.selector = selector;
 	}
 
@@ -89,7 +89,7 @@ public class FlowSpec {
 		return condition;
 	}
 
-	public synchronized void setCondition(String condition) {
+	public synchronized void setCondition(final String condition) {
 		this.condition = condition;
 	}
 
@@ -97,7 +97,8 @@ public class FlowSpec {
 		return preOperationChain;
 	}
 
-	public synchronized void setPreOperationChain(List<String> preOperationChain) {
+	public synchronized void setPreOperationChain(
+			final List<String> preOperationChain) {
 		this.preOperationChain = preOperationChain;
 	}
 
@@ -105,7 +106,7 @@ public class FlowSpec {
 		return preFileChain;
 	}
 
-	public synchronized void setPreFileChain(List<String> preFileChain) {
+	public synchronized void setPreFileChain(final List<String> preFileChain) {
 		this.preFileChain = preFileChain;
 	}
 
@@ -113,7 +114,7 @@ public class FlowSpec {
 		return postFileChain;
 	}
 
-	public synchronized void setPostFileChain(List<String> postFileChain) {
+	public synchronized void setPostFileChain(final List<String> postFileChain) {
 		this.postFileChain = postFileChain;
 	}
 
@@ -122,7 +123,7 @@ public class FlowSpec {
 	}
 
 	public synchronized void setPostOperationChain(
-			List<String> postOperationChain) {
+			final List<String> postOperationChain) {
 		this.postOperationChain = postOperationChain;
 	}
 
@@ -130,7 +131,7 @@ public class FlowSpec {
 		return errorHandler;
 	}
 
-	public synchronized void setErrorHandler(String errorHandler) {
+	public synchronized void setErrorHandler(final String errorHandler) {
 		this.errorHandler = errorHandler;
 	}
 

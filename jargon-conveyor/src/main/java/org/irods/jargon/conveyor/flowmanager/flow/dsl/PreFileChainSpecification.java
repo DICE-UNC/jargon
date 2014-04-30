@@ -7,14 +7,14 @@ import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
 
 /**
  * @author mikeconway
- *
+ * 
  */
 public class PreFileChainSpecification extends FlowSpecDslMicroserviceElement {
 
 	/**
 	 * @param flowSpec
 	 */
-	public PreFileChainSpecification(FlowSpec flowSpec) {
+	public PreFileChainSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -27,7 +27,7 @@ public class PreFileChainSpecification extends FlowSpecDslMicroserviceElement {
 	public PreFileChainSpecification addPreFileMicroservice(
 			final String microserviceFullyQualifiedClassName) {
 
-		this.getFlowSpec().getPreFileChain()
+		getFlowSpec().getPreFileChain()
 				.add(microserviceFullyQualifiedClassName);
 		return this;
 
@@ -39,7 +39,7 @@ public class PreFileChainSpecification extends FlowSpecDslMicroserviceElement {
 	 * @return
 	 */
 	public PostFileChainSpecification endPreFileChain() {
-		return new PostFileChainSpecification(this.getFlowSpec());
+		return new PostFileChainSpecification(getFlowSpec());
 	}
 
 }

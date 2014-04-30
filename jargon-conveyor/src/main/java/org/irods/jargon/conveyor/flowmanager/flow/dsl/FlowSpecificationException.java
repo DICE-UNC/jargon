@@ -7,7 +7,7 @@ package org.irods.jargon.conveyor.flowmanager.flow.dsl;
  * Exception (runtime) that occurs when defining a specification
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowSpecificationException extends RuntimeException {
 
@@ -25,14 +25,14 @@ public class FlowSpecificationException extends RuntimeException {
 	/**
 	 * @param arg0
 	 */
-	public FlowSpecificationException(String arg0) {
+	public FlowSpecificationException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public FlowSpecificationException(Throwable arg0) {
+	public FlowSpecificationException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -40,7 +40,7 @@ public class FlowSpecificationException extends RuntimeException {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public FlowSpecificationException(String arg0, Throwable arg1) {
+	public FlowSpecificationException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

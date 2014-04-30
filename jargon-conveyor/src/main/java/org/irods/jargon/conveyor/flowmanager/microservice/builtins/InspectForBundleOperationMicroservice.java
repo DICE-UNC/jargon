@@ -38,7 +38,7 @@ public class InspectForBundleOperationMicroservice extends
 	 * #execute(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public ExecResult execute(TransferStatus transferStatus)
+	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 
 		log.info("execute()...do a summary of the source dir");
@@ -48,10 +48,10 @@ public class InspectForBundleOperationMicroservice extends
 					"this microservice only makes sense in a PUT operation");
 		}
 
-		TreeSummarizingService service = new TreeSummarizingServiceImpl(this
-				.getContainerEnvironment().getConveyorService()
-				.getIrodsAccessObjectFactory(), this.getInvocationContext()
-				.getIrodsAccount());
+		TreeSummarizingService service = new TreeSummarizingServiceImpl(
+				getContainerEnvironment().getConveyorService()
+						.getIrodsAccessObjectFactory(), getInvocationContext()
+						.getIrodsAccount());
 
 		try {
 			log.info("generating tree summary");

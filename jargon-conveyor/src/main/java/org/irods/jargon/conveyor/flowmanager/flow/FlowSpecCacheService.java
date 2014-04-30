@@ -63,11 +63,11 @@ public class FlowSpecCacheService {
 
 		log.info("flows processed");
 
-		if (this.flowSpecs.isEmpty()) {
+		if (flowSpecs.isEmpty()) {
 			log.warn("No flows configured");
 		}
 
-		this.flowSpecs = Collections.unmodifiableList(this.flowSpecs);
+		flowSpecs = Collections.unmodifiableList(flowSpecs);
 
 	}
 
@@ -79,7 +79,7 @@ public class FlowSpecCacheService {
 	 * @throws FlowSpecConfigurationException
 	 * @throws FlowManagerException
 	 */
-	private void findFlowsInPath(String flowPath)
+	private void findFlowsInPath(final String flowPath)
 			throws FlowSpecConfigurationException, FlowManagerException {
 
 		log.info("looking for flows in path:{}", flowPath);
@@ -121,7 +121,7 @@ public class FlowSpecCacheService {
 		}
 	}
 
-	private void addGroovyDslToFlowSpecs(File child)
+	private void addGroovyDslToFlowSpecs(final File child)
 			throws FlowManagerException {
 
 		log.info("parsing groovy sript for flow:{}", child);
@@ -130,7 +130,7 @@ public class FlowSpecCacheService {
 		 * Note here that the specified roots are scanned for any code changes,
 		 * allowing recompile in place if they change
 		 */
-		String[] roots = this.flowSourceLocalAbsolutePaths
+		String[] roots = flowSourceLocalAbsolutePaths
 				.toArray(new String[flowSourceLocalAbsolutePaths.size()]);
 		GroovyScriptEngine gse;
 		try {
@@ -143,7 +143,7 @@ public class FlowSpecCacheService {
 				log.warn("null result, script discarded for:{}", child);
 			} else if (result instanceof FlowSpec) {
 				log.info("adding flow spec for child");
-				this.flowSpecs.add((FlowSpec) result);
+				flowSpecs.add((FlowSpec) result);
 			} else {
 				log.warn("result not flow spec, discarding:{}", child);
 			}
@@ -203,7 +203,7 @@ public class FlowSpecCacheService {
 	 * @param flowSourceLocalAbsolutePaths
 	 */
 	public synchronized void setFlowSourceLocalAbsolutePaths(
-			List<String> flowSourceLocalAbsolutePaths) {
+			final List<String> flowSourceLocalAbsolutePaths) {
 
 		if (flowSourceLocalAbsolutePaths == null) {
 			throw new IllegalArgumentException(

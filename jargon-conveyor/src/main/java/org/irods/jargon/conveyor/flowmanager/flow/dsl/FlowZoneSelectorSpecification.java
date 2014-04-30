@@ -8,11 +8,11 @@ import org.irods.jargon.conveyor.flowmanager.flow.Selector;
 
 /**
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowZoneSelectorSpecification extends FlowSpecDslElement {
 
-	public FlowZoneSelectorSpecification(FlowSpec flowSpec) {
+	public FlowZoneSelectorSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -36,9 +36,9 @@ public class FlowZoneSelectorSpecification extends FlowSpecDslElement {
 		} else {
 			mySelector = zoneSelector;
 		}
-		this.getFlowSpec().getSelector().setZoneSelector(mySelector);
+		getFlowSpec().getSelector().setZoneSelector(mySelector);
 
-		return new ConditionSpecification(this.getFlowSpec());
+		return new ConditionSpecification(getFlowSpec());
 
 	}
 
@@ -48,8 +48,8 @@ public class FlowZoneSelectorSpecification extends FlowSpecDslElement {
 	 * @return
 	 */
 	public ConditionSpecification forAnyZone() {
-		this.getFlowSpec().getSelector().setZoneSelector(Selector.ANY);
-		return new ConditionSpecification(this.getFlowSpec());
+		getFlowSpec().getSelector().setZoneSelector(Selector.ANY);
+		return new ConditionSpecification(getFlowSpec());
 
 	}
 }

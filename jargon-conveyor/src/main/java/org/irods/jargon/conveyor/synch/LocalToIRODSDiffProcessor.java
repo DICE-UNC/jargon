@@ -30,8 +30,8 @@ public class LocalToIRODSDiffProcessor extends
 	private static final Logger log = LoggerFactory
 			.getLogger(LocalToIRODSDiffProcessor.class);
 
-	public LocalToIRODSDiffProcessor(ConveyorService conveyorService,
-			TransferControlBlock transferControlBlock) {
+	public LocalToIRODSDiffProcessor(final ConveyorService conveyorService,
+			final TransferControlBlock transferControlBlock) {
 		super(conveyorService, transferControlBlock);
 	}
 
@@ -43,6 +43,7 @@ public class LocalToIRODSDiffProcessor extends
 	 * @param localRootAbsolutePath
 	 * @param irodsRootAbsolutePath
 	 */
+	@Override
 	protected void scheduleLocalToIrods(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath)
@@ -94,17 +95,17 @@ public class LocalToIRODSDiffProcessor extends
 				putPath);
 
 		try {
-			this.getTransferControlBlock().resetTransferData();
-			this.getDataTransferOperations().putOperation(
+			getTransferControlBlock().resetTransferData();
+			getDataTransferOperations().putOperation(
 					entry.getFormattedAbsolutePath(), putPath,
-					this.getIrodsAccount().getDefaultStorageResource(), this,
-					this.getTransferControlBlock());
+					getIrodsAccount().getDefaultStorageResource(), this,
+					getTransferControlBlock());
 		} catch (Exception e) {
 
 			log.error("error in put operation as part of synch", e);
-			this.getTransferControlBlock().reportErrorInTransfer();
+			getTransferControlBlock().reportErrorInTransfer();
 
-			if (this.getTransferStatusCallbackListener() == null) {
+			if (getTransferStatusCallbackListener() == null) {
 				throw new ConveyorExecutionException(
 						"error occurred in synch, no status callback listener was specified",
 						e);
@@ -115,12 +116,12 @@ public class LocalToIRODSDiffProcessor extends
 							.instanceForExceptionForSynch(
 									TransferStatus.TransferType.SYNCH, entry
 											.getFormattedAbsolutePath(), sb
-											.toString(), this.getIrodsAccount()
+											.toString(), getIrodsAccount()
 											.getDefaultStorageResource(), 0L,
-									0L, 0, 0, 0, e, this.getIrodsAccount()
-											.getHost(), this.getIrodsAccount()
-											.getZone());
-					this.getTransferStatusCallbackListener().statusCallback(
+									0L, 0, 0, 0, e,
+									getIrodsAccount().getHost(),
+									getIrodsAccount().getZone());
+					getTransferStatusCallbackListener().statusCallback(
 							transferStatus);
 				} catch (JargonException e1) {
 					log.error("error building transfer status", e1);
@@ -143,6 +144,7 @@ public class LocalToIRODSDiffProcessor extends
 	 * @param irodsRootAbsolutePath
 	 * @throws TransferEngineException
 	 */
+	@Override
 	protected void scheduleMatchedFileOutOfSynch(final FileTreeNode diffNode,
 			final String localRootAbsolutePath,
 			final String irodsRootAbsolutePath)
@@ -164,9 +166,8 @@ public class LocalToIRODSDiffProcessor extends
 			// became
 			// /testFileTreeDiffLocalLocalFileLengthSameLocalChecksumUpdated.txt
 
-			IRODSFile targetFile = this.getIrodsFileFactory()
-					.instanceIRODSFile(irodsRootAbsolutePath,
-							targetRelativePath);
+			IRODSFile targetFile = getIrodsFileFactory().instanceIRODSFile(
+					irodsRootAbsolutePath, targetRelativePath);
 
 			if (targetFile.getName().charAt(0) == '.') {
 				log.debug("no backups of hidden files");
@@ -179,7 +180,7 @@ public class LocalToIRODSDiffProcessor extends
 			log.debug("target file name in iRODS:{}",
 					targetFile.getAbsolutePath());
 
-			IRODSFile userHome = this.getIrodsFileFactory()
+			IRODSFile userHome = getIrodsFileFactory()
 					.instanceIRODSFileUserHomeDir(
 							getIrodsAccount().getUserName());
 
@@ -203,8 +204,7 @@ public class LocalToIRODSDiffProcessor extends
 
 			String backupFileName = LocalFileUtils
 					.getFileNameWithTimeStampInterposed(targetFile.getName());
-			IRODSFile backupFile = this
-					.getConveyorService()
+			IRODSFile backupFile = getConveyorService()
 					.getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFile(irodsBackupAbsPath.toString(),
@@ -215,19 +215,19 @@ public class LocalToIRODSDiffProcessor extends
 			targetFile.renameTo(backupFile);
 			log.debug("rename done");
 
-			this.getTransferControlBlock().resetTransferData();
-			this.getDataTransferOperations().putOperation(
+			getTransferControlBlock().resetTransferData();
+			getDataTransferOperations().putOperation(
 					entry.getFormattedAbsolutePath(),
 					targetFile.getAbsolutePath(),
-					this.getIrodsAccount().getDefaultStorageResource(), this,
-					this.getTransferControlBlock());
+					getIrodsAccount().getDefaultStorageResource(), this,
+					getTransferControlBlock());
 
 		} catch (Exception e) {
 
 			log.error("error in put operation as part of synch", e);
-			this.getTransferControlBlock().reportErrorInTransfer();
+			getTransferControlBlock().reportErrorInTransfer();
 
-			if (this.getTransferStatusCallbackListener() == null) {
+			if (getTransferStatusCallbackListener() == null) {
 				throw new ConveyorExecutionException(
 						"error occurred in synch, no status callback listener was specified",
 						e);
@@ -238,13 +238,12 @@ public class LocalToIRODSDiffProcessor extends
 							.instanceForExceptionForSynch(
 									TransferStatus.TransferType.SYNCH, entry
 											.getFormattedAbsolutePath(),
-									irodsRootAbsolutePath, this
-											.getIrodsAccount()
+									irodsRootAbsolutePath, getIrodsAccount()
 											.getDefaultStorageResource(), 0L,
-									0L, 0, 0, 0, e, this.getIrodsAccount()
-											.getHost(), this.getIrodsAccount()
-											.getZone());
-					this.getTransferStatusCallbackListener().statusCallback(
+									0L, 0, 0, 0, e,
+									getIrodsAccount().getHost(),
+									getIrodsAccount().getZone());
+					getTransferStatusCallbackListener().statusCallback(
 							transferStatus);
 				} catch (JargonException e1) {
 					log.error("error building transfer status", e1);

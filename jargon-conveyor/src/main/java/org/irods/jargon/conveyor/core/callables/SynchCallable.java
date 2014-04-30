@@ -37,8 +37,8 @@ public class SynchCallable extends AbstractConveyorCallable {
 	 * @param transferAttempt
 	 * @param conveyorService
 	 */
-	public SynchCallable(TransferAttempt transferAttempt,
-			ConveyorService conveyorService) {
+	public SynchCallable(final TransferAttempt transferAttempt,
+			final ConveyorService conveyorService) {
 		super(transferAttempt, conveyorService);
 	}
 
@@ -51,8 +51,8 @@ public class SynchCallable extends AbstractConveyorCallable {
 	 * org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	void processCallForThisTransfer(TransferControlBlock tcb,
-			IRODSAccount irodsAccount) throws ConveyorExecutionException,
+	void processCallForThisTransfer(final TransferControlBlock tcb,
+			final IRODSAccount irodsAccount) throws ConveyorExecutionException,
 			JargonException {
 
 		log.info("processCallForThisTransfer for synch");
@@ -60,8 +60,7 @@ public class SynchCallable extends AbstractConveyorCallable {
 		assert tcb != null;
 		assert irodsAccount != null;
 
-		Synchronization synchronization = this.getTransfer()
-				.getSynchronization();
+		Synchronization synchronization = getTransfer().getSynchronization();
 
 		assert synchronization != null;
 
@@ -71,9 +70,9 @@ public class SynchCallable extends AbstractConveyorCallable {
 		log.info("getting diff creation service...");
 
 		try {
-			AbstractSynchronizingDiffCreator diffCreator = this
-					.getConveyorService().getSynchComponentFactory()
-					.instanceDiffCreator(synchronization, tcb);
+			AbstractSynchronizingDiffCreator diffCreator = getConveyorService()
+					.getSynchComponentFactory().instanceDiffCreator(
+							synchronization, tcb);
 			FileTreeModel diffModel = diffCreator.createDiff(getTransfer());
 
 			if (isCancelled()) {
@@ -84,9 +83,9 @@ public class SynchCallable extends AbstractConveyorCallable {
 
 			log.info("have file tree model, now process the diff to resolve it...get diff processor from factory");
 
-			AbstractSynchronizingDiffProcessor diffProcessor = this
-					.getConveyorService().getSynchComponentFactory()
-					.instanceDiffProcessor(synchronization, tcb);
+			AbstractSynchronizingDiffProcessor diffProcessor = getConveyorService()
+					.getSynchComponentFactory().instanceDiffProcessor(
+							synchronization, tcb);
 
 			log.info("..have diff processor, now invoke...");
 
@@ -94,7 +93,7 @@ public class SynchCallable extends AbstractConveyorCallable {
 			 * Note I register this callable as the callback listener, so that
 			 * status updates flow back to this processor
 			 */
-			diffProcessor.execute(this.getTransferAttempt(), diffModel, this);
+			diffProcessor.execute(getTransferAttempt(), diffModel, this);
 
 			if (isCancelled()) {
 				log.info("cancellation received");
@@ -113,10 +112,11 @@ public class SynchCallable extends AbstractConveyorCallable {
 
 		} catch (Exception e) {
 			log.error("error encountered during synch processing", e);
-                        
-                        this.sendSynchStatusMessage(getTransfer(), synchronization, TransferState.FAILURE);
-              
-			this.reportConveyerExceptionDuringProcessing(e);
+
+			sendSynchStatusMessage(getTransfer(), synchronization,
+					TransferState.FAILURE);
+
+			reportConveyerExceptionDuringProcessing(e);
 		}
 
 	}
@@ -136,7 +136,7 @@ public class SynchCallable extends AbstractConveyorCallable {
 					0, transferState, transfer.getGridAccount().getHost(),
 					transfer.getGridAccount().getZone());
 
-			this.overallStatusCallback(overallSynchStartStatus);
+			overallStatusCallback(overallSynchStartStatus);
 
 		} catch (JargonException e) {
 			log.error("error creating synch", e);
@@ -153,32 +153,32 @@ public class SynchCallable extends AbstractConveyorCallable {
 	 */
 	@Override
 	protected void processOverallCompletionOfTransfer(
-			TransferStatus transferStatus) throws ConveyorExecutionException {
+			final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
 		log.info("processOverallCompletionOfTransfer() subclassed for synch");
 
 		log.info("evaluating transfer status by inspecting items for any file level errors");
-		TransferStatusEnum evaluatedStatus = evaluateTransferErrorsInItemsToSetOverallStatus(this
-				.getTransferAttempt());
+		TransferStatusEnum evaluatedStatus = evaluateTransferErrorsInItemsToSetOverallStatus(getTransferAttempt());
 
 		log.info("status was:{}", evaluatedStatus);
 
 		if (evaluatedStatus == TransferStatusEnum.OK) {
 
-			this.getConveyorService().getConveyorExecutorService()
-					.setErrorStatus(ErrorStatus.OK);
+			getConveyorService().getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.OK);
 			getConveyorService().getSynchronizationManagerService()
 					.updateSynchronizationWithSuccessfulCompletion(
-							transferStatus, this.getTransferAttempt());
+							transferStatus, getTransferAttempt());
 
 		} else if (evaluatedStatus == TransferStatusEnum.WARNING) {
-			this.getConveyorService().getConveyorExecutorService()
-					.setErrorStatus(ErrorStatus.WARNING);
+			getConveyorService().getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.WARNING);
 			getConveyorService().getSynchronizationManagerService()
 					.updateSynchronizationWithWarningCompletion(transferStatus,
-							this.getTransferAttempt());
+							getTransferAttempt());
 		} else if (evaluatedStatus == TransferStatusEnum.ERROR) {
-			this.getConveyorService().getConveyorExecutorService()
-					.setErrorStatus(ErrorStatus.ERROR);
+			getConveyorService().getConveyorExecutorService().setErrorStatus(
+					ErrorStatus.ERROR);
 			getConveyorService().getTransferAccountingManagementService()
 					.updateTransferAfterOverallFailureByFileErrorThreshold(
 							transferStatus, getTransferAttempt());
@@ -192,7 +192,7 @@ public class SynchCallable extends AbstractConveyorCallable {
 	 * @return
 	 */
 	protected boolean isCancelled() {
-		return (this.getTransferControlBlock().isCancelled() || this
-				.getTransferControlBlock().isPaused());
+		return (getTransferControlBlock().isCancelled() || getTransferControlBlock()
+				.isPaused());
 	}
 }

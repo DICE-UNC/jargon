@@ -5,7 +5,7 @@ package org.irods.jargon.conveyor.flowmanager.flow;
 
 /**
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowSpecConfigurationException extends Exception {
 
@@ -23,14 +23,14 @@ public class FlowSpecConfigurationException extends Exception {
 	/**
 	 * @param arg0
 	 */
-	public FlowSpecConfigurationException(String arg0) {
+	public FlowSpecConfigurationException(final String arg0) {
 		super(arg0);
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public FlowSpecConfigurationException(Throwable arg0) {
+	public FlowSpecConfigurationException(final Throwable arg0) {
 		super(arg0);
 	}
 
@@ -38,7 +38,8 @@ public class FlowSpecConfigurationException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public FlowSpecConfigurationException(String arg0, Throwable arg1) {
+	public FlowSpecConfigurationException(final String arg0,
+			final Throwable arg1) {
 		super(arg0, arg1);
 	}
 

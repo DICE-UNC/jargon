@@ -11,7 +11,7 @@ import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
  * like validate the microservice
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowSpecDslMicroserviceElement extends FlowSpecDslElement {
 
@@ -75,7 +75,7 @@ public class FlowSpecDslMicroserviceElement extends FlowSpecDslElement {
 	/**
 	 * @param flowSpec
 	 */
-	public FlowSpecDslMicroserviceElement(FlowSpec flowSpec) {
+	public FlowSpecDslMicroserviceElement(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 

@@ -34,8 +34,8 @@ public class SelectorProcessor {
 	 *            {@link FlowSpe} that is a candidate for matching
 	 * @return
 	 */
-	public boolean evaluateSelectorForTransfer(FlowSpec flowSpec,
-			TransferAttempt transferAttempt) {
+	public boolean evaluateSelectorForTransfer(final FlowSpec flowSpec,
+			final TransferAttempt transferAttempt) {
 
 		log.info("match on action...");
 		if (flowSpec.getSelector().getFlowActionEnum() == FlowActionEnum.ANY) {

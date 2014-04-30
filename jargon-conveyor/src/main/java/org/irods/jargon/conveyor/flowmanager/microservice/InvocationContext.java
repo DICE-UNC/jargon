@@ -48,7 +48,7 @@ public class InvocationContext {
 	 * @param irodsAccount
 	 *            the {@link IRODSAccount} to set
 	 */
-	public void setIrodsAccount(IRODSAccount irodsAccount) {
+	public void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
@@ -63,7 +63,7 @@ public class InvocationContext {
 	 * @param transferAttempt
 	 *            the {@link TransferAttempt} to set
 	 */
-	public void setTransferAttempt(TransferAttempt transferAttempt) {
+	public void setTransferAttempt(final TransferAttempt transferAttempt) {
 		this.transferAttempt = transferAttempt;
 	}
 
@@ -79,7 +79,7 @@ public class InvocationContext {
 	 *            the {@link TransferControlBlock} to set
 	 */
 	public void setTransferControlBlock(
-			TransferControlBlock transferControlBlock) {
+			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
 

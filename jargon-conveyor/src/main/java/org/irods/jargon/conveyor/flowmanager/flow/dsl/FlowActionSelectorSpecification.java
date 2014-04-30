@@ -10,14 +10,14 @@ import org.irods.jargon.conveyor.flowmanager.flow.Selector.FlowActionEnum;
  * Sets up the ability to chose a required 'for' action
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowActionSelectorSpecification extends FlowSpecDslElement {
 
 	/**
 	 * 
 	 */
-	public FlowActionSelectorSpecification(FlowSpec flowSpec) {
+	public FlowActionSelectorSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -34,9 +34,9 @@ public class FlowActionSelectorSpecification extends FlowSpecDslElement {
 			throw new IllegalArgumentException("null flowActionEnum");
 		}
 
-		this.getFlowSpec().getSelector().setFlowActionEnum(flowActionEnum);
+		getFlowSpec().getSelector().setFlowActionEnum(flowActionEnum);
 
-		return new FlowHostSelectorSpecification(this.getFlowSpec());
+		return new FlowHostSelectorSpecification(getFlowSpec());
 
 	}
 
@@ -47,8 +47,8 @@ public class FlowActionSelectorSpecification extends FlowSpecDslElement {
 	 */
 	public FlowHostSelectorSpecification forAnyAction() {
 
-		this.getFlowSpec().getSelector().setFlowActionEnum(FlowActionEnum.ANY);
-		return new FlowHostSelectorSpecification(this.getFlowSpec());
+		getFlowSpec().getSelector().setFlowActionEnum(FlowActionEnum.ANY);
+		return new FlowHostSelectorSpecification(getFlowSpec());
 
 	}
 

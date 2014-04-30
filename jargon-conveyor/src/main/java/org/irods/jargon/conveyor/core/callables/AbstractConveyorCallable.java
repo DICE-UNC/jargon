@@ -340,9 +340,9 @@ public abstract class AbstractConveyorCallable implements
 			if (transferStatus.getTransferState() == TransferState.SUCCESS
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
 
-				if (this.selectedFlowSpec != null) {
+				if (selectedFlowSpec != null) {
 					log.info("processing post-file flow");
-					ExecResult execResult = this.flowCoProcessor
+					ExecResult execResult = flowCoProcessor
 							.executePostFileChain(selectedFlowSpec,
 									transferStatus);
 
@@ -369,9 +369,9 @@ public abstract class AbstractConveyorCallable implements
 			} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
 				log.info("file initiation, this is just passed on by conveyor");
 
-				if (this.selectedFlowSpec != null) {
+				if (selectedFlowSpec != null) {
 					log.info("processing pre-file flow");
-					ExecResult execResult = this.flowCoProcessor
+					ExecResult execResult = flowCoProcessor
 							.executePreFileChain(selectedFlowSpec,
 									transferStatus);
 
@@ -512,22 +512,22 @@ public abstract class AbstractConveyorCallable implements
 	 * @param transferStatus
 	 * @throws ConveyorExecutionException
 	 */
-	private void handleOverallInitiation(TransferStatus transferStatus)
+	private void handleOverallInitiation(final TransferStatus transferStatus)
 			throws ConveyorExecutionException {
 		log.info("handleOverallInitiation()");
-		if (this.getCandidateFlowSpecs().isEmpty()) {
+		if (getCandidateFlowSpecs().isEmpty()) {
 			log.info("No flows to inspect");
 			return;
 		}
 
 		// need to loop thru and run a condition on candidate flows
 
-		for (FlowSpec flowSpec : this.candidateFlowSpecs) {
+		for (FlowSpec flowSpec : candidateFlowSpecs) {
 			boolean runFlow = flowCoProcessor.evaluateCondition(flowSpec,
 					transferStatus);
 			if (runFlow) {
 				log.info("found a flow:{}", runFlow);
-				this.selectedFlowSpec = flowSpec;
+				selectedFlowSpec = flowSpec;
 			}
 		}
 
@@ -535,9 +535,9 @@ public abstract class AbstractConveyorCallable implements
 		 * If I have a flow spec, run the pre op chain, which will be normal,
 		 * will cause a cancellation, or may abort with an error
 		 */
-		if (this.selectedFlowSpec != null) {
+		if (selectedFlowSpec != null) {
 			log.info("have a flow spec, run any pre flow chain");
-			ExecResult overallResult = this.flowCoProcessor
+			ExecResult overallResult = flowCoProcessor
 					.executePreOperationChain(selectedFlowSpec, transferStatus);
 			log.info("overall result of pre-flow chain is:{}", overallResult);
 		}
@@ -812,10 +812,10 @@ public abstract class AbstractConveyorCallable implements
 			throws ConveyorExecutionException {
 		log.info("retrieveCandidateFlowSpecs()");
 
-		FlowManagerService flowManagerService = this.conveyorService
+		FlowManagerService flowManagerService = conveyorService
 				.getFlowManagerService();
 
-		this.candidateFlowSpecs = flowManagerService
+		candidateFlowSpecs = flowManagerService
 				.retrieveCandidateFlowSpecs(getTransferAttempt());
 
 		return candidateFlowSpecs;
@@ -829,7 +829,7 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	protected synchronized List<FlowSpec> getCandidateFlowSpecs()
 			throws ConveyorExecutionException {
-		if (this.candidateFlowSpecs == null) {
+		if (candidateFlowSpecs == null) {
 			retrieveCandidateFlowSpecs();
 		}
 		return candidateFlowSpecs;
@@ -840,7 +840,7 @@ public abstract class AbstractConveyorCallable implements
 	 *            the candidateFlowSpecs to set
 	 */
 	protected synchronized void setCandidateFlowSpecs(
-			List<FlowSpec> candidateFlowSpecs) {
+			final List<FlowSpec> candidateFlowSpecs) {
 		this.candidateFlowSpecs = candidateFlowSpecs;
 	}
 

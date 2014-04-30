@@ -4,16 +4,15 @@
 package org.irods.jargon.conveyor.flowmanager.flow.dsl;
 
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
-import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 
 /**
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class PostOperationChainSpecification extends
 		FlowSpecDslMicroserviceElement {
 
-	public PostOperationChainSpecification(FlowSpec flowSpec) {
+	public PostOperationChainSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -26,10 +25,9 @@ public class PostOperationChainSpecification extends
 	public PostOperationChainSpecification addPostOperationMicroservice(
 			final String microserviceFullyQualifiedClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPostOperationChain()
-				.add(microserviceFullyQualifiedClassName);
+		createMicroserviceInstance(microserviceFullyQualifiedClassName);
+		getFlowSpec().getPostOperationChain().add(
+				microserviceFullyQualifiedClassName);
 		return this;
 
 	}
@@ -40,7 +38,7 @@ public class PostOperationChainSpecification extends
 	 * @return
 	 */
 	public ErrorHandlerSpecification endPostOperationChain() {
-		return new ErrorHandlerSpecification(this.getFlowSpec());
+		return new ErrorHandlerSpecification(getFlowSpec());
 	}
 
 }

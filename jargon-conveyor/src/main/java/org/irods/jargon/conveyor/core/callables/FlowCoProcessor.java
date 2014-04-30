@@ -42,7 +42,7 @@ class FlowCoProcessor {
 	 *            transfer and running flows
 	 * @throws ConveyorExecutionException
 	 */
-	FlowCoProcessor(AbstractConveyorCallable callable)
+	FlowCoProcessor(final AbstractConveyorCallable callable)
 			throws ConveyorExecutionException {
 		super();
 		if (callable == null) {
@@ -270,7 +270,7 @@ class FlowCoProcessor {
 
 	}
 
-	void executeAnyFailureMicroservice(FlowSpec flowSpec) {
+	void executeAnyFailureMicroservice(final FlowSpec flowSpec) {
 
 		log.error("failure stuff no implemented yet");
 		throw new UnsupportedOperationException("implement me!!! please?");
@@ -285,10 +285,9 @@ class FlowCoProcessor {
 	 * @return
 	 */
 	private Microservice createAndProvisionChainMicroservice(
-			String microserviceFqcn) {
-		Microservice microservice = this
-				.createMicroserviceInstance(microserviceFqcn);
-		this.provisionMicroservice(microservice);
+			final String microserviceFqcn) {
+		Microservice microservice = createMicroserviceInstance(microserviceFqcn);
+		provisionMicroservice(microservice);
 		return microservice;
 	}
 
@@ -330,7 +329,7 @@ class FlowCoProcessor {
 
 		log.info("have a condition..evaluate it");
 
-		Microservice microservice = this.createMicroserviceInstance(flowSpec
+		Microservice microservice = createMicroserviceInstance(flowSpec
 				.getCondition());
 
 		if (microservice instanceof ConditionMicroservice) {
@@ -369,7 +368,7 @@ class FlowCoProcessor {
 	 * 
 	 * @param microservice
 	 */
-	private void provisionMicroservice(Microservice microservice) {
+	private void provisionMicroservice(final Microservice microservice) {
 		log.info("provision microservice");
 		microservice.setContainerEnvironment(containerEnvironment);
 		microservice.setInvocationContext(invocationContext);

@@ -4,11 +4,10 @@
 package org.irods.jargon.conveyor.flowmanager.flow.dsl;
 
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
-import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 
 /**
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class PreOperationChainSpecification extends
 		FlowSpecDslMicroserviceElement {
@@ -16,7 +15,7 @@ public class PreOperationChainSpecification extends
 	/**
 	 * @param flowSpec
 	 */
-	public PreOperationChainSpecification(FlowSpec flowSpec) {
+	public PreOperationChainSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -29,10 +28,9 @@ public class PreOperationChainSpecification extends
 	public PreOperationChainSpecification addPreOperationMicroservice(
 			final String microserviceFullyQualifiedClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPreOperationChain()
-				.add(microserviceFullyQualifiedClassName);
+		createMicroserviceInstance(microserviceFullyQualifiedClassName);
+		getFlowSpec().getPreOperationChain().add(
+				microserviceFullyQualifiedClassName);
 		return this;
 
 	}
@@ -43,6 +41,6 @@ public class PreOperationChainSpecification extends
 	 * @return
 	 */
 	public PreFileChainSpecification endPreOperationChain() {
-		return new PreFileChainSpecification(this.getFlowSpec());
+		return new PreFileChainSpecification(getFlowSpec());
 	}
 }

@@ -16,6 +16,8 @@ import org.irods.jargon.conveyor.core.callables.PutConveyorCallableFlowSpecTest;
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpecCacheServiceTest;
 import org.irods.jargon.conveyor.flowmanager.flow.SelectorProcessorTest;
 import org.irods.jargon.conveyor.flowmanager.flow.dsl.FlowTest;
+import org.irods.jargon.conveyor.flowmanager.microservice.builtins.EnqueueTransferMicroserviceTest;
+import org.irods.jargon.conveyor.flowmanager.microservice.builtins.TarCollectionMicroserviceTest;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServiceFunctionalTests;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest;
 import org.irods.jargon.conveyor.functionaltest.ConveyorServicePutWithPostFileMetadataFunctionalTest;
@@ -59,7 +61,9 @@ import org.junit.runners.Suite;
 		FlowCoProcessorTest.class,
 		ConveyorServicePutWithSkipFunctionalTest.class,
 		ConveyorServicePutWithPostFileMetadataFunctionalTest.class,
-		ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest.class })
+		ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest.class,
+		TarCollectionMicroserviceTest.class,
+		EnqueueTransferMicroserviceTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

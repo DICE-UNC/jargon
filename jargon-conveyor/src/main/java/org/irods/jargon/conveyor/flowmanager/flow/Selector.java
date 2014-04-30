@@ -41,7 +41,7 @@ public class Selector {
 	 * @param hostSelector
 	 *            the hostSelector to set
 	 */
-	public synchronized void setHostSelector(String hostSelector) {
+	public synchronized void setHostSelector(final String hostSelector) {
 		this.hostSelector = hostSelector;
 	}
 
@@ -56,7 +56,7 @@ public class Selector {
 	 * @param zoneSelector
 	 *            the zoneSelector to set
 	 */
-	public synchronized void setZoneSelector(String zoneSelector) {
+	public synchronized void setZoneSelector(final String zoneSelector) {
 		this.zoneSelector = zoneSelector;
 	}
 
@@ -71,7 +71,8 @@ public class Selector {
 	 * @param transferTypeSelector
 	 *            the transferTypeSelector to set
 	 */
-	public synchronized void setFlowActionEnum(FlowActionEnum flowActionEnum) {
+	public synchronized void setFlowActionEnum(
+			final FlowActionEnum flowActionEnum) {
 		this.flowActionEnum = flowActionEnum;
 	}
 

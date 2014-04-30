@@ -4,20 +4,19 @@
 package org.irods.jargon.conveyor.flowmanager.flow.dsl;
 
 import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
-import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 
 /**
  * Handles post file chains in the DSL
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class PostFileChainSpecification extends FlowSpecDslMicroserviceElement {
 
 	/**
 	 * @param flowSpec
 	 */
-	public PostFileChainSpecification(FlowSpec flowSpec) {
+	public PostFileChainSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -30,10 +29,9 @@ public class PostFileChainSpecification extends FlowSpecDslMicroserviceElement {
 	public PostFileChainSpecification addPostFileMicroservice(
 			final String microserviceFullyQualifiedClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(microserviceFullyQualifiedClassName);
-		this.getFlowSpec().getPostFileChain()
-				.add(microserviceFullyQualifiedClassName);
+		createMicroserviceInstance(microserviceFullyQualifiedClassName);
+		getFlowSpec().getPostFileChain().add(
+				microserviceFullyQualifiedClassName);
 		return this;
 
 	}
@@ -44,7 +42,7 @@ public class PostFileChainSpecification extends FlowSpecDslMicroserviceElement {
 	 * @return
 	 */
 	public PostOperationChainSpecification endPostFileChain() {
-		return new PostOperationChainSpecification(this.getFlowSpec());
+		return new PostOperationChainSpecification(getFlowSpec());
 	}
 
 }

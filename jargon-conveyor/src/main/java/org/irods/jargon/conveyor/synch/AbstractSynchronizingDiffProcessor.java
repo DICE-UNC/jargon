@@ -67,7 +67,8 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 *            {@link TransferControlBlock} instance that allows signalling
 	 *            of cancellation and communication with the calling process
 	 */
-	public AbstractSynchronizingDiffProcessor(ConveyorService conveyorService,
+	public AbstractSynchronizingDiffProcessor(
+			final ConveyorService conveyorService,
 			final TransferControlBlock transferControlBlock) {
 		super();
 
@@ -106,9 +107,9 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 *            call-backs on the status of the diff processing
 	 * @throws ConveyorExecutionException
 	 */
-	public void execute(TransferAttempt transferAttempt,
-			FileTreeModel diffModel,
-			TransferStatusCallbackListener transferStatusCallbackListener)
+	public void execute(final TransferAttempt transferAttempt,
+			final FileTreeModel diffModel,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws ConveyorExecutionException {
 
 		log.info("processDiff()");
@@ -118,18 +119,16 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 		assert transferStatusCallbackListener != null;
 
 		try {
-			this.signalStartupCallback(transferAttempt.getTransfer()
+			signalStartupCallback(transferAttempt.getTransfer()
 					.getSynchronization(), transferStatusCallbackListener);
 
 			synchronized (this) {
-				irodsAccount = this
-						.getConveyorService()
-						.getGridAccountService()
+				irodsAccount = getConveyorService().getGridAccountService()
 						.irodsAccountForGridAccount(
 								transferAttempt.getTransfer()
 										.getSynchronization().getGridAccount());
 
-				this.dataTransferOperations = this.getConveyorService()
+				dataTransferOperations = getConveyorService()
 						.getIrodsAccessObjectFactory()
 						.getDataTransferOperations(irodsAccount);
 
@@ -440,7 +439,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 * @param irodsAccount
 	 *            the irodsAccount to set
 	 */
-	protected synchronized void setIrodsAccount(IRODSAccount irodsAccount) {
+	protected synchronized void setIrodsAccount(final IRODSAccount irodsAccount) {
 		this.irodsAccount = irodsAccount;
 	}
 
@@ -456,7 +455,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 *            the dataTransferOperations to set
 	 */
 	protected synchronized void setDataTransferOperations(
-			DataTransferOperations dataTransferOperations) {
+			final DataTransferOperations dataTransferOperations) {
 		this.dataTransferOperations = dataTransferOperations;
 	}
 
@@ -479,7 +478,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 *            the transferStatusCallbackListener to set
 	 */
 	protected synchronized void setTransferStatusCallbackListener(
-			TransferStatusCallbackListener transferStatusCallbackListener) {
+			final TransferStatusCallbackListener transferStatusCallbackListener) {
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 	}
 
@@ -490,7 +489,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 * @return
 	 */
 	protected IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
-		return this.getConveyorService().getIrodsAccessObjectFactory();
+		return getConveyorService().getIrodsAccessObjectFactory();
 	}
 
 	/**
@@ -504,7 +503,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	protected IRODSFileFactory getIrodsFileFactory()
 			throws ConveyorExecutionException {
 		try {
-			return this.getIrodsAccessObjectFactory().getIRODSFileFactory(
+			return getIrodsAccessObjectFactory().getIRODSFileFactory(
 					getIrodsAccount());
 		} catch (JargonException e) {
 			log.error("cannot obtain irodsFileFactory", e);
@@ -522,13 +521,12 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 */
 	@Override
 	public FileStatusCallbackResponse statusCallback(
-			TransferStatus transferStatus) throws JargonException {
+			final TransferStatus transferStatus) throws JargonException {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			// quash
 		} else {
-			this.getTransferStatusCallbackListener().statusCallback(
-					transferStatus);
+			getTransferStatusCallbackListener().statusCallback(transferStatus);
 		}
 
 		return FileStatusCallbackResponse.CONTINUE;
@@ -542,7 +540,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 * overallStatusCallback(org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void overallStatusCallback(TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException {
 
 		log.info(
@@ -552,7 +550,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 		if (transferStatus.getTransferState() == TransferState.FAILURE) {
 			log.error("failure in underlying transfer:{}", transferStatus);
 			log.info("set cancel in tcb, let synch process terminate");
-			this.signalFailureCallback(this.transferAttempt.getTransfer()
+			signalFailureCallback(transferAttempt.getTransfer()
 					.getSynchronization(), transferStatusCallbackListener);
 		}
 
@@ -566,7 +564,7 @@ public abstract class AbstractSynchronizingDiffProcessor implements
 	 */
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
-			String irodsAbsolutePath, boolean isCollection) {
+			final String irodsAbsolutePath, final boolean isCollection) {
 
 		log.info("overwrite situation, cancel as this shouldn't happen");
 

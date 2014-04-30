@@ -50,7 +50,7 @@ public class ContainerEnvironment {
 	 * @param conveyorService
 	 *            {@link ConveyorService}
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 
@@ -59,7 +59,7 @@ public class ContainerEnvironment {
 	}
 
 	public void setGlobalConfigurationProperties(
-			Properties globalConfigurationProperties) {
+			final Properties globalConfigurationProperties) {
 		this.globalConfigurationProperties = globalConfigurationProperties;
 	}
 

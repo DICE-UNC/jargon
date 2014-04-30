@@ -10,11 +10,11 @@ import org.irods.jargon.conveyor.flowmanager.flow.Selector;
  * Allows specification of a host selector
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FlowHostSelectorSpecification extends FlowSpecDslElement {
 
-	public FlowHostSelectorSpecification(FlowSpec flowSpec) {
+	public FlowHostSelectorSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -38,9 +38,9 @@ public class FlowHostSelectorSpecification extends FlowSpecDslElement {
 		} else {
 			mySelector = hostSelector;
 		}
-		this.getFlowSpec().getSelector().setHostSelector(mySelector);
+		getFlowSpec().getSelector().setHostSelector(mySelector);
 
-		return new FlowZoneSelectorSpecification(this.getFlowSpec());
+		return new FlowZoneSelectorSpecification(getFlowSpec());
 
 	}
 
@@ -50,8 +50,8 @@ public class FlowHostSelectorSpecification extends FlowSpecDslElement {
 	 * @return
 	 */
 	public FlowZoneSelectorSpecification forAnyHost() {
-		this.getFlowSpec().getSelector().setHostSelector(Selector.ANY);
-		return new FlowZoneSelectorSpecification(this.getFlowSpec());
+		getFlowSpec().getSelector().setHostSelector(Selector.ANY);
+		return new FlowZoneSelectorSpecification(getFlowSpec());
 
 	}
 

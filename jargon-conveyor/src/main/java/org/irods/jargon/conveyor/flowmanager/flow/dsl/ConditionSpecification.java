@@ -8,7 +8,7 @@ import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
  * Condition portion of flow specification
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 
@@ -16,7 +16,7 @@ public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 	 * 
 	 * @param flowSpec
 	 */
-	public ConditionSpecification(FlowSpec flowSpec) {
+	public ConditionSpecification(final FlowSpec flowSpec) {
 		super(flowSpec);
 	}
 
@@ -32,8 +32,7 @@ public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 	public PreOperationChainSpecification when(
 			final String fullyQualifiedMicroserviceClassName) {
 
-		Microservice microservice = this
-				.createMicroserviceInstance(fullyQualifiedMicroserviceClassName);
+		Microservice microservice = createMicroserviceInstance(fullyQualifiedMicroserviceClassName);
 
 		if (microservice instanceof ConditionMicroservice) {
 			// ok
@@ -42,8 +41,8 @@ public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 					"condition microservice must be subclass of ConditionMicroservice");
 		}
 
-		this.getFlowSpec().setCondition(fullyQualifiedMicroserviceClassName);
-		return new PreOperationChainSpecification(this.getFlowSpec());
+		getFlowSpec().setCondition(fullyQualifiedMicroserviceClassName);
+		return new PreOperationChainSpecification(getFlowSpec());
 
 	}
 
@@ -53,7 +52,7 @@ public class ConditionSpecification extends FlowSpecDslMicroserviceElement {
 	 * @return
 	 */
 	public PreOperationChainSpecification onAllConditions() {
-		return new PreOperationChainSpecification(this.getFlowSpec());
+		return new PreOperationChainSpecification(getFlowSpec());
 	}
 
 }

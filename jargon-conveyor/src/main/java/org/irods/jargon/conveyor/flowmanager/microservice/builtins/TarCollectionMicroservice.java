@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * the transfer).
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class TarCollectionMicroservice extends Microservice {
 
@@ -34,21 +34,23 @@ public class TarCollectionMicroservice extends Microservice {
 			.getLogger(TarCollectionMicroservice.class);
 
 	@Override
-	public ExecResult execute(TransferStatus transferStatus)
+	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 
 		log.info("execute");
 
-		String tarFileName = (String) this.getInvocationContext()
+		String tarFileName = (String) getInvocationContext()
 				.getSharedProperties().get(TAR_FILE_NAME);
 
 		/*
 		 * TODO: where do I put this? for now use target dir and contents.tar
 		 */
 		if (tarFileName == null) {
+			File sourceFile = new File(
+					transferStatus.getSourceFileAbsolutePath());
 			log.info("no tar file, create a temp dir for this tar file");
 			StringBuilder targetDir = new StringBuilder();
-			targetDir.append(transferStatus.getTargetFileAbsolutePath());
+			targetDir.append(sourceFile.getParent());
 			targetDir.append("/contents.tar");
 			tarFileName = targetDir.toString();
 		}
@@ -60,10 +62,9 @@ public class TarCollectionMicroservice extends Microservice {
 
 		try {
 			File archiveFile = localFileTarArchiver.createArchive();
-			this.getInvocationContext()
-					.getSharedProperties()
-					.put(EnqueueTransferMicroservice.SOURCE_FILE_NAME,
-							archiveFile.getAbsolutePath());
+			getInvocationContext().getSharedProperties().put(
+					EnqueueTransferMicroservice.LOCAL_FILE_NAME,
+					archiveFile.getAbsolutePath());
 			return ExecResult.CONTINUE;
 
 		} catch (FileNotFoundException e) {

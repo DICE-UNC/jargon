@@ -63,7 +63,7 @@ public class Microservice {
 	 *            {@link ContainerEnvironment}
 	 */
 	public void setContainerEnvironment(
-			ContainerEnvironment containerEnvironment) {
+			final ContainerEnvironment containerEnvironment) {
 		this.containerEnvironment = containerEnvironment;
 	}
 
@@ -100,7 +100,7 @@ public class Microservice {
 	 * @param invocationContext
 	 *            the {@link InvocationContext} to set
 	 */
-	public void setInvocationContext(InvocationContext invocationContext) {
+	public void setInvocationContext(final InvocationContext invocationContext) {
 		this.invocationContext = invocationContext;
 	}
 
@@ -110,40 +110,40 @@ public class Microservice {
 	 * microservice as a nice sanity check.
 	 */
 	public void evaluateContext() {
-		if (this.getContainerEnvironment() == null) {
+		if (getContainerEnvironment() == null) {
 			throw new IllegalStateException("null container environment");
 		}
 
-		if (this.getContainerEnvironment().getConveyorService() == null) {
+		if (getContainerEnvironment().getConveyorService() == null) {
 			throw new IllegalStateException(
 					"null conveyor service in container environment");
 		}
 
-		if (this.getContainerEnvironment().getGlobalConfigurationProperties() == null) {
+		if (getContainerEnvironment().getGlobalConfigurationProperties() == null) {
 			throw new IllegalStateException(
 					"null globalConfigurationProperties in container environment");
 		}
 
-		if (this.getInvocationContext() == null) {
+		if (getInvocationContext() == null) {
 			throw new IllegalStateException("null invocation context");
 		}
 
-		if (this.getInvocationContext().getIrodsAccount() == null) {
+		if (getInvocationContext().getIrodsAccount() == null) {
 			throw new IllegalStateException(
 					"null irodsAccount in invocation context");
 		}
 
-		if (this.getInvocationContext().getSharedProperties() == null) {
+		if (getInvocationContext().getSharedProperties() == null) {
 			throw new IllegalStateException(
 					"null shared properties in invocation context");
 		}
 
-		if (this.getInvocationContext().getTransferAttempt() == null) {
+		if (getInvocationContext().getTransferAttempt() == null) {
 			throw new IllegalStateException(
 					"null transferAttempt in invocation context");
 		}
 
-		if (this.getInvocationContext().getTransferControlBlock() == null) {
+		if (getInvocationContext().getTransferControlBlock() == null) {
 			throw new IllegalStateException(
 					"null transferControlBlock in invocation context");
 		}

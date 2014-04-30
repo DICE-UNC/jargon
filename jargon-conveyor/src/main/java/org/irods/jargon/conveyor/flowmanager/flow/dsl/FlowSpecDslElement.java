@@ -4,8 +4,9 @@ import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
 
 /**
  * Parent class for an element of the FlowSpec dsl flow chain builder
+ * 
  * @author mikeconway
- *
+ * 
  */
 public class FlowSpecDslElement {
 
