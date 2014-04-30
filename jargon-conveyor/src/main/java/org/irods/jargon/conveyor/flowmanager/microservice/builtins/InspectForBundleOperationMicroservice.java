@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.conveyor.flowmanager.microservice.builtins;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import org.irods.jargon.conveyor.flowmanager.microservice.ConditionMicroservice;
@@ -48,6 +49,18 @@ public class InspectForBundleOperationMicroservice extends
 					"this microservice only makes sense in a PUT operation");
 		}
 
+		File localFile = new File(transferStatus.getSourceFileAbsolutePath());
+
+		if (!localFile.exists()) {
+			log.info("source file does not exist, consider a failed condition");
+			return ExecResult.TERMINATE_FLOW_FAIL_PRECONDITION;
+		}
+
+		if (!localFile.isDirectory()) {
+			log.info("source file is not a dir, consider a failed condition");
+			return ExecResult.TERMINATE_FLOW_FAIL_PRECONDITION;
+		}
+
 		TreeSummarizingService service = new TreeSummarizingServiceImpl(
 				getContainerEnvironment().getConveyorService()
 						.getIrodsAccessObjectFactory(), getInvocationContext()
@@ -84,11 +97,11 @@ public class InspectForBundleOperationMicroservice extends
 				score += 2;
 			}
 
-			if (summary.getTotalFiles() >= 3000) {
+			if (summary.getTotalFiles() >= 500) {
 				score += 10;
-			} else if (summary.getTotalFiles() >= 2000) {
+			} else if (summary.getTotalFiles() >= 300) {
 				score += 5;
-			} else if (summary.getTotalFiles() >= 1000) {
+			} else if (summary.getTotalFiles() >= 100) {
 				score += 2;
 			}
 
