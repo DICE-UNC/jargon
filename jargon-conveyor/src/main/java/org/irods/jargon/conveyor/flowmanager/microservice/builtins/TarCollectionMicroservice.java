@@ -51,7 +51,9 @@ public class TarCollectionMicroservice extends Microservice {
 			log.info("no tar file, create a temp dir for this tar file");
 			StringBuilder targetDir = new StringBuilder();
 			targetDir.append(sourceFile.getParent());
-			targetDir.append("/contents.tar");
+			targetDir.append("/contents");
+			targetDir.append(System.currentTimeMillis());
+			targetDir.append(".tar");
 			tarFileName = targetDir.toString();
 		}
 
@@ -78,5 +80,4 @@ public class TarCollectionMicroservice extends Microservice {
 		}
 
 	}
-
 }
