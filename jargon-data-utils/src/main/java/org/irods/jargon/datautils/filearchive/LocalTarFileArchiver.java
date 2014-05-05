@@ -109,7 +109,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		log.info("tar target file:{}", tarArchiveFile.getAbsolutePath());
 
 		if (tarArchiveFile.exists()) {
-			throw new JargonException("tar file already exists");
+			tarArchiveFile.delete();
 		}
 
 		log.info("creating tar archive stream from file");

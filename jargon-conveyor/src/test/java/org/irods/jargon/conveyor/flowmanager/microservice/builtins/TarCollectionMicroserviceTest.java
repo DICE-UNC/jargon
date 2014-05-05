@@ -56,7 +56,6 @@ public class TarCollectionMicroserviceTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass
@@ -72,7 +71,7 @@ public class TarCollectionMicroserviceTest {
 	}
 
 	@Test
-	public void testTarCollection() throws Exception {
+	public void testUntarCollectionInIRODS() throws Exception {
 
 		String host = "test";
 		String zone = "zone";
@@ -87,7 +86,7 @@ public class TarCollectionMicroserviceTest {
 
 		DefaultTransferControlBlock.instance();
 
-		String rootCollection = "testTarUpCollection";
+		String rootCollection = "testUntarCollectionInIRODS";
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
