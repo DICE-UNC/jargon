@@ -404,12 +404,13 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 				log.info("refreshing cacheEncryptor with the new pass phrase...");
 				cacheEncryptor = new CacheEncryptor(getCachedPassPhrase());
-
+				log.info("cache encrypter refreshed with pass phrase");
 			} catch (TransferDAOException e) {
 				log.error("error finding pass phrase in key store", e);
 				throw new ConveyorExecutionException(
 						"unable to find pass phrase in key store");
 			} finally {
+				log.info("ok, now set the operation completed, I've got the pass phrase cached");
 				getConveyorExecutorService().setOperationCompleted();
 			}
 		}

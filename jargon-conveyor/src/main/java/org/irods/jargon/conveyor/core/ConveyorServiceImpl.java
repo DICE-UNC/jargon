@@ -168,9 +168,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 	@Override
 	public void validatePassPhrase(final String passPhrase)
 			throws PassPhraseInvalidException, ConveyorExecutionException {
+
 		synchronized (this) {
 			log.info("validating pass phrase...");
 			gridAccountService.validatePassPhrase(passPhrase);
+			log.info("validated...");
 			init();
 		}
 
@@ -327,6 +329,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 		}
 
 		try {
+			log.info("setting busy");
 			getConveyorExecutorService().setBusyForAnOperation();
 			log.info("checking for any transactions that were set to processing, and reset them to enqueued...");
 			getQueueManagerService().preprocessQueueAtStartup();
