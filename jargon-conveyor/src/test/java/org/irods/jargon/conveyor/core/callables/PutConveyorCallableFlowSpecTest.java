@@ -271,11 +271,6 @@ public class PutConveyorCallableFlowSpecTest {
 		PutConveyorCallable callable = new PutConveyorCallable(transferAttempt,
 				conveyorService);
 
-		TransferStatus status = TransferStatus.instance(
-				TransferStatus.TransferType.PUT, "x", "x", "x", 1L, 1L, 1, 1,
-				1, TransferState.OVERALL_INITIATION, gridAccount.getHost(),
-				gridAccount.getZone());
-
 		callable.setTransferControlBlock(transferControlBlock);
 		callable.call();
 		TransferStatus overallStatus = TransferStatus.instance(
@@ -285,6 +280,11 @@ public class PutConveyorCallableFlowSpecTest {
 
 		// to trigger locating the flowspec
 		callable.overallStatusCallback(overallStatus);
+
+		TransferStatus status = TransferStatus.instance(
+				TransferStatus.TransferType.PUT, "x", "x", "x", 1L, 1L, 1, 1,
+				1, TransferState.IN_PROGRESS_START_FILE, gridAccount.getHost(),
+				gridAccount.getZone());
 
 		FileStatusCallbackResponse response = callable.statusCallback(status);
 		Assert.assertEquals("should have continue",
@@ -388,11 +388,6 @@ public class PutConveyorCallableFlowSpecTest {
 		PutConveyorCallable callable = new PutConveyorCallable(transferAttempt,
 				conveyorService);
 
-		TransferStatus status = TransferStatus.instance(
-				TransferStatus.TransferType.PUT, "x", "x", "x", 1L, 1L, 1, 1,
-				1, TransferState.OVERALL_INITIATION, gridAccount.getHost(),
-				gridAccount.getZone());
-
 		callable.setTransferControlBlock(transferControlBlock);
 		callable.call();
 		TransferStatus overallStatus = TransferStatus.instance(
@@ -402,6 +397,11 @@ public class PutConveyorCallableFlowSpecTest {
 
 		// to trigger locating the flowspec
 		callable.overallStatusCallback(overallStatus);
+
+		TransferStatus status = TransferStatus.instance(
+				TransferStatus.TransferType.PUT, "x", "x", "x", 1L, 1L, 1, 1,
+				1, TransferState.IN_PROGRESS_START_FILE, gridAccount.getHost(),
+				gridAccount.getZone());
 
 		FileStatusCallbackResponse response = callable.statusCallback(status);
 		Assert.assertEquals("should have skip",
