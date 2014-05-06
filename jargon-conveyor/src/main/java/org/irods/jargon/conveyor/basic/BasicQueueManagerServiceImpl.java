@@ -123,7 +123,8 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("reenqueueTransferAtBootstrapTime()");
 
-		reenqueueTransfer(transferId);
+		conveyorService.getTransferAccountingManagementService()
+				.restartProcessingTransferAtStartup(transferId);
 
 		log.info("restart enqueued, queue is not yet triggered...");
 

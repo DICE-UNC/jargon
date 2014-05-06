@@ -6008,6 +6008,6 @@ public class DataObjectAOImplTest {
 		List<DataObject> dataObjects = dataObjectAO
 				.findDomainByMetadataQuery(avuQueryElements);
 		Assert.assertFalse(dataObjects.size() >= 1);
-	}
 
+	}
 }
