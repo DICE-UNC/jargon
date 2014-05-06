@@ -29,9 +29,10 @@ public class DevNullCallbackListener implements ConveyorCallbackListener {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) throws JargonException {
 
+		return FileStatusCallbackResponse.CONTINUE;
 	}
 
 	/*

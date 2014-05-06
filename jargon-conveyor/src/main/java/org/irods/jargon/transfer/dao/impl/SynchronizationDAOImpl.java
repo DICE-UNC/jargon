@@ -71,10 +71,10 @@ public class SynchronizationDAOImpl extends HibernateDaoSupport implements
 			throws TransferDAOException {
 		logger.debug("entering save(Synchronization)");
 		try {
-			
-				getSessionFactory().getCurrentSession().saveOrUpdate(
-						synchronization);
-			
+
+			getSessionFactory().getCurrentSession().saveOrUpdate(
+					synchronization);
+
 		} catch (Exception e) {
 
 			log.error("error in save(synchronization)", e);

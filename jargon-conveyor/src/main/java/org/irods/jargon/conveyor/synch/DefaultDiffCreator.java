@@ -34,8 +34,8 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 	private static final Logger log = LoggerFactory
 			.getLogger(DefaultDiffCreator.class);
 
-	public DefaultDiffCreator(ConveyorService conveyorService,
-			TransferControlBlock transferControlBlock) {
+	public DefaultDiffCreator(final ConveyorService conveyorService,
+			final TransferControlBlock transferControlBlock) {
 		super(conveyorService, transferControlBlock);
 	}
 
@@ -49,7 +49,7 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 	 */
 	@Override
 	protected FileTreeModel generateFileTreeDiffModel(
-			Synchronization synchronization, Transfer transfer)
+			final Synchronization synchronization, final Transfer transfer)
 			throws ConveyorExecutionException {
 
 		log.info("generateFileTreeDiffModel()");
@@ -59,9 +59,9 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 
 		log.info("generating diff for: {}", synchronization);
 
-		String localPath = this.normalizeFilePath(synchronization
+		String localPath = normalizeFilePath(synchronization
 				.getLocalSynchDirectory());
-		String irodsPath = this.normalizeFilePath(synchronization
+		String irodsPath = normalizeFilePath(synchronization
 				.getIrodsSynchDirectory());
 
 		log.info("resolving account and obtaining access object factory...");
@@ -76,7 +76,7 @@ public class DefaultDiffCreator extends AbstractSynchronizingDiffCreator {
 
 		FileTreeDiffUtility fileTreeDiffUtility = new FileTreeDiffUtilityImpl(
 				synchAccount, irodsAccessObjectFactory,
-				this.getTransferControlBlock());
+				getTransferControlBlock());
 
 		FileTreeModel diffModel;
 		try {

@@ -113,10 +113,7 @@
 		<property name="synchronizationDAO" ref="synchronizationDAO" />
 		<property name="transferDAO" ref="transferDAO" />
 		<property name="transferAttemptDAO" ref="transferAttemptDAO" />
-
-
 	</bean>
-
 
 	<bean id="conveyorService" class="org.irods.jargon.conveyor.core.ConveyorServiceImpl">
 		<property name="conveyorExecutorService" ref="conveyorExecutorService" />
@@ -126,11 +123,23 @@
 		<property name="queueManagerService" ref="queueManagerService" />
 		<property name="transferAccountingManagementService" ref="transferAccountingManagementService" />
 		<property name="synchComponentFactory" ref="synchComponentFactory" />
+		<property name="flowManagerService" ref="flowManagerService" />
+		
 	</bean>
 
 	<bean id="configurationService"
 		class="org.irods.jargon.conveyor.basic.ConfigurationServiceImpl">
 		<property name="configurationPropertyDAO" ref="configurationPropertyDAO" />
+	</bean>
+	
+	<bean id="flowManagerService"
+		class="org.irods.jargon.conveyor.basic.BasicFlowManagerService">
+		<property name="conveyorService" ref="conveyorService" />
+		<property name="flowSpecCacheService" ref="flowSpecCacheService"/>
+	</bean>
+	
+	<bean id="flowSpecCacheService" class="org.irods.jargon.conveyor.flowmanager.flow.FlowSpecCacheService" init-method="init">
+	    <property name="flowSourceLocalAbsolutePathsAsDelimitedString" value="${flow.dir}" />
 	</bean>
 
 	<bean id="queueManagerService"

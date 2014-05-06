@@ -21,8 +21,8 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.After;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -55,14 +55,8 @@ public class RuleCompositionServiceImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-	@Before
+	@After
 	public void cleanUpIrods() throws Exception {
-		irodsFileSystem.closeAndEatExceptions();
-
-	}
-
-	@Before
-	public void before() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
 
 	}

@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
@@ -748,10 +749,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info(
 						"before generating parallel transfer threads, computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils
-						.md5ByteArrayToString(LocalFileUtils
-								.computeMD5FileCheckSumViaAbsolutePath(localFile
-										.getAbsolutePath()));
+				String localFileChecksum = dataAOHelper
+						.computeLocalFileChecksum(localFile, myTransferOptions);
+
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
 
@@ -1338,10 +1338,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.isComputeAndVerifyChecksumAfterTransfer()) {
 				log.info("computing a checksum on the file at:{}",
 						localFileToHoldData.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils
-						.md5ByteArrayToString(LocalFileUtils
-								.computeMD5FileCheckSumViaAbsolutePath(localFileToHoldData
-										.getAbsolutePath()));
+
+				String localFileChecksum = dataAOHelper
+						.computeLocalFileChecksum(localFileToHoldData,
+								thisFileTransferOptions);
+
 				log.info("local file checksum is:{}", localFileChecksum);
 				String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
 				log.info("irods checksum:{}", irodsChecksum);
@@ -2686,6 +2687,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getStringValue();
 		log.info("checksum is: {}", returnedChecksum);
 		return returnedChecksum;
+	}
+
+	// FIXME: implement
+	public String computeChecksumOnDataObject(final IRODSFile irodsFile,
+			final ChecksumEncoding checksumEncoding) throws JargonException {
+		return null;
 	}
 
 	/*

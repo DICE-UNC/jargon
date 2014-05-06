@@ -343,7 +343,7 @@ public class Synchronization {
 	 * @param defaultStorageResource
 	 *            the defaultStorageResource to set
 	 */
-	public void setDefaultStorageResource(String defaultStorageResource) {
+	public void setDefaultStorageResource(final String defaultStorageResource) {
 		this.defaultStorageResource = defaultStorageResource;
 	}
 

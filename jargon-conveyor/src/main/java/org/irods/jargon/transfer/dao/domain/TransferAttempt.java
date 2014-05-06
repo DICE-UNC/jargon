@@ -336,7 +336,7 @@ public class TransferAttempt implements Serializable {
 	 *            the transferAttemptTypeEnum to set
 	 */
 	public void setTransferAttemptTypeEnum(
-			TransferAttemptTypeEnum transferAttemptTypeEnum) {
+			final TransferAttemptTypeEnum transferAttemptTypeEnum) {
 		this.transferAttemptTypeEnum = transferAttemptTypeEnum;
 	}
 

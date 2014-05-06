@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.conveyor.core.callables;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
@@ -10,6 +11,9 @@ import org.irods.jargon.conveyor.core.ConveyorExecutionFuture;
 import org.irods.jargon.conveyor.core.ConveyorExecutorService.ErrorStatus;
 import org.irods.jargon.conveyor.core.ConveyorRuntimeException;
 import org.irods.jargon.conveyor.core.ConveyorService;
+import org.irods.jargon.conveyor.core.FlowManagerService;
+import org.irods.jargon.conveyor.flowmanager.flow.FlowSpec;
+import org.irods.jargon.conveyor.flowmanager.microservice.Microservice.ExecResult;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -46,18 +50,20 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
- @Transactional(noRollbackFor = { JargonException.class }, rollbackFor = {
- ConveyorExecutionException.class })
+@Transactional(noRollbackFor = { JargonException.class }, rollbackFor = { ConveyorExecutionException.class })
 public abstract class AbstractConveyorCallable implements
 		Callable<ConveyorExecutionFuture>, TransferStatusCallbackListener {
 
-	// private final Transfer transfer;
 	private final TransferAttempt transferAttempt;
 	private final ConveyorService conveyorService;
 	private TransferControlBlock transferControlBlock;
+	private FlowCoProcessor flowCoProcessor;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractConveyorCallable.class);
+
+	private List<FlowSpec> candidateFlowSpecs = null;
+	private FlowSpec selectedFlowSpec = null;
 
 	/**
 	 * Convenience method to get a <code>IRODSAccount</code> with a decrypted
@@ -109,6 +115,7 @@ public abstract class AbstractConveyorCallable implements
 
 		this.transferAttempt = transferAttempt;
 		this.conveyorService = conveyorService;
+
 	}
 
 	/**
@@ -192,6 +199,12 @@ public abstract class AbstractConveyorCallable implements
 			 * the jargon transfer processes, and are not caught below.
 			 */
 
+			retrieveCandidateFlowSpecs();
+			/*
+			 * initialize the flow co processor. This is done here to avoid
+			 * leaking a this ref from the constructor
+			 */
+			flowCoProcessor = new FlowCoProcessor(this);
 			processCallForThisTransfer(transferControlBlock, irodsAccount);
 			return new ConveyorExecutionFuture();
 		} catch (JargonException je) {
@@ -317,15 +330,75 @@ public abstract class AbstractConveyorCallable implements
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public void statusCallback(final TransferStatus transferStatus)
-			throws JargonException {
+	public FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) throws JargonException {
 		log.info("status callback:{}", transferStatus);
+
+		FileStatusCallbackResponse response = FileStatusCallbackResponse.CONTINUE;
+
 		try {
 			if (transferStatus.getTransferState() == TransferState.SUCCESS
 					|| transferStatus.getTransferState() == TransferStatus.TransferState.IN_PROGRESS_COMPLETE_FILE) {
+
+				if (selectedFlowSpec != null) {
+					log.info("processing post-file flow");
+					ExecResult execResult = flowCoProcessor
+							.executePostFileChain(selectedFlowSpec,
+									transferStatus);
+
+					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+						flowCoProcessor
+								.executeAnyFailureMicroservice(selectedFlowSpec);
+					} else if (execResult == ExecResult.CANCEL_OPERATION) {
+						// cancel is set in coprocessor code
+						log.info("cancelling...");
+
+					} else if (execResult != ExecResult.CONTINUE) {
+						log.error(
+								"unsupported response for a pre-file operation:{}",
+								execResult);
+						throw new ConveyorExecutionException(
+								"unsupported response for a pre-file operation");
+					}
+				}
+
+				// FIXME: how is status updated by a skip, etc? should hti sonly
+				// be for a continue or skip rest of flow?
 				updateTransferStateOnFileCompletion(transferStatus);
-			} else if (transferStatus.getTransferState() == TransferState.OVERALL_INITIATION) {
+
+			} else if (transferStatus.getTransferState() == TransferState.IN_PROGRESS_START_FILE) {
 				log.info("file initiation, this is just passed on by conveyor");
+
+				if (selectedFlowSpec != null) {
+					log.info("processing pre-file flow");
+					ExecResult execResult = flowCoProcessor
+							.executePreFileChain(selectedFlowSpec,
+									transferStatus);
+
+					if (execResult == ExecResult.ABORT_AND_TRIGGER_ANY_ERROR_HANDLER) {
+						flowCoProcessor
+								.executeAnyFailureMicroservice(selectedFlowSpec);
+					} else if (execResult == ExecResult.CANCEL_OPERATION) {
+						// cancel is set in coprocessor code
+						log.info("cancelling...");
+
+					} else if (execResult == ExecResult.SKIP_THIS_FILE) {
+						// FIXME: skip file processing?
+						updateTransferStateOnRestartFile(transferStatus);
+
+						// need to decide whether to just skip out and update
+						// here, or whether to let jargon core do it and call
+						// back again?
+						response = FileStatusCallbackResponse.SKIP;
+					} else if (execResult != ExecResult.CONTINUE) {
+						log.error(
+								"unsupported response for a pre-file operation:{}",
+								execResult);
+						throw new ConveyorExecutionException(
+								"unsupported response for a pre-file operation");
+					}
+				}
+
 			} else if (transferStatus.getTransferState() == TransferState.RESTARTING) {
 				updateTransferStateOnRestartFile(transferStatus);
 
@@ -359,6 +432,8 @@ public abstract class AbstractConveyorCallable implements
 					transferStatus);
 		}
 
+		return response;
+
 	}
 
 	/**
@@ -390,7 +465,10 @@ public abstract class AbstractConveyorCallable implements
 				transferStatus);
 		boolean doComplete = false;
 		try {
-			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
+			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_INITIATION) {
+				// potentially handle any pre proc for operation flow specs
+				handleOverallInitiation(transferStatus);
+			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 				log.info("overall completion...updating status of transfer...");
 				doComplete = true;
 				processOverallCompletionOfTransfer(transferStatus);
@@ -423,6 +501,45 @@ public abstract class AbstractConveyorCallable implements
 				doCompletionSequence();
 			}
 
+		}
+
+	}
+
+	/**
+	 * Handle an overall initiation of a transfer operation, signaling any
+	 * flows, etc
+	 * 
+	 * @param transferStatus
+	 * @throws ConveyorExecutionException
+	 */
+	private void handleOverallInitiation(final TransferStatus transferStatus)
+			throws ConveyorExecutionException {
+		log.info("handleOverallInitiation()");
+		if (getCandidateFlowSpecs().isEmpty()) {
+			log.info("No flows to inspect");
+			return;
+		}
+
+		// need to loop thru and run a condition on candidate flows
+
+		for (FlowSpec flowSpec : candidateFlowSpecs) {
+			boolean runFlow = flowCoProcessor.evaluateCondition(flowSpec,
+					transferStatus);
+			if (runFlow) {
+				log.info("found a flow:{}", runFlow);
+				selectedFlowSpec = flowSpec;
+			}
+		}
+
+		/*
+		 * If I have a flow spec, run the pre op chain, which will be normal,
+		 * will cause a cancellation, or may abort with an error
+		 */
+		if (selectedFlowSpec != null) {
+			log.info("have a flow spec, run any pre flow chain");
+			ExecResult overallResult = flowCoProcessor
+					.executePreOperationChain(selectedFlowSpec, transferStatus);
+			log.info("overall result of pre-flow chain is:{}", overallResult);
 		}
 
 	}
@@ -490,9 +607,7 @@ public abstract class AbstractConveyorCallable implements
 		} finally {
 			log.info("aftar all possible error handling and notification, I am releasing the queue");
 			doCompletionSequence();
-
 		}
-
 	}
 
 	/**
@@ -537,7 +652,7 @@ public abstract class AbstractConveyorCallable implements
 				.updateTransferAfterSuccessfulFileTransfer(transferStatus,
 						getTransferAttempt());
 	}
- 
+
 	/**
 	 * A complete with success callback for an entire transfer operation, make
 	 * the necessary updates
@@ -680,6 +795,67 @@ public abstract class AbstractConveyorCallable implements
 	 */
 	protected Transfer getTransfer() {
 		return getTransferAttempt().getTransfer();
+	}
+
+	/**
+	 * On initiation of a transfer, get any candidate flow specs, selected based
+	 * on properties of the transfer. These will later be evaluated based on
+	 * conditions within the <code>FlowSpec</code>
+	 * 
+	 * @return <code>List</code> of {@link FlowSpec} that are candidates for
+	 *         this transfer attempt. This reflects the flow specs that are
+	 *         cached for this instance
+	 * 
+	 * @throws ConveyorExecutionException
+	 */
+	private List<FlowSpec> retrieveCandidateFlowSpecs()
+			throws ConveyorExecutionException {
+		log.info("retrieveCandidateFlowSpecs()");
+
+		FlowManagerService flowManagerService = conveyorService
+				.getFlowManagerService();
+
+		candidateFlowSpecs = flowManagerService
+				.retrieveCandidateFlowSpecs(getTransferAttempt());
+
+		return candidateFlowSpecs;
+
+	}
+
+	/**
+	 * @return the candidateFlowSpecs that are cached, and this will cache them
+	 *         if they have not been obtained already
+	 * @throws ConveyorExecutionException
+	 */
+	protected synchronized List<FlowSpec> getCandidateFlowSpecs()
+			throws ConveyorExecutionException {
+		if (candidateFlowSpecs == null) {
+			retrieveCandidateFlowSpecs();
+		}
+		return candidateFlowSpecs;
+	}
+
+	/**
+	 * @param candidateFlowSpecs
+	 *            the candidateFlowSpecs to set
+	 */
+	protected synchronized void setCandidateFlowSpecs(
+			final List<FlowSpec> candidateFlowSpecs) {
+		this.candidateFlowSpecs = candidateFlowSpecs;
+	}
+
+	/**
+	 * @return the selectedFlowSpec
+	 */
+	protected FlowSpec getSelectedFlowSpec() {
+		return selectedFlowSpec;
+	}
+
+	/**
+	 * @return the flowCoProcessor
+	 */
+	FlowCoProcessor getFlowCoProcessor() {
+		return flowCoProcessor;
 	}
 
 }

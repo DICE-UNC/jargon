@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.irods.jargon.conveyor.core.AbstractConveyorComponentService;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
@@ -50,34 +49,34 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * Injected dependency
 	 */
 	private SynchronizationDAO synchronizationDAO;
-        
-        
-        /**
-         * injected dependency
-         */
-        private TransferDAO transferDAO;
 
-    public TransferDAO getTransferDAO() {
-        return transferDAO;
-    }
+	/**
+	 * injected dependency
+	 */
+	private TransferDAO transferDAO;
 
-    public void setTransferDAO(TransferDAO transferDAO) {
-        this.transferDAO = transferDAO;
-    }
+	public TransferDAO getTransferDAO() {
+		return transferDAO;
+	}
 
-    public TransferAttemptDAO getTransferAttemptDAO() {
-        return transferAttemptDAO;
-    }
+	public void setTransferDAO(final TransferDAO transferDAO) {
+		this.transferDAO = transferDAO;
+	}
 
-    public void setTransferAttemptDAO(TransferAttemptDAO transferAttemptDAO) {
-        this.transferAttemptDAO = transferAttemptDAO;
-    }
-        
-          /**
-         * injected dependency
-         */
-        private TransferAttemptDAO transferAttemptDAO;
-        
+	public TransferAttemptDAO getTransferAttemptDAO() {
+		return transferAttemptDAO;
+	}
+
+	public void setTransferAttemptDAO(
+			final TransferAttemptDAO transferAttemptDAO) {
+		this.transferAttemptDAO = transferAttemptDAO;
+	}
+
+	/**
+	 * injected dependency
+	 */
+	private TransferAttemptDAO transferAttemptDAO;
+
 	/**
 	 * Injected dependency
 	 */
@@ -126,7 +125,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
 	 */
 	@Override
-	public void addOrUpdateSynchronization(Synchronization synchronization)
+	public void addOrUpdateSynchronization(final Synchronization synchronization)
 			throws ConveyorExecutionException {
 
 		log.info("addOrUpdateSynchronization()");
@@ -177,7 +176,7 @@ public class BasicSychronizationManagerServiceImpl extends
 		IRODSFile irodsFile;
 
 		try {
-			irodsFile = this.conveyorService
+			irodsFile = conveyorService
 					.getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(irodsAccount)
 					.instanceIRODSFile(synchronization.getIrodsSynchDirectory());
@@ -223,7 +222,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
 	 */
 	@Override
-	public void deleteSynchronization(Synchronization synchronization)
+	public void deleteSynchronization(final Synchronization synchronization)
 			throws ConveyorExecutionException {
 		log.info("deleteSynchronization()");
 
@@ -248,7 +247,8 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
 	 */
 	@Override
-	public void purgeSynchronizationHistory(Synchronization synchronization)
+	public void purgeSynchronizationHistory(
+			final Synchronization synchronization)
 			throws DataNotFoundException, ConveyorExecutionException {
 		// TODO Auto-generated method stub
 
@@ -262,7 +262,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * (org.irods.jargon.transfer.dao.domain.Synchronization)
 	 */
 	@Override
-	public void triggerSynchronizationNow(Synchronization synchronization)
+	public void triggerSynchronizationNow(final Synchronization synchronization)
 			throws RejectedTransferException, ConveyorExecutionException {
 
 		log.info(" triggerSynchronizationNow()");
@@ -315,24 +315,23 @@ public class BasicSychronizationManagerServiceImpl extends
 		transfer.setResourceName(synchronization.getGridAccount()
 				.getDefaultResource());
 		transfer.setSynchronization(synchronization);
-                synchronization.getTransfers().add(transfer);
+		synchronization.getTransfers().add(transfer);
 		transfer.setTransferState(TransferStateEnum.ENQUEUED);
 		transfer.setTransferType(TransferType.SYNCH);
 		transfer.setUpdatedAt(now);
-            try {
-     
-                //transferDAO.save(transfer);
-                synchronizationDAO.save(synchronization);
-            } catch (TransferDAOException ex) {
-               log.error("error saving synch", ex);
-               throw new ConveyorExecutionException("error savign synch", ex);
-            }
+		try {
+
+			// transferDAO.save(transfer);
+			synchronizationDAO.save(synchronization);
+		} catch (TransferDAOException ex) {
+			log.error("error saving synch", ex);
+			throw new ConveyorExecutionException("error savign synch", ex);
+		}
 
 		log.info("built transfer for synch:{}", transfer);
 
-		IRODSAccount irodsAccount = this.conveyorService
-				.getGridAccountService().irodsAccountForGridAccount(
-						synchronization.getGridAccount());
+		IRODSAccount irodsAccount = conveyorService.getGridAccountService()
+				.irodsAccountForGridAccount(synchronization.getGridAccount());
 		conveyorService.getQueueManagerService().enqueueTransferOperation(
 				transfer, irodsAccount);
 
@@ -351,7 +350,8 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * @param synchronizationDAO
 	 *            the synchronizationDAO to set
 	 */
-	public void setSynchronizationDAO(SynchronizationDAO synchronizationDAO) {
+	public void setSynchronizationDAO(
+			final SynchronizationDAO synchronizationDAO) {
 		this.synchronizationDAO = synchronizationDAO;
 	}
 
@@ -366,7 +366,7 @@ public class BasicSychronizationManagerServiceImpl extends
 	 * @param conveyorService
 	 *            the conveyorService to set
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 
@@ -379,7 +379,8 @@ public class BasicSychronizationManagerServiceImpl extends
 	 */
 	@Override
 	@Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
-	public Synchronization findById(long id) throws ConveyorExecutionException {
+	public Synchronization findById(final long id)
+			throws ConveyorExecutionException {
 		try {
 			return synchronizationDAO.findById(id);
 		} catch (TransferDAOException e) {
@@ -452,9 +453,9 @@ public class BasicSychronizationManagerServiceImpl extends
 		}
 
 		log.info("update of transfer...");
-                
-                Transfer transfer = transferAttempt.getTransfer();
-                
+
+		Transfer transfer = transferAttempt.getTransfer();
+
 		transfer.setLastTransferStatus(TransferStatusEnum.OK);
 		transfer.setTransferState(TransferStateEnum.COMPLETE);
 		transfer.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -463,8 +464,7 @@ public class BasicSychronizationManagerServiceImpl extends
 		transferAttempt.setAttemptStatus(TransferStatusEnum.OK);
 		transferAttempt.setUpdatedAt(transferAttempt.getAttemptEnd());
 		transferAttempt.setErrorMessage("");
-                Synchronization synchronization = transfer
-				.getSynchronization();
+		Synchronization synchronization = transfer.getSynchronization();
 		if (synchronization == null) {
 			throw new ConveyorExecutionException(
 					"no synchronization configured for the transfer");
@@ -477,16 +477,14 @@ public class BasicSychronizationManagerServiceImpl extends
 		log.info("updated transfer attempt:{}", transferAttempt);
 
 		try {
-                        synchronizationDAO.save(synchronization);
-			//transferAttemptDAO.save(transferAttempt);
-			//transferDAO.save(transfer);
+			synchronizationDAO.save(synchronization);
+			// transferAttemptDAO.save(transferAttempt);
+			// transferDAO.save(transfer);
 		} catch (TransferDAOException ex) {
-                    log.error("transferDAOException on save of transfer data", ex);
+			log.error("transferDAOException on save of transfer data", ex);
 			throw new ConveyorExecutionException(
 					"error saving transfer attempt", ex);
 		}
-                
-       
 
 	}
 

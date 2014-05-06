@@ -33,7 +33,7 @@ public class AbstractSynchronizingComponent {
 	 * @param conveyorService
 	 *            the conveyorService to set
 	 */
-	public void setConveyorService(ConveyorService conveyorService) {
+	public void setConveyorService(final ConveyorService conveyorService) {
 		this.conveyorService = conveyorService;
 	}
 
@@ -49,7 +49,7 @@ public class AbstractSynchronizingComponent {
 	 *            the transferControlBlock to set
 	 */
 	public void setTransferControlBlock(
-			TransferControlBlock transferControlBlock) {
+			final TransferControlBlock transferControlBlock) {
 		this.transferControlBlock = transferControlBlock;
 	}
 
@@ -59,6 +59,6 @@ public class AbstractSynchronizingComponent {
 	 * @return <code>boolean</code> indicating that a cancellation was received
 	 */
 	public boolean isCancelled() {
-		return this.getTransferControlBlock().isCancelled();
+		return getTransferControlBlock().isCancelled();
 	}
 }

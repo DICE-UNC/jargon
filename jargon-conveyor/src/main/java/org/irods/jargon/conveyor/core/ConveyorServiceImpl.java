@@ -351,7 +351,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
-	public void validatePassPhraseInTearOffMode(IRODSAccount irodsAccount)
+	public void validatePassPhraseInTearOffMode(final IRODSAccount irodsAccount)
 			throws AuthenticationException, ConveyorExecutionException,
 			JargonException {
 		log.info("validatePassPhraseInTearOffMode");
@@ -363,11 +363,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 
 			log.info("attempting to authenticate the given account:{}",
 					irodsAccount);
-			AuthResponse authResponse = this.getIrodsAccessObjectFactory()
+			AuthResponse authResponse = getIrodsAccessObjectFactory()
 					.authenticateIRODSAccount(irodsAccount);
 
 			log.info("auth accepted, set the pass phrase to the given password and store the grid Account");
-			this.resetConveyorService();
+			resetConveyorService();
 
 			gridAccountService.validatePassPhrase(irodsAccount.getPassword());
 			gridAccountService.addOrUpdateGridAccountBasedOnIRODSAccount(
@@ -386,7 +386,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	@Override
 	public void setSynchComponentFactory(
-			SynchComponentFactory synchComponentFactory) {
+			final SynchComponentFactory synchComponentFactory) {
 		this.synchComponentFactory = synchComponentFactory;
 
 	}
@@ -399,7 +399,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 	 */
 	@Override
 	public SynchComponentFactory getSynchComponentFactory() {
-		return this.synchComponentFactory;
+		return synchComponentFactory;
 	}
 
 }

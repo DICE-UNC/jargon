@@ -11,7 +11,7 @@ import org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker.VisitorDes
  * results.
  * <p/>
  * E = type of data sent to the invoke method, R = return type from the complete
- * method back to the callser
+ * method back to the caller
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

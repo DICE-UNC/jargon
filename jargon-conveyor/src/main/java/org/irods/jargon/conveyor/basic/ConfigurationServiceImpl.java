@@ -48,8 +48,7 @@ public class ConfigurationServiceImpl extends AbstractConveyorComponentService
 	 */
 	@Override
 	public boolean isInTearOffMode() throws ConveyorExecutionException {
-		ConfigurationProperty property = this
-				.findConfigurationPropertyByKey(TEAR_OFF_MODE);
+		ConfigurationProperty property = findConfigurationPropertyByKey(TEAR_OFF_MODE);
 		boolean inTearOff = false;
 		if (property != null) {
 			inTearOff = Boolean.parseBoolean(property.getPropertyValue());

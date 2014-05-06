@@ -385,7 +385,7 @@ public class GridAccount implements Serializable {
 	 * @param runAsUserName
 	 *            the runAsUserName to set
 	 */
-	public void setRunAsUserName(String runAsUserName) {
+	public void setRunAsUserName(final String runAsUserName) {
 		this.runAsUserName = runAsUserName;
 	}
 
@@ -400,7 +400,7 @@ public class GridAccount implements Serializable {
 	 * @param runAsAuthScheme
 	 *            the runAsAuthScheme to set
 	 */
-	public void setRunAsAuthScheme(AuthScheme runAsAuthScheme) {
+	public void setRunAsAuthScheme(final AuthScheme runAsAuthScheme) {
 		this.runAsAuthScheme = runAsAuthScheme;
 	}
 
@@ -415,7 +415,7 @@ public class GridAccount implements Serializable {
 	 * @param authDate
 	 *            the authDate to set
 	 */
-	public void setAuthDate(Date authDate) {
+	public void setAuthDate(final Date authDate) {
 		this.authDate = authDate;
 	}
 
@@ -430,7 +430,7 @@ public class GridAccount implements Serializable {
 	 * @param runAsPassword
 	 *            the runAsPassword to set
 	 */
-	public void setRunAsPassword(String runAsPassword) {
+	public void setRunAsPassword(final String runAsPassword) {
 		this.runAsPassword = runAsPassword;
 	}
 

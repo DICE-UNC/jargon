@@ -32,8 +32,9 @@ public abstract class AbstractSynchronizingDiffCreator extends
 	private static final Logger log = LoggerFactory
 			.getLogger(AbstractSynchronizingDiffCreator.class);
 
-	public AbstractSynchronizingDiffCreator(ConveyorService conveyorService,
-			TransferControlBlock transferControlBlock) {
+	public AbstractSynchronizingDiffCreator(
+			final ConveyorService conveyorService,
+			final TransferControlBlock transferControlBlock) {
 		super(conveyorService, transferControlBlock);
 	}
 
@@ -133,7 +134,7 @@ public abstract class AbstractSynchronizingDiffCreator extends
 	 * @return {@link TransferStatusCallbackListener}
 	 */
 	protected TransferStatusCallbackListener getConfiguredCallbackListener() {
-		TransferStatusCallbackListener listener = this.getConveyorService()
+		TransferStatusCallbackListener listener = getConveyorService()
 				.getConveyorCallbackListener();
 		assert listener != null;
 		return listener;

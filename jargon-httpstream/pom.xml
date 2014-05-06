@@ -4,7 +4,7 @@
   <parent>
     <artifactId>jargon</artifactId>
     <groupId>org.irods</groupId>
-	<version>3.3.3-SNAPSHOT</version>
+	<version>3.3.5-SNAPSHOT</version>
   </parent>
   <groupId>org.irods.jargon</groupId>
   <artifactId>jargon-httpstream</artifactId> 

@@ -123,7 +123,8 @@ public class BasicQueueManagerServiceImpl extends
 
 		log.info("reenqueueTransferAtBootstrapTime()");
 
-		reenqueueTransfer(transferId);
+		conveyorService.getTransferAccountingManagementService()
+				.restartProcessingTransferAtStartup(transferId);
 
 		log.info("restart enqueued, queue is not yet triggered...");
 
@@ -152,7 +153,7 @@ public class BasicQueueManagerServiceImpl extends
 		} catch (TransferDAOException e) {
 			throw new ConveyorExecutionException();
 		}
-                
+
 		conveyorService.getTransferAccountingManagementService()
 				.prepareTransferForRestart(transferId);
 	}
@@ -328,12 +329,13 @@ public class BasicQueueManagerServiceImpl extends
 				log.error(
 						"transfer attempt is not available in the transfer:{}, \nwill delete [this is an error recovery step]",
 						transfer);
-                               // transferDAO.delete(transfer);
-                                // FIXME: what to do here?  S
-                                getConveyorExecutorService().setOperationCompleted();
+				// transferDAO.delete(transfer);
+				// FIXME: what to do here? S
+				getConveyorExecutorService().setOperationCompleted();
 				return;
-                                
-                               // throw new ConveyorExecutionException("cannot find transfer attempt for transfer");
+
+				// throw new
+				// ConveyorExecutionException("cannot find transfer attempt for transfer");
 			}
 
 			transferAttempt.setAttemptStart(new Timestamp(System
@@ -359,7 +361,7 @@ public class BasicQueueManagerServiceImpl extends
 			getConveyorExecutorService().setOperationCompleted();
 			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(je);
-			//dequeueNextOperation();
+			// dequeueNextOperation();
 		} catch (Exception e) {
 			log.error("jargon exception dequeue operation, will unlock queue");
 
@@ -374,7 +376,7 @@ public class BasicQueueManagerServiceImpl extends
 			getConveyorExecutorService().setOperationCompleted();
 			getConveyorService().getConveyorCallbackListener()
 					.signalUnhandledConveyorException(e);
-			//dequeueNextOperation();
+			// dequeueNextOperation();
 		}
 	}
 
