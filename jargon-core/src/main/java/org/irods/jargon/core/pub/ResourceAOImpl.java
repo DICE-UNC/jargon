@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public static final String ERROR_IN_RESOURCE_QUERY = "error in resource query";
 	private final transient ResourceAOHelper resourceAOHelper;
@@ -527,6 +527,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS.getName());
+		query.append(COMMA);
+		query.append(RodsGenQueryEnum.COL_META_USER_ATTR_ID.getName());
 
 		query.append(WHERE);
 		boolean previousElement = false;

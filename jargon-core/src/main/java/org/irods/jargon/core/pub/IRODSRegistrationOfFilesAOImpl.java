@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -234,6 +235,83 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 		getIRODSProtocol().irodsFunction(dataObjInp);
 
 		return localChecksum;
+	}
+
+	public String registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(
+			final String physicalPath, final String irodsAbsolutePath,
+			final String destinationResource, final String resourceGroup,
+			final ChecksumEncoding checksumEncoding)
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
+
+		log.info("registerPhysicalDataFileToIRODSWithVerifyLocalChecksum()");
+
+		if (physicalPath == null || physicalPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty physical path");
+		}
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (destinationResource == null || destinationResource.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty destination resource");
+		}
+
+		if (resourceGroup == null) {
+			throw new IllegalArgumentException(
+					"null resourceGroup, set to blank if not used");
+		}
+
+		if (checksumEncoding == null) {
+			throw new IllegalArgumentException("null checksum encoding");
+		}
+
+		log.info("physicalPath:{}", physicalPath);
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("destinationResource:{}", destinationResource);
+		log.info("resourceGroup:{}", resourceGroup);
+		log.info("checksumEncoding:{}", checksumEncoding);
+
+		File localFile = new File(physicalPath);
+		if (!localFile.exists()) {
+			log.error("cannot find local file");
+			throw new DataNotFoundException("file to register does not exist");
+		}
+
+		if (!localFile.isFile()) {
+			throw new JargonException(
+					"given file is a collection, not a data object");
+		}
+
+		log.info("calculating local checksum..");
+		ChecksumHandling checksumHandling = ChecksumHandling.VERFIY_CHECKSUM;
+
+		String localFileChecksum;
+		if (checksumEncoding == ChecksumEncoding.MD5
+				|| checksumEncoding == ChecksumEncoding.DEFAULT) {
+			localFileChecksum = LocalFileUtils
+					.md5ByteArrayToString(LocalFileUtils
+							.computeMD5FileCheckSumViaAbsolutePath(physicalPath));
+		} else if (checksumEncoding == ChecksumEncoding.SHA256) {
+			localFileChecksum = LocalFileUtils
+					.md5ByteArrayToString(LocalFileUtils
+							.computeSHA256FileCheckSumViaAbsolutePath(physicalPath));
+		} else {
+			throw new JargonException("unsupported checksum type");
+		}
+
+		log.info("local file checksum:{}", localFileChecksum);
+
+		DataObjInpForReg dataObjInp = DataObjInpForReg.instance(physicalPath,
+				irodsAbsolutePath, resourceGroup, destinationResource, false,
+				false, checksumHandling, false, localFileChecksum);
+
+		getIRODSProtocol().irodsFunction(dataObjInp);
+
+		return localFileChecksum;
 	}
 
 	/*
