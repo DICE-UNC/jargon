@@ -163,6 +163,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
 		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
 				.getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing
+				.setParentAbsolutePath(absolutePathToParent);
+		pagingAwareCollectionListing.setPathComponents(MiscIRODSUtils
+				.breakIRODSPathIntoComponents(absolutePathToParent));
+
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
@@ -204,11 +209,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			log.info("adding child collections");
 			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
 					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setCount(queriedEntries
-					.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing
-					.setTotalRecords(queriedEntries.get(0)
-							.getTotalRecords());
+			pagingAwareCollectionListing.setCount(queriedEntries.get(
+					queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing.setTotalRecords(queriedEntries.get(0)
+					.getTotalRecords());
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(
 							queriedEntries);

@@ -20,8 +20,7 @@ import org.slf4j.LoggerFactory;
  * Implementation of an object that iterates over an iRODS collection, listing
  * child objects in a paging aware fashion
  * 
- * @author Mike Conway DICE (www.irods.org)
- * 
+ * @author Mike Conway DICE (www.irods.org) FIXME: deprecate this?
  */
 public class CollectionIteratorAOImpl extends IRODSGenericAO {
 
@@ -103,11 +102,10 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			log.info("adding child collections");
 			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
 					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setCount(queriedEntries
-					.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing
-					.setTotalRecords(queriedEntries.get(0)
-							.getTotalRecords());
+			pagingAwareCollectionListing.setCount(queriedEntries.get(
+					queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing.setTotalRecords(queriedEntries.get(0)
+					.getTotalRecords());
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(
 							queriedEntries);

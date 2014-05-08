@@ -26,6 +26,16 @@ public class PagingAwareCollectionListing {
 	}
 
 	/**
+	 * Absolute path to the parent of the listed contents as requested
+	 */
+	private String parentAbsolutePath = "";
+
+	/**
+	 * List of <code>String</code> path components for the parent listing
+	 */
+	private List<String> pathComponents = new ArrayList<String>();
+
+	/**
 	 * Represents the paging style supported by the underlying source of the
 	 * listing. For example, the iRODS iCAT treats collections and data objects
 	 * as separate entities with a paging status for each type, while other
@@ -216,6 +226,22 @@ public class PagingAwareCollectionListing {
 
 	public PagingStyle getPagingStyle() {
 		return pagingStyle;
+	}
+
+	public String getParentAbsolutePath() {
+		return parentAbsolutePath;
+	}
+
+	public List<String> getPathComponents() {
+		return pathComponents;
+	}
+
+	public void setParentAbsolutePath(String parentAbsolutePath) {
+		this.parentAbsolutePath = parentAbsolutePath;
+	}
+
+	public void setPathComponents(List<String> pathComponents) {
+		this.pathComponents = pathComponents;
 	}
 
 }
