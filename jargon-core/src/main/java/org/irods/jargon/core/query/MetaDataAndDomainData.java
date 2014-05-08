@@ -21,6 +21,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	private final MetadataDomain metadataDomain;
 	private final String domainObjectId;
 	private final String domainObjectUniqueName;
+	private final int avuId;
 	private final String avuAttribute;
 	private final String avuValue;
 	private final String avuUnit;
@@ -37,6 +38,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * @param domainObjectUniqueName
 	 *            <code>String</code> with the unique name in ICAT, such as
 	 *            absolute path or resource name
+	 * @param avuId
+	 *            <code>int</code> with the AVU id
 	 * @param avuAttribute
 	 *            <code>String</code> with the AVU attribute
 	 * @param avuValue
@@ -49,10 +52,11 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 */
 	public static MetaDataAndDomainData instance(
 			final MetadataDomain metadataDomain, final String domainObjectId,
-			final String domainObjectUniqueName, final String avuAttribute,
-			final String avuValue, final String avuUnit) throws JargonException {
+			final String domainObjectUniqueName, final int avuId,
+			final String avuAttribute, final String avuValue,
+			final String avuUnit) throws JargonException {
 		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
-				domainObjectUniqueName, avuAttribute, avuValue, avuUnit);
+				domainObjectUniqueName, avuId, avuAttribute, avuValue, avuUnit);
 	}
 
 	@Override
@@ -65,6 +69,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		sb.append(domainObjectId);
 		sb.append("\n   domainObjectUniqueName:");
 		sb.append(domainObjectUniqueName);
+		sb.append("\n   avuId:");
+		sb.append(avuId);
 		sb.append("\n   avuAttribute:");
 		sb.append(avuAttribute);
 		sb.append("\n   avuValue:");
@@ -76,7 +82,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	private MetaDataAndDomainData(final MetadataDomain metadataDomain,
 			final String domainObjectId, final String domainObjectUniqueName,
-			final String avuAttribute, final String avuValue,
+			final int avuId, final String avuAttribute, final String avuValue,
 			final String avuUnit) throws JargonException {
 
 		if (metadataDomain == null) {
@@ -107,6 +113,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		this.metadataDomain = metadataDomain;
 		this.domainObjectId = domainObjectId;
 		this.domainObjectUniqueName = domainObjectUniqueName;
+		this.avuId = avuId;
 		this.avuAttribute = avuAttribute;
 		this.avuValue = avuValue;
 		this.avuUnit = avuUnit;
@@ -134,6 +141,10 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	public MetadataDomain getMetadataDomain() {
 		return metadataDomain;
+	}
+
+	public int getAvuId() {
+		return avuId;
 	}
 
 }

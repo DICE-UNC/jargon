@@ -12,8 +12,14 @@ import javax.crypto.spec.PBEParameterSpec;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CacheEncryptor {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(CacheEncryptor.class);
+
 	Cipher ecipher;
 	Cipher dcipher;
 
@@ -25,7 +31,9 @@ public class CacheEncryptor {
 	int iterationCount = 19;
 
 	public CacheEncryptor(final String passPhrase) {
+		log.info("CacheEncryptor()");
 		try {
+			log.info("create key");
 			// Create the key
 			KeySpec keySpec = new PBEKeySpec(passPhrase.toCharArray(), salt,
 					iterationCount);
@@ -34,13 +42,17 @@ public class CacheEncryptor {
 			ecipher = Cipher.getInstance(key.getAlgorithm());
 			dcipher = Cipher.getInstance(key.getAlgorithm());
 
+			log.info("prepare the param to the ciphers");
 			// Prepare the parameter to the ciphers
 			AlgorithmParameterSpec paramSpec = new PBEParameterSpec(salt,
 					iterationCount);
 
+			log.info("create cyphers");
+
 			// Create the ciphers
 			ecipher.init(Cipher.ENCRYPT_MODE, key, paramSpec);
 			dcipher.init(Cipher.DECRYPT_MODE, key, paramSpec);
+			log.info("cyphers created");
 		} catch (java.security.InvalidAlgorithmParameterException e) {
 			throw new JargonRuntimeException("error creating cacheEncryptor");
 

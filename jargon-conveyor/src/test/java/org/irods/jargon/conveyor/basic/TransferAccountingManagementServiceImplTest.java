@@ -175,9 +175,8 @@ public class TransferAccountingManagementServiceImplTest {
 		Assert.assertEquals("should have an error attempt status",
 				TransferStatusEnum.ERROR,
 				transferAttemptExecution.getAttemptStatus());
-		Assert.assertEquals(
-				"should have  error message",
-				TransferAccountingManagementServiceImpl.ERROR_ATTEMPTING_TO_RUN,
+		Assert.assertEquals("should have  error message",
+				TransferAccountingManagementService.ERROR_ATTEMPTING_TO_RUN,
 				transferAttemptExecution.getErrorMessage());
 		Assert.assertEquals("should have global exception message",
 				myException.getMessage(),

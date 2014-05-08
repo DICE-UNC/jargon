@@ -5,6 +5,7 @@ import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
@@ -282,5 +283,13 @@ public interface IRODSFile {
 	 */
 	boolean createNewFileCheckNoResourceFound()
 			throws NoResourceDefinedException, JargonException;
+
+	/**
+	 * Handy method to return a file:// based URL from the iRODS file, instead
+	 * of the irods:// protocol format
+	 * 
+	 * @return {@link URL} in file:// format
+	 */
+	public abstract URL toFileBasedURL();
 
 }

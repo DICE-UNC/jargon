@@ -2,7 +2,6 @@ package org.irods.jargon.transfer.dao;
 
 import static org.junit.Assert.assertTrue;
 import junit.framework.Assert;
-import junit.framework.TestCase;
 
 import org.irods.jargon.transfer.dao.domain.KeyStore;
 import org.junit.AfterClass;
@@ -80,7 +79,7 @@ public class KeyStoreDAOImplTest {
 		keyStoreDAO.save(keyStore);
 		keyStoreDAO.delete(keyStore);
 		KeyStore found = keyStoreDAO.findById(KeyStore.KEY_STORE_PASS_PHRASE);
-		TestCase.assertNull("should not find", found);
+		Assert.assertNull("should not find", found);
 	}
 
 }

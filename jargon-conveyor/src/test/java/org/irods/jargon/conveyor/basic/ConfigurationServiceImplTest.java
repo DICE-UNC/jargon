@@ -171,14 +171,14 @@ public class ConfigurationServiceImplTest {
 		configurationService.addConfigurationProperty(configProperty);
 
 		ConfigurationProperty actual = configurationService
-				.findConfigurationServiceByKey(testKey);
+				.findConfigurationPropertyByKey(testKey);
 		Assert.assertNotNull("did not find key for props just added", actual);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindConfigurationPropertyByKeyNull() throws Exception {
-		configurationService.findConfigurationServiceByKey(null);
+		configurationService.findConfigurationPropertyByKey(null);
 	}
 
 	@Test

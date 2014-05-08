@@ -15,6 +15,7 @@ import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.exception.InvalidGroupException;
+import org.irods.jargon.core.exception.InvalidInputParameterException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
@@ -101,7 +102,8 @@ public class IRODSErrorScanner {
 
 			} catch (IllegalArgumentException iae) {
 				throw new JargonException(
-						"Unknown iRODS exception code recieved", infoValue);
+						"Unknown iRODS exception code recieved:" + infoValue,
+						infoValue);
 			}
 
 			log.debug("errorEnum val:{}", errorEnum);
@@ -198,6 +200,8 @@ public class IRODSErrorScanner {
 			throw new DataNotFoundException("Special collection not found");
 		case PAM_AUTH_ERROR:
 			throw new AuthenticationException("PAM authentication error");
+		case INVALID_INPUT_PARAM:
+			throw new InvalidInputParameterException("Invalid input parameter");
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

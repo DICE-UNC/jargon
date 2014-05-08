@@ -327,6 +327,7 @@ public class ConveyorExecutorServiceImpl implements ConveyorExecutorService {
 			currentTransferAttempt = null;
 			currentTransferFuture = null;
 			currentCallable = null;
+			log.info("cleared...operation complete");
 		}
 	}
 

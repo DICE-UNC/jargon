@@ -18,6 +18,14 @@ public interface TransferStatusCallbackListener {
 	}
 
 	/**
+	 * Callback response that is honored for pre-file transfer callbacks and can
+	 * skip the transfer of the specific file
+	 */
+	public enum FileStatusCallbackResponse {
+		CONTINUE, SKIP
+	}
+
+	/**
 	 * Method that will receive a callback on the status of a transfer
 	 * operation. Note that when a status listener is registered for callbacks,
 	 * that exceptions that occur in the transfer are not thrown, rather, the
@@ -28,10 +36,14 @@ public interface TransferStatusCallbackListener {
 	 * @param transferStatus
 	 *            {@link org.irods.jargon.core.transfer.TransferStatus} with
 	 *            information on the transfer.
+	 * @return {@link FileStatusCallbackResponse} that indicates whether a file
+	 *         should be skipped in a pre file operation. The nominal response
+	 *         is CONTINUE, a SKIP has no effect except in the pre file transfer
+	 *         response
 	 * @throws JargonException
 	 */
-	void statusCallback(final TransferStatus transferStatus)
-			throws JargonException;
+	FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) throws JargonException;
 
 	/**
 	 * Method will reeive a callback at the initiation and completion of an

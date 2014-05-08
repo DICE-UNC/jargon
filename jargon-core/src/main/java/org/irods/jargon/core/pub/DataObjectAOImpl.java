@@ -1,6 +1,11 @@
 package org.irods.jargon.core.pub;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,10 +14,12 @@ import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InvalidInputParameterException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
@@ -26,6 +33,7 @@ import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.BulkAVUOperationResponse.ResultStatus;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
@@ -741,10 +749,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info(
 						"before generating parallel transfer threads, computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils
-						.md5ByteArrayToString(LocalFileUtils
-								.computeMD5FileCheckSumViaAbsolutePath(localFile
-										.getAbsolutePath()));
+				String localFileChecksum = dataAOHelper
+						.computeLocalFileChecksum(localFile, myTransferOptions);
+
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
 
@@ -1331,10 +1338,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							.isComputeAndVerifyChecksumAfterTransfer()) {
 				log.info("computing a checksum on the file at:{}",
 						localFileToHoldData.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils
-						.md5ByteArrayToString(LocalFileUtils
-								.computeMD5FileCheckSumViaAbsolutePath(localFileToHoldData
-										.getAbsolutePath()));
+
+				String localFileChecksum = dataAOHelper
+						.computeLocalFileChecksum(localFileToHoldData,
+								thisFileTransferOptions);
+
 				log.info("local file checksum is:{}", localFileChecksum);
 				String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
 				log.info("irods checksum:{}", irodsChecksum);
@@ -1507,11 +1515,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
 					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
+
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL,
@@ -1589,6 +1600,103 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		final IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				fileAbsolutePath);
 		return irodsFile;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject
+	 * (java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("addBulkAVUMetadataToDataObject()");
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolute path");
+		}
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				addAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when adding an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
+				continue;
+			} catch (DuplicateDataException dde) {
+				log.error(
+						"DuplicateDataException when adding an AVU, catch and add to response data",
+						dde);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.DUPLICATE_AVU, value, dde.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
+	 * (java.lang.String, java.util.List)
+	 */
+	@Override
+	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(
+			final String absolutePath, final List<AvuData> avuData)
+			throws JargonException {
+
+		log.info("deleteBulkAVUMetadataFromDataObject()");
+
+		if (avuData == null || avuData.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuData");
+		}
+
+		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+
+		for (AvuData value : avuData) {
+			try {
+				deleteAVUMetadata(absolutePath, value);
+			} catch (DataNotFoundException dnf) {
+				log.error(
+						"dataNotFoundException when deleti an AVU, catch and add to response data",
+						dnf);
+				responses.add(BulkAVUOperationResponse.instance(
+						ResultStatus.MISSING_METADATA_TARGET, value,
+						dnf.getMessage()));
+				continue;
+
+			}
+
+			log.info("treat as success...", value);
+			responses.add(BulkAVUOperationResponse.instance(ResultStatus.OK,
+					value, ""));
+		}
+
+		log.info("...complete");
+		return responses;
 	}
 
 	/*
@@ -1722,6 +1830,53 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	@Override
+	public void deleteAllAVUForDataObject(final String absolutePath)
+			throws DataNotFoundException, JargonException {
+
+		/*
+		 * There are multiple objsStats being called, need to consolidate this
+		 * and have methods that can take in a passed in object stat
+		 */
+
+		log.info("deleteAllAVForDataObject()");
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		log.info("absolute path: {}", absolutePath);
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (FileNotFoundException e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			return;
+		}
+
+		List<MetaDataAndDomainData> metadatas = this
+				.findMetadataValuesForDataObject(objStat);
+
+		List<AvuData> avusToDelete = new ArrayList<AvuData>();
+
+		for (MetaDataAndDomainData metadata : metadatas) {
+			avusToDelete.add(AvuData.instance(metadata.getAvuAttribute(),
+					metadata.getAvuValue(), metadata.getAvuUnit()));
+		}
+
+		deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1852,6 +2007,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
 					.addSelectAsGenQueryValue(
@@ -2305,12 +2462,124 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
+	 * (java.lang.String, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForDataObjectById(
+			final String dataObjectAbsolutePath, final int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException {
+
+		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty dataObjectAbsolutePath");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
+
+		log.info("findMetadataValueForDataObjectById: {}",
+				dataObjectAbsolutePath);
+		log.info("id:{}", id);
+
+		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		return findMetadataValueForDataObjectById(objStat, id);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
+	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
+	 */
+	@Override
+	public MetaDataAndDomainData findMetadataValueForDataObjectById(
+			final ObjStat objStat, final int id) throws DataNotFoundException,
+			JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null or empty objStat");
+		}
+
+		log.info("findMetadataValueForDataObjectById: {}", objStat);
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info(
+					"objStat indicates collection type that does not support this operation:{}",
+					objStat);
+			throw new JargonException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		// need to break up the path for the query
+		IRODSFile dataObjectFile = getIRODSFileFactory().instanceIRODSFile(
+				absPath);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
+				null);
+		IRODSQueryResultSetInterface resultSet;
+
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							dataObjectFile.getParent())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL,
+							dataObjectFile.getName())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_META_DATA_ATTR_ID,
+							QueryConditionOperators.EQUAL, id);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(absPath));
+
+			return DataAOHelper
+					.buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+							resultSet.getFirstResult(), 1);
+
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query", e);
+			throw new JargonException("error building query", e);
+		} catch (JargonQueryException jqe) {
+			log.error("error executing query", jqe);
+			throw new JargonException("error executing query", jqe);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (java.lang.String)
 	 */
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForDataObject(
-			final String dataObjectAbsolutePath) throws JargonException {
+			final String dataObjectAbsolutePath) throws FileNotFoundException,
+			JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -2321,10 +2590,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(dataObjectAbsolutePath);
-
 		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+
+		return findMetadataValuesForDataObject(objStat);
+	}
+
+	private List<MetaDataAndDomainData> findMetadataValuesForDataObject(
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("null or empty objStat");
+		}
+
+		log.info("findMetadataValuesForDataObject: {}", objStat);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
@@ -2335,13 +2614,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		CollectionAndPath collectionAndName = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(objStat
+						.getAbsolutePath());
+
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(
-					queryElements, collName.getCollectionParent(),
-					collName.getChildName());
+					queryElements, collectionAndName.getCollectionParent(),
+					collectionAndName.getChildName());
 		} catch (JargonQueryException e) {
 			log.error("query exception looking up data object:{}",
-					dataObjectAbsolutePath, e);
+					objStat.getAbsolutePath(), e);
 			throw new JargonException(e);
 		}
 	}
@@ -2404,6 +2687,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getStringValue();
 		log.info("checksum is: {}", returnedChecksum);
 		return returnedChecksum;
+	}
+
+	// FIXME: implement
+	public String computeChecksumOnDataObject(final IRODSFile irodsFile,
+			final ChecksumEncoding checksumEncoding) throws JargonException {
+		return null;
 	}
 
 	/*
@@ -3450,9 +3739,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 			return DataAOHelper.buildListFromResultSet(resultSet);
 		} catch (Exception e) {
-			log.error("Error executing Query getReplicationsForFile() for "
-					+ collectionAbsPath + "/" + fileName + " " + e.getMessage()
-					+ e.getStackTrace());
+			log.error("Error executing Query getReplicationsForFile()", e);
 			throw new JargonException(
 					"error querying for files in resource group", e);
 		}
@@ -3811,10 +4098,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					MiscIRODSUtils.wrapStringInQuotes("null")));
 		}
 
-		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
-				"/rules/trimDataObject.r", irodsRuleParameters,
-				RuleProcessingType.EXTERNAL);
-		log.info("result of action:{}", result.getRuleExecOut().trim());
+		try {
+			IRODSRuleExecResult result = ruleProcessingAO
+					.executeRuleFromResource("/rules/trimDataObject.r",
+							irodsRuleParameters, RuleProcessingType.EXTERNAL);
+			log.info("result of action:{}", result.getRuleExecOut().trim());
+
+		} catch (InvalidInputParameterException e) {
+			log.warn(
+					"invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",
+					e);
+			if (getIRODSServerProperties().isEirods()) {
+				log.warn("ignored....is eirods");
+			} else {
+				throw e;
+			}
+		}
 
 	}
 
@@ -3864,10 +4163,67 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					irodsQuery, 0);
 
 			return DataAOHelper.buildListFromResultSet(resultSet);
+
 		} catch (Exception e) {
 			log.error("error querying for replicas", e);
 			throw new JargonException("error querying for file replicas", e);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(java.lang.String)
+	 */
+	@Override
+	public byte[] computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(
+			final String irodsAbsolutePath) throws DataNotFoundException,
+			JargonException {
+
+		log.info("computeSHA1ChecksumOfIrodsFileByReadingDataFromStream()");
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		log.info("get input stream and read to compute sha1");
+		InputStream is = new BufferedInputStream(getIRODSFileFactory()
+				.instanceIRODSFileInputStream(irodsAbsolutePath));
+		MessageDigest md;
+		try {
+			md = MessageDigest.getInstance("SHA1");
+		} catch (NoSuchAlgorithmException e) {
+			log.error("unable to get SHA1 message digest", e);
+			throw new JargonException("cannot commute SHA1 checksum", e);
+		}
+
+		byte[] dataBytes = new byte[1024];
+
+		int nread = 0;
+
+		try {
+			while ((nread = is.read(dataBytes)) != -1) {
+				md.update(dataBytes, 0, nread);
+			}
+		} catch (IOException e) {
+			log.error("IO exception computing sha1 checksum", e);
+			throw new JargonException(e.getMessage());
+		} finally {
+			try {
+				is.close();
+			} catch (IOException e) {
+				// ignore
+			}
+		}
+
+		byte[] mdbytes = md.digest();
+		log.info("computed");
+		return mdbytes;
+
 	}
 
 }

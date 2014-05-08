@@ -12,14 +12,14 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSRuleExecResultOutputParameter {
+public class IRODSRuleExecResultOutputParameter {
 	public enum OutputParamType {
 		RULE_EXEC_OUT, QUERY_OUT, CLIENT_ACTION_RESULT, STRING, INT
 	}
 
-	private final String parameterName;
-	private final OutputParamType outputParamType;
-	private final Object resultObject;
+	private String parameterName;
+	private OutputParamType outputParamType;
+	private Object resultObject;
 
 	/**
 	 * Return a new immutable value object that encapsulates the output of a
@@ -58,7 +58,7 @@ public final class IRODSRuleExecResultOutputParameter {
 		return sb.toString();
 	}
 
-	private IRODSRuleExecResultOutputParameter(final String parameterName,
+	protected IRODSRuleExecResultOutputParameter(final String parameterName,
 			final OutputParamType outputParamType, final Object resultObject)
 			throws JargonException {
 
@@ -79,6 +79,9 @@ public final class IRODSRuleExecResultOutputParameter {
 		this.resultObject = resultObject;
 	}
 
+	public IRODSRuleExecResultOutputParameter() {
+	}
+
 	public String getParameterName() {
 		return parameterName;
 	}
@@ -89,6 +92,30 @@ public final class IRODSRuleExecResultOutputParameter {
 
 	public Object getResultObject() {
 		return resultObject;
+	}
+
+	/**
+	 * @param parameterName
+	 *            the parameterName to set
+	 */
+	public void setParameterName(final String parameterName) {
+		this.parameterName = parameterName;
+	}
+
+	/**
+	 * @param outputParamType
+	 *            the outputParamType to set
+	 */
+	public void setOutputParamType(final OutputParamType outputParamType) {
+		this.outputParamType = outputParamType;
+	}
+
+	/**
+	 * @param resultObject
+	 *            the resultObject to set
+	 */
+	public void setResultObject(final Object resultObject) {
+		this.resultObject = resultObject;
 	}
 
 }

@@ -14,6 +14,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
@@ -312,13 +313,14 @@ public final class DataAOHelper extends AOHelper {
 		sb.append('/');
 		sb.append(row.getColumn(2));
 		String domainUniqueName = sb.toString();
-		String attributeName = row.getColumn(3);
-		String attributeValue = row.getColumn(4);
-		String attributeUnits = row.getColumn(5);
+		int attributeId = Integer.parseInt(row.getColumn(3));
+		String attributeName = row.getColumn(4);
+		String attributeValue = row.getColumn(5);
+		String attributeUnits = row.getColumn(6);
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, domainId, domainUniqueName, attributeName,
-				attributeValue, attributeUnits);
+				MetadataDomain.DATA, domainId, domainUniqueName, attributeId,
+				attributeName, attributeValue, attributeUnits);
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
@@ -339,7 +341,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	void processNormalGetTransfer(final File localFileToHoldData,
-			final long length, final AbstractIRODSMidLevelProtocol irodsProtocol,
+			final long length,
+			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
@@ -491,10 +494,10 @@ public final class DataAOHelper extends AOHelper {
 					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
 				log.info("computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
-				String localFileChecksum = LocalFileUtils
-						.md5ByteArrayToString(LocalFileUtils
-								.computeMD5FileCheckSumViaAbsolutePath(localFile
-										.getAbsolutePath()));
+
+				String localFileChecksum = computeLocalFileChecksum(localFile,
+						myTransferOptions);
+
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
 			}
@@ -532,6 +535,32 @@ public final class DataAOHelper extends AOHelper {
 		irodsProtocol.irodsFunctionIncludingAllDataInStream(dataObjInp,
 				localFile.length(), fileInputStream, intraFileStatusListener);
 
+	}
+
+	/**
+	 * @param localFile
+	 * @param myTransferOptions
+	 * @return
+	 * @throws JargonException
+	 */
+	String computeLocalFileChecksum(final File localFile,
+			TransferOptions myTransferOptions) throws JargonException {
+		String localFileChecksum;
+		if (myTransferOptions.getChecksumEncoding() == ChecksumEncoding.MD5
+				|| myTransferOptions.getChecksumEncoding() == ChecksumEncoding.DEFAULT) {
+			localFileChecksum = LocalFileUtils
+					.md5ByteArrayToString(LocalFileUtils
+							.computeMD5FileCheckSumViaAbsolutePath(localFile
+									.getAbsolutePath()));
+		} else if (myTransferOptions.getChecksumEncoding() == ChecksumEncoding.SHA256) {
+			localFileChecksum = LocalFileUtils
+					.md5ByteArrayToString(LocalFileUtils
+							.computeSHA256FileCheckSumViaAbsolutePath(localFile
+									.getAbsolutePath()));
+		} else {
+			throw new JargonException("unsupported checksum type");
+		}
+		return localFileChecksum;
 	}
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite,

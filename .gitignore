@@ -1,6 +1,5 @@
 **/.classpath
-*/.DS_Store
-**.DS_Store
+.DS_Store
 **/nb-configuration.xml
 **/.springBeans
 **/testing.properties
@@ -11,6 +10,7 @@ Servers
 .settings
 .classpath
 target
+mvn-repo
 bin
 *.war
 *.log
@@ -19,7 +19,3 @@ nbactions.xml
 testing.properties
 */test-output
 JargonVersion.java
-<<<<<<< HEAD
-=======
-
->>>>>>> master

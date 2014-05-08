@@ -622,10 +622,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            object
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
 	 * @throws JargonException
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForDataObject(
-			String dataObjectAbsolutePath) throws JargonException;
+			String dataObjectAbsolutePath) throws FileNotFoundException,
+			JargonException;
 
 	/**
 	 * This is a special method to modify the Avu value for a given attribute
@@ -1077,5 +1080,108 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void replicateIrodsDataObjectAsynchronously(
 			String irodsCollectionAbsolutePath, String fileName,
 			String resourceName, int delayInMinutes) throws JargonException;
+
+	/**
+	 * Given a list of avu metadata, add all to the data object. A response will
+	 * be returned giving individual success/failure information. For example,
+	 * an attempt to add a duplicate AVU will result in an error entry in the
+	 * response versus a thrown exception.
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param avuData
+	 *            <code>List</code> of {@link AvuData} for each AVU to be added.
+	 * @return {@link BulkAVUOperationResponse} with details on the success or
+	 *         failure of the add of each AVU.
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
+	 * @throws JargonException
+	 */
+	List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
+			String absolutePath, List<AvuData> avuData)
+			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Given a list of avu metadata, delete all from the data object. A response
+	 * will be returned giving individual success/failure information. Note that
+	 * a delete of a non-existent AVU will be silently ignored
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @param avuData
+	 *            <code>List</code> of {@link AvuData} for each AVU to be
+	 *            deleted.
+	 * @return {@link BulkAVUOperationResponse} with details on the success or
+	 *         failure of the delete of each AVU.
+	 * @throws FileNotFoundException
+	 *             if the data object is missing
+	 * @throws JargonException
+	 */
+	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(
+			String absolutePath, List<AvuData> avuData) throws JargonException;
+
+	/**
+	 * Clear all AVUs from the given data object by doing a bulk delete
+	 * operation
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the data object
+	 * @throws DataNotFoundException
+	 *             if the data object is not found
+	 * @throws JargonException
+	 */
+	void deleteAllAVUForDataObject(final String absolutePath)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Utility to stream back an iRODS file and compute a SHA-1 checksum value.
+	 * Note that this requires pulling in the file data via stream so it can be
+	 * expensive to do for large files. Further, this computed checksum is not
+	 * the one stored in iRODS, rather it is computed on the fly. Be aware that
+	 * data has to be read to compute this value, and it can be expensive.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path
+	 * @return <code>byte[]</code> with a SHA-1 checksum value
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	byte[] computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(
+			final String irodsAbsolutePath) throws DataNotFoundException,
+			JargonException;
+
+	/**
+	 * Look up an AVU associated with a data object by providing an ObjStat and
+	 * id (the id key of the AVU)
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the data object
+	 * @param id
+	 *            <code>int</code> with the unique key for the AVU attribute
+	 * @return {@link MetaDataAndDomainData} representing that AVU
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 *             if the AVU is not found
+	 */
+	MetaDataAndDomainData findMetadataValueForDataObjectById(ObjStat objStat,
+			int id) throws DataNotFoundException, JargonException;
+
+	/**
+	 * Look up an AVU associated with a data object by providing a path and id
+	 * (the id key of the AVU)
+	 * 
+	 * @param dataObjectAbsolutePath
+	 *            <code>String</code> with the absolute path for the data object
+	 * @param id
+	 *            <code>int</code> with the unique key for the AVU attribute
+	 * @return {@link MetaDataAndDomainData} representing that AVU
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 *             if the AVU is not found
+	 */
+	MetaDataAndDomainData findMetadataValueForDataObjectById(
+			String dataObjectAbsolutePath, int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException;
 
 }

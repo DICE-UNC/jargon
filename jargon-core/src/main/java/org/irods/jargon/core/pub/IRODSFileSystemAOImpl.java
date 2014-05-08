@@ -29,7 +29,6 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -541,13 +540,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		List<String> subdirs = new ArrayList<String>();
-		String path = "";
-
-		if (irodsFile.isDirectory()) {
-			path = irodsFile.getAbsolutePath();
-		} else {
-			path = irodsFile.getParent();
-		}
+		String path = irodsFile.getAbsolutePath();
 
 		log.debug("path for query:{}", path);
 
@@ -643,10 +636,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	private void processRowForSubdirWhenListDirWithFilter(
 			final FilenameFilter fileNameFilter, final List<String> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
-		String thisFileDir;
-		thisFileDir = row.getColumn(0);
-		if (fileNameFilter.accept(new File(thisFileDir), "")) {
-			subdirs.add(row.getColumn(0));
+		File fileFromResult = new File(row.getColumn(1));
+		if (fileNameFilter.accept(fileFromResult.getParentFile(),
+				fileFromResult.getName())) {
+			subdirs.add(row.getColumn(1));
 		}
 	}
 
@@ -665,8 +658,14 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		// this is a file, does it pass the file name filter?
 		thisFileName = row.getColumn(1);
 		thisFileDir = row.getColumn(0);
+		StringBuilder sb = new StringBuilder();
+		sb.append(thisFileDir);
+		sb.append('/');
+		sb.append(thisFileName);
+		String fileName = sb.toString();
+
 		if (fileNameFilter.accept(new File(thisFileDir), thisFileName)) {
-			subdirs.add(row.getColumn(1));
+			subdirs.add(fileName);
 		}
 	}
 
@@ -896,7 +895,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irodsFile is null");
 		}
 
-		IRODSFileImpl irodsFileImpl = (IRODSFileImpl) irodsFile;
+		IRODSFile irodsFileImpl = irodsFile;
 
 		String absPath = resolveAbsolutePathGivenObjStat((irodsFileImpl
 				.initializeObjStatForFile()));

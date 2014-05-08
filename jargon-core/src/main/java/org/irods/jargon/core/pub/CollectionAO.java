@@ -932,7 +932,56 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *             if an unexpected exception not anticipated by the bulk AVU
 	 *             process occurs
 	 */
-	List<BulkAVUOperationResponse> deleteBulkAVUMetadataToCollection(
+	List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(
 			String absolutePath, List<AvuData> avuData) throws JargonException;
+
+	/**
+	 * Do a buld delete of all AVUs associated with the collection
+	 * 
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path for the collection
+	 * @throws DataNotFoundException
+	 *             if the collection is missing
+	 * @throws JargonException
+	 */
+	void deleteAllAVUMetadata(String absolutePath)
+			throws DataNotFoundException, JargonException;
+
+	/**
+	 * Query for a specific AVU associated with the collection based on the
+	 * metadata id
+	 * 
+	 * @param collectionAbsolutePath
+	 *            <code>String</code> with the absolute path to the iRODS
+	 *            collection
+	 * @param id
+	 *            <code>int</code> with the id of the avu (unique database key)
+	 * @return {@link MetaDataAndDomainData} at the given id
+	 * @throws FileNotFoundException
+	 *             if the collection is not found
+	 * @throws DataNotFoundException
+	 *             if the avu is not found
+	 * @throws JargonException
+	 */
+	MetaDataAndDomainData findMetadataValueForCollectionByMetadataId(
+			String collectionAbsolutePath, int id)
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException;
+
+	/**
+	 * Query for a specific AVU associated with the collection based on the
+	 * metadata id and a provided objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} previously obtained objStat of a collection
+	 * @param id
+	 *            <code>int</code> with the id of the avu (unique database key)
+	 * @return {@link MetaDataAndDomainData} at the given id
+	 * @throws DataNotFoundException
+	 *             if the avu is not found
+	 * @throws JargonException
+	 */
+	MetaDataAndDomainData findMetadataValueForCollectionById(ObjStat objStat,
+			int id) throws DataNotFoundException, JargonException;
 
 }

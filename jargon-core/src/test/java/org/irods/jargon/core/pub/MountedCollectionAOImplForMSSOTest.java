@@ -47,6 +47,11 @@ public class MountedCollectionAOImplForMSSOTest {
 
 	@Test
 	public void testMountMSSOWorkflow() throws Exception {
+
+		if (!testingPropertiesHelper.isTestWorkflow(testingProperties)) {
+			return;
+		}
+
 		String targetCollectionName = "testMountMSSOWorkflow";
 		String subMountCollection = "testMountMSSOWorkflowMounted";
 		String mssoFile = "/msso/eCWkflow.mss";

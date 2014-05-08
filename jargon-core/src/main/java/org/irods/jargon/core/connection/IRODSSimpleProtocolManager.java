@@ -66,7 +66,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 		}
 
 		checkMidLevelProtocolFactory(irodsSession);
-		return this.createNewProtocol(irodsAccount, pipelineConfiguration,
+		return createNewProtocol(irodsAccount, pipelineConfiguration,
 				irodsSession);
 	}
 
@@ -77,13 +77,12 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 */
 	private synchronized void checkMidLevelProtocolFactory(
 			final IRODSSession irodsSession) throws JargonException {
-		if (this.getIrodsMidLevelProtocolFactory() == null) {
-			IRODSConnectionFactory irodsConnectionFactory = this
-					.getIrodsConnectionFactoryProducingFactory().instance(
-							irodsSession.getJargonProperties());
+		if (getIrodsMidLevelProtocolFactory() == null) {
+			IRODSConnectionFactory irodsConnectionFactory = getIrodsConnectionFactoryProducingFactory()
+					.instance(irodsSession.getJargonProperties());
 
-			this.setIrodsMidLevelProtocolFactory(new IRODSMidLevelProtocolFactory(
-					irodsConnectionFactory, this.getAuthenticationFactory()));
+			setIrodsMidLevelProtocolFactory(new IRODSMidLevelProtocolFactory(
+					irodsConnectionFactory, getAuthenticationFactory()));
 		}
 	}
 

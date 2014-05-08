@@ -1157,6 +1157,59 @@ public class DataTransferOperationsImplTest {
 				localFile, returnedData);
 	}
 
+	/*
+	 * https://github.com/DICE-UNC/jargon/issues/1 transfer get of file with
+	 * parens and spaces in name gives file not found #1
+	 */
+	@Test
+	public void testPutThenGetOneFileBug1() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testPutThenGetOneFileBug1 (1).txt";
+		String testRetrievedFileName = "ttestPutThenGetOneFileBug1 (1) Retreived.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now get
+		File retrievedLocalFile = new File(absPath + testRetrievedFileName);
+		dataTransferOperationsAO.getOperation(destFile, retrievedLocalFile,
+				null, null);
+
+		// compare checkums
+
+		long origChecksum = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localFile.getAbsolutePath());
+		long retrievedChecksum = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localFile.getAbsolutePath());
+
+		// byte[] retrievedChecksum =
+		// scratchFileUtils.computeFileCheckSumViaAbsolutePath(retrievedLocalFile.getAbsolutePath());
+
+		Assert.assertEquals(origChecksum, retrievedChecksum);
+	}
+
 	@Test
 	public void testPutThenGetOneFile() throws Exception {
 		// generate a local scratch file
@@ -1214,8 +1267,8 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testPutThenGetOneFileWithSpecialCharsÅßá.txt";
-		String testRetrievedFileName = "testPutThenGetOneFileRetreivedòËæêðāéu,1o·ÆÃ.txt";
+		String testFileName = "testPutThenGetOneFileWithSpecialCharsÃ…ÃŸÃ¡.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreivedÃ²Ã‹Ã¦ÃªÃ°Ä�Ã©u,1oÂ·Ã†Ãƒ.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -1807,6 +1860,67 @@ public class DataTransferOperationsImplTest {
 				destFile.list().length);
 		Assert.assertTrue("should have a status callback of cancelled",
 				listener.isCancelEncountered());
+	}
+
+	@Test
+	public void testPutWithSkip() throws Exception {
+
+		String rootCollection = "testPutWithSkip";
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		/*
+		 * Keep an even number for testing skips
+		 */
+		int fileCtr = 10;
+
+		// listener will give skip callback for odd files
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 0, true);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator.generateManyFilesInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath, "testPutWithCancel", ".txt",
+				fileCtr, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, listener,
+				transferControlBlock);
+
+		irodsFileSystem = IRODSFileSystem.instance();
+		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+
+		// I've put a mess of stuff, now get it
+
+		int expectedSkipped = fileCtr / 2;
+		Assert.assertEquals("didnt get an init callback for each file",
+				fileCtr, listener.getInitCallbackCtr());
+		Assert.assertEquals("didnt get skips for half", expectedSkipped,
+				listener.getSkipCtr());
+		Assert.assertEquals("didnt get transfers for half", expectedSkipped,
+				listener.getPutCallbackCtr());
+
 	}
 
 	@Test
@@ -2569,6 +2683,68 @@ public class DataTransferOperationsImplTest {
 				"did not get count matching expected files in the transferControlBlock",
 				transferControlBlock.getTotalFilesToTransfer(),
 				transferControlBlock.getTotalFilesTransferredSoFar());
+
+	}
+
+	@Test
+	public void testGetWithSkipOfEvenFiles() throws Exception {
+
+		String rootCollection = "testGetWithSkipOfEvenFiles";
+		String returnedLocalCollection = "testGetWithSkipOfEvenFilesReturned";
+
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+
+		TransferStatusCallbackListenerTestingImplementation listener = new TransferStatusCallbackListenerTestingImplementation(
+				transferControlBlock, 0, 0, true);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, rootCollection, 3, 4, 2,
+						"prefix", ".suffix", 7, 2, 1, 3);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// now get the files into a local return collection and verify
+		IRODSFile getIrodsFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+		String returnLocalCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedLocalCollection);
+		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
+
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
+				listener, transferControlBlock);
+
+		Assert.assertEquals("transfer controls out of balance",
+				listener.getInitCallbackCtr(),
+				transferControlBlock.getTotalFilesTransferredSoFar());
+
+		Assert.assertEquals(
+				"skip counts disagree between listener and transferControlBlock",
+				listener.getSkipCtr(),
+				transferControlBlock.getTotalFilesSkippedSoFar());
 
 	}
 

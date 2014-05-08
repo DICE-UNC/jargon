@@ -18,6 +18,7 @@ import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.IRODSFileSystemAOImpl;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSUriUtils;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 //import org.perf4j.StopWatch;
@@ -54,6 +55,32 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
 				getIRODSSession(), getIRODSAccount());
 		return new IRODSFileImpl(path, irodsFileSystem);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileUserHomeDir
+	 * (java.lang.String)
+	 */
+	@Override
+	public IRODSFile instanceIRODSFileUserHomeDir(final String userName)
+			throws JargonException {
+
+		log.info("instanceIRODSFileUserHomeDir()");
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
+				getIRODSSession(), getIRODSAccount());
+
+		String homePath = MiscIRODSUtils
+				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+						getIRODSAccount(), userName);
+		return new IRODSFileImpl(homePath, irodsFileSystem);
 	}
 
 	/*
@@ -111,6 +138,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			throw new JargonException("both child and parent names are blank");
 		}
 
+		if (child.isEmpty()) {
+			return instanceIRODSFile(parent);
+		}
+
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(
 				getIRODSSession(), getIRODSAccount());
 
@@ -140,6 +171,10 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		if (child == null) {
 			throw new JargonException("child is null");
+		}
+
+		if (child.isEmpty()) {
+			return instanceIRODSFile(parent.getAbsolutePath());
 		}
 
 		IRODSFileSystemAO irodsFileSystem = new IRODSFileSystemAOImpl(

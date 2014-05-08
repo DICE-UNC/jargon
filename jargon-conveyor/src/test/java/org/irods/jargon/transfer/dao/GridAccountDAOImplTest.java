@@ -5,7 +5,7 @@ import static org.junit.Assert.assertTrue;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.TestCase;
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -68,7 +68,7 @@ public class GridAccountDAOImplTest {
 
 		gridAccountDAO.save(gridAccount);
 		List<GridAccount> actual = gridAccountDAO.findAll();
-		TestCase.assertFalse("no results returned", actual.isEmpty());
+		Assert.assertFalse("no results returned", actual.isEmpty());
 
 	}
 
@@ -82,7 +82,7 @@ public class GridAccountDAOImplTest {
 
 		gridAccountDAO.save(gridAccount);
 		GridAccount actual = gridAccountDAO.findById(gridAccount.getId());
-		TestCase.assertNotNull("not found", actual);
+		Assert.assertNotNull("not found", actual);
 
 	}
 
@@ -96,7 +96,7 @@ public class GridAccountDAOImplTest {
 		gridAccount.setId(new Long(99999999));
 
 		GridAccount actual = gridAccountDAO.findById(gridAccount.getId());
-		TestCase.assertNull("should have returned null", actual);
+		Assert.assertNull("should have returned null", actual);
 
 	}
 
@@ -113,7 +113,7 @@ public class GridAccountDAOImplTest {
 		GridAccount actual = gridAccountDAO.findByHostZoneAndUserName(
 				irodsAccount.getHost(), irodsAccount.getZone(),
 				irodsAccount.getUserName());
-		TestCase.assertNotNull("not found", actual);
+		Assert.assertNotNull("not found", actual);
 
 	}
 
@@ -127,7 +127,7 @@ public class GridAccountDAOImplTest {
 		GridAccount actual = gridAccountDAO.findByHostZoneAndUserName(
 				irodsAccount.getHost(), irodsAccount.getZone(),
 				irodsAccount.getUserName());
-		TestCase.assertNull("no results should be returned", actual);
+		Assert.assertNull("no results should be returned", actual);
 
 	}
 
@@ -207,10 +207,10 @@ public class GridAccountDAOImplTest {
 
 		gridAccountDAO.save(gridAccount);
 		GridAccount actual = gridAccountDAO.findById(gridAccount.getId());
-		TestCase.assertNotNull("not found", actual);
+		Assert.assertNotNull("not found", actual);
 		gridAccountDAO.delete(gridAccount);
 		actual = gridAccountDAO.findById(gridAccount.getId());
-		TestCase.assertNull("found, should have deleted", actual);
+		Assert.assertNull("found, should have deleted", actual);
 
 	}
 

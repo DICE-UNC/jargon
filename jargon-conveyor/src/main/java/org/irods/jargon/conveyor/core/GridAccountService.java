@@ -6,6 +6,7 @@ package org.irods.jargon.conveyor.core;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.transfer.dao.domain.GridAccount;
 import org.irods.jargon.transfer.dao.domain.KeyStore;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
@@ -204,5 +205,26 @@ public interface GridAccountService {
 	 */
 	void rememberDefaultStorageResource(String resourceName,
 			IRODSAccount irodsAccount) throws ConveyorExecutionException;
+
+	/**
+	 * Update the stored grid account, including optional
+	 * <code>AuthResponse</code> data from an authentication. This allows
+	 * caching of a secondary runAs identity. This is useful in authentication
+	 * scenarios where a temporary account may be generated upon login and used,
+	 * such as during PAM authentication.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} to save
+	 * @param authResponse
+	 *            {@link AuthResponse} to save, this may be left
+	 *            <code>null</code>, and if supplied will be cached in the grid
+	 *            account information
+	 * @return {@link GridAccount} that corresponds to the iRODS account
+	 * @throws PassPhraseInvalidException
+	 * @throws ConveyorExecutionException
+	 */
+	GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+			final IRODSAccount irodsAccount, final AuthResponse authResponse)
+			throws PassPhraseInvalidException, ConveyorExecutionException;
 
 }

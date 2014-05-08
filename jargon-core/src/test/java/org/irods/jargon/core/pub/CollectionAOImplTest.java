@@ -292,6 +292,85 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public final void testFindMetadataValueForCollectionById() throws Exception {
+		String testDirName = "testFindMetadataValueForCollectionById";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// initialize the AVU data
+		String expectedAttribName = "testmdattrib1".toUpperCase();
+		String expectedAttribValue = "testmdvalue1";
+		String expectedAttribUnits = "test1mdunits";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQueryForCollection(queryElements,
+						targetIrodsCollection);
+
+		Assert.assertEquals("did not find the avu", 1, result.size());
+
+		MetaDataAndDomainData expected = result.get(0);
+
+		MetaDataAndDomainData actual = collectionAO
+				.findMetadataValueForCollectionByMetadataId(
+						targetIrodsCollection, expected.getAvuId());
+		Assert.assertEquals("didnt find the avu", expected.getAvuAttribute(),
+				actual.getAvuAttribute());
+
+	}
+
+	@Test(expected = DataNotFoundException.class)
+	public final void testFindMetadataValueForCollectionByIdMissingAvu()
+			throws Exception {
+		String testDirName = "testFindMetadataValueForCollectionByIdMissingAvu";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile irodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		collectionAO.findMetadataValueForCollectionByMetadataId(
+				targetIrodsCollection, 999);
+
+	}
+
+	@Test
 	public final void testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive()
 			throws Exception {
 		String testDirName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive";
@@ -512,7 +591,7 @@ public class CollectionAOImplTest {
 
 		// added, now delete the same and observe they are all gone
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
@@ -554,7 +633,7 @@ public class CollectionAOImplTest {
 
 		// check idempotency
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);
@@ -567,6 +646,79 @@ public class CollectionAOImplTest {
 			Assert.assertNotNull("no avuData in response",
 					response.getAvuData());
 		}
+
+	}
+
+	@Test
+	public void testDeleteAllAvuMetadata() throws Exception {
+		String testDirName = "testDeleteAllAvuMetadata";
+		String expectedAttribName = "testDeleteAllAvuMetadataattrib1";
+		String expectedAttribValue = "testDeleteAllAvuMetadatavalue1";
+
+		String expectedAttribName2 = "testDeleteAllAvuMetadataattrib2";
+		String expectedAttribValue2 = "testDeleteAllAvuMetadatavalue2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile dirFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection);
+		dirFile.mkdirs();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		List<AvuData> listOfAvuData = new ArrayList<AvuData>();
+
+		listOfAvuData.add(AvuData.instance(expectedAttribName,
+				expectedAttribValue, ""));
+		listOfAvuData.add(AvuData.instance(expectedAttribName2,
+				expectedAttribValue2, ""));
+
+		collectionAO.addBulkAVUMetadataToCollection(targetIrodsCollection,
+				listOfAvuData);
+
+		// added, now delete the same and observe they are all gone
+
+		collectionAO.deleteAllAVUMetadata(targetIrodsCollection);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue));
+
+		List<MetaDataAndDomainData> result = collectionAO
+				.findMetadataValuesByMetadataQueryForCollection(queryElements,
+						dirFile.getAbsolutePath());
+		Assert.assertTrue("should have been deleted", result.isEmpty());
+
+		queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue2));
+
+		Assert.assertTrue("should have been deleted", result.isEmpty());
 
 	}
 
@@ -606,7 +758,7 @@ public class CollectionAOImplTest {
 
 		// added, now delete the same and observe they are all gone
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);
@@ -623,7 +775,7 @@ public class CollectionAOImplTest {
 
 		// check idempotency
 
-		responses = collectionAO.deleteBulkAVUMetadataToCollection(
+		responses = collectionAO.deleteBulkAVUMetadataFromCollection(
 				targetIrodsCollection, listOfAvuData);
 
 		Assert.assertNotNull("no responses", responses);

@@ -812,8 +812,7 @@ public class IRODSFileSystemAOImplTest {
 				null, tcb);
 
 		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/'
-						+ topLevelTestDir);
+				.instanceIRODSFile(targetIrodsCollection);
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		List<String> subdirs = fileSystemAO.getListInDirWithFilter(irodsFile,

@@ -58,38 +58,48 @@ public class GridAccountConfigurationProcessorTest {
 		GridAccountConfigurationProcessor.serializeIRODSAccountListToFile(
 				testFile, irodsAccounts);
 		Assert.assertTrue("file does not exist", testFile.exists());
-		List<IRODSAccount> actual = GridAccountConfigurationProcessor.deserializeIRODSAccountListFromFile(testFile);
+		List<IRODSAccount> actual = GridAccountConfigurationProcessor
+				.deserializeIRODSAccountListFromFile(testFile);
 		IRODSAccount expected = irodsAccounts.get(0);
 		Assert.assertEquals("did not get an account", 1, actual.size());
-		Assert.assertEquals("bad host", expected.getHost(), actual.get(0).getHost());
-		Assert.assertEquals("bad port", expected.getPort(), actual.get(0).getPort());
-		Assert.assertEquals("bad zone", expected.getZone(), actual.get(0).getZone());
-		Assert.assertEquals("bad user", expected.getUserName(), actual.get(0).getUserName());
-		Assert.assertEquals("bad resource", expected.getDefaultStorageResource(), actual.get(0).getDefaultStorageResource());
-		Assert.assertEquals("bad home dir", expected.getHomeDirectory(), actual.get(0).getHomeDirectory());
-		Assert.assertEquals("bad auth type", expected.getAuthenticationScheme(), actual.get(0).getAuthenticationScheme());
+		Assert.assertEquals("bad host", expected.getHost(), actual.get(0)
+				.getHost());
+		Assert.assertEquals("bad port", expected.getPort(), actual.get(0)
+				.getPort());
+		Assert.assertEquals("bad zone", expected.getZone(), actual.get(0)
+				.getZone());
+		Assert.assertEquals("bad user", expected.getUserName(), actual.get(0)
+				.getUserName());
+		Assert.assertEquals("bad resource", expected
+				.getDefaultStorageResource(), actual.get(0)
+				.getDefaultStorageResource());
+		Assert.assertEquals("bad home dir", expected.getHomeDirectory(), actual
+				.get(0).getHomeDirectory());
+		Assert.assertEquals("bad auth type",
+				expected.getAuthenticationScheme(), actual.get(0)
+						.getAuthenticationScheme());
 
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testSerializeIRODSAccountListNullFile() throws Exception {
-		ArrayList<IRODSAccount> irodsAccounts = new ArrayList<IRODSAccount>();		
-		GridAccountConfigurationProcessor.serializeIRODSAccountListToFile(
-				null, irodsAccounts);
+		ArrayList<IRODSAccount> irodsAccounts = new ArrayList<IRODSAccount>();
+		GridAccountConfigurationProcessor.serializeIRODSAccountListToFile(null,
+				irodsAccounts);
 	}
-	
-	@Test(expected=IllegalArgumentException.class)
+
+	@Test(expected = IllegalArgumentException.class)
 	public void testSerializeIRODSAccountListNullAccounts() throws Exception {
 		String testFileName = "testSerializeIRODSAccountListToFile.txt";
 		String testFileAbsPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ "/" + testFileName);
 		File testFile = new File(testFileAbsPath);
-		
+
 		GridAccountConfigurationProcessor.serializeIRODSAccountListToFile(
 				testFile, null);
 	}
-	
+
 	@Test
 	public void testSerializeIRODSAccountListEmptyAccounts() throws Exception {
 		String testFileName = "testSerializeIRODSAccountListToFile.txt";
@@ -98,12 +108,13 @@ public class GridAccountConfigurationProcessorTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ "/" + testFileName);
 		File testFile = new File(testFileAbsPath);
-		
+
 		GridAccountConfigurationProcessor.serializeIRODSAccountListToFile(
 				testFile, irodsAccounts);
-		List<IRODSAccount> actual = GridAccountConfigurationProcessor.deserializeIRODSAccountListFromFile(testFile);
+		List<IRODSAccount> actual = GridAccountConfigurationProcessor
+				.deserializeIRODSAccountListFromFile(testFile);
 		Assert.assertEquals("should get empty account list", 0, actual.size());
-		
+
 	}
 
 }

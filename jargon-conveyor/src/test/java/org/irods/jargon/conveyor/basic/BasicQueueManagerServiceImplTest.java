@@ -35,6 +35,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -337,10 +338,10 @@ public class BasicQueueManagerServiceImplTest {
 				dto);
 		Mockito.doThrow(new JargonException("blah"))
 				.when(dto)
-				.putOperation(Mockito.anyString(), Mockito.anyString(),
-						Mockito.anyString(),
-						Mockito.any(TransferStatusCallbackListener.class),
-						Mockito.any(TransferControlBlock.class));
+				.putOperation(Matchers.anyString(), Matchers.anyString(),
+						Matchers.anyString(),
+						Matchers.any(TransferStatusCallbackListener.class),
+						Matchers.any(TransferControlBlock.class));
 		Mockito.when(
 				irodsAccessObjectFactory
 						.buildDefaultTransferControlBlockBasedOnJargonProperties())

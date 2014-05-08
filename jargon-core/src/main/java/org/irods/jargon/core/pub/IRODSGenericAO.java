@@ -121,7 +121,8 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
-	public final AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException {
+	public final AbstractIRODSMidLevelProtocol getIRODSProtocol()
+			throws JargonException {
 		return getIRODSSession().currentConnection(getIRODSAccount());
 	}
 

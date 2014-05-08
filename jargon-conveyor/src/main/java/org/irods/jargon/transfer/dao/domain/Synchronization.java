@@ -55,6 +55,13 @@ public class Synchronization {
 	private String irodsSynchDirectory;
 
 	/**
+	 * Optional (blank if not used) resource that will be used to override the
+	 * resource used for any synch operations
+	 */
+	@Column(name = "default_storage_resource", nullable = false)
+	private String defaultStorageResource = "";
+
+	/**
 	 * Join to table that contain the grid login information
 	 */
 	@ManyToOne(targetEntity = GridAccount.class, fetch = FetchType.LAZY)
@@ -89,7 +96,8 @@ public class Synchronization {
 	private String lastSynchronizationMessage;
 
 	/**
-	 * Enumerated mode of the synchronization (direction of synch)
+	 * Enumerated mode of the synchronization (direction of
+	 * org.irods.jargon.conveyor.synch)
 	 */
 	@Column(name = "synchronization_mode", nullable = false)
 	@Enumerated(EnumType.STRING)
@@ -322,6 +330,21 @@ public class Synchronization {
 	 */
 	public void setGridAccount(final GridAccount gridAccount) {
 		this.gridAccount = gridAccount;
+	}
+
+	/**
+	 * @return the defaultStorageResource
+	 */
+	public String getDefaultStorageResource() {
+		return defaultStorageResource;
+	}
+
+	/**
+	 * @param defaultStorageResource
+	 *            the defaultStorageResource to set
+	 */
+	public void setDefaultStorageResource(final String defaultStorageResource) {
+		this.defaultStorageResource = defaultStorageResource;
 	}
 
 }

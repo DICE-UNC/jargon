@@ -7,8 +7,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -926,7 +928,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public synchronized File[] listFiles(final FilenameFilter filter) {
 		try {
 			List<String> result = irodsFileSystemAO.getListInDirWithFilter(
-					this, new IRODSAcceptAllFileNameFilter());
+					this, filter);
 			IRODSFileImpl[] a = new IRODSFileImpl[result.size()];
 			IRODSFileImpl irodsFile;
 			int i = 0;
@@ -1204,6 +1206,27 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		return uri;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#toFileBasedURL()
+	 */
+	@Override
+	public URL toFileBasedURL() {
+		log.info("toFileBasedURL()");
+		StringBuilder sb = new StringBuilder();
+		sb.append("file://");
+		sb.append(getAbsolutePath());
+
+		try {
+			return new URL(sb.toString());
+		} catch (MalformedURLException e) {
+			log.error("malformedURL", e);
+			throw new JargonRuntimeException(e);
+		}
+
 	}
 
 	/*

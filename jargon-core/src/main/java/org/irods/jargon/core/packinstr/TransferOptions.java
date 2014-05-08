@@ -1,5 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
+import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
+
 /**
  * Represents options that control the transfer of data to and from iRODS (get
  * and put). This is not an immutable object to make setting the various options
@@ -38,6 +40,7 @@ public class TransferOptions {
 	private boolean intraFileStatusCallbacks = false;
 	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
 	private boolean useParallelTransfer = true;
+	private ChecksumEncoding checksumEncoding = ChecksumEncoding.DEFAULT;
 
 	/**
 	 * DataType option for putting certain types of special files
@@ -82,6 +85,8 @@ public class TransferOptions {
 		sb.append(useParallelTransfer);
 		sb.append("\n   putOption:");
 		sb.append(putOption);
+		sb.append("\n   checksumEncoding:");
+		sb.append(checksumEncoding);
 		return sb.toString();
 	}
 
@@ -111,6 +116,7 @@ public class TransferOptions {
 				setForceOption(transferOptions.getForceOption());
 				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
 				setPutOption(transferOptions.getPutOption());
+				setChecksumEncoding(transferOptions.getChecksumEncoding());
 			}
 		}
 	}
@@ -283,7 +289,7 @@ public class TransferOptions {
 	 * @return useParallelTransfer <code>boolean</code> which is
 	 *         <code>true</code> if parallel transfers can be usd
 	 */
-	public boolean isUseParallelTransfer() {
+	public synchronized boolean isUseParallelTransfer() {
 		return useParallelTransfer;
 	}
 
@@ -293,14 +299,15 @@ public class TransferOptions {
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> with the useParallelTransfer option
 	 */
-	public void setUseParallelTransfer(final boolean useParallelTransfer) {
+	public synchronized void setUseParallelTransfer(
+			final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
 	/**
 	 * @return the putOption
 	 */
-	public PutOptions getPutOption() {
+	public synchronized PutOptions getPutOption() {
 		return putOption;
 	}
 
@@ -308,8 +315,28 @@ public class TransferOptions {
 	 * @param putOption
 	 *            the putOption to set
 	 */
-	public void setPutOption(final PutOptions putOption) {
+	public synchronized void setPutOption(final PutOptions putOption) {
 		this.putOption = putOption;
 	}
 
+	public synchronized ChecksumEncoding getChecksumEncoding() {
+		return checksumEncoding;
+	}
+
+	/**
+	 * Set the type of checksum to use for iRODS. The default is MD5, and for
+	 * versions of iRODS 3.3.1 and higher SHA256 is available
+	 * 
+	 * @param checksumEncoding
+	 */
+	public synchronized void setChecksumEncoding(
+			final ChecksumEncoding checksumEncoding) {
+
+		if (checksumEncoding == null) {
+			throw new IllegalArgumentException("null checksumEncoding");
+		}
+
+		this.checksumEncoding = checksumEncoding;
+
+	}
 }

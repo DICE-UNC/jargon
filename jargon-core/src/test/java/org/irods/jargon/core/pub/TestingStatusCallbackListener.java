@@ -18,7 +18,8 @@ public class TestingStatusCallbackListener implements
 	private int numberIntraFileCallbacks = 0;
 
 	@Override
-	public void statusCallback(final TransferStatus transferStatus) {
+	public FileStatusCallbackResponse statusCallback(
+			final TransferStatus transferStatus) {
 
 		if (transferStatus.isIntraFileStatusReport()) {
 			numberIntraFileCallbacks++;
@@ -34,6 +35,8 @@ public class TestingStatusCallbackListener implements
 			lastTargetPath = transferStatus.getTargetFileAbsolutePath();
 			lastResource = transferStatus.getTargetResource();
 		}
+
+		return FileStatusCallbackResponse.CONTINUE;
 
 	}
 

@@ -8,12 +8,12 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.pub.io.IRODSFile;
-import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
+import org.irods.jargon.core.transfer.TransferStatusCallbackListener.FileStatusCallbackResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -160,13 +160,12 @@ final class TransferOperationsHelper {
 						log.warn("unable to make directories in local file system, log and proceed");
 					}
 
-					recursivelyGet((IRODSFileImpl) fileInSourceCollection,
+					recursivelyGet((IRODSFile) fileInSourceCollection,
 							newSubCollection, transferStatusCallbackListener,
 							transferControlBlock);
 
 				} else {
-					processGetOfSingleFile(
-							(IRODSFileImpl) fileInSourceCollection,
+					processGetOfSingleFile((IRODSFile) fileInSourceCollection,
 							targetLocalFile, transferStatusCallbackListener,
 							transferControlBlock);
 				}
@@ -262,7 +261,32 @@ final class TransferOperationsHelper {
 						dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
 								.getIRODSAccount().getZone());
 
-				transferStatusCallbackListener.statusCallback(status);
+				/*
+				 * The callback listener may respond with a request to skip this
+				 * particular file
+				 */
+
+				FileStatusCallbackResponse response = transferStatusCallbackListener
+						.statusCallback(status);
+				if (response == FileStatusCallbackResponse.SKIP) {
+					log.info(
+							"file signalled as skipped in callback response:{}",
+							irodsSourceFile.getAbsolutePath());
+					transferControlBlock.incrementFilesSkippedSoFar();
+					status = TransferStatus.instance(TransferType.GET,
+							irodsSourceFile.getAbsolutePath(), targetLocalFile
+									.getAbsolutePath(), "", 0, 0,
+							transferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							transferControlBlock.getTotalFilesSkippedSoFar(),
+							totalFiles, TransferState.SKIPPING, dataObjectAO
+									.getIRODSAccount().getHost(), dataObjectAO
+									.getIRODSAccount().getZone());
+
+					transferStatusCallbackListener.statusCallback(status);
+					return;
+				}
+
 			}
 
 			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
@@ -485,15 +509,23 @@ final class TransferOperationsHelper {
 				totalFiles = transferControlBlock.getTotalFilesToTransfer();
 			}
 
+			int filesTransferredSoFar = 0;
+			int filesSkippedSoFar = 0;
+
+			if (transferControlBlock != null) {
+				filesTransferredSoFar = transferControlBlock
+						.getTotalFilesTransferredSoFar();
+				filesSkippedSoFar = transferControlBlock
+						.getTotalFilesSkippedSoFar();
+			}
+
 			TransferStatus status = TransferStatus.instanceForException(
 					TransferType.PUT, fileInSourceCollection.getAbsolutePath(),
-					newIrodsFile.getAbsolutePath(), "",
-					fileInSourceCollection.length(),
-					fileInSourceCollection.length(),
-					transferControlBlock.getTotalFilesTransferredSoFar(),
-					transferControlBlock.getTotalFilesSkippedSoFar(),
-					totalFiles, je, dataObjectAO.getIRODSAccount().getHost(),
-					dataObjectAO.getIRODSAccount().getZone());
+					newIrodsFile.getAbsolutePath(), "", fileInSourceCollection
+							.length(), fileInSourceCollection.length(),
+					filesTransferredSoFar, filesSkippedSoFar, totalFiles, je,
+					dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
+							.getIRODSAccount().getZone());
 
 			log.info("status callback to be sent for error:{}", status);
 			transferStatusCallbackListener.statusCallback(status);
@@ -798,7 +830,35 @@ final class TransferOperationsHelper {
 								.getIRODSAccount().getHost(), dataObjectAO
 								.getIRODSAccount().getZone());
 
-				transferStatusCallbackListener.statusCallback(status);
+				/*
+				 * I make the status callback, and the listener, if configured,
+				 * may respond to skip this file or continue. If they say skip,
+				 * then send a callback that says this was done, and increment
+				 * the skipped count in the tcb
+				 */
+
+				FileStatusCallbackResponse response = transferStatusCallbackListener
+						.statusCallback(status);
+				if (response == FileStatusCallbackResponse.SKIP) {
+					log.info(
+							"file signalled as skipped in callback response:{}",
+							sourceFile.getAbsolutePath());
+					transferControlBlock.incrementFilesSkippedSoFar();
+
+					status = TransferStatus.instance(TransferType.PUT,
+							sourceFile.getAbsolutePath(), targetIrodsFile
+									.getAbsolutePath(), "", 0, 0,
+							transferControlBlock
+									.getTotalFilesTransferredSoFar(),
+							transferControlBlock.getTotalFilesSkippedSoFar(),
+							transferControlBlock.getTotalFilesToTransfer(),
+							TransferState.SKIPPING, dataObjectAO
+									.getIRODSAccount().getHost(), dataObjectAO
+									.getIRODSAccount().getZone());
+
+					transferStatusCallbackListener.statusCallback(status);
+					return;
+				}
 			}
 
 			dataObjectAO.putLocalDataObjectToIRODS(sourceFile, targetIrodsFile,
@@ -1052,7 +1112,7 @@ final class TransferOperationsHelper {
 						.instanceIRODSFileForCollectionPath(targetCollection);
 				childTargetFile.mkdirs();
 
-				recursivelyCopy((IRODSFileImpl) fileInSourceCollection,
+				recursivelyCopy((IRODSFile) fileInSourceCollection,
 						targetResource, targetCollection,
 						transferStatusCallbackListener, transferControlBlock);
 

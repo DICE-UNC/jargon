@@ -72,7 +72,7 @@ public abstract class IRODSProtocolManager {
 			irodsConnection.obliterateConnectionAndDiscardErrors();
 			try {
 				if (irodsConnection.getIrodsSession() == null) {
-					log.info("returning connection, no session, so do not discard in session, this can be a normal case in authentication processing, or in areas where a connection is manually done outside of the normal access object factory scheme, otherwise, it might signify a logic error");
+					log.debug("returning connection, no session, so do not discard in session, this can be a normal case in authentication processing, or in areas where a connection is manually done outside of the normal access object factory scheme, otherwise, it might signify a logic error");
 				} else {
 					irodsConnection.getIrodsSession().discardSessionForErrors(
 							irodsConnection.getIrodsAccount());
@@ -172,7 +172,7 @@ public abstract class IRODSProtocolManager {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 
-		return this.getIrodsMidLevelProtocolFactory().instance(irodsSession,
+		return getIrodsMidLevelProtocolFactory().instance(irodsSession,
 				irodsAccount, this);
 	}
 
@@ -223,7 +223,7 @@ public abstract class IRODSProtocolManager {
 	 * @throws JargonException
 	 */
 	public void destroy() throws JargonException {
-		log.info("destroy called, does nothing by default");
+		log.debug("destroy called, does nothing by default");
 	}
 
 	/**
@@ -234,7 +234,7 @@ public abstract class IRODSProtocolManager {
 	 * @throws JargonException
 	 */
 	public void initialize() throws JargonException {
-		log.info("initialize called, does nothing by default");
+		log.debug("initialize called, does nothing by default");
 
 	}
 

@@ -76,4 +76,18 @@ public class LocalFileUtilsTest {
 
 	}
 
+	@Test
+	public void testGenerateSHA256Checksum() throws Exception {
+		String testFileName = "testGenerateSHA256Checksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		byte[] actual = LocalFileUtils
+				.computeSHA256FileCheckSumViaAbsolutePath(localFileName);
+		Assert.assertNotNull("no checksum", actual);
+
+	}
+
 }

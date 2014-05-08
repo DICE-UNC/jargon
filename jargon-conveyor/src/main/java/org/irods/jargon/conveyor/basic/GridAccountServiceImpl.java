@@ -10,6 +10,7 @@ import org.irods.jargon.conveyor.core.ConveyorBusyException;
 import org.irods.jargon.conveyor.core.ConveyorExecutionException;
 import org.irods.jargon.conveyor.core.GridAccountService;
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.datacache.CacheEncryptor;
@@ -259,10 +260,19 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 		log.info("addOrUpdateGridAccountBasedOnIRODSAccount");
 
+		return addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount, null);
+	}
+
+	@Override
+	public GridAccount addOrUpdateGridAccountBasedOnIRODSAccount(
+			final IRODSAccount irodsAccount, final AuthResponse authResponse)
+			throws PassPhraseInvalidException, ConveyorExecutionException {
+
+		log.info("addOrUpdateGridAccountBasedOnIRODSAccount(irodsAccount, authResponse)");
+
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
-
 		log.info("irodsAccount:{}", irodsAccount);
 
 		if (!isValidated()) {
@@ -300,6 +310,21 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 			gridAccount.setDefaultPath(irodsAccount.getHomeDirectory());
 			gridAccount.setAuthScheme(irodsAccount.getAuthenticationScheme());
 			gridAccount.setPort(irodsAccount.getPort());
+
+			if (authResponse != null) {
+				gridAccount.setRunAsAuthScheme(authResponse
+						.getAuthenticatedIRODSAccount()
+						.getAuthenticationScheme());
+				gridAccount.setRunAsPassword(authResponse
+						.getAuthenticatedIRODSAccount().getPassword());
+				gridAccount.setRunAsUserName(authResponse
+						.getAuthenticatedIRODSAccount().getUserName());
+			} else {
+				gridAccount.setRunAsAuthScheme(null);
+				gridAccount.setRunAsPassword(null);
+				gridAccount.setRunAsUserName(null);
+			}
+
 		} catch (JargonException e) {
 			log.error("error encrypting password with pass phrase", e);
 			throw new ConveyorExecutionException(e);
@@ -379,12 +404,13 @@ public class GridAccountServiceImpl extends AbstractConveyorComponentService
 
 				log.info("refreshing cacheEncryptor with the new pass phrase...");
 				cacheEncryptor = new CacheEncryptor(getCachedPassPhrase());
-
+				log.info("cache encrypter refreshed with pass phrase");
 			} catch (TransferDAOException e) {
 				log.error("error finding pass phrase in key store", e);
 				throw new ConveyorExecutionException(
 						"unable to find pass phrase in key store");
 			} finally {
+				log.info("ok, now set the operation completed, I've got the pass phrase cached");
 				getConveyorExecutorService().setOperationCompleted();
 			}
 		}

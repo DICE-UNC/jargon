@@ -137,6 +137,10 @@ public class MountedFilesystemIRODSFileImplTest {
 		// this test requires the prop test.option.reg.basedir to be set, and to
 		// contain the contents of test-data/reg. This is a manual setup step
 
+		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
+			return;
+		}
+
 		String scratchDir = "testIsFileWhenFile";
 		String testFileName = "testIsFileWhenFile.txt";
 

@@ -3,6 +3,12 @@ package org.irods.jargon.conveyor.core;
 import java.util.Timer;
 
 import org.irods.jargon.conveyor.basic.BasicQueueManagerServiceImpl;
+import org.irods.jargon.conveyor.synch.SynchComponentFactory;
+import org.irods.jargon.conveyor.synch.SynchPeriodicScheduler;
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.transfer.exception.PassPhraseInvalidException;
 import org.slf4j.Logger;
@@ -63,6 +69,12 @@ public class ConveyorServiceImpl implements ConveyorService {
 	private IRODSAccessObjectFactory irodsAccessObjectFactory;
 
 	private Timer queueTimer = new Timer();
+
+	/**
+	 * Required dependency on a factory to create synch components
+	 * {@link SynchComponentFactory}
+	 */
+	private SynchComponentFactory synchComponentFactory;
 
 	private static final Logger log = LoggerFactory
 			.getLogger(BasicQueueManagerServiceImpl.class);
@@ -156,9 +168,12 @@ public class ConveyorServiceImpl implements ConveyorService {
 	@Override
 	public void validatePassPhrase(final String passPhrase)
 			throws PassPhraseInvalidException, ConveyorExecutionException {
+
 		synchronized (this) {
 			log.info("validating pass phrase...");
 			gridAccountService.validatePassPhrase(passPhrase);
+			log.info("validated...");
+			init();
 		}
 
 	}
@@ -289,11 +304,11 @@ public class ConveyorServiceImpl implements ConveyorService {
 		queueSchedulerTimerTask.setConveyorService(this);
 		queueSchedulerTimerTask.init();
 
-		// SynchPeriodicScheduler synchPeriodicScheduler = new
-		// SynchPeriodicScheduler(idropCore.getTransferManager(),
-		// idropCore.getIRODSAccessObjectFactory());
+		SynchPeriodicScheduler synchPeriodicScheduler = new SynchPeriodicScheduler(
+				this);
 		queueTimer = new Timer();
 		queueTimer.scheduleAtFixedRate(queueSchedulerTimerTask, 10000, 120000);
+		queueTimer.scheduleAtFixedRate(synchPeriodicScheduler, 20000, 360000);
 		log.info("timer scheduled");
 		queueManagerService.dequeueNextOperation();
 	}
@@ -314,6 +329,7 @@ public class ConveyorServiceImpl implements ConveyorService {
 		}
 
 		try {
+			log.info("setting busy");
 			getConveyorExecutorService().setBusyForAnOperation();
 			log.info("checking for any transactions that were set to processing, and reset them to enqueued...");
 			getQueueManagerService().preprocessQueueAtStartup();
@@ -328,6 +344,65 @@ public class ConveyorServiceImpl implements ConveyorService {
 					e);
 		}
 
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.conveyor.core.ConveyorService#
+	 * validatePassPhraseInTearOffMode
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public void validatePassPhraseInTearOffMode(final IRODSAccount irodsAccount)
+			throws AuthenticationException, ConveyorExecutionException,
+			JargonException {
+		log.info("validatePassPhraseInTearOffMode");
+		synchronized (this) {
+			log.info("validating given iRODS Account...");
+			if (irodsAccount == null) {
+				throw new IllegalArgumentException("null irodsAccount");
+			}
+
+			log.info("attempting to authenticate the given account:{}",
+					irodsAccount);
+			AuthResponse authResponse = getIrodsAccessObjectFactory()
+					.authenticateIRODSAccount(irodsAccount);
+
+			log.info("auth accepted, set the pass phrase to the given password and store the grid Account");
+			resetConveyorService();
+
+			gridAccountService.validatePassPhrase(irodsAccount.getPassword());
+			gridAccountService.addOrUpdateGridAccountBasedOnIRODSAccount(
+					irodsAccount, authResponse);
+			init();
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorService#setSynchComponentFactory
+	 * (org.irods.jargon.conveyor.synch.SynchComponentFactory)
+	 */
+	@Override
+	public void setSynchComponentFactory(
+			final SynchComponentFactory synchComponentFactory) {
+		this.synchComponentFactory = synchComponentFactory;
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.conveyor.core.ConveyorService#getSynchComponentFactory()
+	 */
+	@Override
+	public SynchComponentFactory getSynchComponentFactory() {
+		return synchComponentFactory;
 	}
 
 }

@@ -15,6 +15,7 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.irods.jargon.datautils.tree.FileOrDirFilter.FilterFor;
@@ -40,6 +41,28 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			.getLogger(FileTreeDiffUtilityImpl.class);
 
 	private DataObjectAO dataObjectAO = null;
+	/**
+	 * Optional field allows communication with diff processor
+	 */
+	private final TransferControlBlock transferControlBlock;
+
+	/**
+	 * Default constructor
+	 * 
+	 * @param irodsAccount
+	 *            <code>IRODSAccount</code> that is used to connect to the
+	 *            compared iRODS file system
+	 * @param irodsAccessObjectFactory
+	 *            <code>IRODSAccessObjectFactory</code> that is used to obtain
+	 *            objects needed to work with iRODS data cancellation of the
+	 *            diff process.
+	 */
+	public FileTreeDiffUtilityImpl(final IRODSAccount irodsAccount,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+
+		this(irodsAccount, irodsAccessObjectFactory, null);
+
+	}
 
 	/**
 	 * Default constructor
@@ -50,9 +73,14 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	 * @param irodsAccessObjectFactory
 	 *            <code>IRODSAccessObjectFactory</code> that is used to obtain
 	 *            objects needed to work with iRODS data
+	 * @param transferControlBlock
+	 *            {@link TransferControlBlock} or <code>null</code>. The
+	 *            transfer control block allows signalling of a cancellation of
+	 *            the diff process.
 	 */
 	public FileTreeDiffUtilityImpl(final IRODSAccount irodsAccount,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final TransferControlBlock transferControlBlock) {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -64,6 +92,8 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 		this.irodsAccount = irodsAccount;
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.transferControlBlock = transferControlBlock;
+
 	}
 
 	/*
@@ -202,6 +232,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 				rootIRODSFile.getAbsolutePath(),
 				timestampForLastSynchLeftHandSide,
 				timestampForLastSynchRightHandSide);
+
+		if (isCancelled()) {
+			return null;
+		}
+
 		return fileTreeModel;
 	}
 
@@ -225,6 +260,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
+
+		if (isCancelled()) {
+			return 0;
+		}
 
 		// get the relative paths of each side beneath the root so we compare
 		// apples to apples
@@ -312,6 +351,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 
+		if (isCancelled()) {
+			return;
+		}
+
 		boolean lhsFile = leftHandSide.isFile();
 		boolean rhsFile = rightHandSide.isFile();
 
@@ -357,6 +400,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
 
+		if (isCancelled()) {
+			return;
+		}
+
 		log.info("\n\n************************************\n************************************\n\n");
 		log.info("comparing two equal directories");
 		log.info("   lhs dir:{}", leftHandSide.getAbsolutePath());
@@ -400,6 +447,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		// w/rhs
 		File lhsFile = null;
 		for (i = 0; i < lhsChildren.length; i++) {
+
+			if (isCancelled()) {
+				return;
+			}
+
 			lhsFile = lhsChildren[i];
 			log.debug("inspecting lhs file:{}", lhsFile.getAbsolutePath());
 			if (!lhsFile.isFile()) {
@@ -414,6 +466,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 			} else {
 				while (j < rhsChildren.length) {
+
+					if (isCancelled()) {
+						return;
+					}
 
 					lhMatchOrPass = diffTwoFiles(parentNode, lhsFile,
 							leftHandSideRootPath, rhsChildren[j],
@@ -449,6 +505,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		File rhsFile;
 
 		for (; j < rhsChildren.length; j++) {
+
+			if (isCancelled()) {
+				return;
+			}
+
 			rhsFile = rhsChildren[j];
 			if (!rhsFile.isFile()) {
 				continue;
@@ -483,6 +544,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		// use the lhs as the point of ref, ping each child and do a match/merge
 		// w/rhs
 		for (File element : lhsChildren) {
+
+			if (isCancelled()) {
+				return;
+			}
+
 			log.debug("inspecting lhs dir, looking for dirs only:{}",
 					element.getAbsolutePath());
 
@@ -497,6 +563,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 						timestampForLastSynchRightHandSide);
 			} else {
 				while (j < rhsChildren.length) {
+
+					if (isCancelled()) {
+						return;
+					}
 
 					if (rhsChildren[j].isFile()) {
 						log.debug("rhs is a file, ignore");
@@ -536,6 +606,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		 */
 
 		for (; j < rhsChildren.length; j++) {
+
+			if (isCancelled()) {
+				return;
+			}
+
 			rhsFile = rhsChildren[j];
 			if (rhsFile.isFile()) {
 				continue;
@@ -568,6 +643,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final File leftHandSide, final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide) {
+
+		if (isCancelled()) {
+			return;
+		}
 
 		log.info("lhsChildIsUnmatched:{}", leftHandSide.getAbsolutePath());
 		log.info("lhs last synch:{}", timestampForLastSynchLeftHandSide);
@@ -603,6 +682,11 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
 			throws JargonException {
+
+		if (isCancelled()) {
+			return;
+		}
+
 		log.debug("file compare");
 
 		if (leftHandSide.length() != rightHandSide.length()) {
@@ -681,6 +765,22 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		}
 		return dataObjectAO
 				.computeMD5ChecksumOnDataObject((IRODSFile) irodsFile);
+	}
+
+	/**
+	 * @return the transferControlBlock
+	 */
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
+	}
+
+	public boolean isCancelled() {
+		boolean cancelled = false;
+		if (transferControlBlock != null) {
+			cancelled = (transferControlBlock.isCancelled() || transferControlBlock
+					.isPaused());
+		}
+		return cancelled;
 	}
 
 }

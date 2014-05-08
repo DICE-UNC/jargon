@@ -92,7 +92,7 @@ public class AccessObjectQueryProcessingUtils {
 	 * @return
 	 * @throws JargonException
 	 */
-	private static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
+	public static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
 			final MetaDataAndDomainData.MetadataDomain metadataDomain,
 			final IRODSQueryResultRow row, final int totalRecordCount)
 			throws JargonException {
@@ -102,10 +102,11 @@ public class AccessObjectQueryProcessingUtils {
 		String attributeName = row.getColumn(2);
 		String attributeValue = row.getColumn(3);
 		String attributeUnits = row.getColumn(4);
+		int attributeId = Integer.parseInt(row.getColumn(5));
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				metadataDomain, domainId, domainUniqueName, attributeName,
-				attributeValue, attributeUnits);
+				metadataDomain, domainId, domainUniqueName, attributeId,
+				attributeName, attributeValue, attributeUnits);
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
 		data.setTotalRecords(totalRecordCount);
