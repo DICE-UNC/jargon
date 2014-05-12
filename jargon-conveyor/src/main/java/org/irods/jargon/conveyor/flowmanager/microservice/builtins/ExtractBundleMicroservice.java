@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.conveyor.flowmanager.microservice.builtins;
 
+import java.io.File;
+
 import org.irods.jargon.conveyor.flowmanager.microservice.InvocationContext;
 import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 import org.irods.jargon.conveyor.flowmanager.microservice.MicroserviceException;
@@ -69,7 +71,14 @@ public class ExtractBundleMicroservice extends Microservice {
 		if (bundleToExtract == null || bundleToExtract.isEmpty()) {
 			log.info("did not find BUNDLE_TO_EXTRACT, look at transfer status value");
 			bundleToExtract = transferStatus.getTargetFileAbsolutePath();
-	
+			File sourceFile = new File(
+					transferStatus.getSourceFileAbsolutePath());
+			StringBuilder sb = new StringBuilder();
+			sb.append(bundleToExtract);
+			sb.append("/");
+			sb.append(sourceFile.getName());
+			bundleToExtract = sb.toString();
+
 			if (bundleToExtract == null || bundleToExtract.isEmpty()) {
 				log.error("no bundle to extract found");
 				throw new MicroserviceException(
@@ -78,19 +87,23 @@ public class ExtractBundleMicroservice extends Microservice {
 		}
 
 		log.info("bundle to extract:{}", bundleToExtract);
-		
+
 		IRODSFile targetFile = null;
 		try {
-			targetFile = this.getContainerEnvironment().getConveyorService().getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(this.getInvocationContext().getIrodsAccount())
+			targetFile = this
+					.getContainerEnvironment()
+					.getConveyorService()
+					.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(
+							this.getInvocationContext().getIrodsAccount())
 					.instanceIRODSFile(bundleToExtract);
 		} catch (JargonException e1) {
 			log.error("jargon error getting target file");
 			throw new MicroserviceException();
 		}
-		
+
 		log.info("target file:{}", targetFile);
-		
+
 		if (targetFile.exists() && targetFile.isDirectory()) {
 			log.error("bundle file not in iRODS");
 			throw new MicroserviceException();
@@ -105,9 +118,9 @@ public class ExtractBundleMicroservice extends Microservice {
 			log.info("no target collection passed in, use the parent of the tar file");
 			targetCollection = targetFile.getParent();
 		}
-		
+
 		log.info("target collection will be:{}", targetCollection);
-		
+
 		log.info("getting resource");
 		String targetResource = (String) this.getInvocationContext()
 				.getSharedProperties().get(TARGET_RESOURCE);
