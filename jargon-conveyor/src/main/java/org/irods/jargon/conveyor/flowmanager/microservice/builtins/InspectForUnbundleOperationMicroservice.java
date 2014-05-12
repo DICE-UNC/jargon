@@ -17,7 +17,7 @@ import org.irods.jargon.datautils.tree.TreeSummarizingServiceImpl;
 import org.irods.jargon.datautils.tree.TreeSummary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+   
 /**
  * Inspect a source and see if a tar file is being transferred that should be unbundled
  * 
