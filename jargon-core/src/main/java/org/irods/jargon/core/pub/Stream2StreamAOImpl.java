@@ -105,6 +105,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			final long length, final int readBuffSize)
 			throws NoResourceDefinedException, JargonException {
 
+		// FIXME: deprecate length, not needed
+
 		if (inputStream == null) {
 			throw new IllegalArgumentException("null or empty inputStream");
 		}
