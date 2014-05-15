@@ -285,6 +285,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			log.info("input already buffered");
 			myInput = inputStream;
 		} else {
+			log.info("wrapping input with a buffer");
 			myInput = new BufferedInputStream(inputStream);
 		}
 
@@ -292,11 +293,15 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			log.info("output already buffered");
 			myOutput = outputStream;
 		} else {
+			log.info("wrapping output with a buffer");
 			myOutput = new BufferedOutputStream(outputStream);
 		}
 
 		final byte[] buffer = new byte[getJargonProperties()
 				.getInputToOutputCopyBufferByteSize()];
+
+		log.info("buffer length for read/write will be:{}", buffer.length);
+
 		long count = 0;
 		int n = 0;
 		try {
