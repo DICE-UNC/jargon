@@ -35,5 +35,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ##Bug Fixes
 
+* https://github.com/DICE-UNC/jargon/issues/17 - added support for IN queries (need to add between, etc)
 
 ##Features

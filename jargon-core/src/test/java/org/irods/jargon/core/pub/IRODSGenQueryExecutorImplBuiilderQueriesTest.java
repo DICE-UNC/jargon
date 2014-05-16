@@ -4,11 +4,14 @@
 package org.irods.jargon.core.pub;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
@@ -94,6 +97,114 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 		// not a great test as the count is indeterminate, really just looking
 		// for exec errors and that something is returned
 		Assert.assertTrue("count not produced", actualCount > 0);
+
+	}
+
+	/**
+	 * BUG: gen query error with IN statement #17
+	 * https://github.com/DICE-UNC/jargon/issues/17
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteMetadataQueryWithIn() throws Exception {
+		String testFileName = "testExecuteMetadataQueryWithIn.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dto.putOperation(localFileName, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName1 = "testExecuteMetadataQueryWithInattrib1";
+		String expectedAttribValue1 = "testExecuteMetadataQueryWithInvalue1";
+		String expectedAttribUnits1 = "testExecuteMetadataQueryWithInunits1";
+
+		AvuData avuData = AvuData.instance(expectedAttribName1,
+				expectedAttribValue1, expectedAttribUnits1);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		String expectedAttribName2 = "testExecuteMetadataQueryWithInattrib2";
+		String expectedAttribValue2 = "testExecuteMetadataQueryWithInvalue2";
+		String expectedAttribUnits2 = "testExecuteMetadataQueryWithInunits2";
+
+		avuData = AvuData.instance(expectedAttribName2, expectedAttribValue2,
+				expectedAttribUnits2);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		String expectedAttribName3 = "testExecuteMetadataQueryWithInattrib3";
+		String expectedAttribValue3 = "testExecuteMetadataQueryWithInvalue3";
+		String expectedAttribUnits3 = "testExecuteMetadataQueryWithInunits3";
+
+		avuData = AvuData.instance(expectedAttribName3, expectedAttribValue3,
+				expectedAttribUnits3);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+						irodsAccount);
+
+		IRODSGenQueryBuilder queryBuilder = new IRODSGenQueryBuilder(true,
+				false, true, null);
+		queryBuilder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
+				QueryConditionOperators.EQUAL, expectedAttribName1);
+
+		List<String> values = new ArrayList<String>();
+		values.add(expectedAttribValue1);
+		values.add(expectedAttribValue2);
+		values.add(expectedAttribValue3);
+
+		queryBuilder.addConditionAsMultiValueCondition(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+				QueryConditionOperators.IN, values);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
+				QueryConditionOperators.EQUAL, expectedAttribName2);
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue2);
+
+		IRODSGenQueryFromBuilder query = queryBuilder
+				.exportIRODSQueryFromBuilder(1);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+		Assert.assertTrue("no result", resultSet.getResults().size() > 0);
 
 	}
 

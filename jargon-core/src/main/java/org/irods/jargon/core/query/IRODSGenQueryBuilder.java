@@ -251,6 +251,60 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
+	 * Add a condition that is an IN operator condition, with a
+	 * <code>List<String></code> of values provided without quotes (these are
+	 * added later)
+	 * 
+	 * @param rodsGenQueryEnumValue
+	 *            {@link RodsGenQueryEnumValue} for the condition
+	 * @param operator
+	 *            {@link QueryConditionOperators} enum value for the operator of
+	 *            the condition that is a multi value operator such as IN
+	 * @param nonQuotedValues
+	 *            <code>List<String></code>
+	 * @return
+	 */
+	public IRODSGenQueryBuilder addConditionAsMultiValueCondition(
+			final RodsGenQueryEnum rodsGenQueryEnumValue,
+			final QueryConditionOperators operator,
+			final List<String> nonQuotedValues) {
+
+		if (rodsGenQueryEnumValue == null) {
+			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
+		}
+
+		if (operator == null) {
+			throw new IllegalArgumentException("null operator");
+		}
+
+		if (nonQuotedValues == null || nonQuotedValues.isEmpty()) {
+			throw new IllegalArgumentException("null or empty nonQuotedValues");
+		}
+
+		/*
+		 * Format the query based on the operator TODO: add handling for tables,
+		 * in, etc
+		 */
+
+		if (operator == QueryConditionOperators.IN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+
+			.instanceForIn(rodsGenQueryEnumValue.getName(),
+					SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+					nonQuotedValues);
+			conditions.add(genQueryBuilderCondition);
+
+		} else {
+			throw new UnsupportedOperationException(
+					"query operator not yet supported:" + operator);
+		}
+
+		return this;
+
+	}
+
+	/**
 	 * Add a gen query condition to the builder query.
 	 * 
 	 * @param rodsGenQueryEnumValue
@@ -284,19 +338,30 @@ public class IRODSGenQueryBuilder {
 		 * in, etc
 		 */
 
-		StringBuilder sb = new StringBuilder();
-		sb.append("'");
-		sb.append(value);
-		sb.append("'");
+		if (operator == QueryConditionOperators.IN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+					.instance(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD, String
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator,
+							value);
 
-		GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
-				.instance(
-						rodsGenQueryEnumValue.getName(),
-						SelectFieldSource.DEFINED_QUERY_FIELD,
-						String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-						operator, sb.toString());
+			conditions.add(genQueryBuilderCondition);
+		} else {
+			StringBuilder sb = new StringBuilder();
+			sb.append("'");
+			sb.append(value);
+			sb.append("'");
 
-		conditions.add(genQueryBuilderCondition);
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+					.instance(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD, String
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator, sb
+									.toString());
+
+			conditions.add(genQueryBuilderCondition);
+		}
 
 		return this;
 
