@@ -209,6 +209,107 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 	}
 
 	/**
+	 * BUG: gen query error with IN statement #17
+	 * https://github.com/DICE-UNC/jargon/issues/17
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testExecuteMetadataQueryWithBetween() throws Exception {
+		String testFileName = "testExecuteMetadataQueryWithBetween.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dto.putOperation(localFileName, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName1 = "testExecuteMetadataQueryWithInattrib1";
+		String expectedAttribValue1 = "1500";
+		String expectedAttribUnits1 = "testExecuteMetadataQueryWithInunits1";
+
+		AvuData avuData = AvuData.instance(expectedAttribName1,
+				expectedAttribValue1, expectedAttribUnits1);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+						irodsAccount);
+
+		IRODSGenQueryBuilder queryBuilder = new IRODSGenQueryBuilder(true,
+				false, true, null);
+		queryBuilder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
+				testFileName);
+
+		List<String> values = new ArrayList<String>();
+		values.add("1000");
+		values.add("2000");
+
+		queryBuilder.addConditionAsMultiValueCondition(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+				QueryConditionOperators.BETWEEN, values);
+
+		IRODSGenQueryFromBuilder query = queryBuilder
+				.exportIRODSQueryFromBuilder(100);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+		Assert.assertTrue("no result", resultSet.getResults().size() > 0);
+
+		queryBuilder = new IRODSGenQueryBuilder(true, false, true, null);
+		queryBuilder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
+				testFileName);
+
+		values = new ArrayList<String>();
+		values.add("3000");
+		values.add("4000");
+
+		queryBuilder.addConditionAsMultiValueCondition(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+				QueryConditionOperators.BETWEEN, values);
+
+		query = queryBuilder.exportIRODSQueryFromBuilder(100);
+
+		resultSet = irodsGenQueryExecutor.executeIRODSQuery(query, 0);
+		Assert.assertFalse("no result expected",
+				resultSet.getResults().size() > 0);
+
+	}
+
+	/**
 	 * Ask for a row count in the query results feature: [#1046] Add total row
 	 * count to gen query out
 	 * 

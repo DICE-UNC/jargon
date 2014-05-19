@@ -50,12 +50,8 @@ public class BuilderQueryUtils {
 			return QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO;
 		case IN:
 			return QueryConditionOperators.IN;
-		case NOT_IN:
-			return QueryConditionOperators.NOT_IN;
 		case BETWEEN:
 			return QueryConditionOperators.BETWEEN;
-		case NOT_BETWEEN:
-			return QueryConditionOperators.NOT_BETWEEN;
 		case LIKE:
 			return QueryConditionOperators.LIKE;
 		case NOT_LIKE:

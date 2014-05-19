@@ -251,9 +251,9 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
-	 * Add a condition that is an IN operator condition, with a
-	 * <code>List<String></code> of values provided without quotes (these are
-	 * added later)
+	 * Add a condition that is multi-value operator condition such as IN and
+	 * BETWEEN, with a <code>List<String></code> of values provided without
+	 * quotes (these are added later)
 	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the condition
@@ -295,6 +295,14 @@ public class IRODSGenQueryBuilder {
 					nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 
+		} else if (operator == QueryConditionOperators.BETWEEN) {
+			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
+
+			.instanceForBetween(rodsGenQueryEnumValue.getName(),
+					SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+					nonQuotedValues);
+			conditions.add(genQueryBuilderCondition);
 		} else {
 			throw new UnsupportedOperationException(
 					"query operator not yet supported:" + operator);
