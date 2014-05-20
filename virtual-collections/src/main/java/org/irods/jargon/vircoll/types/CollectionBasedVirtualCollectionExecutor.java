@@ -9,6 +9,7 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.vircoll.AbstractVirtualCollectionExecutor;
+import org.irods.jargon.vircoll.PathHintable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -19,8 +20,13 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  * 
  */
+/**
+ * @author mikeconway
+ *
+ */
 public class CollectionBasedVirtualCollectionExecutor extends
-		AbstractVirtualCollectionExecutor<CollectionBasedVirtualCollection> {
+		AbstractVirtualCollectionExecutor<CollectionBasedVirtualCollection>
+		implements PathHintable {
 
 	static Logger log = LoggerFactory
 			.getLogger(CollectionBasedVirtualCollectionExecutor.class);
@@ -53,7 +59,7 @@ public class CollectionBasedVirtualCollectionExecutor extends
 	public PagingAwareCollectionListing queryAll(final int offset)
 			throws JargonException {
 
-		log.info("query()");
+		log.info("queryAll()");
 
 		log.info("offset:{}", offset);
 
@@ -64,11 +70,46 @@ public class CollectionBasedVirtualCollectionExecutor extends
 		return collectionAndDataObjectListAndSearchAO
 				.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(getCollection()
 						.getRootPath());
-
 	}
 
 	public String getCollectionParentAbsolutePath() {
 		return getCollection().getRootPath();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.vircoll.PathHintable#queryAll(java.lang.String,
+	 * int)
+	 */
+	@Override
+	public PagingAwareCollectionListing queryAll(String path, int offset)
+			throws JargonException {
+		log.info("queryAll()");
+
+		if (path == null) {
+			throw new IllegalArgumentException("null path");
+		}
+
+		log.info("offset:{}", offset);
+		log.info("path:{}", path);
+
+		log.info("collection parent:{}", getCollection().getRootPath());
+		String myPath;
+		if (path.isEmpty()) {
+			myPath = getCollection().getRootPath();
+		} else if (path.indexOf(getCollection().getRootPath()) != 0) {
+			log.error("my given path is not under the root path");
+			throw new JargonException(
+					"given path is not under root path of virtual collection");
+		} else {
+			myPath = path;
+		}
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
+		return collectionAndDataObjectListAndSearchAO
+				.listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(myPath);
 	}
 
 }
