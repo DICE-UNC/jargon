@@ -23,12 +23,20 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileInputStream extends InputStream {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private transient final IRODSFile irodsFile;
 	private transient final FileIOOperations fileIOOperations;
 	private transient int fd = -1;
 	private transient long filePointer = 0;
+
+	/**
+	 * Default constructor of limited utility but allowing mocking
+	 */
+	public IRODSFileInputStream() {
+		this.irodsFile = null;
+		this.fileIOOperations = null;
+	}
 
 	/**
 	 * Creates a <code>FileInputStream</code> by opening a connection to an
