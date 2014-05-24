@@ -1076,4 +1076,10 @@ public class TestingPropertiesHelper {
 		return pathBuilder.toString();
 	}
 
+	public static IRODSAccount buildDummyIrodsAccount() throws JargonException {
+		return IRODSAccount.instance("host", 1247, "user", "password", "",
+				"zone", "");
+
+	}
+
 }
