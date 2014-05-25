@@ -164,6 +164,8 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 
 		}
 
+		dataProfile.setIrodsTagValues(resultValues);
+
 	}
 
 	/**
