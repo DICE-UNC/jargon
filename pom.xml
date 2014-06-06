@@ -470,7 +470,6 @@
 		<module>jargon-conveyor</module>
 		<module>jargon-workflow</module>
 		<module>jargon-ruleservice</module>
-    <module>virtual-collections</module>
     <module>data-profile</module>
   </modules>
 </project>
