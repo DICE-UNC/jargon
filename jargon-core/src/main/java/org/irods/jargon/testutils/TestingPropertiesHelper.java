@@ -130,17 +130,6 @@ public class TestingPropertiesHelper {
 				// ignore
 			}
 		}
-
-		String testingConfirm = properties
-				.getProperty(IRODS_CONFIRM_TESTING_KEY);
-		if (testingConfirm == null) {
-			throw new TestingUtilsException(
-					"did not find a test.confirm property in testing.properties");
-		} else if (!testingConfirm.equals(IRODS_CONFIRM_TESTING_TRUE)) {
-			throw new TestingUtilsException(
-					"test.confirm property in testing.properties needs to be set to true");
-		}
-
 		return properties;
 	}
 
