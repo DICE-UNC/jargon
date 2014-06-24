@@ -335,7 +335,7 @@ public class TransferOptions {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
 		}
-
+		
 		this.checksumEncoding = checksumEncoding;
 
 	}

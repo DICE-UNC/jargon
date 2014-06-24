@@ -18,7 +18,7 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 public interface JargonProperties {
 
 	public enum ChecksumEncoding {
-		DEFAULT, MD5, SHA256
+		DEFAULT, MD5, SHA256, STRONG
 	};
 
 	/**
