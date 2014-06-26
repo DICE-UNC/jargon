@@ -5,8 +5,8 @@ This is a release candidate for the next feature branch of Jargon
 
 # Project: Jargon-core API
 ### Date: 03/21/2014
-### Release Version: 3.3.3-beta1
-### git tag: 3.3.3-beta1
+### Release Version: 4.0.2-SNAPSHOT
+### git tag: 
 
 ## News
 
@@ -41,7 +41,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3.1 community, as well as iRODS 4.0 consortium
+*Jargon supports iRODS 2.5 through iRODS 3.3.1 community, as well as iRODS 4.0.2 consortium
 
 ## Libraries
 
@@ -50,6 +50,10 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Bug Fixes
+
+#### implement checksum variants #24
+
+implement pluggable checksum generation/validation (https://github.com/DICE-UNC/jargon/issues/24)
 
 =======
 ## Features

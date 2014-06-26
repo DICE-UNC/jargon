@@ -4,7 +4,6 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
@@ -14,6 +13,7 @@ import org.irods.jargon.core.packinstr.DataObjInpForReg;
 import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
 import org.irods.jargon.core.packinstr.DataObjInpForUnregister;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,7 +240,7 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 	public String registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup,
-			final ChecksumEncoding checksumEncoding)
+			final ChecksumEncodingEnum checksumEncoding)
 			throws DataNotFoundException, DuplicateDataException,
 			JargonException {
 
@@ -290,12 +290,12 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 		ChecksumHandling checksumHandling = ChecksumHandling.VERFIY_CHECKSUM;
 
 		String localFileChecksum;
-		if (checksumEncoding == ChecksumEncoding.MD5
-				|| checksumEncoding == ChecksumEncoding.DEFAULT) {
+		if (checksumEncoding == ChecksumEncodingEnum.MD5
+				|| checksumEncoding == ChecksumEncodingEnum.DEFAULT) {
 			localFileChecksum = LocalFileUtils
 					.md5ByteArrayToString(LocalFileUtils
 							.computeMD5FileCheckSumViaAbsolutePath(physicalPath));
-		} else if (checksumEncoding == ChecksumEncoding.SHA256) {
+		} else if (checksumEncoding == ChecksumEncodingEnum.SHA256) {
 			localFileChecksum = LocalFileUtils
 					.md5ByteArrayToString(LocalFileUtils
 							.computeSHA256FileCheckSumViaAbsolutePath(physicalPath));

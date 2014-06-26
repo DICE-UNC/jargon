@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Represents options that control the transfer of data to and from iRODS (get
@@ -40,7 +40,7 @@ public class TransferOptions {
 	private boolean intraFileStatusCallbacks = false;
 	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
 	private boolean useParallelTransfer = true;
-	private ChecksumEncoding checksumEncoding = ChecksumEncoding.DEFAULT;
+	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.DEFAULT;
 
 	/**
 	 * DataType option for putting certain types of special files
@@ -319,7 +319,7 @@ public class TransferOptions {
 		this.putOption = putOption;
 	}
 
-	public synchronized ChecksumEncoding getChecksumEncoding() {
+	public synchronized ChecksumEncodingEnum getChecksumEncoding() {
 		return checksumEncoding;
 	}
 
@@ -330,12 +330,12 @@ public class TransferOptions {
 	 * @param checksumEncoding
 	 */
 	public synchronized void setChecksumEncoding(
-			final ChecksumEncoding checksumEncoding) {
+			final ChecksumEncodingEnum checksumEncoding) {
 
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
 		}
-		
+
 		this.checksumEncoding = checksumEncoding;
 
 	}
