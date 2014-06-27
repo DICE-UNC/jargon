@@ -10,6 +10,7 @@ import org.irods.jargon.conveyor.flowmanager.microservice.Microservice;
 import org.irods.jargon.conveyor.flowmanager.microservice.MicroserviceException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.BulkFileOperationsAO;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -68,10 +69,15 @@ public class ExtractBundleMicroservice extends Microservice {
 		String bundleToExtract = (String) this.getInvocationContext()
 				.getSharedProperties().get(BUNDLE_TO_EXTRACT);
 		if (bundleToExtract == null || bundleToExtract.isEmpty()) {
-			log.info("did not find BUNDLE_TO_EXTRACT, look at TarCollectionMicroservice value");
-			bundleToExtract = (String) this.getInvocationContext()
-					.getSharedProperties()
-					.get(TarCollectionMicroservice.TAR_FILE_NAME);
+			log.info("did not find BUNDLE_TO_EXTRACT, look at transfer status value");
+			bundleToExtract = transferStatus.getTargetFileAbsolutePath();
+			File sourceFile = new File(
+					transferStatus.getSourceFileAbsolutePath());
+			StringBuilder sb = new StringBuilder();
+			sb.append(bundleToExtract);
+			sb.append("/");
+			sb.append(sourceFile.getName());
+			bundleToExtract = sb.toString();
 
 			if (bundleToExtract == null || bundleToExtract.isEmpty()) {
 				log.error("no bundle to extract found");
@@ -82,6 +88,27 @@ public class ExtractBundleMicroservice extends Microservice {
 
 		log.info("bundle to extract:{}", bundleToExtract);
 
+		IRODSFile targetFile = null;
+		try {
+			targetFile = this
+					.getContainerEnvironment()
+					.getConveyorService()
+					.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(
+							this.getInvocationContext().getIrodsAccount())
+					.instanceIRODSFile(bundleToExtract);
+		} catch (JargonException e1) {
+			log.error("jargon error getting target file");
+			throw new MicroserviceException();
+		}
+
+		log.info("target file:{}", targetFile);
+
+		if (targetFile.exists() && targetFile.isDirectory()) {
+			log.error("bundle file not in iRODS");
+			throw new MicroserviceException();
+		}
+
 		log.info("look for target");
 
 		String targetCollection = (String) this.getInvocationContext()
@@ -89,16 +116,10 @@ public class ExtractBundleMicroservice extends Microservice {
 
 		if (targetCollection == null || targetCollection.isEmpty()) {
 			log.info("no target collection passed in, use the parent of the tar file");
-			File parentOfTar = new File(bundleToExtract);
-			if (!parentOfTar.exists()) {
-				log.error("tar file does not exist, cannot extract parent");
-				throw new MicroserviceException(
-						"cannot find tar file to resolve parent");
-			}
-
-			targetCollection = parentOfTar.getParent();
-
+			targetCollection = targetFile.getParent();
 		}
+
+		log.info("target collection will be:{}", targetCollection);
 
 		log.info("getting resource");
 		String targetResource = (String) this.getInvocationContext()
