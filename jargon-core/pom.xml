@@ -56,7 +56,7 @@
 
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" message="package ${package.name};${line.separator}" />
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="public final class JargonVersion {${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${pom.version}&quot;;${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${project.version}&quot;;${line.separator}" />
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="}${line.separator}" />
 								<echo message="BUILD ${buildtime}" />

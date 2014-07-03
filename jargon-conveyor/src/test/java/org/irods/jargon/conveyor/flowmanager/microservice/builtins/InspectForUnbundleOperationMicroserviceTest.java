@@ -14,7 +14,6 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -29,11 +28,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 
-public class ExtractBundleMicroserviceTest {
+public class InspectForUnbundleOperationMicroserviceTest {
+
 	private static Properties testingProperties = new Properties();
 	private static JargonProperties jargonOriginalProperties = null;
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "ExtractBundleMicroserviceTest";
+	public static final String IRODS_TEST_SUBDIR_PATH = "InspectForUnbundleOperationMicroserviceTest";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
@@ -90,8 +90,8 @@ public class ExtractBundleMicroserviceTest {
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath, bunSubdir, 2, 3, 2,
-						"testFile", ".txt", 3, 2, 1, 200 * 1024);
+						localCollectionAbsolutePath, bunSubdir, 1, 3, 2,
+						"testFile", ".txt", 3, 2, 1, 2);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
@@ -134,27 +134,14 @@ public class ExtractBundleMicroserviceTest {
 
 		File tarredFile = archiver.createArchive();
 
-		DataTransferOperations dto = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-
-		dto.putOperation(tarredFile.getAbsolutePath(), targetBunFileAbsPath,
-				"", null, null);
-
 		TransferStatus transferStatus = TransferStatus.instance(
-				TransferStatus.TransferType.PUT, localCollectionAbsolutePath,
-				targetBunFileAbsPath, "", 0, 0, 0, 0, 0, TransferState.OVERALL_INITIATION,
+				TransferStatus.TransferType.PUT, tarredFile.getAbsolutePath(),
+				"blah", "", 0, 0, 0, 0, 0, TransferState.OVERALL_INITIATION,
 				"host", "zone");
 
-		Microservice extractBundleMicroservice = new ExtractBundleMicroservice();
+		Microservice inspectForUnbundleOperationMicroservice = new InspectForUnbundleOperationMicroservice();
 		InvocationContext invocationContext = new InvocationContext();
 
-		invocationContext.getSharedProperties().put(
-				ExtractBundleMicroservice.BUNDLE_TO_EXTRACT,
-				targetBunFileAbsPath);
-		invocationContext.getSharedProperties().put(
-				ExtractBundleMicroservice.TARGET_COLLECTION,
-				extractBunIrodsCollection);
 
 		ContainerEnvironment containerEnvironment = new ContainerEnvironment();
 		ConveyorService conveyorService = Mockito.mock(ConveyorService.class);
@@ -162,10 +149,10 @@ public class ExtractBundleMicroserviceTest {
 		Mockito.when(conveyorService.getIrodsAccessObjectFactory()).thenReturn(
 				irodsFileSystem.getIRODSAccessObjectFactory());
 		invocationContext.setIrodsAccount(irodsAccount);
-		extractBundleMicroservice.setInvocationContext(invocationContext);
-		extractBundleMicroservice.setContainerEnvironment(containerEnvironment);
+		inspectForUnbundleOperationMicroservice.setInvocationContext(invocationContext);
+		inspectForUnbundleOperationMicroservice.setContainerEnvironment(containerEnvironment);
 
-		ExecResult result = extractBundleMicroservice.execute(transferStatus);
+		ExecResult result = inspectForUnbundleOperationMicroservice.execute(transferStatus);
 		Assert.assertEquals("should get continue as exec result",
 				ExecResult.CONTINUE, result);
 

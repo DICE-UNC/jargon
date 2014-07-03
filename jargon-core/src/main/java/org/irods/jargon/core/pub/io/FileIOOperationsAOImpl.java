@@ -109,7 +109,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 	public int fileRead(final int fd, final OutputStream destination,
 			long length) throws JargonException {
 
-		log.info("file read for fd: {}", fd);
+		log.debug("file read for fd: {}", fd);
 
 		if (fd <= 0) {
 			throw new IllegalArgumentException("invalid file descriptor");
@@ -146,7 +146,7 @@ final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 	public int fileRead(final int fd, final byte buffer[], final int offset,
 			int length) throws JargonException {
 
-		log.info("file read for fd: {}", fd);
+		log.debug("file read for fd: {}", fd);
 
 		if (fd <= 0) {
 			throw new IllegalArgumentException("invalid file descriptor");
