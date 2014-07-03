@@ -8,11 +8,11 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
-import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.BeforeClass;
@@ -64,7 +64,7 @@ public class IRODSAccessObjectFactoryImplTest {
 
 		SettableJargonProperties settableProperties = new SettableJargonProperties(
 				irodsSession.getJargonProperties());
-		settableProperties.setChecksumEncoding(ChecksumEncoding.SHA256);
+		settableProperties.setChecksumEncoding(ChecksumEncodingEnum.SHA256);
 		irodsSession.setJargonProperties(settableProperties);
 
 		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
@@ -72,8 +72,8 @@ public class IRODSAccessObjectFactoryImplTest {
 		TransferControlBlock tcb = irodsAccessObjectFactory
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 
-		Assert.assertEquals("did not set sha256", ChecksumEncoding.SHA256, tcb
-				.getTransferOptions().getChecksumEncoding());
+		Assert.assertEquals("did not set sha256", ChecksumEncodingEnum.SHA256,
+				tcb.getTransferOptions().getChecksumEncoding());
 
 	}
 

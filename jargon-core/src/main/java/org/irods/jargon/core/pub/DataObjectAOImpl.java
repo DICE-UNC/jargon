@@ -14,7 +14,6 @@ import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
-import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
@@ -31,6 +30,7 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.BulkAVUOperationResponse.ResultStatus;
@@ -2691,7 +2691,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	// FIXME: implement
 	public String computeChecksumOnDataObject(final IRODSFile irodsFile,
-			final ChecksumEncoding checksumEncoding) throws JargonException {
+			final ChecksumEncodingEnum checksumEncoding) throws JargonException {
 		return null;
 	}
 

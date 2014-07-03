@@ -1,5 +1,6 @@
 package org.irods.jargon.core.unittest;
 
+import org.irods.jargon.core.checksum.ChecksumManagerImplTest;
 import org.irods.jargon.core.query.IRODSGenQueryTest;
 import org.irods.jargon.core.query.IRODSGenQueryTranslatorTest;
 import org.irods.jargon.core.query.TranslatedIRODSQueryTest;
@@ -18,7 +19,8 @@ import org.junit.runners.Suite;
 		PackingInstructionTests.class, DomainTests.class, TransferTests.class,
 		LocalFileUtilsTest.class, RemoteExecuteServiceImplTest.class,
 		IRODSPasswordUtilitiesTest.class, IRODSUriUtilsTest.class,
-		MiscIRODSUtilsTest.class, AuthTests.class })
+		MiscIRODSUtilsTest.class, AuthTests.class,
+		ChecksumManagerImplTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

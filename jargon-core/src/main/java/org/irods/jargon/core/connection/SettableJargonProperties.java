@@ -1,6 +1,7 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Implementation of the <code>JargonProperties</code> interface that is
@@ -51,7 +52,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int pamTimeToLive = 0;
 	private boolean forcePamFlush = false;
 	private String connectionFactory = "tcp";
-	private ChecksumEncoding checksumEncoding = ChecksumEncoding.DEFAULT;
+	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.DEFAULT;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -807,7 +808,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
 	@Override
-	public ChecksumEncoding getChecksumEncoding() {
+	public ChecksumEncodingEnum getChecksumEncoding() {
 		return checksumEncoding;
 	}
 
@@ -816,7 +817,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param checksumEncoding
 	 */
-	public void setChecksumEncoding(final ChecksumEncoding checksumEncoding) {
+	public void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
 		}

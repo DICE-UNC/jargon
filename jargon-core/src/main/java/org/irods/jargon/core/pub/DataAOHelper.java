@@ -14,11 +14,11 @@ import java.util.List;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.JargonProperties.ChecksumEncoding;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.TransferOptions;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.aohelper.AOHelper;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.ByteCountingCallbackInputStreamWrapper;
@@ -546,13 +546,13 @@ public final class DataAOHelper extends AOHelper {
 	String computeLocalFileChecksum(final File localFile,
 			TransferOptions myTransferOptions) throws JargonException {
 		String localFileChecksum;
-		if (myTransferOptions.getChecksumEncoding() == ChecksumEncoding.MD5
-				|| myTransferOptions.getChecksumEncoding() == ChecksumEncoding.DEFAULT) {
+		if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.MD5
+				|| myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.DEFAULT) {
 			localFileChecksum = LocalFileUtils
 					.md5ByteArrayToString(LocalFileUtils
 							.computeMD5FileCheckSumViaAbsolutePath(localFile
 									.getAbsolutePath()));
-		} else if (myTransferOptions.getChecksumEncoding() == ChecksumEncoding.SHA256) {
+		} else if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.SHA256) {
 			localFileChecksum = LocalFileUtils
 					.md5ByteArrayToString(LocalFileUtils
 							.computeSHA256FileCheckSumViaAbsolutePath(localFile
