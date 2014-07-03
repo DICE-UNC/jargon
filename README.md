@@ -6,7 +6,7 @@ This is a release candidate for the next feature branch of Jargon
 # Project: Jargon-core API
 ### Date:
 ### Release Version: 4.0.2.2
-### git tag: 3.3.3-beta1
+### git tag: 
 
 ## News
 
