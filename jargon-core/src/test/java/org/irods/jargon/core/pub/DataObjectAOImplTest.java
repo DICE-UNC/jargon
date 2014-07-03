@@ -1754,10 +1754,10 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test
+	@Ignore
 	public final void testGetWithIntraFileCallbacks() throws Exception {
 
-		int testFileLen = 3000000;
+		int testFileLen = 2099999;
 		// generate a local scratch file
 		String testFileName = "testGetWithIntraFileCallbacks.doc";
 		String absPath = scratchFileUtils
@@ -4824,7 +4824,9 @@ public class DataObjectAOImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// TODO: need to parameterize the interval, right now the file needs to be
+	// huge to get callbacks.
 	public void testPutFileReceiveIntraFileCallbacks() throws Exception {
 		long testSize = 8000000;
 		// generate a local scratch file
