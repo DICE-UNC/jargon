@@ -1,9 +1,8 @@
 
 Jargon Core API
 
-This is a release candidate for the next release of Jargon per milestone:
 
-https://github.com/DICE-UNC/jargon/issues?milestone=4
+branch for issue https://github.com/DICE-UNC/jargon/issues/31
 
 # Project: Jargon-core API
 ### Date: 03/21/2014
