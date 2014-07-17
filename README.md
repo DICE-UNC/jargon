@@ -1,8 +1,7 @@
 
 Jargon Core API
 
-
-branch for issue https://github.com/DICE-UNC/jargon/issues/31
+work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
 ### Date: 03/21/2014
