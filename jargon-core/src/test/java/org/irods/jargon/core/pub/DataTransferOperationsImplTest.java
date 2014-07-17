@@ -9,6 +9,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
@@ -1037,12 +1038,17 @@ public class DataTransferOperationsImplTest {
 				localFile, returnCompareLocalFile);
 	}
 
-	@Test
-	public void testGetCollectionWithTwoFilesWithCallbacksNoPermission()
+	/**
+	 * Test ref issue: https://github.com/DICE-UNC/jargon/issues/30
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = CatNoAccessException.class)
+	public void testGetCollectionWithTwoFilesWithNoCallbacksNoPermission()
 			throws Exception {
 
-		String rootCollection = "testGetCollectionWithTwoFilesNoCallbacks";
-		String returnedLocalCollection = "testGetCollectionWithTwoFilesNoCallbacksReturnedLocalFiles";
+		String rootCollection = "testGetCollectionWithTwoFilesWithNoCallbacksNoPermission";
+		String returnedLocalCollection = "testGetCollectionWithTwoFilesWithNoCallbacksNoPermissionLocalFiles";
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -1051,9 +1057,6 @@ public class DataTransferOperationsImplTest {
 		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH); // TODO: add
-		// test with
-		// trailing
-		// '/'
 
 		FileGenerator
 				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
@@ -1063,6 +1066,8 @@ public class DataTransferOperationsImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
@@ -1093,6 +1098,10 @@ public class DataTransferOperationsImplTest {
 						+ '/' + returnedLocalCollection);
 		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
 
+		dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						secondaryAccount);
+
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				null, null);
 
@@ -1104,6 +1113,80 @@ public class DataTransferOperationsImplTest {
 
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
 				localFile, returnCompareLocalFile);
+	}
+
+	/**
+	 * Test ref issue: https://github.com/DICE-UNC/jargon/issues/30
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testGetCollectionWithTwoFilesWithCallbacksNoPermission()
+			throws Exception {
+
+		String rootCollection = "testGetCollectionWithTwoFilesWithCallbacksNoPermission";
+		String returnedLocalCollection = "testGetCollectionWithTwoFilesWithCallbacksNoPermissionLocalFiles";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH); // TODO: add
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.close();
+
+		destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, (File) destFile);
+
+		// now get the files into a local return collection and verify
+
+		IRODSFile getIrodsFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+		String returnLocalCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedLocalCollection);
+		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
+
+		dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						secondaryAccount);
+
+		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
+
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
+				testCallbackListener, null);
+
+		Assert.assertEquals("did not get two errors from callbacks", 2,
+				testCallbackListener.getErrorCallbacks().size());
+
 	}
 
 	/**
