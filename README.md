@@ -1,9 +1,8 @@
 
 Jargon Core API
 
-This is a release candidate for the next release of Jargon per milestone:
 
-https://github.com/DICE-UNC/jargon/issues?milestone=4
+branch for issue https://github.com/DICE-UNC/jargon/issues/31
 
 # Project: Jargon-core API
 ### Date: 03/21/2014
@@ -56,6 +55,17 @@ Note that the following bug and feature requests are logged in GForge with relat
 #### implement checksum variants #24
 
 implement pluggable checksum generation/validation (https://github.com/DICE-UNC/jargon/issues/24)
+
+#### remove cache of objStat for IRODSFile operations #34
+
+IRODSFile uses a scheme to cache information to respond to exists, isFile, length, and other requests.
+
+As these sorts of requests are made multiple times in client scenarios, it was originally coded to cache that information once (it obtains an objStat in the background), rather than calling iRODS each time a file.xxx() method was called.
+
+That can save a good deal of traffic, but requires calling reset() to clear the cache on the client side.
+
+The cache semantics were removed and reset() now is deprecated and has no effect.
+
 
 =======
 ## Features

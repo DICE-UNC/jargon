@@ -1037,6 +1037,75 @@ public class DataTransferOperationsImplTest {
 				localFile, returnCompareLocalFile);
 	}
 
+	@Test
+	public void testGetCollectionWithTwoFilesWithCallbacksNoPermission()
+			throws Exception {
+
+		String rootCollection = "testGetCollectionWithTwoFilesNoCallbacks";
+		String returnedLocalCollection = "testGetCollectionWithTwoFilesNoCallbacksReturnedLocalFiles";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH); // TODO: add
+		// test with
+		// trailing
+		// '/'
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.close();
+
+		destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, (File) destFile);
+
+		// now get the files into a local return collection and verify
+
+		IRODSFile getIrodsFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath + "/"
+						+ rootCollection);
+		String returnLocalCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedLocalCollection);
+		File returnLocalFile = new File(returnLocalCollectionAbsolutePath);
+
+		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
+				null, null);
+
+		String returnLocalCollectionCompareAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedLocalCollection + '/' + rootCollection);
+		File returnCompareLocalFile = new File(
+				returnLocalCollectionCompareAbsolutePath);
+
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, returnCompareLocalFile);
+	}
+
 	/**
 	 * Get a collection to a target directory, one file will be an overwrite,
 	 * and the no force option will cause an exception
