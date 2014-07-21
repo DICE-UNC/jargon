@@ -1072,10 +1072,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			 */
 
 			if (targetFile instanceof IRODSFile) {
-				IRODSFile myTargetIRODSFile = (IRODSFile) targetFile;
 				try {
-					if (myTargetIRODSFile.initializeObjStatForFile()
-							.getSpecColType() == SpecColType.MOUNTED_COLL) {
+					if (this.getObjectStatForAbsolutePath(
+							targetFile.getAbsolutePath()).getSpecColType() == SpecColType.MOUNTED_COLL) {
 						log.info("always use force for mounted collections, see comments for Bug 1606");
 						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 						return overwriteResponse;
@@ -1422,19 +1421,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info("callback listener was provided");
 			}
 
-			/*
-			 * Do not try and find the file length if this is a client side
-			 * action from a rule, this messes up the protocol
-			 */
-			long lengthToUse = 0;
-			if (!clientSideAction) {
-				lengthToUse = irodsSourceFile.length();
-			}
-
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData, getIRODSAccessObjectFactory(),
-							lengthToUse, transferControlBlock,
+							irodsFileLength, transferControlBlock,
 							transferStatusCallbackListener);
 
 			parallelGetTransferStrategy.transfer();

@@ -1824,7 +1824,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		preCountIrodsFilesBeforeTransfer(sourceFile.getAbsolutePath(),
 				operativeTransferControlBlock);
 
-		// The source directory becomes the new target subdirectory
+		/*
+		 * Don't copy to self
+		 */
 		if (targetFile.getAbsolutePath().equals(sourceFile.getParent())) {
 			log.error("source file is being copied to own parent:{}",
 					sourceFile.getAbsolutePath());
@@ -1832,14 +1834,17 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					"attempt to copy source file to its parent");
 		}
 
-		// if the target is a file, use the parent
+		// if the target is a file throw an exception
 		if (targetFile.exists() && targetFile.isFile()) {
 			targetFile = (IRODSFile) targetFile.getParentFile();
-			log.info("target of copy is a file, path switched to parent: {}",
+			log.error("attempt to copy a directory to a file: {}",
 					targetFile.getAbsolutePath());
+			throw new JargonException("attempt to copy a directory to a file");
 		}
 
 		// here I know the source file is a collection
+		// The source directory contents are copied under the target contents
+
 		targetFile = getIRODSFileFactory().instanceIRODSFile(
 				targetFile.getAbsolutePath(), sourceFile.getName());
 
