@@ -50,11 +50,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
 
 	private IRODSFileSystemAO irodsFileSystemAO = null;
-	/**
-	 * ObjStat is a cached object (synchronized access) that is obtained from
-	 * iRODS to describe the file
-	 */
-	private transient ObjStat objStat = null;
 
 	private String fileName = "";
 	private String resource = "";
@@ -69,8 +64,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
 	 */
 	@Override
-	public synchronized void reset() {
-		objStat = null;
+	public void reset() {
 	}
 
 	protected IRODSFileImpl(final String pathName,
@@ -331,7 +325,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean canRead = false;
 
 		try {
-			initializeObjStatForFile();
 			canRead = irodsFileSystemAO.isFileReadable(this);
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return false", e);
@@ -353,7 +346,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean canWrite = false;
 
 		try {
-			initializeObjStatForFile();
 			canWrite = irodsFileSystemAO.isFileWriteable(this);
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return false", e);
@@ -444,7 +436,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 			}
 		}
-		objStat = null;
 		fileDescriptor = -1;
 		return successful;
 
@@ -473,7 +464,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			log.error(msg, e);
 			throw new JargonRuntimeException(msg, e);
 		}
-		objStat = null;
 		fileDescriptor = -1;
 		return successful;
 
@@ -716,13 +706,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		log.info("isDirectory() for path:{}", getAbsolutePath());
 		boolean isDir = false;
 		try {
-			if (objStat == null) {
-				log.info("looking up objStat, not cached in file");
-				objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
-			}
 
-			if (getObjStat().getObjectType() == ObjectType.COLLECTION
-					|| getObjStat().getObjectType() == ObjectType.LOCAL_DIR) {
+			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
+
+			if (objStat.getObjectType() == ObjectType.COLLECTION
+					|| objStat.getObjectType() == ObjectType.LOCAL_DIR) {
 				isDir = true;
 			}
 		} catch (FileNotFoundException fnf) {
@@ -747,14 +735,16 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		boolean isFile = false;
 
 		try {
+			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
+
 			if (objStat == null) {
 
 				log.info("looking up objStat, not cached in file");
 				objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			}
 
-			if (getObjStat().getObjectType() == ObjectType.DATA_OBJECT
-					|| getObjStat().getObjectType() == ObjectType.LOCAL_FILE) {
+			if (objStat.getObjectType() == ObjectType.DATA_OBJECT
+					|| objStat.getObjectType() == ObjectType.LOCAL_FILE) {
 				isFile = true;
 			}
 		} catch (FileNotFoundException fnf) {
@@ -796,9 +786,8 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	public synchronized long lastModified() {
 		log.info("lastModified() for path:{}", getAbsolutePath());
 		long lastMod = 0L;
-
 		try {
-			initializeObjStatForFile();
+			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			lastMod = objStat.getModifiedAt().getTime();
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return 0L", e);
@@ -823,7 +812,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		long length = 0L;
 
 		try {
-			initializeObjStatForFile();
+			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			length = objStat.getObjSize();
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return false", e);
@@ -1042,7 +1031,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 				throw new JargonRuntimeException(e);
 			}
 		}
-		objStat = null;
 		return success;
 	}
 
@@ -1337,7 +1325,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		irodsFileSystemAO.fileClose(getFileDescriptor());
 		setFileDescriptor(-1);
-		objStat = null;
 
 	}
 
@@ -1361,8 +1348,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		irodsFileSystemAO.fileClose(fd);
 		setFileDescriptor(-1);
-		objStat = null;
-
 	}
 
 	/*
@@ -1409,20 +1394,6 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.pub.io.IRODSFile#initializeObjStatForFile()
-	 */
-	@Override
-	public synchronized ObjStat initializeObjStatForFile()
-			throws FileNotFoundException, JargonException {
-		if (objStat == null) {
-			objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
-		}
-		return objStat;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see java.io.File#canExecute()
 	 */
 	@Override
@@ -1430,9 +1401,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 
 		boolean canExecute = false;
 		try {
-			initializeObjStatForFile();
 			canExecute = irodsFileSystemAO.isFileExecutable(this);
-
 		} catch (FileNotFoundException e) {
 			log.warn("file not found exception, return false", e);
 
@@ -1442,13 +1411,4 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 		return canExecute;
 	}
-
-	public synchronized ObjStat getObjStat() {
-		return objStat;
-	}
-
-	public synchronized void setObjStat(final ObjStat objStat) {
-		this.objStat = objStat;
-	}
-
 }
