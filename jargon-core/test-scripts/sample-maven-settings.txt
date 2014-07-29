@@ -36,7 +36,6 @@ java test resources directory -->
 		<profile>
 			<id>jargonTest</id>
 			<properties>
-				<jargon.test.confirm>true</jargon.test.confirm>
 				<jargon.test.data.directory>/Users/mikeconway/temp/irodsscratch/</jargon.test.data.directory>
 				<jargon.test.irods.admin>rods</jargon.test.irods.admin>
 				<jargon.test.irods.admin.password>test</jargon.test.irods.admin.password>
@@ -57,7 +56,6 @@ java test resources directory -->
 				<jargon.test.user.group>jargonTestUg</jargon.test.user.group>
 				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
 				<jargon.test.irods.scratch.subdir>jargon-scratch</jargon.test.irods.scratch.subdir>
-				<jargon.test.mac.icommand.path>/opt/iRODS/iRODS2.5/iRODS/clients/icommands/bin/</jargon.test.mac.icommand.path>
 				<jargon.test.option.exercise.remoteexecstream>true</jargon.test.option.exercise.remoteexecstream>
  				<jargon.test.option.exercise.ticket>true</jargon.test.option.exercise.ticket>
  				<jargon.test.option.exercise.audit>false</jargon.test.option.exercise.audit>
@@ -85,5 +83,7 @@ java test resources directory -->
 		
 		
 	<activeProfiles>
-		<activeProfile>eirods</activeProfile>
+		<activeProfile>jargonTest</activeProfile>
 	</activeProfiles>
+	
+	</settings>
