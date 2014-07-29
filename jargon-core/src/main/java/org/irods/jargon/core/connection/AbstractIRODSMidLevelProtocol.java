@@ -25,6 +25,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	private IRODSProtocolManager irodsProtocolManager;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
+	private StartupResponseData startupResponseData;
 
 	public static final int EIRODS_MIN = 301;
 	public static final int EIRODS_MAX = 301;
@@ -237,6 +238,21 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		readMessage();
 		log.debug("message read");
 		return dataSent;
+	}
+
+	/**
+	 * the {@link StartupResponseData} from the send of the initial iRODS
+	 * startup packet is provisisioned by the authentication mechanism.
+	 * 
+	 * @return {@link StartupResponseData} as obtained when sending the startup
+	 *         pack
+	 */
+	public StartupResponseData getStartupResponseData() {
+		return startupResponseData;
+	}
+
+	public void setStartupResponseData(StartupResponseData startupResponseData) {
+		this.startupResponseData = startupResponseData;
 	}
 
 	/**
