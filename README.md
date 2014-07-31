@@ -65,6 +65,9 @@ That can save a good deal of traffic, but requires calling reset() to clear the 
 
 The cache semantics were removed and reset() now is deprecated and has no effect.
 
+#### PAM/SSL issues and slowness in workflow processing #27
+
+Fixed PAM flush behavior for versions of iRODS > 3.2, avoiding those flushes when not necessary.  This can cause significant response time issues and was only needed to work around a bug in earlier versions of iRODS PAM processing.
 
 =======
 ## Features
