@@ -71,6 +71,53 @@ public class FileOperationSequences {
 	 * @throws Exception
 	 */
 	@Test
+	public void testRepeatedPutAndDeleteOfFileBug28() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testRepeatedPutAndDeleteOfFileBug28andThisNameIsRealllllllllllllllllyLong.txt";
+
+		int nbrIterations = 150;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 3);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		for (int i = 0; i < nbrIterations; i++) {
+			dataTransferOperationsAO.putOperation(localFile, destFile, null,
+					null);
+			destFile.delete();
+			destFile.reset();
+
+		}
+
+	}
+
+	/**
+	 * Mutli-threaded test of multiple operations for a get with shared access
+	 * objects between threads [#1065] [iROD-Chat:9047] Java
+	 * ClosedChannelException in Jargon 3.2.1
+	 * 
+	 * @throws Exception
+	 */
+	@Test
 	public void testMultiThreadSharingOfDataAOBug1065() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testMultiThreadSharingOfDataAOBug1065.txt";

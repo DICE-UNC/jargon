@@ -1,5 +1,8 @@
 package org.irods.jargon.core.pub;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -16,6 +19,12 @@ public class TestingStatusCallbackListener implements
 
 	private long bytesReportedIntraFileCallbacks = 0L;
 	private int numberIntraFileCallbacks = 0;
+
+	private final List<TransferStatus> errorCallbacks = new ArrayList<TransferStatus>();
+
+	public List<TransferStatus> getErrorCallbacks() {
+		return errorCallbacks;
+	}
 
 	@Override
 	public FileStatusCallbackResponse statusCallback(
@@ -36,6 +45,9 @@ public class TestingStatusCallbackListener implements
 			lastResource = transferStatus.getTargetResource();
 		}
 
+		if (transferStatus.getTransferException() != null) {
+			errorCallbacks.add(transferStatus);
+		}
 		return FileStatusCallbackResponse.CONTINUE;
 
 	}

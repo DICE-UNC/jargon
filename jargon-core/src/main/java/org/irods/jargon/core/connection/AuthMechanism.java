@@ -13,6 +13,14 @@ import org.irods.jargon.core.protovalues.RequestTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Represents a type of authentication scheme, outlining a life cycle model of
+ * connections with events called at appropriate points where authentication
+ * processing can be implemented
+ * 
+ * @author Mike Conway - DICE
+ *
+ */
 abstract class AuthMechanism {
 
 	public static final int AUTH_REQUEST_AN = 703;
@@ -206,7 +214,7 @@ abstract class AuthMechanism {
 						"cookie").getStringValue());
 
 		log.info("startup response:{}", startupResponseData);
-
+		irodsCommands.setStartupResponseData(startupResponseData);
 		return startupResponseData;
 	}
 

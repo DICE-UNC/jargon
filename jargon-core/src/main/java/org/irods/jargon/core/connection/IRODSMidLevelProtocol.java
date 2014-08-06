@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,10 +113,18 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @return
 	 */
 	boolean isPamFlush() {
-		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+
+		boolean postThreeDotThree = MiscIRODSUtils
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(this
+						.getStartupResponseData().getRelVersion(), "rods3.3");
+
+		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
+				&& !postThreeDotThree) {
 			return true;
 		} else if (getPipelineConfiguration().isForcePamFlush()) {
 			return true;
+		} else if (postThreeDotThree) {
+			return false;
 		} else {
 			return false;
 		}
