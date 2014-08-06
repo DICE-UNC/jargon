@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
-import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
-import org.irods.jargon.core.pub.domain.ObjStat;
 
 /**
  * Interface followed by {@link org.irods.jargon.core.pub.io.IRODSFileImpl}. The
@@ -235,9 +233,11 @@ public interface IRODSFile {
 	boolean deleteWithForceOption();
 
 	/**
-	 * Reset cached data about the file (exists, type, length) so it can be
-	 * accessed again
+	 * Note: the caching behavior has been removed and deprecated, this method
+	 * can be removed and has no effect Reset cached data about the file
+	 * (exists, type, length) so it can be accessed again
 	 */
+	@Deprecated
 	void reset();
 
 	/**
@@ -251,22 +251,6 @@ public interface IRODSFile {
 	 * @throws JargonException
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;
-
-	/**
-	 * Initialize the cached <code>ObjStat</code> for this
-	 * <code>IRODSFile</code>. The cached stat describes the file information,
-	 * and is used in determining length, whether it is a collection, and other
-	 * file basics. It also establishes the zone for the file for use in
-	 * querying things like file permissions. Calling this method will set the
-	 * <code>objStat</code> instance variable, and as such, it is synchronized.
-	 * 
-	 * @return {@link ObjStat} describing the iRODS file
-	 * @throws FileNotFoundException
-	 *             if the file <code>ObjStat</code> cannot be found
-	 * @throws JargonException
-	 */
-	ObjStat initializeObjStatForFile() throws FileNotFoundException,
-			JargonException;
 
 	/**
 	 * Create a new file, and detect errors where no default storage resource is
