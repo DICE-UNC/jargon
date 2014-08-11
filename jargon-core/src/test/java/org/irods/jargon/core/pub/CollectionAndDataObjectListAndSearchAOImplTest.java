@@ -22,6 +22,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAndDataObjectListAndSearchAOImplTest {
@@ -2019,7 +2020,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
-	@Test
+	@Ignore
 	/**
 	 * Obtain an entry at the given valid abs path that is a data object
 	 * @throws Exception
