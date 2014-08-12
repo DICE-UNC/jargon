@@ -19,6 +19,8 @@ iadmin mkresc test1-resc2 "unix file system"  localhost:/var/lib/irods/Vault2
 
 iadmin mkuser anonymous rodsuser
 
+iadmin atg public anonymous
+
 iadmin mkgroup jargonTestUg
 
 iadmin atg jargonTestUg test1

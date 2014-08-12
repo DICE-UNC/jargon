@@ -270,7 +270,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		try {
 			objStat = retrieveObjectStatForPath(absolutePathToParent);
 		} catch (FileNotFoundException fnf) {
-			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
+			log.info("didn't find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			return collectionListingUtils
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 		}
