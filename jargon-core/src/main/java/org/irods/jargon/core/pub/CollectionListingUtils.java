@@ -128,9 +128,7 @@ class CollectionListingUtils {
 
 		if (!path.equals(comparePath)) {
 			log.info("I am not under /, /zone/, or /zone/home/ so I cannot do anything but throw the original exception");
-			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
 			throw new FileNotFoundException("the collection cannot be found");
-
 		}
 
 		log.info("under home, look for public and home dir");
