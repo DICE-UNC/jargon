@@ -98,6 +98,10 @@ public class PAMAuth extends AuthMechanism {
 		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
 				secureConnection, irodsCommands.getIrodsProtocolManager());
 
+		log.info("carrying over startup pack with server info");
+		secureIRODSCommands.setStartupResponseData(irodsCommands
+				.getStartupResponseData());
+
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
 		// send pam auth request

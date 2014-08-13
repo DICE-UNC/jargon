@@ -6,7 +6,7 @@
 	<parent> 
 		<artifactId>jargon</artifactId>
 		<groupId>org.irods</groupId>
-		<version>4.0.2.2-SNAPSHOT</version>
+		<version>4.0.3-SNAPSHOT</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-conveyor</artifactId>
