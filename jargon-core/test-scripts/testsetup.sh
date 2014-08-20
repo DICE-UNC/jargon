@@ -21,9 +21,13 @@ iadmin atrg testResourceGroup test1-resc2
 
 iadmin mkuser anonymous rodsuser
 
+iadmin atg public anonymous
+
 iadmin mkgroup jargonTestUg
 
 iadmin atg jargonTestUg test1
 
 iadmin atg jargonTestUg test3
+
+
 
