@@ -203,7 +203,6 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
@@ -578,8 +577,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSFile.delete();
-
-		targetIRODSFile.reset();
 
 		Assert.assertFalse(targetIRODSFile.exists());
 	}

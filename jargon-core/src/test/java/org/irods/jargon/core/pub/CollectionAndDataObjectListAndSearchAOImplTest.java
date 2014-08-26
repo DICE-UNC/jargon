@@ -22,6 +22,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class CollectionAndDataObjectListAndSearchAOImplTest {
@@ -2019,7 +2020,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 	}
 
-	@Test
+	@Ignore
 	/**
 	 * Obtain an entry at the given valid abs path that is a data object
 	 * @throws Exception
@@ -2235,6 +2236,131 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		Assert.assertFalse("no owner name", objStat.getOwnerName().isEmpty());
 		Assert.assertFalse("no owner zone", objStat.getOwnerZone().isEmpty());
 		Assert.assertEquals("wrong file size", fileSize, objStat.getObjSize());
+	}
+
+	/**
+	 * Bug reported in idrop as https://github.com/DICE-UNC/idrop/issues/56
+	 * 
+	 * If this test fails make sure that the user anonymous is part of the group
+	 * public, as in the testsetup.sh script
+	 * 
+	 * iadmin atg public anonymous
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testObjStatPublicAsAnonymousUserBug56iDrop() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String publicCollection = "/" + irodsAccount.getZone() + "/home/public";
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(publicCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		IRODSAccount anonAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(anonAccount);
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(publicCollection);
+		Assert.assertNotNull("no objStat from public", objStat);
+
+	}
+
+	/**
+	 * Bug reported in idrop as https://github.com/DICE-UNC/idrop/issues/56
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDrop()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPublicAsAnonymousUserBug56iDrop";
+		int count = 3;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String publicCollection = "/" + irodsAccount.getZone() + "/home/public";
+		String targetIrodsCollection = publicCollection + "/" + subdirPrefix;
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+		}
+
+		IRODSAccount anonAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(anonAccount);
+
+		List<CollectionAndDataObjectListingEntry> entries = collectionAndDataObjectListAndSearchAO
+				.listDataObjectsAndCollectionsUnderPath(targetIrodsCollection);
+		Assert.assertFalse("no entries returned", entries.isEmpty());
+
+	}
+
+	/**
+	 * Bug reported in idrop as https://github.com/DICE-UNC/idrop/issues/56
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDropStartUnderPublic()
+			throws Exception {
+
+		String subdirPrefix = "testListCollectionsUnderPublicAsAnonymousUserBug56iDropStartUnderPublic";
+		int count = 3;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String publicCollection = "/" + irodsAccount.getZone() + "/home/public";
+		String targetIrodsCollection = publicCollection + "/" + subdirPrefix;
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i)
+					+ subdirPrefix;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+		}
+
+		IRODSAccount anonAccount = testingPropertiesHelper
+				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(anonAccount);
+
+		List<CollectionAndDataObjectListingEntry> entries = collectionAndDataObjectListAndSearchAO
+				.listDataObjectsAndCollectionsUnderPath(publicCollection);
+		Assert.assertFalse("no entries returned", entries.isEmpty());
+
 	}
 
 }
