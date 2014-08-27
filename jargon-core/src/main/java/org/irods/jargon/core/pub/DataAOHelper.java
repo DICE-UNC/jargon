@@ -549,12 +549,12 @@ public final class DataAOHelper extends AOHelper {
 		if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.MD5
 				|| myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.DEFAULT) {
 			localFileChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
+					.digestByteArrayToString(LocalFileUtils
 							.computeMD5FileCheckSumViaAbsolutePath(localFile
 									.getAbsolutePath()));
 		} else if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.SHA256) {
 			localFileChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
+					.digestByteArrayToString(LocalFileUtils
 							.computeSHA256FileCheckSumViaAbsolutePath(localFile
 									.getAbsolutePath()));
 		} else {

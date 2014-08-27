@@ -360,26 +360,24 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given an md5 checksum, return a
+	 * Given a checksum digest as a <code>byte[]</code>, return a
 	 * <code>String</value> as used in iRODS packing instructions
 	 * 
-	 * @param md5
-	 *            <code>byte[]</code> which is an MD5 checksum value
+	 * @param digestAsByteArray
+	 *            <code>byte[]</code> which is a checksum value
 	 * @return <code>String</code> in hex that represents this checkSum
 	 */
-	public static String md5ByteArrayToString(final byte[] md5) {
+	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
 
-		if (md5 == null || md5.length != 16) {
+		if (digestAsByteArray == null) {
 			throw new IllegalArgumentException(
 					"unknown format, not recognized as an MD5 checksum in a byte array");
 		}
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < 16; i++) {
-
-			sb.append(String.format("%02x", md5[i]));
-
+		for (int i = 0; i < digestAsByteArray.length; i++) {
+			sb.append(String.format("%02x", digestAsByteArray[i]));
 		}
 
 		return sb.toString();

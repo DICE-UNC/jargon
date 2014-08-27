@@ -15,10 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tools to manage negotiation and generation of checksums
+ * Service to determine, based on local and remote server properties, the
+ * correct checksum hash type.
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ChecksumManagerImpl implements ChecksumManager {
 
