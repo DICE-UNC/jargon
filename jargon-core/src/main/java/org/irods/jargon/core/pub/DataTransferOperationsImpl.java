@@ -55,7 +55,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	private static Logger log = LoggerFactory
 			.getLogger(DataTransferOperationsImpl.class);
 	private TransferOperationsHelper transferOperationsHelper = null;
-	private DataObjectAO dataObjectAO = null;
+	private DataObjectAO dataObjectAO;
 
 	/**
 	 * @param irodsSession
@@ -67,6 +67,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 		transferOperationsHelper = TransferOperationsHelper.instance(
 				irodsSession, irodsAccount);
+		dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
+				getIRODSAccount());
+
 	}
 
 	/*
@@ -115,22 +118,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.error(msg);
 			throw new JargonException(msg);
 		}
-
-		// go ahead and mkdirs for the target directory, just in case, no harm
-		// if it already exists
-
-		// if
-		// (!sourceFile.getAbsolutePath().equals(targetFile.getAbsolutePath()))
-		// {
-		// targetFile.mkdirs();
-		// }
-
-		/*
-		 * if (!sourceFile.getParentFile().getAbsolutePath()
-		 * .equals(targetFile.getParentFile().getAbsolutePath())) {
-		 * log.info("move is to a different parent, so mkdir for the target");
-		 * // make sure the target parent dir exists targetFile.mkdirs(); }
-		 */
 
 		String lastPartOfSourcePath = sourceFile.getName();
 		log.debug(
@@ -423,10 +410,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		IRODSAccount reroutedAccount = null;
 		log.info("redirects are available, check to see if I need to redirect to a resource server");
-		if (dataObjectAO == null) {
-			dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
-					getIRODSAccount());
-		}
 
 		// make a call to see if I need to go to a different host
 		String detectedHost = dataObjectAO.getHostForGetOperation(
@@ -853,10 +836,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					&& getIRODSServerProperties()
 							.isSupportsConnectionRerouting()) {
 				log.info("redirects are available, check to see if I need to redirect to a resource server");
-				if (dataObjectAO == null) {
-					dataObjectAO = getIRODSAccessObjectFactory()
-							.getDataObjectAO(getIRODSAccount());
-				}
 
 				// make a call to see if I need to go to a different host
 
@@ -974,7 +953,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			 * prior to the put operation. The reset clears the cache of the
 			 * exists(), isFile(), and other basic file stat info
 			 */
-			targetIrodsFile.reset();
 			if (targetIrodsFile.exists() && targetIrodsFile.isDirectory()) {
 				log.info("target is a directory, source is file");
 				targetIrodsPathBuilder
@@ -1943,6 +1921,37 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		transferOperationsHelper.processReplicationOfSingleFile(
 				irodsFileAbsolutePath, targetResource,
 				transferStatusCallbackListener, transferControlBlock);
+	}
+
+	/**
+	 * @return the transferOperationsHelper
+	 */
+	public TransferOperationsHelper getTransferOperationsHelper() {
+		return transferOperationsHelper;
+	}
+
+	/**
+	 * @param transferOperationsHelper
+	 *            the transferOperationsHelper to set
+	 */
+	public void setTransferOperationsHelper(
+			TransferOperationsHelper transferOperationsHelper) {
+		this.transferOperationsHelper = transferOperationsHelper;
+	}
+
+	/**
+	 * @return the dataObjectAO
+	 */
+	public DataObjectAO getDataObjectAO() {
+		return dataObjectAO;
+	}
+
+	/**
+	 * @param dataObjectAO
+	 *            the dataObjectAO to set
+	 */
+	public void setDataObjectAO(DataObjectAO dataObjectAO) {
+		this.dataObjectAO = dataObjectAO;
 	}
 
 }

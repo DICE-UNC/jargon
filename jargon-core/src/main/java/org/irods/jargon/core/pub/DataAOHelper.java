@@ -11,6 +11,8 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.checksum.ChecksumManager;
+import org.irods.jargon.core.checksum.ChecksumManagerImpl;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -61,6 +63,8 @@ public final class DataAOHelper extends AOHelper {
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
+	private final ChecksumManager checksumManager;
+
 	private int putBufferSize = 0;
 
 	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
@@ -81,6 +85,8 @@ public final class DataAOHelper extends AOHelper {
 				.getSendInputStreamBufferSize();
 		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
 				.getPutBufferSize();
+		checksumManager = new ChecksumManagerImpl(irodsAccount,
+				irodsAccessObjectFactory);
 
 	}
 
@@ -546,6 +552,13 @@ public final class DataAOHelper extends AOHelper {
 	String computeLocalFileChecksum(final File localFile,
 			TransferOptions myTransferOptions) throws JargonException {
 		String localFileChecksum;
+
+		ChecksumEncodingEnum checksumEncoding = checksumManager
+				.determineChecksumEncodingForTargetServer();
+		log.info("using checksum algorithm:{}", checksumEncoding);
+
+		// AbstractChecksumComputeStrategy strategy = LocalChe
+
 		if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.MD5
 				|| myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.DEFAULT) {
 			localFileChecksum = LocalFileUtils
