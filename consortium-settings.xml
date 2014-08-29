@@ -128,7 +128,7 @@
 				<jargon.test.option.exercise.workflow>true</jargon.test.option.exercise.workflow>
 				<jargon.test.option.exercise.filesystem.mount>true</jargon.test.option.exercise.filesystem.mount>
 				<jargon.test.option.exercise.filesystem.mount.local>true</jargon.test.option.exercise.filesystem.mount.local>
-				<test.option.mount.basedir>/tmp/irods/basedir</test.option.mount.basedir>
+				<test.option.mount.basedir>/tmp/basedir</test.option.mount.basedir>
 				<test.option.pam>false</test.option.pam>
 				<jargon.test.pam.user>pam</jargon.test.pam.user>
 				<jargon.test.pam.password>pam</jargon.test.pam.password>
