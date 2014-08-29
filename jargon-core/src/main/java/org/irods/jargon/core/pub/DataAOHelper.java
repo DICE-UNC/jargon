@@ -11,6 +11,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
 import org.irods.jargon.core.checksum.ChecksumManager;
 import org.irods.jargon.core.checksum.ChecksumManagerImpl;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
@@ -44,7 +45,6 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
-import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -551,29 +551,23 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	String computeLocalFileChecksum(final File localFile,
 			TransferOptions myTransferOptions) throws JargonException {
-		String localFileChecksum;
 
 		ChecksumEncodingEnum checksumEncoding = checksumManager
 				.determineChecksumEncodingForTargetServer();
 		log.info("using checksum algorithm:{}", checksumEncoding);
 
-		// AbstractChecksumComputeStrategy strategy = LocalChe
-
-		if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.MD5
-				|| myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.DEFAULT) {
-			localFileChecksum = LocalFileUtils
-					.digestByteArrayToString(LocalFileUtils
-							.computeMD5FileCheckSumViaAbsolutePath(localFile
-									.getAbsolutePath()));
-		} else if (myTransferOptions.getChecksumEncoding() == ChecksumEncodingEnum.SHA256) {
-			localFileChecksum = LocalFileUtils
-					.digestByteArrayToString(LocalFileUtils
-							.computeSHA256FileCheckSumViaAbsolutePath(localFile
-									.getAbsolutePath()));
-		} else {
-			throw new JargonException("unsupported checksum type");
+		AbstractChecksumComputeStrategy strategy = this.irodsAccessObjectFactory
+				.getIrodsSession().getLocalChecksumComputerFactory()
+				.instance(checksumEncoding);
+		try {
+			return strategy.instanceChecksumForPackingInstruction(localFile
+					.getAbsolutePath());
+		} catch (FileNotFoundException e) {
+			log.error("cannot find file for computing local checksum", e);
+			throw new JargonException(
+					"cannot find local file to do the checksum", e);
 		}
-		return localFileChecksum;
+
 	}
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite,
