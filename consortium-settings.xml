@@ -153,11 +153,7 @@
 	</profiles>
   
 	<activeProfiles>
-		<activeProfile>git-dice</activeProfile>
 		<activeProfile>jargonTest</activeProfile>
-		<activeProfile>hive</activeProfile>
-		<activeProfile>dvn</activeProfile>
-		<activeProfile>indexer</activeProfile>
 	</activeProfiles>
 
 </settings>
