@@ -117,7 +117,7 @@
 				<jargon.test.irods.resource3>test1-resc2</jargon.test.irods.resource3>
 				<jargon.test.irods.host>localhost</jargon.test.irods.host>
 				<jargon.test.irods.port>1247</jargon.test.irods.port>
-				<jargon.test.irods.zone>test1</jargon.test.irods.zone>
+				<jargon.test.irods.zone>tempZone</jargon.test.irods.zone>
 				<jargon.test.resource.group>testResourceGroup</jargon.test.resource.group>
 				<jargon.test.user.group>jargonTestUg</jargon.test.user.group>
 				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
