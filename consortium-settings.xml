@@ -102,7 +102,7 @@
 			<id>jargonTest</id>
 			<properties>
 				<jargon.test.confirm>true</jargon.test.confirm>
-				<jargon.test.data.directory>/temp/irods/jargontest</jargon.test.data.directory>
+				<jargon.test.data.directory>/temp/irods/jargontest/</jargon.test.data.directory>
 				<jargon.test.irods.admin>rods</jargon.test.irods.admin>
 				<jargon.test.irods.admin.password>rods</jargon.test.irods.admin.password>
 				<jargon.test.irods.user>test1</jargon.test.irods.user>
