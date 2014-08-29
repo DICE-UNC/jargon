@@ -80,11 +80,11 @@ public class ChecksumManagerImpl implements ChecksumManager {
 					"jargon properties has null checksum encoding");
 		}
 
-		if (encodingFromProperties.equals(ChecksumEncodingEnum.MD5.toString())) {
+		if (encodingFromProperties == ChecksumEncodingEnum.MD5) {
 			log.info("jargon properties specifies MD5");
 			cacheEncoding(ChecksumEncodingEnum.MD5);
 			return ChecksumEncodingEnum.MD5;
-		} else if (encodingFromProperties.equals(ChecksumEncodingEnum.SHA256)) {
+		} else if (encodingFromProperties == ChecksumEncodingEnum.SHA256) {
 			log.info("jargon properties specifies SHA256");
 			cacheEncoding(ChecksumEncodingEnum.SHA256);
 			return ChecksumEncodingEnum.SHA256;
