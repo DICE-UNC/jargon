@@ -4,10 +4,10 @@ Jargon Core API
 work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
-### Date: 03/21/2014
-### Release Version: 4.0.2-SNAPSHOT
-### git tag: 
-
+#### Date: 03/21/2014
+#### Release Version: 4.0.2-SNAPSHOT
+#### git tag: 
+#### Developer: Mike Conway - DICE
 ## News
 
 This version of Jargon is a release candidate for the next feature release of Jargon. This version contains many large and small upgrades in support of 
