@@ -5,6 +5,7 @@ package org.irods.jargon.core.checksum;
 
 import java.io.FileNotFoundException;
 
+import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
@@ -41,7 +42,7 @@ public class SHA256LocalChecksumComputerStrategy extends
 
 		byte[] digest = LocalFileUtils
 				.computeSHA256FileCheckSumViaAbsolutePath(localFileAbsolutePath);
-		return LocalFileUtils.digestByteArrayToString(digest);
+		return Base64.encodeBase64String(digest);
 
 	}
 
