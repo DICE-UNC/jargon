@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * processing can be implemented
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 abstract class AuthMechanism {
 

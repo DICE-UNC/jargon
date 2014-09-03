@@ -14,6 +14,7 @@ import java.util.List;
 import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
 import org.irods.jargon.core.checksum.ChecksumManager;
 import org.irods.jargon.core.checksum.ChecksumManagerImpl;
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -501,8 +502,8 @@ public final class DataAOHelper extends AOHelper {
 				log.info("computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
 
-				String localFileChecksum = computeLocalFileChecksum(localFile,
-						myTransferOptions);
+				ChecksumValue localFileChecksum = computeLocalFileChecksum(
+						localFile, null);
 
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
@@ -544,19 +545,46 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
+	 * Given local file data, compute the appropriate checksum
+	 * 
 	 * @param localFile
-	 * @param myTransferOptions
+	 * @param overrideChecksumEncoding
+	 *            {@link ChecksumEncodingEnum} to use explicitly, otherwise will
+	 *            use a default and <code>null</code> can be passed here
 	 * @return
 	 * @throws JargonException
 	 */
-	String computeLocalFileChecksum(final File localFile,
-			TransferOptions myTransferOptions) throws JargonException {
+	ChecksumValue computeLocalFileChecksum(final File localFile,
+			final ChecksumEncodingEnum overrideChecksumEncoding)
+			throws JargonException {
 
-		ChecksumEncodingEnum checksumEncoding = checksumManager
-				.determineChecksumEncodingForTargetServer();
+		log.info("computeLocalFileChecksum()");
+
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+
+		log.info("localFile:{}", localFile);
+
+		if (!localFile.exists()) {
+			throw new JargonException("file does not exist");
+		}
+
+		if (!localFile.isFile()) {
+			throw new JargonException("path is not a file");
+		}
+
+		ChecksumEncodingEnum checksumEncoding;
+		if (overrideChecksumEncoding == null) {
+			checksumEncoding = checksumManager
+					.determineChecksumEncodingForTargetServer();
+		} else {
+			checksumEncoding = overrideChecksumEncoding;
+		}
+
 		log.info("using checksum algorithm:{}", checksumEncoding);
 
-		AbstractChecksumComputeStrategy strategy = this.irodsAccessObjectFactory
+		AbstractChecksumComputeStrategy strategy = irodsAccessObjectFactory
 				.getIrodsSession().getLocalChecksumComputerFactory()
 				.instance(checksumEncoding);
 		try {
@@ -568,6 +596,20 @@ public final class DataAOHelper extends AOHelper {
 					"cannot find local file to do the checksum", e);
 		}
 
+	}
+
+	/**
+	 * Given a checksum value coming back from iRODS, compute the checksum value
+	 * 
+	 * @param irodsValue
+	 * @return
+	 * @throws JargonException
+	 */
+	ChecksumValue computeChecksumValueFromIrodsData(final String irodsValue)
+			throws JargonException {
+		// param checks in delegated method
+		return checksumManager
+				.determineChecksumEncodingFromIrodsData(irodsValue.trim());
 	}
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite,

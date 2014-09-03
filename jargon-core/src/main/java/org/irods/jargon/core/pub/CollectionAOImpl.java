@@ -703,7 +703,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				avuData.getValue(), result.get(0).getAvuUnit());
 		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
-	} 
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -1535,6 +1535,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwnAsAdmin(
+	 * java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public void setAccessPermissionOwnAsAdmin(final String zone,
 			final String absolutePath, final String userName,

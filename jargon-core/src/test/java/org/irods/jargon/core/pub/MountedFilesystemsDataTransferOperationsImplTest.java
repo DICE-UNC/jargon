@@ -328,7 +328,6 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(sourceDirFile, destFile, null,
 				null);
 		destFile.close();
-		destFile.reset();
 
 		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection
 				+ "/" + rootCollection);
@@ -397,7 +396,6 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		mountedCollectionAO.unmountACollection(irodsCollectionForTarget,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionTargetFile.reset();
 		mountedCollectionTargetFile.mkdirs();
 
 		mountedCollectionAO.createMountedFileSystemCollection(
@@ -497,7 +495,6 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(sourceDirFile, destFile, null,
 				null);
 		destFile.close();
-		destFile.reset();
 
 		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection
 				+ "/" + rootCollection);

@@ -20,11 +20,11 @@ public abstract class AbstractChecksumComputeStrategy {
 	 * 
 	 * @param localFileAbsolutePath
 	 *            <code>String</code> with the absolute path to a local file
-	 * @return <code>String</code> with a checksum in digest (string) form.
+	 * @return {@link ChecksumValue} with a checksum in digest (string) form.
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	public abstract String instanceChecksumForPackingInstruction(
+	public abstract ChecksumValue instanceChecksumForPackingInstruction(
 			final String localFileAbsolutePath) throws FileNotFoundException,
 			JargonException;
 

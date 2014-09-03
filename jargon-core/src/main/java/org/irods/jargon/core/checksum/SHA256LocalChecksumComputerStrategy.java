@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,8 +30,8 @@ public class SHA256LocalChecksumComputerStrategy extends
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */
 	@Override
-	public String instanceChecksumForPackingInstruction(
-			String localFileAbsolutePath) throws FileNotFoundException,
+	public ChecksumValue instanceChecksumForPackingInstruction(
+			final String localFileAbsolutePath) throws FileNotFoundException,
 			JargonException {
 
 		log.info("instanceChecksumForPackingInstruction()");
@@ -42,7 +43,15 @@ public class SHA256LocalChecksumComputerStrategy extends
 
 		byte[] digest = LocalFileUtils
 				.computeSHA256FileCheckSumViaAbsolutePath(localFileAbsolutePath);
-		return Base64.encodeBase64String(digest);
+
+		ChecksumValue value = new ChecksumValue();
+		value.setChecksumEncoding(ChecksumEncodingEnum.SHA256);
+		value.setChecksumStringValue(Base64.encodeBase64String(digest).trim());
+		StringBuilder sb = new StringBuilder();
+		sb.append("sha2:");
+		sb.append(value.getChecksumStringValue());
+		value.setChecksumTransmissionFormat(sb.toString().trim());
+		return value;
 
 	}
 

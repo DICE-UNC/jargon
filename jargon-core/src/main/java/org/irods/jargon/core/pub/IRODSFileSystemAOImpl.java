@@ -368,7 +368,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("checking existence of: {}", irodsFile.getAbsolutePath());
 		try {
-			ObjStat objStat = this.getObjStat(irodsFile.getAbsolutePath());
+			ObjStat objStat = getObjStat(irodsFile.getAbsolutePath());
 			if (objStat.getObjectType() == ObjectType.UNKNOWN) {
 				exists = false;
 			} else {
@@ -403,7 +403,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.info("checking is dir for: {}", irodsFile.getAbsolutePath());
 
 		try {
-			ObjStat objStat = this.getObjStat(irodsFile.getAbsolutePath());
+			ObjStat objStat = getObjStat(irodsFile.getAbsolutePath());
 			// no error means it exists
 			if (objStat.getObjectType() == ObjectType.COLLECTION
 					|| objStat.getObjectType() == ObjectType.LOCAL_DIR) {
@@ -437,7 +437,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		log.info("checking is file for: {}", irodsFile.getAbsolutePath());
 
 		try {
-			ObjStat objStat = this.getObjStat(irodsFile.getAbsolutePath());
+			ObjStat objStat = getObjStat(irodsFile.getAbsolutePath());
 			// no error means it exists
 			if (objStat.getObjectType() == ObjectType.DATA_OBJECT
 					|| objStat.getObjectType() == ObjectType.LOCAL_FILE) {
@@ -836,7 +836,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irods file is null");
 		}
 
-		ObjStat objStat = this.getObjStat(irodsFile.getAbsolutePath());
+		ObjStat objStat = getObjStat(irodsFile.getAbsolutePath());
 		return objStat.getObjectType();
 
 	}
@@ -894,10 +894,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throw new JargonException("irodsFile is null");
 		}
 
-		IRODSFile irodsFileImpl = irodsFile;
-
-		String absPath = resolveAbsolutePathGivenObjStat(this
-				.getObjStat(irodsFile.getAbsolutePath()));
+		String absPath = resolveAbsolutePathGivenObjStat(getObjStat(irodsFile
+				.getAbsolutePath()));
 
 		DataObjInp dataObjInp = DataObjInp.instanceForOpen(absPath, openFlags);
 
@@ -1074,7 +1072,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
-		irodsFile.reset();
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1112,8 +1109,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("deleting without force option:{}",
 				irodsFile.getAbsolutePath());
-
-		irodsFile.reset();
 
 		if (!irodsFile.isFile()) {
 			String msg = "file delete, given irodsFile is not a file";
@@ -1154,8 +1149,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
 
-		irodsFile.reset();
-
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";
 			log.error(msg);
@@ -1191,8 +1184,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		}
 
 		log.info("deleting:{}", irodsFile.getAbsolutePath());
-
-		irodsFile.reset();
 
 		if (!irodsFile.isDirectory()) {
 			String msg = "directory delete, given irodsFile is not a collection";

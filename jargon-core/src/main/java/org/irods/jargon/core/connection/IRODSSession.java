@@ -77,10 +77,9 @@ public class IRODSSession {
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
 	private JargonProperties jargonProperties;
-	
 
 	/**
-	 * Factory to return a checksum computation strategy 
+	 * Factory to return a checksum computation strategy
 	 */
 	private final LocalChecksumComputerFactory localChecksumComputerFactory = new LocalChecksumComputerFactoryImpl();
 
@@ -666,9 +665,11 @@ public class IRODSSession {
 		// getjargonProperties is already sync'd
 		return getJargonProperties().isUsingDiscoveredServerPropertiesCache();
 	}
-	
+
 	/**
-	 * Get a reference to a factory that can return checksum computation strategies on local file systems
+	 * Get a reference to a factory that can return checksum computation
+	 * strategies on local file systems
+	 * 
 	 * @return {@link LocalChecksumComputerFactory}
 	 */
 	public LocalChecksumComputerFactory getLocalChecksumComputerFactory() {

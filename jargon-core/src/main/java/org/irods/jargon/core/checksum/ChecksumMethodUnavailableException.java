@@ -18,7 +18,7 @@ public class ChecksumMethodUnavailableException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public ChecksumMethodUnavailableException(String message) {
+	public ChecksumMethodUnavailableException(final String message) {
 		super(message);
 	}
 
@@ -26,14 +26,15 @@ public class ChecksumMethodUnavailableException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public ChecksumMethodUnavailableException(String message, Throwable cause) {
+	public ChecksumMethodUnavailableException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ChecksumMethodUnavailableException(Throwable cause) {
+	public ChecksumMethodUnavailableException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -42,8 +43,8 @@ public class ChecksumMethodUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumMethodUnavailableException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumMethodUnavailableException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -51,8 +52,8 @@ public class ChecksumMethodUnavailableException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumMethodUnavailableException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumMethodUnavailableException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,8 +61,8 @@ public class ChecksumMethodUnavailableException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumMethodUnavailableException(String message,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumMethodUnavailableException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

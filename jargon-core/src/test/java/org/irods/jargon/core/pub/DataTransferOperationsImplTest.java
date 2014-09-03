@@ -561,8 +561,6 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		destFile.reset();
-
 		File retrieveFile = new File(absPath + "/" + testRetrievedFileName);
 		dataTransferOperationsAO.getOperation(destFile, retrieveFile, null,
 				null);

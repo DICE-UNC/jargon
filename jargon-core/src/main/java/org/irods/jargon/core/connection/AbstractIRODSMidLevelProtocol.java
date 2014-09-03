@@ -251,7 +251,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		return startupResponseData;
 	}
 
-	public void setStartupResponseData(StartupResponseData startupResponseData) {
+	public void setStartupResponseData(
+			final StartupResponseData startupResponseData) {
 		this.startupResponseData = startupResponseData;
 	}
 

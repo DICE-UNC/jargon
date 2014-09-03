@@ -45,12 +45,14 @@ public class MD5LocalChecksumComputerStrategyTest {
 				.digestByteArrayToString(expectedDigest);
 
 		MD5LocalChecksumComputerStrategy checksumStrategy = new MD5LocalChecksumComputerStrategy();
-		String actual = checksumStrategy
+		ChecksumValue actual = checksumStrategy
 				.instanceChecksumForPackingInstruction(localFileName);
 
 		Assert.assertEquals(
 				"did not compute md5 checksum and string encode it",
-				expectedAsString, actual);
+				expectedAsString, actual.getChecksumStringValue());
+		Assert.assertEquals("transmission value improper", expectedAsString,
+				actual.getChecksumTransmissionFormat());
 
 	}
 

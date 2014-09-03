@@ -376,8 +376,8 @@ public class LocalFileUtils {
 
 		StringBuilder sb = new StringBuilder();
 
-		for (int i = 0; i < digestAsByteArray.length; i++) {
-			sb.append(String.format("%02x", digestAsByteArray[i]));
+		for (byte element : digestAsByteArray) {
+			sb.append(String.format("%02x", element));
 		}
 
 		return sb.toString();

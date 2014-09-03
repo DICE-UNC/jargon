@@ -90,7 +90,6 @@ public class MountedFilesystemCollectionAOImplTest {
 		mountedCollectionAO.unmountACollection(targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionTargetFile.reset();
 		mountedCollectionTargetFile.mkdirs();
 
 		mountedCollectionAO.createMountedFileSystemCollection(
@@ -162,7 +161,6 @@ public class MountedFilesystemCollectionAOImplTest {
 		mountedCollectionAO.unmountACollection(targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionTargetFile.reset();
 		mountedCollectionTargetFile.mkdirs();
 
 		mountedCollectionAO.createMountedFileSystemCollection(
@@ -226,7 +224,6 @@ public class MountedFilesystemCollectionAOImplTest {
 		mountedCollectionAO.unmountACollection(targetIrodsCollection,
 				irodsAccount.getDefaultStorageResource());
 
-		mountedCollectionTargetFile.reset();
 		mountedCollectionTargetFile.mkdirs();
 
 		mountedCollectionAO.createMountedFileSystemCollection(

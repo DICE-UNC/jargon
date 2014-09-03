@@ -6,6 +6,7 @@ package org.irods.jargon.core.checksum;
 import java.io.FileNotFoundException;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,8 @@ public class MD5LocalChecksumComputerStrategy extends
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */
 	@Override
-	public String instanceChecksumForPackingInstruction(
-			String localFileAbsolutePath) throws FileNotFoundException,
+	public ChecksumValue instanceChecksumForPackingInstruction(
+			final String localFileAbsolutePath) throws FileNotFoundException,
 			JargonException {
 
 		log.info("instanceChecksumForPackingInstruction()");
@@ -41,7 +42,12 @@ public class MD5LocalChecksumComputerStrategy extends
 
 		byte[] digest = LocalFileUtils
 				.computeMD5FileCheckSumViaAbsolutePath(localFileAbsolutePath);
-		return LocalFileUtils.digestByteArrayToString(digest);
+		ChecksumValue value = new ChecksumValue();
+		value.setChecksumEncoding(ChecksumEncodingEnum.MD5);
+		value.setChecksumStringValue(LocalFileUtils
+				.digestByteArrayToString(digest));
+		value.setChecksumTransmissionFormat(value.getChecksumStringValue());
+		return value;
 
 	}
 

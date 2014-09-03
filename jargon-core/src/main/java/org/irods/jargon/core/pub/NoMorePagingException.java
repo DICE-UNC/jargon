@@ -21,7 +21,7 @@ public class NoMorePagingException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public NoMorePagingException(String message) {
+	public NoMorePagingException(final String message) {
 		super(message);
 	}
 
@@ -29,14 +29,14 @@ public class NoMorePagingException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public NoMorePagingException(String message, Throwable cause) {
+	public NoMorePagingException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public NoMorePagingException(Throwable cause) {
+	public NoMorePagingException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -45,8 +45,8 @@ public class NoMorePagingException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMorePagingException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public NoMorePagingException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -54,8 +54,8 @@ public class NoMorePagingException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMorePagingException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public NoMorePagingException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -63,8 +63,8 @@ public class NoMorePagingException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMorePagingException(String message,
-			int underlyingIRODSExceptionCode) {
+	public NoMorePagingException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

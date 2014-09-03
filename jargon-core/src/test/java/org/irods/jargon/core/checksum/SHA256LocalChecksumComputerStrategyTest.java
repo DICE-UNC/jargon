@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -41,17 +42,16 @@ public class SHA256LocalChecksumComputerStrategyTest {
 
 		byte[] expectedDigest = LocalFileUtils
 				.computeSHA256FileCheckSumViaAbsolutePath(localFileName);
-		String expectedAsString = LocalFileUtils
-				.digestByteArrayToString(expectedDigest);
-
+		String expectedAsString = Base64.encodeBase64String(expectedDigest);
 		AbstractChecksumComputeStrategy checksumStrategy = new SHA256LocalChecksumComputerStrategy();
-		String actual = checksumStrategy
+		ChecksumValue actual = checksumStrategy
 				.instanceChecksumForPackingInstruction(localFileName);
 
 		Assert.assertEquals(
 				"did not compute sha256 checksum and string encode it",
-				expectedAsString, actual);
-
+				expectedAsString, actual.getChecksumStringValue());
+		Assert.assertEquals("transmission value improper", "sha2:"
+				+ expectedAsString, actual.getChecksumTransmissionFormat());
 	}
 
 }

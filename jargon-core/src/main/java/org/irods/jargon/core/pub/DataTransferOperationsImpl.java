@@ -1935,7 +1935,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            the transferOperationsHelper to set
 	 */
 	public void setTransferOperationsHelper(
-			TransferOperationsHelper transferOperationsHelper) {
+			final TransferOperationsHelper transferOperationsHelper) {
 		this.transferOperationsHelper = transferOperationsHelper;
 	}
 
@@ -1950,7 +1950,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * @param dataObjectAO
 	 *            the dataObjectAO to set
 	 */
-	public void setDataObjectAO(DataObjectAO dataObjectAO) {
+	public void setDataObjectAO(final DataObjectAO dataObjectAO) {
 		this.dataObjectAO = dataObjectAO;
 	}
 
