@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.GeneralAdminInpForResources;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -64,11 +65,106 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#addResource(org.irods.jargon.core
+	 * .pub.domain.Resource)
+	 */
+	@Override
+	public void addResource(final Resource resource)
+			throws DuplicateDataException, JargonException {
+
+		log.info("addResource()");
+		if (resource == null) {
+			throw new IllegalArgumentException("null resource");
+		}
+
+		log.info("resource:{}", resource);
+
+		if (!this.getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException(
+					"add resource only works for 4.0+");
+		}
+
+		/*
+		 * arg0 mkresc
+		 * 
+		 * generalAdminInp->arg1, "resource"
+		 * 
+		 * std::string resc_name( _generalAdminInp->arg2 );
+		 * 
+		 * std::string resc_type( _generalAdminInp->arg3 );
+		 * 
+		 * std::string resc_host_path(_generalAdminInp->arg4 );
+		 * 
+		 * for host path can be blank, otherwise in / separate the
+		 * location:/vault/path pair
+		 * 
+		 * std::string resc_ctx(_generalAdminInp->arg5 );
+		 * 
+		 * 
+		 * examples
+		 * 
+		 * "iadmin mkresc rrResc random",
+		 */
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForAddResource(resource);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
+	 */
+	@Override
+	public void deleteResource(final String resourceName) throws Exception {
+		log.info("deleteResource()");
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForRemoveResource(resourceName);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+
+	}
+
+	public void addChildToResource(Resource parent, Resource child)
+			throws JargonException {
+
+		log.info("addChildToResource");
+
+		// rg1, "childtoresc"
+
+		// snprintf( rescInfo.rescName, sizeof( rescInfo.rescName ), "%s",
+		// _generalAdminInp->arg2 );
+		// std::string rescChild( _generalAdminInp->arg3 );
+		// std::string rescContext( _generalAdminInp->arg4 );
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#findByName(java.lang.String)
 	 */
 	@Override
 	public Resource findByName(final String resourceName)
 			throws JargonException, DataNotFoundException {
+
+		log.info("findByName()");
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
 

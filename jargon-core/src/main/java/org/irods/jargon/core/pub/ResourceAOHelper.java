@@ -160,7 +160,7 @@ class ResourceAOHelper extends AOHelper {
 		}
 
 		resource.setZone(lastZone);
-		resource.setType(row.getColumn(3));
+		resource.setContextString(row.getColumn(3));
 		resource.setResourceClass(row.getColumn(4));
 		resource.setLocation(row.getColumn(5));
 		resource.setVaultPath(row.getColumn(6));

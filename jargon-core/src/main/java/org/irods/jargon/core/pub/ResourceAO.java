@@ -174,4 +174,17 @@ public interface ResourceAO extends IRODSAccessObject {
 	 */
 	void deleteAVUMetadata(String resourceName, AvuData avuData)
 			throws InvalidResourceException, JargonException;
+
+	/**
+	 * Add a new resource
+	 * 
+	 * @param resource
+	 *            {@link Resource} to be added
+	 * @throws DuplicateDataException
+	 * @throws JargonException
+	 */
+	void addResource(final Resource resource) throws DuplicateDataException,
+			JargonException;
+
+	public abstract void deleteResource(final String resourceName) throws Exception;
 }

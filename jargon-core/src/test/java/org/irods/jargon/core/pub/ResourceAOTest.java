@@ -68,15 +68,17 @@ public class ResourceAOTest {
 	@Test
 	public final void testListResourceAndResourceGroupNames() throws Exception {
 
-		if (testingPropertiesHelper.isTestEirods(testingProperties)) {
-			return;
-		}
-
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		List<String> resources = resourceAO.listResourceAndResourceGroupNames();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
@@ -548,6 +550,60 @@ public class ResourceAOTest {
 		AvuData avuData = null;
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
+
+	}
+
+	@Test
+	public final void testRemoveDeferredResource() throws Exception {
+
+		String rescName = "testRemoveDeferredResource";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resourceAO.deleteResource(rescName);
+		Resource actual = resourceAO.findByName(rescName);
+		Assert.assertNull("shouldn't find resource", actual);
+	}
+
+	@Test
+	public final void testAddParentDeferredResource() throws Exception {
+
+		String rescName = "testAddParentDeferredResource";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		resourceAO.deleteResource(rescName);
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		Resource actual = resourceAO.findByName(rescName);
+		Assert.assertNotNull("didn't find resource", actual);
 
 	}
 
