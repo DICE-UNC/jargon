@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -960,12 +959,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("getDataObjectFromIrods()");
 
-		if (transferStatusCallbackListener == null) {
-			log.info("transferStatusCallbackListener not given to getDataObjectFromIrods() method");
-		} else {
-			log.info("transferStatusCallbackListener present for getDataObjectFromIrods() method");
-		}
-
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
@@ -984,7 +977,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
-			log.info("a put to a directory, just use the source file name and accept the directory as a target");
+			log.info("a get to a directory, just use the source file name and accept the directory as a target");
 			StringBuilder sb = new StringBuilder();
 			sb.append(localFileToHoldData.getAbsolutePath());
 			sb.append("/");
@@ -1271,9 +1264,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
-
-		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
+		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		// irods file doesn't exist
 		if (message == null) {
@@ -1328,7 +1319,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
-						lengthFromIrodsResponse, irodsProtocol,
+						lengthFromIrodsResponse, getIRODSProtocol(),
 						thisFileTransferOptions, transferControlBlock,
 						transferStatusCallbackListener);
 			}
@@ -1340,8 +1331,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				// compute iRODS first, use algorithm from iRODS to compute the
 				// local checksum that should match
 
-				ChecksumValue irodsChecksum = this
-						.computeChecksumOnDataObject(irodsFileToGet);
+				ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFileToGet);
 
 				log.info("computing a checksum on the file at:{}",
 						localFileToHoldData.getAbsolutePath());
