@@ -6,10 +6,12 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
@@ -56,6 +58,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			.getLogger(DataTransferOperationsImpl.class);
 	private TransferOperationsHelper transferOperationsHelper = null;
 	private DataObjectAO dataObjectAO = null;
+	private CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = null;
 
 	/**
 	 * @param irodsSession
@@ -67,6 +70,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 		transferOperationsHelper = TransferOperationsHelper.instance(
 				irodsSession, irodsAccount);
+		collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 	}
 
 	/*
@@ -470,12 +476,28 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					"null operativeTransferControlBlock");
 		}
 
+		log.info("get objStat..");
+		ObjStat objStat;
+		try {
+			objStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(irodsSourceFile
+							.getAbsolutePath());
+		} catch (FileNotFoundException e) {
+			log.error("file not found retrieving objStat for file:{}",
+					irodsSourceFile.getAbsolutePath(), e);
+			this.processExceptionDuringGetOperation(irodsSourceFile,
+					targetLocalFileNameForCallbacks,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock, e);
+			return;
+		}
+
 		/*
 		 * Compute the count of files to be transferred. This is different
 		 * depending on whether this is a single file, or whether it's a
 		 * collection.
 		 */
-		if (irodsSourceFile.isDirectory()) {
+		if (objStat.isSomeTypeOfCollection()) {
 			log.debug("get operation, treating as a directory");
 			if (operativeTransferControlBlock != null) {
 
@@ -594,8 +616,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
-			processGetOfSingleFile(irodsSourceFile, targetLocalFile,
-					transferStatusCallbackListener,
+			transferOperationsHelper.processGetOfSingleFile(irodsSourceFile,
+					targetLocalFile, transferStatusCallbackListener,
 					operativeTransferControlBlock);
 
 			// send a status callback that indicates completion
@@ -764,41 +786,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		transferOperationsHelper.recursivelyGet(irodsSourceFile,
 				newParentDirectory, transferStatusCallbackListener,
-				transferControlBlock);
-	}
-
-	/**
-	 * In a transfer operation, process the given iRODS file as a data object to
-	 * be retrieved.
-	 * 
-	 * @param irodsSourceFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the get.
-	 * @param targetLocalFile
-	 *            <code>File</code> on the local file system to which the files
-	 *            will be transferrred.
-	 * @param transferStatusCallbackListener
-	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            implementation that will receive callbacks of success/failure
-	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
-	 *            will be rethrown by this method to the caller.
-	 * @param transferControlBlock
-	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
-	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process.
-	 * @throws JargonException
-	 */
-	private void processGetOfSingleFile(
-			final IRODSFile irodsSourceFile,
-			final File targetLocalFile,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock)
-			throws JargonException {
-		log.info("get of single file");
-
-		transferOperationsHelper.processGetOfSingleFile(irodsSourceFile,
-				targetLocalFile, transferStatusCallbackListener,
 				transferControlBlock);
 	}
 
@@ -974,7 +961,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			 * prior to the put operation. The reset clears the cache of the
 			 * exists(), isFile(), and other basic file stat info
 			 */
-			targetIrodsFile.reset();
 			if (targetIrodsFile.exists() && targetIrodsFile.isDirectory()) {
 				log.info("target is a directory, source is file");
 				targetIrodsPathBuilder
