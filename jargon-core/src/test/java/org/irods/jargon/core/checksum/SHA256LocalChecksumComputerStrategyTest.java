@@ -42,7 +42,8 @@ public class SHA256LocalChecksumComputerStrategyTest {
 
 		byte[] expectedDigest = LocalFileUtils
 				.computeSHA256FileCheckSumViaAbsolutePath(localFileName);
-		String expectedAsString = Base64.encodeBase64String(expectedDigest);
+		String expectedAsString = Base64.encodeBase64String(expectedDigest)
+				.trim();
 		AbstractChecksumComputeStrategy checksumStrategy = new SHA256LocalChecksumComputerStrategy();
 		ChecksumValue actual = checksumStrategy
 				.instanceChecksumForPackingInstruction(localFileName);

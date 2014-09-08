@@ -2278,7 +2278,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
 	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDrop()
 			throws Exception {
 
@@ -2323,7 +2323,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
 	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDropStartUnderPublic()
 			throws Exception {
 
