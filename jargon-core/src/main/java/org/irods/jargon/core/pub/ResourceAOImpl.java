@@ -131,15 +131,32 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
 				.instanceForRemoveResource(resourceName);
 		log.debug("executing admin PI");
-		getIRODSProtocol().irodsFunction(adminPI);
+		try {
+			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (DataNotFoundException e) {
+			log.warn("data not found deleting resource, silently ignore", e);
+		}
 		log.info("complete");
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#addChildToResource(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void addChildToResource(String parent, String child,
 			String optionalContext) throws JargonException {
 
 		log.info("addChildToResource");
+
+		if (!this.getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		}
 
 		if (child == null || child.isEmpty()) {
 			throw new IllegalArgumentException("null or empty child");
@@ -154,7 +171,42 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
-				.instanceForRemoveResource(resourceName);
+				.instanceForAddChildToResource(child, parent, optionalContext);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+		// FIXME: add test that lists tree
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#removeChildFromResource(java.lang
+	 * .String, java.lang.String)
+	 */
+	@Override
+	public void removeChildFromResource(String parent, String child)
+			throws InvalidResourceException, JargonException {
+
+		log.info("removeChildFromResource");
+
+		if (!this.getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		}
+
+		if (child == null || child.isEmpty()) {
+			throw new IllegalArgumentException("null or empty child");
+		}
+
+		if (parent == null || parent.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parent");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForRemoveChildFromResource(child, parent);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
 		log.info("complete");

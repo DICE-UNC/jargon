@@ -186,5 +186,33 @@ public interface ResourceAO extends IRODSAccessObject {
 	void addResource(final Resource resource) throws DuplicateDataException,
 			JargonException;
 
-	public abstract void deleteResource(final String resourceName) throws Exception;
+	void deleteResource(final String resourceName) throws Exception;
+
+	/**
+	 * Add the child resource to the parent resource
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the parent resource
+	 * @param child
+	 *            <code>String</code> with the child resource
+	 * @param optionalContext
+	 *            <code>String</code> that is blank if not used, with an
+	 *            optional context string
+	 * @throws JargonException
+	 */
+	void addChildToResource(String parent, String child, String optionalContext)
+			throws JargonException;
+
+	/**
+	 * Remove the given child from the resource
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the parent resource name
+	 * @param child
+	 *            <code>String</code> with the child resource name to be removed
+	 * @throws InvalidResourceException
+	 * @throws JargonException
+	 */
+	void removeChildFromResource(String parent, String child)
+			throws InvalidResourceException, JargonException;
 }

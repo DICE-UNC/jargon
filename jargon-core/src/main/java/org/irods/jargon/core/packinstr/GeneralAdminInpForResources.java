@@ -115,6 +115,26 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	}
 
+	public static final GeneralAdminInpForResources instanceForRemoveChildFromResource(
+			final String childResourceName, final String parentResourceName)
+			throws JargonException {
+
+		if (childResourceName == null || childResourceName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty childResourceName");
+		}
+
+		if (parentResourceName == null || parentResourceName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty parentResourceName");
+		}
+
+		return new GeneralAdminInpForResources("rm", "childfromresc",
+				parentResourceName, childResourceName, BLANK, BLANK, BLANK,
+				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+	}
+
 	/**
 	 * Generate the packing instruction suitable for removing a
 	 * <code>Resource</code>

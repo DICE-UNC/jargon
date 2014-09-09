@@ -7,6 +7,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -20,6 +21,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ResourceAOTest {
@@ -554,6 +556,30 @@ public class ResourceAOTest {
 	}
 
 	@Test
+	public final void testRemoveBogusResource() throws Exception {
+
+		String rescName = "testRemoveBogusResource";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+
+		resourceAO.deleteResource(rescName);
+		boolean deleted = false;
+
+		// should silently fail
+
+	}
+
+	@Test
 	public final void testRemoveDeferredResource() throws Exception {
 
 		String rescName = "testRemoveDeferredResource";
@@ -562,6 +588,11 @@ public class ResourceAOTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		try {
@@ -590,6 +621,38 @@ public class ResourceAOTest {
 
 	}
 
+	@Test(expected = DuplicateDataException.class)
+	public final void testAddDuplicateResource() throws Exception {
+
+		String rescName = "testAddDuplicateResource";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+		resourceAO.addResource(resource);
+
+	}
+
 	@Test
 	public final void testAddParentDeferredResource() throws Exception {
 
@@ -600,6 +663,11 @@ public class ResourceAOTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		try {
@@ -616,6 +684,130 @@ public class ResourceAOTest {
 
 		Resource actual = resourceAO.findByName(rescName);
 		Assert.assertNotNull("didn't find resource", actual);
+
+	}
+
+	@Test
+	public final void testAddChildToParent() throws Exception {
+
+		String rescName = "testAddChildToParent";
+		String childName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.removeChildFromResource(rescName, childName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resourceAO.addChildToResource(rescName, childName, "");
+
+		Resource actual = resourceAO.findByName(rescName);
+		Assert.assertNotNull("didn't find resource", actual);
+
+	}
+
+	@Test
+	public final void testAddChildToParentDuplicate() throws Exception {
+
+		String rescName = "testAddChildToParentDuplicate";
+		String childName = testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.removeChildFromResource(rescName, childName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resourceAO.addChildToResource(rescName, childName, "");
+		resourceAO.addChildToResource(rescName, childName, "");
+		// expect to silently ignore, no error
+
+	}
+
+	@Ignore
+	// FIXME: waits for resolution of https://github.com/irods/irods/issues/2325
+	public final void testAddMissingChildToParent() throws Exception {
+
+		String rescName = "testAddMissingChildToParentxxxx";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		String child = "reallybogusresourceherebroxxx";
+		resourceAO.addChildToResource(rescName, child, "");
 
 	}
 
