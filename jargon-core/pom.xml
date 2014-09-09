@@ -71,7 +71,6 @@
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
 								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
-									test.confirm=${jargon.test.confirm}
 									test.data.directory=${jargon.test.data.directory}
 									test.irods.admin=${jargon.test.irods.admin}
 									test.irods.admin.password=${jargon.test.irods.admin.password}
@@ -92,7 +91,6 @@
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
-									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.eirods=${test.option.eirods}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
@@ -105,7 +103,6 @@
 									test.option.federated.zone=${test.option.federated.zone}
 									test.option.kerberos=${test.option.kerberos}
 									test.option.pam=${test.option.pam}
-									test.option.eirods=${test.option.eirods}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}

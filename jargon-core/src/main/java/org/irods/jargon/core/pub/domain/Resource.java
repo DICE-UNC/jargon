@@ -3,7 +3,9 @@
  */
 package org.irods.jargon.core.pub.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class is a domain object that represents an IRODS resource. This object
@@ -21,7 +23,7 @@ public class Resource extends IRODSDomainObject {
 	private Zone zone = new Zone();
 	private String type = "";
 	private String contextString = "";
-	private String resourceClass = ""; // TODO: enum?
+	private String resourceClass = "";
 	private String location = "";
 	private String vaultPath = "";
 	private long freeSpace = 0;
@@ -31,6 +33,8 @@ public class Resource extends IRODSDomainObject {
 	Date createTime = new Date();
 	Date modifyTime = new Date();
 	private String status = "";
+	private String parentName = "";
+	private List<String> immediateChildren = new ArrayList<String>();
 
 	public String getId() {
 		return id;
@@ -222,9 +226,15 @@ public class Resource extends IRODSDomainObject {
 			builder.append(modifyTime);
 			builder.append(", ");
 		}
+
 		if (status != null) {
 			builder.append("status=");
 			builder.append(status);
+		}
+
+		if (parentName != null) {
+			builder.append("parentName=");
+			builder.append(parentName);
 		}
 		builder.append("]");
 		return builder.toString();
@@ -243,6 +253,36 @@ public class Resource extends IRODSDomainObject {
 	 */
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	/**
+	 * @return the parentName
+	 */
+	public String getParentName() {
+		return parentName;
+	}
+
+	/**
+	 * @param parentName
+	 *            the parentName to set
+	 */
+	public void setParentName(String parentName) {
+		this.parentName = parentName;
+	}
+
+	/**
+	 * @return the immediateChildren
+	 */
+	public List<String> getImmediateChildren() {
+		return immediateChildren;
+	}
+
+	/**
+	 * @param immediateChildren
+	 *            the immediateChildren to set
+	 */
+	public void setImmediateChildren(List<String> immediateChildren) {
+		this.immediateChildren = immediateChildren;
 	}
 
 }

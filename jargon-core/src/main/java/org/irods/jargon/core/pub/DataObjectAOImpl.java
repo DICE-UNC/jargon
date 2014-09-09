@@ -3692,7 +3692,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<Resource> resources = resourceAOHelper
-				.buildResourceListFromResultSet(resultSet);
+				.buildResourceListFromResultSetClassic(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");

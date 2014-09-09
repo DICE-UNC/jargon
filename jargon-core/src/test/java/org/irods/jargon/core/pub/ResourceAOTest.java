@@ -573,7 +573,6 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		resourceAO.deleteResource(rescName);
-		boolean deleted = false;
 
 		// should silently fail
 
@@ -692,7 +691,7 @@ public class ResourceAOTest {
 
 		String rescName = "testAddChildToParent";
 		String childName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);
@@ -709,13 +708,11 @@ public class ResourceAOTest {
 		try {
 			resourceAO.removeChildFromResource(rescName, childName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -733,11 +730,92 @@ public class ResourceAOTest {
 	}
 
 	@Test
+	public final void testAddTwoChildToParentAndThenListAll() throws Exception {
+
+		String rescName = "testAddTwoChildToParentAndThenListAll";
+		String child1Suffix = "-child1";
+		String child2Suffix = "-child2";
+
+		String child1Name = rescName + child1Suffix;
+		String child2Name = rescName + child2Suffix;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+		try {
+			resourceAO.removeChildFromResource(rescName, child1Name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.removeChildFromResource(rescName, child2Name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.deleteResource(child1Name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			resourceAO.deleteResource(child2Name);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resource = new Resource();
+		resource.setContextString("");
+		resource.setName(child1Name);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resource = new Resource();
+		resource.setContextString("");
+		resource.setName(child2Name);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		resourceAO.addChildToResource(rescName, child1Name, "");
+		resourceAO.addChildToResource(rescName, child2Name, "");
+
+		List<Resource> actual = resourceAO.findAll();
+		Assert.assertNotNull("didn't find resources", actual.isEmpty());
+		boolean foundParent = false;
+
+		for (Resource actualResource : actual) {
+			if (actualResource.getName().equals(rescName)) {
+				foundParent = true;
+			}
+
+		}
+
+	}
+
+	@Test
 	public final void testAddChildToParentDuplicate() throws Exception {
 
 		String rescName = "testAddChildToParentDuplicate";
 		String childName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);
@@ -754,13 +832,11 @@ public class ResourceAOTest {
 		try {
 			resourceAO.removeChildFromResource(rescName, childName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -797,7 +873,6 @@ public class ResourceAOTest {
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Resource resource = new Resource();
