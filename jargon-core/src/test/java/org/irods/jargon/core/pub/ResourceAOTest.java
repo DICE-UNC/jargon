@@ -578,8 +578,16 @@ public class ResourceAOTest {
 		resourceAO.addResource(resource);
 
 		resourceAO.deleteResource(rescName);
-		Resource actual = resourceAO.findByName(rescName);
-		Assert.assertNull("shouldn't find resource", actual);
+		boolean deleted = false;
+
+		try {
+			resourceAO.findByName(rescName);
+		} catch (Exception e) {
+			deleted = true;
+		}
+
+		Assert.assertTrue("didn't delete", deleted);
+
 	}
 
 	@Test
@@ -594,8 +602,12 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		resourceAO.deleteResource(rescName);
-
+		try {
+			resourceAO.deleteResource(rescName);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		Resource resource = new Resource();
 		resource.setContextString("");
 		resource.setName(rescName);

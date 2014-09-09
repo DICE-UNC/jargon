@@ -136,17 +136,28 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	}
 
-	public void addChildToResource(Resource parent, Resource child)
-			throws JargonException {
+	public void addChildToResource(String parent, String child,
+			String optionalContext) throws JargonException {
 
 		log.info("addChildToResource");
 
-		// rg1, "childtoresc"
+		if (child == null || child.isEmpty()) {
+			throw new IllegalArgumentException("null or empty child");
+		}
 
-		// snprintf( rescInfo.rescName, sizeof( rescInfo.rescName ), "%s",
-		// _generalAdminInp->arg2 );
-		// std::string rescChild( _generalAdminInp->arg3 );
-		// std::string rescContext( _generalAdminInp->arg4 );
+		if (parent == null || parent.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parent");
+		}
+
+		if (optionalContext == null) {
+			throw new IllegalArgumentException("null  optionalContext");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForRemoveResource(resourceName);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
 
 	}
 

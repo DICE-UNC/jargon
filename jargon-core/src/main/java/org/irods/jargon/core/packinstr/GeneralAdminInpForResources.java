@@ -79,6 +79,43 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	}
 
 	/**
+	 * Packing instruction to add a child to a resource
+	 * 
+	 * @param childResourceName
+	 *            <code>String</code> with the resource name for the child
+	 * @param parentResourceName
+	 *            <code>String</code> with the resource name for the parent
+	 * @param context
+	 *            <code>String</code> with an optional context, blank of not
+	 *            needed
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final GeneralAdminInpForResources instanceForAddChildToResource(
+			final String childResourceName, final String parentResourceName,
+			final String context) throws JargonException {
+
+		if (childResourceName == null || childResourceName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty childResourceName");
+		}
+
+		if (parentResourceName == null || parentResourceName.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty parentResourceName");
+		}
+
+		if (context == null) {
+			throw new IllegalArgumentException("null  context");
+		}
+
+		return new GeneralAdminInpForResources("add", "childtoresc",
+				parentResourceName, childResourceName, context, BLANK, BLANK,
+				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+
+	}
+
+	/**
 	 * Generate the packing instruction suitable for removing a
 	 * <code>Resource</code>
 	 * 
