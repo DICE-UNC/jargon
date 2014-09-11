@@ -232,7 +232,6 @@ public class MountedFilesystemIRODSFileImplTest {
 		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, subdirName);
 		dirFile.mkdirs();
-		dirFile.reset();
 
 		boolean isDir = dirFile.isDirectory();
 		Assert.assertTrue("this should be a collection", isDir);
@@ -321,7 +320,6 @@ public class MountedFilesystemIRODSFileImplTest {
 		IRODSFile dirFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, subdirName);
 		dirFile.mkdirs();
-		dirFile.reset();
 
 		boolean exists = dirFile.exists();
 		Assert.assertTrue("this should exists", exists);

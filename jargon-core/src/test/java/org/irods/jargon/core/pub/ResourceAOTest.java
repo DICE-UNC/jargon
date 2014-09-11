@@ -17,11 +17,10 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class ResourceAOTest {
@@ -47,6 +46,11 @@ public class ResourceAOTest {
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
 	}
 
 	@Test
@@ -98,39 +102,6 @@ public class ResourceAOTest {
 
 		Assert.assertTrue("did not find the resource group in the results",
 				found);
-	}
-
-	/**
-	 * Listing resources, providing null zone name
-	 * 
-	 * @throws Exception
-	 */
-	@Test(expected = IllegalArgumentException.class)
-	public final void testListResourcesNullZone() throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		resourceAO.listResourcesInZone(null);
-
-	}
-
-	@Test
-	public final void testListResources() throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		List<Resource> resources = resourceAO
-				.listResourcesInZone(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
-		Assert.assertTrue("no resources returned", resources.size() > 0);
 	}
 
 	@Test
@@ -203,6 +174,7 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		List<Resource> resources = resourceAO.findAll();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
+
 	}
 
 	@Test
@@ -240,32 +212,6 @@ public class ResourceAOTest {
 		Assert.assertEquals(
 				"resource not returned that matches given resource name",
 				testResource, resource.getName());
-	}
-
-	@Test
-	public final void testFindWhere() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		StringBuilder sb = new StringBuilder();
-		sb.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
-		sb.append(" = '");
-		sb.append(testResource);
-		sb.append("'");
-
-		List<Resource> resources = resourceAO.findWhere(sb.toString());
-		Assert.assertTrue(
-				"should have gotten the one resource that matches my query",
-				resources.size() == 1);
-		Assert.assertEquals(
-				"resource not returned that matches given resource name",
-				testResource, resources.get(0).getName());
 	}
 
 	@Test
@@ -597,7 +543,6 @@ public class ResourceAOTest {
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -640,7 +585,6 @@ public class ResourceAOTest {
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Resource resource = new Resource();
@@ -672,7 +616,6 @@ public class ResourceAOTest {
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		Resource resource = new Resource();
@@ -804,9 +747,14 @@ public class ResourceAOTest {
 		for (Resource actualResource : actual) {
 			if (actualResource.getName().equals(rescName)) {
 				foundParent = true;
+				Assert.assertEquals("parent should hove two children", 2,
+						actualResource.getImmediateChildren().size());
+
 			}
 
 		}
+
+		Assert.assertTrue("found the parent", foundParent);
 
 	}
 
@@ -852,7 +800,7 @@ public class ResourceAOTest {
 
 	}
 
-	@Ignore
+	@Test
 	// FIXME: waits for resolution of https://github.com/irods/irods/issues/2325
 	public final void testAddMissingChildToParent() throws Exception {
 

@@ -313,16 +313,46 @@ class ResourceAOHelper extends AOHelper {
 				.getDateFromIRODSValue(row.getColumn(12)));
 		resource.setStatus(row.getColumn(13));
 		resource.setParentName(row.getColumn(14));
-		String childrenVal = row.getColumn(15);
-		log.info("children:{}", childrenVal); // FIXME: what to do about
-												// children
+		resource.setImmediateChildren(this.formatImmediateChildren(row
+				.getColumn(15)));
+		// children
 		resource.setContextString(row.getColumn(16));
 
 		return resource;
 	}
 
 	List<String> formatImmediateChildren(final String childrenString) {
+
+		if (childrenString == null) {
+			throw new IllegalArgumentException("null childrenString");
+		}
+
 		List<String> immediateChildren = new ArrayList<String>();
+
+		// empty list if no children
+		if (childrenString.isEmpty()) {
+			return immediateChildren;
+		}
+
+		String[] items = childrenString.split(";");
+
+		for (String item : items) {
+			if (item.isEmpty()) {
+				continue;
+			}
+
+			int idxBracket = item.indexOf("{");
+
+			if (idxBracket > -1) {
+				immediateChildren.add(item.substring(0, idxBracket));
+			} else {
+				immediateChildren.add(item);
+			}
+
+		}
+
+		return immediateChildren;
+
 	}
 
 }

@@ -34,10 +34,6 @@ public class ResourceGroupAOImplTest {
 	 * Get a list of resource group names
 	 */
 	@Test
-	/*
-	 * TODO: right now depends on testResourceGroup added by test setup script,
-	 * do setup/teardown in test once that functionality is in place
-	 */
 	public final void testListResourceGroupNames() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -48,10 +44,6 @@ public class ResourceGroupAOImplTest {
 						irodsAccount);
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isEirods()) {
-			return;
-		}
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

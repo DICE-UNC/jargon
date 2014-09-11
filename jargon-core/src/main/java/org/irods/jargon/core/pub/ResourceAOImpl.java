@@ -503,8 +503,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public List<String> listResourceAndResourceGroupNames()
 			throws JargonException {
 
+		log.info("listResourceAndResourceGroupNames()");
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
+
+		if (this.getIRODSServerProperties().isEirods()) {
+			log.info("is consortium irods, don't look for resource groups");
+			return combined;
+		}
+
 		log.info("appending resource group names..");
 		ResourceGroupAO resourceGroupAO = getIRODSAccessObjectFactory()
 				.getResourceGroupAO(getIRODSAccount());
@@ -529,6 +536,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 
+			if (this.getIRODSServerProperties().isEirods()) {
+				builder.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_RESC_PARENT,
+						QueryConditionOperators.EQUAL, "");
+			}
+
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 
@@ -552,53 +565,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		return resourceNames;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.ResourceAO#listResourcesInZone(java.lang.String
-	 * )
-	 */
-	@Override
-	public List<Resource> listResourcesInZone(final String zoneName)
-			throws JargonException {
-
-		if (zoneName == null || zoneName.length() == 0) {
-			throw new IllegalArgumentException("zone name is null or blank");
-		}
-
-		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
-		StringBuilder query = new StringBuilder();
-
-		query.append(resourceAOHelper.buildResourceSelectsClassic());
-		query.append(" where ");
-		query.append(RodsGenQueryEnum.COL_R_ZONE_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(zoneName);
-		query.append("'");
-
-		String queryString = query.toString();
-		if (log.isInfoEnabled()) {
-			log.info("resource query:" + toString());
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for:{}", queryString, e);
-			throw new JargonException("error in query");
-		}
-
-		return resourceAOHelper
-				.buildResourceListFromResultSetClassic(resultSet);
 
 	}
 
@@ -645,54 +611,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		return AccessObjectQueryProcessingUtils
 				.buildAvuDataListFromResultSet(resultSet);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.ResourceAO#findWhere(java.lang.String)
-	 */
-	@Override
-	public List<Resource> findWhere(final String whereStatement)
-			throws JargonException {
-
-		// FIXME: collapse other query methods onto this one method....
-
-		if (whereStatement == null) {
-			throw new IllegalArgumentException("null where statement");
-		}
-
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
-
-		final StringBuilder sb = new StringBuilder();
-		sb.append(resourceAOHelper.buildResourceSelectsClassic());
-
-		if (whereStatement.isEmpty()) {
-			log.debug("no where statement given, so will do plain select");
-		} else {
-			sb.append(WHERE);
-			sb.append(whereStatement);
-		}
-
-		String queryString = sb.toString();
-		if (log.isInfoEnabled()) {
-			log.info("query: " + queryString);
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for query:" + queryString, e);
-			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
-		}
-		return resourceAOHelper
-				.buildResourceListFromResultSetClassic(resultSet);
 	}
 
 	/**
