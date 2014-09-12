@@ -65,7 +65,7 @@ public class Resource extends IRODSDomainObject {
 	}
 
 	public void setContextString(final String type) {
-		this.contextString = type;
+		contextString = type;
 	}
 
 	public String getResourceClass() {
@@ -251,7 +251,7 @@ public class Resource extends IRODSDomainObject {
 	 * @param type
 	 *            the type to set
 	 */
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type = type;
 	}
 
@@ -266,7 +266,7 @@ public class Resource extends IRODSDomainObject {
 	 * @param parentName
 	 *            the parentName to set
 	 */
-	public void setParentName(String parentName) {
+	public void setParentName(final String parentName) {
 		this.parentName = parentName;
 	}
 
@@ -281,7 +281,7 @@ public class Resource extends IRODSDomainObject {
 	 * @param immediateChildren
 	 *            the immediateChildren to set
 	 */
-	public void setImmediateChildren(List<String> immediateChildren) {
+	public void setImmediateChildren(final List<String> immediateChildren) {
 		this.immediateChildren = immediateChildren;
 	}
 

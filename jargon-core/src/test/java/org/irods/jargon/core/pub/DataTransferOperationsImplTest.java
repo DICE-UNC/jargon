@@ -9,8 +9,8 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
-import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.exception.PathTooLongException;
@@ -1041,7 +1041,7 @@ public class DataTransferOperationsImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected = FileNotFoundException.class)
+	@Test(expected = DataNotFoundException.class)
 	public void testGetCollectionWithTwoFilesWithNoCallbacksNoPermission()
 			throws Exception {
 
@@ -1182,7 +1182,7 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				testCallbackListener, null);
 
-		Assert.assertEquals("did not get errors from callbacks", 1,
+		Assert.assertEquals("did not get errors from callbacks", 2,
 				testCallbackListener.getErrorCallbacks().size());
 
 	}

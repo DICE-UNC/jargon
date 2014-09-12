@@ -578,7 +578,8 @@ public class ResourceAOTest {
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
 				.isEirods()) {
-			return;
+			throw new DuplicateDataException(
+					"skip but maintain expectations of test");
 		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);

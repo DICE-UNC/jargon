@@ -83,7 +83,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("resource:{}", resource);
 
-		if (!this.getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isEirods()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException(
 					"add resource only works for 4.0+");
@@ -151,12 +151,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addChildToResource(String parent, String child,
-			String optionalContext) throws JargonException {
+	public void addChildToResource(final String parent, final String child,
+			final String optionalContext) throws JargonException {
 
 		log.info("addChildToResource");
 
-		if (!this.getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isEirods()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException("only works for iRODS 4.0+");
 		}
@@ -190,12 +190,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * .String, java.lang.String)
 	 */
 	@Override
-	public void removeChildFromResource(String parent, String child)
+	public void removeChildFromResource(final String parent, final String child)
 			throws InvalidResourceException, JargonException {
 
 		log.info("removeChildFromResource");
 
-		if (!this.getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isEirods()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException("only works for iRODS 4.0+");
 		}
@@ -359,7 +359,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("findAll()");
 		List<Resource> resources;
-		if (this.getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isEirods()) {
 			resources = findAllComposable();
 		} else {
 			resources = findAllClassic();
@@ -507,7 +507,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
 
-		if (this.getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isEirods()) {
 			log.info("is consortium irods, don't look for resource groups");
 			return combined;
 		}
@@ -536,7 +536,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 
-			if (this.getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isEirods()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_R_RESC_PARENT,
 						QueryConditionOperators.EQUAL, "");

@@ -313,8 +313,7 @@ class ResourceAOHelper extends AOHelper {
 				.getDateFromIRODSValue(row.getColumn(12)));
 		resource.setStatus(row.getColumn(13));
 		resource.setParentName(row.getColumn(14));
-		resource.setImmediateChildren(this.formatImmediateChildren(row
-				.getColumn(15)));
+		resource.setImmediateChildren(formatImmediateChildren(row.getColumn(15)));
 		// children
 		resource.setContextString(row.getColumn(16));
 

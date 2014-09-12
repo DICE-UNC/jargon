@@ -158,9 +158,11 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	}
 
-	private GeneralAdminInpForResources(String arg0, String arg1, String arg2,
-			String arg3, String arg4, String arg5, String arg6, String arg7,
-			String arg8, String arg9, int apiNumber) throws JargonException {
+	private GeneralAdminInpForResources(final String arg0, final String arg1,
+			final String arg2, final String arg3, final String arg4,
+			final String arg5, final String arg6, final String arg7,
+			final String arg8, final String arg9, final int apiNumber)
+			throws JargonException {
 		super(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
 				apiNumber);
 	}

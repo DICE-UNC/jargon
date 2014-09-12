@@ -74,8 +74,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
 				getIRODSAccount());
 
-		collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 	}
 
@@ -319,7 +318,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws DataNotFoundException, JargonException {
 
 		log.info("getOperation()");
 
@@ -469,7 +468,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		} catch (FileNotFoundException e) {
 			log.error("file not found retrieving objStat for file:{}",
 					irodsSourceFile.getAbsolutePath(), e);
-			this.processExceptionDuringGetOperation(irodsSourceFile,
+			processExceptionDuringGetOperation(irodsSourceFile,
 					targetLocalFileNameForCallbacks,
 					transferStatusCallbackListener,
 					operativeTransferControlBlock, e);
