@@ -32,19 +32,12 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
-import org.irods.jargon.core.query.IRODSGenQueryBuilder;
-import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
-import org.irods.jargon.core.query.IRODSQueryResultRow;
-import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.core.query.QueryConditionOperators;
-import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener.CallbackResponse;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
-import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -3063,6 +3056,11 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -3927,52 +3925,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-
-		/*
-		 * FIXME: factor this out
-		 */
-
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-						QueryConditionOperators.EQUAL,
-						irodsFile.getAbsolutePath())
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
-						QueryConditionOperators.EQUAL, testFileName)
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
-						QueryConditionOperators.EQUAL, testUser);
-
-		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
-
-		IRODSQueryResultSetInterface resultSet;
-
-		IRODSGenQueryFromBuilder irodsQuery = builder
-				.exportIRODSQueryFromBuilder(irodsFileSystem
-						.getJargonProperties().getMaxFilesAndDirsQueryMax());
-
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
-				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-						irodsAccount);
-
-		resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-				irodsQuery, 0);
-
-		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			userFilePermissions.add(new UserFilePermission(row.getColumn(0),
-					row.getColumn(1), FilePermissionEnum
-							.valueOf(IRODSDataConversionUtil
-									.getIntOrZeroFromIRODSValue(row
-											.getColumn(2))), UserTypeEnum
-							.findTypeByString(row.getColumn(3)), row
-							.getColumn(4)));
-		}
 
 		FilePermissionEnum filePermissionEnum = dataObjectAO
 				.getPermissionForDataObject(
@@ -5402,6 +5354,11 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -5600,6 +5557,11 @@ public class DataObjectAOImplTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isEirods()) {
+			return;
+		}
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);

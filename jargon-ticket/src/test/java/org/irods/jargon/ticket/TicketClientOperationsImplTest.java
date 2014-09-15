@@ -486,7 +486,7 @@ public class TicketClientOperationsImplTest {
 				.getIRODSServerPropertiesFromIRODSServer();
 
 		if (props.isEirods()) {
-			throw new DataNotFoundException("thrown for expectations");
+			throw new FileNotFoundException("thrown for expectations");
 		}
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
