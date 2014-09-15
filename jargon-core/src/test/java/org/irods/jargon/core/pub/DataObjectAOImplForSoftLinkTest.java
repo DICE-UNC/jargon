@@ -793,15 +793,12 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		destFile.reset();
-
 		IRODSFile newFileLocation = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(destFile.getParentFile(),
 				testNewFileName);
 
 		destFile.renameTo(newFileLocation);
 		Assert.assertTrue("new file should exist", newFileLocation.exists());
-		destFile.reset();
 		Assert.assertFalse("old file should not exist", destFile.exists());
 
 	}

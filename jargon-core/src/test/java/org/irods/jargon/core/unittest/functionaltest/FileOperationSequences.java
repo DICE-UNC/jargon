@@ -104,7 +104,6 @@ public class FileOperationSequences {
 			dataTransferOperationsAO.putOperation(localFile, destFile, null,
 					null);
 			destFile.delete();
-			destFile.reset();
 
 		}
 
@@ -281,10 +280,10 @@ class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
 		this.targetAbsolutePath = targetAbsolutePath;
 	}
 
-	private DataObjectAO dataObjectAO;
-	private DataTransferOperations dataTransferOperations;
-	private String sourceAbsolutePath;
-	private String targetAbsolutePath;
+	private final DataObjectAO dataObjectAO;
+	private final DataTransferOperations dataTransferOperations;
+	private final String sourceAbsolutePath;
+	private final String targetAbsolutePath;
 
 	@Override
 	public DataObject call() throws Exception {

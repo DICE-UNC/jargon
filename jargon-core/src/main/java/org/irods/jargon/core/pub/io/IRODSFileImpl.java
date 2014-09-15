@@ -815,7 +815,7 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			length = objStat.getObjSize();
 		} catch (FileNotFoundException e) {
-			log.warn("file not found exception, return false", e);
+			log.warn("file not found exception, return length of 0", e);
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);

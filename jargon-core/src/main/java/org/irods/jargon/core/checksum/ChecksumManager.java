@@ -8,7 +8,7 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * checksum type
  * 
  * @author Mike Conway - DICXE
- *
+ * 
  */
 public interface ChecksumManager {
 
@@ -21,5 +21,20 @@ public interface ChecksumManager {
 	 */
 	public abstract ChecksumEncodingEnum determineChecksumEncodingForTargetServer()
 			throws JargonException;
+
+	/**
+	 * Using a value from iRODS describing a checksum on a file, determine the
+	 * type of encoding used
+	 * 
+	 * @param irodsChecksumValue
+	 *            <code>String</code> with the checksum value from iRODS,
+	 *            potentially including a prefix
+	 * @return {@link ChecksumValue} indicating the hashing algorithm used to
+	 *         determine the checksum and the actual value
+	 * @throws ChecksumMethodUnavailableException
+	 */
+	public ChecksumValue determineChecksumEncodingFromIrodsData(
+			String irodsChecksumValue)
+			throws ChecksumMethodUnavailableException;
 
 }

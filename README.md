@@ -5,10 +5,8 @@ work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=o
 
 # Project: Jargon-core API
 ### Date:
-### Release Version: 4.0.2.2
-
+### Release Version: 4.0.3-SNAPSHOT
 ### git tag: 
-
 ## News
 
 This is the development track for milestone 4.0.2.2 supporting iDrop 3

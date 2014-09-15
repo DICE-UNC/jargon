@@ -150,7 +150,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);
@@ -187,7 +186,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		BufferedOutputStream outputStream = new BufferedOutputStream(
 				irodsFileSystem.getIRODSAccessObjectFactory()
@@ -231,7 +229,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		OutputStream outputStream = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -273,8 +270,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
-
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.transferStreamToFileUsingIOStreams(inputStream,
@@ -348,7 +343,6 @@ public class Stream2StreamAOImplTest {
 		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		collFile.deleteWithForceOption();
-		collFile.reset();
 		collFile.mkdirs();
 
 		String absPath = scratchFileUtils
@@ -363,7 +357,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);

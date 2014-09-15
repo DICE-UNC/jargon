@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import org.irods.jargon.core.checksum.LocalChecksumComputerFactory;
+import org.irods.jargon.core.checksum.LocalChecksumComputerFactoryImpl;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -75,6 +77,11 @@ public class IRODSSession {
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
 	private JargonProperties jargonProperties;
+
+	/**
+	 * Factory to return a checksum computation strategy
+	 */
+	private final LocalChecksumComputerFactory localChecksumComputerFactory = new LocalChecksumComputerFactoryImpl();
 
 	/**
 	 * Simple cache (tolerating concurrent access) for name/value props. This
@@ -657,6 +664,16 @@ public class IRODSSession {
 	public boolean isUsingDynamicServerPropertiesCache() {
 		// getjargonProperties is already sync'd
 		return getJargonProperties().isUsingDiscoveredServerPropertiesCache();
+	}
+
+	/**
+	 * Get a reference to a factory that can return checksum computation
+	 * strategies on local file systems
+	 * 
+	 * @return {@link LocalChecksumComputerFactory}
+	 */
+	public LocalChecksumComputerFactory getLocalChecksumComputerFactory() {
+		return localChecksumComputerFactory;
 	}
 
 }
