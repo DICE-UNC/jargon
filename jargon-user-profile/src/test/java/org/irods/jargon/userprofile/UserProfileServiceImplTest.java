@@ -90,7 +90,7 @@ public class UserProfileServiceImplTest {
 	public final void testRepeatedlyAddAndRemoveProfileForUser()
 			throws Exception {
 
-		int count = 15;
+		int count = 5;
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -119,40 +119,43 @@ public class UserProfileServiceImplTest {
 
 		for (int i = 0; i < count; i++) {
 
-		userProfileService.removeProfileInformation(testUser);
+			userProfileService.removeProfileInformation(testUser);
 
-		UserProfile userProfile = new UserProfile();
-		userProfile.setUserName(testUser);
-		userProfile.setZone(irodsAccount.getZone());
+			UserProfile userProfile = new UserProfile();
+			userProfile.setUserName(testUser);
+			userProfile.setZone(irodsAccount.getZone());
 
-		// adjust the config to use the admin uid as the protected profile
-		// access person
-		userProfileService.getUserProfileServiceConfiguration()
-				.setProtectedProfileReadWriteGroup(irodsAccount.getUserName());
+			// adjust the config to use the admin uid as the protected profile
+			// access person
+			userProfileService.getUserProfileServiceConfiguration()
+					.setProtectedProfileReadWriteGroup(
+							irodsAccount.getUserName());
 
-		userProfileService.addProfileForUser(testUser, userProfile);
+			userProfileService.addProfileForUser(testUser, userProfile);
 
-		// make the files are there with the necessary permissions
+			// make the files are there with the necessary permissions
 
 			String userHomeDir = userProfileService.getUserProfileDir(testUser);
 
-		IRODSFile userProfileFile = accessObjectFactory.getIRODSFileFactory(
-				testUserAccount).instanceIRODSFile(
-				userHomeDir,
-				userProfileService.getUserProfileServiceConfiguration()
-						.getPublicProfileFileName());
+			IRODSFile userProfileFile = accessObjectFactory
+					.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+							userHomeDir,
+							userProfileService
+									.getUserProfileServiceConfiguration()
+									.getPublicProfileFileName());
 
-		TestCase.assertTrue("public user profile not created",
-				userProfileFile.exists());
+			TestCase.assertTrue("public user profile not created",
+					userProfileFile.exists());
 
-		IRODSFile protectedProfileFile = accessObjectFactory
-				.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
-						userHomeDir,
-						userProfileService.getUserProfileServiceConfiguration()
-								.getProtectedProfileFileName());
+			IRODSFile protectedProfileFile = accessObjectFactory
+					.getIRODSFileFactory(testUserAccount).instanceIRODSFile(
+							userHomeDir,
+							userProfileService
+									.getUserProfileServiceConfiguration()
+									.getProtectedProfileFileName());
 
-		TestCase.assertTrue("protected user profile not created",
-				protectedProfileFile.exists());
+			TestCase.assertTrue("protected user profile not created",
+					protectedProfileFile.exists());
 		}
 
 	}
@@ -192,19 +195,18 @@ public class UserProfileServiceImplTest {
 		UserProfileService userProfileService = new UserProfileServiceImpl(
 				accessObjectFactory, testUserAccount);
 
-			userProfileService.removeProfileInformation(testUser);
+		userProfileService.removeProfileInformation(testUser);
 
-			UserProfile userProfile = new UserProfile();
-			userProfile.setUserName(testUser);
-			userProfile.setZone(irodsAccount.getZone());
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserName(testUser);
+		userProfile.setZone(irodsAccount.getZone());
 
-			// adjust the config to use the admin uid as the protected profile
-			// access person
-			userProfileService.getUserProfileServiceConfiguration()
-					.setProtectedProfileReadWriteGroup(
-							irodsAccount.getUserName());
+		// adjust the config to use the admin uid as the protected profile
+		// access person
+		userProfileService.getUserProfileServiceConfiguration()
+				.setProtectedProfileReadWriteGroup(irodsAccount.getUserName());
 
-			userProfileService.addProfileForUser(testUser, userProfile);
+		userProfileService.addProfileForUser(testUser, userProfile);
 		userProfileService.addProfileForUser(testUser, userProfile);
 	}
 
@@ -273,8 +275,7 @@ public class UserProfileServiceImplTest {
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		FilePermissionEnum permissionData = dataObjectAO
-				.getPermissionForDataObject(
-				userProfileFile.getAbsolutePath(),
+				.getPermissionForDataObject(userProfileFile.getAbsolutePath(),
 						"public", irodsAccount.getZone());
 
 		TestCase.assertEquals("public should have read permission",
@@ -579,7 +580,8 @@ public class UserProfileServiceImplTest {
 		userProfileService.addProfileForUser(testUser, userProfile);
 
 		// now retrive and update the email and descr
-		UserProfile beforeUpdate = userProfileService.retrieveUserProfile(testUser);
+		UserProfile beforeUpdate = userProfileService
+				.retrieveUserProfile(testUser);
 		beforeUpdate.getUserProfileProtectedFields().setMail(
 				actualEmail + updatedPostFix);
 		beforeUpdate.getUserProfilePublicFields().setDescription(
@@ -597,7 +599,7 @@ public class UserProfileServiceImplTest {
 		TestCase.assertEquals("did not update email", actualEmail
 				+ updatedPostFix, actual.getUserProfileProtectedFields()
 				.getMail());
-		
+
 	}
 
 	/**
@@ -723,9 +725,10 @@ public class UserProfileServiceImplTest {
 		userProfileService.updateUserProfile(userProfile);
 
 	}
-	
+
 	@Test
-	public final void testRetrieveProfileForUserAllPublicFieldsTested() throws Exception {
+	public final void testRetrieveProfileForUserAllPublicFieldsTested()
+			throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);
@@ -768,18 +771,29 @@ public class UserProfileServiceImplTest {
 		userProfile.getUserProfilePublicFields().setNickName(actualNickName);
 		userProfile.getUserProfileProtectedFields().setMail(actualEmail);
 		userProfile.getUserProfilePublicFields().setCn(UserProfileConstants.CN);
-		userProfile.getUserProfilePublicFields().setGivenName(UserProfileConstants.GIVEN_NAME);
-		userProfile.getUserProfilePublicFields().setJpegPhoto(UserProfileConstants.JPEG_PHOTO);
-		userProfile.getUserProfilePublicFields().setLabeledURL(UserProfileConstants.LABELED_URL);
-		userProfile.getUserProfilePublicFields().setLocalityName(UserProfileConstants.LOCALITY_NAME);
-		userProfile.getUserProfilePublicFields().setPostalAddress(UserProfileConstants.POSTAL_ADDRESS);
-		userProfile.getUserProfilePublicFields().setPostalCode(UserProfileConstants.POSTAL_CODE);
-		userProfile.getUserProfilePublicFields().setPostOfficeBox(UserProfileConstants.POST_OFFICE_BOX);
+		userProfile.getUserProfilePublicFields().setGivenName(
+				UserProfileConstants.GIVEN_NAME);
+		userProfile.getUserProfilePublicFields().setJpegPhoto(
+				UserProfileConstants.JPEG_PHOTO);
+		userProfile.getUserProfilePublicFields().setLabeledURL(
+				UserProfileConstants.LABELED_URL);
+		userProfile.getUserProfilePublicFields().setLocalityName(
+				UserProfileConstants.LOCALITY_NAME);
+		userProfile.getUserProfilePublicFields().setPostalAddress(
+				UserProfileConstants.POSTAL_ADDRESS);
+		userProfile.getUserProfilePublicFields().setPostalCode(
+				UserProfileConstants.POSTAL_CODE);
+		userProfile.getUserProfilePublicFields().setPostOfficeBox(
+				UserProfileConstants.POST_OFFICE_BOX);
 		userProfile.getUserProfilePublicFields().setSn(UserProfileConstants.SN);
-		userProfile.getUserProfilePublicFields().setSt(UserProfileConstants.STATE);
-		userProfile.getUserProfilePublicFields().setStreet(UserProfileConstants.STREET);
-		userProfile.getUserProfilePublicFields().setTelephoneNumber(UserProfileConstants.TELEPHONE_NUMBER);
-		userProfile.getUserProfilePublicFields().setTitle(UserProfileConstants.TITLE);
+		userProfile.getUserProfilePublicFields().setSt(
+				UserProfileConstants.STATE);
+		userProfile.getUserProfilePublicFields().setStreet(
+				UserProfileConstants.STREET);
+		userProfile.getUserProfilePublicFields().setTelephoneNumber(
+				UserProfileConstants.TELEPHONE_NUMBER);
+		userProfile.getUserProfilePublicFields().setTitle(
+				UserProfileConstants.TITLE);
 
 		// access person
 		userProfileService.getUserProfileServiceConfiguration()
@@ -802,33 +816,41 @@ public class UserProfileServiceImplTest {
 		TestCase.assertEquals("mail not set", userProfile
 				.getUserProfileProtectedFields().getMail(), actual
 				.getUserProfileProtectedFields().getMail());
-		
+
 		TestCase.assertEquals("cn not set", UserProfileConstants.CN, actual
 				.getUserProfilePublicFields().getCn());
-		TestCase.assertEquals("GIVEN_NAME not set", UserProfileConstants.GIVEN_NAME, actual
-				.getUserProfilePublicFields().getGivenName());
-		TestCase.assertEquals("JPEG_PHOTO not set", UserProfileConstants.JPEG_PHOTO, actual
-				.getUserProfilePublicFields().getJpegPhoto());
-		TestCase.assertEquals("LABELED_URL not set", UserProfileConstants.LABELED_URL, actual
-				.getUserProfilePublicFields().getLabeledURL());
-		TestCase.assertEquals("LOCALITY_NAME not set", UserProfileConstants.LOCALITY_NAME, actual
-				.getUserProfilePublicFields().getLocalityName());
-		TestCase.assertEquals("POSTAL_ADDRESS not set", UserProfileConstants.POSTAL_ADDRESS, actual
-				.getUserProfilePublicFields().getPostalAddress());
-		TestCase.assertEquals("POSTAL_CODE not set", UserProfileConstants.POSTAL_CODE, actual
-				.getUserProfilePublicFields().getPostalCode());
-		TestCase.assertEquals("POST_OFFICE_BOX not set", UserProfileConstants.POST_OFFICE_BOX, actual
-				.getUserProfilePublicFields().getPostOfficeBox());
+		TestCase.assertEquals("GIVEN_NAME not set",
+				UserProfileConstants.GIVEN_NAME, actual
+						.getUserProfilePublicFields().getGivenName());
+		TestCase.assertEquals("JPEG_PHOTO not set",
+				UserProfileConstants.JPEG_PHOTO, actual
+						.getUserProfilePublicFields().getJpegPhoto());
+		TestCase.assertEquals("LABELED_URL not set",
+				UserProfileConstants.LABELED_URL, actual
+						.getUserProfilePublicFields().getLabeledURL());
+		TestCase.assertEquals("LOCALITY_NAME not set",
+				UserProfileConstants.LOCALITY_NAME, actual
+						.getUserProfilePublicFields().getLocalityName());
+		TestCase.assertEquals("POSTAL_ADDRESS not set",
+				UserProfileConstants.POSTAL_ADDRESS, actual
+						.getUserProfilePublicFields().getPostalAddress());
+		TestCase.assertEquals("POSTAL_CODE not set",
+				UserProfileConstants.POSTAL_CODE, actual
+						.getUserProfilePublicFields().getPostalCode());
+		TestCase.assertEquals("POST_OFFICE_BOX not set",
+				UserProfileConstants.POST_OFFICE_BOX, actual
+						.getUserProfilePublicFields().getPostOfficeBox());
 		TestCase.assertEquals("SN not set", UserProfileConstants.SN, actual
 				.getUserProfilePublicFields().getSn());
-		TestCase.assertEquals("STREET not set", UserProfileConstants.STREET, actual
-				.getUserProfilePublicFields().getStreet());
-		TestCase.assertEquals("STATE not set", UserProfileConstants.STATE, actual
-				.getUserProfilePublicFields().getSt());
-		TestCase.assertEquals("TELEPHONE_NUMBER not set", UserProfileConstants.TELEPHONE_NUMBER, actual
-				.getUserProfilePublicFields().getTelephoneNumber());
-		TestCase.assertEquals("TITLE not set", UserProfileConstants.TITLE, actual
-				.getUserProfilePublicFields().getTitle());
+		TestCase.assertEquals("STREET not set", UserProfileConstants.STREET,
+				actual.getUserProfilePublicFields().getStreet());
+		TestCase.assertEquals("STATE not set", UserProfileConstants.STATE,
+				actual.getUserProfilePublicFields().getSt());
+		TestCase.assertEquals("TELEPHONE_NUMBER not set",
+				UserProfileConstants.TELEPHONE_NUMBER, actual
+						.getUserProfilePublicFields().getTelephoneNumber());
+		TestCase.assertEquals("TITLE not set", UserProfileConstants.TITLE,
+				actual.getUserProfilePublicFields().getTitle());
 	}
 
 }

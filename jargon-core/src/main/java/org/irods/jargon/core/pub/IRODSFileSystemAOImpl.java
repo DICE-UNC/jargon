@@ -1032,19 +1032,12 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 					"attempting to close file with no valid descriptor");
 		}
 
-		/*
-		 * DataObjCloseInp dataObjCloseInp = DataObjCloseInp.instance(
-		 * fileDescriptor, 0L);
-		 */
 		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
 				.instanceForFileClose(fileDescriptor);
 
 		Tag response = getIRODSProtocol().irodsFunction(
 				OpenedDataObjInp.PI_TAG, openedDataObjInp.getParsedTags(),
 				openedDataObjInp.getApiNumber());
-
-		// FIXME: look here at FileCloseInp in iRODS, I think this is the
-		// correct API
 
 		if (response != null) {
 			log.warn(
@@ -1413,7 +1406,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Respond to client status messages for an operation until exhausted.
-	 * FIXME: clean up and constants
 	 * 
 	 * @param reply
 	 *            <code>Tag</code> containing status messages from IRODS
