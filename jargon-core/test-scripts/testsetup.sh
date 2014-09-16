@@ -13,9 +13,9 @@ iadmin mkuser test3 rodsuser
 
 iadmin moduser test3 password test
 
-iadmin mkresc test1-resc "unix file system" cache test331 "/opt/irods/iRODS/Vault1"
+iadmin mkresc test1-resc "unix file system" cache irods331.irods.org "/opt/trunk/iRODS/Vault1"
 
-iadmin mkresc test1-resc2 "unix file system" cache test331 "/opt/irods/iRODS/Vault2"
+iadmin mkresc test1-resc2 "unix file system" cache irods331.irods.org "/opt/trunk/iRODS/Vault2"
 
 iadmin atrg testResourceGroup test1-resc2
 

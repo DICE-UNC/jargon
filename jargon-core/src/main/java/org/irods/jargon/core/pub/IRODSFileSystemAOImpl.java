@@ -1027,7 +1027,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public void fileClose(final int fileDescriptor) throws JargonException {
 
-		log.info("ileClose(final int fileDescriptor) :{}", fileDescriptor);
+		log.info("fileClose(final int fileDescriptor) :{}", fileDescriptor);
 
 		if (fileDescriptor <= 0) {
 			throw new JargonException(
