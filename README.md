@@ -41,7 +41,7 @@ Jargon-core consists of the following libraries
 
 *Jargon depends on Java 1.6+
 *Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 2.5 through iRODS 3.3.1 community, as well as iRODS 4.0.2 consortium
+*Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
 
 ## Libraries
 
@@ -50,6 +50,24 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Bug Fixes
+
+
+#### PAM/SSL issues and slowness in workflow processing #27
+
+Fixed PAM flush behavior for versions of iRODS > 3.2, avoiding those flushes when not necessary.  This can cause significant response time issues and was only needed to work around a bug in earlier versions of iRODS PAM processing.
+
+#### gen query error with IN statement #17
+
+Fix IN statenent in GenQuery processing
+
+#### improvements to efficiency of stream io transfers #16
+
+Additional buffering and paremeter adjustments to improve file i/o streaming
+
+
+
+=======
+## Features
 
 #### implement checksum variants #24
 
@@ -65,18 +83,15 @@ That can save a good deal of traffic, but requires calling reset() to clear the 
 
 The cache semantics were removed and reset() now is deprecated and has no effect.
 
-#### PAM/SSL issues and slowness in workflow processing #27
-
-Fixed PAM flush behavior for versions of iRODS > 3.2, avoiding those flushes when not necessary.  This can cause significant response time issues and was only needed to work around a bug in earlier versions of iRODS PAM processing.
-
-=======
-## Features
-
 #### Significant development of new transfer framework (conveyor) to replace older transfer engine.
 
 Conveyor is a drop-in framework to manage a persistent queue of transfers with file-by-file accounting. This will be extended in later releases to provide a client-side rule
 engine that can manage pre and post transfer and pre and post file operation workflows on the client side.  Conveyor is embedded within iDrop and can also be easily incorporated
 into other interfaces and tools.
+
+#### Add flow manager to conveyor #11
+
+Add flow manager support to conveyor framework. This is a client side rule engine to interact with conveyor.  FlowManager allows definition of Java based microservices and chaining into workflows using a Groovy based DSL
 
 #### Mounted collection support
 
@@ -90,6 +105,10 @@ in the jargon-ruleservice project
 ##### iRODS Workflow support
 
 Basic workflow support has been added in the jargon-workflow subproject to be able to parse and execute iRODS workflows
+
+#### CI integration with iRODS 4 #18
+
+Additional code and adjustments to support CI integration at iRODS Consortium.  Testing now possible, with a likely second round of changes in 3.0.3 to fully automate Jargon testing in CI
 
 ##### Other Changes
 
