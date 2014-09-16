@@ -427,7 +427,6 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener);
 
-		destFile.reset();
 		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
 		Assert.assertEquals(
@@ -488,7 +487,6 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener);
 
-		destFile.reset();
 		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
 		Assert.assertEquals(
@@ -547,7 +545,6 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener);
 
-		destFile.reset();
 		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
 		Assert.assertEquals(
@@ -607,7 +604,6 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener);
 
-		destFile.reset();
 		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
 		Assert.assertEquals(
@@ -2576,7 +2572,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -2618,7 +2613,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -3074,7 +3068,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -5414,7 +5407,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -5465,7 +5457,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -5538,7 +5529,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -5616,7 +5606,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -5665,7 +5654,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -5721,7 +5709,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -5797,7 +5784,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);
@@ -5855,7 +5841,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		irodsFile.deleteWithForceOption();
 
-		irodsFile.reset();
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 		File localFile = new File(fileNameOrig);

@@ -17,6 +17,34 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
  */
 public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("SpecificQueryInp [");
+		if (args != null) {
+			builder.append("args=");
+			builder.append(args.subList(0, Math.min(args.size(), maxLen)));
+			builder.append(", ");
+		}
+		if (queryOrAlias != null) {
+			builder.append("queryOrAlias=");
+			builder.append(queryOrAlias);
+			builder.append(", ");
+		}
+		builder.append("maxRows=");
+		builder.append(maxRows);
+		builder.append(", continueIndex=");
+		builder.append(continueIndex);
+		builder.append(", ");
+		if (zoneHint != null) {
+			builder.append("zoneHint=");
+			builder.append(zoneHint);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 	public static final String PI_TAG = "specificQueryInp_PI";
 	public static final int SPECIFIC_QUERY_API_NBR = 722;
 	private static final int MAX_ARGS = 10;

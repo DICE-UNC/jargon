@@ -115,8 +115,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	boolean isPamFlush() {
 
 		boolean postThreeDotThree = MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(this
-						.getStartupResponseData().getRelVersion(), "rods3.3");
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						getStartupResponseData().getRelVersion(), "rods3.3");
 
 		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
 				&& !postThreeDotThree) {

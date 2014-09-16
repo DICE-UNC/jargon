@@ -699,7 +699,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
 			String lhsChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
+					.digestByteArrayToString(LocalFileUtils
 							.computeMD5FileCheckSumViaAbsolutePath(leftHandSide
 									.getAbsolutePath()));
 			log.debug("left hand side checksum:{}", lhsChecksum);

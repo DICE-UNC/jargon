@@ -223,7 +223,7 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 		log.info("calculating local checksum..");
 		ChecksumHandling checksumHandling = ChecksumHandling.VERFIY_CHECKSUM;
 		String localChecksum = LocalFileUtils
-				.md5ByteArrayToString(LocalFileUtils
+				.digestByteArrayToString(LocalFileUtils
 						.computeMD5FileCheckSumViaAbsolutePath(physicalPath));
 
 		log.info("local file checksum:{}", localChecksum);
@@ -293,11 +293,11 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 		if (checksumEncoding == ChecksumEncodingEnum.MD5
 				|| checksumEncoding == ChecksumEncodingEnum.DEFAULT) {
 			localFileChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
+					.digestByteArrayToString(LocalFileUtils
 							.computeMD5FileCheckSumViaAbsolutePath(physicalPath));
 		} else if (checksumEncoding == ChecksumEncodingEnum.SHA256) {
 			localFileChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
+					.digestByteArrayToString(LocalFileUtils
 							.computeSHA256FileCheckSumViaAbsolutePath(physicalPath));
 		} else {
 			throw new JargonException("unsupported checksum type");

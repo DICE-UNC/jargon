@@ -102,7 +102,7 @@
 			<id>jargonTest</id>
 			<properties>
 				<jargon.test.confirm>true</jargon.test.confirm>
-				<jargon.test.data.directory>/temp/irods/jargontest</jargon.test.data.directory>
+				<jargon.test.data.directory>/tmp/jargontest/</jargon.test.data.directory>
 				<jargon.test.irods.admin>rods</jargon.test.irods.admin>
 				<jargon.test.irods.admin.password>rods</jargon.test.irods.admin.password>
 				<jargon.test.irods.user>test1</jargon.test.irods.user>
@@ -117,7 +117,7 @@
 				<jargon.test.irods.resource3>test1-resc2</jargon.test.irods.resource3>
 				<jargon.test.irods.host>localhost</jargon.test.irods.host>
 				<jargon.test.irods.port>1247</jargon.test.irods.port>
-				<jargon.test.irods.zone>test1</jargon.test.irods.zone>
+				<jargon.test.irods.zone>tempZone</jargon.test.irods.zone>
 				<jargon.test.resource.group>testResourceGroup</jargon.test.resource.group>
 				<jargon.test.user.group>jargonTestUg</jargon.test.user.group>
 				<jargon.test.irods.userDN>test1DN</jargon.test.irods.userDN>
@@ -128,7 +128,7 @@
 				<jargon.test.option.exercise.workflow>true</jargon.test.option.exercise.workflow>
 				<jargon.test.option.exercise.filesystem.mount>true</jargon.test.option.exercise.filesystem.mount>
 				<jargon.test.option.exercise.filesystem.mount.local>true</jargon.test.option.exercise.filesystem.mount.local>
-				<test.option.mount.basedir>/temp/irods/basedir</test.option.mount.basedir>
+				<test.option.mount.basedir>/tmp/basedir</test.option.mount.basedir>
 				<test.option.pam>false</test.option.pam>
 				<jargon.test.pam.user>pam</jargon.test.pam.user>
 				<jargon.test.pam.password>pam</jargon.test.pam.password>
@@ -153,11 +153,7 @@
 	</profiles>
   
 	<activeProfiles>
-		<activeProfile>git-dice</activeProfile>
 		<activeProfile>jargonTest</activeProfile>
-		<activeProfile>hive</activeProfile>
-		<activeProfile>dvn</activeProfile>
-		<activeProfile>indexer</activeProfile>
 	</activeProfiles>
 
 </settings>

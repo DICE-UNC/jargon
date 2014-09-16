@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileOutputStream extends OutputStream {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;

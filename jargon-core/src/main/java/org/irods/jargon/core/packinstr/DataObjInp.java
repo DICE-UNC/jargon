@@ -6,6 +6,7 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.TransferOptions.PutOptions;
 import org.slf4j.Logger;
@@ -93,8 +94,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Optional checksum value used for operations where a checksum validation
 	 * is requested. This will be the computed checksum of the file in question.
+	 * <p/>
+	 * Can be set to <code>null</code> if no checksum is specified
 	 */
-	private String fileChecksumValue = "";
+	private ChecksumValue fileChecksumValue = null;
 
 	/**
 	 * Generic instance creation method with all constructor parameters. In this
@@ -801,9 +804,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 		if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
 				|| transferOptions.isComputeChecksumAfterTransfer()) {
-			if (fileChecksumValue == null || fileChecksumValue.isEmpty()) {
+			if (fileChecksumValue == null) {
 				throw new JargonException(
-						"no fileChecksumValue set, call the setter with the hex encoded checksum value");
+						"no fileChecksumValue set, call the setter with the encoded checksum value");
 			}
 			log.info("local file checksum is:{}", getFileChecksumValue());
 
@@ -812,10 +815,11 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
 				log.info("adding kvps to compute and verify checksum");
 				kvps.add(KeyValuePair.instance("verifyChksum",
-						fileChecksumValue));
+						fileChecksumValue.getChecksumTransmissionFormat()));
 			} else if (transferOptions.isComputeChecksumAfterTransfer()) {
 				log.info("adding dvp to compute checksum");
-				kvps.add(KeyValuePair.instance("regChksum", fileChecksumValue));
+				kvps.add(KeyValuePair.instance("regChksum",
+						fileChecksumValue.getChecksumTransmissionFormat()));
 			}
 		}
 	}
@@ -907,14 +911,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param fileChecksumValue
 	 *            the fileChecksumValue to set
 	 */
-	public void setFileChecksumValue(final String fileChecksumValue) {
+	public void setFileChecksumValue(final ChecksumValue fileChecksumValue) {
 		this.fileChecksumValue = fileChecksumValue;
 	}
 
 	/**
 	 * @return the fileChecksumValue
 	 */
-	public String getFileChecksumValue() {
+	public ChecksumValue getFileChecksumValue() {
 		return fileChecksumValue;
 	}
 
