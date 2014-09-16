@@ -27,6 +27,7 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -699,7 +700,9 @@ public class IRODSGenQueryExecutorImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
+	// FIXME: overheaded until resolved
+	// https://github.com/irods/irods/issues/2339
 	public final void testExecuteIRODSQueryBuilderQueryWithOrderByDesc()
 			throws Exception {
 
@@ -744,7 +747,8 @@ public class IRODSGenQueryExecutorImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
+	// FIXME: overhead until resolved https://github.com/irods/irods/issues/2339
 	public final void testExecuteIRODSQueryBuilderQueryWithOrderByAsc()
 			throws Exception {
 
