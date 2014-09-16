@@ -50,7 +50,7 @@ public class FlowTestProvisioningUtil {
 	 * @throws JargonException
 	 */
 	public static void clearAndProvisionTestDslDirecory(
-			Properties transferProperties, String dslName)
+			final Properties transferProperties, final String dslName)
 			throws JargonException {
 
 		if (transferProperties == null) {
@@ -90,7 +90,7 @@ public class FlowTestProvisioningUtil {
 	 * @param transferProperties
 	 * @throws JargonException
 	 */
-	public static void clearDslDirectory(Properties transferProperties)
+	public static void clearDslDirectory(final Properties transferProperties)
 			throws JargonException {
 
 		if (transferProperties == null) {

@@ -66,7 +66,8 @@ import org.junit.runners.Suite;
 		ConveyorServicePutInspectForBundleOperationMicroserviceFunctionalTest.class,
 		TarCollectionMicroserviceTest.class,
 		EnqueueTransferMicroserviceTest.class,
-		ExtractBundleMicroserviceTest.class, InspectForUnbundleOperationMicroserviceTest.class })
+		ExtractBundleMicroserviceTest.class,
+		InspectForUnbundleOperationMicroserviceTest.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

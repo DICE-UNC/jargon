@@ -9,7 +9,7 @@ package org.irods.jargon.conveyor.flowmanager.flow;
  * @author Mike Conway - DICE
  * 
  */
-public class Selector {
+public class Selector implements Cloneable {
 
 	public enum FlowActionEnum {
 		ANY, PUT, GET
