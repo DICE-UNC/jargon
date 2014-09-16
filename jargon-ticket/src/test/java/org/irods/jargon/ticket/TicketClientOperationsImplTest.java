@@ -13,6 +13,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -450,7 +451,7 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public final void testGetFileFromIRODSUsingTicketOnFileAsAnonymousNoTicketAccess()
 			throws Exception {
 
@@ -485,7 +486,7 @@ public class TicketClientOperationsImplTest {
 				.getIRODSServerPropertiesFromIRODSServer();
 
 		if (props.isEirods()) {
-			throw new DataNotFoundException("thrown for expectations");
+			throw new FileNotFoundException("thrown for expectations");
 		}
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem

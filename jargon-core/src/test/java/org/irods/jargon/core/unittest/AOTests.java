@@ -33,6 +33,7 @@ import org.irods.jargon.core.pub.MountedFilesystemsDataTransferOperationsImplTes
 import org.irods.jargon.core.pub.ProtocolExtensionPointImplTest;
 import org.irods.jargon.core.pub.QuotaAOImplTest;
 import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAOImplTest;
+import org.irods.jargon.core.pub.ResourceAOHelperTest;
 import org.irods.jargon.core.pub.ResourceAOTest;
 import org.irods.jargon.core.pub.ResourceGroupAOImplTest;
 import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
@@ -79,7 +80,7 @@ import org.junit.runners.Suite;
 		MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
 		MountedFilesystemsDataTransferOperationsImplTest.class,
 		MountedFilesystemCollectionAOImplTest.class,
-		IRODSFileSystemSingletonWrapperTest.class })
+		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

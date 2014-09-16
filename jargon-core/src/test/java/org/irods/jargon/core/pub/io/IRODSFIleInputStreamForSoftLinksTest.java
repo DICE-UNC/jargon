@@ -119,8 +119,6 @@ public class IRODSFIleInputStreamForSoftLinksTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
-		destFile.reset();
-
 		IRODSFileInputStream fis = irodsFileFactory
 				.instanceIRODSFileInputStream(destFile);
 

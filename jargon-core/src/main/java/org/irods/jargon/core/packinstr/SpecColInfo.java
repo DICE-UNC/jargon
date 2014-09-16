@@ -11,7 +11,6 @@ package org.irods.jargon.core.packinstr;
  */
 public class SpecColInfo {
 
-	// FIXME: clean up, comment, toString, think about enums
 	private int collClass = 0;
 	private int type = 0;
 	private String collection = "";

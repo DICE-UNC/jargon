@@ -47,8 +47,6 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
-		ResourceAO resourceAO = new ResourceAOImpl(getIRODSSession(),
-				getIRODSAccount());
 		StringBuilder zoneQuery = new StringBuilder();
 		char comma = ',';
 
@@ -93,7 +91,6 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 			zone.setZoneType(row.getColumn(2));
 			zone.setZoneConnection(row.getColumn(3));
 			zone.setZoneComment(row.getColumn(4));
-			zone.setResources(resourceAO.listResourcesInZone(zone.getZoneName()));
 			// TODO: set up the dates
 			zones.add(zone);
 			if (log.isInfoEnabled()) {

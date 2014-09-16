@@ -16,17 +16,6 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 public interface ResourceAO extends IRODSAccessObject {
 
 	/**
-	 * List all of the <code>Resource</code> in the zone. This returns a list of
-	 * domain objects with detailed information.
-	 * 
-	 * @param zoneName
-	 *            <code>String</code> with the target zone name.
-	 * @return <code>List</code> of {@link Resource}
-	 * @throws JargonException
-	 */
-	List<Resource> listResourcesInZone(String zoneName) throws JargonException;
-
-	/**
 	 * Get the first <code>Resource</code> associated with an iRODS file. There
 	 * may be other iRODS resources associated with the given file
 	 * 
@@ -63,19 +52,6 @@ public interface ResourceAO extends IRODSAccessObject {
 	 */
 	Resource findByName(final String resourceName) throws JargonException,
 			DataNotFoundException;
-
-	/**
-	 * Handy query method will return a list of resources that fit a given where
-	 * statement.
-	 * 
-	 * @param whereStatement
-	 *            <code>String</code> with an iquest formatted query where
-	 *            statement, does not include the leading 'WHERE' clause
-	 * @return <code>List<Resource></code> with the resources that match the
-	 *         given query
-	 * @throws JargonException
-	 */
-	List<Resource> findWhere(String whereStatement) throws JargonException;
 
 	/**
 	 * Find a resource by its id
@@ -123,7 +99,10 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Retrieve a list of plain <code>String</code> with the resource names in
 	 * the zone. These are sorted ascending.
 	 * <p/>
-	 * This is handy for generating resource lists in interfaces.
+	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
+	 * it will only list resources that have no parent, appropriate for
+	 * addressing the top of a composable resource tree where the children
+	 * should not be directly accessed.
 	 * 
 	 * @return <code>List<String></code> of resource names in the zone
 	 * @throws JargonException
@@ -135,7 +114,10 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * the zone, followed by resourceGroupNames in the zone. These are sorted
 	 * ascending.
 	 * <p/>
-	 * This is handy for generating resource lists in interfaces.
+	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
+	 * it will only list resources that have no parent, appropriate for
+	 * addressing the top of a composable resource tree where the children
+	 * should not be directly accessed.
 	 * 
 	 * @return <code>List<String></code> of resource names in the zone
 	 * @throws JargonException
@@ -173,5 +155,46 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *             when resource is missing
 	 */
 	void deleteAVUMetadata(String resourceName, AvuData avuData)
+			throws InvalidResourceException, JargonException;
+
+	/**
+	 * Add a new resource
+	 * 
+	 * @param resource
+	 *            {@link Resource} to be added
+	 * @throws DuplicateDataException
+	 * @throws JargonException
+	 */
+	void addResource(final Resource resource) throws DuplicateDataException,
+			JargonException;
+
+	void deleteResource(final String resourceName) throws Exception;
+
+	/**
+	 * Add the child resource to the parent resource
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the parent resource
+	 * @param child
+	 *            <code>String</code> with the child resource
+	 * @param optionalContext
+	 *            <code>String</code> that is blank if not used, with an
+	 *            optional context string
+	 * @throws JargonException
+	 */
+	void addChildToResource(String parent, String child, String optionalContext)
+			throws JargonException;
+
+	/**
+	 * Remove the given child from the resource
+	 * 
+	 * @param parent
+	 *            <code>String</code> with the parent resource name
+	 * @param child
+	 *            <code>String</code> with the child resource name to be removed
+	 * @throws InvalidResourceException
+	 * @throws JargonException
+	 */
+	void removeChildFromResource(String parent, String child)
 			throws InvalidResourceException, JargonException;
 }

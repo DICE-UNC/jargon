@@ -251,7 +251,6 @@ public class IRODSFileImplForSoftLinksTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
-		irodsFile.reset();
 
 		Assert.assertTrue("file does not exist", irodsFile.exists());
 		Assert.assertTrue("file should be a dir", irodsFile.isDirectory());
@@ -304,7 +303,6 @@ public class IRODSFileImplForSoftLinksTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, newSubdirName);
 		irodsFile.mkdirs();
-		irodsFile.reset();
 
 		Assert.assertTrue("file does not exist", irodsFile.exists());
 		Assert.assertTrue("file should be a dir", irodsFile.isDirectory());
@@ -360,7 +358,6 @@ public class IRODSFileImplForSoftLinksTest {
 				.instanceIRODSFile(targetIrodsCollection, newFileName);
 		irodsFile.createNewFile();
 
-		irodsFile.reset();
 		Assert.assertTrue("file does not exist", irodsFile.exists());
 		Assert.assertTrue("file should be a file", irodsFile.isFile());
 
@@ -416,7 +413,6 @@ public class IRODSFileImplForSoftLinksTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, newSubdirName);
 		irodsFile.mkdirs();
-		irodsFile.reset();
 
 		File[] fileList = irodsFile.getParentFile().listFiles();
 		Assert.assertTrue("file list should not be empty", fileList.length == 1);

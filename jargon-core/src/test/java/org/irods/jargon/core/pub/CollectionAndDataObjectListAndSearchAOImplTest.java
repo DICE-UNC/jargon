@@ -1424,7 +1424,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdir();
 
 		// make a subdir with the search term

@@ -14,6 +14,7 @@ import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
@@ -1251,7 +1252,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final boolean clientSideAction) throws OverwriteException,
-			JargonException, DataNotFoundException {
+			DataNotFoundException, JargonException {
 
 		log.info("process get after resource determined");
 
@@ -1264,7 +1265,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		final Tag message = getIRODSProtocol().irodsFunction(dataObjInp);
+		Tag message;
+		try {
+			message = getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (CatNoAccessException e) {
+			log.error(
+					"no access exception wrapped as DataNotFoundException for consistency with API",
+					e);
+			throw new DataNotFoundException(e);
+
+		}
 
 		// irods file doesn't exist
 		if (message == null) {
@@ -3692,7 +3702,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<Resource> resources = resourceAOHelper
-				.buildResourceListFromResultSet(resultSet);
+				.buildResourceListFromResultSetClassic(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");

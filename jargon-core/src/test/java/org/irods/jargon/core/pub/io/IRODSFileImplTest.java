@@ -203,7 +203,6 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 		CollectionAO collectionAO = accessObjectFactory
 				.getCollectionAO(irodsAccount);
@@ -578,9 +577,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSFile.delete();
-
-		targetIRODSFile.reset();
-
 		Assert.assertFalse(targetIRODSFile.exists());
 	}
 
@@ -611,9 +607,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSFile.delete();
-
-		targetIRODSFile.reset();
-
 		Assert.assertFalse(targetIRODSFile.exists());
 	}
 
@@ -651,9 +644,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSCollection.delete();
-
-		targetIRODSFile.reset();
-
 		Assert.assertFalse("file should not still exist",
 				targetIRODSFile.exists());
 	}
@@ -681,7 +671,6 @@ public class IRODSFileImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetIRODSCollection.mkdirs();
 		targetIRODSCollection.delete();
-		targetIRODSCollection.reset();
 		Assert.assertFalse("file should not still exist",
 				targetIRODSCollection.exists());
 	}

@@ -6,7 +6,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -34,24 +33,10 @@ public class ResourceGroupAOImplTest {
 	 * Get a list of resource group names
 	 */
 	@Test
-	/*
-	 * TODO: right now depends on testResourceGroup added by test setup script,
-	 * do setup/teardown in test once that functionality is in place
-	 */
 	public final void testListResourceGroupNames() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isEirods()) {
-			return;
-		}
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
