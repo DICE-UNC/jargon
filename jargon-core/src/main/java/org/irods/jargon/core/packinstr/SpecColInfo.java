@@ -11,6 +11,11 @@ package org.irods.jargon.core.packinstr;
  */
 public class SpecColInfo {
 
+	/**
+	 * Flag that indicates whether resource heirarchy is included in sending
+	 * data to iRODS, to accomodate protocol differences in 4.x
+	 */
+	private boolean useResourceHierarchy = false;
 	private int collClass = 0;
 	private int type = 0;
 	private String collection = "";
@@ -91,6 +96,57 @@ public class SpecColInfo {
 
 	public void setReplNum(final int replNum) {
 		this.replNum = replNum;
+	}
+
+	public boolean isUseResourceHierarchy() {
+		return useResourceHierarchy;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SpecColInfo [useResourceHierarchy=");
+		builder.append(useResourceHierarchy);
+		builder.append(", collClass=");
+		builder.append(collClass);
+		builder.append(", type=");
+		builder.append(type);
+		builder.append(", ");
+		if (collection != null) {
+			builder.append("collection=");
+			builder.append(collection);
+			builder.append(", ");
+		}
+		if (objPath != null) {
+			builder.append("objPath=");
+			builder.append(objPath);
+			builder.append(", ");
+		}
+		if (resource != null) {
+			builder.append("resource=");
+			builder.append(resource);
+			builder.append(", ");
+		}
+		if (phyPath != null) {
+			builder.append("phyPath=");
+			builder.append(phyPath);
+			builder.append(", ");
+		}
+		if (cacheDir != null) {
+			builder.append("cacheDir=");
+			builder.append(cacheDir);
+			builder.append(", ");
+		}
+		builder.append("cacheDirty=");
+		builder.append(cacheDirty);
+		builder.append(", replNum=");
+		builder.append(replNum);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	public void setUseResourceHierarchy(boolean useResourceHierarchy) {
+		this.useResourceHierarchy = useResourceHierarchy;
 	}
 
 }

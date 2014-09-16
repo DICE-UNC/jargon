@@ -119,7 +119,11 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 		specCol.addTag("collection", specColInfo.getCollection());
 		specCol.addTag("objPath", specColInfo.getObjPath());
 		specCol.addTag("resource", specColInfo.getResource());
-		specCol.addTag("rescHier", "");
+
+		if (specColInfo.isUseResourceHierarchy()) {
+			specCol.addTag("rescHier", "");
+		}
+
 		specCol.addTag("phyPath", specColInfo.getPhyPath());
 		specCol.addTag("cacheDir", specColInfo.getCacheDir());
 		specCol.addTag("cacheDirty",
