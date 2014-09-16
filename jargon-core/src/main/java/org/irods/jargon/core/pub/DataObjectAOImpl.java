@@ -1272,7 +1272,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(
 					"no access exception wrapped as DataNotFoundException for consistency with API",
 					e);
-			throw new DataNotFoundException(e);
+			throw new FileNotFoundException(e);
 
 		}
 
@@ -1281,7 +1281,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.warn(
 					"irods file does not exist, null was returned from the get, return DataNotFoundException for iRODS file: {}",
 					irodsFileToGet.getAbsolutePath());
-			throw new DataNotFoundException(
+			throw new FileNotFoundException(
 					"irods file not found during get operation:"
 							+ irodsFileToGet.getAbsolutePath());
 		}

@@ -281,7 +281,7 @@ public class TicketAdminServiceImplTest {
 
 		try {
 			ticketSvc.createTicket(TicketCreateModeEnum.READ, targetFile, null);
-		} catch (DataNotFoundException dnf) {
+		} catch (FileNotFoundException dnf) {
 			gotError = true;
 		}
 
@@ -380,11 +380,11 @@ public class TicketAdminServiceImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void testCreateTicketForCollectionDoesNotExist() throws Exception {
 
 		if (!testTicket) {
-			throw new DataNotFoundException("expected");
+			throw new FileNotFoundException("expected");
 		}
 
 		String collectionName = "testCreateTicketForCollectionDoesNotExist";
@@ -2903,7 +2903,7 @@ public class TicketAdminServiceImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void createTicketFromTicketObjectForCollectionNotExists()
 			throws Exception {
 

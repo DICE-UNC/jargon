@@ -98,7 +98,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 	private void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
 			final IRODSFile sourceFile, final IRODSFile targetFile)
-			throws JargonFileOrCollAlreadyExistsException, JargonException {
+			throws FileNotFoundException,
+			JargonFileOrCollAlreadyExistsException, JargonException {
 
 		if (sourceFile == null) {
 			throw new IllegalArgumentException("null sourceFile");
@@ -116,7 +117,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		// source file must exist or error
 		if (!sourceFile.exists()) {
 			log.info("the source file does not exist, cannot move");
-			throw new JargonException("source file does not exist");
+			throw new FileNotFoundException("source file does not exist");
 		}
 
 		if (!sourceFile.isDirectory()) {
@@ -269,7 +270,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void move(final IRODSFile sourceFile, final IRODSFile targetFile)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("moveAFileOrCollection");
 
@@ -318,7 +319,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperation()");
 
@@ -445,6 +446,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * @param transferStatusCallbackListener
 	 * @param operativeTransferControlBlock
 	 * @param targetLocalFileNameForCallbacks
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	protected void processGetAfterAnyConnectionRerouting(
@@ -452,7 +454,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
-			final File targetLocalFileNameForCallbacks) throws JargonException {
+			final File targetLocalFileNameForCallbacks)
+			throws FileNotFoundException, JargonException {
 
 		if (operativeTransferControlBlock == null) {
 			throw new IllegalArgumentException(
@@ -637,7 +640,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final String sourceResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException {
+			throws FileNotFoundException, OverwriteException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -732,6 +735,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
 	 *            is required
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	private void getOperationWhenSourceFileIsDirectory(
@@ -739,7 +743,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperationWhenSourceFileIsDirectory");
 
@@ -787,7 +791,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 		IRODSAccount reroutedAccount = null;
@@ -1663,7 +1667,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (irodsSourceFile == null) {
 			throw new IllegalArgumentException("irodsSourceFile is null");
@@ -1714,7 +1718,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (targetFile.getAbsolutePath().equals(sourceFile.getParent())) {
 			log.error("source file is being copied to own parent:{}",
@@ -1783,7 +1787,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 		log.info("this copy operation is recursive");
 
 		preCountIrodsFilesBeforeTransfer(sourceFile.getAbsolutePath(),
@@ -1863,12 +1867,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * 
 	 * @param irodsFileAbsolutePath
 	 * @param operativeTransferControlBlock
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	private void preCountIrodsFilesBeforeTransfer(
 			final String irodsFileAbsolutePath,
 			final TransferControlBlock operativeTransferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = irodsAccessObjectFactory
 				.getCollectionAO(getIRODSAccount());

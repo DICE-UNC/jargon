@@ -906,7 +906,7 @@ public class CollectionAOImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void testAddAvuMetadataMissingCollection() throws Exception {
 		String testDirName = "testAddAvuMetadataMissingCollection";
 		String expectedAttribName = "testattrib1";
@@ -1429,7 +1429,7 @@ public class CollectionAOImplTest {
 		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void testRemoveAvuMetadataCollectionNotExists() throws Exception {
 		String testDirName = "testRemoveAvuMetadataIDontExistDir";
 		String expectedAttribName = "testattrib1";
