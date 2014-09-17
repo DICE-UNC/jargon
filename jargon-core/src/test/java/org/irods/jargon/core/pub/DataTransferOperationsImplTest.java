@@ -9,8 +9,8 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.exception.PathTooLongException;
@@ -1041,7 +1041,7 @@ public class DataTransferOperationsImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test(expected = CatNoAccessException.class)
+	@Test(expected = FileNotFoundException.class)
 	public void testGetCollectionWithTwoFilesWithNoCallbacksNoPermission()
 			throws Exception {
 
@@ -1182,8 +1182,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.getOperation(getIrodsFile, returnLocalFile,
 				testCallbackListener, null);
 
-		Assert.assertEquals("did not get two errors from callbacks", 2,
-				testCallbackListener.getErrorCallbacks().size());
+		Assert.assertTrue("did not get errors from callbacks",
+				testCallbackListener.getErrorCallbacks().size() > 0);
 
 	}
 
@@ -1417,8 +1417,8 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testPutThenGetOneFileWithSpecialCharsÃ…ÃŸÃ¡.txt";
-		String testRetrievedFileName = "testPutThenGetOneFileRetreivedÃ²Ã‹Ã¦ÃªÃ°Ä�Ã©u,1oÂ·Ã†Ãƒ.txt";
+		String testFileName = "testPutThenGetOneFileWithSpecialChars�������������.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreived������������������������������u,1o�������������.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator

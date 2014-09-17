@@ -5,6 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
@@ -210,7 +211,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
 	 *             been set
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
@@ -219,7 +220,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
@@ -274,7 +275,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *             if an overwrite is attempted and the force option has not
 	 *             been set and no callback listener can be consulted, or set to
 	 *             no overwrite,
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
@@ -282,7 +283,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String targetLocalFileAbsolutePath, String sourceResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Perform a replication operation. This will copy the given file to a
@@ -398,7 +399,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
 	 *             been set
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
@@ -406,7 +407,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String targetIrodsFileAbsolutePath, String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Move a file or collection between two locations in iRODS. This method
@@ -432,9 +433,12 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 *             if a move is made to a file or collection that already exists
+	 * @throws FileNotFoundException
+	 *             if source or target cannot be found
 	 */
 	void move(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile)
-			throws JargonFileOrCollAlreadyExistsException, JargonException;
+			throws FileNotFoundException,
+			JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
 	 * Copy a file or collection from one iRODS location to another. This is the
@@ -478,7 +482,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
 	 *             been set
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
@@ -486,7 +490,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String irodsTargetFileAbsolutePath,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-			throws OverwriteException, DataNotFoundException, JargonException;
+			throws OverwriteException, FileNotFoundException, JargonException;
 
 	/**
 	 * Copy a file or collection from one iRODS location to another. This is the

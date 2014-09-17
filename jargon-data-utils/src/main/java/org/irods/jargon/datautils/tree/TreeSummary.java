@@ -52,10 +52,13 @@ public class TreeSummary {
 	}
 
 	public long calculateAverageLength() {
+		if (totalFiles == 0) {
+			return 0L;
+		}
 		return totalBytes / totalFiles;
 	}
 
-	public void processFileInfo(File file) {
+	public void processFileInfo(final File file) {
 
 		long length = file.length();
 		String extension = LocalFileUtils.getFileExtension(file.getName()
@@ -110,7 +113,7 @@ public class TreeSummary {
 	 *            the fileSizeSummaryMap to set
 	 */
 	public void setFileSizeSummaryMap(
-			ConcurrentMap<String, AtomicLong> fileSizeSummaryMap) {
+			final ConcurrentMap<String, AtomicLong> fileSizeSummaryMap) {
 		this.fileSizeSummaryMap = fileSizeSummaryMap;
 	}
 

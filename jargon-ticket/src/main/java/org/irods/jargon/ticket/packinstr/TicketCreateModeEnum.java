@@ -5,8 +5,7 @@ import java.util.List;
 
 public enum TicketCreateModeEnum {
 
-	READ("read"), WRITE("write"), UNKNOWN(
-			"unknown");
+	READ("read"), WRITE("write"), UNKNOWN("unknown");
 
 	private String textValue;
 

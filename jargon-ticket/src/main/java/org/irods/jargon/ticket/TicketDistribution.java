@@ -103,7 +103,7 @@ public class TicketDistribution {
 	 *            that URL will return an intermediate web page appropriate to
 	 *            the given ticket
 	 */
-	public void setTicketURLWithLandingPage(URL ticketURLWithLandingPage) {
+	public void setTicketURLWithLandingPage(final URL ticketURLWithLandingPage) {
 		this.ticketURLWithLandingPage = ticketURLWithLandingPage;
 	}
 

@@ -118,7 +118,6 @@ public class InspectForUnbundleOperationMicroserviceTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ bunSubdir);
 
-		String targetBunFileAbsPath = targetBunIrodsCollection + "/" + tarName;
 		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetBunIrodsCollection);
 		irodsFile.mkdir();
@@ -142,17 +141,19 @@ public class InspectForUnbundleOperationMicroserviceTest {
 		Microservice inspectForUnbundleOperationMicroservice = new InspectForUnbundleOperationMicroservice();
 		InvocationContext invocationContext = new InvocationContext();
 
-
 		ContainerEnvironment containerEnvironment = new ContainerEnvironment();
 		ConveyorService conveyorService = Mockito.mock(ConveyorService.class);
 		containerEnvironment.setConveyorService(conveyorService);
 		Mockito.when(conveyorService.getIrodsAccessObjectFactory()).thenReturn(
 				irodsFileSystem.getIRODSAccessObjectFactory());
 		invocationContext.setIrodsAccount(irodsAccount);
-		inspectForUnbundleOperationMicroservice.setInvocationContext(invocationContext);
-		inspectForUnbundleOperationMicroservice.setContainerEnvironment(containerEnvironment);
+		inspectForUnbundleOperationMicroservice
+				.setInvocationContext(invocationContext);
+		inspectForUnbundleOperationMicroservice
+				.setContainerEnvironment(containerEnvironment);
 
-		ExecResult result = inspectForUnbundleOperationMicroservice.execute(transferStatus);
+		ExecResult result = inspectForUnbundleOperationMicroservice
+				.execute(transferStatus);
 		Assert.assertEquals("should get continue as exec result",
 				ExecResult.CONTINUE, result);
 

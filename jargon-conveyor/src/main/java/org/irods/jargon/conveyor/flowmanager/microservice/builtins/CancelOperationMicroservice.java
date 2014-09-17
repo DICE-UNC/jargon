@@ -23,7 +23,7 @@ public class CancelOperationMicroservice extends Microservice {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public ExecResult execute(TransferStatus transferStatus)
+	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 		return ExecResult.CANCEL_OPERATION;
 	}

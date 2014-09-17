@@ -48,12 +48,12 @@ public class EnqueueTransferMicroservice extends Microservice {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public ExecResult execute(TransferStatus transferStatus)
+	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 
 		log.info("execute");
 
-		Transfer oldTransfer = this.getInvocationContext().getTransferAttempt()
+		Transfer oldTransfer = getInvocationContext().getTransferAttempt()
 				.getTransfer();
 
 		log.info("currentTransfer:{}", oldTransfer);
@@ -62,27 +62,25 @@ public class EnqueueTransferMicroservice extends Microservice {
 		transfer.setTransferType(oldTransfer.getTransferType());
 		transfer.setGridAccount(oldTransfer.getGridAccount());
 
-		if (this.getInvocationContext().getSharedProperties()
-				.get(LOCAL_FILE_NAME) != null) {
+		if (getInvocationContext().getSharedProperties().get(LOCAL_FILE_NAME) != null) {
 			log.info("overriding source file name");
-			transfer.setLocalAbsolutePath((String) this.getInvocationContext()
+			transfer.setLocalAbsolutePath((String) getInvocationContext()
 					.getSharedProperties().get(LOCAL_FILE_NAME));
 		} else {
 			transfer.setLocalAbsolutePath(oldTransfer.getLocalAbsolutePath());
 		}
 
-		if (this.getInvocationContext().getSharedProperties()
-				.get(IRODS_FILE_NAME) != null) {
+		if (getInvocationContext().getSharedProperties().get(IRODS_FILE_NAME) != null) {
 			log.info("overriding irods file name");
-			transfer.setIrodsAbsolutePath((String) this.getInvocationContext()
+			transfer.setIrodsAbsolutePath((String) getInvocationContext()
 					.getSharedProperties().get(IRODS_FILE_NAME));
 		} else {
 			transfer.setIrodsAbsolutePath(oldTransfer.getIrodsAbsolutePath());
 		}
 
-		if (this.getInvocationContext().getSharedProperties().get(RESOURCE) != null) {
+		if (getInvocationContext().getSharedProperties().get(RESOURCE) != null) {
 			log.info("overriding resource name");
-			transfer.setResourceName((String) this.getInvocationContext()
+			transfer.setResourceName((String) getInvocationContext()
 					.getSharedProperties().get(RESOURCE));
 		} else {
 			transfer.setResourceName(oldTransfer.getResourceName());
@@ -90,16 +88,16 @@ public class EnqueueTransferMicroservice extends Microservice {
 
 		log.info("updated transfer is:{}", transfer);
 		try {
-			this.getContainerEnvironment()
+			getContainerEnvironment()
 					.getConveyorService()
 					.getQueueManagerService()
 					.enqueueTransferOperation(transfer,
-							this.getInvocationContext().getIrodsAccount());
+							getInvocationContext().getIrodsAccount());
 
 			// add the enqueued transfer to the whiteboard
 
-			this.getInvocationContext().getSharedProperties()
-					.put(ENQUEUED_TRANSFER, transfer);
+			getInvocationContext().getSharedProperties().put(ENQUEUED_TRANSFER,
+					transfer);
 
 		} catch (RejectedTransferException e) {
 			log.error("rejected transfer:{}", transfer, e);

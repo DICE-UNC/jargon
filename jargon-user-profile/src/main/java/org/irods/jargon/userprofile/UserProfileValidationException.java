@@ -27,8 +27,8 @@ public class UserProfileValidationException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(String message,
-			int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
@@ -37,8 +37,8 @@ public class UserProfileValidationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -46,14 +46,15 @@ public class UserProfileValidationException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public UserProfileValidationException(String message, Throwable cause) {
+	public UserProfileValidationException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param message
 	 */
-	public UserProfileValidationException(String message) {
+	public UserProfileValidationException(final String message) {
 		super(message);
 	}
 
@@ -61,15 +62,15 @@ public class UserProfileValidationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public UserProfileValidationException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public UserProfileValidationException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public UserProfileValidationException(Throwable cause) {
+	public UserProfileValidationException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -84,7 +85,7 @@ public class UserProfileValidationException extends JargonException {
 	 * @param validationMessages
 	 *            the validationMessages to set
 	 */
-	public void setValidationMessages(List<String> validationMessages) {
+	public void setValidationMessages(final List<String> validationMessages) {
 		this.validationMessages = validationMessages;
 	}
 

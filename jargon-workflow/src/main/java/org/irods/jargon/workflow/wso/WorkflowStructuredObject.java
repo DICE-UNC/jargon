@@ -70,7 +70,7 @@ public class WorkflowStructuredObject extends IRODSDomainObject {
 		return collection;
 	}
 
-	public void setCollection(Collection collection) {
+	public void setCollection(final Collection collection) {
 		this.collection = collection;
 	}
 
@@ -78,7 +78,7 @@ public class WorkflowStructuredObject extends IRODSDomainObject {
 		return mssFileAbsolutePath;
 	}
 
-	public void setMssFileAbsolutePath(String mssFileAbsolutePath) {
+	public void setMssFileAbsolutePath(final String mssFileAbsolutePath) {
 		this.mssFileAbsolutePath = mssFileAbsolutePath;
 	}
 
@@ -86,7 +86,7 @@ public class WorkflowStructuredObject extends IRODSDomainObject {
 		return mssCacheDirPath;
 	}
 
-	public void setMssCacheDirPath(String mssCacheDirPath) {
+	public void setMssCacheDirPath(final String mssCacheDirPath) {
 		this.mssCacheDirPath = mssCacheDirPath;
 	}
 
@@ -94,7 +94,7 @@ public class WorkflowStructuredObject extends IRODSDomainObject {
 		return mssAsText;
 	}
 
-	public void setMssAsText(String mssAsText) {
+	public void setMssAsText(final String mssAsText) {
 		this.mssAsText = mssAsText;
 	}
 

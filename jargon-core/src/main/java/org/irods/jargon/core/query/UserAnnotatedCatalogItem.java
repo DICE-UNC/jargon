@@ -1,5 +1,7 @@
 package org.irods.jargon.core.query;
 
+import java.io.Serializable;
+
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 
@@ -10,8 +12,13 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject {
+public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
+		implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3473243677966963376L;
 	private final MetadataDomain metadataDomain;
 	private final String domainUniqueName;
 	private final String userName;

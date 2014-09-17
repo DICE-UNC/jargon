@@ -18,7 +18,7 @@ import java.util.List;
  * @author Mike Conway - DICE
  * 
  */
-public class FlowSpec {
+public class FlowSpec implements Cloneable {
 
 	private Selector selector = new Selector();
 	private String condition;

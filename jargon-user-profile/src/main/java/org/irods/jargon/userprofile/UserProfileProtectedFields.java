@@ -44,7 +44,7 @@ public class UserProfileProtectedFields {
 	 * @param mail
 	 *            the mail to set
 	 */
-	public void setMail(String mail) {
+	public void setMail(final String mail) {
 		this.mail = mail;
 	}
 

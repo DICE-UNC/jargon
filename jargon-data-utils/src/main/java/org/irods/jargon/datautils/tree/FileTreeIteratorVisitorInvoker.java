@@ -51,9 +51,9 @@ public class FileTreeIteratorVisitorInvoker extends
 	 *            {@link} file (can be an IRODSFile) that is the parent
 	 */
 	public FileTreeIteratorVisitorInvoker(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount, AbstractIRODSVisitor<File> visitor,
-			final File parentFile) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSVisitor<File> visitor, final File parentFile) {
 		super(irodsAccessObjectFactory, irodsAccount, visitor);
 
 		if (parentFile == null) {

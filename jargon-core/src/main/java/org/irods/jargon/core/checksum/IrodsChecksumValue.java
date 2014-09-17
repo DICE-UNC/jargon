@@ -9,7 +9,7 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * Value of a checksum stored in iRODS
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class IrodsChecksumValue {
 	/**
@@ -25,7 +25,7 @@ public class IrodsChecksumValue {
 		return checksumValue;
 	}
 
-	public void setChecksumValue(String checksumValue) {
+	public void setChecksumValue(final String checksumValue) {
 		this.checksumValue = checksumValue;
 	}
 
@@ -34,7 +34,7 @@ public class IrodsChecksumValue {
 	}
 
 	public void setChecksumEncodingEnum(
-			ChecksumEncodingEnum checksumEncodingEnum) {
+			final ChecksumEncodingEnum checksumEncodingEnum) {
 		this.checksumEncodingEnum = checksumEncodingEnum;
 	}
 

@@ -14,8 +14,6 @@ public class UserProfileValidatorImpl extends AbstractJargonService {
 	public void validateUserProfile(final UserProfile userProfile)
 			throws UserProfileValidationException, JargonException {
 
-
 	}
-
 
 }

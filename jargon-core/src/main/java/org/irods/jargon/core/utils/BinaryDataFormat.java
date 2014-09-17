@@ -358,9 +358,6 @@ public final class BinaryDataFormat extends Object {
 	public final void finalize() {
 	}
 
-	// ----------------------------------------------------------------------
-	// Object Methods
-	// ----------------------------------------------------------------------
 	/**
 	 * Indicates whether another binary data format object is equal to this. For
 	 * such an object to be equal, it must describe the same byte order and data

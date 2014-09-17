@@ -79,7 +79,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 					"null or empty irodsAbsolutePath");
 		}
 
-		if (this.anonymousUserName == null || this.anonymousUserName.isEmpty()) {
+		if (anonymousUserName == null || anonymousUserName.isEmpty()) {
 			throw new JargonException(
 					"anonymous user name is null or empty, and likely improperly set when configuring this service");
 		}
@@ -190,13 +190,13 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 						"cannot set permission to null or none here");
 			} else if (filePermissionForTargetPath == FilePermissionEnum.READ) {
 				dataObjectAO.setAccessPermissionRead(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName());
+						objStat.getAbsolutePath(), getAnonymousUserName());
 			} else if (filePermissionForTargetPath == FilePermissionEnum.WRITE) {
 				dataObjectAO.setAccessPermissionWrite(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName());
+						objStat.getAbsolutePath(), getAnonymousUserName());
 			} else if (filePermissionForTargetPath == FilePermissionEnum.OWN) {
 				dataObjectAO.setAccessPermissionOwn(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName());
+						objStat.getAbsolutePath(), getAnonymousUserName());
 			}
 
 			// if optional permission for target not specified, make it
@@ -216,20 +216,20 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 
 			log.info("file permission for parent collection set to:{}",
 					operativeFilePermission);
-			IRODSFile dataObjectFile = this.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount())
-					.instanceIRODSFile(objStat.getAbsolutePath());
+			IRODSFile dataObjectFile = getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
+							objStat.getAbsolutePath());
 			String parentPath = dataObjectFile.getParent();
 
 			if (operativeFilePermission == FilePermissionEnum.READ) {
 				collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
-						parentPath, this.getAnonymousUserName(), true);
+						parentPath, getAnonymousUserName(), true);
 			} else if (operativeFilePermission == FilePermissionEnum.WRITE) {
 				collectionAO.setAccessPermissionWrite(irodsAccount.getZone(),
-						parentPath, this.getAnonymousUserName(), true);
+						parentPath, getAnonymousUserName(), true);
 			} else if (operativeFilePermission == FilePermissionEnum.OWN) {
 				collectionAO.setAccessPermissionOwn(irodsAccount.getZone(),
-						parentPath, this.getAnonymousUserName(), true);
+						parentPath, getAnonymousUserName(), true);
 			}
 
 			log.info("setting inheritance bit...");
@@ -264,17 +264,20 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 				throw new IllegalArgumentException(
 						"cannot set permission to null or none here");
 			} else if (filePermissionForTargetPath == FilePermissionEnum.READ) {
-				collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName(),
-						true);
+				collectionAO
+						.setAccessPermissionRead(irodsAccount.getZone(),
+								objStat.getAbsolutePath(),
+								getAnonymousUserName(), true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.WRITE) {
-				collectionAO.setAccessPermissionWrite(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName(),
-						true);
+				collectionAO
+						.setAccessPermissionWrite(irodsAccount.getZone(),
+								objStat.getAbsolutePath(),
+								getAnonymousUserName(), true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.OWN) {
-				collectionAO.setAccessPermissionOwn(irodsAccount.getZone(),
-						objStat.getAbsolutePath(), this.getAnonymousUserName(),
-						true);
+				collectionAO
+						.setAccessPermissionOwn(irodsAccount.getZone(),
+								objStat.getAbsolutePath(),
+								getAnonymousUserName(), true);
 			}
 			log.info("setting inheritance bit...");
 			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),

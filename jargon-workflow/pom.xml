@@ -36,7 +36,6 @@
 								<delete file="${basedir}/src/test/resources/testing.properties" />
 								<touch file="${basedir}/src/test/resources/testing.properties" mkdirs="true" />
 								<echo file="${basedir}/src/test/resources/testing.properties" append="true">
-									test.confirm=${jargon.test.confirm}
 									test.data.directory=${jargon.test.data.directory}
 									test.irods.admin=${jargon.test.irods.admin}
 									test.irods.admin.password=${jargon.test.irods.admin.password}
@@ -56,7 +55,6 @@
 									test.resource.group=${jargon.test.resource.group}
 									test.irods.userDN=${jargon.test.irods.userDN}
 									test.irods.scratch.subdir=${jargon.test.irods.scratch.subdir}
-									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.exercise.audit=${jargon.test.option.exercise.audit}
 									test.option.exercise.workflow=${jargon.test.option.exercise.workflow}

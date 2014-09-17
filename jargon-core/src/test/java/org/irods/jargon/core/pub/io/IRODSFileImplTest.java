@@ -577,7 +577,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSFile.delete();
-
 		Assert.assertFalse(targetIRODSFile.exists());
 	}
 
@@ -608,9 +607,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSFile.delete();
-
-		targetIRODSFile.reset();
-
 		Assert.assertFalse(targetIRODSFile.exists());
 	}
 
@@ -648,9 +644,6 @@ public class IRODSFileImplTest {
 				null);
 
 		targetIRODSCollection.delete();
-
-		targetIRODSFile.reset();
-
 		Assert.assertFalse("file should not still exist",
 				targetIRODSFile.exists());
 	}
@@ -678,7 +671,6 @@ public class IRODSFileImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		targetIRODSCollection.mkdirs();
 		targetIRODSCollection.delete();
-		targetIRODSCollection.reset();
 		Assert.assertFalse("file should not still exist",
 				targetIRODSCollection.exists());
 	}

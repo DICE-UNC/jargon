@@ -59,10 +59,10 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
 
-		this.dataTransferOperations = irodsAccessObjectFactory
+		dataTransferOperations = irodsAccessObjectFactory
 				.getDataTransferOperations(irodsAccount);
-		this.ticketClientSupport = new TicketClientSupport(
-				irodsAccessObjectFactory, irodsAccount);
+		ticketClientSupport = new TicketClientSupport(irodsAccessObjectFactory,
+				irodsAccount);
 	}
 
 	/*
@@ -200,9 +200,9 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 					"error copying provided input stream to temporary cache");
 		}
 
-		IRODSFile targetIrodsFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
+		IRODSFile targetIrodsFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
+						irodsCollectionAbsolutePath, fileName);
 		log.info("target iRODS file:{}", targetIrodsFile);
 
 		log.info("data has been copied to temp file, now put to iRODS via ticket");
@@ -221,7 +221,6 @@ public class TicketClientOperationsImpl extends AbstractTicketService implements
 			} catch (IOException e) {
 			}
 		}
-
 
 		log.info("transfer complete");
 

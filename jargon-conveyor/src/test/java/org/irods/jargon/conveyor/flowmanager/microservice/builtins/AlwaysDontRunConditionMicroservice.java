@@ -32,7 +32,7 @@ public class AlwaysDontRunConditionMicroservice extends ConditionMicroservice {
 	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 		log.info("execute()");
-		this.evaluateContext();
+		evaluateContext();
 		return ExecResult.TERMINATE_FLOW_FAIL_PRECONDITION;
 
 	}

@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.usertagging.domain;
 
+import java.io.Serializable;
+
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
@@ -10,10 +12,15 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
  * Represents a share for a user, which consists of the user name, user zone,
  * and permission type desired
  * 
- * @author mikeconway
+ * @author Mike Conway - DICE
  * 
  */
-public class ShareUser extends IRODSDomainObject {
+public class ShareUser extends IRODSDomainObject implements Serializable {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4660577038224822489L;
 
 	/**
 	 * User name to share with

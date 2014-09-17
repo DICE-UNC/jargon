@@ -38,8 +38,8 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	 * @param sourceFileAbsolutePath
 	 * @param targetFileAbsolutePath
 	 */
-	public LocalTarFileArchiver(String sourceFileAbsolutePath,
-			String targetFileAbsolutePath) {
+	public LocalTarFileArchiver(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath) {
 		super(sourceFileAbsolutePath, targetFileAbsolutePath);
 	}
 
@@ -56,7 +56,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		try {
 			tarArchiveOutputStream.flush();
 			tarArchiveOutputStream.close();
-			return this.tarArchiveFile;
+			return tarArchiveFile;
 
 		} catch (IOException e) {
 			log.error("io exception in completeArchiving", e);
@@ -73,7 +73,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	 * (java.io.File)
 	 */
 	@Override
-	protected void addFileToArchive(File file) throws JargonException {
+	protected void addFileToArchive(final File file) throws JargonException {
 
 		log.info("adding file to tar:{}", file);
 
@@ -105,7 +105,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 	@Override
 	protected void initializeTargetArchive() throws JargonException {
 		log.info("initializeTargetArchive()");
-		tarArchiveFile = new File(this.getTargetFileAbsolutePath());
+		tarArchiveFile = new File(getTargetFileAbsolutePath());
 		log.info("tar target file:{}", tarArchiveFile.getAbsolutePath());
 
 		if (tarArchiveFile.exists()) {
@@ -117,7 +117,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		try {
 			FileOutputStream fos = new FileOutputStream(tarArchiveFile);
 
-			this.tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()
+			tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()
 					.createArchiveOutputStream(ArchiveStreamFactory.TAR, fos);
 			tarArchiveOutputStream
 					.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
