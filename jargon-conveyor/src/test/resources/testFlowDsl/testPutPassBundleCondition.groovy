@@ -4,7 +4,7 @@ import org.irods.jargon.conveyor.flowmanager.microservice.builtins.InspectForBun
 
 String fqcn = InspectForBundleOperationMicroservice.class.getName()
 
-FlowSpec flow =Flow.define().forAction(FlowActionEnum.PUT).forAnyHost().forAnyZone()
+FlowSpec flow =Flow.define().forAction(Selector.FlowActionEnum.PUT).forAnyHost().forAnyZone()
 		.when(fqcn)
 		.endPreOperationChain()
 		.endPreFileChain()

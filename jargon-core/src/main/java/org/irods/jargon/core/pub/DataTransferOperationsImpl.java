@@ -153,12 +153,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
 				sourceFile.getAbsolutePath(), sb.toString());
 
-		try {
-			getIRODSProtocol().irodsFunction(dataObjCopyInp);
-		} catch (JargonException je) {
-			log.error("jargon exception in move operation", je);
-			throw je;
-		}
+		getIRODSProtocol().irodsFunction(dataObjCopyInp);
 
 		log.info("successful move");
 	}

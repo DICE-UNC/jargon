@@ -4,6 +4,7 @@ Jargon Core API
 work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
+<<<<<<< HEAD
 ### Date:
 ### Release Version: 4.0.3-SNAPSHOT
 ### git tag: 
@@ -13,6 +14,18 @@ This is the development track for milestone 4.0.2.2 supporting iDrop 3
 
 https://github.com/DICE-UNC/jargon/issues?milestone=6
 
+=======
+#### Date: 09/16/2014
+#### Release Version: 4.0.2
+#### git tag: 4.0.2-RELEASE
+#### Developer: Mike Conway - DICE
+## News
+
+This release marks compatability with iRODS 4.0.3, integration work with the iRODS Consortium CI infrastructure, and a large number of accumulated fixes 
+and features marking the transition to the iRODS consortium model.
+
+=======
+>>>>>>> master
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 Jargon-core consists of the following libraries
