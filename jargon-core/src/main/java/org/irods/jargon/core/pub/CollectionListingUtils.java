@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -152,8 +153,7 @@ class CollectionListingUtils {
 		} else {
 
 			sb.append("/");
-			sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-					.getUserName());
+			sb.append(IRODSAccount.PUBLIC_USERNAME);
 
 			comparePath = sb.toString();
 
@@ -171,6 +171,10 @@ class CollectionListingUtils {
 					log.info("no home dir");
 				}
 
+			} else {
+				log.info("really is a not found");
+				throw new FileNotFoundException(
+						"unable to find file under path");
 			}
 		}
 		// I was under /zone/home/ looking for public and user dirs, return what
