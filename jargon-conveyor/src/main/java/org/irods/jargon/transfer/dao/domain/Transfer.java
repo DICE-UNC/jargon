@@ -71,7 +71,7 @@ public class Transfer implements Serializable {
 	 */
 	@ManyToOne(targetEntity = Synchronization.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "synchronization_id", nullable = true)
-	private transient Synchronization synchronization;
+	private Synchronization synchronization;
 
 	@Column(name = "local_absolute_path", length = 32672)
 	private String localAbsolutePath = "";

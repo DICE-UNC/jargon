@@ -52,6 +52,9 @@ public class TreeSummary {
 	}
 
 	public long calculateAverageLength() {
+		if (totalFiles == 0) {
+			return 0L;
+		}
 		return totalBytes / totalFiles;
 	}
 

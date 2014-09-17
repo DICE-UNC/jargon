@@ -155,7 +155,7 @@ public class GridAccount implements Serializable {
 	@OrderBy("name")
 	@LazyCollection(LazyCollectionOption.TRUE)
 	@Cascade({ CascadeType.ALL })
-	private transient final Set<Synchronization> synchronization = new HashSet<Synchronization>();
+	private  final Set<Synchronization> synchronization = new HashSet<Synchronization>();
 
 	/**
 	 * @return
