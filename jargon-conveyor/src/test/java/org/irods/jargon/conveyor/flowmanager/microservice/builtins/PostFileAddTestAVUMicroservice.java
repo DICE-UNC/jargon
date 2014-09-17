@@ -44,21 +44,17 @@ public class PostFileAddTestAVUMicroservice extends Microservice {
 					"");
 			File sourceAsFile = new File(
 					transferStatus.getSourceFileAbsolutePath());
-			IRODSFile targetAsFile = this
-					.getContainerEnvironment()
+			IRODSFile targetAsFile = getContainerEnvironment()
 					.getConveyorService()
 					.getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(
-							this.getInvocationContext().getIrodsAccount())
+							getInvocationContext().getIrodsAccount())
 					.instanceIRODSFile(
 							transferStatus.getTargetFileAbsolutePath(),
 							sourceAsFile.getName());
-			DataObjectAO dataObjectAO = this
-					.getContainerEnvironment()
-					.getConveyorService()
-					.getIrodsAccessObjectFactory()
-					.getDataObjectAO(
-							this.getInvocationContext().getIrodsAccount());
+			DataObjectAO dataObjectAO = getContainerEnvironment()
+					.getConveyorService().getIrodsAccessObjectFactory()
+					.getDataObjectAO(getInvocationContext().getIrodsAccount());
 			log.info("adding an avu to:{}", targetAsFile.getAbsolutePath());
 			dataObjectAO
 					.addAVUMetadata(targetAsFile.getAbsolutePath(), avuData);

@@ -87,7 +87,8 @@ public class SynchronizationDAOTest {
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName("test");
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -108,7 +109,8 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName("test");
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -116,7 +118,8 @@ public class SynchronizationDAOTest {
 
 		Synchronization actual = synchronizationDAO.findById(synchronization
 				.getId());
-		Assert.assertNotNull("did not find org.irods.jargon.conveyor.synch by id", actual);
+		Assert.assertNotNull(
+				"did not find org.irods.jargon.conveyor.synch by id", actual);
 
 	}
 
@@ -133,14 +136,16 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName(testName);
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
 		synchronizationDAO.save(synchronization);
 
 		Synchronization actual = synchronizationDAO.findByName(testName);
-		Assert.assertNotNull("did not find org.irods.jargon.conveyor.synch by name", actual);
+		Assert.assertNotNull(
+				"did not find org.irods.jargon.conveyor.synch by name", actual);
 	}
 
 	@Test
@@ -155,7 +160,8 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName("test");
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -191,7 +197,8 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName(testName);
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -201,7 +208,8 @@ public class SynchronizationDAOTest {
 		synchronizationDAO.delete(actual);
 
 		Synchronization lookUpAgain = synchronizationDAO.findByName(testName);
-		Assert.assertNull("did not delete org.irods.jargon.conveyor.synch", lookUpAgain);
+		Assert.assertNull("did not delete org.irods.jargon.conveyor.synch",
+				lookUpAgain);
 
 	}
 
@@ -217,7 +225,8 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory("irods/dir");
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName("testSaveWithLocalIRODSTransfer");
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -238,7 +247,8 @@ public class SynchronizationDAOTest {
 
 		Synchronization actual = synchronizationDAO.findById(synchronization
 				.getId());
-		Assert.assertNotNull("did not find actual org.irods.jargon.conveyor.synch", actual);
+		Assert.assertNotNull(
+				"did not find actual org.irods.jargon.conveyor.synch", actual);
 		Assert.assertTrue("did not find localIRODSTransfer in synchronization",
 				synchronization.getTransfers().size() > 0);
 
@@ -259,7 +269,8 @@ public class SynchronizationDAOTest {
 		synchronization.setGridAccount(gridAccount);
 		synchronization.setFrequencyType(FrequencyType.EVERY_HOUR);
 		synchronization.setIrodsSynchDirectory(testName);
-		synchronization.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
+		synchronization
+				.setLocalSynchDirectory("local/org.irods.jargon.conveyor.synch");
 		synchronization.setName(testName);
 		synchronization
 				.setSynchronizationMode(SynchronizationType.ONE_WAY_LOCAL_TO_IRODS);
@@ -282,14 +293,17 @@ public class SynchronizationDAOTest {
 		for (Transfer actualTransfer : allTransfers) {
 			if (actualTransfer.getIrodsAbsolutePath().equals(testName)) {
 				foundTransfer = true;
-				Assert.assertNotNull("transfer did not have org.irods.jargon.conveyor.synch",
+				Assert.assertNotNull(
+						"transfer did not have org.irods.jargon.conveyor.synch",
 						actualTransfer.getSynchronization());
-				Assert.assertEquals("org.irods.jargon.conveyor.synch did not have proper data", testName,
-						actualTransfer.getSynchronization().getName());
+				Assert.assertEquals(
+						"org.irods.jargon.conveyor.synch did not have proper data",
+						testName, actualTransfer.getSynchronization().getName());
 			}
 		}
 
-		Assert.assertTrue("did not find org.irods.jargon.conveyor.synch", foundTransfer);
+		Assert.assertTrue("did not find org.irods.jargon.conveyor.synch",
+				foundTransfer);
 
 	}
 

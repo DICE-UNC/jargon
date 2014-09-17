@@ -251,7 +251,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		return startupResponseData;
 	}
 
-	public void setStartupResponseData(StartupResponseData startupResponseData) {
+	public void setStartupResponseData(
+			final StartupResponseData startupResponseData) {
 		this.startupResponseData = startupResponseData;
 	}
 
@@ -615,8 +616,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			// squelch genqueryout data for nicer logs
 			if (log.isDebugEnabled()) {
 				String messageAsString = message.parseTag();
-				if (messageAsString.indexOf("GenQueryOut") == -1
-						|| ConnectionConstants.DUMP_GEN_QUERY_OUT) {
+				int idx = messageAsString.indexOf("GenQueryOut");
+				if (idx == -1 || ConnectionConstants.DUMP_GEN_QUERY_OUT) {
 					log.debug("message from IRODS read back:{}",
 							messageAsString);
 				}

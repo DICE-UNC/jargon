@@ -318,7 +318,7 @@ public class MiscIRODSUtils {
 			algorithm.reset();
 			algorithm.update(input.getBytes());
 			byte[] md5 = algorithm.digest();
-			return LocalFileUtils.md5ByteArrayToString(md5);
+			return LocalFileUtils.digestByteArrayToString(md5);
 		} catch (NoSuchAlgorithmException ex) {
 			throw new JargonException(
 					"exception creating MD5 Hash of the given string", ex);

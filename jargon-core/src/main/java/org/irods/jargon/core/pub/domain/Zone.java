@@ -3,9 +3,7 @@
  */
 package org.irods.jargon.core.pub.domain;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 /**
  * This class is a domain object that represents an IRODS zone. This object is
@@ -27,7 +25,6 @@ public class Zone extends IRODSDomainObject {
 	Date zoneCreateTime = new Date();
 	Date zoneModifyTime = new Date(); // TODO: util to convert IRODS date values
 										// to java Dates needed
-	List<Resource> resources = new ArrayList<Resource>();
 
 	public String getZoneId() {
 		return zoneId;
@@ -112,14 +109,6 @@ public class Zone extends IRODSDomainObject {
 		stringBuilder.append('\n');
 
 		return stringBuilder.toString();
-	}
-
-	public List<Resource> getResources() {
-		return resources;
-	}
-
-	public void setResources(final List<Resource> resources) {
-		this.resources = resources;
 	}
 
 }

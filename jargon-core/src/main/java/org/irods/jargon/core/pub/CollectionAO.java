@@ -197,7 +197,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             when data object is missing
 	 * @throws DuplicateDataException
 	 *             when an AVU already exists. Note that iRODS (at least at 2.5)
@@ -205,7 +205,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *             units are not blank
 	 */
 	void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException,
+			throws FileNotFoundException, DuplicateDataException,
 			JargonException;
 
 	/**
@@ -220,12 +220,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            collection
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
-	 * @throws DataNotFoundException
+	 * @throws FileNotFoundException
 	 *             if the target iRODS collection is missing
 	 * @throws JargonException
 	 */
 	void deleteAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * List the AVU metadata for a particular collection, as well as information
@@ -907,12 +907,14 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} with the AVU
 	 *            values to be added to the collection
 	 * @return <code>List</code> of {@link BulkAVUOperationResponse}
+	 * 
 	 * @throws JargonException
 	 *             if an unexpected exception not anticipated by the bulk AVU
 	 *             process occurs
 	 */
 	List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
-			String absolutePath, List<AvuData> avuData) throws JargonException;
+			String absolutePath, List<AvuData> avuData)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Convenience method to delete a set of AVU metadata. This operation is

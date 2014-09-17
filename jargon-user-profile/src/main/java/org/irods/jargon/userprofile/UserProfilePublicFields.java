@@ -14,7 +14,6 @@ package org.irods.jargon.userprofile;
  */
 public class UserProfilePublicFields {
 
-
 	/**
 	 * Open-ended; whatever the person or the directory manager puts here.
 	 * According to RFC 4519,
@@ -119,7 +118,6 @@ public class UserProfilePublicFields {
 	 */
 	private String telephoneNumber = "";
 
-
 	/**
 	 * @return the description
 	 */
@@ -131,7 +129,7 @@ public class UserProfilePublicFields {
 	 * @param description
 	 *            the description to set
 	 */
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
@@ -146,7 +144,7 @@ public class UserProfilePublicFields {
 	 * @param nickName
 	 *            the nickName to set
 	 */
-	public void setNickName(String nickName) {
+	public void setNickName(final String nickName) {
 		this.nickName = nickName;
 	}
 
@@ -161,7 +159,7 @@ public class UserProfilePublicFields {
 	 * @param cn
 	 *            the cn to set
 	 */
-	public void setCn(String cn) {
+	public void setCn(final String cn) {
 		this.cn = cn;
 	}
 
@@ -176,7 +174,7 @@ public class UserProfilePublicFields {
 	 * @param givenName
 	 *            the givenName to set
 	 */
-	public void setGivenName(String givenName) {
+	public void setGivenName(final String givenName) {
 		this.givenName = givenName;
 	}
 
@@ -191,7 +189,7 @@ public class UserProfilePublicFields {
 	 * @param sn
 	 *            the sn to set
 	 */
-	public void setSn(String sn) {
+	public void setSn(final String sn) {
 		this.sn = sn;
 	}
 
@@ -206,7 +204,7 @@ public class UserProfilePublicFields {
 	 * @param postalAddress
 	 *            the postalAddress to set
 	 */
-	public void setPostalAddress(String postalAddress) {
+	public void setPostalAddress(final String postalAddress) {
 		this.postalAddress = postalAddress;
 	}
 
@@ -221,7 +219,7 @@ public class UserProfilePublicFields {
 	 * @param postalCode
 	 *            the postalCode to set
 	 */
-	public void setPostalCode(String postalCode) {
+	public void setPostalCode(final String postalCode) {
 		this.postalCode = postalCode;
 	}
 
@@ -236,7 +234,7 @@ public class UserProfilePublicFields {
 	 * @param postOfficeBox
 	 *            the postOfficeBox to set
 	 */
-	public void setPostOfficeBox(String postOfficeBox) {
+	public void setPostOfficeBox(final String postOfficeBox) {
 		this.postOfficeBox = postOfficeBox;
 	}
 
@@ -251,7 +249,7 @@ public class UserProfilePublicFields {
 	 * @param localityName
 	 *            the localityName to set
 	 */
-	public void setLocalityName(String localityName) {
+	public void setLocalityName(final String localityName) {
 		this.localityName = localityName;
 	}
 
@@ -266,7 +264,7 @@ public class UserProfilePublicFields {
 	 * @param street
 	 *            the street to set
 	 */
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.street = street;
 	}
 
@@ -281,7 +279,7 @@ public class UserProfilePublicFields {
 	 * @param jpegPhoto
 	 *            the jpegPhoto to set
 	 */
-	public void setJpegPhoto(String jpegPhoto) {
+	public void setJpegPhoto(final String jpegPhoto) {
 		this.jpegPhoto = jpegPhoto;
 	}
 
@@ -296,7 +294,7 @@ public class UserProfilePublicFields {
 	 * @param labeledURL
 	 *            the labeledURL to set
 	 */
-	public void setLabeledURL(String labeledURL) {
+	public void setLabeledURL(final String labeledURL) {
 		this.labeledURL = labeledURL;
 	}
 
@@ -311,7 +309,7 @@ public class UserProfilePublicFields {
 	 * @param st
 	 *            the st to set
 	 */
-	public void setSt(String st) {
+	public void setSt(final String st) {
 		this.st = st;
 	}
 
@@ -326,7 +324,7 @@ public class UserProfilePublicFields {
 	 * @param title
 	 *            the title to set
 	 */
-	public void setTitle(String title) {
+	public void setTitle(final String title) {
 		this.title = title;
 	}
 
@@ -341,7 +339,7 @@ public class UserProfilePublicFields {
 	 * @param telephoneNumber
 	 *            the telephoneNumber to set
 	 */
-	public void setTelephoneNumber(String telephoneNumber) {
+	public void setTelephoneNumber(final String telephoneNumber) {
 		this.telephoneNumber = telephoneNumber;
 	}
 

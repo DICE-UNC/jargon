@@ -31,7 +31,7 @@ public class AlwaysRunConditionMicroservice extends ConditionMicroservice {
 	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 		log.info("execute()");
-		this.evaluateContext();
+		evaluateContext();
 		return ExecResult.CONTINUE;
 
 	}

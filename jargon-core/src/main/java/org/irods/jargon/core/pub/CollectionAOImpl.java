@@ -423,9 +423,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		for (AvuData value : avuData) {
 			try {
 				addAVUMetadata(absolutePath, value);
-			} catch (DataNotFoundException dnf) {
+			} catch (FileNotFoundException dnf) {
 				log.error(
-						"dataNotFoundException when adding an AVU, catch and add to response data",
+						"FileNotFoundException when adding an AVU, catch and add to response data",
 						dnf);
 				responses.add(BulkAVUOperationResponse.instance(
 						ResultStatus.MISSING_METADATA_TARGET, value,
@@ -473,9 +473,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		for (AvuData value : avuData) {
 			try {
 				deleteAVUMetadata(absolutePath, value);
-			} catch (DataNotFoundException dnf) {
+			} catch (FileNotFoundException dnf) {
 				log.error(
-						"dataNotFoundException when deleti an AVU, catch and add to response data",
+						"FileNotFoundException when deleti an AVU, catch and add to response data",
 						dnf);
 				responses.add(BulkAVUOperationResponse.instance(
 						ResultStatus.MISSING_METADATA_TARGET, value,
@@ -502,7 +502,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public void addAVUMetadata(final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, DuplicateDataException,
+			throws FileNotFoundException, DuplicateDataException,
 			JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
@@ -554,7 +554,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public void deleteAVUMetadata(final String absolutePath,
-			final AvuData avuData) throws DataNotFoundException,
+			final AvuData avuData) throws FileNotFoundException,
 			JargonException {
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -579,7 +579,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		} catch (JargonException je) {
 
 			if (je.getMessage().indexOf("-814000") > -1) {
-				throw new DataNotFoundException(
+				throw new FileNotFoundException(
 						"Target collection was not found, could not remove AVU");
 			}
 
@@ -599,7 +599,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	@Override
 	public void deleteAllAVUMetadata(final String absolutePath)
-			throws DataNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("deleteAllAVUMetadata");
 
@@ -612,12 +612,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("absolute path: {}", absolutePath);
 
-		ObjStat objStat;
-		try {
-			objStat = this.retrieveObjStat(absolutePath);
-		} catch (FileNotFoundException e) {
-			throw new DataNotFoundException(e);
-		}
+		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info(
@@ -703,7 +698,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				avuData.getValue(), result.get(0).getAvuUnit());
 		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
-	} 
+	}
 
 	/*
 	 * (non-Javadoc)
@@ -1535,6 +1530,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwnAsAdmin(
+	 * java.lang.String, java.lang.String, java.lang.String, boolean)
+	 */
 	@Override
 	public void setAccessPermissionOwnAsAdmin(final String zone,
 			final String absolutePath, final String userName,

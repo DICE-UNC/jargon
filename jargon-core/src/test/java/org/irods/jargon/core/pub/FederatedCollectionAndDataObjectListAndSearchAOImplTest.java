@@ -283,7 +283,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, subCollName);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		collectionAO
@@ -376,7 +375,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection, subCollName);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdirs();
 
 		collectionAO
@@ -465,7 +463,6 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdir();
 		irodsFile.close();
 

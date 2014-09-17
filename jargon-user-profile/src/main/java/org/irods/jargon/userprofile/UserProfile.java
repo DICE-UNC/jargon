@@ -12,7 +12,7 @@ package org.irods.jargon.userprofile;
  * 
  */
 public class UserProfile {
-	
+
 	private String zone = "";
 	private String userName = "";
 	private UserProfilePublicFields userProfilePublicFields = new UserProfilePublicFields();
@@ -42,7 +42,7 @@ public class UserProfile {
 	 * @param zone
 	 *            the zone to set
 	 */
-	public void setZone(String zone) {
+	public void setZone(final String zone) {
 		this.zone = zone;
 	}
 
@@ -57,7 +57,7 @@ public class UserProfile {
 	 * @param userName
 	 *            the userName to set
 	 */
-	public void setUserName(String userName) {
+	public void setUserName(final String userName) {
 		this.userName = userName;
 	}
 
@@ -73,7 +73,7 @@ public class UserProfile {
 	 *            the userProfilePublicFields to set
 	 */
 	public void setUserProfilePublicFields(
-			UserProfilePublicFields userProfilePublicFields) {
+			final UserProfilePublicFields userProfilePublicFields) {
 		this.userProfilePublicFields = userProfilePublicFields;
 	}
 
@@ -89,7 +89,7 @@ public class UserProfile {
 	 *            the userProfileProtectedFields to set
 	 */
 	public void setUserProfileProtectedFields(
-			UserProfileProtectedFields userProfileProtectedFields) {
+			final UserProfileProtectedFields userProfileProtectedFields) {
 		this.userProfileProtectedFields = userProfileProtectedFields;
 	}
 

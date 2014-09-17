@@ -143,8 +143,8 @@ public class ExtractBundleMicroserviceTest {
 
 		TransferStatus transferStatus = TransferStatus.instance(
 				TransferStatus.TransferType.PUT, localCollectionAbsolutePath,
-				targetBunFileAbsPath, "", 0, 0, 0, 0, 0, TransferState.OVERALL_INITIATION,
-				"host", "zone");
+				targetBunFileAbsPath, "", 0, 0, 0, 0, 0,
+				TransferState.OVERALL_INITIATION, "host", "zone");
 
 		Microservice extractBundleMicroservice = new ExtractBundleMicroservice();
 		InvocationContext invocationContext = new InvocationContext();

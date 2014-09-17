@@ -1424,7 +1424,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.deleteWithForceOption();
-		irodsFile.reset();
 		irodsFile.mkdir();
 
 		// make a subdir with the search term
@@ -2278,7 +2277,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
 	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDrop()
 			throws Exception {
 
@@ -2323,7 +2322,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
 	public void testListCollectionsUnderPublicAsAnonymousUserBug56iDropStartUnderPublic()
 			throws Exception {
 

@@ -21,7 +21,6 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-// TODO: user name required?
 public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
 		implements Serializable {
 
@@ -54,9 +53,9 @@ public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
 		sb.append("\n\tshareName:");
 		sb.append(shareName);
 		sb.append("\n\tmetadataDomain:");
-		sb.append(this.getMetadataDomain());
+		sb.append(getMetadataDomain());
 		sb.append("\n\tpath:");
-		sb.append(this.getDomainUniqueName());
+		sb.append(getDomainUniqueName());
 		sb.append("\n\tshareOwner:");
 		sb.append(shareOwner);
 		sb.append("\n\tshareZone:");

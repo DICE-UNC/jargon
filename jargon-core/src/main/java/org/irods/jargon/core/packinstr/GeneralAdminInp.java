@@ -21,17 +21,17 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static final int GEN_ADMIN_INP_API_NBR = 701;
 
-	private static final String ARG0 = "arg0";
-	private static final String ARG1 = "arg1";
-	private static final String ARG2 = "arg2";
-	private static final String ARG3 = "arg3";
-	private static final String ARG4 = "arg4";
-	private static final String ARG5 = "arg5";
-	private static final String ARG6 = "arg6";
-	private static final String ARG7 = "arg7";
-	private static final String ARG8 = "arg8";
-	private static final String ARG9 = "arg9";
-	private static final String BLANK = "";
+	public static final String ARG0 = "arg0";
+	public static final String ARG1 = "arg1";
+	public static final String ARG2 = "arg2";
+	public static final String ARG3 = "arg3";
+	public static final String ARG4 = "arg4";
+	public static final String ARG5 = "arg5";
+	public static final String ARG6 = "arg6";
+	public static final String ARG7 = "arg7";
+	public static final String ARG8 = "arg8";
+	public static final String ARG9 = "arg9";
+	public static final String BLANK = "";
 
 	private String arg0 = "";
 	private String arg1 = "";
@@ -570,7 +570,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 				GEN_ADMIN_INP_API_NBR);
 	}
 
-	private GeneralAdminInp(final String arg0, final String arg1,
+	protected GeneralAdminInp(final String arg0, final String arg1,
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)

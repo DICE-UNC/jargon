@@ -155,9 +155,9 @@ public class IRODSErrorScanner {
 			throw new FileIntegrityException(
 					"File checksum verification mismatch");
 		case CAT_UNKNOWN_FILE:
-			throw new DataNotFoundException("Unknown file");
+			throw new FileNotFoundException("Unknown file");
 		case CAT_UNKNOWN_COLLECTION:
-			throw new DataNotFoundException("Unknown collection");
+			throw new FileNotFoundException("Unknown collection");
 		case CAT_COLLECTION_NOT_EMPTY:
 			throw new CollectionNotEmptyException("Collection not empty",
 					infoValue);

@@ -175,9 +175,9 @@ public class FileTreeDiffEntry {
 
 		this.diffType = diffType;
 		this.collectionAndDataObjectListingEntry = collectionAndDataObjectListingEntry;
-		this.lengthOppositeFile = lengthRhsFile;
-		this.timestampOppositeFile = timestampRhsFile;
-		this.absPathOppositeFile = absolutePathOppositeFile;
+		lengthOppositeFile = lengthRhsFile;
+		timestampOppositeFile = timestampRhsFile;
+		absPathOppositeFile = absolutePathOppositeFile;
 		this.checksumThisFile = checksumThisFile;
 		this.checksumOppositeFile = checksumOppositeFile;
 

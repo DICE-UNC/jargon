@@ -9,11 +9,12 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileIntegrityException;
@@ -30,7 +31,6 @@ import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
-import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.BulkAVUOperationResponse.ResultStatus;
@@ -749,8 +749,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info(
 						"before generating parallel transfer threads, computing a checksum on the file at:{}",
 						localFile.getAbsolutePath());
-				String localFileChecksum = dataAOHelper
-						.computeLocalFileChecksum(localFile, myTransferOptions);
+
+				ChecksumValue localFileChecksum = dataAOHelper
+						.computeLocalFileChecksum(localFile, null);
 
 				log.info("local file checksum is:{}", localFileChecksum);
 				dataObjInp.setFileChecksumValue(localFileChecksum);
@@ -959,12 +960,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("getDataObjectFromIrods()");
 
-		if (transferStatusCallbackListener == null) {
-			log.info("transferStatusCallbackListener not given to getDataObjectFromIrods() method");
-		} else {
-			log.info("transferStatusCallbackListener present for getDataObjectFromIrods() method");
-		}
-
 		if (localFileToHoldData == null) {
 			throw new IllegalArgumentException(NULL_LOCAL_FILE);
 		}
@@ -983,7 +978,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
-			log.info("a put to a directory, just use the source file name and accept the directory as a target");
+			log.info("a get to a directory, just use the source file name and accept the directory as a target");
 			StringBuilder sb = new StringBuilder();
 			sb.append(localFileToHoldData.getAbsolutePath());
 			sb.append("/");
@@ -1073,7 +1068,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (targetFile instanceof IRODSFile) {
 				try {
-					if (this.getObjectStatForAbsolutePath(
+					if (getObjectStatForAbsolutePath(
 							targetFile.getAbsolutePath()).getSpecColType() == SpecColType.MOUNTED_COLL) {
 						log.info("always use force for mounted collections, see comments for Bug 1606");
 						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
@@ -1257,7 +1252,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final boolean clientSideAction) throws OverwriteException,
-			JargonException, DataNotFoundException {
+			DataNotFoundException, JargonException {
 
 		log.info("process get after resource determined");
 
@@ -1270,16 +1265,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		LocalFileUtils.createLocalFileIfNotExists(localFileToHoldData);
-		AbstractIRODSMidLevelProtocol irodsProtocol = getIRODSProtocol();
+		Tag message;
+		try {
+			message = getIRODSProtocol().irodsFunction(dataObjInp);
+		} catch (CatNoAccessException e) {
+			log.error(
+					"no access exception wrapped as DataNotFoundException for consistency with API",
+					e);
+			throw new FileNotFoundException(e);
 
-		final Tag message = irodsProtocol.irodsFunction(dataObjInp);
+		}
 
 		// irods file doesn't exist
 		if (message == null) {
 			log.warn(
 					"irods file does not exist, null was returned from the get, return DataNotFoundException for iRODS file: {}",
 					irodsFileToGet.getAbsolutePath());
-			throw new DataNotFoundException(
+			throw new FileNotFoundException(
 					"irods file not found during get operation:"
 							+ irodsFileToGet.getAbsolutePath());
 		}
@@ -1327,7 +1329,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
-						lengthFromIrodsResponse, irodsProtocol,
+						lengthFromIrodsResponse, getIRODSProtocol(),
 						thisFileTransferOptions, transferControlBlock,
 						transferStatusCallbackListener);
 			}
@@ -1335,17 +1337,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			if (thisFileTransferOptions != null
 					&& thisFileTransferOptions
 							.isComputeAndVerifyChecksumAfterTransfer()) {
+
+				// compute iRODS first, use algorithm from iRODS to compute the
+				// local checksum that should match
+
+				ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFileToGet);
+
 				log.info("computing a checksum on the file at:{}",
 						localFileToHoldData.getAbsolutePath());
 
-				String localFileChecksum = dataAOHelper
+				ChecksumValue localFileChecksum = dataAOHelper
 						.computeLocalFileChecksum(localFileToHoldData,
-								thisFileTransferOptions);
+								irodsChecksum.getChecksumEncoding());
 
 				log.info("local file checksum is:{}", localFileChecksum);
-				String irodsChecksum = computeMD5ChecksumOnDataObject(irodsFileToGet);
 				log.info("irods checksum:{}", irodsChecksum);
-				if (!(irodsChecksum.equals(localFileChecksum))) {
+				if (!(irodsChecksum.getChecksumStringValue()
+						.equals(localFileChecksum.getChecksumStringValue()))) {
 					throw new FileIntegrityException(
 							"checksum verification after get fails");
 				}
@@ -2679,10 +2687,41 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return returnedChecksum;
 	}
 
-	// FIXME: implement
-	public String computeChecksumOnDataObject(final IRODSFile irodsFile,
-			final ChecksumEncodingEnum checksumEncoding) throws JargonException {
-		return null;
+	/**
+	 * @param irodsFile
+	 * @param checksumEncoding
+	 * @return
+	 * @throws JargonException
+	 */
+	@Override
+	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile)
+			throws JargonException {
+
+		log.info("computeChecksumOnDataObject()");
+
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("irodsFile is null");
+		}
+
+		log.info("computing checksum on irodsFile: {}",
+				irodsFile.getAbsolutePath());
+
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForDataObjectChecksum(irodsFile.getAbsolutePath());
+		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		if (response == null) {
+			log.error("invalid response to checksum call, response was null, expected checksum value");
+			throw new JargonException(
+					"invalid response to checksum call, received null response when doing checksum on file:"
+							+ irodsFile);
+		}
+
+		String returnedChecksum = response.getTag(DataObjInp.MY_STR)
+				.getStringValue();
+		log.info("checksum is: {}", returnedChecksum);
+
+		return dataAOHelper.computeChecksumValueFromIrodsData(returnedChecksum);
 	}
 
 	/*
@@ -3663,7 +3702,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		List<Resource> resources = resourceAOHelper
-				.buildResourceListFromResultSet(resultSet);
+				.buildResourceListFromResultSetClassic(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");

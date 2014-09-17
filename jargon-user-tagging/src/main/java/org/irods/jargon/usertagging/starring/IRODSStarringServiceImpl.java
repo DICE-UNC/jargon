@@ -230,8 +230,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
 				irodsStarredFiles
-						.add(this
-								.transformMetadataValueToStarValue(metadataAndDomainData));
+						.add(transformMetadataValueToStarValue(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -270,8 +269,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
 				irodsStarredFiles
-						.add(this
-								.transformMetadataValueToStarValue(metadataAndDomainData));
+						.add(transformMetadataValueToStarValue(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {

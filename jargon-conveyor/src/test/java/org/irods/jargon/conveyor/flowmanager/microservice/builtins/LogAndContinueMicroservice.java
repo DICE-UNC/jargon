@@ -31,13 +31,13 @@ public class LogAndContinueMicroservice extends Microservice {
 			throws MicroserviceException {
 		log.info("execute()");
 
-		Object countObjVal = this.getInvocationContext().getSharedProperties()
-				.get(COUNT_KEY);
+		Object countObjVal = getInvocationContext().getSharedProperties().get(
+				COUNT_KEY);
 		if (countObjVal == null) {
-			this.getInvocationContext().getSharedProperties().put(COUNT_KEY, 1);
+			getInvocationContext().getSharedProperties().put(COUNT_KEY, 1);
 		} else {
 			int count = (Integer) countObjVal;
-			this.getInvocationContext().getSharedProperties()
+			getInvocationContext().getSharedProperties()
 					.put(COUNT_KEY, ++count);
 		}
 

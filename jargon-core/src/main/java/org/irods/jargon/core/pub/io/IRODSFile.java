@@ -201,13 +201,13 @@ public interface IRODSFile {
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read/write mode.
 	 * 
-	 * @return <code>int</code> with the irods file descriptor.
+	 * @return <code>int</code> with the iRODS file descriptor.
 	 * @throws JargonException
 	 */
 	int open() throws JargonException;
 
 	/**
-	 * Open the iROD file (obtaining a fiel desriptor from iRODS). This method
+	 * Open the iROD file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
 	 * 
 	 * @return <code>int</code> with the irods file descriptor.

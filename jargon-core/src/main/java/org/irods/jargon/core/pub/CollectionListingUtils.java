@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -47,8 +47,8 @@ class CollectionListingUtils {
 			.getLogger(CollectionIteratorAOImpl.class);
 
 	/**
-	 * 
-	 */
+     *
+     */
 	CollectionListingUtils(
 			final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO) {
 		if (collectionAndDataObjectListAndSearchAO == null) {
@@ -61,8 +61,8 @@ class CollectionListingUtils {
 
 	/**
 	 * This is a compensating method used to deal with the top of the tree when
-	 * permissions do not allow listing'into' the tree to get to things the user
-	 * actually has access to.
+	 * permissions do not allow listing 'into' the tree to get to things the
+	 * user actually has access to.
 	 * 
 	 * @param absolutePathToParent
 	 * @return
@@ -81,7 +81,6 @@ class CollectionListingUtils {
 		 * This is somewhat convoluted, note the return statements in the
 		 * various conditions
 		 */
-
 		if (!collectionAndDataObjectListAndSearchAO.getJargonProperties()
 				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
 			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
@@ -90,7 +89,6 @@ class CollectionListingUtils {
 
 		// check if under '/' and infer that there is a '/zone' subdir to return
 		// this time
-
 		if (path.equals("/")) {
 			collectionAndDataObjectListingEntries
 					.add(createStandInForZoneDir());
@@ -98,7 +96,6 @@ class CollectionListingUtils {
 		}
 
 		// check if under '/zone' and if so infer that there is a home dir
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
 		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
@@ -117,7 +114,6 @@ class CollectionListingUtils {
 		 * check if I am under /zone/home, look for public and user dir. In this
 		 * situation I should be able to list them via obj stat
 		 */
-
 		sb = new StringBuilder();
 		sb.append("/");
 		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
@@ -126,29 +122,21 @@ class CollectionListingUtils {
 
 		comparePath = sb.toString();
 
-		if (!path.equals(comparePath)) {
-			log.info("I am not under /, /zone/, or /zone/home/ so I cannot do anything but throw the original exception");
-			throw new FileNotFoundException("the collection cannot be found");
-		}
+		if (path.equals(comparePath)) {
+			log.info("under home, look for public and home dir");
+			sb.append("/public");
+			ObjStat statForPublic;
+			try {
+				statForPublic = collectionAndDataObjectListAndSearchAO
+						.retrieveObjectStatForPath(sb.toString());
+				collectionAndDataObjectListingEntries
+						.add(createStandInForPublicDir(statForPublic));
+			} catch (FileNotFoundException fnf) {
+				log.info("no public dir");
+			}
 
-		log.info("under home, look for public and home dir");
-		sb.append("/public");
-		ObjStat statForPublic;
-		try {
-			statForPublic = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(sb.toString());
-			collectionAndDataObjectListingEntries
-					.add(createStandInForPublicDir(statForPublic));
-		} catch (FileNotFoundException fnf) {
-			log.info("no public dir");
-		}
+			log.info("see if a user home dir applies");
 
-		log.info("see if a user home dir applies");
-
-		if (collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.isAnonymousAccount()) {
-			log.info("is anonymous account, no home directory applies");
-		} else {
 			ObjStat statForUserHome;
 			try {
 				statForUserHome = collectionAndDataObjectListAndSearchAO
@@ -160,8 +148,31 @@ class CollectionListingUtils {
 			} catch (FileNotFoundException fnf) {
 				log.info("no home dir");
 			}
-		}
 
+		} else {
+
+			sb.append("/");
+			sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
+					.getUserName());
+
+			comparePath = sb.toString();
+
+			if (path.equals(comparePath)) {
+
+				log.info("see if a user home dir applies");
+
+				ObjStat statForUserHome;
+				try {
+					statForUserHome = collectionAndDataObjectListAndSearchAO
+							.retrieveObjectStatForPath(comparePath);
+					collectionAndDataObjectListingEntries
+							.add(createStandInForUserDir(statForUserHome));
+				} catch (FileNotFoundException fnf) {
+					log.info("no home dir");
+				}
+
+			}
+		}
 		// I was under /zone/home/ looking for public and user dirs, return what
 		// I have, it could be empty
 		return collectionAndDataObjectListingEntries;
@@ -307,7 +318,6 @@ class CollectionListingUtils {
 		 * Listing for soft links substitutes the source path for the target
 		 * path in the query
 		 */
-
 		String effectiveAbsolutePath = MiscIRODSUtils
 				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
@@ -343,6 +353,11 @@ class CollectionListingUtils {
 		specColInfo.setPhyPath(objStat.getObjectPath());
 		specColInfo.setReplNum(objStat.getReplNumber());
 		specColInfo.setType(2);
+
+		if (collectionAndDataObjectListAndSearchAO.getIRODSServerProperties()
+				.isEirods()) {
+			specColInfo.setUseResourceHierarchy(true);
+		}
 
 		DataObjInpForQuerySpecColl dataObjInp = null;
 
@@ -429,10 +444,8 @@ class CollectionListingUtils {
 	}
 
 	private CollectionAndDataObjectListingEntry createListingEntryFromResultRow(
-			final ObjStat objStat,
-
-			final IRODSQueryResultRow row, final boolean isCollection)
-			throws JargonException {
+			final ObjStat objStat, final IRODSQueryResultRow row,
+			final boolean isCollection) throws JargonException {
 		CollectionAndDataObjectListingEntry listingEntry;
 		CollectionAndPath collectionAndPath;
 		listingEntry = new CollectionAndDataObjectListingEntry();

@@ -1,11 +1,13 @@
 package org.irods.jargon.datautils.tree;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -698,13 +700,27 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			log.debug("files differ on length:{}", entry);
 			currentFileTreeNode.add(new FileTreeNode(entry));
 		} else {
-			String lhsChecksum = LocalFileUtils
-					.md5ByteArrayToString(LocalFileUtils
-							.computeMD5FileCheckSumViaAbsolutePath(leftHandSide
-									.getAbsolutePath()));
+
+			ChecksumValue rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
+			ChecksumValue lhsChecksum;
+			try {
+				lhsChecksum = getIrodsAccessObjectFactory()
+						.getIrodsSession()
+						.getLocalChecksumComputerFactory()
+						.instance(rhsChecksum.getChecksumEncoding())
+						.instanceChecksumForPackingInstruction(
+								leftHandSide.getAbsolutePath());
+			} catch (FileNotFoundException e) {
+				log.error("file not found computing checksum", e);
+				throw new JargonException(
+						"data error while synchronizing, cannot find local file for checksum",
+						e);
+			}
+
 			log.debug("left hand side checksum:{}", lhsChecksum);
-			String rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
-			if (lhsChecksum.equals(rhsChecksum)) {
+
+			if (lhsChecksum.getChecksumStringValue().equals(
+					rhsChecksum.getChecksumStringValue())) {
 				log.debug("checksum match, files are same");
 			} else {
 				log.debug("files differ on checksum");
@@ -712,7 +728,8 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 						leftHandSide, DiffType.FILE_OUT_OF_SYNCH,
 						rightHandSide.getAbsolutePath(),
 						rightHandSide.length(), rightHandSide.lastModified(),
-						lhsChecksum, rhsChecksum);
+						lhsChecksum.getChecksumStringValue(),
+						rhsChecksum.getChecksumStringValue());
 				log.debug("files differ on checksum:{}", entry);
 
 				currentFileTreeNode.add(new FileTreeNode(entry));
@@ -757,14 +774,14 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		return diffEntry;
 	}
 
-	private String getIRODSChecksumOnDataObject(final File irodsFile)
+	private ChecksumValue getIRODSChecksumOnDataObject(final File irodsFile)
 			throws JargonException {
 		if (dataObjectAO == null) {
 			dataObjectAO = irodsAccessObjectFactory
 					.getDataObjectAO(irodsAccount);
 		}
-		return dataObjectAO
-				.computeMD5ChecksumOnDataObject((IRODSFile) irodsFile);
+		return dataObjectAO.computeChecksumOnDataObject((IRODSFile) irodsFile);
+
 	}
 
 	/**

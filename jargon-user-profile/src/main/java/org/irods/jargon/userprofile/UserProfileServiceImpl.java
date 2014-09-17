@@ -95,9 +95,9 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("user profile:{}", userProfile);
 
 		log.info("remove old...");
-		this.removeProfileInformation(userProfile.getUserName());
+		removeProfileInformation(userProfile.getUserName());
 		log.info("add new...");
-		this.addProfileForUser(userProfile.getUserName(), userProfile);
+		addProfileForUser(userProfile.getUserName(), userProfile);
 		log.info("profile updated");
 
 	}
@@ -271,10 +271,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		log.info("look for protected profile file info...");
 		String userHomeDir = getUserProfileDir(userName);
 
-		IRODSFile protectedProfileFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
 						userHomeDir,
 						userProfileServiceConfiguration
 								.getProtectedProfileFileName());
@@ -287,10 +285,10 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			return userProfile;
 		}
 
-		InputStream userProfileInputStream = new BufferedInputStream(this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFileInputStream(protectedProfileFile));
+		InputStream userProfileInputStream = new BufferedInputStream(
+				getIrodsAccessObjectFactory().getIRODSFileFactory(
+						getIrodsAccount()).instanceIRODSFileInputStream(
+						protectedProfileFile));
 		Properties protectedProperties = new Properties();
 		try {
 			protectedProperties.load(userProfileInputStream);
@@ -338,10 +336,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("user home dir:{}", userHomeDir);
 
-		IRODSFile userProfileFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
+		IRODSFile userProfileFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
 						userHomeDir,
 						userProfileServiceConfiguration
 								.getPublicProfileFileName());
@@ -349,10 +345,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		// delete the actual public profile file and associated AVU's
 		deletePublicProfile(irodsUserName, userProfileFile);
 
-		IRODSFile protectedProfileFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
 						userHomeDir,
 						userProfileServiceConfiguration
 								.getProtectedProfileFileName());
@@ -428,7 +422,7 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				|| userProfileServiceConfiguration
 						.getProtectedProfileReadWriteGroup().isEmpty()) {
 			log.info("no permissions set for protected profile group in user profile service config");
-		} else if (!this.isProtectedReadGroupConfigured()) {
+		} else if (!isProtectedReadGroupConfigured()) {
 			log.info("no permissions set for protected profile group in user profile service config");
 		} else {
 			userGroupForProfilePresent = true;
@@ -449,10 +443,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 		String userHomeDir = getUserProfileDir(irodsUserName);
 		log.info("looking for profile in userHomeDir:{}", userHomeDir);
 
-		IRODSFile userProfileFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
+		IRODSFile userProfileFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
 						userHomeDir,
 						userProfileServiceConfiguration
 								.getPublicProfileFileName());
@@ -496,10 +488,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		log.info("creating the protected profile file");
 
-		IRODSFile protectedProfileFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
+		IRODSFile protectedProfileFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
 						userHomeDir,
 						userProfileServiceConfiguration
 								.getProtectedProfileFileName());
@@ -619,9 +609,9 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 				protectedProperties);
 
 		OutputStream protectedPropertiesOutputStream = new BufferedOutputStream(
-				this.getIrodsAccessObjectFactory()
-						.getIRODSFileFactory(getIrodsAccount())
-						.instanceIRODSFileOutputStream(protectedProfileFile));
+				getIrodsAccessObjectFactory().getIRODSFileFactory(
+						getIrodsAccount()).instanceIRODSFileOutputStream(
+						protectedProfileFile));
 
 		log.info("output stream created, store to properties file");
 
@@ -746,8 +736,8 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 			return false;
 		}
 
-		UserGroupAO userGroupAO = this.getIrodsAccessObjectFactory()
-				.getUserGroupAO(getIrodsAccount());
+		UserGroupAO userGroupAO = getIrodsAccessObjectFactory().getUserGroupAO(
+				getIrodsAccount());
 		UserGroup group = userGroupAO
 				.findByName(userProfileServiceConfiguration
 						.getProtectedProfileReadWriteGroup());
@@ -774,13 +764,9 @@ public class UserProfileServiceImpl extends AbstractJargonService implements
 
 		String userHomeDir = getUserProfileDir(userName);
 
-		return this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
-						userHomeDir,
-						userProfileServiceConfiguration
-								.getPublicProfileFileName());
+		return getIrodsAccessObjectFactory().getIRODSFileFactory(
+				getIrodsAccount()).instanceIRODSFile(userHomeDir,
+				userProfileServiceConfiguration.getPublicProfileFileName());
 	}
 
 }

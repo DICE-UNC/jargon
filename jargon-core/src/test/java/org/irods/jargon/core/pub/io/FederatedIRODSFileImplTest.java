@@ -456,7 +456,6 @@ public class FederatedIRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
 		boolean success = irodsFile.mkdirs();
-		irodsFile.reset();
 
 		Assert.assertTrue("did not get success in the mkdirs command", success);
 		assertionHelper.assertIrodsFileOrCollectionExists(

@@ -29,9 +29,6 @@ public class SynchPeriodicScheduler extends TimerTask {
 
 	private final ConveyorService conveyorService;
 
-	private static final DateFormat dateFormat = SimpleDateFormat
-			.getDateTimeInstance();
-
 	public static final Logger log = LoggerFactory
 			.getLogger(SynchPeriodicScheduler.class);
 
@@ -135,6 +132,7 @@ public class SynchPeriodicScheduler extends TimerTask {
 			final Synchronization synchronization, final Calendar nowDate) {
 
 		Calendar targetDate = nowDate;
+		final DateFormat dateFormat = SimpleDateFormat.getDateTimeInstance();
 
 		if (synchronization.getLastSynchronized() == null) {
 			log.info("this is the first synchronization, go ahead and schedule");

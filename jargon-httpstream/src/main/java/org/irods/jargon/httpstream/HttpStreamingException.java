@@ -23,14 +23,14 @@ public class HttpStreamingException extends Exception {
 	/**
 	 * @param message
 	 */
-	public HttpStreamingException(String message) {
+	public HttpStreamingException(final String message) {
 		super(message);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public HttpStreamingException(Throwable cause) {
+	public HttpStreamingException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -38,7 +38,7 @@ public class HttpStreamingException extends Exception {
 	 * @param message
 	 * @param cause
 	 */
-	public HttpStreamingException(String message, Throwable cause) {
+	public HttpStreamingException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 

@@ -61,12 +61,12 @@ public class ExtractBundleMicroservice extends Microservice {
 	 * (org.irods.jargon.core.transfer.TransferStatus)
 	 */
 	@Override
-	public ExecResult execute(TransferStatus transferStatus)
+	public ExecResult execute(final TransferStatus transferStatus)
 			throws MicroserviceException {
 
 		log.info("execute");
 
-		String bundleToExtract = (String) this.getInvocationContext()
+		String bundleToExtract = (String) getInvocationContext()
 				.getSharedProperties().get(BUNDLE_TO_EXTRACT);
 		if (bundleToExtract == null || bundleToExtract.isEmpty()) {
 			log.info("did not find BUNDLE_TO_EXTRACT, look at transfer status value");
@@ -90,12 +90,11 @@ public class ExtractBundleMicroservice extends Microservice {
 
 		IRODSFile targetFile = null;
 		try {
-			targetFile = this
-					.getContainerEnvironment()
+			targetFile = getContainerEnvironment()
 					.getConveyorService()
 					.getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(
-							this.getInvocationContext().getIrodsAccount())
+							getInvocationContext().getIrodsAccount())
 					.instanceIRODSFile(bundleToExtract);
 		} catch (JargonException e1) {
 			log.error("jargon error getting target file");
@@ -111,7 +110,7 @@ public class ExtractBundleMicroservice extends Microservice {
 
 		log.info("look for target");
 
-		String targetCollection = (String) this.getInvocationContext()
+		String targetCollection = (String) getInvocationContext()
 				.getSharedProperties().get(TARGET_COLLECTION);
 
 		if (targetCollection == null || targetCollection.isEmpty()) {
@@ -122,7 +121,7 @@ public class ExtractBundleMicroservice extends Microservice {
 		log.info("target collection will be:{}", targetCollection);
 
 		log.info("getting resource");
-		String targetResource = (String) this.getInvocationContext()
+		String targetResource = (String) getInvocationContext()
 				.getSharedProperties().get(TARGET_RESOURCE);
 
 		if (targetResource == null) {
@@ -134,12 +133,11 @@ public class ExtractBundleMicroservice extends Microservice {
 		log.info("ok have everything set let's uncompress the tar by calling iRODS");
 
 		try {
-			BulkFileOperationsAO bulkFileOperations = this
-					.getContainerEnvironment()
+			BulkFileOperationsAO bulkFileOperations = getContainerEnvironment()
 					.getConveyorService()
 					.getIrodsAccessObjectFactory()
 					.getBulkFileOperationsAO(
-							this.getInvocationContext().getIrodsAccount());
+							getInvocationContext().getIrodsAccount());
 
 			bulkFileOperations.extractABundleIntoAnIrodsCollection(
 					bundleToExtract, targetCollection, targetResource);

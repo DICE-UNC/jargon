@@ -32,7 +32,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	public static final String INX = "inx";
 	private int apiNumber = 0;
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	public AbstractIRODSPackingInstruction() {
 	}
@@ -105,12 +105,25 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 			throw new IllegalArgumentException("null specColInfo");
 		}
 
+		/*
+		 * SpecColl_PI
+		 * "int collClass; int type; str collection[MAX_NAME_LEN]; str objPath[MAX_NAME_LEN]; "
+		 * +
+		 * "str resource[NAME_LEN]; str rescHier[MAX_NAME_LEN]; str phyPath[MAX_NAME_LEN]; "
+		 * + "str cacheDir[MAX_NAME_LEN]; int cacheDirty; int replNum;"
+		 */
+
 		Tag specCol = new Tag("SpecColl_PI");
 		specCol.addTag("collClass", String.valueOf(specColInfo.getCollClass()));
 		specCol.addTag("type", String.valueOf(specColInfo.getType()));
 		specCol.addTag("collection", specColInfo.getCollection());
 		specCol.addTag("objPath", specColInfo.getObjPath());
 		specCol.addTag("resource", specColInfo.getResource());
+
+		if (specColInfo.isUseResourceHierarchy()) {
+			specCol.addTag("rescHier", "");
+		}
+
 		specCol.addTag("phyPath", specColInfo.getPhyPath());
 		specCol.addTag("cacheDir", specColInfo.getCacheDir());
 		specCol.addTag("cacheDirty",

@@ -16,6 +16,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BulkFileOperationsAOImplTest {
@@ -495,7 +496,9 @@ public class BulkFileOperationsAOImplTest {
 				targetBunFileAbsPath, targetIrodsCollection, "");
 	}
 
-	@Test
+	@Ignore
+	// FIXME: set back to test when bug resolved...
+	// https://github.com/irods/irods/issues/2323
 	public void testExtractBundleWithOverwriteNoBulkWhenTargetCollectionAlreadyExists()
 			throws Exception {
 		String tarName = "testExtractBundleWithOverwriteNoBulkWhenTargetCollectionAlreadyExists.tar";

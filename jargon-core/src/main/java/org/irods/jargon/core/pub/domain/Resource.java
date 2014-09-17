@@ -3,7 +3,9 @@
  */
 package org.irods.jargon.core.pub.domain;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This class is a domain object that represents an IRODS resource. This object
@@ -19,8 +21,9 @@ public class Resource extends IRODSDomainObject {
 	private String id = "";
 	private String name = "";
 	private Zone zone = new Zone();
-	private String type = ""; // TODO: enum here
-	private String resourceClass = ""; // TODO: enum?
+	private String type = "";
+	private String contextString = "";
+	private String resourceClass = "";
 	private String location = "";
 	private String vaultPath = "";
 	private long freeSpace = 0;
@@ -30,54 +33,8 @@ public class Resource extends IRODSDomainObject {
 	Date createTime = new Date();
 	Date modifyTime = new Date();
 	private String status = "";
-
-	@Override
-	public String toString() {
-		StringBuilder b = new StringBuilder();
-		b.append("Resource:\n");
-		b.append("  id:");
-		b.append(id);
-		b.append('\n');
-		b.append("  name:");
-		b.append(name);
-		b.append('\n');
-		b.append("  zone:");
-		b.append(zone);
-		b.append('\n');
-		b.append("  type:");
-		b.append(type);
-		b.append('\n');
-		b.append("  class:");
-		b.append(resourceClass);
-		b.append('\n');
-		b.append("  location:");
-		b.append(location);
-		b.append('\n');
-		b.append("  vault path:");
-		b.append(vaultPath);
-		b.append('\n');
-		b.append("  freeSpace:");
-		b.append(freeSpace);
-		b.append('\n');
-		b.append("  freeSpaceTime:");
-		b.append(freeSpaceTime);
-		b.append('\n');
-		b.append("  info:");
-		b.append(info);
-		b.append('\n');
-		b.append("  comment:");
-		b.append(comment);
-		b.append('\n');
-		b.append("\n   status:");
-		b.append(status);
-		b.append("\n   createTime:");
-		b.append(createTime);
-		b.append('\n');
-		b.append("  modifyTime:");
-		b.append(modifyTime);
-		b.append('\n');
-		return b.toString();
-	}
+	private String parentName = "";
+	private List<String> immediateChildren = new ArrayList<String>();
 
 	public String getId() {
 		return id;
@@ -103,12 +60,12 @@ public class Resource extends IRODSDomainObject {
 		this.zone = zone;
 	}
 
-	public String getType() {
-		return type;
+	public String getContextString() {
+		return contextString;
 	}
 
-	public void setType(final String type) {
-		this.type = type;
+	public void setContextString(final String type) {
+		contextString = type;
 	}
 
 	public String getResourceClass() {
@@ -189,6 +146,143 @@ public class Resource extends IRODSDomainObject {
 
 	public void setStatus(final String status) {
 		this.status = status;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Resource [");
+		if (id != null) {
+			builder.append("id=");
+			builder.append(id);
+			builder.append(", ");
+		}
+		if (name != null) {
+			builder.append("name=");
+			builder.append(name);
+			builder.append(", ");
+		}
+		if (zone != null) {
+			builder.append("zone=");
+			builder.append(zone);
+			builder.append(", ");
+		}
+		if (contextString != null) {
+			builder.append("contextString=");
+			builder.append(contextString);
+			builder.append(", ");
+		}
+		if (resourceClass != null) {
+			builder.append("resourceClass=");
+			builder.append(resourceClass);
+			builder.append(", ");
+		}
+		if (location != null) {
+			builder.append("location=");
+			builder.append(location);
+			builder.append(", ");
+		}
+		if (vaultPath != null) {
+			builder.append("vaultPath=");
+			builder.append(vaultPath);
+			builder.append(", ");
+		}
+		if (type != null) {
+			builder.append("type=");
+			builder.append(type);
+			builder.append(", ");
+		}
+
+		builder.append("freeSpace=");
+		builder.append(freeSpace);
+		builder.append(", ");
+		if (freeSpaceTime != null) {
+			builder.append("freeSpaceTime=");
+			builder.append(freeSpaceTime);
+			builder.append(", ");
+		}
+		if (info != null) {
+			builder.append("info=");
+			builder.append(info);
+			builder.append(", ");
+		}
+		if (comment != null) {
+			builder.append("comment=");
+			builder.append(comment);
+			builder.append(", ");
+		}
+		if (createTime != null) {
+			builder.append("createTime=");
+			builder.append(createTime);
+			builder.append(", ");
+		}
+		if (modifyTime != null) {
+			builder.append("modifyTime=");
+			builder.append(modifyTime);
+			builder.append(", ");
+		}
+
+		if (status != null) {
+			builder.append("status=");
+			builder.append(status);
+		}
+
+		if (parentName != null) {
+			builder.append("parentName=");
+			builder.append(parentName);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * @return the type
+	 */
+	public String getType() {
+		return type;
+	}
+
+	/**
+	 * @param type
+	 *            the type to set
+	 */
+	public void setType(final String type) {
+		this.type = type;
+	}
+
+	/**
+	 * @return the parentName
+	 */
+	public String getParentName() {
+		return parentName;
+	}
+
+	/**
+	 * @param parentName
+	 *            the parentName to set
+	 */
+	public void setParentName(final String parentName) {
+		this.parentName = parentName;
+	}
+
+	/**
+	 * @return the immediateChildren
+	 */
+	public List<String> getImmediateChildren() {
+		return immediateChildren;
+	}
+
+	/**
+	 * @param immediateChildren
+	 *            the immediateChildren to set
+	 */
+	public void setImmediateChildren(final List<String> immediateChildren) {
+		this.immediateChildren = immediateChildren;
 	}
 
 }

@@ -26,7 +26,8 @@ import org.slf4j.LoggerFactory;
  * 
  * 
  */
-public class TreeSummarizingServiceImpl extends AbstractJargonService implements TreeSummarizingService {
+public class TreeSummarizingServiceImpl extends AbstractJargonService implements
+		TreeSummarizingService {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TreeSummarizingServiceImpl.class);
@@ -36,13 +37,16 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 	 * @param irodsAccount
 	 */
 	public TreeSummarizingServiceImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#generateTreeSummaryForIrodsFileTree(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#
+	 * generateTreeSummaryForIrodsFileTree(java.lang.String)
 	 */
 	@Override
 	public TreeSummary generateTreeSummaryForIrodsFileTree(
@@ -54,16 +58,16 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 			throw new IllegalArgumentException("null or empty localFilePath");
 		}
 
-		File irodsFile = (File) this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(this.getIrodsAccount())
-				.instanceIRODSFile(irodsFilePath);
+		File irodsFile = (File) getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
+						irodsFilePath);
 		if (!irodsFile.exists()) {
 			throw new FileNotFoundException("cannot find local file");
 		}
 
 		TreeSummarizingVisitor fileTreeIteratorVisitor = new TreeSummarizingVisitor();
 		FileTreeIteratorVisitorInvoker invoker = new FileTreeIteratorVisitorInvoker(
-				this.getIrodsAccessObjectFactory(), this.getIrodsAccount(),
+				getIrodsAccessObjectFactory(), getIrodsAccount(),
 				fileTreeIteratorVisitor, irodsFile);
 
 		log.info("executing...");
@@ -75,8 +79,11 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#generateTreeSummaryForLocalFileTree(java.lang.String)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#
+	 * generateTreeSummaryForLocalFileTree(java.lang.String)
 	 */
 	@Override
 	public TreeSummary generateTreeSummaryForLocalFileTree(
@@ -96,7 +103,7 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 
 		TreeSummarizingVisitor fileTreeIteratorVisitor = new TreeSummarizingVisitor();
 		FileTreeIteratorVisitorInvoker invoker = new FileTreeIteratorVisitorInvoker(
-				this.getIrodsAccessObjectFactory(), this.getIrodsAccount(),
+				getIrodsAccessObjectFactory(), getIrodsAccount(),
 				fileTreeIteratorVisitor, localPathFile);
 
 		log.info("executing...");

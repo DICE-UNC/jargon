@@ -17,6 +17,8 @@ iadmin mkresc test1-resc "unix file system"  localhost:/var/lib/irods/Vault1
 
 iadmin mkresc test1-resc2 "unix file system"  localhost:/var/lib/irods/Vault2
 
+iadmin mkresc test1-resc3 "unix file system"  localhost:/var/lib/irods/Vault3
+
 iadmin mkuser anonymous rodsuser
 
 iadmin atg public anonymous

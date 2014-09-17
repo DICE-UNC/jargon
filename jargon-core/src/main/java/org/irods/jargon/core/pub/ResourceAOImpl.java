@@ -17,6 +17,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.GeneralAdminInpForResources;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
@@ -27,11 +28,14 @@ import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.AccessObjectQueryProcessingUtils;
 import org.slf4j.Logger;
@@ -64,17 +68,175 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	/*
 	 * (non-Javadoc)
 	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#addResource(org.irods.jargon.core
+	 * .pub.domain.Resource)
+	 */
+	@Override
+	public void addResource(final Resource resource)
+			throws DuplicateDataException, JargonException {
+
+		log.info("addResource()");
+		if (resource == null) {
+			throw new IllegalArgumentException("null resource");
+		}
+
+		log.info("resource:{}", resource);
+
+		if (!getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException(
+					"add resource only works for 4.0+");
+		}
+
+		/*
+		 * arg0 mkresc
+		 * 
+		 * generalAdminInp->arg1, "resource"
+		 * 
+		 * std::string resc_name( _generalAdminInp->arg2 );
+		 * 
+		 * std::string resc_type( _generalAdminInp->arg3 );
+		 * 
+		 * std::string resc_host_path(_generalAdminInp->arg4 );
+		 * 
+		 * for host path can be blank, otherwise in / separate the
+		 * location:/vault/path pair
+		 * 
+		 * std::string resc_ctx(_generalAdminInp->arg5 );
+		 * 
+		 * 
+		 * examples
+		 * 
+		 * "iadmin mkresc rrResc random",
+		 */
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForAddResource(resource);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
+	 */
+	@Override
+	public void deleteResource(final String resourceName) throws Exception {
+		log.info("deleteResource()");
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForRemoveResource(resourceName);
+		log.debug("executing admin PI");
+		try {
+			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (DataNotFoundException e) {
+			log.warn("data not found deleting resource, silently ignore", e);
+		}
+		log.info("complete");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#addChildToResource(java.lang.String,
+	 * java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void addChildToResource(final String parent, final String child,
+			final String optionalContext) throws JargonException {
+
+		log.info("addChildToResource");
+
+		if (!getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		}
+
+		if (child == null || child.isEmpty()) {
+			throw new IllegalArgumentException("null or empty child");
+		}
+
+		if (parent == null || parent.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parent");
+		}
+
+		if (optionalContext == null) {
+			throw new IllegalArgumentException("null  optionalContext");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForAddChildToResource(child, parent, optionalContext);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+		// FIXME: add test that lists tree
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#removeChildFromResource(java.lang
+	 * .String, java.lang.String)
+	 */
+	@Override
+	public void removeChildFromResource(final String parent, final String child)
+			throws InvalidResourceException, JargonException {
+
+		log.info("removeChildFromResource");
+
+		if (!getIRODSServerProperties().isEirods()) {
+			log.error("does not work pre iRODS 4.0");
+			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		}
+
+		if (child == null || child.isEmpty()) {
+			throw new IllegalArgumentException("null or empty child");
+		}
+
+		if (parent == null || parent.isEmpty()) {
+			throw new IllegalArgumentException("null or empty parent");
+		}
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForRemoveChildFromResource(child, parent);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		log.info("complete");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#findByName(java.lang.String)
 	 */
 	@Override
 	public Resource findByName(final String resourceName)
 			throws JargonException, DataNotFoundException {
+
+		log.info("findByName()");
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourceName");
+		}
+
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
 
 		final StringBuilder sb = new StringBuilder();
 
-		sb.append(resourceAOHelper.buildResourceSelects());
+		sb.append(resourceAOHelper.buildResourceSelectsClassic());
 		sb.append(WHERE);
 		sb.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		sb.append(EQUALS_AND_QUOTE);
@@ -119,7 +281,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		// I know I have just one user
 
 		IRODSQueryResultRow row = resultSet.getFirstResult();
-		Resource resource = resourceAOHelper.buildResourceFromResultSetRow(row);
+		Resource resource = resourceAOHelper
+				.buildResourceFromResultSetRowClassic(row);
 
 		return resource;
 	}
@@ -136,7 +299,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				getIRODSSession(), getIRODSAccount());
 		final StringBuilder sb = new StringBuilder();
 
-		sb.append(resourceAOHelper.buildResourceSelects());
+		sb.append(resourceAOHelper.buildResourceSelectsClassic());
 		sb.append(" where ");
 		sb.append(RodsGenQueryEnum.COL_R_RESC_ID.getName());
 		sb.append(EQUALS_AND_QUOTE);
@@ -180,7 +343,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		// I know I have just one resource
 		IRODSQueryResultRow row = resultSet.getFirstResult();
-		Resource resource = resourceAOHelper.buildResourceFromResultSetRow(row);
+		Resource resource = resourceAOHelper
+				.buildResourceFromResultSetRowClassic(row);
 
 		return resource;
 	}
@@ -192,10 +356,28 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 */
 	@Override
 	public List<Resource> findAll() throws JargonException {
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
+
+		log.info("findAll()");
+		List<Resource> resources;
+		if (getIRODSServerProperties().isEirods()) {
+			resources = findAllComposable();
+		} else {
+			resources = findAllClassic();
+		}
+
+		log.info("resources:{}", resources);
+		return resources;
+
+	}
+
+	private List<Resource> findAllClassic() throws JargonException {
+
+		log.info("findAllClassic() - pre 4.0 server");
+		final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
+
 		StringBuilder userQuery = new StringBuilder();
-		userQuery.append(resourceAOHelper.buildResourceSelects());
+		userQuery.append(resourceAOHelper.buildResourceSelectsClassic());
 
 		String queryString = userQuery.toString();
 		if (log.isInfoEnabled()) {
@@ -207,14 +389,46 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for:{}", queryString, e);
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
-		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
+		return resourceAOHelper
+				.buildResourceListFromResultSetClassic(resultSet);
+	}
+
+	private List<Resource> findAllComposable() throws JargonException {
+
+		log.info("findAllComposable() - post 4.0 server");
+
+		final IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
+				getIRODSSession(), getIRODSAccount());
+
+		IRODSQueryResultSet resultSet = null;
+		try {
+			IRODSGenQueryBuilder builder = resourceAOHelper
+					.buildResourceSelectsComposable();
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_R_RESC_NAME,
+					QueryConditionOperators.NOT_EQUAL, "bundleResc");
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
+					irodsQuery, 0);
+
+		} catch (JargonQueryException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error("query exception for query", e);
+			throw new JargonException("error in query", e);
+		}
+		return resourceAOHelper
+				.buildResourceListFromResultSetComposable(resultSet);
 	}
 
 	/*
@@ -232,7 +446,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		StringBuilder query = new StringBuilder();
-		query.append(resourceAOHelper.buildResourceSelects());
+		query.append(resourceAOHelper.buildResourceSelectsClassic());
 		query.append(" where ");
 
 		if (irodsFile.isFile()) {
@@ -273,7 +487,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		List<Resource> resources = resourceAOHelper
-				.buildResourceListFromResultSet(resultSet);
+				.buildResourceListFromResultSetClassic(resultSet);
 
 		if (resources.isEmpty()) {
 			log.warn("no data found");
@@ -289,8 +503,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	public List<String> listResourceAndResourceGroupNames()
 			throws JargonException {
 
+		log.info("listResourceAndResourceGroupNames()");
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
+
+		if (getIRODSServerProperties().isEirods()) {
+			log.info("is consortium irods, don't look for resource groups");
+			return combined;
+		}
+
 		log.info("appending resource group names..");
 		ResourceGroupAO resourceGroupAO = getIRODSAccessObjectFactory()
 				.getResourceGroupAO(getIRODSAccount());
@@ -315,6 +536,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 
+			if (getIRODSServerProperties().isEirods()) {
+				builder.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_RESC_PARENT,
+						QueryConditionOperators.EQUAL, "");
+			}
+
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 
@@ -338,52 +565,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		return resourceNames;
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.ResourceAO#listResourcesInZone(java.lang.String
-	 * )
-	 */
-	@Override
-	public List<Resource> listResourcesInZone(final String zoneName)
-			throws JargonException {
-
-		if (zoneName == null || zoneName.length() == 0) {
-			throw new IllegalArgumentException("zone name is null or blank");
-		}
-
-		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
-		StringBuilder query = new StringBuilder();
-
-		query.append(resourceAOHelper.buildResourceSelects());
-		query.append(" where ");
-		query.append(RodsGenQueryEnum.COL_R_ZONE_NAME.getName());
-		query.append(EQUALS_AND_QUOTE);
-		query.append(zoneName);
-		query.append("'");
-
-		String queryString = query.toString();
-		if (log.isInfoEnabled()) {
-			log.info("resource query:" + toString());
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for:{}", queryString, e);
-			throw new JargonException("error in query");
-		}
-
-		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
 
 	}
 
@@ -430,53 +611,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		return AccessObjectQueryProcessingUtils
 				.buildAvuDataListFromResultSet(resultSet);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.pub.ResourceAO#findWhere(java.lang.String)
-	 */
-	@Override
-	public List<Resource> findWhere(final String whereStatement)
-			throws JargonException {
-
-		// FIXME: collapse other query methods onto this one method....
-
-		if (whereStatement == null) {
-			throw new IllegalArgumentException("null where statement");
-		}
-
-		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
-				getIRODSSession(), getIRODSAccount());
-
-		final StringBuilder sb = new StringBuilder();
-		sb.append(resourceAOHelper.buildResourceSelects());
-
-		if (whereStatement.isEmpty()) {
-			log.debug("no where statement given, so will do plain select");
-		} else {
-			sb.append(WHERE);
-			sb.append(whereStatement);
-		}
-
-		String queryString = sb.toString();
-		if (log.isInfoEnabled()) {
-			log.info("query: " + queryString);
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-		} catch (JargonQueryException e) {
-			log.error("query exception for query:" + queryString, e);
-			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
-		}
-		return resourceAOHelper.buildResourceListFromResultSet(resultSet);
 	}
 
 	/**

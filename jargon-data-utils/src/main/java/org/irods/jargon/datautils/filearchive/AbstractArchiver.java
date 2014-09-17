@@ -142,7 +142,8 @@ public abstract class AbstractArchiver {
 	 * @return {@link File} that is the completed bundle
 	 * @throws JargonException
 	 */
-	protected File archiveSingleFile(File sourceFile) throws JargonException {
+	protected File archiveSingleFile(final File sourceFile)
+			throws JargonException {
 		log.info("adding file to archive");
 		addFileToArchive(sourceFile);
 		log.info("done!");

@@ -10,15 +10,14 @@ import java.io.OutputStream;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.nio.channels.WritableByteChannel;
-import java.util.Arrays;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.ChannelTools;
-import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -85,20 +84,21 @@ public class Stream2StreamAOImplTest {
 		irodsFile.delete();
 
 		stream2StreamAO.streamBytesToIRODSFile(bytesToStream, irodsFile);
-
-		byte[] localChecksum = LocalFileUtils
-				.computeMD5FileCheckSumViaAbsolutePath(fileNameOrig);
-
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		String irodsChecksum = dataObjectAO
-				.computeMD5ChecksumOnDataObject(irodsFile);
-		byte[] irodsChecksumAsByte = LocalFileUtils
-				.hexStringToByteArray(irodsChecksum);
 
-		Assert.assertTrue(
+		ChecksumValue irodsChecksum = dataObjectAO
+				.computeChecksumOnDataObject(irodsFile);
+
+		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
+				.getLocalChecksumComputerFactory()
+				.instance(irodsChecksum.getChecksumEncoding())
+				.instanceChecksumForPackingInstruction(fileNameOrig);
+
+		Assert.assertEquals(
 				"checksum from orig bytes and irods file do not match",
-				Arrays.equals(localChecksum, irodsChecksumAsByte));
+				localChecksum.getChecksumTransmissionFormat(),
+				irodsChecksum.getChecksumTransmissionFormat());
 
 	}
 
@@ -150,7 +150,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);
@@ -187,7 +186,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		BufferedOutputStream outputStream = new BufferedOutputStream(
 				irodsFileSystem.getIRODSAccessObjectFactory()
@@ -231,7 +229,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		OutputStream outputStream = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -273,8 +270,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
-
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.transferStreamToFileUsingIOStreams(inputStream,
@@ -348,7 +343,6 @@ public class Stream2StreamAOImplTest {
 		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		collFile.deleteWithForceOption();
-		collFile.reset();
 		collFile.mkdirs();
 
 		String absPath = scratchFileUtils
@@ -363,7 +357,6 @@ public class Stream2StreamAOImplTest {
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
 		targetIrodsFile.delete();
-		targetIrodsFile.reset();
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);

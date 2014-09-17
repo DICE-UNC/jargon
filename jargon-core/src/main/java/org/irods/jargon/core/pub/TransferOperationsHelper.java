@@ -5,6 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -80,6 +81,7 @@ final class TransferOperationsHelper {
 	 *            transfer. This control block may contain a filter that can be
 	 *            used to control restarts, and provides a way for the
 	 *            requesting process to send a cancellation. This is required.
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	void recursivelyGet(
@@ -87,7 +89,7 @@ final class TransferOperationsHelper {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		log.info("recursively getting source file: {}",
 				irodsSourceFile.getAbsolutePath());
@@ -206,6 +208,7 @@ final class TransferOperationsHelper {
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
 	 *            is required.
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	void processGetOfSingleFile(
@@ -213,7 +216,7 @@ final class TransferOperationsHelper {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		log.info("get of single file...filtered?");
 

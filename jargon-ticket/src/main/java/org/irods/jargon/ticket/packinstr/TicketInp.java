@@ -82,7 +82,7 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 		this.arg4 = arg4;
 		this.arg5 = arg5;
 		this.arg6 = arg6;
-		this.setApiNumber(apiNbr);
+		setApiNumber(apiNbr);
 	}
 
 	/*

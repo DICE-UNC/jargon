@@ -15,10 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Tools to manage negotiation and generation of checksums
+ * Service to determine, based on local and remote server properties, the
+ * correct checksum hash type.
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ChecksumManagerImpl implements ChecksumManager {
 
@@ -79,11 +80,11 @@ public class ChecksumManagerImpl implements ChecksumManager {
 					"jargon properties has null checksum encoding");
 		}
 
-		if (encodingFromProperties.equals(ChecksumEncodingEnum.MD5.toString())) {
+		if (encodingFromProperties == ChecksumEncodingEnum.MD5) {
 			log.info("jargon properties specifies MD5");
 			cacheEncoding(ChecksumEncodingEnum.MD5);
 			return ChecksumEncodingEnum.MD5;
-		} else if (encodingFromProperties.equals(ChecksumEncodingEnum.SHA256)) {
+		} else if (encodingFromProperties == ChecksumEncodingEnum.SHA256) {
 			log.info("jargon properties specifies SHA256");
 			cacheEncoding(ChecksumEncodingEnum.SHA256);
 			return ChecksumEncodingEnum.SHA256;
@@ -149,11 +150,65 @@ public class ChecksumManagerImpl implements ChecksumManager {
 
 	}
 
-	private void cacheEncoding(ChecksumEncodingEnum checksumEncoding) {
+	private void cacheEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()
 				.cacheAProperty(irodsAccount.getHost(), irodsAccount.getZone(),
 						DiscoveredServerPropertiesCache.CHECKSUM_TYPE,
 						checksumEncoding.toString());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.checksum.ChecksumManager#
+	 * determineChecksumEncodingFromIrodsData(java.lang.String)
+	 */
+	@Override
+	public ChecksumValue determineChecksumEncodingFromIrodsData(
+			final String irodsChecksumValue)
+			throws ChecksumMethodUnavailableException {
+
+		log.info("determineChecksumEncodingFromIrodsData()");
+
+		if (irodsChecksumValue == null || irodsChecksumValue.isEmpty()) {
+			throw new IllegalArgumentException("null or empty checksum value");
+		}
+
+		log.info("irodsChecksumValue:{}", irodsChecksumValue);
+
+		ChecksumEncodingEnum checksumEncodingEnum = null;
+		int idxColon = irodsChecksumValue.indexOf(":");
+		if (idxColon == -1) {
+			checksumEncodingEnum = ChecksumEncodingEnum.MD5;
+		} else {
+
+			String beforeColon = irodsChecksumValue.substring(0, idxColon);
+			if (beforeColon.equals("md5")) {
+				checksumEncodingEnum = ChecksumEncodingEnum.MD5;
+			} else if (beforeColon.equals("sha2")) {
+				checksumEncodingEnum = ChecksumEncodingEnum.SHA256;
+			} else {
+				log.error("unknown checksum type:{}", beforeColon);
+				throw new ChecksumMethodUnavailableException(
+						"unknown checksum type:" + beforeColon);
+			}
+		}
+
+		log.info("have encoding of :{}", checksumEncodingEnum);
+		String checksumData;
+		if (idxColon == -1) {
+			checksumData = irodsChecksumValue;
+		} else {
+			checksumData = irodsChecksumValue.substring(idxColon + 1);
+		}
+
+		ChecksumValue checksumValue = new ChecksumValue();
+		checksumValue.setChecksumEncoding(checksumEncodingEnum);
+		checksumValue.setChecksumStringValue(checksumData);
+		checksumValue.setChecksumTransmissionFormat(irodsChecksumValue);
+		log.info("checksumValue from iRODS:{}", checksumValue);
+		return checksumValue;
+
 	}
 
 }

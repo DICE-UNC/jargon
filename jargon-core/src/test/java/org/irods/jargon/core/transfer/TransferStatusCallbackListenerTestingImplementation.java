@@ -229,7 +229,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	 * @param skipCtr
 	 *            the skipCtr to set
 	 */
-	public void setSkipCtr(int skipCtr) {
+	public void setSkipCtr(final int skipCtr) {
 		this.skipCtr = skipCtr;
 	}
 
@@ -244,7 +244,7 @@ public class TransferStatusCallbackListenerTestingImplementation implements
 	 * @param initCallbackCtr
 	 *            the initCallbackCtr to set
 	 */
-	public void setInitCallbackCtr(int initCallbackCtr) {
+	public void setInitCallbackCtr(final int initCallbackCtr) {
 		this.initCallbackCtr = initCallbackCtr;
 	}
 

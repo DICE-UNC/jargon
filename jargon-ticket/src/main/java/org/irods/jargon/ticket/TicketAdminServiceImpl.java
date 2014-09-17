@@ -94,14 +94,13 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		log.info("create a temp password for the given user, if I am not rodsadmin this will fail");
 
 		// generate a temp password for the given user
-		UserAO userAO = this.getIrodsAccessObjectFactory().getUserAO(
-				irodsAccount);
+		UserAO userAO = getIrodsAccessObjectFactory().getUserAO(irodsAccount);
 		String tempPassword = userAO
 				.getTemporaryPasswordForASpecifiedUser(userName);
-		IRODSAccount tempUserAccount = IRODSAccount.instance(this
-				.getIrodsAccount().getHost(), this.getIrodsAccount().getPort(),
-				userName, tempPassword, "", this.getIrodsAccount().getZone(),
-				this.getIrodsAccount().getDefaultStorageResource());
+		IRODSAccount tempUserAccount = IRODSAccount.instance(getIrodsAccount()
+				.getHost(), getIrodsAccount().getPort(), userName,
+				tempPassword, "", getIrodsAccount().getZone(),
+				getIrodsAccount().getDefaultStorageResource());
 
 		log.info("temp password created, delegate to a service for this user");
 		Ticket delegateTicket;
@@ -116,7 +115,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 					.createTicketFromTicketObject(ticket);
 			log.info("created ticket as user:${}", delegateTicket);
 		} finally {
-			this.getIrodsAccessObjectFactory().closeSession(tempUserAccount);
+			getIrodsAccessObjectFactory().closeSession(tempUserAccount);
 		}
 
 		return delegateTicket;
@@ -165,8 +164,8 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 			ticket.setObjectType(TicketObjectType.DATA_OBJECT);
 		}
 
-		ticket.setOwnerName(this.getIrodsAccount().getUserName());
-		ticket.setOwnerZone(this.getIrodsAccount().getZone());
+		ticket.setOwnerName(getIrodsAccount().getUserName());
+		ticket.setOwnerZone(getIrodsAccount().getZone());
 
 		log.info("creating base ticket");
 		ticket.setTicketString(createTicket(ticket.getType(), ticketFile,
@@ -174,22 +173,21 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		log.info("adding count values and limits");
 
 		if (ticket.getExpireTime() != null) {
-			this.setTicketExpiration(ticket.getTicketString(),
+			setTicketExpiration(ticket.getTicketString(),
 					ticket.getExpireTime());
 		}
 
 		if (ticket.getUsesLimit() > 0) {
-			this.setTicketUsesLimit(ticket.getTicketString(),
-					ticket.getUsesLimit());
+			setTicketUsesLimit(ticket.getTicketString(), ticket.getUsesLimit());
 		}
 
 		if (ticket.getWriteByteLimit() > 0) {
-			this.setTicketByteWriteLimit(ticket.getTicketString(),
+			setTicketByteWriteLimit(ticket.getTicketString(),
 					ticket.getWriteByteLimit());
 		}
 
 		if (ticket.getWriteFileLimit() > 0) {
-			this.setTicketFileWriteLimit(ticket.getTicketString(),
+			setTicketFileWriteLimit(ticket.getTicketString(),
 					ticket.getWriteFileLimit());
 		}
 
@@ -239,7 +237,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 			log.info(
 					"ticket is for a collection, set inherit to true on collection:{}",
 					file.getAbsolutePath());
-			CollectionAO collectionAO = this.getIrodsAccessObjectFactory()
+			CollectionAO collectionAO = getIrodsAccessObjectFactory()
 					.getCollectionAO(getIrodsAccount());
 			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
 					file.getAbsolutePath(), true);
@@ -321,7 +319,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		List<Ticket> tickets = new ArrayList<Ticket>();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.buildQuerySelectForLSAllTicketsForDataObjects());
+		sb.append(buildQuerySelectForLSAllTicketsForDataObjects());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				irodsAccessObjectFactory.getJargonProperties()
@@ -381,7 +379,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		List<Ticket> tickets = new ArrayList<Ticket>();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.buildQuerySelectForLSAllTicketsForCollections());
+		sb.append(buildQuerySelectForLSAllTicketsForCollections());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				irodsAccessObjectFactory.getJargonProperties()
@@ -469,8 +467,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIrodsAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()),
 							partialStartIndex);
@@ -559,8 +556,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(this
-									.getIrodsAccessObjectFactory()
+							builder.exportIRODSQueryFromBuilder(getIrodsAccessObjectFactory()
 									.getJargonProperties()
 									.getMaxFilesAndDirsQueryMax()),
 							partialStartIndex);
@@ -612,7 +608,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		List<Ticket> tickets = new ArrayList<Ticket>();
 
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.buildQuerySelectForTicketsCommon());
+		sb.append(buildQuerySelectForTicketsCommon());
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(sb.toString(),
 				irodsAccessObjectFactory.getJargonProperties()
@@ -1297,7 +1293,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 		ticket.setTicketId(row.getColumn(0));
 		ticket.setTicketString(row.getColumn(1));
 		ticket.setType(TicketCreateModeEnum.findTypeByString(row.getColumn(2)));
-		ticket.setObjectType(this.findObjectType(row.getColumn(3)));
+		ticket.setObjectType(findObjectType(row.getColumn(3)));
 		ticket.setOwnerName(row.getColumn(4));
 		ticket.setOwnerZone(row.getColumn(5));
 		ticket.setUsesCount(IRODSDataConversionUtil

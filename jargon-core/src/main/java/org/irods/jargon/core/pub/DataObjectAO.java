@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -1183,5 +1184,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			String dataObjectAbsolutePath, int id)
 			throws FileNotFoundException, DataNotFoundException,
 			JargonException;
+
+	/**
+	 * Given an iRODS file absolute path, compute the checksum using the
+	 * appropriate algorithm
+	 * 
+	 * @param irodsFile
+	 *            <code>String</code> with the absolute path for the data object
+	 * @return
+	 * @throws JargonException
+	 */
+	ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile)
+			throws JargonException;
 
 }

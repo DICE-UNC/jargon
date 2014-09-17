@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSFileOutputStream extends OutputStream {
 
-	private Logger log = LoggerFactory.getLogger(this.getClass());
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;
@@ -86,7 +86,6 @@ public class IRODSFileOutputStream extends OutputStream {
 		if (irodsFile.exists()) {
 			log.info("deleting file, as this stream operation is overwriting");
 			irodsFile.deleteWithForceOption();
-			irodsFile.reset();
 		}
 
 		irodsFile.createNewFileCheckNoResourceFound();

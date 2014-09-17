@@ -6,10 +6,12 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
@@ -55,7 +57,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	private static Logger log = LoggerFactory
 			.getLogger(DataTransferOperationsImpl.class);
 	private TransferOperationsHelper transferOperationsHelper = null;
+
 	private DataObjectAO dataObjectAO = null;
+	private CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = null;
 
 	/**
 	 * @param irodsSession
@@ -67,6 +71,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		super(irodsSession, irodsAccount);
 		transferOperationsHelper = TransferOperationsHelper.instance(
 				irodsSession, irodsAccount);
+		dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
+				getIRODSAccount());
+
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 	}
 
 	/*
@@ -89,7 +98,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 	private void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
 			final IRODSFile sourceFile, final IRODSFile targetFile)
-			throws JargonFileOrCollAlreadyExistsException, JargonException {
+			throws FileNotFoundException,
+			JargonFileOrCollAlreadyExistsException, JargonException {
 
 		if (sourceFile == null) {
 			throw new IllegalArgumentException("null sourceFile");
@@ -107,7 +117,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		// source file must exist or error
 		if (!sourceFile.exists()) {
 			log.info("the source file does not exist, cannot move");
-			throw new JargonException("source file does not exist");
+			throw new FileNotFoundException("source file does not exist");
 		}
 
 		if (!sourceFile.isDirectory()) {
@@ -115,22 +125,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			log.error(msg);
 			throw new JargonException(msg);
 		}
-
-		// go ahead and mkdirs for the target directory, just in case, no harm
-		// if it already exists
-
-		// if
-		// (!sourceFile.getAbsolutePath().equals(targetFile.getAbsolutePath()))
-		// {
-		// targetFile.mkdirs();
-		// }
-
-		/*
-		 * if (!sourceFile.getParentFile().getAbsolutePath()
-		 * .equals(targetFile.getParentFile().getAbsolutePath())) {
-		 * log.info("move is to a different parent, so mkdir for the target");
-		 * // make sure the target parent dir exists targetFile.mkdirs(); }
-		 */
 
 		String lastPartOfSourcePath = sourceFile.getName();
 		log.debug(
@@ -276,7 +270,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 */
 	@Override
 	public void move(final IRODSFile sourceFile, final IRODSFile targetFile)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("moveAFileOrCollection");
 
@@ -325,7 +319,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperation()");
 
@@ -423,10 +417,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		IRODSAccount reroutedAccount = null;
 		log.info("redirects are available, check to see if I need to redirect to a resource server");
-		if (dataObjectAO == null) {
-			dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
-					getIRODSAccount());
-		}
 
 		// make a call to see if I need to go to a different host
 		String detectedHost = dataObjectAO.getHostForGetOperation(
@@ -456,6 +446,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * @param transferStatusCallbackListener
 	 * @param operativeTransferControlBlock
 	 * @param targetLocalFileNameForCallbacks
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	protected void processGetAfterAnyConnectionRerouting(
@@ -463,11 +454,28 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
-			final File targetLocalFileNameForCallbacks) throws JargonException {
+			final File targetLocalFileNameForCallbacks)
+			throws FileNotFoundException, JargonException {
 
 		if (operativeTransferControlBlock == null) {
 			throw new IllegalArgumentException(
 					"null operativeTransferControlBlock");
+		}
+
+		log.info("get objStat..");
+		ObjStat objStat;
+		try {
+			objStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(irodsSourceFile
+							.getAbsolutePath());
+		} catch (FileNotFoundException e) {
+			log.error("file not found retrieving objStat for file:{}",
+					irodsSourceFile.getAbsolutePath(), e);
+			processExceptionDuringGetOperation(irodsSourceFile,
+					targetLocalFileNameForCallbacks,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock, e);
+			return;
 		}
 
 		/*
@@ -475,7 +483,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		 * depending on whether this is a single file, or whether it's a
 		 * collection.
 		 */
-		if (irodsSourceFile.isDirectory()) {
+		if (objStat.isSomeTypeOfCollection()) {
 			log.debug("get operation, treating as a directory");
 			if (operativeTransferControlBlock != null) {
 
@@ -594,8 +602,8 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
-			processGetOfSingleFile(irodsSourceFile, targetLocalFile,
-					transferStatusCallbackListener,
+			transferOperationsHelper.processGetOfSingleFile(irodsSourceFile,
+					targetLocalFile, transferStatusCallbackListener,
 					operativeTransferControlBlock);
 
 			// send a status callback that indicates completion
@@ -632,7 +640,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final String sourceResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException {
+			throws FileNotFoundException, OverwriteException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -727,6 +735,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
 	 *            is required
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	private void getOperationWhenSourceFileIsDirectory(
@@ -734,7 +743,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperationWhenSourceFileIsDirectory");
 
@@ -767,41 +776,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				transferControlBlock);
 	}
 
-	/**
-	 * In a transfer operation, process the given iRODS file as a data object to
-	 * be retrieved.
-	 * 
-	 * @param irodsSourceFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the get.
-	 * @param targetLocalFile
-	 *            <code>File</code> on the local file system to which the files
-	 *            will be transferrred.
-	 * @param transferStatusCallbackListener
-	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
-	 *            implementation that will receive callbacks of success/failure
-	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
-	 *            will be rethrown by this method to the caller.
-	 * @param transferControlBlock
-	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
-	 *            implementation that is the communications mechanism between
-	 *            the initiator of the transfer and the transfer process.
-	 * @throws JargonException
-	 */
-	private void processGetOfSingleFile(
-			final IRODSFile irodsSourceFile,
-			final File targetLocalFile,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final TransferControlBlock transferControlBlock)
-			throws JargonException {
-		log.info("get of single file");
-
-		transferOperationsHelper.processGetOfSingleFile(irodsSourceFile,
-				targetLocalFile, transferStatusCallbackListener,
-				transferControlBlock);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -817,7 +791,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 		IRODSAccount reroutedAccount = null;
@@ -853,10 +827,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					&& getIRODSServerProperties()
 							.isSupportsConnectionRerouting()) {
 				log.info("redirects are available, check to see if I need to redirect to a resource server");
-				if (dataObjectAO == null) {
-					dataObjectAO = getIRODSAccessObjectFactory()
-							.getDataObjectAO(getIRODSAccount());
-				}
 
 				// make a call to see if I need to go to a different host
 
@@ -974,7 +944,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			 * prior to the put operation. The reset clears the cache of the
 			 * exists(), isFile(), and other basic file stat info
 			 */
-			targetIrodsFile.reset();
 			if (targetIrodsFile.exists() && targetIrodsFile.isDirectory()) {
 				log.info("target is a directory, source is file");
 				targetIrodsPathBuilder
@@ -1698,7 +1667,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (irodsSourceFile == null) {
 			throw new IllegalArgumentException("irodsSourceFile is null");
@@ -1749,7 +1718,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (targetFile.getAbsolutePath().equals(sourceFile.getParent())) {
 			log.error("source file is being copied to own parent:{}",
@@ -1818,7 +1787,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-			throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 		log.info("this copy operation is recursive");
 
 		preCountIrodsFilesBeforeTransfer(sourceFile.getAbsolutePath(),
@@ -1898,12 +1867,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * 
 	 * @param irodsFileAbsolutePath
 	 * @param operativeTransferControlBlock
+	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	private void preCountIrodsFilesBeforeTransfer(
 			final String irodsFileAbsolutePath,
 			final TransferControlBlock operativeTransferControlBlock)
-			throws JargonException {
+			throws FileNotFoundException, JargonException {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = irodsAccessObjectFactory
 				.getCollectionAO(getIRODSAccount());
@@ -1943,6 +1913,37 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		transferOperationsHelper.processReplicationOfSingleFile(
 				irodsFileAbsolutePath, targetResource,
 				transferStatusCallbackListener, transferControlBlock);
+	}
+
+	/**
+	 * @return the transferOperationsHelper
+	 */
+	public TransferOperationsHelper getTransferOperationsHelper() {
+		return transferOperationsHelper;
+	}
+
+	/**
+	 * @param transferOperationsHelper
+	 *            the transferOperationsHelper to set
+	 */
+	public void setTransferOperationsHelper(
+			final TransferOperationsHelper transferOperationsHelper) {
+		this.transferOperationsHelper = transferOperationsHelper;
+	}
+
+	/**
+	 * @return the dataObjectAO
+	 */
+	public DataObjectAO getDataObjectAO() {
+		return dataObjectAO;
+	}
+
+	/**
+	 * @param dataObjectAO
+	 *            the dataObjectAO to set
+	 */
+	public void setDataObjectAO(final DataObjectAO dataObjectAO) {
+		this.dataObjectAO = dataObjectAO;
 	}
 
 }
