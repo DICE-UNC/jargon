@@ -4,23 +4,14 @@ Jargon Core API
 work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
-#### Date: 03/21/2014
-#### Release Version: 4.0.2-SNAPSHOT
-#### git tag: 
+#### Date: 09/16/2014
+#### Release Version: 4.0.2
+#### git tag: 4.0.2-RELEASE
 #### Developer: Mike Conway - DICE
 ## News
 
-This version of Jargon is a release candidate for the next feature release of Jargon. This version contains many large and small upgrades in support of 
-
-* Workflows
-* Editing and running rules from interfaces
-* iDrop transfer client, including a completely refactored transfer management service called 'jargon-conveyor' that replaces the old 'transfer-engine'
-* Support for the irods-rest API with support for course-grained actions for ACLs and AVUs
-* API support as needed to support JBoss ModeShape
-
-It is important to note that the follow on to this release will see the wiring in of a client side action engine, allowing pluggable client workflows as
-part of the transfer process in conveyor.  In doing so, we will need to alter the TransferStatusCallbackListener to give an option for listeners to intervene and
-alter the processing of a transfer.  This may impact any code that implements TransferStatusCallbackListener.
+This release marks compatability with iRODS 4.0.3, integration work with the iRODS Consortium CI infrastructure, and a large number of accumulated fixes 
+and features marking the transition to the iRODS consortium model.
 
 =======
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
