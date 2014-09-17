@@ -23,8 +23,8 @@ public class TreeSummarizingVisitor extends AbstractIRODSVisitor<File> {
 	private final TreeSummary treeSummary = new TreeSummary();
 
 	@Override
-	public VisitorDesiredAction invoke(File visited,
-			AbstractIRODSVisitorInvoker<File> abstractIRODSVisitorInvoker)
+	public VisitorDesiredAction invoke(final File visited,
+			final AbstractIRODSVisitorInvoker<File> abstractIRODSVisitorInvoker)
 			throws JargonException {
 
 		treeSummary.processFileInfo(visited);

@@ -210,14 +210,13 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("userName:${}", userName);
 
 		// generate a temp password for the given user
-		UserAO userAO = this.getIrodsAccessObjectFactory().getUserAO(
-				irodsAccount);
+		UserAO userAO = getIrodsAccessObjectFactory().getUserAO(irodsAccount);
 		String tempPassword = userAO
 				.getTemporaryPasswordForASpecifiedUser(userName);
-		IRODSAccount tempUserAccount = IRODSAccount.instance(this
-				.getIrodsAccount().getHost(), this.getIrodsAccount().getPort(),
-				userName, tempPassword, "", this.getIrodsAccount().getZone(),
-				this.getIrodsAccount().getDefaultStorageResource());
+		IRODSAccount tempUserAccount = IRODSAccount.instance(getIrodsAccount()
+				.getHost(), getIrodsAccount().getPort(), userName,
+				tempPassword, "", getIrodsAccount().getZone(),
+				getIrodsAccount().getDefaultStorageResource());
 
 		log.info("generated temp password and created temp account:${}",
 				tempUserAccount);
@@ -239,15 +238,15 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 		dataCacheService.putStringValueIntoCache(fileShoppingCart
 				.serializeShoppingCartContentsToStringOneItemPerLine(), key);
 		// close and regenerate a temp password to pass to the caller
-		this.getIrodsAccessObjectFactory().closeSession(tempUserAccount);
+		getIrodsAccessObjectFactory().closeSession(tempUserAccount);
 
 		log.info("generate a new temp password that the caller can use");
 
 		tempPassword = userAO.getTemporaryPasswordForASpecifiedUser(userName);
-		tempUserAccount = IRODSAccount.instance(this.getIrodsAccount()
-				.getHost(), this.getIrodsAccount().getPort(), userName,
-				tempPassword, "", this.getIrodsAccount().getZone(), this
-						.getIrodsAccount().getDefaultStorageResource());
+		tempUserAccount = IRODSAccount.instance(getIrodsAccount().getHost(),
+				getIrodsAccount().getPort(), userName, tempPassword, "",
+				getIrodsAccount().getZone(), getIrodsAccount()
+						.getDefaultStorageResource());
 
 		log.info("generated temp password and created temp account:${}",
 				tempUserAccount);

@@ -183,7 +183,7 @@ public interface TicketClientOperations {
 	void redeemTicketAndStreamToIRODSCollection(String ticketString,
 			String irodsCollectionAbsolutePath, String fileName,
 			InputStream inputStreamForFileData,
-			File temporaryCacheDirectoryLocation)
-			throws DataNotFoundException, OverwriteException, JargonException;
+			File temporaryCacheDirectoryLocation) throws DataNotFoundException,
+			OverwriteException, JargonException;
 
 }

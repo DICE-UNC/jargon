@@ -103,12 +103,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
 				irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsFileAbsolutePath);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsFileAbsolutePath);
 
 		createCacheFileAndCacheDir(cacheFile);
-		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
 
@@ -159,10 +159,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
 				irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsFileAbsolutePath);
-		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
+		IRODSFile cacheFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsFileAbsolutePath);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
 		log.info("decrypting data based on provided key....");
@@ -228,12 +228,12 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
 				irodsAccount.getUserName());
 		log.info("storing to file at absolute path: {}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsFileAbsolutePath);
+		IRODSFile cacheFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsFileAbsolutePath);
 		createCacheFileAndCacheDir(cacheFile);
 
-		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		stream2StreamAO.streamBytesToIRODSFile(encrypted, cacheFile);
 
@@ -275,10 +275,10 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		String irodsFileAbsolutePath = buildIRODSFileAbsolutePath(keyHash,
 				irodsAccount.getUserName());
 		log.info("looking for cache file at path:{}", irodsFileAbsolutePath);
-		IRODSFile cacheFile = this.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(irodsFileAbsolutePath);
-		Stream2StreamAO stream2StreamAO = this.getIrodsAccessObjectFactory()
+		IRODSFile cacheFile = getIrodsAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsFileAbsolutePath);
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
 				.getStream2StreamAO(irodsAccount);
 		byte[] fileBytes = stream2StreamAO.streamFileToByte(cacheFile);
 		log.info("decrypting data based on provided key....");
@@ -387,7 +387,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public void purgeOldRequests() throws JargonException {
 		log.info("purgeOldRequests()");
-		long daysToMillis = (long) this.getCacheServiceConfiguration()
+		long daysToMillis = (long) getCacheServiceConfiguration()
 				.getLifetimeInDays() * 60 * 1000 * 60 * 24;
 		long millisNow = System.currentTimeMillis();
 		long purgeThreshold = millisNow - daysToMillis;

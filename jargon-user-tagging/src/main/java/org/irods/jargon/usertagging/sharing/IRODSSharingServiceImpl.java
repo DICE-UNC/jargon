@@ -112,8 +112,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		 */
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
 
-		IRODSSharedFileOrCollection irodsSharedFileOrCollection = this
-				.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection = findSharedGivenObjStat(
+				irodsAbsolutePath, objStat);
 
 		if (irodsSharedFileOrCollection == null) {
 			log.warn("no share exists, delete action ignored...");
@@ -128,12 +128,12 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("calling delete on a Collection");
-			CollectionAO collectionAO = this.getIrodsAccessObjectFactory()
+			CollectionAO collectionAO = getIrodsAccessObjectFactory()
 					.getCollectionAO(getIrodsAccount());
 			collectionAO.deleteAVUMetadata(
 					irodsSharedFileOrCollection.getDomainUniqueName(), avuData);
 		} else {
-			DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
+			DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
 					.getDataObjectAO(getIrodsAccount());
 			dataObjectAO.deleteAVUMetadata(
 					irodsSharedFileOrCollection.getDomainUniqueName(), avuData);
@@ -176,8 +176,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		 */
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
 
-		IRODSSharedFileOrCollection irodsSharedFileOrCollection = this
-				.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		IRODSSharedFileOrCollection irodsSharedFileOrCollection = findSharedGivenObjStat(
+				irodsAbsolutePath, objStat);
 		if (irodsSharedFileOrCollection == null) {
 			log.error("no share exists, cannot update for path:{}",
 					irodsAbsolutePath);
@@ -190,7 +190,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("updating collection AVU for share...");
-			CollectionAO collectionAO = this.getIrodsAccessObjectFactory()
+			CollectionAO collectionAO = getIrodsAccessObjectFactory()
 					.getCollectionAO(getIrodsAccount());
 			AvuData currentData = AvuData.instance(
 					irodsSharedFileOrCollection.getShareName(),
@@ -203,7 +203,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 					newData);
 		} else {
 			log.info("updating data object AVU for share...");
-			DataObjectAO dataObjectAO = this.getIrodsAccessObjectFactory()
+			DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
 					.getDataObjectAO(getIrodsAccount());
 			AvuData currentData = AvuData.instance(
 					irodsSharedFileOrCollection.getShareName(),
@@ -247,10 +247,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 				.getDomainUniqueName());
 
 		log.info("seeing if share already present..");
-		IRODSSharedFileOrCollection currentSharedFile = this
-				.findSharedGivenObjStat(
-						irodsSharedFileOrCollection.getDomainUniqueName(),
-						objStat);
+		IRODSSharedFileOrCollection currentSharedFile = findSharedGivenObjStat(
+				irodsSharedFileOrCollection.getDomainUniqueName(), objStat);
 		if (currentSharedFile != null) {
 			throw new ShareAlreadyExistsException("share already exists");
 		}
@@ -306,8 +304,8 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		ObjStat objStat = getObjStatForAbsolutePath(irodsAbsolutePath);
 
 		log.info("seeing if share already present..");
-		IRODSSharedFileOrCollection currentSharedFile = this
-				.findSharedGivenObjStat(irodsAbsolutePath, objStat);
+		IRODSSharedFileOrCollection currentSharedFile = findSharedGivenObjStat(
+				irodsAbsolutePath, objStat);
 		if (currentSharedFile != null) {
 			throw new ShareAlreadyExistsException("share already exists");
 		}
@@ -619,7 +617,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		String myZone;
 		if (userZone.isEmpty()) {
-			myZone = this.getIrodsAccount().getZone();
+			myZone = getIrodsAccount().getZone();
 		} else {
 			myZone = userZone;
 		}
@@ -678,7 +676,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		String myZone;
 		if (userZone.isEmpty()) {
-			myZone = this.getIrodsAccount().getZone();
+			myZone = getIrodsAccount().getZone();
 		} else {
 			myZone = userZone;
 		}
@@ -740,8 +738,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	public List<ShareUser> listUsersForShare(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException {
 		log.info("listUsersForShare()");
-		IRODSSharedFileOrCollection share = this
-				.findShareByAbsolutePath(irodsAbsolutePath);
+		IRODSSharedFileOrCollection share = findShareByAbsolutePath(irodsAbsolutePath);
 
 		List<ShareUser> shareUsers;
 		if (share == null) {
@@ -782,12 +779,12 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 		checkSpecificQuerySupport();
 		try {
-			SpecificQueryAO queryAO = this.getIrodsAccessObjectFactory()
-					.getSpecificQueryAO(this.getIrodsAccount());
+			SpecificQueryAO queryAO = getIrodsAccessObjectFactory()
+					.getSpecificQueryAO(getIrodsAccount());
 
-			return queryAO.executeSpecificQueryUsingAlias(specificQuery, this
-					.getIrodsAccessObjectFactory().getJargonProperties()
-					.getMaxFilesAndDirsQueryMax());
+			return queryAO.executeSpecificQueryUsingAlias(specificQuery,
+					getIrodsAccessObjectFactory().getJargonProperties()
+							.getMaxFilesAndDirsQueryMax());
 
 		} catch (DataNotFoundException dnf) {
 			log.error("data not found error in specific query", dnf);
@@ -807,13 +804,12 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	private void checkSpecificQuerySupport() throws JargonException,
 			OperationNotSupportedByThisServerException {
 
-		if (!this.getIrodsAccessObjectFactory()
-				.getIRODSServerProperties(getIrodsAccount())
-				.isSupportsSpecificQuery()) {
+		if (!getIrodsAccessObjectFactory().getIRODSServerProperties(
+				getIrodsAccount()).isSupportsSpecificQuery()) {
 			log.error(
 					"specific query is not supported by this iRODS server:{}",
-					this.getIrodsAccessObjectFactory()
-							.getIRODSServerProperties(getIrodsAccount()));
+					getIrodsAccessObjectFactory().getIRODSServerProperties(
+							getIrodsAccount()));
 			throw new OperationNotSupportedByThisServerException(
 					"specific query not supported by this iRODS version");
 		}
@@ -833,7 +829,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	private void indicateSharingSupport(final boolean isSupported) {
 		// do I even need to bother?
 
-		if (!this.getIrodsAccessObjectFactory()
+		if (!getIrodsAccessObjectFactory()
 				.isUsingDynamicServerPropertiesCache()) {
 			return;
 		}
@@ -845,8 +841,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 			propToSet = IRODSSharingService.SHARING_DISABLED_PROPERTY;
 		}
 
-		this.getIrodsAccessObjectFactory()
-				.getDiscoveredServerPropertiesCache()
+		getIrodsAccessObjectFactory().getDiscoveredServerPropertiesCache()
 				.cacheAProperty(irodsAccount.getHost(), irodsAccount.getZone(),
 						propToSet, "");
 
@@ -859,13 +854,11 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	 * @return
 	 */
 	private boolean isDeterminedThatSharingQueriesNotSupported() {
-		if (this.getIrodsAccessObjectFactory()
-				.isUsingDynamicServerPropertiesCache()) {
-			String notSupported = this
-					.getIrodsAccessObjectFactory()
-					.getDiscoveredServerPropertiesCache()
-					.retrieveValue(this.getIrodsAccount().getHost(),
-							this.getIrodsAccount().getZone(),
+		if (getIrodsAccessObjectFactory().isUsingDynamicServerPropertiesCache()) {
+			String notSupported = getIrodsAccessObjectFactory()
+					.getDiscoveredServerPropertiesCache().retrieveValue(
+							getIrodsAccount().getHost(),
+							getIrodsAccount().getZone(),
 							IRODSSharingService.SHARING_DISABLED_PROPERTY);
 			if (notSupported == null) {
 				return false;

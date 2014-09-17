@@ -704,8 +704,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			ChecksumValue rhsChecksum = getIRODSChecksumOnDataObject(rightHandSide);
 			ChecksumValue lhsChecksum;
 			try {
-				lhsChecksum = this
-						.getIrodsAccessObjectFactory()
+				lhsChecksum = getIrodsAccessObjectFactory()
 						.getIrodsSession()
 						.getLocalChecksumComputerFactory()
 						.instance(rhsChecksum.getChecksumEncoding())

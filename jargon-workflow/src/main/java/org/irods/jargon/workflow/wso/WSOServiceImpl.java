@@ -63,8 +63,9 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 	 *            {@link IRODSAccount} with credentials used to interact with an
 	 *            iRODS server
 	 */
-	public WSOServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount) {
+	public WSOServiceImpl(
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
@@ -111,9 +112,8 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 			throws FileNotFoundException, JargonException {
 
 		log.info("createNewWorkflow(final String absoluteLocalPathToWssFile, final String absoluteIRODSTargetPathToTheWssToBeMounted,final String absolutePathToMountedCollection)");
-		MountedCollectionAO mountedCollectionAO = this
-				.getIrodsAccessObjectFactory().getMountedCollectionAO(
-						getIrodsAccount());
+		MountedCollectionAO mountedCollectionAO = getIrodsAccessObjectFactory()
+				.getMountedCollectionAO(getIrodsAccount());
 
 		mountedCollectionAO.createAnMSSOMountForWorkflow(
 				absoluteLocalPathToWssFile,
@@ -172,8 +172,7 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 
 		log.info("getting wso...");
 
-		WorkflowStructuredObject wso = this
-				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+		WorkflowStructuredObject wso = findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
 		log.info("wso is:{}", wso);
 		try {
 
@@ -187,24 +186,22 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 
 			log.info("checking if this exists...");
 
-			IRODSFile parameterFile = this.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(this.getIrodsAccount())
-					.instanceIRODSFile(targetFileName);
+			IRODSFile parameterFile = getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
+							targetFileName);
 			if (parameterFile.exists()) {
 				log.error("duplicate parameter file name");
 				throw new WSOException("duplicate parameter file name");
 			}
 
-			IRODSFileOutputStream outputStream = this
-					.getIrodsAccessObjectFactory()
+			IRODSFileOutputStream outputStream = getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFileOutputStream(parameterFile);
 
 			log.info("streaming parameter file to target...");
 
-			Stream2StreamAO stream2StreamAO = this
-					.getIrodsAccessObjectFactory().getStream2StreamAO(
-							getIrodsAccount());
+			Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
+					.getStream2StreamAO(getIrodsAccount());
 			stream2StreamAO.streamToStreamCopyUsingStandardIO(
 					workflowParameterFileInputStream, outputStream);
 
@@ -267,11 +264,10 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 
 		log.info("getting wso...");
 
-		WorkflowStructuredObject wso = this
-				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+		WorkflowStructuredObject wso = findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
 		log.info("wso is:{}", wso);
 		try {
-			DataTransferOperations dto = this.getIrodsAccessObjectFactory()
+			DataTransferOperations dto = getIrodsAccessObjectFactory()
 					.getDataTransferOperations(getIrodsAccount());
 			dto.putOperation(workflowParameterLocalFileAbsolutePath,
 					absolutePathToMountedWorkflowCollection, getIrodsAccount()
@@ -308,15 +304,13 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 
 		log.info("finding workflow information...");
 
-		WorkflowStructuredObject wso = this
-				.findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
+		WorkflowStructuredObject wso = findWSOForCollectionPath(absolutePathToMountedWorkflowCollection);
 
 		log.info("found wso to delete:{}", wso);
 		log.info("unmounting collection...");
 		try {
-			MountedCollectionAO mountedCollectionAO = this
-					.getIrodsAccessObjectFactory().getMountedCollectionAO(
-							getIrodsAccount());
+			MountedCollectionAO mountedCollectionAO = getIrodsAccessObjectFactory()
+					.getMountedCollectionAO(getIrodsAccount());
 
 			mountedCollectionAO.unmountACollection(
 					absolutePathToMountedWorkflowCollection, "");
@@ -324,9 +318,8 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 			log.info("collection unmounted, now delete the .mss file:{}",
 					wso.getMssFileAbsolutePath());
 
-			IRODSFileFactory irodsFileFactory = this
-					.getIrodsAccessObjectFactory().getIRODSFileFactory(
-							getIrodsAccount());
+			IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount());
 			IRODSFile mssFile = irodsFileFactory.instanceIRODSFile(wso
 					.getMssFileAbsolutePath());
 
@@ -447,12 +440,11 @@ public class WSOServiceImpl extends AbstractJargonService implements WSOService 
 				mssFileAbsolutePath);
 
 		try {
-			Stream2StreamAO stream2StreamAO = this
-					.getIrodsAccessObjectFactory().getStream2StreamAO(
-							irodsAccount);
-			IRODSFile mssFile = this.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(irodsAccount)
-					.instanceIRODSFile(mssFileAbsolutePath);
+			Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
+					.getStream2StreamAO(irodsAccount);
+			IRODSFile mssFile = getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+							mssFileAbsolutePath);
 
 			if (!mssFile.exists()) {
 				log.error(

@@ -133,7 +133,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 		log.info("creating factory for conns");
 		ConnectionCreatingPoolableObjectFactory factory = new ConnectionCreatingPoolableObjectFactory(
-				irodsAccount, this.irodsSession, this.baseProtocolManager);
+				irodsAccount, irodsSession, baseProtocolManager);
 		log.info("factory created, setting up config and creating pool");
 		GenericObjectPool.Config config = new Config();
 		config.maxActive = 1;

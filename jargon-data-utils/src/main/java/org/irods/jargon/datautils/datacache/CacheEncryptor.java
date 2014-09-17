@@ -107,7 +107,7 @@ public class CacheEncryptor {
 	 * @return <code>String</code> Encrypted version of the provided String
 	 */
 	@SuppressWarnings("restriction")
-	public String encrypt(String str) throws JargonException {
+	public String encrypt(final String str) throws JargonException {
 		try {
 			// Encode the string into bytes using utf-8
 			byte[] utf8 = str.getBytes("UTF8");
@@ -133,7 +133,7 @@ public class CacheEncryptor {
 	 * @return <code>String</code> Decrypted version of the provided String
 	 */
 	@SuppressWarnings("restriction")
-	public String decrypt(String str) throws JargonException {
+	public String decrypt(final String str) throws JargonException {
 
 		try {
 

@@ -22,7 +22,7 @@ public class Rule {
 	private String ruleBody = "";
 	private List<IRODSRuleParameter> inputParameters = new ArrayList<IRODSRuleParameter>();
 	private List<IRODSRuleParameter> outputParameters = new ArrayList<IRODSRuleParameter>();
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -32,59 +32,52 @@ public class Rule {
 		sb.append("\n\truleBody:");
 		sb.append(ruleBody);
 		sb.append("\n\tinputParameters:");
-		for(IRODSRuleParameter parm : inputParameters) {
+		for (IRODSRuleParameter parm : inputParameters) {
 			sb.append("\n\t\tparm:");
 			sb.append(parm);
 		}
 		sb.append("\n\toutputParameters:");
-		for(IRODSRuleParameter parm : outputParameters) {
+		for (IRODSRuleParameter parm : outputParameters) {
 			sb.append("\n\t\tparm:");
 			sb.append(parm);
 		}
 		return sb.toString();
 	}
 
-
 	public Rule() {
 	}
-
 
 	public ProcessingType getProcessingType() {
 		return processingType;
 	}
 
-
-	public void setProcessingType(ProcessingType processingType) {
+	public void setProcessingType(final ProcessingType processingType) {
 		this.processingType = processingType;
 	}
-
 
 	public String getRuleBody() {
 		return ruleBody;
 	}
 
-
-	public void setRuleBody(String ruleBody) {
+	public void setRuleBody(final String ruleBody) {
 		this.ruleBody = ruleBody;
 	}
-
 
 	public List<IRODSRuleParameter> getInputParameters() {
 		return inputParameters;
 	}
 
-
-	public void setInputParameters(List<IRODSRuleParameter> inputParameters) {
+	public void setInputParameters(
+			final List<IRODSRuleParameter> inputParameters) {
 		this.inputParameters = inputParameters;
 	}
-
 
 	public List<IRODSRuleParameter> getOutputParameters() {
 		return outputParameters;
 	}
 
-
-	public void setOutputParameters(List<IRODSRuleParameter> outputParameters) {
+	public void setOutputParameters(
+			final List<IRODSRuleParameter> outputParameters) {
 		this.outputParameters = outputParameters;
 	}
 

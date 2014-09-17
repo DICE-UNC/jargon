@@ -50,7 +50,7 @@ public class UserProfileServiceConfiguration {
 	 *            the publicProfileFileName to set which is the file name of the
 	 *            public profile
 	 */
-	public void setPublicProfileFileName(String publicProfileFileName) {
+	public void setPublicProfileFileName(final String publicProfileFileName) {
 		this.publicProfileFileName = publicProfileFileName;
 	}
 
@@ -66,7 +66,8 @@ public class UserProfileServiceConfiguration {
 	 * @param protectedProfileFileName
 	 *            the protectedProfileFileName to set
 	 */
-	public void setProtectedProfileFileName(String protectedProfileFileName) {
+	public void setProtectedProfileFileName(
+			final String protectedProfileFileName) {
 		this.protectedProfileFileName = protectedProfileFileName;
 	}
 
@@ -85,7 +86,7 @@ public class UserProfileServiceConfiguration {
 	 *            the profile
 	 */
 	public void setProtectedProfileReadWriteGroup(
-			String protectedProfileReadWriteGroup) {
+			final String protectedProfileReadWriteGroup) {
 		this.protectedProfileReadWriteGroup = protectedProfileReadWriteGroup;
 	}
 
@@ -103,7 +104,7 @@ public class UserProfileServiceConfiguration {
 	 *            the protectedProfileGroupHasWriteAccessToPublic to set
 	 */
 	public void setProtectedProfileGroupHasWriteAccessToPublic(
-			boolean protectedProfileGroupHasWriteAccessToPublic) {
+			final boolean protectedProfileGroupHasWriteAccessToPublic) {
 		this.protectedProfileGroupHasWriteAccessToPublic = protectedProfileGroupHasWriteAccessToPublic;
 	}
 
@@ -123,7 +124,7 @@ public class UserProfileServiceConfiguration {
 	 * @param profileSubdirName
 	 *            the profileSubdirName to set
 	 */
-	public void setProfileSubdirName(String profileSubdirName) {
+	public void setProfileSubdirName(final String profileSubdirName) {
 		this.profileSubdirName = profileSubdirName;
 	}
 }

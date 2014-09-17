@@ -117,8 +117,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 					"nul irodsAbsolutePathToGenerateThumbnailFor");
 		}
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIrodsAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
@@ -223,8 +222,7 @@ public class ThumbnailServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("irodsAbsolutePathToGenerateThumbnailFor:{}",
 				irodsAbsolutePathToGenerateThumbnailFor);
 
-		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this
-				.getIrodsAccessObjectFactory()
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePathToGenerateThumbnailFor);
