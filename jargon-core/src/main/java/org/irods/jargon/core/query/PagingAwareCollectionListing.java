@@ -22,7 +22,7 @@ import java.util.List;
 public class PagingAwareCollectionListing {
 
 	public enum PagingStyle {
-		NONE, MIXED, SPLIT_COLLECTIONS_AND_FILES
+		NONE, CONTINUOUS, SPLIT_COLLECTIONS_AND_FILES
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class PagingAwareCollectionListing {
 	 * as separate entities with a paging status for each type, while other
 	 * listings might have a single source.
 	 */
-	private PagingStyle pagingStyle = PagingStyle.MIXED;
+	private PagingStyle pagingStyle = PagingStyle.CONTINUOUS;
 
 	/**
 	 * Offset into collections represented by the results, if the mode is mixed
@@ -58,23 +58,30 @@ public class PagingAwareCollectionListing {
 	/**
 	 * In split mode, Count of collections in results, will be 0 if no
 	 * collections. In mixed mode, the total count in results.
+	 * <p/>
+	 * To differentiate from total records, the count is the total number of
+	 * results in this page.
 	 */
 	private int count = 0;
 
 	/**
-	 * Total records available in the catalog (may not be available on all
-	 * databases)
+	 * If not split count, the total records available in the catalog (if
+	 * available), if split count, this will contain the total number of
+	 * collections
 	 */
 	private int totalRecords = 0;
 
 	/**
 	 * Count of files in results, will be 0 if no files
+	 * <p/>
+	 * To differentiate from total records, the count is the total number of
+	 * results in this page.
 	 */
 	private int dataObjectsCount = 0;
 
 	/**
-	 * Total records available in the catalog (may not be available on all
-	 * databases)
+	 * Total data object records available in the catalog (may not be available
+	 * on all databases)
 	 */
 	private int dataObjectsTotalRecords = 0;
 

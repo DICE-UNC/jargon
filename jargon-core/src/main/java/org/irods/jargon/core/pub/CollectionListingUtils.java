@@ -21,12 +21,15 @@ import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.QueryResultProcessingUtils;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -41,24 +44,13 @@ import org.slf4j.LoggerFactory;
  */
 class CollectionListingUtils {
 
+	private final IRODSAccount irodsAccount;
+	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
 	public static final Logger log = LoggerFactory
-			.getLogger(CollectionIteratorAOImpl.class);
-
-	/**
-     *
-     */
-	CollectionListingUtils(
-			final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO) {
-		if (collectionAndDataObjectListAndSearchAO == null) {
-			throw new IllegalArgumentException(
-					"null collectionAndDataObjectListAndSearchAO");
-		}
-
-		this.collectionAndDataObjectListAndSearchAO = collectionAndDataObjectListAndSearchAO;
-	}
+			.getLogger(CollectionListingUtils.class);
 
 	/**
 	 * This is a compensating method used to deal with the top of the tree when
@@ -82,7 +74,7 @@ class CollectionListingUtils {
 		 * This is somewhat convoluted, note the return statements in the
 		 * various conditions
 		 */
-		if (!collectionAndDataObjectListAndSearchAO.getJargonProperties()
+		if (!irodsAccessObjectFactory.getJargonProperties()
 				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
 			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
 			throw new FileNotFoundException("the collection cannot be found");
@@ -99,8 +91,7 @@ class CollectionListingUtils {
 		// check if under '/zone' and if so infer that there is a home dir
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 
 		String comparePath = sb.toString();
 
@@ -749,6 +740,193 @@ class CollectionListingUtils {
 
 		}
 
+	}
+
+	int countDataObjectsUnderPath(final ObjStat objStat)
+			throws FileNotFoundException, JargonException {
+
+		log.info("countDataObjectsUnderPath()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat is null");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		// I cannot get children if this is not a directory (a file has no
+		// children)
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
+					objStat.getAbsolutePath());
+			throw new JargonException(
+					"attempting to count children under a file at path:"
+							+ objStat.getAbsolutePath());
+		}
+
+		return queryDataObjectCountsUnderPath(effectiveAbsolutePath);
+
+	}
+
+	/**
+	 * Given an objStat, get the count of collections under the path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat}
+	 * @return <code>int</code> with the total collections under a given path
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	int countCollectionsUnderPath(final ObjStat objStat)
+			throws FileNotFoundException, JargonException {
+
+		log.info("countCollectionsUnderPath()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat is null");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		// I cannot get children if this is not a directory (a file has no
+		// children)
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
+					objStat.getAbsolutePath());
+			throw new JargonException(
+					"attempting to count children under a file at path:"
+							+ objStat);
+		}
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSet resultSet;
+
+		try {
+			builder.addSelectAsAgregateGenQueryValue(
+					RodsGenQueryEnum.COL_COLL_TYPE, SelectFieldTypes.COUNT)
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							SelectFieldTypes.COUNT)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_PARENT_NAME,
+							QueryConditionOperators.EQUAL,
+							effectiveAbsolutePath);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+		} catch (JargonQueryException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		}
+
+		int collCtr = 0;
+		if (resultSet.getResults().size() > 0) {
+			collCtr = IRODSDataConversionUtil
+					.getIntOrZeroFromIRODSValue(resultSet.getFirstResult()
+							.getColumn(0));
+		}
+
+		return collCtr;
+
+	}
+
+	int queryDataObjectCountsUnderPath(final String effectiveAbsolutePath)
+			throws JargonException, DataNotFoundException {
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSet resultSet;
+
+		try {
+			builder.addSelectAsAgregateGenQueryValue(
+					RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							SelectFieldTypes.COUNT)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							effectiveAbsolutePath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM,
+							QueryConditionOperators.EQUAL, "0");
+
+			;
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+		} catch (JargonQueryException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		}
+
+		int fileCtr = 0;
+
+		if (resultSet.getResults().size() > 0) {
+			fileCtr = IRODSDataConversionUtil
+					.getIntOrZeroFromIRODSValue(resultSet.getFirstResult()
+							.getColumn(0));
+		}
+
+		return fileCtr;
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @param irodsAccessObjectFactory
+	 * @throws JargonException
+	 */
+	CollectionListingUtils(IRODSAccount irodsAccount,
+			IRODSAccessObjectFactory irodsAccessObjectFactory)
+			throws JargonException {
+		super();
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException("null irodsAccessObjectFactory");
+		}
+
+		this.irodsAccount = irodsAccount;
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+
+		this.collectionAndDataObjectListAndSearchAO = irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
 }
