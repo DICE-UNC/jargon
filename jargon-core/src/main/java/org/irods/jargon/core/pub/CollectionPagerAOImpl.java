@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class CollectionPagerAOImpl extends IRODSGenericAO {
+public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionPagerAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionPagerAOImpl.class);
@@ -45,6 +45,10 @@ public class CollectionPagerAOImpl extends IRODSGenericAO {
 				this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent(java.lang.String)
+	 */
+	@Override
 	public PagingAwareCollectionListing retrieveFirstPageUnderParent(
 			final String irodsAbsolutePath) throws FileNotFoundException,
 			NoMoreDataException, JargonException {
@@ -95,10 +99,17 @@ public class CollectionPagerAOImpl extends IRODSGenericAO {
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
 			log.info("no collections, so get data objects");
+			pagingAwareCollectionListing.setCollectionsComplete(true);
+
 			listAndCount = listDataObjectsGivenObjStat(objStat, 0);
+			if (listAndCount.getCollectionAndDataObjectListingEntries()
+					.isEmpty()) {
+				log.info("data objects empty as well");
+				pagingAwareCollectionListing.setDataObjectsComplete(true);
+			}
 		}
 
-		return null; // FIXME: work in progress here
+		return pagingAwareCollectionListing;
 
 	}
 

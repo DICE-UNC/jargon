@@ -510,4 +510,16 @@ public interface IRODSAccessObjectFactory {
 	 */
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
+	/**
+	 * Get service to handle pagaeable collection listings
+	 * 
+	 * @param irodsAccount
+	 *            {@IRODSAccount} with the authenticating
+	 *            principal
+	 * @return {@link CollectionPagerAO}
+	 * @throws JargonException
+	 */
+	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }
