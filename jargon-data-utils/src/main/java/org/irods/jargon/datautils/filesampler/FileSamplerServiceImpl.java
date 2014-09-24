@@ -23,7 +23,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  * 
  */
-public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl implements FileSamplerService {
+public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
+		implements FileSamplerService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(FileSamplerServiceImpl.class);
@@ -44,8 +45,12 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 	public FileSamplerServiceImpl() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.datautils.filesampler.FileSamplerService#sampleToByteArray(java.lang.String, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.datautils.filesampler.FileSamplerService#sampleToByteArray
+	 * (java.lang.String, int)
 	 */
 	@Override
 	public byte[] sampleToByteArray(final String irodsAbsolutePath,
@@ -69,7 +74,6 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 					"sample size too large,use an input stream");
 		}
 
-		byte[] sample = new byte[sampleSize];
 		log.info("getting input stream...");
 		InputStream inputStream = null;
 		try {
@@ -78,7 +82,7 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl impleme
 					.getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSFileInputStream(irodsAbsolutePath));
 
-			sample = IOUtils.toByteArray(inputStream, sampleSize);
+			byte[] sample = IOUtils.toByteArray(inputStream, sampleSize);
 			log.info("done...");
 			return sample;
 
