@@ -43,7 +43,7 @@ public class CollectionPagerAOImplTest {
 
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(1);
-		entry.setTotalRecords(totalRecords);
+		// entry.setTotalRecords(totalRecords);
 
 	}
 

@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
 import org.irods.jargon.core.packinstr.DataObjInpForQuerySpecColl;
 import org.irods.jargon.core.packinstr.SpecColInfo;
 import org.irods.jargon.core.packinstr.Tag;
@@ -46,7 +47,6 @@ class CollectionListingUtils {
 
 	private final IRODSAccount irodsAccount;
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
-	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
 	public static final Logger log = LoggerFactory
@@ -108,8 +108,7 @@ class CollectionListingUtils {
 		 */
 		sb = new StringBuilder();
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 		sb.append("/home");
 
 		comparePath = sb.toString();
@@ -119,8 +118,7 @@ class CollectionListingUtils {
 			sb.append("/public");
 			ObjStat statForPublic;
 			try {
-				statForPublic = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(sb.toString());
+				statForPublic = retrieveObjectStatForPath(sb.toString());
 				collectionAndDataObjectListingEntries
 						.add(createStandInForPublicDir(statForPublic));
 			} catch (FileNotFoundException fnf) {
@@ -131,10 +129,8 @@ class CollectionListingUtils {
 
 			ObjStat statForUserHome;
 			try {
-				statForUserHome = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(MiscIRODSUtils
-								.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO
-										.getIRODSAccount()));
+				statForUserHome = retrieveObjectStatForPath(MiscIRODSUtils
+						.computeHomeDirectoryForIRODSAccount(irodsAccount));
 				collectionAndDataObjectListingEntries
 						.add(createStandInForUserDir(statForUserHome));
 			} catch (FileNotFoundException fnf) {
@@ -154,8 +150,7 @@ class CollectionListingUtils {
 
 				ObjStat statForUserHome;
 				try {
-					statForUserHome = collectionAndDataObjectListAndSearchAO
-							.retrieveObjectStatForPath(comparePath);
+					statForUserHome = retrieveObjectStatForPath(comparePath);
 					collectionAndDataObjectListingEntries
 							.add(createStandInForUserDir(statForUserHome));
 				} catch (FileNotFoundException fnf) {
@@ -180,13 +175,11 @@ class CollectionListingUtils {
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
 		entry.setParentPath(sb.toString());
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(SpecColType.NORMAL);
 		return entry;
@@ -201,13 +194,11 @@ class CollectionListingUtils {
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setParentPath("/");
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(SpecColType.NORMAL);
@@ -225,13 +216,11 @@ class CollectionListingUtils {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
 		entry.setLastResult(true);
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setOwnerName(objStat.getOwnerName());
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 		sb.append("/home");
 		entry.setParentPath(sb.toString());
 		sb.append("/public");
@@ -255,24 +244,20 @@ class CollectionListingUtils {
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(irodsAccount.getZone());
 		sb.append("/home");
 		entry.setParentPath(sb.toString());
 		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getUserName());
+		sb.append(irodsAccount.getUserName());
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(objStat.getSpecColType());
 		entry.setCreatedAt(objStat.getCreatedAt());
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setOwnerName(objStat.getOwnerName());
 		return entry;
 	}
@@ -349,7 +334,7 @@ class CollectionListingUtils {
 		specColInfo.setReplNum(objStat.getReplNumber());
 		specColInfo.setType(2);
 
-		if (collectionAndDataObjectListAndSearchAO.getIRODSServerProperties()
+		if (irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount)
 				.isEirods()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
@@ -366,8 +351,8 @@ class CollectionListingUtils {
 		Tag response;
 
 		try {
-			response = collectionAndDataObjectListAndSearchAO
-					.getIRODSProtocol().irodsFunction(dataObjInp);
+			response = irodsAccessObjectFactory.getIrodsSession()
+					.currentConnection(irodsAccount).irodsFunction(dataObjInp);
 
 			log.debug("response from function: {}", response.parseTag());
 
@@ -404,8 +389,9 @@ class CollectionListingUtils {
 									specColInfo, continueInx);
 				}
 
-				response = collectionAndDataObjectListAndSearchAO
-						.getIRODSProtocol().irodsFunction(dataObjInp);
+				response = irodsAccessObjectFactory.getIrodsSession()
+						.currentConnection(irodsAccount)
+						.irodsFunction(dataObjInp);
 
 				log.debug("response from function: {}", response.parseTag());
 
@@ -529,17 +515,15 @@ class CollectionListingUtils {
 			throws JargonException {
 
 		log.info("queryForPathAndReturnResultSet for: {}", absolutePath);
-		IRODSGenQueryExecutor irodsGenQueryExecutor = collectionAndDataObjectListAndSearchAO
-				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
-						collectionAndDataObjectListAndSearchAO
-								.getIRODSAccount());
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSGenQueryFromBuilder irodsQuery;
 		IRODSQueryResultSet resultSet;
 
 		try {
 			irodsQuery = builder
-					.exportIRODSQueryFromBuilder(collectionAndDataObjectListAndSearchAO
+					.exportIRODSQueryFromBuilder(irodsAccessObjectFactory
 							.getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor
 					.executeIRODSQueryWithPagingInZone(irodsQuery,
@@ -925,8 +909,158 @@ class CollectionListingUtils {
 		this.irodsAccount = irodsAccount;
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 
-		this.collectionAndDataObjectListAndSearchAO = irodsAccessObjectFactory
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+	}
+
+	/**
+	 * Retrieve an iRODS ObjStat object for the given iRODS path
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with an absolute path to an irods object
+	 * @return {@link ObjStat} from iRODS
+	 * @throws FileNotFoundException
+	 *             if the file does not exist
+	 * @throws JargonException
+	 */
+	ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"irodsAbsolutePath is null or empty");
+		}
+
+		/*
+		 * StopWatch stopWatch = null;
+		 * 
+		 * if (this.isInstrumented()) { stopWatch = new
+		 * Log4JStopWatch("retrieveObjectStatForPath"); }
+		 */
+
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
+				.instance(irodsAbsolutePath);
+		Tag response;
+		try {
+			response = irodsAccessObjectFactory.getIrodsSession()
+					.currentConnection(irodsAccount).irodsFunction(dataObjInp);
+		} catch (DataNotFoundException e) {
+			log.info("rethrow DataNotFound as FileNotFound per contract");
+			throw new FileNotFoundException(e);
+		}
+
+		log.debug("response from objStat: {}", response.parseTag());
+
+		/**
+		 * For spec cols - soft link - phyPath = parent canonical dir -objPath =
+		 * canonical path
+		 */
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(irodsAbsolutePath);
+		objStat.setChecksum(response.getTag("chksum").getStringValue());
+		objStat.setDataId(response.getTag("dataId").getIntValue());
+		int objType = response.getTag("objType").getIntValue();
+		objStat.setObjectType(ObjectType.values()[objType]);
+		objStat.setObjSize(response.getTag("objSize").getLongValue());
+		objStat.setOwnerName(response.getTag("ownerName").getStringValue());
+		objStat.setOwnerZone(response.getTag("ownerZone").getStringValue());
+		objStat.setSpecColType(SpecColType.NORMAL);
+		Tag specColl = response.getTag("SpecColl_PI");
+
+		/*
+		 * Look for the specColl tag (it is expected to be there) and see if
+		 * there are any special collection types (e.g. mounted or soft links)
+		 * to deal with
+		 */
+		if (specColl != null) {
+
+			Tag tag = specColl.getTag("collection");
+
+			if (tag != null) {
+				objStat.setCollectionPath(tag.getStringValue());
+			}
+
+			tag = specColl.getTag("cacheDir");
+
+			if (tag != null) {
+				objStat.setCacheDir(tag.getStringValue());
+			}
+
+			tag = specColl.getTag("cacheDirty");
+
+			if (tag != null) {
+				objStat.setCacheDirty(tag.getStringValue().equals("1"));
+			}
+
+			int collClass = specColl.getTag("collClass").getIntValue();
+			objStat.setReplNumber(specColl.getTag("replNum").getIntValue());
+
+			switch (collClass) {
+			case 0:
+				objStat.setSpecColType(SpecColType.NORMAL);
+				objStat.setObjectPath(specColl.getTag("phyPath")
+						.getStringValue());
+				break;
+			case 1:
+				objStat.setSpecColType(SpecColType.STRUCT_FILE_COLL);
+				break;
+			case 2:
+				objStat.setSpecColType(SpecColType.MOUNTED_COLL);
+				break;
+			case 3:
+				objStat.setSpecColType(SpecColType.LINKED_COLL);
+
+				/*
+				 * physical path will hold the canonical source dir where it was
+				 * linked. The collection path will hold the top level of the
+				 * soft link target. This does not 'follow' by incrementing the
+				 * path as you descend into subdirs, so I use the collection
+				 * path to chop off the absolute path, and use the remainder
+				 * appended to the collection path to arrive at equivalent
+				 * canonical source path fo rthis soft linked directory. This is
+				 * all rather confusing, so instead of worrying about it, Jargon
+				 * has the headache, you can just trust the objStat objectPath
+				 * to point to the equivalent canonical source path to the soft
+				 * linked path.
+				 */
+				String canonicalSourceDirForSoftLink = specColl.getTag(
+						"phyPath").getStringValue();
+				String softLinkTargetDir = specColl.getTag("collection")
+						.getStringValue();
+				if (softLinkTargetDir.length() > objStat.getAbsolutePath()
+						.length()) {
+					throw new JargonException(
+							"cannot properly compute path for soft link");
+				}
+
+				String additionalPath = objStat.getAbsolutePath().substring(
+						softLinkTargetDir.length());
+				StringBuilder sb = new StringBuilder();
+				sb.append(canonicalSourceDirForSoftLink);
+				sb.append(additionalPath);
+				objStat.setObjectPath(sb.toString());
+
+				break;
+			default:
+				throw new JargonException("unknown special coll type:");
+			}
+
+		}
+
+		String createdDate = response.getTag("createTime").getStringValue();
+		String modifiedDate = response.getTag("modifyTime").getStringValue();
+		objStat.setCreatedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(createdDate));
+		objStat.setModifiedAt(IRODSDataConversionUtil
+				.getDateFromIRODSValue(modifiedDate));
+
+		/*
+		 * if (this.isInstrumented()) { stopWatch.stop(); }
+		 */
+
+		log.info(objStat.toString());
+		return objStat;
+
 	}
 
 }
