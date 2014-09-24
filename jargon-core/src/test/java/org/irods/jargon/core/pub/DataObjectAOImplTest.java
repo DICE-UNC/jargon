@@ -5035,7 +5035,6 @@ public class DataObjectAOImplTest {
 
 		dto.putOperation(localFileName, targetIrodsCollection, "", null, null);
 
-		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = dataObjectAO
