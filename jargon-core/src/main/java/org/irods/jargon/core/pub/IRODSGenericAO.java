@@ -58,7 +58,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 		this.irodsSession = irodsSession;
 		this.irodsAccount = irodsAccount;
-		instrumented = getIRODSAccessObjectFactory().getJargonProperties()
+		instrumented = this.getIRODSSession().getJargonProperties()
 				.isInstrument();
 
 		log.debug("establishing connection");

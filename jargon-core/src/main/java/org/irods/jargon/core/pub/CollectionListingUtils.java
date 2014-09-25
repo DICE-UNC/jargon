@@ -49,7 +49,7 @@ class CollectionListingUtils {
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
-	public static final Logger log = LoggerFactory
+	static final Logger log = LoggerFactory
 			.getLogger(CollectionListingUtils.class);
 
 	/**
@@ -1053,10 +1053,6 @@ class CollectionListingUtils {
 				.getDateFromIRODSValue(createdDate));
 		objStat.setModifiedAt(IRODSDataConversionUtil
 				.getDateFromIRODSValue(modifiedDate));
-
-		/*
-		 * if (this.isInstrumented()) { stopWatch.stop(); }
-		 */
 
 		log.info(objStat.toString());
 		return objStat;

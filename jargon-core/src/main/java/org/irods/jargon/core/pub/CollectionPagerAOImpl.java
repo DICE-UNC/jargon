@@ -26,27 +26,58 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionPagerAO {
+public class CollectionPagerAOImpl extends IRODSGenericAO implements
+		CollectionPagerAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionPagerAOImpl.class);
 
-	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	private final CollectionListingUtils collectionListingUtils;
 
+	/**
+	 * Standad constructor with session and account
+	 * 
+	 * @param irodsSession
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
 	public CollectionPagerAOImpl(IRODSSession irodsSession,
 			IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		this.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		this.collectionListingUtils = new CollectionListingUtils(
 				this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent(java.lang.String)
+	/**
+	 * Constructor allows specification of a collection listing utils, this is
+	 * actually an affordence for testing.
+	 * 
+	 * @param irodsSession
+	 * @param irodsAccount
+	 * @param collectionListingUtils
+	 * @throws JargonException
+	 */
+	CollectionPagerAOImpl(IRODSSession irodsSession, IRODSAccount irodsAccount,
+			final CollectionListingUtils collectionListingUtils)
+			throws JargonException {
+		super(irodsSession, irodsAccount);
+		if (collectionListingUtils == null) {
+			throw new IllegalArgumentException("null collectionListingUtils");
+		}
+		this.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		this.collectionListingUtils = collectionListingUtils;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent
+	 * (java.lang.String)
 	 */
 	@Override
 	public PagingAwareCollectionListing retrieveFirstPageUnderParent(
@@ -66,7 +97,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
 		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
 				.getMaxFilesAndDirsQueryMax());
-		objStat = collectionAndDataObjectListAndSearchAO
+		objStat = collectionListingUtils
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 		log.info("objStat:{}", objStat);
 
@@ -97,9 +128,15 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 
 		ListAndCount listAndCount = listCollectionsGivenObjStat(objStat, 0);
 
+		pagingAwareCollectionListing.setTotalRecords(listAndCount
+				.getCountTotal());
+		pagingAwareCollectionListing.setCount(listAndCount.getCountThisPage());
+		pagingAwareCollectionListing.setOffset(listAndCount.getOffsetStart());
+		pagingAwareCollectionListing.setCollectionsComplete(listAndCount
+				.isEndOfRecords());
+
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
 			log.info("no collections, so get data objects");
-			pagingAwareCollectionListing.setCollectionsComplete(true);
 
 			listAndCount = listDataObjectsGivenObjStat(objStat, 0);
 			if (listAndCount.getCollectionAndDataObjectListingEntries()
