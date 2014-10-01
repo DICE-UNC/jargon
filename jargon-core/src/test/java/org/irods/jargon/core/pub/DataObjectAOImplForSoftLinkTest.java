@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -637,6 +638,12 @@ public class DataObjectAOImplForSoftLinkTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = listAndSearch.retrieveObjectStatForPath(destFile
+				.getAbsolutePath());
+		Assert.assertNotNull("null objStat", objStat);
 		String computedChecksum = dataObjectAO
 				.computeMD5ChecksumOnDataObject(destFile);
 		Assert.assertTrue("did not return a checksum",

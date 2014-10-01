@@ -135,15 +135,21 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		pagingAwareCollectionListing.setCollectionsComplete(listAndCount
 				.isEndOfRecords());
 
-		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
-			log.info("no collections, so get data objects");
+		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()
+				|| listAndCount.getCountThisPage() < this.getJargonProperties()
+						.getMaxFilesAndDirsQueryMax()) {
+			log.info("collections are empty or less then max, so get data objects");
 
 			listAndCount = listDataObjectsGivenObjStat(objStat, 0);
-			if (listAndCount.getCollectionAndDataObjectListingEntries()
-					.isEmpty()) {
-				log.info("data objects empty as well");
-				pagingAwareCollectionListing.setDataObjectsComplete(true);
-			}
+
+			pagingAwareCollectionListing
+					.setDataObjectsTotalRecords(listAndCount.getCountTotal());
+			pagingAwareCollectionListing.setDataObjectsCount(listAndCount
+					.getCountThisPage());
+			pagingAwareCollectionListing.setDataObjectsOffset(listAndCount
+					.getOffsetStart());
+			pagingAwareCollectionListing.setDataObjectsComplete(listAndCount
+					.isEndOfRecords());
 		}
 
 		return pagingAwareCollectionListing;
@@ -215,6 +221,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
 			listAndCount.setCountTotal(0);
+			listAndCount.setEndOfRecords(true);
 			log.info("empty results returned");
 			return listAndCount;
 		}
@@ -346,5 +353,35 @@ class ListAndCount {
 	 */
 	void setOffsetEnd(int offsetEnd) {
 		this.offsetEnd = offsetEnd;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 5;
+		StringBuilder builder = new StringBuilder();
+		builder.append("ListAndCount [countTotal=");
+		builder.append(countTotal);
+		builder.append(", countThisPage=");
+		builder.append(countThisPage);
+		builder.append(", endOfRecords=");
+		builder.append(endOfRecords);
+		builder.append(", offsetStart=");
+		builder.append(offsetStart);
+		builder.append(", offsetEnd=");
+		builder.append(offsetEnd);
+		builder.append(", ");
+		if (collectionAndDataObjectListingEntries != null) {
+			builder.append("collectionAndDataObjectListingEntries=");
+			builder.append(collectionAndDataObjectListingEntries.subList(0,
+					Math.min(collectionAndDataObjectListingEntries.size(),
+							maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 }

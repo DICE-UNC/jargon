@@ -6,6 +6,7 @@ import org.irods.jargon.core.pub.CollectionAOImplTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.CollectionAuditAOImplTest;
+import org.irods.jargon.core.pub.CollectionPagerAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAOImplForSoftLinkTest;
 import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
@@ -80,7 +81,8 @@ import org.junit.runners.Suite;
 		MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
 		MountedFilesystemsDataTransferOperationsImplTest.class,
 		MountedFilesystemCollectionAOImplTest.class,
-		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class })
+		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
+		CollectionPagerAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
