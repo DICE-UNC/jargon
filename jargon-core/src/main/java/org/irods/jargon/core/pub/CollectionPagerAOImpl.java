@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
  * paging by clients
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		CollectionPagerAO {
@@ -95,6 +95,9 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 		ObjStat objStat;
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
+		pagingAwareCollectionListing.setParentAbsolutePath(irodsAbsolutePath);
+		pagingAwareCollectionListing.setPathComponents(MiscIRODSUtils
+				.breakIRODSPathIntoComponents(irodsAbsolutePath));
 		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
 				.getMaxFilesAndDirsQueryMax());
 		objStat = collectionListingUtils
@@ -135,6 +138,10 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		pagingAwareCollectionListing.setCollectionsComplete(listAndCount
 				.isEndOfRecords());
 
+		pagingAwareCollectionListing
+				.setCollectionAndDataObjectListingEntries(listAndCount
+						.getCollectionAndDataObjectListingEntries());
+
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()
 				|| listAndCount.getCountThisPage() < this.getJargonProperties()
 						.getMaxFilesAndDirsQueryMax()) {
@@ -150,6 +157,10 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 					.getOffsetStart());
 			pagingAwareCollectionListing.setDataObjectsComplete(listAndCount
 					.isEndOfRecords());
+			pagingAwareCollectionListing
+					.getCollectionAndDataObjectListingEntries()
+					.addAll(listAndCount
+							.getCollectionAndDataObjectListingEntries());
 		}
 
 		return pagingAwareCollectionListing;
