@@ -5,6 +5,7 @@ import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerT
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.filearchive.LocalFileGzipCompressorTest;
 import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
+import org.irods.jargon.datautils.filesampler.FileSamplerServiceImplTest;
 import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
 import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
@@ -36,7 +37,7 @@ import org.junit.runners.Suite;
 		DiffTreePostProcessorTest.class,
 		FileTreeIteratorVisitorInvokerTest.class,
 		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-		LocalFileGzipCompressorTest.class })
+		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class })
 public class AllTests {
 
 }
