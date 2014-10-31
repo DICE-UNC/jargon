@@ -36,6 +36,8 @@ public class DataProfileServiceImplTest {
 		DataObject dataObject = new DataObject();
 		String dataName = "file.txt";
 		dataObject.setDataName(dataName);
+		dataObject.setCollectionName("/a/collection");
+		String irodsAbsolutePath = "/a/collection/" + dataName;
 
 		MetaDataAndDomainData metaDataAndDamainData = MetaDataAndDomainData
 				.instance(MetadataDomain.DATA, "1", "blah", 0,
@@ -61,11 +63,12 @@ public class DataProfileServiceImplTest {
 				.mock(CollectionAndDataObjectListAndSearchAOImpl.class);
 
 		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath("/some/absolutepath/something.txt");
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 		Mockito.when(
 				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(dataName)).thenReturn(
-				objStat);
+						.retrieveObjectStatForPath(irodsAbsolutePath))
+				.thenReturn(objStat);
 
 		Mockito.when(
 				irodsAccessObjectFactory
@@ -73,10 +76,11 @@ public class DataProfileServiceImplTest {
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		DataObjectAO dataObjectAO = Mockito.mock(DataObjectAO.class);
-		Mockito.when(dataObjectAO.findByAbsolutePath(dataName)).thenReturn(
-				dataObject);
+		Mockito.when(dataObjectAO.findByAbsolutePath(irodsAbsolutePath))
+				.thenReturn(dataObject);
 
-		Mockito.when(dataObjectAO.findMetadataValuesForDataObject(dataName))
+		Mockito.when(
+				dataObjectAO.findMetadataValuesForDataObject(irodsAbsolutePath))
 				.thenReturn(avus);
 
 		Mockito.when(irodsAccessObjectFactory.getDataObjectAO(irodsAccount))
@@ -87,12 +91,24 @@ public class DataProfileServiceImplTest {
 
 		@SuppressWarnings("unchecked")
 		DataProfile<DataObject> actual = dataProfileService
-				.retrieveDataProfile(dataName);
+				.retrieveDataProfile(irodsAbsolutePath);
 		Assert.assertNotNull("null dataProfle", actual);
 		Assert.assertNotNull("no data object", actual.getDomainObject());
 		Assert.assertTrue("should be file", actual.isFile());
 		Assert.assertTrue("shoudl be starred", actual.isStarred());
 		Assert.assertTrue("should be shared", actual.isShared());
+		Assert.assertNotNull("should have collection parent",
+				actual.getParentPath());
+		Assert.assertFalse("should have collection parent", actual
+				.getParentPath().isEmpty());
+		Assert.assertNotNull("should have child name", actual.getChildName());
+		Assert.assertFalse("should have child name", actual.getChildName()
+				.isEmpty());
+
+		Assert.assertNotNull("should have path components",
+				actual.getPathComponents());
+		Assert.assertFalse("should have path components", actual
+				.getPathComponents().isEmpty());
 
 	}
 
@@ -223,6 +239,18 @@ public class DataProfileServiceImplTest {
 		Assert.assertFalse("should not be file", actual.isFile());
 		Assert.assertTrue("shoudl be starred", actual.isStarred());
 		Assert.assertTrue("should be shared", actual.isShared());
+		Assert.assertNotNull("should have collection parent",
+				actual.getParentPath());
+		Assert.assertFalse("should have collection parent", actual
+				.getParentPath().isEmpty());
+		Assert.assertNotNull("should have child name", actual.getChildName());
+		Assert.assertFalse("should have child name", actual.getChildName()
+				.isEmpty());
+
+		Assert.assertNotNull("should have path components",
+				actual.getPathComponents());
+		Assert.assertFalse("should have path components", actual
+				.getPathComponents().isEmpty());
 
 	}
 

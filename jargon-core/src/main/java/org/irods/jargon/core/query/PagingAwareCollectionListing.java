@@ -117,27 +117,52 @@ public class PagingAwareCollectionListing {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("PagingAwareCollectionListing");
-		sb.append("\n\tcollectionOffset:");
-		sb.append(offset);
-		sb.append("\n\tcollectionsCount:");
-		sb.append(count);
-		sb.append("\n\tcollectionsTotalRecords:");
-		sb.append(totalRecords);
-		sb.append("\n\tcollectionsComplete:");
-		sb.append(collectionsComplete);
-		sb.append("\n\tdataObjectsOffset:");
-		sb.append(dataObjectsOffset);
-		sb.append("\n\tdataObjectsCount:");
-		sb.append(dataObjectsCount);
-		sb.append("\n\tdataObjectsTotalRecords:");
-		sb.append(dataObjectsTotalRecords);
-		sb.append("\n\tdataObjectsComplete:");
-		sb.append(dataObjectsComplete);
-		sb.append("\n\tpageSizeUtilized:");
-		sb.append(pageSizeUtilized);
-		return sb.toString();
+		final int maxLen = 5;
+		StringBuilder builder = new StringBuilder();
+		builder.append("PagingAwareCollectionListing [");
+		if (parentAbsolutePath != null) {
+			builder.append("parentAbsolutePath=");
+			builder.append(parentAbsolutePath);
+			builder.append(", ");
+		}
+		if (pathComponents != null) {
+			builder.append("pathComponents=");
+			builder.append(pathComponents.subList(0,
+					Math.min(pathComponents.size(), maxLen)));
+			builder.append(", ");
+		}
+		if (pagingStyle != null) {
+			builder.append("pagingStyle=");
+			builder.append(pagingStyle);
+			builder.append(", ");
+		}
+		builder.append("offset=");
+		builder.append(offset);
+		builder.append(", dataObjectsOffset=");
+		builder.append(dataObjectsOffset);
+		builder.append(", count=");
+		builder.append(count);
+		builder.append(", totalRecords=");
+		builder.append(totalRecords);
+		builder.append(", dataObjectsCount=");
+		builder.append(dataObjectsCount);
+		builder.append(", dataObjectsTotalRecords=");
+		builder.append(dataObjectsTotalRecords);
+		builder.append(", collectionsComplete=");
+		builder.append(collectionsComplete);
+		builder.append(", dataObjectsComplete=");
+		builder.append(dataObjectsComplete);
+		builder.append(", pageSizeUtilized=");
+		builder.append(pageSizeUtilized);
+		builder.append(", ");
+		if (collectionAndDataObjectListingEntries != null) {
+			builder.append("collectionAndDataObjectListingEntries=");
+			builder.append(collectionAndDataObjectListingEntries.subList(0,
+					Math.min(collectionAndDataObjectListingEntries.size(),
+							maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**

@@ -28,6 +28,18 @@ public class DataProfile<T extends IRODSDomainObject> {
 	private boolean isShared = false;
 	private String mimeType = "";
 	private List<IRODSTagValue> irodsTagValues = new ArrayList<IRODSTagValue>();
+	/**
+	 * parent of the current data object
+	 */
+	private String parentPath = "";
+	/**
+	 * child name (last path component)
+	 */
+	private String childName = "";
+	/**
+	 * List of path components suitable for generating breadcrumbs and the like
+	 */
+	private List<String> pathComponents = null;
 
 	public void setDomainObject(T domainObject) {
 		this.domainObject = domainObject;
@@ -97,6 +109,114 @@ public class DataProfile<T extends IRODSDomainObject> {
 
 	public void setIrodsTagValues(List<IRODSTagValue> irodsTagValues) {
 		this.irodsTagValues = irodsTagValues;
+	}
+
+	/**
+	 * @return the parentPath
+	 */
+	public String getParentPath() {
+		return parentPath;
+	}
+
+	/**
+	 * @param parentPath
+	 *            the parentPath to set
+	 */
+	public void setParentPath(String parentPath) {
+		this.parentPath = parentPath;
+	}
+
+	/**
+	 * @return the childName
+	 */
+	public String getChildName() {
+		return childName;
+	}
+
+	/**
+	 * @param childName
+	 *            the childName to set
+	 */
+	public void setChildName(String childName) {
+		this.childName = childName;
+	}
+
+	/**
+	 * @return the pathComponents
+	 */
+	public List<String> getPathComponents() {
+		return pathComponents;
+	}
+
+	/**
+	 * @param pathComponents
+	 *            the pathComponents to set
+	 */
+	public void setPathComponents(List<String> pathComponents) {
+		this.pathComponents = pathComponents;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 5;
+		StringBuilder builder = new StringBuilder();
+		builder.append("DataProfile [file=");
+		builder.append(file);
+		builder.append(", ");
+		if (domainObject != null) {
+			builder.append("domainObject=");
+			builder.append(domainObject);
+			builder.append(", ");
+		}
+		if (metadata != null) {
+			builder.append("metadata=");
+			builder.append(metadata.subList(0,
+					Math.min(metadata.size(), maxLen)));
+			builder.append(", ");
+		}
+		if (acls != null) {
+			builder.append("acls=");
+			builder.append(acls.subList(0, Math.min(acls.size(), maxLen)));
+			builder.append(", ");
+		}
+		builder.append("isStarred=");
+		builder.append(isStarred);
+		builder.append(", isShared=");
+		builder.append(isShared);
+		builder.append(", ");
+		if (mimeType != null) {
+			builder.append("mimeType=");
+			builder.append(mimeType);
+			builder.append(", ");
+		}
+		if (irodsTagValues != null) {
+			builder.append("irodsTagValues=");
+			builder.append(irodsTagValues.subList(0,
+					Math.min(irodsTagValues.size(), maxLen)));
+			builder.append(", ");
+		}
+		if (parentPath != null) {
+			builder.append("parentPath=");
+			builder.append(parentPath);
+			builder.append(", ");
+		}
+		if (childName != null) {
+			builder.append("childName=");
+			builder.append(childName);
+			builder.append(", ");
+		}
+		if (pathComponents != null) {
+			builder.append("pathComponents=");
+			builder.append(pathComponents.subList(0,
+					Math.min(pathComponents.size(), maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

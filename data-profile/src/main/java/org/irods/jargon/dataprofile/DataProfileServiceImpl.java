@@ -19,6 +19,8 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.utils.CollectionAndPath;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.slf4j.Logger;
@@ -131,6 +133,15 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 		checkIfShared(dataProfile, this.getIrodsAccount().getUserName());
 		extractTags(dataProfile);
 		establishDataType(dataProfile);
+
+		dataProfile.setPathComponents(MiscIRODSUtils
+				.breakIRODSPathIntoComponents(irodsAbsolutePath));
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+
+		dataProfile.setParentPath(collectionAndPath.getCollectionParent());
+		dataProfile.setChildName(collectionAndPath.getChildName());
+
 		return dataProfile;
 
 	}
@@ -258,6 +269,14 @@ public class DataProfileServiceImpl extends AbstractJargonService implements
 		checkIfShared(dataProfile, this.getIrodsAccount().getUserName());
 		extractTags(dataProfile);
 		dataProfile.setMimeType("");
+		dataProfile.setPathComponents(MiscIRODSUtils
+				.breakIRODSPathIntoComponents(irodsAbsolutePath));
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+
+		dataProfile.setParentPath(collectionAndPath.getCollectionParent());
+		dataProfile.setChildName(collectionAndPath.getChildName());
+
 		return dataProfile;
 
 	}
