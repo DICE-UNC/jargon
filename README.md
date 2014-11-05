@@ -6,7 +6,11 @@ work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=o
 # Project: Jargon-core API
 #### Date: 09/16/2014
 #### Release Version: 4.0.2.1-SNAPSHOT
+<<<<<<< HEAD
 #### git tag: 
+=======
+#### git tag: MASTER
+>>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
 #### Developer: Mike Conway - DICE
 ## News
 
@@ -42,7 +46,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Bug Fixes
 
+#### fix display version of file length for rounding #54
 
+<<<<<<< HEAD
 
 
 
@@ -52,3 +58,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 #### Setting inheritance on collection as admin #55
 
 Add ability to set inherit/noinherit in CollectionAO as admin
+=======
+Fix display of file size to not round down for CollectionAndDataObjectListingEntry
+
+=======
+## Features
+>>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
