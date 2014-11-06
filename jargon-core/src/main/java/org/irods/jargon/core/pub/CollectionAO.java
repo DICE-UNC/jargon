@@ -986,4 +986,48 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	MetaDataAndDomainData findMetadataValueForCollectionById(ObjStat objStat,
 			int id) throws DataNotFoundException, JargonException;
 
+	/**
+	 * For a given iRODS collection, set he default to not inherit access
+	 * permissions. This version will do the operation in admin mode.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the collection.
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether the permission
+	 *            should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionToNotInheritInAdminMode(String zone,
+			String absolutePath, boolean recursive) throws JargonException;
+
+	/**
+	 * For a given iRODS collection, set he default to inherit access
+	 * permissions, using admin mode.
+	 * <p/>
+	 * Note that this method will work if a soft-linked collection name is
+	 * supplied. Permissions are always associated with the canonical path name,
+	 * and a soft linked collection will have the same permissions as the
+	 * canonical collection
+	 * 
+	 * @param zone
+	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            blank if not used, it is not required.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the collection.
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether the permission
+	 *            should be applied recursively
+	 * @throws JargonException
+	 */
+	void setAccessPermissionInheritAsAdmin(String zone, String absolutePath,
+			boolean recursive) throws JargonException;
+
 }
