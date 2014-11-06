@@ -1245,6 +1245,42 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInheritAsAdmin
+	 * (java.lang.String, java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionInheritAsAdmin(final String zone,
+			final String absolutePath, final boolean recursive)
+			throws JargonException {
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		// pi tests parameters
+		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
+
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetInheritOnACollectionInAdminMode(
+						collNeedsRecursive, zone, effectiveAbsPath);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit
 	 * (java.lang.String, java.lang.String, boolean)
 	 */
@@ -1274,6 +1310,43 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
 				.instanceForSetNoInheritOnACollection(collNeedsRecursive, zone,
 						effectiveAbsPath);
+		getIRODSProtocol().irodsFunction(modAccessControlInp);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAO#
+	 * setAccessPermissionToNotInheritInAdminMode(java.lang.String,
+	 * java.lang.String, boolean)
+	 */
+	@Override
+	public void setAccessPermissionToNotInheritInAdminMode(final String zone,
+			final String absolutePath, final boolean recursive)
+			throws JargonException {
+
+		if (zone == null) {
+			throw new IllegalArgumentException("null zone");
+		}
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		// pi tests parameters
+		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
+
+		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
+
+		boolean collNeedsRecursive = adjustRecursiveOption(effectiveAbsPath,
+				recursive);
+
+		ModAccessControlInp modAccessControlInp = ModAccessControlInp
+				.instanceForSetNoInheritOnACollectionInAdminMode(
+						collNeedsRecursive, zone, effectiveAbsPath);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 
 	}

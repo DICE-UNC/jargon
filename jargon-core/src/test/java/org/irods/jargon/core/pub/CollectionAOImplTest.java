@@ -2447,6 +2447,37 @@ public class CollectionAOImplTest {
 	}
 
 	@Test
+	public final void testSetInheritAdminMode() throws Exception {
+
+		String testFileName = "testSetInheritAdminMode";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testFileName);
+
+		IRODSAccount rodsAccount = testingPropertiesHelper
+				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(rodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdirs();
+
+		collectionAO.setAccessPermissionInheritAsAdmin("",
+				targetIrodsCollection, false);
+
+		boolean isInherit = collectionAO
+				.isCollectionSetForPermissionInheritance(targetIrodsCollection);
+
+		Assert.assertTrue("collection should have inherit set", isInherit);
+
+	}
+
+	@Test
 	public final void testSetNoInherit() throws Exception {
 
 		String testFileName = "testSetNoInherit";

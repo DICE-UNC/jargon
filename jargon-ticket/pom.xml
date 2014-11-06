@@ -4,7 +4,6 @@
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
 		<version>4.0.3-SNAPSHOT</version>
-
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-ticket</artifactId>

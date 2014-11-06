@@ -117,6 +117,28 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create an instance of packing instruction to set a collection to inherit.
+	 * With admin mode
+	 * 
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether this is a
+	 *            recursive operation
+	 * @param zone
+	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            blank if not used.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            or collection.
+	 * @return
+	 */
+	public static ModAccessControlInp instanceForSetInheritOnACollectionInAdminMode(
+			final boolean recursive, final String zone,
+			final String absolutePath) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
+				zone, absolutePath, "", INHERIT_PERMISSION, true);
+	}
+
+	/**
 	 * Create an instance of packing instruction to set a collection to set no
 	 * inherit.
 	 * 
@@ -136,6 +158,28 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 			final String absolutePath) {
 		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
 				zone, absolutePath, "", NOINHERIT_PERMISSION, false);
+	}
+
+	/**
+	 * Create an instance of packing instruction to set a collection to set no
+	 * inherit. In admin mode.
+	 * 
+	 * @param recursive
+	 *            <code>boolean</code> that indicates whether this is a
+	 *            recursive operation
+	 * @param zone
+	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            blank if not used.
+	 * @param absolutePath
+	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            or collection.
+	 * @return
+	 */
+	public static ModAccessControlInp instanceForSetNoInheritOnACollectionInAdminMode(
+			final boolean recursive, final String zone,
+			final String absolutePath) {
+		return new ModAccessControlInp(MOD_ACESS_CONTROL_API_NBR, recursive,
+				zone, absolutePath, "", NOINHERIT_PERMISSION, true);
 	}
 
 	/**
