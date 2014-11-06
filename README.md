@@ -1,11 +1,11 @@
 
 Jargon Core API
 
-Work for milestone https://github.com/DICE-UNC/jargon/milestones/features%20branch%204.0.3
+Work for milestone https://github.com/DICE-UNC/jargon/milestones/4.0.3.1%20second%20tier%20features%20branch
 
 # Project: Jargon-core API
 ### Date:
-### Release Version: 4.0.3-SNAPSHOT
+### Release Version: 4.0.3.1-SNAPSHOT
 ### git tag: 
 
 ## News
@@ -26,7 +26,7 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-*Jargon depends on Java 1.6+
+*Jargon depends on Java 1.7+
 *Jargon is built using Apache Maven2, see POM for dependencies
 *Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
 

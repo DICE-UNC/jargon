@@ -421,8 +421,8 @@
 					<optimize>true</optimize>
 					<fork>true</fork>
 					<compilerVersion>1.6</compilerVersion>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>1.7</source>
+					<target>1.7</target>
 					<compilerArgument>-Xlint:-unchecked</compilerArgument>
 				</configuration>
 			</plugin>
