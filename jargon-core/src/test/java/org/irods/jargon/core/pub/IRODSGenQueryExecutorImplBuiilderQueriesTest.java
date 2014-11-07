@@ -208,6 +208,57 @@ public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
 
 	}
 
+	@Test
+	public final void testQueryCollectionPathWithLike() throws Exception {
+		String testFileName = "testQueryCollectionPathWithLike";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection, testFileName);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+						irodsAccount);
+
+		IRODSGenQueryBuilder queryBuilder = new IRODSGenQueryBuilder(true,
+				false, true, null);
+
+		/*
+		 * queryBuilder .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+		 * .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		 * .addConditionAsGenQueryField( RodsGenQueryEnum.COL_COLL_NAME,
+		 * QueryConditionOperators.LIKE, "/" + irodsAccount.getZone() + "/home/"
+		 * + irodsAccount.getUserName() + "%");
+		 */
+
+		queryBuilder
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.LIKE,
+						"/" + irodsAccount.getZone() + "/home/"
+								+ irodsAccount.getUserName() + "/%");
+
+		IRODSGenQueryFromBuilder query = queryBuilder
+				.exportIRODSQueryFromBuilder(1000);
+
+		IRODSQueryResultSetInterface resultSet = irodsGenQueryExecutor
+				.executeIRODSQuery(query, 0);
+		Assert.assertTrue("no result", resultSet.getResults().size() > 0);
+
+	}
+
 	/**
 	 * BUG: gen query error with IN statement #17
 	 * https://github.com/DICE-UNC/jargon/issues/17
