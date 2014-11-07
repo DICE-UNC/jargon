@@ -16,6 +16,7 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -469,8 +470,8 @@ public class IRODSFileOutputStreamTest {
 
 		irodsFileOutputStream.write(string1.getBytes());
 		irodsFileOutputStream.close();
-		irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile);
+		irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(
+				irodsFile, OpenFlags.WRITE_TRUNCATE);
 
 		irodsFileOutputStream.write(string2.getBytes());
 		irodsFileOutputStream.close();
@@ -482,6 +483,100 @@ public class IRODSFileOutputStreamTest {
 		irodsFileInputStream.close();
 
 		Assert.assertEquals("should be second string", string2, actual);
+
+	}
+
+	@Test
+	public final void testIRODSFileOutputStreamReadTruncate() throws Exception {
+		String testFileName = "testIRODSFileOutputStreamReadWriteTruncate.txt";
+		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
+		String string2 = "nvmzncvzmvnzx,mcv";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile,
+						OpenFlags.READ_TRUNCATE);
+
+		irodsFileOutputStream.write(string1.getBytes());
+		irodsFileOutputStream.close();
+		irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(
+				irodsFile, OpenFlags.WRITE_TRUNCATE);
+
+		irodsFileOutputStream.write(string2.getBytes());
+		irodsFileOutputStream.close();
+
+		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		String actual = MiscIRODSUtils
+				.convertStreamToString(irodsFileInputStream);
+		irodsFileInputStream.close();
+
+		Assert.assertEquals("should be second string", string2, actual);
+	}
+
+	@Test
+	public final void testIRODSFileOutputStreamReadWriteAndAppend()
+			throws Exception {
+		String testFileName = "testIRODSFileOutputStreamReadWriteAndAppend.txt";
+		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
+		String string2 = "nvmzncvzmvnzx,mcv";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile, OpenFlags.WRITE);
+
+		irodsFileOutputStream.write(string1.getBytes());
+		irodsFileOutputStream.close();
+		irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(
+				irodsFile, OpenFlags.READ_WRITE);
+
+		irodsFileOutputStream.write(string2.getBytes());
+		irodsFileOutputStream.close();
+
+		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		String actual = MiscIRODSUtils
+				.convertStreamToString(irodsFileInputStream);
+		irodsFileInputStream.close();
+
+		Assert.assertEquals("should be concatenated string", string1 + string2,
+				actual);
 
 	}
 
