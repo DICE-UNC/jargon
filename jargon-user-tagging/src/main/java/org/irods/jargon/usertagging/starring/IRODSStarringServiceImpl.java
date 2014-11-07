@@ -258,7 +258,6 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
 
 		// Do collections, then do files
-
 		log.info("querying metadata as a data object to look for starred");
 		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
 				.getDataObjectAO(getIrodsAccount());
