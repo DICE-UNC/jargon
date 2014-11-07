@@ -17,10 +17,16 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.domain.AvuData;
+import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -483,6 +489,83 @@ public class IRODSFileOutputStreamTest {
 		irodsFileInputStream.close();
 
 		Assert.assertEquals("should be second string", string2, actual);
+
+	}
+
+	/**
+	 * Test for #52 Overwriting a file with IRODSFileOutputStream deletes file
+	 * metadata
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testIRODSFileOutputStreamOverwriteBug52()
+			throws Exception {
+		String testFileName = "testIRODSFileOutputStreamOverwriteBug52.txt";
+		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
+		String string2 = "nvmzncvzmvnzx,mcv";
+
+		String expectedAttribName = "testIRODSFileOutputStreamOverwriteBug52";
+		String expectedValueName = "blahblahblah";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		irodsFileOutputStream.write(string1.getBytes());
+		irodsFileOutputStream.close();
+
+		// add an AVU
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedValueName, "");
+
+		dataObjectAO.addAVUMetadata(irodsFile.getAbsolutePath(), avuData);
+
+		irodsFileOutputStream = irodsFileFactory.instanceIRODSFileOutputStream(
+				irodsFile, OpenFlags.WRITE_TRUNCATE);
+
+		irodsFileOutputStream.write(string2.getBytes());
+		irodsFileOutputStream.close();
+
+		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+		String actual = MiscIRODSUtils
+				.convertStreamToString(irodsFileInputStream);
+		irodsFileInputStream.close();
+
+		Assert.assertEquals("should be second string", string2, actual);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO
+				.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertTrue("avu not preserved on stream overwrite",
+				dataObjects.size() >= 1);
 
 	}
 

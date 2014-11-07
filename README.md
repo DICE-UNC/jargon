@@ -46,6 +46,13 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 display of file size to not round down for CollectionAndDataObjectListingEntry
 
+#### Overwriting a file with IRODSFileOutputStream deletes file metadata #52
+
+IRODSOutputStream now has extended support for open flags, including truncation/overwrite handling.  In the immediate case this prevents deletion of AVUs on 
+overwrite of a file via OutputStream.  Extended operations are available 
+
+READ, WRITE, READ_WRITE, READ_TRUNCATE, WRITE_TRUNCATE, READ_WRITE_CREATE_IF_NOT_EXISTS, WRITE_FAIL_IF_EXISTS, READ_WRITE_FAIL_IF_EXISTS
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
