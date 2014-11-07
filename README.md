@@ -1,23 +1,19 @@
 
 Jargon Core API
 
-work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
-#### Date: 09/16/2014
+#### Date: 
 #### Release Version: 4.0.2.1-SNAPSHOT
-<<<<<<< HEAD
-#### git tag: 
-=======
 #### git tag: MASTER
->>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
 #### Developer: Mike Conway - DICE
+
 ## News
 
-This release marks compatability with iRODS 4.0.3, integration work with the iRODS Consortium CI infrastructure, and a large number of accumulated fixes 
-and features marking the transition to the iRODS consortium model.
+work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 =======
+
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -34,7 +30,7 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-*Jargon depends on Java 1.6+
+*Jargon depends on Java 1.7+
 *Jargon is built using Apache Maven2, see POM for dependencies
 *Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
 
@@ -48,19 +44,13 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 #### fix display version of file length for rounding #54
 
-<<<<<<< HEAD
-
-
-
+display of file size to not round down for CollectionAndDataObjectListingEntry
 
 ## Features
 
 #### Setting inheritance on collection as admin #55
 
 Add ability to set inherit/noinherit in CollectionAO as admin
-=======
-Fix display of file size to not round down for CollectionAndDataObjectListingEntry
+Fix
 
-=======
-## Features
->>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
+
