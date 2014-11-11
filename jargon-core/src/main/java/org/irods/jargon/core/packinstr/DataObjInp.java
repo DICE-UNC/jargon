@@ -37,6 +37,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
 
+	public static final int TRUNCATE = 512;
+
 	public static final int CREATE_FILE_API_NBR = 601;
 	public static final int DELETE_FILE_API_NBR = 615;
 	public static final int PHYMOVE_FILE_API_NBR = 631;
@@ -72,8 +74,47 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	public static final String BS_LEN = "bsLen";
 
+	/*
+	 * (Supported modes are:
+	 * 
+	 * READ 'r' Open for reading only; place the file pointer at the beginning
+	 * of the file.
+	 * 
+	 * READ_TRUNCATE 'r+' Open for reading and writing; place the file pointer
+	 * at the beginning of the file.
+	 * 
+	 * WRITE 'w' Open for writing only; place the file pointer at the beginning
+	 * of the file and truncate the file to zero length. If the file does not
+	 * exist, attempt to create it.
+	 * 
+	 * WRITE_TRUNCATE 'w+' Open for reading and writing; place the file pointer
+	 * at the beginning of the file and truncate the file to zero length. If the
+	 * file does not exist, attempt to create it.
+	 * 
+	 * READ_WRITE 'a' Open for writing only; place the file pointer at the end
+	 * of the file. If the file does not exist, attempt to create it.
+	 * 
+	 * READ_WRITE_CREATE_IF_NOT_EXISTS 'a+' Open for reading and writing; place
+	 * the file pointer at the end of the file. If the file does not exist,
+	 * attempt to create it.
+	 * 
+	 * WRITE_FAIL_IF_EXISTS 'x' Create and open for writing only; place the file
+	 * pointer at the beginning of the file. If the file already exists, the
+	 * fopen() call will fail by returning FALSE and generating an error of
+	 * level E_WARNING. If the file does not exist, attempt to create it. This
+	 * is equivalent to specifying O_EXCL|O_CREAT flags for the underlying
+	 * open(2) system call.
+	 * 
+	 * READ_WRITE_FAIL_IF_EXISTS 'x+' Create and open for reading and writing;
+	 * place the file pointer at the beginning of the file. If the file already
+	 * exists, the fopen() call will fail by returning FALSE and generating an
+	 * error of level E_WARNING. If the file does not exist, attempt to create
+	 * it. This is equivalent to specifying O_EXCL|O_CREAT flags for the
+	 * underlying open(2) system call.
+	 */
+
 	public enum OpenFlags {
-		READ, WRITE, READ_WRITE
+		READ, WRITE, READ_WRITE, READ_TRUNCATE, WRITE_TRUNCATE, READ_WRITE_CREATE_IF_NOT_EXISTS, WRITE_FAIL_IF_EXISTS, READ_WRITE_FAIL_IF_EXISTS
 	}
 
 	public enum ForceOptions {
@@ -831,15 +872,35 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private int translateOpenFlagsValue() throws JargonException {
 		int tagOpenFlags = 0;
 
-		if (getOpenFlags() == OpenFlags.READ) {
+		switch (getOpenFlags()) {
+		case READ:
 			tagOpenFlags = 0;
-		} else if (getOpenFlags() == OpenFlags.WRITE) {
+			break;
+		case WRITE:
 			tagOpenFlags = 1;
-		} else if (getOpenFlags() == OpenFlags.READ_WRITE) {
+			break;
+		case READ_TRUNCATE:
+			tagOpenFlags = 0 | TRUNCATE;
+			break;
+		case WRITE_TRUNCATE:
+			tagOpenFlags = 1 | TRUNCATE;
+			break;
+		case READ_WRITE:
 			tagOpenFlags = 2;
-		} else {
+			break;
+		case READ_WRITE_CREATE_IF_NOT_EXISTS:
+			tagOpenFlags = 2;
+			break;
+		case READ_WRITE_FAIL_IF_EXISTS:
+			tagOpenFlags = 2;
+			break;
+		case WRITE_FAIL_IF_EXISTS:
+			tagOpenFlags = 1;
+			break;
+		default:
 			throw new JargonException("invalid open flags:" + getOpenFlags());
 		}
+
 		return tagOpenFlags;
 	}
 

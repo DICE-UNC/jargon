@@ -3,9 +3,11 @@
  */
 package org.irods.jargon.core.query;
 
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 
 /**
  * Represents a row in a query response, with convenience methods to access
@@ -172,6 +174,86 @@ public class IRODSQueryResultRow {
 
 		return queryResultColumns.get(idx);
 
+	}
+
+	/**
+	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * 
+	 * @param column
+	 *            <code>int</code> as column position
+	 * @return <code>Data</code> {@link Date} or <code>null</code>
+	 * @throws JargonException
+	 */
+	public Date getColumnAsDateOrNull(final int column) throws JargonException {
+		return IRODSDataConversionUtil.getDateFromIRODSValue(getColumn(column));
+	}
+
+	/**
+	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * 
+	 * @param columnName
+	 *            <code>String</code> as column name
+	 * @return <code>Data</code> {@link Date} or <code>null</code>
+	 * @throws JargonException
+	 */
+	public Date getColumnAsDateOrNull(final String columnName)
+			throws JargonException {
+		return IRODSDataConversionUtil
+				.getDateFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
+	}
+
+	/**
+	 * Get the given column as a <code>int</code>, or as <code>0</code>
+	 * 
+	 * @param column
+	 *            <code>int</code> as column position
+	 * @return <code>int</code> or 0 if null
+	 * @throws JargonException
+	 */
+	public int getColumnAsIntOrZero(final int column) throws JargonException {
+		return IRODSDataConversionUtil
+				.getIntOrZeroFromIRODSValue(getColumn(column));
+	}
+
+	/**
+	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * 
+	 * @param columnName
+	 *            <code>String</code> as column name
+	 * @return <code>int</code> or 0 if null
+	 * @throws JargonException
+	 */
+	public int getColumnAsIntOrZero(final String columnName)
+			throws JargonException {
+		return IRODSDataConversionUtil
+				.getIntOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
+	}
+
+	/**
+	 * Get the given column as a <code>long</code>, or as <code>0</code>
+	 * 
+	 * @param column
+	 *            <code>int</code> as column position
+	 * @return <code>long</code> or 0 if null
+	 * @throws JargonException
+	 */
+	public long getColumnAsLongOrZero(final int column) throws JargonException {
+		return IRODSDataConversionUtil
+				.getLongOrZeroFromIRODSValue(getColumn(column));
+	}
+
+	/**
+	 * Get the given column as a <code>long</code>, or as <code>null</code>
+	 * 
+	 * @param columnName
+	 *            <code>String</code> as column name
+	 * @return <code>long</code> or 0 if null
+	 * @throws JargonException
+	 */
+	public long getColumnAsLongOrZero(final String columnName)
+			throws JargonException {
+		return IRODSDataConversionUtil
+				.getLongOrZeroFromIRODSValue(getColumn(getColumnNamePosition(columnName)));
 	}
 
 	/**

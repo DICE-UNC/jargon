@@ -230,6 +230,14 @@ public class WSOServiceImplTest {
 		wsoService.ingestLocalParameterFileIntoWorkflow(
 				wpfFile.getAbsolutePath(), mountedCollectionPath);
 
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> listingEntries = collectionAndDataObjectListAndSearchAO
+				.listCollectionsUnderPath(mountedCollectionPath, 0);
+		Assert.assertFalse("no run files generated from workflow",
+				listingEntries.isEmpty());
+
 	}
 
 	@Test

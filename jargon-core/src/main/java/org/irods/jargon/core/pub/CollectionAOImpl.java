@@ -345,16 +345,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_ID);
+			addSelectsForMetadataAndDomainDataToBuilder(builder);
 
 			if (!collectionAbsolutePath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
@@ -856,16 +847,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_ID)
+			addSelectsForMetadataAndDomainDataToBuilder(builder)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL, absPath)
@@ -896,6 +878,23 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	private IRODSGenQueryBuilder addSelectsForMetadataAndDomainDataToBuilder(
+			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+		return builder
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_COLL_ATTR_ID);
+	}
+
 	private List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final ObjStat objStat, final int partialStartIndex)
 			throws FileNotFoundException, JargonException, JargonQueryException {
@@ -923,16 +922,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_ID)
+			addSelectsForMetadataAndDomainDataToBuilder(builder)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.EQUAL, absPath);

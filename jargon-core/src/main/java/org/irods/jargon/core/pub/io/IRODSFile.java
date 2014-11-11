@@ -9,6 +9,7 @@ import java.net.URL;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * Interface followed by {@link org.irods.jargon.core.pub.io.IRODSFileImpl}. The
@@ -207,12 +208,26 @@ public interface IRODSFile {
 	int open() throws JargonException;
 
 	/**
-	 * Open the iROD file (obtaining a file descriptor from iRODS). This method
+	 * Open the iRODS file (obtaining a file descritor from iRODS). THis method
+	 * will open the file according to the provided flags
+	 * 
+	 * @param openFlags
+	 *            {@link OpenFlags} enum value that will dictate the open
+	 *            behavior
+	 * @return <code>int</code> with the iRODS file descriptor value
+	 * @throws JargonException
+	 */
+	int open(final OpenFlags openFlags) throws JargonException;
+
+	/**
+	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
 	 * 
 	 * @return <code>int</code> with the irods file descriptor.
 	 * @throws JargonException
+	 * @deprecated use the <code>open(OpenFlags)</code method
 	 */
+	@Deprecated
 	int openReadOnly() throws JargonException;
 
 	void close() throws JargonException;
