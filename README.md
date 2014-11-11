@@ -4,13 +4,9 @@ Jargon Core API
 work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 # Project: Jargon-core API
-#### Date: 09/16/2014
+#### Date:
 #### Release Version: 4.0.2.1-SNAPSHOT
-<<<<<<< HEAD
-#### git tag: 
-=======
 #### git tag: MASTER
->>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
 #### Developer: Mike Conway - DICE
 ## News
 
@@ -48,19 +44,16 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 #### fix display version of file length for rounding #54
 
-<<<<<<< HEAD
-
-
-
+Fix display of file size to not round down for CollectionAndDataObjectListingEntry
 
 ## Features
 
 #### Setting inheritance on collection as admin #55
 
 Add ability to set inherit/noinherit in CollectionAO as admin
-=======
-Fix display of file size to not round down for CollectionAndDataObjectListingEntry
 
-=======
-## Features
->>>>>>> 9424cc69edd1a8dbfb0e8cf187522138971d01c4
+#### Add create/mod date/data size to DataObjectAOImpl.findMetadataValuesByMetadataQuery #60
+
+Include additional information on data size, create and modify dates to MetaDataAndDomainData,
+useful in metadata query based virtual collections
+

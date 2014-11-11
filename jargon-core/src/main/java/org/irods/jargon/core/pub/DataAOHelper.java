@@ -9,6 +9,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
@@ -194,24 +195,6 @@ public final class DataAOHelper extends AOHelper {
 		return dataObject;
 	}
 
-	/**
-	 * Convenience method to add a series of selects for the AVU metadata for
-	 * this domain. Note that the 'select' token is not present in the returned
-	 * data.
-	 * 
-	 * @return <code>String</code> with an iquest-like set of select values for
-	 *         the metadata AVU elements.
-	 */
-	static String buildMetadataSelects() {
-		StringBuilder sb = new StringBuilder();
-		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE.getName());
-		sb.append(COMMA);
-		sb.append(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS.getName());
-		return sb.toString();
-	}
-
 	public static List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
@@ -223,59 +206,6 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		return data;
-	}
-
-	/**
-	 * Given a set of AVU Query parameters, build the appropriate condition to
-	 * add to a query
-	 * 
-	 * @param queryCondition
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            describes a metadata query
-	 * @param queryElement
-	 *            <codeStringBuilder</code> with the given AVU query in iquest
-	 *            query form.
-	 */
-	StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
-		StringBuilder queryCondition = new StringBuilder();
-		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
-		}
-
-		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
-		}
-
-		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
-		}
-
-		return queryCondition;
 	}
 
 	/**
@@ -320,14 +250,19 @@ public final class DataAOHelper extends AOHelper {
 		sb.append('/');
 		sb.append(row.getColumn(2));
 		String domainUniqueName = sb.toString();
-		int attributeId = Integer.parseInt(row.getColumn(3));
-		String attributeName = row.getColumn(4);
-		String attributeValue = row.getColumn(5);
-		String attributeUnits = row.getColumn(6);
+		long dataSize = row.getColumnAsLongOrZero(3);
+		Date createdAt = row.getColumnAsDateOrNull(4);
+		Date modifiedAt = row.getColumnAsDateOrNull(5);
+
+		int attributeId = Integer.parseInt(row.getColumn(6));
+		String attributeName = row.getColumn(7);
+		String attributeValue = row.getColumn(8);
+		String attributeUnits = row.getColumn(9);
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, domainId, domainUniqueName, attributeId,
-				attributeName, attributeValue, attributeUnits);
+				MetadataDomain.DATA, domainId, domainUniqueName, dataSize,
+				createdAt, modifiedAt, attributeId, attributeName,
+				attributeValue, attributeUnits);
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
