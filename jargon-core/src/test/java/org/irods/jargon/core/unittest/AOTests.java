@@ -22,7 +22,7 @@ import org.irods.jargon.core.pub.FederatedUserAOTest;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactoryImplTest;
 import org.irods.jargon.core.pub.IRODSFileSystemSingletonWrapperTest;
 import org.irods.jargon.core.pub.IRODSFileSystemTest;
-import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplBuiilderQueriesTest;
+import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplBuilderQueriesTest;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.IRODSRegistrationOfFilesAOImplTest;
 import org.irods.jargon.core.pub.MountedCollectionAOImplForMSSOTest;
@@ -73,7 +73,7 @@ import org.junit.runners.Suite;
 		CollectionAOImplForSoftLinkTest.class,
 		DataTransferOperationsImplForSoftLinksTest.class,
 		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
-		IRODSGenQueryExecutorImplBuiilderQueriesTest.class,
+		IRODSGenQueryExecutorImplBuilderQueriesTest.class,
 		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
 		SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class,
 		FederatedSpecificQueryAOTest.class,

@@ -34,12 +34,12 @@ import org.junit.Test;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
+public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSGenQueryExecutorImplBuiilderQueriesTest";
+	public static final String IRODS_TEST_SUBDIR_PATH = "IRODSGenQueryExecutorImplBuilderQueriesTest";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 

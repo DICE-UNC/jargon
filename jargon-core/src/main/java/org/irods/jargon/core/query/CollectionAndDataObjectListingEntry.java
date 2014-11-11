@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
@@ -122,7 +121,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * @return <code>String</code> with displayable file size
 	 */
 	public String getDisplayDataSize() {
-		return FileUtils.byteCountToDisplaySize(dataSize);
+		// return FileUtils.byteCountToDisplaySize(dataSize);
+		return MiscIRODSUtils.humanReadableByteCount(dataSize);
 	}
 
 	public int getId() {

@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.FileCatalogObjectAOImpl;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
@@ -195,30 +196,43 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 			final IRODSFile file) throws NoResourceDefinedException,
 			JargonException {
 
-		log.info("instanceIRODSFileOutputStream(final IRODSFile file)");
+		log.info("instanceIRODSFileOutputStream()");
+		return this.instanceIRODSFileOutputStream(file, OpenFlags.WRITE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStream
+	 * (org.irods.jargon.core.pub.io.IRODSFile,
+	 * org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
+	 */
+	@Override
+	public IRODSFileOutputStream instanceIRODSFileOutputStream(
+			final IRODSFile file, final OpenFlags openFlags)
+			throws NoResourceDefinedException, JargonException {
+
+		log.info("instanceIRODSFileOutputStream()");
 
 		if (file == null) {
 			throw new IllegalArgumentException("null file");
 		}
 
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
-		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
-		 */
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		log.info("file:{}", file);
+		log.info("openFlags:{}", openFlags);
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				getIRODSSession(), getIRODSAccount());
 		try {
-			return new IRODSFileOutputStream(file, fileIOOperations);
+			return new IRODSFileOutputStream(file, fileIOOperations, openFlags);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
-		} finally {
-			/*
-			 * if (this.isInstrumented()) { stopWatch.stop(); }
-			 */
 		}
 	}
 
@@ -239,13 +253,6 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (file == null) {
 			throw new IllegalArgumentException("null file");
 		}
-
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
-		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
-		 */
 
 		try {
 			if (!file.exists()) {
@@ -288,15 +295,14 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 						fileIOOperations);
 			} else {
 				IRODSFile irodsFile = instanceIRODSFile(file.getAbsolutePath());
-				return new IRODSFileOutputStream(irodsFile, fileIOOperations);
+				return new IRODSFileOutputStream(irodsFile, fileIOOperations,
+						OpenFlags.WRITE);
 			}
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);
 		} finally {
-			/*
-			 * if (this.isInstrumented()) { stopWatch.stop(); }
-			 */
+
 		}
 	}
 
@@ -353,18 +359,28 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(final String name)
 			throws NoResourceDefinedException, JargonException {
 
-		log.info("instanceIRODSFileOutputStream(final String name)");
+		log.info("instanceIRODSFileOutputStream()");
+
+		return instanceIRODSFileOutputStream(name, OpenFlags.WRITE);
+	}
+
+	@Override
+	public IRODSFileOutputStream instanceIRODSFileOutputStream(
+			final String name, final OpenFlags openFlags)
+			throws NoResourceDefinedException, JargonException {
+
+		log.info("instanceIRODSFileOutputStream()");
 
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("null or empty name");
 		}
 
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new Slf4JStopWatch(
-		 * "instanceIRODSFileOutputStream(final IRODSFile file)"); }
-		 */
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		log.info("name:{}", name);
+		log.info("openFlags:{}", openFlags);
 
 		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
 				getIRODSSession(), getIRODSAccount());
@@ -373,7 +389,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 				log.info("creating IRODSFileImpl for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
-			return new IRODSFileOutputStream(irodsFile, fileIOOperations);
+			return new IRODSFileOutputStream(irodsFile, fileIOOperations,
+					openFlags);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating output stream", e);
 			throw new JargonException(e);

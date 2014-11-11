@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * This is a special version of a <code>IRODSFileOutputStream</code> that adds
@@ -34,7 +36,30 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
 			throws FileNotFoundException, JargonException {
-		super(irodsFile, fileIOOperations);
+		super(irodsFile, fileIOOperations, DataObjInp.OpenFlags.WRITE);
+	}
+
+	/**
+	 * Constructor is called from the appropriate method in
+	 * <code>org.irods.jargon.core.pub.io.IRODSFileFactory}.
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} that underlies the stream
+	 * @param fileIOOperations
+	 *            {@link FileIOOperations} object that handles the actual iRODS
+	 *            communication.
+	 * @param openFlags
+	 *            {@link DataObjInp.OpenFlags} enum value that dictates file
+	 *            open, create, positioning for the stream
+	 * @throws FileNotFoundException
+	 *             if file cannot be found
+	 * @throws JargonException
+	 *             for other iRODS errors
+	 */
+	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
+			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
+			throws FileNotFoundException, JargonException {
+		super(irodsFile, fileIOOperations, openFlags);
 	}
 
 	/*
