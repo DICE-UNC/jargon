@@ -7,6 +7,9 @@ import java.io.OutputStream;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
+import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,6 +32,12 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	private final IRODSFile irodsFile;
 	private final FileIOOperations fileIOOperations;
+
+	/**
+	 * This is the default open mode see {@link DataObjInp.OpenFlags} for
+	 * details. New signatures allow other open options.
+	 */
+	private OpenFlags openFlags = OpenFlags.WRITE;
 
 	/**
 	 * @return the fileIOOperations
@@ -60,13 +69,18 @@ public class IRODSFileOutputStream extends OutputStream {
 	 *                when other iRODS errors occur
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations)
+			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
 			throws NoResourceDefinedException, FileNotFoundException,
 			JargonException {
+
 		super();
 		checkFileParameter(irodsFile);
 		if (fileIOOperations == null) {
-			throw new JargonRuntimeException("fileIOOperations is null");
+			throw new IllegalArgumentException("fileIOOperations is null");
+		}
+
+		if (openFlags == null) {
+			throw new IllegalArgumentException("openFlags is null");
 		}
 
 		/*
@@ -74,28 +88,56 @@ public class IRODSFileOutputStream extends OutputStream {
 		 */
 
 		this.irodsFile = irodsFile;
-		openIRODSFile();
+		this.openFlags = openFlags;
+		openIRODSFile(fileIOOperations);
 		this.fileIOOperations = fileIOOperations;
-
 	}
 
-	private int openIRODSFile() throws NoResourceDefinedException,
-			JargonException {
+	private int openIRODSFile(FileIOOperations fileIOOperations)
+			throws NoResourceDefinedException, JargonException {
+
+		log.info("openIRODSFile()");
 		int fileDescriptor = -1;
 
-		if (irodsFile.exists()) {
-			log.info("deleting file, as this stream operation is overwriting");
-			irodsFile.deleteWithForceOption();
+		boolean exists = irodsFile.exists();
+		log.info("exists? {}", exists);
+
+		/*
+		 * Check exists with open flags and throw error or create as needed
+		 */
+
+		if (exists) {
+			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+					|| openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
+				log.error("file exists, open flags indicate failure intended");
+				throw new JargonException(
+						"Attempt to open a file that exists is an error based on the desired openFlags");
+			} else {
+				log.info("open file with given flags");
+				irodsFile.open(openFlags);
+			}
+
+		} else {
+			log.info("file does not exist, create it");
+			irodsFile.createNewFileCheckNoResourceFound();
 		}
 
-		irodsFile.createNewFileCheckNoResourceFound();
+		fileDescriptor = irodsFile.getFileDescriptor();
 
-		if (irodsFile.getFileDescriptor() == -1) {
+		/**
+		 * Am I seeking to the end of the file?
+		 */
+		if (openFlags == OpenFlags.READ_WRITE
+				|| openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS) {
+			log.info("seeking to end of file based on open flags...");
+			fileIOOperations.seek(fileDescriptor, 0L, SeekWhenceType.SEEK_END);
+		}
+
+		if (fileDescriptor == -1) {
 			String msg = "no file descriptor returned from file creation";
 			log.error(msg);
 			throw new JargonException(msg);
 		}
-		fileDescriptor = irodsFile.getFileDescriptor();
 		return fileDescriptor;
 
 	}

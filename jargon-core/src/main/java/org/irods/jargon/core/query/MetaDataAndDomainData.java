@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.query;
 
+import java.util.Date;
+
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
@@ -22,6 +24,18 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	private final String domainObjectId;
 	private final String domainObjectUniqueName;
 	private final int avuId;
+	/**
+	 * Data size (if applies to domain)
+	 */
+	private final long size;
+	/**
+	 * Created at date (if applies)
+	 */
+	private final Date createdAt;
+	/**
+	 * Modified date (if applies)
+	 */
+	private final Date modifiedAt;
 	private final String avuAttribute;
 	private final String avuValue;
 	private final String avuUnit;
@@ -56,32 +70,121 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 			final String avuAttribute, final String avuValue,
 			final String avuUnit) throws JargonException {
 		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
-				domainObjectUniqueName, avuId, avuAttribute, avuValue, avuUnit);
+				domainObjectUniqueName, 0L, null, null, avuId, avuAttribute,
+				avuValue, avuUnit);
+	}
+
+	/**
+	 * Create an immutable instance
+	 * 
+	 * @param metadataDomain
+	 *            <code>MetadataDomain</code> enum value that indicates the
+	 *            domain (RESOURCE, USER, etc) that this metadata applies to
+	 * @param domainObjectId
+	 *            <code>String</code> represents the unique id value for this
+	 *            domain object in ICAT
+	 * @param domainObjectUniqueName
+	 *            <code>String</code> with the unique name in ICAT, such as
+	 *            absolute path or resource name
+	 * @param size
+	 *            <code>long</code> with an optional data size
+	 * @param createdAt
+	 *            <code>Date</code> created at, can be <code>null</code>
+	 * @param modifiedAt
+	 *            <code>Date</code> modified, can be <code>null</code>
+	 * @param avuId
+	 *            <code>int</code> with the AVU id
+	 * @param avuAttribute
+	 *            <code>String</code> with the AVU attribute
+	 * @param avuValue
+	 *            <code>String</code> with the AVU value
+	 * @param avuUnit
+	 *            <code>String</code> with the AVU units
+	 * @return <code>MetaDataAndDomainData</code> representing an AVU for the
+	 *         given domain
+	 * @throws JargonException
+	 */
+	public static MetaDataAndDomainData instance(
+			final MetadataDomain metadataDomain, final String domainObjectId,
+			final String domainObjectUniqueName, final long size,
+			final Date createdAt, final Date modifiedAt, final int avuId,
+			final String avuAttribute, final String avuValue,
+			final String avuUnit) throws JargonException {
+		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
+				domainObjectUniqueName, 0L, null, null, avuId, avuAttribute,
+				avuValue, avuUnit);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("MetaDataAndDomainData:");
-		sb.append("\n   domain:");
-		sb.append(metadataDomain);
-		sb.append("\n   id:");
-		sb.append(domainObjectId);
-		sb.append("\n   domainObjectUniqueName:");
-		sb.append(domainObjectUniqueName);
-		sb.append("\n   avuId:");
-		sb.append(avuId);
-		sb.append("\n   avuAttribute:");
-		sb.append(avuAttribute);
-		sb.append("\n   avuValue:");
-		sb.append(avuValue);
-		sb.append("\n   avuUnit:");
-		sb.append(avuUnit);
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("MetaDataAndDomainData [");
+		if (metadataDomain != null) {
+			builder.append("metadataDomain=");
+			builder.append(metadataDomain);
+			builder.append(", ");
+		}
+		if (domainObjectId != null) {
+			builder.append("domainObjectId=");
+			builder.append(domainObjectId);
+			builder.append(", ");
+		}
+		if (domainObjectUniqueName != null) {
+			builder.append("domainObjectUniqueName=");
+			builder.append(domainObjectUniqueName);
+			builder.append(", ");
+		}
+		builder.append("avuId=");
+		builder.append(avuId);
+		builder.append(", size=");
+		builder.append(size);
+		builder.append(", ");
+		if (createdAt != null) {
+			builder.append("createdAt=");
+			builder.append(createdAt);
+			builder.append(", ");
+		}
+		if (modifiedAt != null) {
+			builder.append("modifiedAt=");
+			builder.append(modifiedAt);
+			builder.append(", ");
+		}
+		if (avuAttribute != null) {
+			builder.append("avuAttribute=");
+			builder.append(avuAttribute);
+			builder.append(", ");
+		}
+		if (avuValue != null) {
+			builder.append("avuValue=");
+			builder.append(avuValue);
+			builder.append(", ");
+		}
+		if (avuUnit != null) {
+			builder.append("avuUnit=");
+			builder.append(avuUnit);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
+	/**
+	 * Note that createdAt and modifiedAt can be null
+	 * 
+	 * @param metadataDomain
+	 * @param domainObjectId
+	 * @param domainObjectUniqueName
+	 * @param size
+	 * @param createdAt
+	 * @param modifiedAt
+	 * @param avuId
+	 * @param avuAttribute
+	 * @param avuValue
+	 * @param avuUnit
+	 * @throws JargonException
+	 */
 	private MetaDataAndDomainData(final MetadataDomain metadataDomain,
 			final String domainObjectId, final String domainObjectUniqueName,
+			final long size, final Date createdAt, final Date modifiedAt,
 			final int avuId, final String avuAttribute, final String avuValue,
 			final String avuUnit) throws JargonException {
 
@@ -117,6 +220,9 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		this.avuAttribute = avuAttribute;
 		this.avuValue = avuValue;
 		this.avuUnit = avuUnit;
+		this.size = size;
+		this.modifiedAt = modifiedAt;
+		this.createdAt = createdAt;
 	}
 
 	public String getDomainObjectId() {
@@ -145,6 +251,18 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	public int getAvuId() {
 		return avuId;
+	}
+
+	public long getSize() {
+		return size;
+	}
+
+	public Date getCreatedAt() {
+		return createdAt;
+	}
+
+	public Date getModifiedAt() {
+		return modifiedAt;
 	}
 
 }

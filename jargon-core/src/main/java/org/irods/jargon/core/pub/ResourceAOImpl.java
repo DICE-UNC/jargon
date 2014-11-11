@@ -656,7 +656,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME.getName());
+		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE.getName());
 		query.append(COMMA);
@@ -694,9 +694,53 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
-		return AccessObjectQueryProcessingUtils
-				.buildMetaDataAndDomainDatalistFromResultSet(
-						MetadataDomain.RESOURCE, resultSet);
+		return buildMetaDataAndDomainDatalistFromResultSet(
+				MetadataDomain.RESOURCE, resultSet);
+	}
+
+	private List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(
+			final MetadataDomain metaDataDomain,
+			final IRODSQueryResultSetInterface irodsQueryResultSet)
+			throws JargonException {
+		if (metaDataDomain == null) {
+			throw new JargonException("null metaDataDomain");
+		}
+
+		if (irodsQueryResultSet == null) {
+			throw new JargonException("null irodsQueryResultSet");
+		}
+
+		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
+		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
+			metaDataResults
+					.add(buildMetaDataAndDomainDataFromResultSetRow(
+							metaDataDomain, row,
+							irodsQueryResultSet.getTotalRecords()));
+		}
+
+		return metaDataResults;
+	}
+
+	private MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
+			final MetaDataAndDomainData.MetadataDomain metadataDomain,
+			final IRODSQueryResultRow row, final int totalRecordCount)
+			throws JargonException {
+
+		String domainId = row.getColumn(0);
+		String domainUniqueName = row.getColumn(1);
+		String attributeName = row.getColumn(2);
+		String attributeValue = row.getColumn(3);
+		String attributeUnits = row.getColumn(4);
+		int attributeId = row.getColumnAsIntOrZero(5);
+
+		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
+				metadataDomain, domainId, domainUniqueName, attributeId,
+				attributeName, attributeValue, attributeUnits);
+		data.setCount(row.getRecordCount());
+		data.setLastResult(row.isLastResult());
+		data.setTotalRecords(totalRecordCount);
+		log.debug("metadataAndDomainData: {}", data);
+		return data;
 	}
 
 	/**

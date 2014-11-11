@@ -1509,22 +1509,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
+			addMetadataAndDomainDataSelectsToBuilder(builder);
 
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							dataObjectFile.getParent())
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, dataObjectFile.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL,
@@ -2002,17 +1990,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
+			addMetadataAndDomainDataSelectsToBuilder(builder);
 
 			for (AVUQueryElement queryElement : avuQuery) {
 				DataAOHelper.appendConditionPartToBuilderQuery(queryElement,
@@ -2037,6 +2015,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return DataAOHelper
 				.buildMetaDataAndDomainDataListFromResultSet(resultSet);
 
+	}
+
+	private void addMetadataAndDomainDataSelectsToBuilder(
+			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
 	}
 
 	/*
@@ -2522,21 +2518,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSQueryResultSetInterface resultSet;
 
 		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							dataObjectFile.getParent())
+			addMetadataAndDomainDataSelectsToBuilder(builder);
+
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, dataObjectFile.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL,
