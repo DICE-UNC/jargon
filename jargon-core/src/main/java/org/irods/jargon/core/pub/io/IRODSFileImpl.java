@@ -23,6 +23,7 @@ import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -1257,16 +1258,11 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		this.fileDescriptor = fileDescriptor;
 	}
 
-	private int openWithMode(final DataObjInp.OpenFlags openFlags,
-			final boolean checkExists) throws JargonException {
+	private int openWithMode(final DataObjInp.OpenFlags openFlags)
+			throws JargonException {
 
 		if (log.isInfoEnabled()) {
 			log.info("opening irodsFile:" + getAbsolutePath());
-		}
-
-		if (checkExists && !exists()) {
-			throw new JargonException(
-					"this file does not exist, so it cannot be opened.  The file should be created first!");
 		}
 
 		if (getFileDescriptor() > 0) {
@@ -1290,8 +1286,10 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#openReadOnly()
 	 */
 	@Override
+	@Deprecated
 	public synchronized int openReadOnly() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ, true);
+		log.info("openReadOnly()");
+		return openWithMode(DataObjInp.OpenFlags.READ);
 	}
 
 	/*
@@ -1301,7 +1299,26 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 	 */
 	@Override
 	public synchronized int open() throws JargonException {
-		return openWithMode(DataObjInp.OpenFlags.READ_WRITE, true);
+		log.info("open()");
+		return openWithMode(DataObjInp.OpenFlags.READ_WRITE);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.io.IRODSFile#open(org.irods.jargon.core.packinstr
+	 * .DataObjInp.OpenFlags)
+	 */
+	@Override
+	public synchronized int open(OpenFlags openFlags) throws JargonException {
+		log.info("open()");
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		log.info("openFlags:{}", openFlags);
+		return openWithMode(openFlags);
 	}
 
 	/*
@@ -1411,4 +1428,5 @@ public final class IRODSFileImpl extends File implements IRODSFile {
 		}
 		return canExecute;
 	}
+
 }

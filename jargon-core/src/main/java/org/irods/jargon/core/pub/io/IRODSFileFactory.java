@@ -5,6 +5,8 @@ import java.net.URI;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * Defines the interface to a factory that can produce connected versions of
@@ -51,7 +53,7 @@ public interface IRODSFileFactory {
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
-	 * iRODS file.
+	 * iRODS file. This will use the default OpenFlags.WRITE setting
 	 * 
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be written to via the given
@@ -68,7 +70,32 @@ public interface IRODSFileFactory {
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
-	 * iRODS file.
+	 * iRODS file. This method takes an <code>OpenFlags</code> parameter that
+	 * dicates the open mode and file create mode. See
+	 * {@link DataObjInp.OpenFlags} for details
+	 * 
+	 * @param file
+	 *            {@link IRODSFile} that will be written to via the given
+	 *            stream.
+	 * @param openFlags
+	 *            {@link DataObjInp.OpenFlags} parameter that dicates open mode
+	 *            and automatic create behavior, as well as overwrite/truncation
+	 *            behavior
+	 * 
+	 * @return {@link IRODSFileOutputStream} with an opened and positioned
+	 *         stream
+	 * @throws NoResourceDefinedException
+	 * @throws JargonException
+	 *             +
+	 */
+	IRODSFileOutputStream instanceIRODSFileOutputStream(IRODSFile file,
+			OpenFlags openFlags) throws NoResourceDefinedException,
+			JargonException;
+
+	/**
+	 * Creates an iRODS output stream such that data can be written to the given
+	 * iRODS file. This will default the open behavior to
+	 * <code>OpenFlags.WRITE</code>
 	 * 
 	 * @param name
 	 *            <code>String</code> with and absolute path to the file that
@@ -82,6 +109,24 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFileOutputStream instanceIRODSFileOutputStream(String name)
 			throws NoResourceDefinedException, JargonException;
+
+	/**
+	 * 
+	 * @param name
+	 *            <code>String</code> with and absolute path to the file that
+	 *            will be written to via the given stream.
+	 * @param openFlags
+	 *            {@link DataObjInp.OpenFlags} parameter that dicates open mode
+	 *            and automatic create behavior, as well as overwrite/truncation
+	 *            behavior
+	 * @return {@link IRODSFileOutputStream} implementation of a
+	 *         <code>java.io.OutputStream</code>
+	 * @throws NoResourceDefinedException
+	 * @throws JargonException
+	 */
+	IRODSFileOutputStream instanceIRODSFileOutputStream(String name,
+			OpenFlags openFlags) throws NoResourceDefinedException,
+			JargonException;
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given

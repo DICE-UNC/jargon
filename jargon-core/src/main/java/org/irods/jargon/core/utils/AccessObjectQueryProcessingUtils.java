@@ -99,14 +99,15 @@ public class AccessObjectQueryProcessingUtils {
 
 		String domainId = row.getColumn(0);
 		String domainUniqueName = row.getColumn(1);
-		String attributeName = row.getColumn(2);
-		String attributeValue = row.getColumn(3);
-		String attributeUnits = row.getColumn(4);
-		int attributeId = Integer.parseInt(row.getColumn(5));
+		String attributeName = row.getColumn(4);
+		String attributeValue = row.getColumn(5);
+		String attributeUnits = row.getColumn(6);
+		int attributeId = row.getColumnAsIntOrZero(7);
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				metadataDomain, domainId, domainUniqueName, attributeId,
-				attributeName, attributeValue, attributeUnits);
+				metadataDomain, domainId, domainUniqueName, 0L,
+				row.getColumnAsDateOrNull(2), row.getColumnAsDateOrNull(3),
+				attributeId, attributeName, attributeValue, attributeUnits);
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
 		data.setTotalRecords(totalRecordCount);

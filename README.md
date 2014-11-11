@@ -10,6 +10,19 @@ Work for milestone https://github.com/DICE-UNC/jargon/milestones/4.0.3.1%20secon
 
 ## News
 
+=======
+
+# Project: Jargon-core API
+#### Date: 
+#### Release Version: 4.0.2.1-SNAPSHOT
+#### git tag: MASTER
+#### Developer: Mike Conway - DICE
+
+## News
+
+work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
+
+
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -39,4 +52,3 @@ Note that the following bug and feature requests are logged in GitHub with relat
 ## Bug Fixes
 
 ## Features
-

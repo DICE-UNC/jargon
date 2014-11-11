@@ -34,7 +34,7 @@ import org.junit.Test;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSGenQueryExecutorImplBuiilderQueriesTest {
+public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
