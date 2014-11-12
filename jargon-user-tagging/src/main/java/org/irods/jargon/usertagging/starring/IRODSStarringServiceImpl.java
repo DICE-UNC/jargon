@@ -395,7 +395,10 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 				metadataAndDomainData.getMetadataDomain(),
 				metadataAndDomainData.getDomainObjectUniqueName(),
 				metadataAndDomainData.getAvuAttribute(),
-				metadataAndDomainData.getAvuValue());
+				metadataAndDomainData.getAvuValue(),
+				metadataAndDomainData.getSize(),
+				metadataAndDomainData.getCreatedAt(),
+				metadataAndDomainData.getModifiedAt());
 
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
 		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData
