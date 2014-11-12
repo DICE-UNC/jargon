@@ -3,6 +3,8 @@
 **/nb-configuration.xml
 **/.springBeans
 **/testing.properties
+**/*.eml
+.idea
 .project
 .metadata
 .DS_Store
