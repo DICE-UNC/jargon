@@ -3798,6 +3798,60 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
+	 * https://github.com/DICE-UNC/jargon/issues/63
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testMoveThenMoveBackBug63() throws Exception {
+
+		String rootCollection = "testMoveThenMoveBackBug63";
+		String targetCollection = "testMoveThenMoveBackBug63TargetCollection";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ targetCollection);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
+						1, 1, "testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		// make the target
+
+		IRODSFile targetParent = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+
+		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
+				+ rootCollection, targetParent.getAbsolutePath());
+
+	}
+
+	/**
 	 * Replication sequence for bug [#1044] Jargon allows the creating of
 	 * folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
 	 * 
