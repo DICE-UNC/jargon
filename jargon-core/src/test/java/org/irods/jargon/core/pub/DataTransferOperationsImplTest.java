@@ -3849,6 +3849,14 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, targetParent.getAbsolutePath());
 
+		// now move it back to the source
+		dataTransferOperationsAO.move(targetParent.getAbsolutePath(),
+				irodsCollectionRootAbsolutePath + "/" + rootCollection);
+
+		// expect this to run without error, with the reported bug being
+		// org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException:
+		// Collection already exists
+
 	}
 
 	/**
