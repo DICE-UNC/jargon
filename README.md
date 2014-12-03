@@ -53,6 +53,12 @@ overwrite of a file via OutputStream.  Extended operations are available
 
 READ, WRITE, READ_WRITE, READ_TRUNCATE, WRITE_TRUNCATE, READ_WRITE_CREATE_IF_NOT_EXISTS, WRITE_FAIL_IF_EXISTS, READ_WRITE_FAIL_IF_EXISTS
 
+#### #62 [iROD-Chat:12888] JargonException: java.io.IOException: read length is set to zero when copying file
+
+Clarified the usage of the default storage resource, if set, in IRODSAccount so that it is propagated to move() and copy() operations if a specific resource was not set in the move or copy call.
+Note that if no resource is set, it will defer to default resource settings in iRODS.  Additionally, the move() method was enhanced, so that, if a move is being done from a source file to the same target
+file, but with a different resource, it will delegate to a physical move.  This seems like a 'least surprise' sensible default.
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
