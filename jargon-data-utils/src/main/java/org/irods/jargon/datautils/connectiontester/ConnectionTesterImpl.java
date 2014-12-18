@@ -20,14 +20,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * @author Mike
+ * @author Mike Conway - DICE
  * 
  */
-public class ConnectionTesterImpl extends AbstractJargonService {
-
-	public enum TestType {
-		SMALL, MEDIUM, LARGE, EXTRA_LARGE
-	}
+public class ConnectionTesterImpl extends AbstractJargonService implements
+		ConnectionTester {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ConnectionTesterImpl.class);
@@ -60,6 +57,7 @@ public class ConnectionTesterImpl extends AbstractJargonService {
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException
 	 */
+	@Override
 	public ConnectionTestResult runTests(final List<TestType> testTypes)
 			throws JargonException {
 
@@ -75,6 +73,9 @@ public class ConnectionTesterImpl extends AbstractJargonService {
 
 		for (TestType testType : testTypes) {
 			List<TestResultEntry> individualTestResults = processTest(testType);
+
+			testResult.getTestResults().addAll(individualTestResults);
+
 		}
 
 		return testResult;
@@ -181,8 +182,14 @@ public class ConnectionTesterImpl extends AbstractJargonService {
 		}
 		long endTime = System.currentTimeMillis();
 		result.setTotalMilliseconds(endTime - startTime);
-		result.setTransferRateBytesPerSecond((int) (dataSize / (result
-				.getTotalMilliseconds() / 1000)));
+
+		float totalSeconds = result.getTotalMilliseconds() / 1000;
+
+		if (totalSeconds == 0) {
+			totalSeconds = 1;
+		}
+
+		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
 		result.setSuccess(true);
 		entries.add(result);
 
@@ -217,8 +224,13 @@ public class ConnectionTesterImpl extends AbstractJargonService {
 
 		endTime = System.currentTimeMillis();
 		result.setTotalMilliseconds(endTime - startTime);
-		result.setTransferRateBytesPerSecond((int) (dataSize / (result
-				.getTotalMilliseconds() / 1000)));
+		totalSeconds = result.getTotalMilliseconds() / 1000;
+
+		if (totalSeconds == 0) {
+			totalSeconds = 1;
+		}
+
+		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
 		result.setSuccess(true);
 		entries.add(result);
 
@@ -235,7 +247,7 @@ public class ConnectionTesterImpl extends AbstractJargonService {
 				// ignore
 			}
 			try {
-				irodsFile.delete();
+				irodsFile.deleteWithForceOption();
 			} catch (Exception e) {
 				// ignore
 			}

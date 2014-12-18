@@ -27,7 +27,7 @@ public class ConnectionTestResult {
 	/**
 	 * A list of results by test type requested
 	 */
-	private List<ConnectionTestResult> testResults = new ArrayList<ConnectionTestResult>();
+	private List<TestResultEntry> testResults = new ArrayList<TestResultEntry>();
 
 	/**
 	 * 
@@ -68,7 +68,7 @@ public class ConnectionTestResult {
 	/**
 	 * @return the testResults
 	 */
-	public List<ConnectionTestResult> getTestResults() {
+	public List<TestResultEntry> getTestResults() {
 		return testResults;
 	}
 
@@ -76,7 +76,7 @@ public class ConnectionTestResult {
 	 * @param testResults
 	 *            the testResults to set
 	 */
-	public void setTestResults(List<ConnectionTestResult> testResults) {
+	public void setTestResults(List<TestResultEntry> testResults) {
 		this.testResults = testResults;
 	}
 

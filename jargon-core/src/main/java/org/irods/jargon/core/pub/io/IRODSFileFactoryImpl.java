@@ -127,6 +127,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFile instanceIRODSFile(final String parent, final String child)
 			throws JargonException {
 
+		log.info("instanceIRODSFile()");
+
 		if (parent == null) {
 			throw new JargonException("parent is null");
 		}
@@ -134,6 +136,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (child == null) {
 			throw new JargonException("child is null");
 		}
+
+		log.info("parent:{}", parent);
+		log.info("child:{}", child);
 
 		if (child.isEmpty() && parent.isEmpty()) {
 			throw new JargonException("both child and parent names are blank");

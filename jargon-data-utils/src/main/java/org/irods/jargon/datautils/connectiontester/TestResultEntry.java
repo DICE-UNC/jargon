@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.datautils.connectiontester;
 
-import org.irods.jargon.datautils.connectiontester.ConnectionTesterImpl.TestType;
+import org.irods.jargon.datautils.connectiontester.ConnectionTester.TestType;
 
 /**
  * Entry for a connection test result
