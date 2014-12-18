@@ -70,3 +70,7 @@ Add ability to set inherit/noinherit in CollectionAO as admin
 Include additional information on data size, create and modify dates to MetaDataAndDomainData,
 useful in metadata query based virtual collections
 
+#### Connection tester #67
+
+Add connection tester package to jargon-data-utils to test out and measure put/get performance 
+
