@@ -2,6 +2,7 @@ package org.irods.jargon.datautils.unittest;
 
 import org.irods.jargon.datautils.connection.ConnectionCreatingPoolableObjectFactoryTest;
 import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerTest;
+import org.irods.jargon.datautils.connectiontester.ConnectionTesterImplTest;
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.filearchive.LocalFileGzipCompressorTest;
 import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
@@ -36,7 +37,7 @@ import org.junit.runners.Suite;
 		DiffTreePostProcessorTest.class,
 		FileTreeIteratorVisitorInvokerTest.class,
 		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-		LocalFileGzipCompressorTest.class })
+		LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
 public class AllTests {
 
 }
