@@ -1465,8 +1465,8 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testPutThenGetOneFileWithSpecialChars�������������.txt";
-		String testRetrievedFileName = "testPutThenGetOneFileRetreived������������������������������u,1o�������������.txt";
+		String testFileName = "testPutThenGetOneFileWithSpecialChars���������������������������������������.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreived������������������������������������������������������������������������������������������u,1o���������������������������������������.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -2943,6 +2943,61 @@ public class DataTransferOperationsImplTest {
 				"skip counts disagree between listener and transferControlBlock",
 				listener.getSkipCtr(),
 				transferControlBlock.getTotalFilesSkippedSoFar());
+
+	}
+
+	/**
+	 * FIXME: looks like an iRODS bug? Ignored for now see
+	 * https://github.com/DICE-UNC/jargon/issues/63
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore
+	public void testMoveSourceCollectionTargetCollectionBug63()
+			throws Exception {
+
+		String rootCollection = "testMoveSourceCollectionTargetCollectionBug63";
+		String rootCollection2 = "testMoveSourceCollectionTargetCollectionBug63Coll2";
+		String testFileName = "testMoveSourceCollectionTargetCollectionBug63.txt";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection);
+		String irodsCollectionRoot2AbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ rootCollection2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile rootFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		IRODSFile root2File = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRoot2AbsolutePath);
+
+		rootFile.mkdirs();
+		root2File.mkdirs();
+
+		FileGenerator.generateFileOfFixedLengthGivenName(
+				localCollectionAbsolutePath, testFileName, 10);
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, rootFile, null, null);
+
+		dataTransferOperationsAO.move(rootFile, root2File);
 
 	}
 
