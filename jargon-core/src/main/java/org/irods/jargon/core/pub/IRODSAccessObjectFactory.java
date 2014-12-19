@@ -510,4 +510,14 @@ public interface IRODSAccessObjectFactory {
 	 */
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
+	/**
+	 * Obtain a manager of iRODS file locks
+	 * 
+	 * @param irodsAccount
+	 * @return
+	 * @throws JargonException
+	 */
+	FileLockManagerAO getFileLockManagerAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }
