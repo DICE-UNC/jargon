@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.DataObjInpForFileLock;
 import org.irods.jargon.core.packinstr.DataObjInpForFileLock.LockCommandType;
 import org.irods.jargon.core.packinstr.Tag;
@@ -20,7 +21,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class FileLockManagerAOImpl extends IRODSGenericAO implements FileLockManagerAO {
+public class FileLockManagerAOImpl extends IRODSGenericAO implements
+		FileLockManagerAO {
 
 	private static Logger log = LoggerFactory
 			.getLogger(FileLockManagerAOImpl.class);
@@ -32,8 +34,13 @@ public class FileLockManagerAOImpl extends IRODSGenericAO implements FileLockMan
 
 	// TODO: how about wait? test exception for no file found
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.FileLockManagerAO#obtainFileLockWithoutWait(java.lang.String, org.irods.jargon.core.packinstr.DataObjInpForFileLock.LockType)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.FileLockManagerAO#obtainFileLockWithoutWait
+	 * (java.lang.String,
+	 * org.irods.jargon.core.packinstr.DataObjInpForFileLock.LockType)
 	 */
 	@Override
 	public FileLock obtainFileLockWithoutWait(final String irodsAbsolutePath,
@@ -52,9 +59,24 @@ public class FileLockManagerAOImpl extends IRODSGenericAO implements FileLockMan
 
 		DataObjInpForFileLock dataObjInp = DataObjInpForFileLock.instance(
 				irodsAbsolutePath, lockType, LockCommandType.SET_LOCK);
+
+		long currentTime = System.currentTimeMillis();
+
 		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
-		log.info("lock obtained:{}", response);
-		return null; // change to the proper fd
+		log.info("response:{}", response);
+		Tag intVal = response.getTag("MsgHeader_PI").getTag("intInfo");
+		if (intVal == null) {
+			throw new JargonRuntimeException("no fd returned from lock call");
+		}
+
+		FileLock fileLock = new FileLock();
+		fileLock.setApproximateSystemTimeWhenLockObtained(currentTime);
+		fileLock.setFd(intVal.getIntValue());
+		fileLock.setIrodsAbsolutePath(irodsAbsolutePath);
+		fileLock.setLockType(lockType);
+		log.info("lock obtained:{}", fileLock);
+
+		return fileLock; // change to the proper fd
 	}
 
 }

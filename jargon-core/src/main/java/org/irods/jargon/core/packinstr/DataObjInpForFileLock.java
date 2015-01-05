@@ -44,9 +44,9 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 	public static final String SET_LOCK_WAIT_CMD = "setLockWaitCmd";
 	public static final String GET_LOCK_CMD = "getLockCmd";
 
-	public static final String LOCK_TYPE_KW = "LOCK_TYPE_KW";
-	public static final String LOCK_CMD_KW = "LOCK_CMD_KW";
-	public static final String LOCK_FD_KW = "LOCK_FD_KW";
+	public static final String LOCK_TYPE_KW = "lockType";
+	public static final String LOCK_CMD_KW = "lockCmd";
+	public static final String LOCK_FD_KW = "lockFd";
 
 	private String fileAbsolutePath = "";
 	private LockType lockType = LockType.READ_LOCK;
@@ -109,6 +109,41 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.OPR_TYPE, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+		String lockTypeVal;
+		switch (lockType) {
+		case WRITE_LOCK:
+			lockTypeVal = WRITE_LOCK_TYPE;
+			break;
+		case READ_LOCK:
+			lockTypeVal = READ_LOCK_TYPE;
+			break;
+		case UNLOCK:
+			lockTypeVal = UNLOCK_TYPE;
+			break;
+		default:
+			throw new IllegalArgumentException("unkown lock type");
+		}
+
+		kvps.add(KeyValuePair.instance(LOCK_TYPE_KW, lockTypeVal));
+
+		String lockCommandVal;
+		switch (lockCommandType) {
+		case SET_LOCK:
+			lockCommandVal = SET_LOCK_CMD;
+			break;
+		case SET_LOCK_WAIT:
+			lockCommandVal = SET_LOCK_WAIT_CMD;
+			break;
+		case GET_LOCK:
+			lockCommandVal = GET_LOCK_CMD;
+			break;
+		default:
+			throw new IllegalArgumentException("invalid lockCommandType");
+		}
+
+		kvps.add(KeyValuePair.instance(LOCK_CMD_KW, lockCommandVal));
+
+		// lockFD for unlock only
 
 		message.addTag(createKeyValueTag(kvps));
 		return message;

@@ -623,7 +623,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 				}
 			}
 		}
-
 		// previous will have returned or thrown exception
 
 		if (errorLength != 0) {
