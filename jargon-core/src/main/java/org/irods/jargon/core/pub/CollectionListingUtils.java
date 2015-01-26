@@ -328,7 +328,7 @@ class CollectionListingUtils {
 		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
 				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			return listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath,
-					true);
+					true, partialStartIndex);
 		} else {
 			return listCollectionsUnderPathViaGenQuery(objStat,
 					partialStartIndex, effectiveAbsolutePath);
@@ -338,7 +338,8 @@ class CollectionListingUtils {
 
 	private List<CollectionAndDataObjectListingEntry> listUnderPathWhenSpecColl(
 			final ObjStat objStat, final String effectiveAbsolutePath,
-			final boolean isCollection) throws JargonException {
+			final boolean isCollection, final long offset)
+			throws JargonException {
 
 		log.info("listCollectionsUnderPathWhenSpecColl()");
 
@@ -366,11 +367,13 @@ class CollectionListingUtils {
 		DataObjInpForQuerySpecColl dataObjInp = null;
 
 		if (isCollection) {
-			dataObjInp = DataObjInpForQuerySpecColl.instanceQueryCollections(
-					effectiveAbsolutePath, specColInfo);
+			dataObjInp = DataObjInpForQuerySpecColl
+					.instanceQueryCollectionsWithOffset(effectiveAbsolutePath,
+							specColInfo, offset);
 		} else {
-			dataObjInp = DataObjInpForQuerySpecColl.instanceQueryDataObj(
-					effectiveAbsolutePath, specColInfo);
+			dataObjInp = DataObjInpForQuerySpecColl
+					.instanceQueryDataObjWithOffset(effectiveAbsolutePath,
+							specColInfo, offset);
 		}
 		Tag response;
 
@@ -388,7 +391,7 @@ class CollectionListingUtils {
 					.translateResponseIntoResultSet(response,
 							new ArrayList<String>(), 0, 0);
 
-			int ctr = 1;
+			int ctr = (int) offset + 1;
 			CollectionAndDataObjectListingEntry entry = null;
 			for (IRODSQueryResultRow row : results) {
 				entry = createListingEntryFromResultRow(objStat, row,
@@ -637,7 +640,7 @@ class CollectionListingUtils {
 				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 
 			files = listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath,
-					false);
+					false, partialStartIndex);
 		} else {
 
 			files = listDataObjectsUnderPathViaGenQuery(objStat,

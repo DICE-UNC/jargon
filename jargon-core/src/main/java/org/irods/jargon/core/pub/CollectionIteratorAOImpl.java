@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * 
  * @author Mike Conway DICE (www.irods.org) FIXME: deprecate this?
  */
-public class CollectionIteratorAOImpl extends IRODSGenericAO {
+public class CollectionIteratorAOImpl extends IRODSGenericAO implements CollectionIteratorAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionIteratorAOImpl.class);
@@ -47,6 +47,10 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 				collectionAndDataObjectListAndSearchAO);
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionIteratorAO#retrivePagingAwareCollectionListing(java.lang.String)
+	 */
+	@Override
 	public PagingAwareCollectionListing retrivePagingAwareCollectionListing(
 			final String absolutePathToParent) throws FileNotFoundException,
 			JargonException {
