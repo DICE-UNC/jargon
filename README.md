@@ -10,6 +10,14 @@ Work for milestone https://github.com/DICE-UNC/jargon/milestones/features%20bran
 
 ## News
 
+# Project: Jargon-core API
+#### Date: 
+#### Release Version: 4.0.2.1-SNAPSHOT
+#### git tag: MASTER
+#### Developer: Mike Conway - DICE
+
+## News
+
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 Jargon-core consists of the following libraries
