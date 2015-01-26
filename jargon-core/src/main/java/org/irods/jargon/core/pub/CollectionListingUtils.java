@@ -186,7 +186,7 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * @param collectionAndDataObjectListingEntries
+	 * @param data.getCollectionAndDataObjectListingEntries()
 	 */
 	private CollectionAndDataObjectListingEntry createStandInForHomeDir() {
 		log.info("under root, put out home as an entry");

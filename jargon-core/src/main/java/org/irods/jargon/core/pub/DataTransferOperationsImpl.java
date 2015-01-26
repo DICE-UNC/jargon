@@ -288,6 +288,23 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("sourceFile does not exist");
 		}
 
+		log.info("see if this is just a physical move");
+
+		if (sourceFile.getAbsolutePath().equals(targetFile.getAbsolutePath())) {
+			log.info("source and target paths are the same...is this really a phymove?");
+			if (!targetFile.getResource().isEmpty()) {
+				log.info("delegating to a phymove");
+				this.physicalMove(sourceFile.getAbsolutePath(),
+						targetFile.getResource());
+				return;
+			} else {
+				log.error("moving a file to itself");
+				throw new JargonException("cannot move a file to itself!");
+			}
+		}
+
+		log.info("treat as a normal move");
+
 		if (sourceFile.isFile()) {
 			log.info("source file is a data object");
 			moveWhenSourceIsFile(sourceFile, targetFile);
@@ -1607,7 +1624,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	@Override
 	public void copy(
 			final String irodsSourceFileAbsolutePath,
-			final String targetResource,
+			String targetResource,
 			final String irodsTargetFileAbsolutePath,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
@@ -1674,6 +1691,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		log.info("copy operation for source: {}", irodsSourceFile);
 		log.info("to target file:{}", irodsTargetFile);
+
+		if (irodsTargetFile.getResource().isEmpty()) {
+			log.info("target resource empty, use default resource in irods account");
+			irodsTargetFile.setResource(this.getIRODSAccount()
+					.getDefaultStorageResource());
+		}
+
 		log.info(" to target resource: {}", irodsTargetFile.getResource());
 
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);

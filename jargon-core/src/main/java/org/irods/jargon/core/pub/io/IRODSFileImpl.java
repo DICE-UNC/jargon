@@ -47,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * 
  */
 
-public final class IRODSFileImpl extends File implements IRODSFile {
+public class IRODSFileImpl extends File implements IRODSFile {
 	static Logger log = LoggerFactory.getLogger(IRODSFileImpl.class);
 
 	private IRODSFileSystemAO irodsFileSystemAO = null;

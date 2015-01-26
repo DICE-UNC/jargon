@@ -82,13 +82,84 @@ public class CollectionPagerAOImplTest {
 		PagingAwareCollectionListing actual = collectionPagerAO
 				.retrieveFirstPageUnderParent(parentPath);
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
-		Assert.assertFalse("collection should not be complete",
-				actual.isCollectionsComplete());
-		Assert.assertFalse("data objects should not be complete",
-				actual.isCollectionsComplete());
+		Assert.assertFalse("collection should not be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertFalse("data objects should not be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
 		Assert.assertEquals("total colls should be files and queries max",
-				jargonProperties.getMaxFilesAndDirsQueryMax() * 2,
-				actual.getTotalRecords());
+				jargonProperties.getMaxFilesAndDirsQueryMax() * 2, actual
+						.getPagingAwareCollectionListingDescriptor()
+						.getTotalRecords());
+
+	}
+
+	@Test
+	public void testRetriveFirstPageHasTwoPagesCollsSpecialColl()
+			throws Exception {
+		String parentPath = "/a/path";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = Mockito.mock(IRODSSession.class);
+
+		CollectionListingUtils collectionListingUtils = Mockito
+				.mock(CollectionListingUtils.class);
+
+		JargonProperties jargonProperties = new SettableJargonProperties();
+
+		Mockito.when(irodsSession.getJargonProperties()).thenReturn(
+				jargonProperties);
+
+		/*
+		 * Collection listing should return a set that emulates a count of max
+		 * and total records 2x max and not last entry
+		 */
+
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(parentPath);
+		objStat.setObjectType(ObjectType.COLLECTION);
+		objStat.setSpecColType(SpecColType.MOUNTED_COLL);
+
+		Mockito.when(
+				collectionListingUtils.retrieveObjectStatForPath(parentPath))
+				.thenReturn(objStat);
+
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(1);
+		entry.setTotalRecords(jargonProperties.getMaxFilesAndDirsQueryMax() * 2);
+		entry.setLastResult(false);
+		entries.add(entry);
+
+		entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(jargonProperties.getMaxFilesAndDirsQueryMax() / 2);
+		entry.setTotalRecords(jargonProperties.getMaxFilesAndDirsQueryMax() * 2);
+		entry.setLastResult(false);
+		entries.add(entry);
+
+		Mockito.when(
+
+		collectionListingUtils.listCollectionsUnderPath(objStat, 0))
+				.thenReturn(entries);
+
+		CollectionPagerAO collectionPagerAO = new CollectionPagerAOImpl(
+				irodsSession, irodsAccount, collectionListingUtils);
+
+		PagingAwareCollectionListing actual = collectionPagerAO
+				.retrieveFirstPageUnderParent(parentPath);
+		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
+		Assert.assertFalse("collection should not be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertFalse("data objects should not be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertEquals("total colls should be files and queries max",
+				jargonProperties.getMaxFilesAndDirsQueryMax() * 2, actual
+						.getPagingAwareCollectionListingDescriptor()
+						.getTotalRecords());
 
 	}
 
@@ -153,14 +224,18 @@ public class CollectionPagerAOImplTest {
 		PagingAwareCollectionListing actual = collectionPagerAO
 				.retrieveFirstPageUnderParent(parentPath);
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
-		Assert.assertTrue("collection should be complete",
-				actual.isCollectionsComplete());
-		Assert.assertTrue("data objects should  be complete",
-				actual.isDataObjectsComplete());
-		Assert.assertEquals("total data objs this page", 2,
-				actual.getDataObjectsCount());
-		Assert.assertEquals("total data objs should be 2", 2,
-				actual.getDataObjectsTotalRecords());
+		Assert.assertTrue("collection should be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertTrue("data objects should  be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isDataObjectsComplete());
+		Assert.assertEquals("total data objs this page", 2, actual
+				.getPagingAwareCollectionListingDescriptor()
+				.getDataObjectsCount());
+		Assert.assertEquals("total data objs should be 2", 2, actual
+				.getPagingAwareCollectionListingDescriptor()
+				.getDataObjectsTotalRecords());
 
 	}
 
@@ -236,11 +311,14 @@ public class CollectionPagerAOImplTest {
 		PagingAwareCollectionListing actual = collectionPagerAO
 				.retrieveFirstPageUnderParent(parentPath);
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
-		Assert.assertTrue("collection should be complete",
-				actual.isCollectionsComplete());
-		Assert.assertFalse("colls should not be empty", actual.getCount() == 0);
-		Assert.assertTrue("data objects should  be complete",
-				actual.isDataObjectsComplete());
+		Assert.assertTrue("collection should be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertFalse("colls should not be empty", actual
+				.getPagingAwareCollectionListingDescriptor().getCount() == 0);
+		Assert.assertTrue("data objects should  be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isDataObjectsComplete());
 
 	}
 

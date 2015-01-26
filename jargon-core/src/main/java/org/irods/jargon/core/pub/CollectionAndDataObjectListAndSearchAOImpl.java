@@ -26,6 +26,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
+import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.SpecificQuery;
@@ -164,11 +165,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+		PagingAwareCollectionListingDescriptor descriptor = new PagingAwareCollectionListingDescriptor();
 		pagingAwareCollectionListing
-				.setParentAbsolutePath(absolutePathToParent);
-		pagingAwareCollectionListing.setPathComponents(MiscIRODSUtils
+				.setPagingAwareCollectionListingDescriptor(descriptor);
+		descriptor.setPageSizeUtilized(getJargonProperties()
+				.getMaxFilesAndDirsQueryMax());
+		descriptor.setParentAbsolutePath(absolutePathToParent);
+		descriptor.setPathComponents(MiscIRODSUtils
 				.breakIRODSPathIntoComponents(absolutePathToParent));
 
 		List<CollectionAndDataObjectListingEntry> entries = null;
@@ -182,8 +185,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 			pagingAwareCollectionListing
 					.setCollectionAndDataObjectListingEntries(entries);
-			pagingAwareCollectionListing.setCollectionsComplete(true);
-			pagingAwareCollectionListing.setCount(entries.size());
+			descriptor.setCollectionsComplete(true);
+			descriptor.setCount(entries.size());
 			return pagingAwareCollectionListing;
 		}
 
@@ -203,17 +206,16 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		if (queriedEntries.isEmpty()) {
 			log.info("no child collections");
-			pagingAwareCollectionListing.setCollectionsComplete(true);
-			pagingAwareCollectionListing.setCount(0);
-			pagingAwareCollectionListing.setOffset(0);
+			descriptor.setCollectionsComplete(true);
+			descriptor.setCount(0);
+			descriptor.setOffset(0);
 		} else {
 			log.info("adding child collections");
-			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
-					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setCount(queriedEntries.get(
-					queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing.setTotalRecords(queriedEntries.get(0)
-					.getTotalRecords());
+			descriptor.setCollectionsComplete(queriedEntries.get(
+					queriedEntries.size() - 1).isLastResult());
+			descriptor.setCount(queriedEntries.get(queriedEntries.size() - 1)
+					.getCount());
+			descriptor.setTotalRecords(queriedEntries.get(0).getTotalRecords());
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(
 							queriedEntries);
@@ -227,18 +229,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		if (queriedEntries.isEmpty()) {
 			log.info("no child data objects");
-			pagingAwareCollectionListing.setDataObjectsComplete(true);
-			pagingAwareCollectionListing.setDataObjectsCount(0);
-			pagingAwareCollectionListing.setDataObjectsOffset(0);
+			descriptor.setDataObjectsComplete(true);
+			descriptor.setDataObjectsCount(0);
+			descriptor.setDataObjectsOffset(0);
 		} else {
 			log.info("adding child data objects");
-			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries
-					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
-					.get(queriedEntries.size() - 1).getCount());
-			pagingAwareCollectionListing
-					.setDataObjectsTotalRecords(queriedEntries.get(0)
-							.getTotalRecords());
+			descriptor.setDataObjectsComplete(queriedEntries.get(
+					queriedEntries.size() - 1).isLastResult());
+			descriptor.setDataObjectsCount(queriedEntries.get(
+					queriedEntries.size() - 1).getCount());
+			descriptor.setDataObjectsTotalRecords(queriedEntries.get(0)
+					.getTotalRecords());
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(
 							queriedEntries);

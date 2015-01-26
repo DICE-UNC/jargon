@@ -522,4 +522,16 @@ public interface IRODSAccessObjectFactory {
 	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount)
 			throws JargonException;
 
+	/*
+	 * Obtain a manager of iRODS file locks
+	 * 
+	 * @param irodsAccount
+	 * 
+	 * @return
+	 * 
+	 * @throws JargonException
+	 */
+	FileLockManagerAO getFileLockManagerAO(IRODSAccount irodsAccount)
+			throws JargonException;
+
 }
