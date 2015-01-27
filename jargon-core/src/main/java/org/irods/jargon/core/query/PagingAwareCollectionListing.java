@@ -59,14 +59,21 @@ public class PagingAwareCollectionListing {
 	@Override
 	public String toString() {
 		final int maxLen = 10;
-		return "PagingAwareCollectionListing ["
-				+ (pagingAwareCollectionListingDescriptor != null ? "pagingAwareCollectionListingDescriptor="
-						+ pagingAwareCollectionListingDescriptor + ", "
-						: "")
-				+ (collectionAndDataObjectListingEntries != null ? "collectionAndDataObjectListingEntries="
-						+ collectionAndDataObjectListingEntries.subList(0, Math
-								.min(collectionAndDataObjectListingEntries
-										.size(), maxLen)) : "") + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("PagingAwareCollectionListing [");
+		if (pagingAwareCollectionListingDescriptor != null) {
+			builder.append("pagingAwareCollectionListingDescriptor=")
+					.append(pagingAwareCollectionListingDescriptor)
+					.append(", ");
+		}
+		if (collectionAndDataObjectListingEntries != null) {
+			builder.append("collectionAndDataObjectListingEntries=").append(
+					collectionAndDataObjectListingEntries.subList(0, Math.min(
+							collectionAndDataObjectListingEntries.size(),
+							maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

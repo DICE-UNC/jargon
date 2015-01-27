@@ -71,12 +71,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		this.collectionListingUtils = collectionListingUtils;
 	}
 
-	public PagingAwareCollectionListing retrievePageBasedOnOffset(
-			final String irodsAbsolutePath, final int absoluteOffset)
-			throws FileNotFoundException, NoMoreDataException, JargonException {
-		return null; // FIXME: implement
-	}
-
+	@Override
 	public PagingAwareCollectionListing retrieveNextPage(
 			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
 			throws FileNotFoundException, NoMoreDataException, JargonException {
@@ -120,17 +115,17 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 				lastListingDescriptor.getDataObjectsCount());
 
 		pagingAwareCollectionListing
-				.getPagingAwareCollectionListingDescriptor().setTotalRecords(
-						listAndCount.getCountTotal());
-		pagingAwareCollectionListing
-				.getPagingAwareCollectionListingDescriptor().setCount(
-						listAndCount.getCountThisPage());
-		pagingAwareCollectionListing
-				.getPagingAwareCollectionListingDescriptor().setOffset(
-						listAndCount.getOffsetStart());
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsTotalRecords(listAndCount.getCountTotal());
 		pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
-				.setCollectionsComplete(listAndCount.isEndOfRecords());
+				.setDataObjectsCount(listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsOffset(listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsComplete(listAndCount.isEndOfRecords());
 
 		pagingAwareCollectionListing
 				.setCollectionAndDataObjectListingEntries(listAndCount
@@ -251,11 +246,25 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 	}
 
+	/**
+	 * Wraps the provided path as a descriptor for initially obtaining the first
+	 * page
+	 * 
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
 	private PagingAwareCollectionListing obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(
-			String irodsAbsolutePath) {
+			String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
 
-		template out the paging aware descriptor from the objstat and pass it along
-		
+		log.info("obtainObjStatAndBuildSkeletonPagingAwareCollectionListing()");
+
+		PagingAwareCollectionListingDescriptor descriptor = new PagingAwareCollectionListingDescriptor();
+		descriptor.setParentAbsolutePath(irodsAbsolutePath);
+		return obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(descriptor);
+
 	}
 
 	private PagingAwareCollectionListing obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(
@@ -272,6 +281,11 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		objStat = collectionListingUtils
 				.retrieveObjectStatForPath(pagingAwareCollectionListingDescriptor
 						.getParentAbsolutePath());
+		pagingAwareCollectionListingDescriptor
+				.setPathComponents(MiscIRODSUtils
+						.breakIRODSPathIntoComponents(pagingAwareCollectionListingDescriptor
+								.getParentAbsolutePath()));
+		pagingAwareCollectionListingDescriptor.setObjStat(objStat);
 		log.info("objStat:{}", objStat);
 
 		if (!objStat.isSomeTypeOfCollection()) {
