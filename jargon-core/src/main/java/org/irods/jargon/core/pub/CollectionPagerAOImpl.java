@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.NoMoreDataException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
+import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
 import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -71,6 +72,9 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		this.collectionListingUtils = collectionListingUtils;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor)
+	 */
 	@Override
 	public PagingAwareCollectionListing retrieveNextPage(
 			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
@@ -286,6 +290,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.breakIRODSPathIntoComponents(pagingAwareCollectionListingDescriptor
 								.getParentAbsolutePath()));
 		pagingAwareCollectionListingDescriptor.setObjStat(objStat);
+		pagingAwareCollectionListingDescriptor.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
 		log.info("objStat:{}", objStat);
 
 		if (!objStat.isSomeTypeOfCollection()) {
@@ -315,6 +320,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 			final int offset) throws JargonException {
 
 		log.info("listCollectionsGivenObjStat()");
+		log.info("objStat:{}", objStat);
+		log.info("offset:{}", offset);
 		ListAndCount listAndCount = new ListAndCount();
 		listAndCount
 				.setCollectionAndDataObjectListingEntries(collectionListingUtils
@@ -416,7 +423,6 @@ class ListAndCount {
 	private int countThisPage = 0;
 	private boolean endOfRecords = false;
 	private int offsetStart = 0;
-	private int offsetEnd = 0;
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries;
 
 	/**
@@ -495,21 +501,6 @@ class ListAndCount {
 		this.offsetStart = offsetStart;
 	}
 
-	/**
-	 * @return the offsetEnd
-	 */
-	int getOffsetEnd() {
-		return offsetEnd;
-	}
-
-	/**
-	 * @param offsetEnd
-	 *            the offsetEnd to set
-	 */
-	void setOffsetEnd(int offsetEnd) {
-		this.offsetEnd = offsetEnd;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -527,8 +518,6 @@ class ListAndCount {
 		builder.append(endOfRecords);
 		builder.append(", offsetStart=");
 		builder.append(offsetStart);
-		builder.append(", offsetEnd=");
-		builder.append(offsetEnd);
 		builder.append(", ");
 		if (collectionAndDataObjectListingEntries != null) {
 			builder.append("collectionAndDataObjectListingEntries=");
