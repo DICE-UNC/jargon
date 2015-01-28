@@ -54,10 +54,13 @@ public interface CollectionPagerAO {
 	 * <code>PagingAwareCollectionListingDescriptor</code>, page forwards. This
 	 * will give the next page of whatever (collections, data objects) are
 	 * available, and if need be page across the Collections/Data Objects
-	 * boundary. Note that
+	 * boundary.
 	 * 
 	 * @param lastListingDescriptor
-	 * @return
+	 *            {@link PagingAwareCollectionListingDescriptor} from the
+	 *            previous page, as retained by the client. This keeps state of
+	 *            the position in the collection
+	 * @return {@link PagingAwareCollectionListing} with the next page of data
 	 * @throws FileNotFoundException
 	 * @throws NoMoreDataException
 	 * @throws JargonException

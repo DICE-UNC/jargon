@@ -13,6 +13,7 @@ import org.irods.jargon.core.exception.NoMoreDataException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
+import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
 import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -86,7 +87,16 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 		if (!lastListingDescriptor.isCollectionsComplete()) {
 			log.info("more collections to page..");
-			return pageForwardInCollections(lastListingDescriptor);
+			PagingAwareCollectionListing listing = pageForwardInCollections(lastListingDescriptor);
+			// if I've paged out of collections add the first page of data
+			// objects
+			if (listing.getPagingAwareCollectionListingDescriptor()
+					.isCollectionsComplete()) {
+				log.info("colletions complete, page into data objects");
+				addDataObjectsToExistingListing(listing);
+			}
+			return listing;
+
 		} else if (!lastListingDescriptor.isDataObjectsComplete()) {
 			log.info("more data objects to page...");
 			return pageForwardInDataObjects(lastListingDescriptor);
@@ -220,30 +230,35 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.getMaxFilesAndDirsQueryMax()) {
 			log.info("collections are empty or less then max, so get data objects");
 
-			listAndCount = listDataObjectsGivenObjStat(
-					pagingAwareCollectionListing
-							.getPagingAwareCollectionListingDescriptor()
-							.getObjStat(), 0);
-			pagingAwareCollectionListing
-					.getPagingAwareCollectionListingDescriptor()
-					.setDataObjectsTotalRecords(listAndCount.getCountTotal());
-			pagingAwareCollectionListing
-					.getPagingAwareCollectionListingDescriptor()
-					.setDataObjectsCount(listAndCount.getCountThisPage());
-			pagingAwareCollectionListing
-					.getPagingAwareCollectionListingDescriptor()
-					.setDataObjectsOffset(listAndCount.getOffsetStart());
-			pagingAwareCollectionListing
-					.getPagingAwareCollectionListingDescriptor()
-					.setDataObjectsComplete(listAndCount.isEndOfRecords());
-			pagingAwareCollectionListing
-					.getCollectionAndDataObjectListingEntries()
-					.addAll(listAndCount
-							.getCollectionAndDataObjectListingEntries());
+			addDataObjectsToExistingListing(pagingAwareCollectionListing);
 		}
 
 		return pagingAwareCollectionListing;
 
+	}
+
+	private void addDataObjectsToExistingListing(
+			PagingAwareCollectionListing pagingAwareCollectionListing)
+			throws JargonException {
+		ListAndCount listAndCount = listDataObjectsGivenObjStat(
+				pagingAwareCollectionListing
+						.getPagingAwareCollectionListingDescriptor()
+						.getObjStat(), 0);
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsTotalRecords(listAndCount.getCountTotal());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsCount(listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsOffset(listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsComplete(listAndCount.isEndOfRecords());
+		pagingAwareCollectionListing
+				.getCollectionAndDataObjectListingEntries()
+				.addAll(listAndCount.getCollectionAndDataObjectListingEntries());
 	}
 
 	/**
@@ -286,6 +301,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.breakIRODSPathIntoComponents(pagingAwareCollectionListingDescriptor
 								.getParentAbsolutePath()));
 		pagingAwareCollectionListingDescriptor.setObjStat(objStat);
+		pagingAwareCollectionListingDescriptor
+				.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
 		log.info("objStat:{}", objStat);
 
 		if (!objStat.isSomeTypeOfCollection()) {

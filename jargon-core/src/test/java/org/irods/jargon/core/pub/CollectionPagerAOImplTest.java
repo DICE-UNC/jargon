@@ -181,6 +181,111 @@ public class CollectionPagerAOImplTest {
 	}
 
 	@Test
+	public void testPageForwardColsIntoDataObjects() throws Exception {
+		String parentPath = "/a/path";
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = Mockito.mock(IRODSSession.class);
+
+		CollectionListingUtils collectionListingUtils = Mockito
+				.mock(CollectionListingUtils.class);
+
+		JargonProperties jargonProperties = new SettableJargonProperties();
+
+		Mockito.when(irodsSession.getJargonProperties()).thenReturn(
+				jargonProperties);
+
+		/*
+		 * Collection listing should return a set that emulates a count of max
+		 * and total records 2x max and not last entry
+		 */
+
+		ObjStat objStat = new ObjStat();
+		objStat.setAbsolutePath(parentPath);
+		objStat.setObjectType(ObjectType.COLLECTION);
+		objStat.setSpecColType(SpecColType.NORMAL);
+
+		Mockito.when(
+				collectionListingUtils.retrieveObjectStatForPath(parentPath))
+				.thenReturn(objStat);
+
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+
+		entry.setCount(1);
+		entry.setTotalRecords(10000);
+		entry.setLastResult(false);
+		entries.add(entry);
+
+		entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(5000);
+		entry.setTotalRecords(10000);
+		entry.setLastResult(false);
+		entries.add(entry);
+
+		Mockito.when(
+				collectionListingUtils.listCollectionsUnderPath(objStat, 0))
+				.thenReturn(entries);
+
+		CollectionPagerAO collectionPagerAO = new CollectionPagerAOImpl(
+				irodsSession, irodsAccount, collectionListingUtils);
+
+		PagingAwareCollectionListing firstPage = collectionPagerAO
+				.retrieveFirstPageUnderParent(parentPath);
+
+		// now set up to page forward in collections
+		Assert.assertNotNull("null first page", firstPage);
+		// now take that data and page forward
+
+		entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(5001);
+		entry.setTotalRecords(10000);
+		entry.setLastResult(false);
+		entries.add(entry);
+
+		entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(10000);
+		entry.setTotalRecords(10000);
+		entry.setLastResult(true);
+		entries.add(entry);
+
+		List<CollectionAndDataObjectListingEntry> dataObjEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		CollectionAndDataObjectListingEntry dataObjEntry = new CollectionAndDataObjectListingEntry();
+
+		dataObjEntry = new CollectionAndDataObjectListingEntry();
+		dataObjEntry.setObjectType(ObjectType.DATA_OBJECT);
+		dataObjEntry.setCount(1);
+		dataObjEntry.setTotalRecords(2);
+		dataObjEntry.setLastResult(false);
+		dataObjEntries.add(dataObjEntry);
+
+		dataObjEntry = new CollectionAndDataObjectListingEntry();
+		dataObjEntry.setObjectType(ObjectType.DATA_OBJECT);
+		dataObjEntry.setCount(2);
+		dataObjEntry.setTotalRecords(2);
+		dataObjEntry.setLastResult(true);
+		dataObjEntries.add(dataObjEntry);
+
+		Mockito.when(
+				collectionListingUtils.listDataObjectsUnderPath(objStat, 0))
+				.thenReturn(dataObjEntries);
+
+		Mockito.when(
+				collectionListingUtils.listCollectionsUnderPath(objStat, 0))
+				.thenReturn(entries);
+
+		PagingAwareCollectionListing actual = collectionPagerAO
+				.retrieveNextPage(firstPage
+						.getPagingAwareCollectionListingDescriptor());
+
+		Assert.assertNotNull("null actual ", actual);
+
+	}
+
+	@Test
 	public void testRetriveFirstPageHasTwoPagesCollsSpecialColl()
 			throws Exception {
 		String parentPath = "/a/path";
