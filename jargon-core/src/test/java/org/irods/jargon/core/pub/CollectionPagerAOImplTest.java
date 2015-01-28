@@ -282,6 +282,13 @@ public class CollectionPagerAOImplTest {
 						.getPagingAwareCollectionListingDescriptor());
 
 		Assert.assertNotNull("null actual ", actual);
+		Assert.assertTrue("collection should  be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+
+		Assert.assertTrue("data objects should  be complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
 
 	}
 
