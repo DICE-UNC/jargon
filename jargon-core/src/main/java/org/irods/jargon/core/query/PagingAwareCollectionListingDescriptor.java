@@ -84,6 +84,14 @@ public class PagingAwareCollectionListingDescriptor {
 	 * Reflects the page size
 	 */
 	private int pageSizeUtilized;
+	
+	/**
+	 * Are there more colls or data objects to return?
+	 * @return
+	 */
+	public boolean hasMore() {
+		return !(this.dataObjectsComplete && this.collectionsComplete);
+	}
 
 	public PagingAwareCollectionListingDescriptor() {
 	}
