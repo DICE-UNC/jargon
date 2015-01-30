@@ -92,7 +92,27 @@ public class PagingAwareCollectionListingDescriptor {
 	public boolean hasMore() {
 		return !(this.dataObjectsComplete && this.collectionsComplete);
 	}
+	
+	/**
+	 * Return an <code>int<code> that is the absolute offset across both collections and data objects.  Collections are listed first
+	 * so the offset for data objects will be the total offset of the collections added to the offset of any data objects.
+	 * @return <code>int</code> with the continuous count of data objects and collections.
+	 * <p/>
+	 * Remember that 'counts' are 1 based, so the last count value in the listing is the offset for the next listing (offset is 0 based)
+	 */
+	public int computeAbsoluteNextOffset() {
+		return this.count + this.dataObjectsCount;
+	}
 
+	/**
+	 * Return the total records for both collections and data objects together.  
+	 * @return <code>int</code> with the total size of the set
+	 */
+	public int computeAbsoluteTotalSize() {
+		return this.totalRecords + this.dataObjectsTotalRecords;
+	}
+	
+	
 	public PagingAwareCollectionListingDescriptor() {
 	}
 

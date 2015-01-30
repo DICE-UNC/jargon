@@ -9,7 +9,7 @@ import org.irods.jargon.core.unittest.functionaltest.IRODSThousandFilesTest;
 import org.irods.jargon.core.unittest.functionaltest.TestBug38GetFileFromSoftLinkedPublicCollection;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
-
+ 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AllTests.class, IRODSThousandFilesTest.class,
 		IRODSThousandCollectionsTest.class,
