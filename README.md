@@ -59,6 +59,10 @@ Clarified the usage of the default storage resource, if set, in IRODSAccount so 
 Note that if no resource is set, it will defer to default resource settings in iRODS.  Additionally, the move() method was enhanced, so that, if a move is being done from a source file to the same target
 file, but with a different resource, it will delegate to a physical move.  This seems like a 'least surprise' sensible default.
 
+#### #68 display of sharing when group assigned does not show up in shared w me 
+
+Updated specific query to not select user, and added view of 'public' in sharing listings.  This is in the jargon-user-tagging specific queries
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
