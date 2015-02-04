@@ -132,10 +132,10 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				lastPartOfSourcePath);
 		StringBuilder sb = new StringBuilder();
 		sb.append(targetFile.getAbsolutePath());
-		if (!sourceFile.getParent().equals(targetFile.getParent())) {
-			sb.append('/');
-			sb.append(lastPartOfSourcePath);
-		}
+		// if (!sourceFile.getParent().equals(targetFile.getParent())) {
+		sb.append('/');
+		sb.append(lastPartOfSourcePath);
+		// }
 
 		String collectionUnderTargetAbsPath = sb.toString();
 
@@ -158,29 +158,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		log.info("successful move");
 	}
 
-	private void moveWhenSourceIsFile(final IRODSFile irodsSourceFile,
+	private void moveOperation(final IRODSFile irodsSourceFile,
 			final IRODSFile irodsTargetFile)
 			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
-		if (irodsSourceFile == null) {
-			throw new IllegalArgumentException("null irodsSourceFile");
-		}
-
-		if (irodsTargetFile == null) {
-			throw new IllegalArgumentException("null irodsTargetFile");
-		}
-		log.info("processing a move from {}", irodsSourceFile);
-		log.info("to {}", irodsTargetFile);
-		// source file must exist or error
-
-		if (!irodsSourceFile.exists()) {
-			log.info("the source file does not exist, cannot move");
-			throw new JargonException("source file does not exist");
-		}
-
-		log.info("source file exists, is collection? : {}",
-				irodsSourceFile.isDirectory());
-
+		log.info("moveOperation()");
 		log.info("target file:{}", irodsTargetFile.getAbsolutePath());
 		log.info("target file isDir? {}", irodsTargetFile.isDirectory());
 
@@ -195,7 +177,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		if (irodsSourceFile.getAbsolutePath().equals(
 				actualTargetFile.getAbsolutePath())) {
-			log.warn("attempt to move a fie: {} to the same file name, logged and ignored");
+			log.warn("attempt to move a file: {} to the same file name, logged and ignored");
 			return;
 		}
 
@@ -205,12 +187,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		DataObjCopyInp dataObjCopyInp = null;
 
 		if (irodsSourceFile.isFile()) {
-			log.info("transfer is for a file");
+			log.info("move is for a file");
 			dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
 					irodsSourceFile.getAbsolutePath(),
 					actualTargetFile.getAbsolutePath());
 		} else {
-			log.info("transfer is for a collection");
+			log.info("move is for a collection");
 			dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
 					irodsSourceFile.getAbsolutePath(),
 					actualTargetFile.getAbsolutePath());
@@ -253,6 +235,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				sourceFileAbsolutePath);
 		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
 				targetFileAbsolutePath);
+		// targetFile.mkdirs();
 		this.move(sourceFile, targetFile);
 	}
 
@@ -303,16 +286,18 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			}
 		}
 
-		log.info("treat as a normal move");
+		// not a physical move
 
-		if (sourceFile.isFile()) {
-			log.info("source file is a data object");
-			moveWhenSourceIsFile(sourceFile, targetFile);
-		} else {
-			log.info("source file is a collection, reparent it");
-			moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-					sourceFile, targetFile);
-		}
+		log.info("treat as a normal move");
+		moveOperation(sourceFile, targetFile);
+
+		/*
+		 * if (sourceFile.isFile()) { log.info("source file is a data object");
+		 * moveOperation(sourceFile, targetFile); } else {
+		 * log.info("source file is a collection, reparent it");
+		 * moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName
+		 * ( sourceFile, targetFile); }
+		 */
 
 	}
 

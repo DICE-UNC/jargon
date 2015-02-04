@@ -97,7 +97,6 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdir();
-		irodsFile.close();
 
 		String myTarget = "";
 
