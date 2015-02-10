@@ -3,9 +3,15 @@
  */
 package org.irods.jargon.datautils.connectiontester;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -15,16 +21,17 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.datautils.connectiontester.TestResultEntry.OperationType;
 import org.irods.jargon.testutils.TestingUtilsException;
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ConnectionTesterImpl extends AbstractJargonService implements
 		ConnectionTester {
+
+	private static final Random RANDOM = new Random();
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ConnectionTesterImpl.class);
@@ -51,7 +58,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 
 	/**
 	 * Run the given tests in the list, returning a result
-	 *
+	 * 
 	 * @param testTypes
 	 *            <code>List</code> of type {
 	 * @TestType
@@ -85,7 +92,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 
 	/**
 	 * Do a put and get and return the results
-	 *
+	 * 
 	 * @param testType
 	 * @return
 	 * @throws JargonException
@@ -142,12 +149,17 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 					localFile);
 			localFile.delete();
 
+			File parentFile = new File(
+					connectionTesterConfiguration
+							.getLocalSourceParentDirectory());
+			parentFile.mkdirs();
+
 			log.info("using configuration:{}", connectionTesterConfiguration);
 			DataTransferOperations dataTransferOperations = this
 					.getIrodsAccessObjectFactory().getDataTransferOperations(
 							getIrodsAccount());
 
-			FileGenerator.generateFileOfFixedLengthGivenName(
+			generateFileOfFixedLengthGivenName(
 					connectionTesterConfiguration
 							.getLocalSourceParentDirectory(),
 					testFileSourceName, dataSize);
@@ -239,10 +251,17 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			entries.add(result);
 			return entries;
 
-		} catch (Exception e) {
+		} catch (JargonException e) {
 			log.error("error generating local file", e);
 			putSucceeded = false;
 			result.setException(e);
+			result.setSuccess(false);
+			entries.add(result);
+			return entries;
+		} catch (Throwable t) {
+			log.error("some error occurred", t);
+			putSucceeded = false;
+			result.setException(t);
 			result.setSuccess(false);
 			entries.add(result);
 			return entries;
@@ -267,6 +286,85 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 				}
 			}
 		}
+
+	}
+
+	public static String generateFileOfFixedLengthGivenName(
+			final String fileDirectory, final String fileName, final long length)
+			throws TestingUtilsException {
+
+		// 1023 bytes of random stuff should be plenty, then just repeat it as
+		// needed, this is odd number to prevent lining up on even number buffer
+		// offsets
+		if (fileDirectory == null || fileDirectory.isEmpty()) {
+			throw new IllegalArgumentException("null or empty FileDirectory");
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		File dir = new File(fileDirectory);
+		dir.mkdirs();
+
+		long chunkSize = 1023;
+		if (length <= chunkSize) {
+			chunkSize = length;
+		}
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		int generatedLength = 0;
+
+		while (generatedLength < chunkSize) {
+			bos.write(RANDOM.nextInt());
+			generatedLength += 1;
+		}
+
+		byte[] fileChunk = bos.toByteArray();
+
+		// take the chunk and fill up the file
+		File randFile = new File(fileDirectory, fileName);
+		OutputStream outStream = null;
+
+		long generatedFileLength = 0;
+		long nextChunkSize = 0;
+		try {
+			outStream = new BufferedOutputStream(new FileOutputStream(randFile));
+
+			while (generatedFileLength < length) {
+
+				// if more than chunk size to go, just write the chunk
+				nextChunkSize = length - generatedFileLength;
+				if (nextChunkSize > chunkSize) {
+					outStream.write(fileChunk);
+					generatedFileLength += chunkSize;
+				} else {
+					outStream.write(fileChunk, 0, (int) nextChunkSize);
+					generatedFileLength += nextChunkSize;
+				}
+
+			}
+
+		} catch (IOException ioe) {
+			throw new TestingUtilsException(
+					"error generating random file with dir:" + fileDirectory
+							+ " and generated name:" + fileName, ioe);
+		} finally {
+			if (outStream != null) {
+				try {
+
+					outStream.close();
+				} catch (Exception ex) {
+					// ignore
+				}
+			}
+		}
+
+		StringBuilder fullPath = new StringBuilder();
+		fullPath.append(fileDirectory);
+		// fullPath.append("/");
+		fullPath.append(fileName);
+		return fullPath.toString();
 
 	}
 }

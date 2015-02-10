@@ -337,7 +337,7 @@ public final class DataAOHelper extends AOHelper {
 		 * reports to the caller.
 		 */
 		if (transferStatusCallbackListener != null
-				|| transferControlBlock.getTransferOptions()
+				&& transferControlBlock.getTransferOptions()
 						.isIntraFileStatusCallbacks()) {
 			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 					.instance(TransferType.GET, length, transferControlBlock,
@@ -453,7 +453,7 @@ public final class DataAOHelper extends AOHelper {
 		 * reports to the caller.
 		 */
 		if (transferStatusCallbackListener != null
-				|| myTransferOptions.isIntraFileStatusCallbacks()) {
+				&& myTransferOptions.isIntraFileStatusCallbacks()) {
 			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 					.instanceSettingInterval(TransferType.PUT,
 							localFile.length(), transferControlBlock,
