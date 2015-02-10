@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.connectiontester;
 
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ConnectionTesterImpl extends AbstractJargonService implements
 		ConnectionTester {
@@ -51,9 +51,10 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 
 	/**
 	 * Run the given tests in the list, returning a result
-	 * 
+	 *
 	 * @param testTypes
-	 *            <code>List</code> of type {@TestType}
+	 *            <code>List</code> of type {
+	 * @TestType
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException
 	 */
@@ -84,7 +85,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 
 	/**
 	 * Do a put and get and return the results
-	 * 
+	 *
 	 * @param testType
 	 * @return
 	 * @throws JargonException
@@ -92,6 +93,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	private List<TestResultEntry> processTest(TestType testType)
 			throws JargonException {
 
+		log.info("processTest:{}", testType);
 		List<TestResultEntry> entries = new ArrayList<TestResultEntry>();
 
 		log.info("processTest() for type:{}", testType);
@@ -117,6 +119,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			dataSize = 1 * 1024 * 1024 * 1024;
 		}
 
+		log.info("dataSize:{}", dataSize);
+
 		result.setTotalBytes(dataSize);
 
 		StringBuilder sb = new StringBuilder();
@@ -124,136 +128,145 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 		sb.append(testType.name());
 		sb.append(suffix);
 		String testFileSourceName = sb.toString();
-
-		File localFile = new File(
-				connectionTesterConfiguration.getLocalSourceParentDirectory(),
-				testFileSourceName);
-		log.info("delete previous files and generate a local file for:{}",
-				localFile);
-		localFile.delete();
-
-		log.info("using configuration:{}", connectionTesterConfiguration);
+		boolean putSucceeded = true;
+		File localFile = null;
+		IRODSFile irodsFile = null;
+		File localGetFile = null;
 
 		try {
+			localFile = new File(
+					connectionTesterConfiguration
+							.getLocalSourceParentDirectory(),
+					testFileSourceName);
+			log.info("delete previous files and generate a local file for:{}",
+					localFile);
+			localFile.delete();
+
+			log.info("using configuration:{}", connectionTesterConfiguration);
+			DataTransferOperations dataTransferOperations = this
+					.getIrodsAccessObjectFactory().getDataTransferOperations(
+							getIrodsAccount());
+
 			FileGenerator.generateFileOfFixedLengthGivenName(
 					connectionTesterConfiguration
 							.getLocalSourceParentDirectory(),
 					testFileSourceName, dataSize);
-		} catch (TestingUtilsException e) {
-			log.error("error generating local file", e);
-			throw new JargonException(e);
-		}
+			log.info("test file generated at:{}", testFileSourceName);
+			sb = new StringBuilder();
+			sb.append("get");
+			sb.append(testFileSourceName);
+			String testFileGetName = sb.toString();
+			localGetFile = new File(localFile.getParent(), testFileGetName);
+			localGetFile.delete();
+			long startTime = System.currentTimeMillis();
 
-		sb = new StringBuilder();
-		sb.append("get");
-		sb.append(testFileSourceName);
-		String testFileGetName = sb.toString();
-		File localGetFile = new File(localFile.getParent(), testFileGetName);
-		localGetFile.delete();
+			irodsFile = this
+					.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFile(
+							connectionTesterConfiguration
+									.getIrodsParentDirectory(),
+							testFileSourceName);
+			log.info("delete old irods file:{}", irodsFile);
+			irodsFile.deleteWithForceOption();
 
-		IRODSFile irodsFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
-						connectionTesterConfiguration.getIrodsParentDirectory(),
-						testFileSourceName);
-		log.info("delete old irods file:{}", irodsFile);
-		irodsFile.deleteWithForceOption();
+			log.info("initiating put operation to:{}",
+					connectionTesterConfiguration.getIrodsParentDirectory());
 
-		log.info("initiating put operation to:{}",
-				connectionTesterConfiguration.getIrodsParentDirectory());
+			result.setOperationType(OperationType.PUT);
 
-		result.setOperationType(OperationType.PUT);
-
-		DataTransferOperations dataTransferOperations = this
-				.getIrodsAccessObjectFactory().getDataTransferOperations(
-						getIrodsAccount());
-		long startTime = System.currentTimeMillis();
-		boolean putSucceeded = true;
-		try {
 			dataTransferOperations.putOperation(localFile, irodsFile, null,
 					null);
-		} catch (Exception e) {
-			log.error("exception in transfer reported back in status", e);
-			putSucceeded = false;
-			result.setException(e);
-			result.setSuccess(false);
 
-		}
-		long endTime = System.currentTimeMillis();
-		result.setTotalMilliseconds(endTime - startTime);
+			long endTime = System.currentTimeMillis();
+			result.setTotalMilliseconds(endTime - startTime);
 
-		float totalSeconds = result.getTotalMilliseconds() / 1000;
+			float totalSeconds = result.getTotalMilliseconds() / 1000;
 
-		if (totalSeconds == 0) {
-			totalSeconds = 1;
-		}
+			if (totalSeconds == 0) {
+				totalSeconds = 1;
+			}
 
-		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
-		result.setSuccess(true);
-		entries.add(result);
+			result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
+			result.setSuccess(true);
+			entries.add(result);
+			if (!putSucceeded) {
+				log.warn("put failed, do not try get");
+				return entries;
+			}
 
-		if (!putSucceeded) {
-			log.warn("put failed, do not try get");
+			// put succeeded, continue
+			log.info("result for put done, do a get");
+
+			result = new TestResultEntry();
+
+			result.setTestType(testType);
+
+			result.setTotalBytes(dataSize);
+			result.setOperationType(OperationType.GET);
+
+			startTime = System.currentTimeMillis();
+
+			try {
+				dataTransferOperations.getOperation(irodsFile, localGetFile,
+						null, null);
+			} catch (Exception e) {
+				log.error("exception in transfer reported back in status", e);
+				result.setException(e);
+				result.setSuccess(false);
+				entries.add(result);
+				return entries;
+			}
+
+			endTime = System.currentTimeMillis();
+			result.setTotalMilliseconds(endTime - startTime);
+			totalSeconds = result.getTotalMilliseconds() / 1000;
+
+			if (totalSeconds == 0) {
+				totalSeconds = 1;
+			}
+
+			result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
+			result.setSuccess(true);
+			entries.add(result);
 			return entries;
-		}
 
-		// put succeeded, continue
-
-		log.info("result for put done, do a get");
-
-		result = new TestResultEntry();
-
-		result.setTestType(testType);
-
-		result.setTotalBytes(dataSize);
-		result.setOperationType(OperationType.GET);
-
-		startTime = System.currentTimeMillis();
-
-		try {
-			dataTransferOperations.getOperation(irodsFile, localGetFile, null,
-					null);
-		} catch (Exception e) {
-			log.error("exception in transfer reported back in status", e);
+		} catch (TestingUtilsException e) {
+			log.error("error generating local file", e);
+			putSucceeded = false;
 			result.setException(e);
 			result.setSuccess(false);
 			entries.add(result);
 			return entries;
-		}
 
-		endTime = System.currentTimeMillis();
-		result.setTotalMilliseconds(endTime - startTime);
-		totalSeconds = result.getTotalMilliseconds() / 1000;
+		} catch (Exception e) {
+			log.error("error generating local file", e);
+			putSucceeded = false;
+			result.setException(e);
+			result.setSuccess(false);
+			entries.add(result);
+			return entries;
+		} finally {
 
-		if (totalSeconds == 0) {
-			totalSeconds = 1;
-		}
-
-		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
-		result.setSuccess(true);
-		entries.add(result);
-
-		if (this.connectionTesterConfiguration.isCleanupOnCompletion()) {
-			log.info("cleanup");
-			try {
-				localFile.delete();
-			} catch (Exception e) {
-				// ignore
-			}
-			try {
-				localGetFile.delete();
-			} catch (Exception e) {
-				// ignore
-			}
-			try {
-				irodsFile.deleteWithForceOption();
-			} catch (Exception e) {
-				// ignore
+			if (this.connectionTesterConfiguration.isCleanupOnCompletion()) {
+				log.info("cleanup");
+				try {
+					localFile.delete();
+				} catch (Exception e) {
+					// ignore
+				}
+				try {
+					localGetFile.delete();
+				} catch (Exception e) {
+					// ignore
+				}
+				try {
+					irodsFile.deleteWithForceOption();
+				} catch (Exception e) {
+					// ignore
+				}
 			}
 		}
-
-		return entries;
 
 	}
 }
