@@ -118,13 +118,24 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 						getStartupResponseData().getRelVersion(), "rods3.3");
 
+		boolean beforeFourPointOne = !MiscIRODSUtils
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						getStartupResponseData().getRelVersion(), "rods4.1.0");
+		
 		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
 				&& !postThreeDotThree) {
 			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) {
+		} else if (getPipelineConfiguration().isForcePamFlush()) {  // pam flush can be set by a jargon.properties setting
 			return true;
-		} else if (postThreeDotThree) {
-			return false;
+		/*
+		 * Is the server 4.0.X and not yet 4.1? Then I need to worry about pam flushes per
+		 * https://github.com/DICE-UNC/jargon/issues/70
+		 * This overhead will force the pam flush based on the forceSslFlush flag, which will only be turned on to bracket the 
+		 * necessary calls to the protocol, preventing a performance drop from unneeded flushes later
+		 */
+		} else if (postThreeDotThree &&  beforeFourPointOne && this.isForceSslFlush()) {
+			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+			return true;
 		} else {
 			return false;
 		}

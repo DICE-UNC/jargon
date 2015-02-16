@@ -26,6 +26,21 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
 	private StartupResponseData startupResponseData;
+	
+	/**
+	 * This is an overhead for iRODS 4.0 - 4.0.3 servers per
+	 * https://github.com/DICE-UNC/jargon/issues/70
+	 * 
+	 */
+	private boolean forceSslFlush = false;
+
+	public synchronized boolean isForceSslFlush() {
+		return forceSslFlush;
+	}
+
+	public synchronized void setForceSslFlush(boolean forceSslFlush) {
+		this.forceSslFlush = forceSslFlush;
+	}
 
 	public static final int EIRODS_MIN = 301;
 	public static final int EIRODS_MAX = 301;

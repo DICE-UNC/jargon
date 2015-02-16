@@ -13,11 +13,11 @@ iadmin mkuser test3 rodsuser
 
 iadmin moduser test3 password test
 
-iadmin mkresc test1-resc "unix file system"  localhost:/var/lib/irods/Vault1
+iadmin mkresc test1-resc "unix file system"  fedzone1.irods.org:/var/lib/irods/Vault1
 
-iadmin mkresc test1-resc2 "unix file system"  localhost:/var/lib/irods/Vault2
+iadmin mkresc test1-resc2 "unix file system"  fedzone1.irods.org:/var/lib/irods/Vault2
 
-iadmin mkresc test1-resc3 "unix file system"  localhost:/var/lib/irods/Vault3
+iadmin mkresc test1-resc3 "unix file system"  fedzone1.irods.org:/var/lib/irods/Vault3
 
 iadmin mkuser anonymous rodsuser
 

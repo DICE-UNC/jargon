@@ -747,7 +747,7 @@ public class MiscIRODSUtils {
 		return compValue >= 0;
 
 	}
-
+	
 	/**
 	 * Create a truncated file name suitable for display in interfaces
 	 * 

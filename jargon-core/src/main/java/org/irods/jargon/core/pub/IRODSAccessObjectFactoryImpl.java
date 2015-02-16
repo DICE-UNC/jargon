@@ -545,20 +545,6 @@ public final class IRODSAccessObjectFactoryImpl implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getFileLockManagerAO
-	 * (org.irods.jargon.core.connection.IRODSAccount)
-	 */
-	@Override
-	public FileLockManagerAO getFileLockManagerAO(
-			final IRODSAccount irodsAccount) throws JargonException {
-		checkIrodsSessionSet();
-		return new FileLockManagerAOImpl(irodsSession, irodsAccount);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override

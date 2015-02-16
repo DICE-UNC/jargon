@@ -598,6 +598,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 
 		try {
 			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (DataNotFoundException dnf) {
+			log.debug("user does not exist, just behave as if deleted");
 		} catch (InvalidUserException iue) {
 			log.debug("user does not exist, just behave as if deleted");
 		} catch (NoMoreRulesException nmr) {
