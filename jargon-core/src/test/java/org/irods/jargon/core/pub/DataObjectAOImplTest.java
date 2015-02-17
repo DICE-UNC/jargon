@@ -3655,6 +3655,101 @@ public class DataObjectAOImplTest {
 
 	}
 
+	/**
+	 * Added to test appending path in dataObjectAOImpl causes duplicate file
+	 * name #73
+	 * 
+	 * https://github.com/DICE-UNC/jargon/issues/73
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testRemoveAccessPermissionsAsAdminForUser()
+			throws Exception {
+		// generate a local scratch file
+
+		String testFileName = "testRemoveAccessPermissionsAsAdminForUser.doc";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccountRods = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
+				irodsFile, null, null);
+
+		DataObjectAO rodsDataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getDataObjectAO(irodsAccountRods);
+
+		CollectionAO rodsCollectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAO(irodsAccountRods);
+		rodsCollectionAO
+				.setAccessPermissionReadAsAdmin(
+						irodsAccount.getZone(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
+
+		rodsDataObjectAO
+				.setAccessPermissionOwnInAdminMode(
+						"",
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+
+		// log in as the secondary user and test read access
+		IRODSAccount secondaryAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
+				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
+						targetIrodsCollection + "/" + testFileName);
+		DataObjectAO dataObjectAOSecondaryUser = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getDataObjectAO(secondaryAccount);
+		UserFilePermission userFilePermission = dataObjectAOSecondaryUser
+				.getPermissionForDataObjectForUserName(
+						irodsFileForSecondaryUser.getAbsolutePath(),
+						secondaryAccount.getUserName());
+		Assert.assertTrue(
+				"user should have own permission",
+				userFilePermission.getFilePermissionEnum() == FilePermissionEnum.OWN);
+
+		// now remove in admin mode
+
+		rodsDataObjectAO.removeAccessPermissionsForUserInAdminMode(
+				irodsAccount.getZone(), targetIrodsCollection + "/"
+						+ testFileName, secondaryAccount.getUserName());
+
+		userFilePermission = dataObjectAO
+				.getPermissionForDataObjectForUserName(
+						irodsFileForSecondaryUser.getAbsolutePath(),
+						secondaryAccount.getUserName());
+		Assert.assertTrue("user should not have own permission",
+				userFilePermission == null);
+
+	}
+
 	@Test
 	public final void testSetWrite() throws Exception {
 		// generate a local scratch file

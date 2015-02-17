@@ -63,6 +63,10 @@ file, but with a different resource, it will delegate to a physical move.  This 
 
 Updated specific query to not select user, and added view of 'public' in sharing listings.  This is in the jargon-user-tagging specific queries
 
+####  appending path in dataObjectAOImpl causes duplicate file name #73
+
+Fix path munging in removeAccessPermissionsInAdminMode in DataObjectAOImpl
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
@@ -77,4 +81,8 @@ useful in metadata query based virtual collections
 #### Connection tester #67
 
 Add connection tester package to jargon-data-utils to test out and measure put/get performance 
+
+#### Parallel file transfer performance #72
+
+Additional tweaks to improve parallel file transfer performance
 

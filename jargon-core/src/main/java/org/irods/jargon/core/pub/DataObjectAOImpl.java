@@ -3119,14 +3119,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(absPath);
-		sb.append('/');
-		sb.append(collName.getChildName());
 		ModAccessControlInp modAccessControlInp = ModAccessControlInp
-				.instanceForSetPermissionInAdminMode(false, zone,
-						sb.toString(), userName,
-						ModAccessControlInp.NULL_PERMISSION);
+				.instanceForSetPermissionInAdminMode(false, zone, absPath,
+						userName, ModAccessControlInp.NULL_PERMISSION);
 		getIRODSProtocol().irodsFunction(modAccessControlInp);
 	}
 
