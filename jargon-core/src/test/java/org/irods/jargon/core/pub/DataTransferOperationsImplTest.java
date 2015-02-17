@@ -1466,7 +1466,7 @@ public class DataTransferOperationsImplTest {
 	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testPutThenGetOneFileWithSpecialCharsï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.txt";
-		String testRetrievedFileName = "testPutThenGetOneFileRetreivedï¿½ï¿½ï¿¿,¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreivedï¿½ï¿½ï¿¿,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
