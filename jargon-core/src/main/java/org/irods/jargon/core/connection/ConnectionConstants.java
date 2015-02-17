@@ -57,7 +57,7 @@ public final class ConnectionConstants {
 	/**
 	 * Size of the socket send buffer
 	 */
-	public static int OUTPUT_BUFFER_LENGTH = 32768;
+	public static int OUTPUT_BUFFER_LENGTH = 524288;
 
 	/**
 	 * 4 bytes at the front of the header, outside XML
@@ -83,7 +83,7 @@ public final class ConnectionConstants {
 	/**
 	 * Set to true to add gen query out xml protocol messages to debug log
 	 */
-	public static final boolean DUMP_GEN_QUERY_OUT = true;
+	public static final boolean DUMP_GEN_QUERY_OUT = false;
 
 	private ConnectionConstants() {
 	}
