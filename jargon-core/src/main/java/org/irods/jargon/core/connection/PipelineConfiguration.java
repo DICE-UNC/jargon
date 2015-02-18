@@ -32,6 +32,18 @@ public class PipelineConfiguration {
 	private final boolean instrument;
 	private final boolean forcePamFlush;
 
+	private final int socketRecieveWindowSize = 16 * 1024 * 1024;
+
+	public int getSocketRecieveWindowSize() {
+		return socketRecieveWindowSize;
+	}
+
+	public int getSocketSendWindowSize() {
+		return socketSendWindowSize;
+	}
+
+	private final int socketSendWindowSize = 16 * 1024 * 1024;
+
 	/**
 	 * Static initializer method will derive an immutable
 	 * <code>PipelineConfiguration</code> based on the prevailing

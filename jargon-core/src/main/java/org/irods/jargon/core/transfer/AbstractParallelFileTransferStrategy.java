@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
@@ -28,6 +29,12 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final int password;
 	protected final File localFile;
 	protected final long transferLength;
+	private final PipelineConfiguration pipelineConfiguration;
+
+	public PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
+	}
+
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final TransferControlBlock transferControlBlock;
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
@@ -116,6 +123,8 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferLength = transferLength;
 		jargonProperties = irodsAccessObjectFactory.getIrodsSession()
 				.getJargonProperties();
+		this.pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
+				.buildPipelineConfigurationBasedOnJargonProperties();
 
 		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();

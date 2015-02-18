@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.Callable;
 
@@ -68,8 +69,17 @@ public final class ParallelPutTransferThread extends
 			log.info(
 					"opening socket to parallel transfer (high) port at port:{}",
 					parallelPutFileTransferStrategy.getPort());
-			setS(new Socket(parallelPutFileTransferStrategy.getHost(),
-					parallelPutFileTransferStrategy.getPort()));
+			Socket s = new Socket();
+			s.setSendBufferSize(parallelPutFileTransferStrategy
+					.getPipelineConfiguration().getSocketSendWindowSize());
+			s.setReceiveBufferSize(parallelPutFileTransferStrategy
+					.getPipelineConfiguration().getSocketRecieveWindowSize());
+			s.setPerformancePreferences(0, 0, 1);
+			InetSocketAddress address = new InetSocketAddress(
+					parallelPutFileTransferStrategy.getHost(),
+					parallelPutFileTransferStrategy.getPort());
+			s.connect(address);
+			setS(s);
 			if (parallelPutFileTransferStrategy
 					.getParallelSocketTimeoutInSecs() > 0) {
 				log.info(

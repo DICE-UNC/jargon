@@ -3,6 +3,7 @@ package org.irods.jargon.core.connection;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -128,8 +129,15 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			try {
 
 				log.debug("normal iRODS connection");
-				connection = new Socket(irodsAccount.getHost(),
-						irodsAccount.getPort());
+				connection = new Socket();
+				connection.setSendBufferSize(getPipelineConfiguration()
+						.getSocketSendWindowSize());
+				connection.setReceiveBufferSize(getPipelineConfiguration()
+						.getSocketRecieveWindowSize());
+				connection.setPerformancePreferences(0, 0, 1);
+				InetSocketAddress address = new InetSocketAddress(
+						irodsAccount.getHost(), irodsAccount.getPort());
+				connection.connect(address);
 
 				// success, so break out of reconnect loop
 				log.debug("connection to socket made...");
