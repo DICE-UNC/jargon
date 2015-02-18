@@ -31,6 +31,11 @@ public class PipelineConfiguration {
 	private final long reconnectTimeInMillis;
 	private final boolean instrument;
 	private final boolean forcePamFlush;
+	private final boolean tcpKeepAlive = true;
+
+	public boolean isTcpKeepAlive() {
+		return tcpKeepAlive;
+	}
 
 	private final int socketRecieveWindowSize = 16 * 1024 * 1024;
 

@@ -137,6 +137,8 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 				connection.setPerformancePreferences(0, 0, 1);
 				InetSocketAddress address = new InetSocketAddress(
 						irodsAccount.getHost(), irodsAccount.getPort());
+				connection.setKeepAlive(getPipelineConfiguration()
+						.isTcpKeepAlive());
 				connection.connect(address);
 
 				// success, so break out of reconnect loop
