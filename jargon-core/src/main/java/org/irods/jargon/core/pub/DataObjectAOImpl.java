@@ -856,16 +856,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"getting ready to initiate parallel file transfer strategy:{}",
 					parallelPutFileStrategy);
 
-			parallelPutFileStrategy.transfer();
+			try {
+				parallelPutFileStrategy.transfer();
+				log.info("transfer process is complete");
+				int statusForComplete = responseToInitialCallForPut.getTag(
+						IRODSConstants.L1_DESC_INX).getIntValue();
+				log.debug("status for complete:{}", statusForComplete);
+
+				log.info("sending operation complete at termination of parallel transfer");
+				getIRODSProtocol().operationComplete(statusForComplete);
+			} catch (Exception e) {
+
+				log.error(
+						"error in parallel transfers, the main connection will be abandoned",
+						e);
+				this.getIRODSProtocol().disconnectWithForce();
+				throw e;
+			}
 		}
-
-		log.info("transfer process is complete");
-		int statusForComplete = responseToInitialCallForPut.getTag(
-				IRODSConstants.L1_DESC_INX).getIntValue();
-		log.debug("status for complete:{}", statusForComplete);
-
-		log.info("sending operation complete at termination of parallel transfer");
-		getIRODSProtocol().operationComplete(statusForComplete);
 	}
 
 	/**
@@ -1435,7 +1443,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							irodsFileLength, transferControlBlock,
 							transferStatusCallbackListener);
 
-			parallelGetTransferStrategy.transfer();
+			try {
+				parallelGetTransferStrategy.transfer();
+			} catch (Exception e) {
+				log.error(
+						"exception in parallel transfer, connection will be abandoned",
+						e);
+				this.getIRODSProtocol().disconnectWithForce();
+				throw e;
+			}
 		}
 	}
 
@@ -3100,12 +3116,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
-		/*
-		 * Handle soft links by munging the path
-		 */
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
 
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 

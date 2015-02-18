@@ -67,6 +67,10 @@ Updated specific query to not select user, and added view of 'public' in sharing
 
 Fix path munging in removeAccessPermissionsInAdminMode in DataObjectAOImpl
 
+#### untracked error leaves idrop in a processing state #71
+
+Tightened up parallel transfer processing to avoid sending oprcomplete if parallel transfer threads fail.  This will now forcefully abandon the agent connection and properly return an error.  This was falling through the cracks and leaving clients like iDrop in an indeterminate state.
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
