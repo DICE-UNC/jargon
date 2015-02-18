@@ -78,18 +78,18 @@ public final class ParallelPutTransferThread extends
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort());
-			s.connect(address);
-			setS(s);
 			if (parallelPutFileTransferStrategy
 					.getParallelSocketTimeoutInSecs() > 0) {
 				log.info(
 						"timeout (in seconds) for parallel transfer sockets is:{}",
 						parallelPutFileTransferStrategy
 								.getParallelSocketTimeoutInSecs());
-				getS().setSoTimeout(
-						parallelPutFileTransferStrategy
-								.getParallelSocketTimeoutInSecs() * 1000);
+				s.setSoTimeout(parallelPutFileTransferStrategy
+						.getParallelSocketTimeoutInSecs() * 1000);
 			}
+			s.connect(address);
+			setS(s);
+
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
 			setIn(new BufferedInputStream(getS().getInputStream()));
 		} catch (Exception e) {

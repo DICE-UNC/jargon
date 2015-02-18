@@ -8,6 +8,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.concurrent.Callable;
@@ -70,20 +71,26 @@ public final class ParallelGetTransferThread extends
 	@Override
 	public ParallelTransferResult call() throws JargonException {
 		try {
-			setS(new Socket(parallelGetFileTransferStrategy.getHost(),
-					parallelGetFileTransferStrategy.getPort()));
-
+			Socket s = new Socket();
+			s.setSendBufferSize(parallelGetFileTransferStrategy
+					.getPipelineConfiguration().getSocketSendWindowSize());
+			s.setReceiveBufferSize(parallelGetFileTransferStrategy
+					.getPipelineConfiguration().getSocketRecieveWindowSize());
+			s.setPerformancePreferences(0, 0, 1);
+			InetSocketAddress address = new InetSocketAddress(
+					parallelGetFileTransferStrategy.getHost(),
+					parallelGetFileTransferStrategy.getPort());
 			if (parallelGetFileTransferStrategy
 					.getParallelSocketTimeoutInSecs() > 0) {
 				log.info(
 						"timeout (in seconds) for parallel transfer sockets is:{}",
 						parallelGetFileTransferStrategy
 								.getParallelSocketTimeoutInSecs());
-				getS().setSoTimeout(
-						parallelGetFileTransferStrategy
-								.getParallelSocketTimeoutInSecs() * 1000);
+				s.setSoTimeout(parallelGetFileTransferStrategy
+						.getParallelSocketTimeoutInSecs() * 1000);
 			}
-
+			s.connect(address);
+			setS(s);
 			byte[] outputBuffer = new byte[4];
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
