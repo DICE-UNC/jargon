@@ -114,7 +114,7 @@ public final class ParallelGetTransferThread extends
 			setExceptionInTransfer(e);
 			throw new JargonException("unknown host:"
 					+ parallelGetFileTransferStrategy.getHost(), e);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 					parallelGetFileTransferStrategy.toString());
 			setExceptionInTransfer(e);
@@ -330,7 +330,7 @@ public final class ParallelGetTransferThread extends
 			try {
 				local.seek(offset);
 				// log.debug("seek completed");
-			} catch (IOException e) {
+			} catch (Exception e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 						parallelGetFileTransferStrategy.toString());
 				throw new JargonException(

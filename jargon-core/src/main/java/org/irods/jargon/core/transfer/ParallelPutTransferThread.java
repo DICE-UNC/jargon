@@ -251,7 +251,7 @@ public final class ParallelPutTransferThread extends
 
 			}
 
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(
 					"An IO exception occurred during a parallel file put operation",
 					e);
