@@ -459,4 +459,70 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
+	@Override
+	public boolean isParallelTcpKeepAlive() {
+		return verifyPropExistsAndGetAsBoolean("parallelTcpKeepAlive");
+	}
+
+	@Override
+	public int parallelTcpSendWindowSize() {
+		return verifyPropExistsAndGetAsInt("parallelTcpSendWindowSize");
+	}
+
+	@Override
+	public int parallelTcpReceiveWindowSize() {
+		return verifyPropExistsAndGetAsInt("parallelTcpReceiveWindowSize");
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsConnectionTime() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.connectionTime");
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsLatency() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.latency");
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsBandwidth() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.bandwidth");
+	}
+
+	@Override
+	public boolean isPrimaryTcpKeepAlive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int primaryTcpSendWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpReceiveWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsConnectionTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsLatency() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsBandwidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

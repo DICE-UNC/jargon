@@ -361,6 +361,108 @@ public interface JargonProperties {
 	boolean isForcePamFlush();
 
 	/**
+	 * Is TCP keep alive set for the primary (1247) irods Socket?
+	 * 
+	 * @return
+	 */
+	boolean isParallelTcpKeepAlive();
+
+	/**
+	 * parallel TCP send window size, set in a number that will be multiplied by
+	 * 1024. Set to 0 if no window size set. This is for parallel transfer
+	 * sockets.
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         send window size
+	 */
+	int parallelTcpSendWindowSize();
+
+	/**
+	 * parallel TCP receive window size, set in a number that will be multiplied
+	 * by 1024. Set to 0 if no window size set. This is for the parallel socket
+	 * 
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         receive window size
+	 */
+	int parallelTcpReceiveWindowSize();
+
+	/**
+	 * parallel TCP preference for connection time for parallel TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int parallelTcpPerformancePrefsConnectionTime();
+
+	/**
+	 * parallel TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int parallelTcpPerformancePrefsLatency();
+
+	/**
+	 * parallel TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for bandwidth
+	 */
+	int parallelTcpPerformancePrefsBandwidth();
+
+	/**
+	 * Is TCP keep alive set for the primary irods Socket?
+	 * 
+	 * @return
+	 */
+	boolean isPrimaryTcpKeepAlive();
+
+	/**
+	 * Primary TCP send window size, set in a number that will be multiplied by
+	 * 1024. Set to 0 if no window size set. This is for the primary socket
+	 * (1247)
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         send window size
+	 */
+	int primaryTcpSendWindowSize();
+
+	/**
+	 * Primary TCP receive window size, set in a number that will be multiplied
+	 * by 1024. Set to 0 if no window size set. This is for the primary socket
+	 * (1247)
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         receive window size
+	 */
+	int primaryTcpReceiveWindowSize();
+
+	/**
+	 * Primary TCP preference for connection time for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int primaryTcpPerformancePrefsConnectionTime();
+
+	/**
+	 * Primary TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int primaryTcpPerformancePrefsLatency();
+
+	/**
+	 * Primary TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for bandwidth
+	 */
+	int primaryTcpPerformancePrefsBandwidth();
+
+	/**
 	 * Get the type of networking layer that will be used in the low level
 	 * connections to iRODS (currently the values are limited to 'tcp'). If no
 	 * property is found, then 'tcp' will be defaulted.

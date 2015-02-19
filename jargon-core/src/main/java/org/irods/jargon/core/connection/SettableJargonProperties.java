@@ -826,4 +826,76 @@ public class SettableJargonProperties implements JargonProperties {
 
 	}
 
+	@Override
+	public boolean isParallelTcpKeepAlive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int parallelTcpSendWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int parallelTcpReceiveWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsConnectionTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsLatency() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int parallelTcpPerformancePrefsBandwidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isPrimaryTcpKeepAlive() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public int primaryTcpSendWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpReceiveWindowSize() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsConnectionTime() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsLatency() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int primaryTcpPerformancePrefsBandwidth() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
