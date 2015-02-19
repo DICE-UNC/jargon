@@ -871,7 +871,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"error in parallel transfers, the main connection will be abandoned",
 						e);
 				this.getIRODSProtocol().disconnectWithForce();
-				throw e;
+				throw new JargonException(e);
 			}
 		}
 	}
@@ -1450,7 +1450,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"exception in parallel transfer, connection will be abandoned",
 						e);
 				this.getIRODSProtocol().disconnectWithForce();
-				throw e;
+				throw new JargonException(e);
 			}
 		}
 	}
