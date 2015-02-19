@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +40,7 @@ public class AbstractParallelTransferThread {
 		int read;
 		try {
 			read = in.read(b);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
@@ -61,14 +60,14 @@ public class AbstractParallelTransferThread {
 		int read;
 		try {
 			read = in.read(b);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER);
-			throw new JargonRuntimeException(
+			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 		if (read != 8) {
 			log.error("did not read 8 bytes for long");
-			throw new RuntimeException(
+			throw new JargonException(
 					"unable to read all the bytes for an expected long value");
 		}
 
