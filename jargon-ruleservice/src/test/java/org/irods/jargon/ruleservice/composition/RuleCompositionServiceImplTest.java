@@ -180,7 +180,6 @@ public class RuleCompositionServiceImplTest {
 
 		Rule actual = ruleCompositionService
 				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
-		irodsRuleFileAsFile.reset();
 
 		Assert.assertTrue("rule file not stored (does not exist)",
 				irodsRuleFileAsFile.exists());
@@ -299,7 +298,6 @@ public class RuleCompositionServiceImplTest {
 
 		Rule actual = ruleCompositionService
 				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
-		irodsRuleFileAsFile.reset();
 
 		Assert.assertTrue("rule file not stored (does not exist)",
 				irodsRuleFileAsFile.exists());
@@ -370,7 +368,6 @@ public class RuleCompositionServiceImplTest {
 
 		Rule actual = ruleCompositionService
 				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
-		irodsRuleFileAsFile.reset();
 
 		Assert.assertTrue("rule file not stored (does not exist)",
 				irodsRuleFileAsFile.exists());
@@ -427,7 +424,6 @@ public class RuleCompositionServiceImplTest {
 
 		Rule actual = ruleCompositionService
 				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
-		irodsRuleFileAsFile.reset();
 
 		Assert.assertTrue("rule file not stored (does not exist)",
 				irodsRuleFileAsFile.exists());
@@ -490,7 +486,6 @@ public class RuleCompositionServiceImplTest {
 
 		Rule actual = ruleCompositionService
 				.loadRuleFromIrods(irodsRuleFileAsFile.getAbsolutePath());
-		irodsRuleFileAsFile.reset();
 
 		Assert.assertTrue("rule file not stored (does not exist)",
 				irodsRuleFileAsFile.exists());
