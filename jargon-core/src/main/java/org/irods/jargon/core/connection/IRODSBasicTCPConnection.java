@@ -130,15 +130,34 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 				log.debug("normal iRODS connection");
 				connection = new Socket();
-				connection.setSendBufferSize(getPipelineConfiguration()
-						.getSocketSendWindowSize());
-				connection.setReceiveBufferSize(getPipelineConfiguration()
-						.getSocketRecieveWindowSize());
-				connection.setPerformancePreferences(0, 0, 1);
+				connection.setSoTimeout(getPipelineConfiguration()
+						.getIrodsSocketTimeout() * 1000); // time is specified
+															// in seconds
+
+				if (getPipelineConfiguration().getPrimaryTcpSendWindowSize() > 0) {
+					connection.setSendBufferSize(getPipelineConfiguration()
+							.getPrimaryTcpSendWindowSize() * 1024);
+				}
+
+				if (getPipelineConfiguration().getPrimaryTcpReceiveWindowSize() > 0) {
+					connection.setReceiveBufferSize(getPipelineConfiguration()
+							.getPrimaryTcpReceiveWindowSize() * 1024);
+				}
+
+				connection.setPerformancePreferences(getPipelineConfiguration()
+						.getPrimaryTcpPerformancePrefsConnectionTime(),
+						getPipelineConfiguration()
+								.getPrimaryTcpPerformancePrefsLatency(),
+						getPipelineConfiguration()
+								.getPrimaryTcpPerformancePrefsBandwidth());
 				InetSocketAddress address = new InetSocketAddress(
 						irodsAccount.getHost(), irodsAccount.getPort());
 				connection.setKeepAlive(getPipelineConfiguration()
-						.isTcpKeepAlive());
+						.isPrimaryTcpKeepAlive());
+
+				// assume reuse, nodelay
+				connection.setReuseAddress(true);
+				connection.setTcpNoDelay(false);
 				connection.connect(address);
 
 				// success, so break out of reconnect loop
@@ -154,8 +173,9 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 				if (i < attemptCount - 1) {
 					log.error("IOExeption, sleep and attempt a reconnect", ioe);
+
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// ignore
 					}

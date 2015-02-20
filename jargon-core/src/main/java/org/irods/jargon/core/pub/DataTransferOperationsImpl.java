@@ -96,68 +96,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				.physicalMove(absolutePathToSourceFile, targetResource);
 	}
 
-	private void moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName(
-			final IRODSFile sourceFile, final IRODSFile targetFile)
-			throws FileNotFoundException,
-			JargonFileOrCollAlreadyExistsException, JargonException {
-
-		if (sourceFile == null) {
-			throw new IllegalArgumentException("null sourceFile");
-		}
-
-		if (targetFile == null) {
-			throw new IllegalArgumentException("null targetFile");
-		}
-
-		log.info(
-				"moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName from {}",
-				sourceFile.getAbsolutePath());
-		log.info("to {}", targetFile.getAbsolutePath());
-
-		// source file must exist or error
-		if (!sourceFile.exists()) {
-			log.info("the source file does not exist, cannot move");
-			throw new FileNotFoundException("source file does not exist");
-		}
-
-		if (!sourceFile.isDirectory()) {
-			String msg = "source file is not a directory, cannot move under target";
-			log.error(msg);
-			throw new JargonException(msg);
-		}
-
-		String lastPartOfSourcePath = sourceFile.getName();
-		log.debug(
-				"last part of source path to move under target collection is: {}",
-				lastPartOfSourcePath);
-		StringBuilder sb = new StringBuilder();
-		sb.append(targetFile.getAbsolutePath());
-		// if (!sourceFile.getParent().equals(targetFile.getParent())) {
-		sb.append('/');
-		sb.append(lastPartOfSourcePath);
-		// }
-
-		String collectionUnderTargetAbsPath = sb.toString();
-
-		if (sourceFile.getAbsolutePath().equals(collectionUnderTargetAbsPath)) {
-			log.warn("attempted move of directory {} to self silently ignored",
-					sourceFile.getAbsolutePath());
-			return;
-		}
-
-		// after all of the checks, build the packing instruction and send it to
-		// iRODS
-
-		DataObjCopyInp dataObjCopyInp = null;
-
-		dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
-				sourceFile.getAbsolutePath(), sb.toString());
-
-		getIRODSProtocol().irodsFunction(dataObjCopyInp);
-
-		log.info("successful move");
-	}
-
 	private void moveOperation(final IRODSFile irodsSourceFile,
 			final IRODSFile irodsTargetFile)
 			throws JargonFileOrCollAlreadyExistsException, JargonException {

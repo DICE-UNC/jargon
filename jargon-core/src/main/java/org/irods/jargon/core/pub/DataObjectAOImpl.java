@@ -1327,13 +1327,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		// as a standard txfr if 0 threads specified
 		try {
 			if (lengthFromIrodsResponse == 0) {
-				checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
-						irodsFileToGet, localFileToHoldData,
-						thisFileTransferOptions, message,
-						lengthFromIrodsResponse, irodsFileLength,
-						transferControlBlock, transferStatusCallbackListener,
-						clientSideAction);
-				getIRODSProtocol().operationComplete(l1descInx);
+				try {
+					checkNbrThreadsAndProcessAsParallelIfMoreThanZeroThreads(
+							irodsFileToGet, localFileToHoldData,
+							thisFileTransferOptions, message,
+							lengthFromIrodsResponse, irodsFileLength,
+							transferControlBlock,
+							transferStatusCallbackListener, clientSideAction);
+					getIRODSProtocol().operationComplete(l1descInx);
+				} catch (Exception e) {
+					log.error(
+							"an exception had occurred within the parallel transfer, so the opr complete is skipped and the connection abandoned..error will be rethrown",
+							e);
+					this.getIRODSProtocol().disconnectWithForce();
+					throw e;
+				}
 
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,

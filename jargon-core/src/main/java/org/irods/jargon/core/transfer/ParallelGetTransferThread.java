@@ -72,23 +72,41 @@ public final class ParallelGetTransferThread extends
 	public ParallelTransferResult call() throws JargonException {
 		try {
 			Socket s = new Socket();
-			s.setSendBufferSize(parallelGetFileTransferStrategy
-					.getPipelineConfiguration().getSocketSendWindowSize());
-			s.setReceiveBufferSize(parallelGetFileTransferStrategy
-					.getPipelineConfiguration().getSocketRecieveWindowSize());
-			s.setPerformancePreferences(0, 0, 1);
+			if (parallelGetFileTransferStrategy.getPipelineConfiguration()
+					.getParallelTcpSendWindowSize() > 0) {
+				s.setSendBufferSize(parallelGetFileTransferStrategy
+						.getPipelineConfiguration()
+						.getParallelTcpSendWindowSize() * 1024);
+			}
+
+			if (parallelGetFileTransferStrategy.getPipelineConfiguration()
+					.getParallelTcpReceiveWindowSize() > 0) {
+				s.setReceiveBufferSize(parallelGetFileTransferStrategy
+						.getPipelineConfiguration()
+						.getParallelTcpReceiveWindowSize() * 1024);
+			}
+
+			s.setPerformancePreferences(parallelGetFileTransferStrategy
+					.getPipelineConfiguration()
+					.getParallelTcpPerformancePrefsConnectionTime(),
+					parallelGetFileTransferStrategy.getPipelineConfiguration()
+							.getParallelTcpPerformancePrefsLatency(),
+					parallelGetFileTransferStrategy.getPipelineConfiguration()
+							.getParallelTcpPerformancePrefsBandwidth());
+
 			InetSocketAddress address = new InetSocketAddress(
 					parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort());
-			if (parallelGetFileTransferStrategy
-					.getParallelSocketTimeoutInSecs() > 0) {
-				log.info(
-						"timeout (in seconds) for parallel transfer sockets is:{}",
-						parallelGetFileTransferStrategy
-								.getParallelSocketTimeoutInSecs());
-				s.setSoTimeout(parallelGetFileTransferStrategy
-						.getParallelSocketTimeoutInSecs() * 1000);
-			}
+
+			s.setSoTimeout(parallelGetFileTransferStrategy
+					.getParallelSocketTimeoutInSecs() * 1000);
+
+			s.setKeepAlive(parallelGetFileTransferStrategy
+					.getPipelineConfiguration().isParallelTcpKeepAlive());
+
+			// assume reuse, nodelay
+			s.setReuseAddress(true);
+			s.setTcpNoDelay(false);
 			s.connect(address);
 			setS(s);
 			byte[] outputBuffer = new byte[4];
@@ -110,16 +128,13 @@ public final class ParallelGetTransferThread extends
 
 		} catch (UnknownHostException e) {
 			log.error("Unknown host: {}",
-					parallelGetFileTransferStrategy.getHost());
+					parallelGetFileTransferStrategy.getHost(), e);
 			setExceptionInTransfer(e);
 			throw new JargonException("unknown host:"
 					+ parallelGetFileTransferStrategy.getHost(), e);
-		} catch (Exception e) {
-			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-					parallelGetFileTransferStrategy.toString());
-			setExceptionInTransfer(e);
-			throw new JargonException(
-					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+		} catch (Throwable e) {
+			log.error("unchecked exception in transfer", e);
+			throw new JargonException(e);
 		}
 
 	}

@@ -70,26 +70,43 @@ public final class ParallelPutTransferThread extends
 					"opening socket to parallel transfer (high) port at port:{}",
 					parallelPutFileTransferStrategy.getPort());
 			Socket s = new Socket();
-			s.setSendBufferSize(parallelPutFileTransferStrategy
-					.getPipelineConfiguration().getSocketSendWindowSize());
-			s.setReceiveBufferSize(parallelPutFileTransferStrategy
-					.getPipelineConfiguration().getSocketRecieveWindowSize());
-			s.setPerformancePreferences(0, 0, 1);
+			if (parallelPutFileTransferStrategy.getPipelineConfiguration()
+					.getParallelTcpSendWindowSize() > 0) {
+				s.setSendBufferSize(parallelPutFileTransferStrategy
+						.getPipelineConfiguration()
+						.getParallelTcpSendWindowSize() * 1024);
+			}
+
+			if (parallelPutFileTransferStrategy.getPipelineConfiguration()
+					.getParallelTcpReceiveWindowSize() > 0) {
+				s.setReceiveBufferSize(parallelPutFileTransferStrategy
+						.getPipelineConfiguration()
+						.getParallelTcpReceiveWindowSize() * 1024);
+			}
+
+			s.setPerformancePreferences(parallelPutFileTransferStrategy
+					.getPipelineConfiguration()
+					.getParallelTcpPerformancePrefsConnectionTime(),
+					parallelPutFileTransferStrategy.getPipelineConfiguration()
+							.getParallelTcpPerformancePrefsLatency(),
+					parallelPutFileTransferStrategy.getPipelineConfiguration()
+							.getParallelTcpPerformancePrefsBandwidth());
+
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
 					parallelPutFileTransferStrategy.getPort());
-			if (parallelPutFileTransferStrategy
-					.getParallelSocketTimeoutInSecs() > 0) {
-				log.info(
-						"timeout (in seconds) for parallel transfer sockets is:{}",
-						parallelPutFileTransferStrategy
-								.getParallelSocketTimeoutInSecs());
-				s.setSoTimeout(parallelPutFileTransferStrategy
-						.getParallelSocketTimeoutInSecs() * 1000);
-			}
+
+			s.setSoTimeout(parallelPutFileTransferStrategy
+					.getParallelSocketTimeoutInSecs() * 1000);
+
+			s.setKeepAlive(parallelPutFileTransferStrategy
+					.getPipelineConfiguration().isParallelTcpKeepAlive());
+
+			// assume reuse, nodelay
+			s.setReuseAddress(true);
+			s.setTcpNoDelay(false);
 			s.connect(address);
 			setS(s);
-
 			setOut(new BufferedOutputStream(getS().getOutputStream()));
 			setIn(new BufferedInputStream(getS().getInputStream()));
 		} catch (Exception e) {
@@ -119,12 +136,13 @@ public final class ParallelPutTransferThread extends
 			log.debug("cookie written for output thread...calling put() to start read/write loop");
 			put();
 			log.debug("put operation completed");
+			ParallelTransferResult result = new ParallelTransferResult();
+			return result;
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(
 					"An exception occurred during a parallel file put operation",
 					e);
-			setExceptionInTransfer(e);
 			throw new JargonException("error during parallel file put", e);
 		} finally {
 			log.info("closing sockets, this eats any exceptions");
@@ -137,10 +155,6 @@ public final class ParallelPutTransferThread extends
 			} catch (IOException e) {
 			}
 		}
-
-		ParallelTransferResult result = new ParallelTransferResult();
-		result.transferException = getExceptionInTransfer();
-		return result;
 
 	}
 

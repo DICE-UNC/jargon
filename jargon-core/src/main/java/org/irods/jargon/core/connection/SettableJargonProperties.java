@@ -53,6 +53,18 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean forcePamFlush = false;
 	private String connectionFactory = "tcp";
 	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.DEFAULT;
+	private boolean parallelTcpKeepAlive;
+	private int parallelTcpSendWindowSize;
+	private int parallelTcpReceiveWindowSize;
+	private int parallelTcpPerformancePrefsConnectionTime;
+	private int parallelTcpPerformancePrefsLatency;
+	private int parallelTcpPerformancePrefsBandwidth;
+	private boolean primaryTcpKeepAlive;
+	private int primaryTcpSendWindowSize;
+	private int primaryTcpReceiveWindowSize;
+	private int primaryTcpPerformancePrefsConnectionTime;
+	private int primaryTcpPerformancePrefsLatency;
+	private int primaryTcpPerformancePrefsBandwidth;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -130,6 +142,30 @@ public class SettableJargonProperties implements JargonProperties {
 		setForcePamFlush(jargonProperties.isForcePamFlush());
 		connectionFactory = jargonProperties.getConnectionFactory();
 		checksumEncoding = jargonProperties.getChecksumEncoding();
+
+		this.parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
+		this.parallelTcpPerformancePrefsBandwidth = jargonProperties
+				.getParallelTcpPerformancePrefsBandwidth();
+		this.parallelTcpPerformancePrefsConnectionTime = jargonProperties
+				.getParallelTcpPerformancePrefsConnectionTime();
+		this.parallelTcpPerformancePrefsLatency = jargonProperties
+				.getParallelTcpPerformancePrefsLatency();
+		this.parallelTcpReceiveWindowSize = jargonProperties
+				.getParallelTcpReceiveWindowSize();
+		this.parallelTcpSendWindowSize = jargonProperties
+				.getParallelTcpSendWindowSize();
+		this.primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
+		this.primaryTcpPerformancePrefsBandwidth = jargonProperties
+				.getPrimaryTcpPerformancePrefsBandwidth();
+		this.primaryTcpPerformancePrefsConnectionTime = jargonProperties
+				.getPrimaryTcpPerformancePrefsConnectionTime();
+		this.primaryTcpPerformancePrefsLatency = jargonProperties
+				.getPrimaryTcpPerformancePrefsLatency();
+		this.primaryTcpReceiveWindowSize = jargonProperties
+				.getPrimaryTcpReceiveWindowSize();
+		this.primaryTcpSendWindowSize = jargonProperties
+				.getPrimaryTcpSendWindowSize();
+
 	}
 
 	/*
@@ -828,74 +864,228 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public boolean isParallelTcpKeepAlive() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.parallelTcpKeepAlive;
+	}
+
+	public void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
+		this.parallelTcpKeepAlive = parallelTcpKeepAlive;
 	}
 
 	@Override
-	public int parallelTcpSendWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getParallelTcpSendWindowSize() {
+		return this.parallelTcpSendWindowSize;
+	}
+
+	public void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
+		this.parallelTcpSendWindowSize = parallelTcpSendWindowSize;
 	}
 
 	@Override
-	public int parallelTcpReceiveWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getParallelTcpReceiveWindowSize() {
+		return this.parallelTcpReceiveWindowSize;
+	}
+
+	public void setParallelTcpReceiveWindowSize(
+			final int parallelTcpReceiveWindowSize) {
+		this.parallelTcpReceiveWindowSize = parallelTcpReceiveWindowSize;
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsConnectionTime() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getParallelTcpPerformancePrefsConnectionTime() {
+		return this.parallelTcpPerformancePrefsConnectionTime;
+	}
+
+	public void setParallelTcpPerformancePrefsConnectionTime(
+			final int parallelTcpPerformancePrefsConnectionTime) {
+		this.parallelTcpPerformancePrefsConnectionTime = parallelTcpPerformancePrefsConnectionTime;
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsLatency() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getParallelTcpPerformancePrefsLatency() {
+		return this.parallelTcpPerformancePrefsLatency;
+	}
+
+	public void setParallelTcpPerformancePrefsLatency(
+			final int parallelTcpPerformancePrefsLatency) {
+		this.parallelTcpPerformancePrefsLatency = parallelTcpPerformancePrefsLatency;
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsBandwidth() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getParallelTcpPerformancePrefsBandwidth() {
+		return this.parallelTcpPerformancePrefsBandwidth;
+	}
+
+	public void setParallelTcpPerformancePrefsBandwidth(
+			final int parallelTcpPerformancePrefsBandwidth) {
+		this.parallelTcpPerformancePrefsBandwidth = parallelTcpPerformancePrefsBandwidth;
 	}
 
 	@Override
 	public boolean isPrimaryTcpKeepAlive() {
-		// TODO Auto-generated method stub
-		return false;
+		return this.primaryTcpKeepAlive;
+	}
+
+	public void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
+		this.primaryTcpKeepAlive = primaryTcpKeepAlive;
 	}
 
 	@Override
-	public int primaryTcpSendWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpSendWindowSize() {
+		return this.primaryTcpSendWindowSize;
+	}
+
+	public void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
+		this.primaryTcpSendWindowSize = primaryTcpSendWindowSize;
 	}
 
 	@Override
-	public int primaryTcpReceiveWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpReceiveWindowSize() {
+		return this.primaryTcpReceiveWindowSize;
+	}
+
+	public void setPrimaryTcpReceiveWindowSize(
+			final int primaryTcpReceiveWindowSize) {
+		this.primaryTcpReceiveWindowSize = primaryTcpReceiveWindowSize;
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsConnectionTime() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+		return this.primaryTcpPerformancePrefsConnectionTime;
+	}
+
+	public void setPrimaryTcpPerformancePrefsConnectionTime(
+			final int primaryTcpPerformancePrefsConnectionTime) {
+		this.primaryTcpPerformancePrefsConnectionTime = primaryTcpPerformancePrefsConnectionTime;
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsLatency() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsLatency() {
+		return this.primaryTcpPerformancePrefsLatency;
+	}
+
+	public void setPrimaryTcpPerformancePrefsLatency(
+			final int primaryTcpPerformancePrefsLatency) {
+		this.primaryTcpPerformancePrefsLatency = primaryTcpPerformancePrefsLatency;
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsBandwidth() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsBandwidth() {
+		return this.primaryTcpPerformancePrefsBandwidth;
+	}
+
+	public void setPrimaryTcpPerformancePrefsBandwidth(
+			final int primaryTcpPerformancePrefsBandwidth) {
+		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SettableJargonProperties [useParallelTransfer=");
+		builder.append(useParallelTransfer);
+		builder.append(", useNIOForParallelTransfers=");
+		builder.append(useNIOForParallelTransfers);
+		builder.append(", maxParallelThreads=");
+		builder.append(maxParallelThreads);
+		builder.append(", maxFilesAndDirsQueryMax=");
+		builder.append(maxFilesAndDirsQueryMax);
+		builder.append(", useTransferThreadsPool=");
+		builder.append(useTransferThreadsPool);
+		builder.append(", transferThreadPoolMaxSimultaneousTransfers=");
+		builder.append(transferThreadPoolMaxSimultaneousTransfers);
+		builder.append(", transferThreadPoolTimeoutMillis=");
+		builder.append(transferThreadPoolTimeoutMillis);
+		builder.append(", allowPutGetResourceRedirects=");
+		builder.append(allowPutGetResourceRedirects);
+		builder.append(", computeChecksumAfterTransfer=");
+		builder.append(computeChecksumAfterTransfer);
+		builder.append(", computeAndVerifyChecksumAfterTransfer=");
+		builder.append(computeAndVerifyChecksumAfterTransfer);
+		builder.append(", intraFileStatusCallbacks=");
+		builder.append(intraFileStatusCallbacks);
+		builder.append(", irodsSocketTimeout=");
+		builder.append(irodsSocketTimeout);
+		builder.append(", irodsParallelSocketTimeout=");
+		builder.append(irodsParallelSocketTimeout);
+		builder.append(", internalInputStreamBufferSize=");
+		builder.append(internalInputStreamBufferSize);
+		builder.append(", internalOutputStreamBufferSize=");
+		builder.append(internalOutputStreamBufferSize);
+		builder.append(", internalCacheBufferSize=");
+		builder.append(internalCacheBufferSize);
+		builder.append(", sendInputStreamBufferSize=");
+		builder.append(sendInputStreamBufferSize);
+		builder.append(", localFileOutputStreamBufferSize=");
+		builder.append(localFileOutputStreamBufferSize);
+		builder.append(", localFileInputStreamBufferSize=");
+		builder.append(localFileInputStreamBufferSize);
+		builder.append(", putBufferSize=");
+		builder.append(putBufferSize);
+		builder.append(", getBufferSize=");
+		builder.append(getBufferSize);
+		builder.append(", inputToOutputCopyBufferByteSize=");
+		builder.append(inputToOutputCopyBufferByteSize);
+		builder.append(", ");
+		if (encoding != null) {
+			builder.append("encoding=");
+			builder.append(encoding);
+			builder.append(", ");
+		}
+		builder.append("instrument=");
+		builder.append(instrument);
+		builder.append(", reconnect=");
+		builder.append(reconnect);
+		builder.append(", defaultToPublicIfNothingUnderRootWhenListing=");
+		builder.append(defaultToPublicIfNothingUnderRootWhenListing);
+		builder.append(", reconnectTimeInMillis=");
+		builder.append(reconnectTimeInMillis);
+		builder.append(", usingDiscoveredServerPropertiesCache=");
+		builder.append(usingDiscoveredServerPropertiesCache);
+		builder.append(", usingSpecificQueryForCollectionListingsWithPermissions=");
+		builder.append(usingSpecificQueryForCollectionListingsWithPermissions);
+		builder.append(", usingSpecQueryForDataObjPermissionsForUserInGroup=");
+		builder.append(usingSpecQueryForDataObjPermissionsForUserInGroup);
+		builder.append(", pamTimeToLive=");
+		builder.append(pamTimeToLive);
+		builder.append(", forcePamFlush=");
+		builder.append(forcePamFlush);
+		builder.append(", ");
+		if (connectionFactory != null) {
+			builder.append("connectionFactory=");
+			builder.append(connectionFactory);
+			builder.append(", ");
+		}
+		if (checksumEncoding != null) {
+			builder.append("checksumEncoding=");
+			builder.append(checksumEncoding);
+			builder.append(", ");
+		}
+		builder.append("parallelTcpKeepAlive=");
+		builder.append(parallelTcpKeepAlive);
+		builder.append(", parallelTcpSendWindowSize=");
+		builder.append(parallelTcpSendWindowSize);
+		builder.append(", parallelTcpReceiveWindowSize=");
+		builder.append(parallelTcpReceiveWindowSize);
+		builder.append(", parallelTcpPerformancePrefsConnectionTime=");
+		builder.append(parallelTcpPerformancePrefsConnectionTime);
+		builder.append(", parallelTcpPerformancePrefsLatency=");
+		builder.append(parallelTcpPerformancePrefsLatency);
+		builder.append(", parallelTcpPerformancePrefsBandwidth=");
+		builder.append(parallelTcpPerformancePrefsBandwidth);
+		builder.append(", primaryTcpKeepAlive=");
+		builder.append(primaryTcpKeepAlive);
+		builder.append(", primaryTcpSendWindowSize=");
+		builder.append(primaryTcpSendWindowSize);
+		builder.append(", primaryTcpReceiveWindowSize=");
+		builder.append(primaryTcpReceiveWindowSize);
+		builder.append(", primaryTcpPerformancePrefsConnectionTime=");
+		builder.append(primaryTcpPerformancePrefsConnectionTime);
+		builder.append(", primaryTcpPerformancePrefsLatency=");
+		builder.append(primaryTcpPerformancePrefsLatency);
+		builder.append(", primaryTcpPerformancePrefsBandwidth=");
+		builder.append(primaryTcpPerformancePrefsBandwidth);
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

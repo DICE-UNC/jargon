@@ -292,9 +292,17 @@ final class TransferOperationsHelper {
 
 			}
 
-			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
-					targetLocalFile, transferControlBlock,
-					transferStatusCallbackListener);
+			try {
+				dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
+						targetLocalFile, transferControlBlock,
+						transferStatusCallbackListener);
+			} catch (Exception e) {
+				log.error(
+						"exception in transfer, will abandon the connection and rethrow",
+						e);
+				this.dataObjectAO.getIRODSProtocol().disconnectWithForce();
+				throw e;
+			}
 
 			transferControlBlock.incrementFilesTransferredSoFar();
 

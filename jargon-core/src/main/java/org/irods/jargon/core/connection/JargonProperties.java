@@ -375,7 +375,7 @@ public interface JargonProperties {
 	 * @return <code>int</code> that will be multiplied by 1024 and set as the
 	 *         send window size
 	 */
-	int parallelTcpSendWindowSize();
+	int getParallelTcpSendWindowSize();
 
 	/**
 	 * parallel TCP receive window size, set in a number that will be multiplied
@@ -385,7 +385,7 @@ public interface JargonProperties {
 	 * @return <code>int</code> that will be multiplied by 1024 and set as the
 	 *         receive window size
 	 */
-	int parallelTcpReceiveWindowSize();
+	int getParallelTcpReceiveWindowSize();
 
 	/**
 	 * parallel TCP preference for connection time for parallel TCP sockets
@@ -393,7 +393,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for conn time
 	 */
-	int parallelTcpPerformancePrefsConnectionTime();
+	int getParallelTcpPerformancePrefsConnectionTime();
 
 	/**
 	 * parallel TCP preference for latency for TCP sockets
@@ -401,7 +401,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for conn time
 	 */
-	int parallelTcpPerformancePrefsLatency();
+	int getParallelTcpPerformancePrefsLatency();
 
 	/**
 	 * parallel TCP preference for latency for TCP sockets
@@ -409,7 +409,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for bandwidth
 	 */
-	int parallelTcpPerformancePrefsBandwidth();
+	int getParallelTcpPerformancePrefsBandwidth();
 
 	/**
 	 * Is TCP keep alive set for the primary irods Socket?
@@ -426,7 +426,7 @@ public interface JargonProperties {
 	 * @return <code>int</code> that will be multiplied by 1024 and set as the
 	 *         send window size
 	 */
-	int primaryTcpSendWindowSize();
+	int getPrimaryTcpSendWindowSize();
 
 	/**
 	 * Primary TCP receive window size, set in a number that will be multiplied
@@ -436,7 +436,7 @@ public interface JargonProperties {
 	 * @return <code>int</code> that will be multiplied by 1024 and set as the
 	 *         receive window size
 	 */
-	int primaryTcpReceiveWindowSize();
+	int getPrimaryTcpReceiveWindowSize();
 
 	/**
 	 * Primary TCP preference for connection time for TCP sockets
@@ -444,7 +444,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for conn time
 	 */
-	int primaryTcpPerformancePrefsConnectionTime();
+	int getPrimaryTcpPerformancePrefsConnectionTime();
 
 	/**
 	 * Primary TCP preference for latency for TCP sockets
@@ -452,7 +452,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for conn time
 	 */
-	int primaryTcpPerformancePrefsLatency();
+	int getPrimaryTcpPerformancePrefsLatency();
 
 	/**
 	 * Primary TCP preference for latency for TCP sockets
@@ -460,7 +460,7 @@ public interface JargonProperties {
 	 * 
 	 * @return <code>int</code> with preference for bandwidth
 	 */
-	int primaryTcpPerformancePrefsBandwidth();
+	int getPrimaryTcpPerformancePrefsBandwidth();
 
 	/**
 	 * Get the type of networking layer that will be used in the low level

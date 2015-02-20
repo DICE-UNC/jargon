@@ -18,6 +18,10 @@ import org.irods.jargon.core.utils.PropertyUtils;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+/**
+ * @author Mike
+ *
+ */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private final Properties jargonProperties;
@@ -465,64 +469,58 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	@Override
-	public int parallelTcpSendWindowSize() {
+	public int getParallelTcpSendWindowSize() {
 		return verifyPropExistsAndGetAsInt("parallelTcpSendWindowSize");
 	}
 
 	@Override
-	public int parallelTcpReceiveWindowSize() {
+	public int getParallelTcpReceiveWindowSize() {
 		return verifyPropExistsAndGetAsInt("parallelTcpReceiveWindowSize");
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsConnectionTime() {
+	public int getParallelTcpPerformancePrefsConnectionTime() {
 		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.connectionTime");
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsLatency() {
+	public int getParallelTcpPerformancePrefsLatency() {
 		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.latency");
 	}
 
 	@Override
-	public int parallelTcpPerformancePrefsBandwidth() {
+	public int getParallelTcpPerformancePrefsBandwidth() {
 		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.bandwidth");
 	}
 
 	@Override
 	public boolean isPrimaryTcpKeepAlive() {
-		// TODO Auto-generated method stub
-		return false;
+		return verifyPropExistsAndGetAsBoolean("primaryTcpKeepAlive");
 	}
 
 	@Override
-	public int primaryTcpSendWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpSendWindowSize() {
+		return verifyPropExistsAndGetAsInt("primaryTcpSendWindowSize");
 	}
 
 	@Override
-	public int primaryTcpReceiveWindowSize() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpReceiveWindowSize() {
+		return verifyPropExistsAndGetAsInt("primaryTcpReceiveWindowSize");
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsConnectionTime() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.connectionTime");
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsLatency() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsLatency() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.latency");
 	}
 
 	@Override
-	public int primaryTcpPerformancePrefsBandwidth() {
-		// TODO Auto-generated method stub
-		return 0;
+	public int getPrimaryTcpPerformancePrefsBandwidth() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.bandwidth");
 	}
 
 }
