@@ -71,6 +71,10 @@ Fix path munging in removeAccessPermissionsInAdminMode in DataObjectAOImpl
 
 Tightened up parallel transfer processing to avoid sending oprcomplete if parallel transfer threads fail.  This will now forcefully abandon the agent connection and properly return an error.  This was falling through the cracks and leaving clients like iDrop in an indeterminate state.
 
+#### Output streaming did not trigger post proc for put in iRODS4 #74
+
+Fixes that work with 4.0.3 protocols for streaming data to iRODS
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
