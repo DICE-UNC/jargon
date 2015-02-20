@@ -92,5 +92,7 @@ Add connection tester package to jargon-data-utils to test out and measure put/g
 
 #### Parallel file transfer performance #72
 
-Additional tweaks to improve parallel file transfer performance
+Additional tweaks to improve parallel file transfer performance. This includes an expansion of TCP configuration parameters for both the primary and parallel transfer thread to configure window size, quality of service parameters, timeouts, nodelay and other aspects.  This also includes adjustemt to various buffering parameters based on benchmark testing.
+
+
 
