@@ -4,13 +4,13 @@ Jargon Core API
 
 # Project: Jargon-core API
 #### Date: 
-#### Release Version: 4.0.2.1-SNAPSHOT
-#### git tag: MASTER
+#### Release Version: 4.0.2.1-RC1
+#### git tag: 4.0.2.1-RC1
 #### Developer: Mike Conway - DICE
 
 ## News
 
-work on milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
+Release Candidate for milestone: https://github.com/DICE-UNC/jargon/issues?milestone=4&state=open
 
 =======
 
@@ -93,6 +93,8 @@ Add connection tester package to jargon-data-utils to test out and measure put/g
 #### Parallel file transfer performance #72
 
 Additional tweaks to improve parallel file transfer performance. This includes an expansion of TCP configuration parameters for both the primary and parallel transfer thread to configure window size, quality of service parameters, timeouts, nodelay and other aspects.  This also includes adjustemt to various buffering parameters based on benchmark testing.
+
+This version includes much greater configurability of TCP/IP parameters for the primary and parallel socket connections. Currently these parameters are set to an aggressive window size, and bandwidth-favoring parameters, but can ba adjusted in the jargon.properties file.  
 
 
 
