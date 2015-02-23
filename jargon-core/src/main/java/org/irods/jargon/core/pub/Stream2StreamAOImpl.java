@@ -66,6 +66,10 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null irodsTargetFile");
 		}
 
+		// delete the target file for overwrite
+
+		irodsTargetFile.delete();
+
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
 

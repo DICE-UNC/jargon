@@ -458,7 +458,7 @@ public class RuleCompositionServiceImplTest {
 		}
 
 		String ruleFile = "/rules/testRuleBug1641MutlipleGetsAndPuts.r";
-		String irodsRuleFile = "testDeleteOutputParameterFromRule .r";
+		String irodsRuleFile = "testDeleteOutputParameterFromRule.r";
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
@@ -496,6 +496,42 @@ public class RuleCompositionServiceImplTest {
 		Assert.assertEquals("unequal number of output params", rule
 				.getOutputParameters().size() - 1, actual.getOutputParameters()
 				.size());
+
+	}
+
+	@Test
+	public void testReadARuleFromFileWithOuputParams() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/translateTextToRule.r";
+
+		String ruleString = LocalFileUtils
+				.getClasspathResourceFileAsString(ruleFile);
+
+		RuleCompositionService ruleCompositionService = new RuleCompositionServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		Rule rule = ruleCompositionService.parseStringIntoRule(ruleString);
+
+		Assert.assertEquals("unequal number of output params", 1, rule
+				.getOutputParameters().size());
+
+		IRODSRuleParameter outputParam = rule.getOutputParameters().get(0);
+		Assert.assertEquals("did not get *DestFile", "*DestFile",
+				outputParam.getUniqueName());
 
 	}
 

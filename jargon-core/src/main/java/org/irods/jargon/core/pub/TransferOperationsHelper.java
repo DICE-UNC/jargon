@@ -301,7 +301,7 @@ final class TransferOperationsHelper {
 						"exception in transfer, will abandon the connection and rethrow",
 						e);
 				this.dataObjectAO.getIRODSProtocol().disconnectWithForce();
-				throw e;
+				throw new JargonException(e);
 			}
 
 			transferControlBlock.incrementFilesTransferredSoFar();
