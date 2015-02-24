@@ -96,34 +96,30 @@ class CollectionListingUtils {
 			return collectionAndDataObjectListingEntries;
 		}
 
-		// check if under '/zone' and if so infer that there is a home dir
-		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		// see if there is only one path component, if so, treat it as a zone
+		// and interpolate a home directory
 
-		String comparePath = sb.toString();
-
-		if (path.equals(comparePath)) {
-			log.info("under zone, create stand-in home dir");
+		List<String> components = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(path);
+		if (components.size() == 2) {
+			log.info("assume this is a zone name, look for a home dir under the zone name");
 			collectionAndDataObjectListingEntries
-					.add(createStandInForHomeDir());
+					.add(createStandInForHomeDir(path));
 			return collectionAndDataObjectListingEntries;
+
 		}
 
 		/*
 		 * check if I am under /zone/home, look for public and user dir. In this
 		 * situation I should be able to list them via obj stat
 		 */
-		sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-		sb.append("/home");
-
-		comparePath = sb.toString();
-
-		if (path.equals(comparePath)) {
+                
+                
+               components = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(path);
+		if (components.size() == 3 && components.get(2).equals("home")) {
+                fadff
+		
 			log.info("under home, look for public and home dir");
 			sb.append("/public");
 			ObjStat statForPublic;
@@ -204,19 +200,18 @@ class CollectionListingUtils {
 	/**
 	 * @param collectionAndDataObjectListingEntries
 	 */
-	private CollectionAndDataObjectListingEntry createStandInForHomeDir() {
-		log.info("under root, put out home as an entry");
+	private CollectionAndDataObjectListingEntry createStandInForHomeDir(
+			final String path) {
+		log.info("under a zone, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
 		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
 				.getIRODSAccount().getZone());
-		entry.setParentPath("/");
+		entry.setParentPath(path);
 		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(path);
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(SpecColType.NORMAL);

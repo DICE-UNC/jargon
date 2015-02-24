@@ -16,6 +16,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -85,22 +86,51 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 		Zone zone;
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			zone = new Zone();
-			zone.setZoneId(row.getColumn(0));
-			zone.setZoneName(row.getColumn(1));
-			zone.setZoneType(row.getColumn(2));
-			zone.setZoneConnection(row.getColumn(3));
-			zone.setZoneComment(row.getColumn(4));
-			// TODO: set up the dates
+			zone = buildZoneForRow(row);
+
 			zones.add(zone);
-			if (log.isInfoEnabled()) {
-				log.info("got zone \n");
-				log.info(zone.toString());
-			}
+			log.info("got zone:{}", zone.toString());
+
 		}
 
 		return zones;
 
+	}
+
+	private Zone buildZoneForRow(IRODSQueryResultRow row)
+			throws JargonException {
+		Zone zone;
+		zone = new Zone();
+		zone.setZoneId(row.getColumn(0));
+		zone.setZoneName(row.getColumn(1));
+		zone.setZoneType(row.getColumn(2));
+		zone.setZoneConnection(row.getColumn(3));
+		zone.setZoneComment(row.getColumn(4));
+		zone.setZoneCreateTime(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(5)));
+		zone.setZoneModifyTime(IRODSDataConversionUtil
+				.getDateFromIRODSValue(row.getColumn(6)));
+
+		String[] components = zone.getZoneConnection().split(":");
+		if (components.length == 0) {
+			// nothing
+		} else if (components.length == 1) {
+			zone.setHost(components[0]);
+		} else if (components.length == 2) {
+			zone.setHost(components[0]);
+			try {
+				zone.setPort(Integer.parseInt(components[1]));
+			} catch (NumberFormatException e) {
+				log.error("unable to parse connection string:{}",
+						zone.getZoneConnection(), e);
+				throw new JargonException(
+						"error parsing zone connection string", e);
+			}
+		} else {
+			throw new JargonException(
+					"unable to parse connection for host and port");
+		}
+		return zone;
 	}
 
 	/*
@@ -168,19 +198,6 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 		}
 
 		IRODSQueryResultRow row = resultSet.getResults().get(0);
-
-		Zone zone = new Zone();
-		zone.setZoneId(row.getColumn(0));
-		zone.setZoneName(row.getColumn(1));
-		zone.setZoneType(row.getColumn(2));
-		zone.setZoneConnection(row.getColumn(3));
-		zone.setZoneComment(row.getColumn(4));
-		// TODO: set up the dates
-
-		if (log.isInfoEnabled()) {
-			log.info("got zone \n");
-			log.info(zone.toString());
-		}
-		return zone;
+		return buildZoneForRow(row);
 	}
 }

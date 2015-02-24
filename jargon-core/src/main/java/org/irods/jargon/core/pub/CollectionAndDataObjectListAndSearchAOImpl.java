@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
@@ -1547,14 +1548,39 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"irodsAbsolutePath is null or empty");
 		}
 
+		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		// check for a cross-zone query
+		String zoneName = MiscIRODSUtils.getZoneInPath(irodsAbsolutePath);
+                
+                if (!zoneName.isEmpty()) {
+
+		if (!zoneName.equals(this.getIRODSAccount().getZone())) {
+			log.info("cross zones to get this information");
+			ZoneAO zoneAO = this.getIRODSAccessObjectFactory().getZoneAO(
+					getIRODSAccount());
+			Zone zone = zoneAO.getZoneByName(zoneName);
+			IRODSAccount authenticatingIrodsAccount = this.getIRODSProtocol()
+					.getAuthResponse().getAuthenticatingIRODSAccount();
+			IRODSAccount crossZoneAccount = IRODSAccount.instance(
+					zone.getHost(), zone.getPort(),
+					authenticatingIrodsAccount.getUserName(),
+					authenticatingIrodsAccount.getPassword(), "", zoneName, "",
+					authenticatingIrodsAccount.getAuthenticationScheme());
+			CollectionAndDataObjectListAndSearchAO crossZoneCollectionAndDataObjectListAndSearchAO = this
+					.getIRODSAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(crossZoneAccount);
+			return crossZoneCollectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(irodsAbsolutePath);
+
+		}
+            }
+
 		/*
 		 * StopWatch stopWatch = null;
 		 * 
 		 * if (this.isInstrumented()) { stopWatch = new
 		 * Log4JStopWatch("retrieveObjectStatForPath"); }
 		 */
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
@@ -1679,5 +1705,4 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return objStat;
 
 	}
-
 }
