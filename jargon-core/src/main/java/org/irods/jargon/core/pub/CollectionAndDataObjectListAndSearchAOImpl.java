@@ -291,6 +291,31 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return entries;
 	}
 
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		log.info("listDataObjectsAndCollectionsUnderPath(");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat  is null");
+		}
+
+		log.info("objStat:{}", objStat);
+
+		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
+				this);
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat,
+				0));
+		entries.addAll(collectionListingUtils.listDataObjectsUnderPath(objStat,
+				0));
+
+		return entries;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1551,36 +1576,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 		// check for a cross-zone query
 		String zoneName = MiscIRODSUtils.getZoneInPath(irodsAbsolutePath);
-                
-                if (!zoneName.isEmpty()) {
-
-		if (!zoneName.equals(this.getIRODSAccount().getZone())) {
-			log.info("cross zones to get this information");
-			ZoneAO zoneAO = this.getIRODSAccessObjectFactory().getZoneAO(
-					getIRODSAccount());
-			Zone zone = zoneAO.getZoneByName(zoneName);
-			IRODSAccount authenticatingIrodsAccount = this.getIRODSProtocol()
-					.getAuthResponse().getAuthenticatingIRODSAccount();
-			IRODSAccount crossZoneAccount = IRODSAccount.instance(
-					zone.getHost(), zone.getPort(),
-					authenticatingIrodsAccount.getUserName(),
-					authenticatingIrodsAccount.getPassword(), "", zoneName, "",
-					authenticatingIrodsAccount.getAuthenticationScheme());
-			CollectionAndDataObjectListAndSearchAO crossZoneCollectionAndDataObjectListAndSearchAO = this
-					.getIRODSAccessObjectFactory()
-					.getCollectionAndDataObjectListAndSearchAO(crossZoneAccount);
-			return crossZoneCollectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(irodsAbsolutePath);
-
-		}
-            }
-
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new
-		 * Log4JStopWatch("retrieveObjectStatForPath"); }
-		 */
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);

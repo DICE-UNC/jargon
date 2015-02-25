@@ -11,8 +11,13 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.Zone;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQuery;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
+import org.irods.jargon.core.query.IRODSQueryResultSet;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
@@ -46,40 +51,37 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 	@Override
 	public List<Zone> listZones() throws JargonException {
 
-		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
-		StringBuilder zoneQuery = new StringBuilder();
-		char comma = ',';
 
-		zoneQuery.append("select ");
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_ID.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_NAME.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_TYPE.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_CONNECTION.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_COMMENT.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_CREATE_TIME.getName());
-		zoneQuery.append(comma);
-		zoneQuery.append(RodsGenQueryEnum.COL_ZONE_MODIFY_TIME.getName());
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSet resultSet;
 
-		String queryString = zoneQuery.toString();
-		if (log.isInfoEnabled()) {
-			log.info("zone query:" + toString());
-		}
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 500);
-
-		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_TYPE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_ZONE_CONNECTION)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_COMMENT)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_ZONE_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_ZONE_MODIFY_TIME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
+							OrderByType.ASC);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(50);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
 		} catch (JargonQueryException e) {
-			log.error("query exception for:" + queryString, e);
-			throw new JargonException("error in query");
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in query", e);
 		}
 
 		List<Zone> zones = new ArrayList<Zone>();
