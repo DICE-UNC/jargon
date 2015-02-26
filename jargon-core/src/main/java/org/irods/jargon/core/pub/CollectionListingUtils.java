@@ -6,7 +6,6 @@ package org.irods.jargon.core.pub;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -17,6 +16,7 @@ import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.aohelper.CollectionAOHelper;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
+import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
@@ -64,9 +64,23 @@ class CollectionListingUtils {
 	 * This is a compensating method used to deal with the top of the tree when
 	 * permissions do not allow listing 'into' the tree to get to things the
 	 * user actually has access to.
+	 * <p/>
+	 * Phase 1 - when path is / - obtain a listing of zones and display as
+	 * subdirectories
+	 * <p/>
+	 * Phase 2 when path is /zone - interpolate a 'home' directory
+	 * <p/>
+	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
+	 * user name, see if a public dir. For foreign zone, add a dir for
+	 * user#homeZone and see if a public dir
+	 * 
+	 *
 	 * 
 	 * @param absolutePathToParent
-	 * @return
+	 *            <code>String</code> with the current parent
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 *         that has the children under the parent. These children may be
+	 *         simulated per the given rules
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
@@ -76,11 +90,12 @@ class CollectionListingUtils {
 		log.info("handleNoListingUnderRootOrHomeByLookingForPublicAndHome()");
 
 		String path = absolutePathToParent;
+
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		/*
-		 * This is somewhat convoluted, note the return statements in the
-		 * various conditions
+		 * Do I have compensating actions configured? If not, it's just a file
+		 * not found
 		 */
 		if (!collectionAndDataObjectListAndSearchAO.getJargonProperties()
 				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
@@ -88,135 +103,175 @@ class CollectionListingUtils {
 			throw new FileNotFoundException("the collection cannot be found");
 		}
 
-		// check if under '/' and infer that there is a '/zone' subdir to return
-		// this time
+		/*
+		 * Phase1 - under root
+		 * 
+		 * Get a list of zones as subdirs
+		 */
+
 		if (path.equals("/")) {
+			log.info("phase1 - under root, add zones");
 			collectionAndDataObjectListingEntries
-					.add(createStandInForZoneDir());
-			return collectionAndDataObjectListingEntries;
-		}
-
-		// check if under '/zone' and if so infer that there is a home dir
-		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-
-		String comparePath = sb.toString();
-
-		if (path.equals(comparePath)) {
-			log.info("under zone, create stand-in home dir");
-			collectionAndDataObjectListingEntries
-					.add(createStandInForHomeDir());
+					.addAll(createStandInForZoneDir());
 			return collectionAndDataObjectListingEntries;
 		}
 
 		/*
-		 * check if I am under /zone/home, look for public and user dir. In this
-		 * situation I should be able to list them via obj stat
+		 * Phase2 - under a zone, add a home
 		 */
-		sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-		sb.append("/home");
 
-		comparePath = sb.toString();
-
-		if (path.equals(comparePath)) {
-			log.info("under home, look for public and home dir");
-			sb.append("/public");
-			ObjStat statForPublic;
-			try {
-				statForPublic = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(sb.toString());
-				collectionAndDataObjectListingEntries
-						.add(createStandInForPublicDir(statForPublic));
-			} catch (FileNotFoundException fnf) {
-				log.info("no public dir");
-			}
-
-			log.info("see if a user home dir applies");
-
-			ObjStat statForUserHome;
-			try {
-				statForUserHome = collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(MiscIRODSUtils
-								.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO
-										.getIRODSAccount()));
-				collectionAndDataObjectListingEntries
-						.add(createStandInForUserDir(statForUserHome));
-			} catch (FileNotFoundException fnf) {
-				log.info("no home dir");
-			}
-
-		} else {
-
-			sb.append("/");
-			sb.append(IRODSAccount.PUBLIC_USERNAME);
-
-			comparePath = sb.toString();
-
-			if (path.equals(comparePath)) {
-
-				log.info("see if a user home dir applies");
-
-				ObjStat statForUserHome;
-				try {
-					statForUserHome = collectionAndDataObjectListAndSearchAO
-							.retrieveObjectStatForPath(comparePath);
-					collectionAndDataObjectListingEntries
-							.add(createStandInForUserDir(statForUserHome));
-				} catch (FileNotFoundException fnf) {
-					log.info("no home dir");
-				}
-
-			} else {
-				log.info("really is a not found");
-				throw new FileNotFoundException(
-						"unable to find file under path");
-			}
+		List<String> components = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(path);
+		if (components.size() == 2) {
+			log.info("under zone, add a home");
+			log.info("assume this is a zone name, look for a home dir under the zone name");
+			collectionAndDataObjectListingEntries
+					.add(createStandInForHomeDir(path));
+			return collectionAndDataObjectListingEntries;
 		}
-		// I was under /zone/home/ looking for public and user dirs, return what
-		// I have, it could be empty
-		return collectionAndDataObjectListingEntries;
+
+		/*
+		 * Phase 3, under home, see if home zone
+		 */
+		components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
+		if (components.size() == 3 && components.get(2).equals("home")) {
+			log.info("under home, see if same zone as login");
+			if (this.collectionAndDataObjectListAndSearchAO.getIRODSAccount()
+					.getZone().equals(components.get(1))) {
+				log.info("under logged in zone, add user and public dirs");
+				collectionAndDataObjectListingEntries
+						.addAll(createStandInsUnderHomeInLoggedInZone(path));
+			} else {
+				log.info("under federated zone, add federated user");
+				collectionAndDataObjectListingEntries
+						.addAll(createStandInsUnderHomeInFederatedZone(components
+								.get(1)));
+			}
+			return collectionAndDataObjectListingEntries;
+		}
+
+		/*
+		 * Fall through is a legit file not found exception
+		 */
+
+		log.info("really is a not found for file:{}", path);
+		throw new FileNotFoundException("unable to find file under path");
 
 	}
 
-	private CollectionAndDataObjectListingEntry createStandInForZoneDir() {
-		log.info("under root, put out zone as an entry");
-		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
-		entry.setCount(0);
-		entry.setLastResult(true);
-		entry.setObjectType(ObjectType.COLLECTION);
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInLoggedInZone(
+			String path) throws FileNotFoundException, JargonException {
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		// if same zone, look for public and home, if cross zone, look for a
+		// user dir in zone and public
+		log.info("under home, look for public and user dir");
+		StringBuilder sb = new StringBuilder(path);
+		sb.append("/public");
+		ObjStat statForPublic;
+		try {
+			statForPublic = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(sb.toString());
+			collectionAndDataObjectListingEntries
+					.add(createStandInForPublicDir(statForPublic));
+		} catch (FileNotFoundException fnf) {
+			log.info("no public dir");
+		}
+
+		log.info("see if a user home dir applies");
+
+		ObjStat statForUserHome;
+		try {
+			statForUserHome = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(MiscIRODSUtils
+							.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO
+									.getIRODSAccount()));
+			collectionAndDataObjectListingEntries
+					.add(createStandInForUserDir(statForUserHome));
+		} catch (FileNotFoundException fnf) {
+			log.info("no home dir");
+		}
+		return collectionAndDataObjectListingEntries;
+	}
+
+	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInFederatedZone(
+			String zone) throws FileNotFoundException, JargonException {
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		// if same zone, look for public and home, if cross zone, look for a
+		// user dir in zone and public
+		log.info("under home in federated zone, look for public and home dir");
+
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
-		entry.setParentPath(sb.toString());
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-		entry.setPathOrName(sb.toString());
-		entry.setSpecColType(SpecColType.NORMAL);
-		return entry;
+		sb.append(zone);
+		sb.append("/home/public");
+
+		try {
+			ObjStat statForPublic = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(sb.toString());
+			collectionAndDataObjectListingEntries
+					.add(createStandInForPublicDir(statForPublic));
+		} catch (FileNotFoundException fnf) {
+			log.info("no public dir");
+		}
+
+		log.info("see if a user home dir applies");
+
+		try {
+			ObjStat homeStat = collectionAndDataObjectListAndSearchAO
+					.retrieveObjectStatForPath(MiscIRODSUtils
+							.computeHomeDirectoryForIRODSAccountInFederatedZone(
+									this.collectionAndDataObjectListAndSearchAO
+											.getIRODSAccount(), zone));
+			collectionAndDataObjectListingEntries
+					.add(createStandInForUserDir(homeStat));
+		} catch (FileNotFoundException fnf) {
+			log.info("no user dir");
+		}
+		return collectionAndDataObjectListingEntries;
+	}
+
+	private List<CollectionAndDataObjectListingEntry> createStandInForZoneDir()
+			throws FileNotFoundException, JargonException {
+		log.info("under root, put out zone as an entry");
+		CollectionAndDataObjectListingEntry entry;
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		StringBuilder sb;
+		ZoneAO zoneAO = this.collectionAndDataObjectListAndSearchAO
+				.getIRODSAccessObjectFactory().getZoneAO(
+						this.collectionAndDataObjectListAndSearchAO
+								.getIRODSAccount());
+		List<Zone> zones = zoneAO.listZones();
+
+		for (Zone zone : zones) {
+			entry = new CollectionAndDataObjectListingEntry();
+			entry.setParentPath("/");
+			sb = new StringBuilder();
+			sb.append("/");
+			sb.append(zone.getZoneName());
+			entry.setPathOrName(sb.toString());
+			entry.setObjectType(ObjectType.COLLECTION);
+			entries.add(entry);
+		}
+
+		return entries;
+
 	}
 
 	/**
 	 * @param collectionAndDataObjectListingEntries
 	 */
-	private CollectionAndDataObjectListingEntry createStandInForHomeDir() {
-		log.info("under root, put out home as an entry");
+	private CollectionAndDataObjectListingEntry createStandInForHomeDir(
+			final String path) {
+		log.info("under a zone, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
 		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
 				.getIRODSAccount().getZone());
-		entry.setParentPath("/");
+		entry.setParentPath(path);
 		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
+		sb.append(path);
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(SpecColType.NORMAL);
@@ -237,14 +292,7 @@ class CollectionListingUtils {
 		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
 				.getIRODSAccount().getZone());
 		entry.setOwnerName(objStat.getOwnerName());
-		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-		sb.append("/home");
-		entry.setParentPath(sb.toString());
-		sb.append("/public");
-		entry.setPathOrName(sb.toString());
+		entry.setPathOrName(objStat.getAbsolutePath());
 		entry.setSpecColType(objStat.getSpecColType());
 		entry.setCreatedAt(objStat.getCreatedAt());
 		entry.setId(objStat.getDataId());
@@ -266,16 +314,7 @@ class CollectionListingUtils {
 		entry.setObjectType(ObjectType.COLLECTION);
 		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
 				.getIRODSAccount().getZone());
-		StringBuilder sb = new StringBuilder();
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getZone());
-		sb.append("/home");
-		entry.setParentPath(sb.toString());
-		sb.append("/");
-		sb.append(collectionAndDataObjectListAndSearchAO.getIRODSAccount()
-				.getUserName());
-		entry.setPathOrName(sb.toString());
+		entry.setPathOrName(objStat.getAbsolutePath());
 		entry.setSpecColType(objStat.getSpecColType());
 		entry.setCreatedAt(objStat.getCreatedAt());
 		entry.setId(objStat.getDataId());

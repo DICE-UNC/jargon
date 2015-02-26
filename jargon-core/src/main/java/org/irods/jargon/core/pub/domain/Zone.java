@@ -17,14 +17,15 @@ import java.util.Date;
 
 public class Zone extends IRODSDomainObject {
 
-	String zoneId = "";
-	String zoneName = "";
-	String zoneType = ""; // TODO: enum?
-	String zoneConnection = "";
-	String zoneComment = "";
-	Date zoneCreateTime = new Date();
-	Date zoneModifyTime = new Date(); // TODO: util to convert IRODS date values
-										// to java Dates needed
+	private String zoneId = "";
+	private String zoneName = "";
+	private String zoneType = ""; // TODO: enum?
+	private String zoneConnection = "";
+	private String zoneComment = "";
+	private Date zoneCreateTime = new Date();
+	private Date zoneModifyTime = new Date();
+	private String host = "";
+	private int port = 1247;
 
 	public String getZoneId() {
 		return zoneId;
@@ -82,33 +83,89 @@ public class Zone extends IRODSDomainObject {
 		this.zoneModifyTime = zoneModifyTime;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		StringBuilder stringBuilder = new StringBuilder();
-		stringBuilder.append("Zone:\n");
-		stringBuilder.append("  zoneId:");
-		stringBuilder.append(zoneId);
-		stringBuilder.append('\n');
-		stringBuilder.append("  zoneName:");
-		stringBuilder.append(zoneName);
-		stringBuilder.append('\n');
-		stringBuilder.append("  zoneType:");
-		stringBuilder.append(zoneType);
-		stringBuilder.append('\n');
-		stringBuilder.append("  zoneConnection:");
-		stringBuilder.append(zoneConnection);
-		stringBuilder.append('\n');
-		stringBuilder.append("  zoneComment:");
-		stringBuilder.append(zoneComment);
-		stringBuilder.append('\n');
-		stringBuilder.append("  createTime:");
-		stringBuilder.append(zoneCreateTime);
-		stringBuilder.append('\n');
-		stringBuilder.append("  zoneModifyTime:");
-		stringBuilder.append(zoneModifyTime);
-		stringBuilder.append('\n');
+		StringBuilder builder = new StringBuilder();
+		builder.append("Zone [");
+		if (zoneId != null) {
+			builder.append("zoneId=");
+			builder.append(zoneId);
+			builder.append(", ");
+		}
+		if (zoneName != null) {
+			builder.append("zoneName=");
+			builder.append(zoneName);
+			builder.append(", ");
+		}
+		if (zoneType != null) {
+			builder.append("zoneType=");
+			builder.append(zoneType);
+			builder.append(", ");
+		}
+		if (zoneConnection != null) {
+			builder.append("zoneConnection=");
+			builder.append(zoneConnection);
+			builder.append(", ");
+		}
+		if (zoneComment != null) {
+			builder.append("zoneComment=");
+			builder.append(zoneComment);
+			builder.append(", ");
+		}
+		if (zoneCreateTime != null) {
+			builder.append("zoneCreateTime=");
+			builder.append(zoneCreateTime);
+			builder.append(", ");
+		}
+		if (zoneModifyTime != null) {
+			builder.append("zoneModifyTime=");
+			builder.append(zoneModifyTime);
+			builder.append(", ");
+		}
+		if (host != null) {
+			builder.append("host=");
+			builder.append(host);
+			builder.append(", ");
+		}
+		builder.append("port=");
+		builder.append(port);
+		builder.append("]");
+		return builder.toString();
+	}
 
-		return stringBuilder.toString();
+	/**
+	 * @return the host
+	 */
+	public String getHost() {
+		return host;
+	}
+
+	/**
+	 * @param host
+	 *            the host to set
+	 */
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port
+	 *            the port to set
+	 */
+	public void setPort(int port) {
+		this.port = port;
 	}
 
 }

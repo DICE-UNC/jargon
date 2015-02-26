@@ -296,6 +296,11 @@ final class TransferOperationsHelper {
 				dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
 						targetLocalFile, transferControlBlock,
 						transferStatusCallbackListener);
+			} catch (JargonException e) {
+				log.error(
+						"exception in transfer, will abandon the connection and rethrow",
+						e);
+				throw e;
 			} catch (Exception e) {
 				log.error(
 						"exception in transfer, will abandon the connection and rethrow",

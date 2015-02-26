@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
+import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
@@ -280,6 +281,31 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat,
+				0));
+		entries.addAll(collectionListingUtils.listDataObjectsUnderPath(objStat,
+				0));
+
+		return entries;
+	}
+
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		log.info("listDataObjectsAndCollectionsUnderPath(");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat  is null");
+		}
+
+		log.info("objStat:{}", objStat);
+
+		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
+				this);
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat,
@@ -1547,14 +1573,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"irodsAbsolutePath is null or empty");
 		}
 
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new
-		 * Log4JStopWatch("retrieveObjectStatForPath"); }
-		 */
-
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		// check for a cross-zone query
+		String zoneName = MiscIRODSUtils.getZoneInPath(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
@@ -1679,5 +1700,4 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return objStat;
 
 	}
-
 }

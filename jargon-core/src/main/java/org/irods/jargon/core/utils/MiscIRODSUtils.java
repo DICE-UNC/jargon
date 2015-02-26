@@ -363,6 +363,32 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Build the home directory path for the given logged in user in the
+	 * specified federated zone
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @param zone
+	 *            <code>String</code> federated zone name
+	 * @return <code>String</code> in /federatedZone/home/user#homeZone format
+	 */
+	public static String computeHomeDirectoryForIRODSAccountInFederatedZone(
+			final IRODSAccount irodsAccount, final String zone) {
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append("/");
+		sb.append(zone);
+		sb.append("/home/");
+		sb.append(irodsAccount.getUserName());
+		sb.append("#");
+		sb.append(irodsAccount.getZone());
+		return sb.toString();
+	}
+
+	/**
 	 * Compute a home directory path in /zone/home/username format given an
 	 * <code>IRODSAccount</code> that describes the zone, and a user name for
 	 * the target user.
@@ -747,7 +773,7 @@ public class MiscIRODSUtils {
 		return compValue >= 0;
 
 	}
-	
+
 	/**
 	 * Create a truncated file name suitable for display in interfaces
 	 * 
