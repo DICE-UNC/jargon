@@ -91,10 +91,10 @@ public class ConnectionCreatingPoolableObjectFactory implements
 			throw new UnsupportedOperationException(
 					"cannot destroy unknown object, expecting an IRODSCommands");
 		}
-		AbstractIRODSMidLevelProtocol irodsCommands = (AbstractIRODSMidLevelProtocol) objectToDestroy;
-		irodsCommands.setIrodsProtocolManager(irodsProtocolManager);
+		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = (AbstractIRODSMidLevelProtocol) objectToDestroy;
+		irodsMidLevelProtocol.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
-		irodsCommands.disconnect();
+		irodsMidLevelProtocol.disconnect();
 	}
 
 	/*

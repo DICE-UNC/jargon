@@ -103,7 +103,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -207,7 +207,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final byte[] errorBytes, final int errorOffset,
 			final int errorLength, final byte[] bytes, final int byteOffset,
 			final int byteStringLength, final int intInfo)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * iRODS protocol request that sends data to iRODS using the
@@ -249,7 +249,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final int byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -348,7 +348,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final long byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -532,7 +532,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	public synchronized void read(final OutputStream destination,
 			final long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (length <= 0) {
 			throw new JargonException("length out of range");
@@ -753,11 +753,14 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * pool.
 	 * <p/>
 	 * This method is called for normal close of a connection from a higher
-	 * level API method
+	 * level API method, and typically is not used by clients of the API. The
+	 * exception would be when implementing a custom
+	 * <code>IRODSProtocolManager</code> that needs to directly manipulate
+	 * connections in a pool or cache.
 	 *
 	 * @throws JargonException
 	 */
-	synchronized void disconnect() throws JargonException {
+	public synchronized void disconnect() throws JargonException {
 		log.debug("closing connection");
 		getIrodsSession().closeSession(getIrodsAccount());
 
@@ -769,10 +772,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * wrong with the agent or connection, and the connection should not be
 	 * re-used.
 	 * <p/>
-	 * This method is called for abnormal close of a connection from a higher
-	 * level API method
+	 * This method is called for a forced error close of a connection from a
+	 * higher level API method, and typically is not used by clients of the API.
+	 * The exception would be when implementing a custom
+	 * <code>IRODSProtocolManager</code> that needs to directly manipulate
+	 * connections in a pool or cache.
 	 */
-	synchronized void disconnectWithForce() throws JargonException {
+	public synchronized void disconnectWithForce() throws JargonException {
 		getIrodsSession().discardSessionForErrors(getIrodsAccount());
 	}
 
@@ -963,7 +969,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			 * message length in front of the message. Causing unexpected
 			 * results when attempting to parse the message, ie. <REr are
 			 * interpreted as the message length.
-			 *
+			 * 
 			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000
 			 * </status> <msg>ERROR: msiDataObjPut: rsDataObjPut failed for
 			 * <MsgHeader_PI> <type>RODS_API_REPLY </type> <msgLen>0 </msgLen>
@@ -1100,7 +1106,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */

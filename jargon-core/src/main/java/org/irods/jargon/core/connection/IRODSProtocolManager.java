@@ -61,6 +61,11 @@ public abstract class IRODSProtocolManager {
 	 * creating a fresh protocol layer when this protocol is not originating
 	 * from a pool or cache when invoked. Other variants will just create a new
 	 * protocol layer each time it is asked.
+	 * <p/>
+	 * This methods is typically not used by clients of this API. Instead, use
+	 * the methods in {@link IRODSSession} to manage the connection life cycle.
+	 * An exception would be a situation where one is implementing a custom pool
+	 * or cache of connections
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
@@ -77,7 +82,7 @@ public abstract class IRODSProtocolManager {
 	 * @exception JargonException
 	 *                if a general error occurs
 	 */
-	abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(
+	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(
 			IRODSAccount irodsAccount,
 			PipelineConfiguration pipelineConfiguration,
 			IRODSSession irodsSession) throws AuthenticationException,
@@ -93,7 +98,7 @@ public abstract class IRODSProtocolManager {
 	 * @param abstractIRODSMidLevelProtocol
 	 * @throws JargonException
 	 */
-	abstract void returnIRODSProtocol(
+	protected abstract void returnIRODSProtocol(
 			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException;
 
@@ -154,7 +159,7 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} to be returned
 	 */
-	void returnWithForce(
+	protected void returnWithForce(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
 		if (irodsMidLevelProtocol != null) {
@@ -169,7 +174,7 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @throws JargonException
 	 */
-	void destroy() throws JargonException {
+	protected void destroy() throws JargonException {
 		log.debug("destroy called, this will terminate the session and clear it");
 
 	}

@@ -225,7 +225,8 @@ public class IRODSSession {
 	public IRODSSession() {
 		log.debug("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
-			jargonProperties = new DefaultPropertiesJargonConfig();
+			jargonProperties = new SettableJargonProperties(
+					new DefaultPropertiesJargonConfig());
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties");
 		}
