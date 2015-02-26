@@ -95,11 +95,10 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	 */
 	@Override
 	public void returnIRODSProtocol(
-			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
 			throws JargonException {
-		log.debug("abstractIRODSMidLevelProtocol returned:{}",
-				abstractIRODSMidLevelProtocol);
-		abstractIRODSMidLevelProtocol.shutdown();
+		log.debug("irodsMidLevelProtocol returned:{}", irodsMidLevelProtocol);
+		irodsMidLevelProtocol.shutdown();
 
 	}
 

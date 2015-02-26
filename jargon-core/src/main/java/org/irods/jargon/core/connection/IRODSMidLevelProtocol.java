@@ -112,7 +112,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * 
 	 * @return
 	 */
-	boolean isPamFlush() {
+	boolean isPamFlush() { // FIXME: pam flush issue for 3.3.1?
 
 		boolean postThreeDotThree = MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
@@ -121,19 +121,26 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		boolean beforeFourPointOne = !MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 						getStartupResponseData().getRelVersion(), "rods4.1.0");
-		
+
 		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
 				&& !postThreeDotThree) {
 			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) {  // pam flush can be set by a jargon.properties setting
+		} else if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
+																	// can be
+																	// set by a
+																	// jargon.properties
+																	// setting
 			return true;
-		/*
-		 * Is the server 4.0.X and not yet 4.1? Then I need to worry about pam flushes per
-		 * https://github.com/DICE-UNC/jargon/issues/70
-		 * This overhead will force the pam flush based on the forceSslFlush flag, which will only be turned on to bracket the 
-		 * necessary calls to the protocol, preventing a performance drop from unneeded flushes later
-		 */
-		} else if (postThreeDotThree &&  beforeFourPointOne && this.isForceSslFlush()) {
+			/*
+			 * Is the server 4.0.X and not yet 4.1? Then I need to worry about
+			 * pam flushes per https://github.com/DICE-UNC/jargon/issues/70 This
+			 * overhead will force the pam flush based on the forceSslFlush
+			 * flag, which will only be turned on to bracket the necessary calls
+			 * to the protocol, preventing a performance drop from unneeded
+			 * flushes later
+			 */
+		} else if (postThreeDotThree && beforeFourPointOne
+				&& this.isForceSslFlush()) {
 			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
 			return true;
 		} else {

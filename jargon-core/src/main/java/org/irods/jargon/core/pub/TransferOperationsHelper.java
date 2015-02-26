@@ -305,7 +305,10 @@ final class TransferOperationsHelper {
 				log.error(
 						"exception in transfer, will abandon the connection and rethrow",
 						e);
-				this.dataObjectAO.getIRODSProtocol().disconnectWithForce();
+				dataObjectAO
+						.getIRODSAccessObjectFactory()
+						.getIrodsSession()
+						.discardSessionForErrors(dataObjectAO.getIRODSAccount());
 				throw new JargonException(e);
 			}
 

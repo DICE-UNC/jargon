@@ -16,7 +16,6 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
-import org.irods.jargon.core.pub.domain.Zone;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileSystemAOHelper;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
@@ -1574,9 +1573,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
-		// check for a cross-zone query
-		String zoneName = MiscIRODSUtils.getZoneInPath(irodsAbsolutePath);
-
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
 		Tag response;

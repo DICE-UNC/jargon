@@ -12,7 +12,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactory;
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactoryImpl;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl.QueryCloseBehavior;
@@ -51,6 +53,11 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSSession</code> is meant to be created once, either directly, or
  * wrapped in the shared <code>IRODSFileSystem</code>. If desired, the developer
  * can wrap these objects as singletons, but that is not imposed by Jargon.
+ * <p/>
+ * The <code>IRODSAccount</code> presented by the user is the key to the session
+ * cache. The actual operative account is stored within the iRODS protocol. For
+ * example, a PAM login may create a temp irods user under the covers, so a user
+ * presents his pam iRODS account, but the system uses the derived account.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
@@ -200,12 +207,13 @@ public class IRODSSession {
 			return;
 		}
 
-		for (AbstractIRODSMidLevelProtocol irodsCommands : irodsProtocols
+		for (AbstractIRODSMidLevelProtocol irodsMidLevelProtocol : irodsProtocols
 				.values()) {
-			log.debug("found and am closing connection to : {}", irodsCommands
-					.getIrodsAccount().toString());
-			irodsCommands.disconnect();
-
+			log.debug("found and am closing connection to : {}",
+					irodsMidLevelProtocol.getIrodsAccount().toString());
+			// irodsMidLevelProtocol.disconnect();
+			this.getIrodsProtocolManager().returnIRODSProtocol(
+					irodsMidLevelProtocol);
 			// I don't remove from the map because the map is just going to be
 			// set to null in the ThreadLocal below
 		}
@@ -324,6 +332,77 @@ public class IRODSSession {
 		}
 
 		return irodsProtocol;
+	}
+
+	/**
+	 * Given an already established connection, renew the underlying connection
+	 * using the existing credentials. This is used to seamlessly renew a socket
+	 * during operations 'under the covers', for operations like long running
+	 * transfers that may
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount}
+	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
+	 *         with a renewed connection
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
+	public AbstractIRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(
+			final IRODSAccount irodsAccount) throws AuthenticationException,
+			JargonException {
+
+		log.info("renewConnection()");
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = this
+				.currentConnection(irodsAccount);
+
+		log.info("evaluate conn for renewal:{}", irodsAccount);
+
+		boolean shutdown = evaluateConnectionForRenewal(irodsMidLevelProtocol);
+		if (!shutdown) {
+			return irodsMidLevelProtocol;
+		} else {
+			log.info("return a refreshed connection");
+			return this.currentConnection(irodsAccount);
+		}
+
+	}
+
+	/**
+	 * Based on the configured properties, evaluate the age of the current
+	 * connection and potentially renew the connection if necessary.
+	 * 
+	 * @param irodsMidLevelProtocol
+	 * @return <code>boolean</code> that will be <code>true</code> if the conn
+	 *         was shut down
+	 * @throws AuthenticationException
+	 * @throws JargonException
+	 */
+	public boolean evaluateConnectionForRenewal(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
+			throws AuthenticationException, JargonException {
+
+		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration()
+				.getSocketRenewalIntervalInSeconds();
+		// 0 means ignore
+		if (renewalInterval == 0) {
+			return false;
+		}
+		// compute a window based on time of connection...restart?
+		long renewalWindow = irodsMidLevelProtocol.getConnectTimeInMillis()
+				+ renewalInterval * 1000;
+		long currTime = System.currentTimeMillis();
+		if (currTime > renewalWindow) {
+			log.debug("renewing the connection:{}", irodsMidLevelProtocol);
+			log.info("renewing:{}", irodsMidLevelProtocol);
+			this.closeSession(irodsMidLevelProtocol.getIrodsAccount());
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	/**
@@ -458,10 +537,10 @@ public class IRODSSession {
 			return;
 		}
 
-		final AbstractIRODSMidLevelProtocol irodsProtocol = irodsProtocols
+		final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = irodsProtocols
 				.get(irodsAccount.toString());
 
-		if (irodsProtocol == null) {
+		if (irodsMidLevelProtocol == null) {
 			log.warn("closing a connection that is not held, silently ignore");
 			return;
 
@@ -469,7 +548,8 @@ public class IRODSSession {
 		log.debug("found and am closing connection to : {}",
 				irodsAccount.toString());
 
-		irodsProtocol.disconnect();
+		this.getIrodsProtocolManager().returnIRODSProtocol(
+				irodsMidLevelProtocol);
 
 		irodsProtocols.remove(irodsAccount.toString());
 		if (irodsProtocols.isEmpty()) {
@@ -481,12 +561,14 @@ public class IRODSSession {
 
 	/**
 	 * Signal to the <code>IRODSSession</code> that a connection should be
-	 * terminated to re-authenticate
+	 * terminated and cleared from the cache
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
+	 * @deprecated use closeSession(irodsAccount) instead. Duplicative method
 	 */
+	@Deprecated
 	public void discardSessionForReauthenticate(final IRODSAccount irodsAccount)
 			throws JargonException {
 
@@ -494,32 +576,7 @@ public class IRODSSession {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		log.warn("discardSessionForReauthenticate for: {}",
-				irodsAccount.toString());
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
-				.get();
-		if (irodsProtocols == null) {
-			log.warn("discarding session that is already closed, silently ignore");
-			return;
-		}
-
-		AbstractIRODSMidLevelProtocol command = irodsProtocols.get(irodsAccount
-				.toString());
-		if (command == null) {
-			log.debug("no connection found, ignore");
-			return;
-		}
-
-		log.debug("disconnecting:{}", command);
-		command.shutdown();
-		log.debug("disconnected...");
-
-		irodsProtocols.remove(irodsAccount.toString());
-
-		if (irodsProtocols.isEmpty()) {
-			log.debug("no more connections, so clear cache from ThreadLocal");
-			sessionMap.set(null);
-		}
+		this.closeSession(irodsAccount);
 
 	}
 
@@ -532,8 +589,7 @@ public class IRODSSession {
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
 	 */
-	public void discardSessionForErrors(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public void discardSessionForErrors(final IRODSAccount irodsAccount) {
 
 		log.warn("discarding irods session for: {}", irodsAccount.toString());
 		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
@@ -542,7 +598,16 @@ public class IRODSSession {
 			log.warn("discarding session that is already closed, silently ignore");
 			return;
 		}
+		AbstractIRODSMidLevelProtocol badConnection;
+		try {
+			badConnection = this.currentConnection(irodsAccount);
+		} catch (JargonException e) {
+			log.error("unable to retrieve the bad connection from the cache", e);
+			throw new JargonRuntimeException(
+					"unable to retrieve the bad connection to destroy it", e);
+		}
 
+		this.getIrodsProtocolManager().returnWithForce(badConnection);
 		irodsProtocols.remove(irodsAccount.toString());
 
 		if (irodsProtocols.isEmpty()) {

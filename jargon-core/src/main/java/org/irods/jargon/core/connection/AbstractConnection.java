@@ -41,6 +41,7 @@ public abstract class AbstractConnection {
 	private IRODSSession irodsSession = null;
 	protected final IRODSAccount irodsAccount;
 	protected final PipelineConfiguration pipelineConfiguration;
+	private final long connectTimeInMillis = System.currentTimeMillis();
 
 	public enum EncryptionType {
 		NONE, SSL_WRAPPED
@@ -163,13 +164,6 @@ public abstract class AbstractConnection {
 	protected abstract void connect(final IRODSAccount irodsAccount)
 			throws JargonException;
 
-	public void disconnectWithForce() {
-
-		log.info("disconnecting...");
-		// disconnect from irods and close
-		irodsProtocolManager.returnConnectionWithForce(this);
-	}
-
 	public boolean isConnected() {
 		return connected;
 	}
@@ -223,7 +217,7 @@ public abstract class AbstractConnection {
 
 			}
 		} catch (IOException ioe) {
-			disconnectWithForce();
+			getIrodsSession().discardSessionForErrors(getIrodsAccount());
 			throw ioe;
 		}
 	}
@@ -259,7 +253,6 @@ public abstract class AbstractConnection {
 		if (offset > value.length) {
 			String err = "trying to send a byte buffer from an offset that is out of range";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -267,7 +260,6 @@ public abstract class AbstractConnection {
 			// nothing to send, warn and ignore
 			String err = "send length is zero";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -275,12 +267,7 @@ public abstract class AbstractConnection {
 
 		System.arraycopy(value, offset, temp, 0, length);
 
-		try {
-			send(temp);
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
+		send(temp);
 	}
 
 	/**
@@ -296,12 +283,7 @@ public abstract class AbstractConnection {
 			log.debug("null input packing instruction, do not send");
 			return;
 		}
-		try {
-			send(value.getBytes(pipelineConfiguration.getDefaultEncoding()));
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
+		send(value.getBytes(pipelineConfiguration.getDefaultEncoding()));
 
 	}
 
@@ -317,15 +299,9 @@ public abstract class AbstractConnection {
 	protected void sendInNetworkOrder(final int value) throws IOException {
 		byte bytes[] = new byte[INT_LENGTH];
 
-		try {
-			Host.copyInt(value, bytes);
-			send(bytes);
-			flush();
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
-
+		Host.copyInt(value, bytes);
+		send(bytes);
+		flush();
 	}
 
 	/**
@@ -358,55 +334,50 @@ public abstract class AbstractConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		try {
-			int lenThisRead = 0;
-			long lenOfTemp = Math.min(
-					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
-					length);
-			long dataSent = 0;
+		int lenThisRead = 0;
+		long lenOfTemp = Math.min(
+				pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
+				length);
+		long dataSent = 0;
 
-			byte[] temp = new byte[(int) lenOfTemp];
+		byte[] temp = new byte[(int) lenOfTemp];
 
-			while (length > 0) {
+		while (length > 0) {
 
-				if (Thread.interrupted()) {
-					throw new IOException(
+			if (Thread.interrupted()) {
+				throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
-				}
-
-				if (temp.length > length) {
-					temp = new byte[(int) length];
-				}
-				lenThisRead = source.read(temp);
-
-				if (lenThisRead == -1) {
-					log.info("done with stream");
-					break;
-				}
-
-				length -= lenThisRead;
-				dataSent += lenThisRead;
-				send(temp, 0, lenThisRead);
-				/*
-				 * If a listener is specified, send call-backs with progress
-				 */
-				if (connectionProgressStatusListener != null) {
-					connectionProgressStatusListener
-							.connectionProgressStatusCallback(ConnectionProgressStatus
-									.instanceForSend(lenThisRead));
-				}
+				"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
-			log.debug("final flush of data sent");
-			flush();
-			log.info("total sent:{}", dataSent);
-			return dataSent;
+			if (temp.length > length) {
+				temp = new byte[(int) length];
+			}
+			lenThisRead = source.read(temp);
 
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
+			if (lenThisRead == -1) {
+				log.info("done with stream");
+				break;
+			}
+
+			length -= lenThisRead;
+			dataSent += lenThisRead;
+			send(temp, 0, lenThisRead);
+			/*
+			 * If a listener is specified, send call-backs with progress
+			 */
+			if (connectionProgressStatusListener != null) {
+				connectionProgressStatusListener
+						.connectionProgressStatusCallback(ConnectionProgressStatus
+								.instanceForSend(lenThisRead));
+			}
 		}
+
+		log.debug("final flush of data sent");
+		flush();
+		log.info("total sent:{}", dataSent);
+		return dataSent;
+
 	}
 
 	/**
@@ -423,20 +394,14 @@ public abstract class AbstractConnection {
 			throw new ClosedChannelException();
 		}
 
-		try {
-			if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-				irodsOutputStream.write(outputBuffer, 0, outputOffset);
-				irodsOutputStream.flush();
-				byte zerByte = (byte) 0;
-				java.util.Arrays.fill(outputBuffer, zerByte);
-				outputOffset = 0;
-			} else {
-				irodsOutputStream.flush();
-			}
-
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
+		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+			irodsOutputStream.write(outputBuffer, 0, outputOffset);
+			irodsOutputStream.flush();
+			byte zerByte = (byte) 0;
+			java.util.Arrays.fill(outputBuffer, zerByte);
+			outputOffset = 0;
+		} else {
+			irodsOutputStream.flush();
 		}
 
 	}
@@ -447,14 +412,9 @@ public abstract class AbstractConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	protected byte read() throws JargonException {
-		try {
-			return (byte) irodsInputStream.read();
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw new JargonException(ioe);
-		}
+	protected byte read() throws IOException {
+		return (byte) irodsInputStream.read();
+
 	}
 
 	/**
@@ -464,14 +424,9 @@ public abstract class AbstractConnection {
 	 * @return
 	 * @throws JargonException
 	 */
-	protected int read(final byte[] value) throws JargonException {
-		try {
-			return read(value, 0, value.length);
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw new JargonException(ioe);
-		}
+	protected int read(final byte[] value) throws IOException {
+		return read(value, 0, value.length);
+
 	}
 
 	/**
@@ -516,7 +471,6 @@ public abstract class AbstractConnection {
 		}
 
 		BufferedOutputStream bos = new BufferedOutputStream(destination);
-
 		try {
 			byte[] temp = new byte[Math.min(
 					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
@@ -553,10 +507,6 @@ public abstract class AbstractConnection {
 
 			bos.flush();
 
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw ioe;
 		} finally {
 			try {
 				bos.close();
@@ -588,7 +538,6 @@ public abstract class AbstractConnection {
 		if (value == null) {
 			String err = "no data sent";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -602,14 +551,12 @@ public abstract class AbstractConnection {
 		if (length == 0) {
 			String err = "read length is set to zero";
 			log.error(err);
-			disconnectWithForce();
 			throw new IOException(err);
 		}
 
 		int result = 0;
 		if (length + offset > value.length) {
 			log.error("index out of bounds exception, length + offset larger then byte array");
-			disconnectWithForce();
 			throw new IllegalArgumentException(
 					"length + offset larger than byte array");
 		}
@@ -633,17 +580,14 @@ public abstract class AbstractConnection {
 			return result;
 		} catch (ClosedChannelException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 
 		} catch (InterruptedIOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 
 		} catch (IOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 		}
 	}
@@ -684,7 +628,7 @@ public abstract class AbstractConnection {
 			log.error("********  connection is:{}, will attempt to disconnect",
 					connectionInternalIdentifier);
 			log.error("**************************************************************************************");
-			triggerSessionCacheCleanupViaConnection();
+			this.shutdown();
 		}
 
 		super.finalize();
@@ -750,34 +694,10 @@ public abstract class AbstractConnection {
 	protected abstract void shutdown() throws JargonException;
 
 	/**
-	 * Close doen the actual connection and quash any errors (avoids
+	 * Close down the actual connection and quash any errors (avoids
 	 * boiler-plate try-catch in code)
 	 */
 	protected abstract void obliterateConnectionAndDiscardErrors();
-
-	/**
-	 * Clean up class, when finalizing, that can trigger the removal of any
-	 * cached AbstractIRODSMidLevelProtocol implemenetion to iRODS when a
-	 * connection is being finalized.
-	 * <p/>
-	 * Typically, connections are cleaned up when the containing
-	 * <code>AbstractIRODSMidLevelProtocol</code> is closed in an orderly
-	 * fashion. The cleanup via a handle to the connection is a recovery
-	 * procedure when this doesn't occur.
-	 * 
-	 * @throws JargonException
-	 */
-	protected void triggerSessionCacheCleanupViaConnection()
-			throws JargonException {
-		if (!connection.isConnected()) {
-			log.debug("not connected, just bypass");
-		}
-		log.info("disconnecting...");
-		// disconnect from irods and close
-		irodsProtocolManager.returnConnectionWithForce(this);
-
-		log.info("disconnected");
-	}
 
 	/**
 	 * @return the connectionInternalIdentifier
@@ -799,6 +719,13 @@ public abstract class AbstractConnection {
 	 */
 	protected void setEncryptionType(final EncryptionType encryptionType) {
 		this.encryptionType = encryptionType;
+	}
+
+	/**
+	 * @return the connectTimeInMillis
+	 */
+	public long getConnectTimeInMillis() {
+		return connectTimeInMillis;
 	}
 
 }

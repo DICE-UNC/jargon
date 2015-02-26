@@ -68,7 +68,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		irodsSession.discardSessionForReauthenticate(irodsAccount);
+		irodsSession.closeSession(irodsAccount);
 
 		/*
 		 * Note that this works if the account is already authenticated by

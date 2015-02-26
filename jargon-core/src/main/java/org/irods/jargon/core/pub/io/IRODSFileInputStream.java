@@ -6,6 +6,7 @@ import java.io.InputStream;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -169,8 +170,7 @@ public class IRODSFileInputStream extends InputStream {
 
 		log.info("opening the file");
 		// open the file (read-only since its an input stream)
-		fd = irodsFile.openReadOnly();
-
+		fd = irodsFile.open(OpenFlags.READ);
 		log.info("file descriptor from open operation:{}", fd);
 
 		return fd;

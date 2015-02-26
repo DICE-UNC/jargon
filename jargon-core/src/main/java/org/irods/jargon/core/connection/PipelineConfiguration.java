@@ -28,7 +28,6 @@ public class PipelineConfiguration {
 	private final String defaultEncoding;
 	private final int inputToOutputCopyBufferByteSize;
 	private final boolean reconnect;
-	private final long reconnectTimeInMillis;
 	private final boolean instrument;
 	private final boolean forcePamFlush;
 	private final boolean parallelTcpKeepAlive;
@@ -43,6 +42,7 @@ public class PipelineConfiguration {
 	private final int primaryTcpPerformancePrefsConnectionTime;
 	private final int primaryTcpPerformancePrefsLatency;
 	private final int primaryTcpPerformancePrefsBandwidth;
+	private final int socketRenewalIntervalInSeconds;
 
 	/**
 	 * Static initializer method will derive an immutable
@@ -81,7 +81,6 @@ public class PipelineConfiguration {
 				.getInputToOutputCopyBufferByteSize();
 		instrument = jargonProperties.isInstrument();
 		reconnect = jargonProperties.isReconnect();
-		reconnectTimeInMillis = jargonProperties.getReconnectTimeInMillis();
 		defaultEncoding = jargonProperties.getEncoding();
 		forcePamFlush = jargonProperties.isForcePamFlush();
 
@@ -108,6 +107,8 @@ public class PipelineConfiguration {
 				.getPrimaryTcpReceiveWindowSize();
 		this.primaryTcpSendWindowSize = jargonProperties
 				.getPrimaryTcpSendWindowSize();
+		this.socketRenewalIntervalInSeconds = jargonProperties
+				.getSocketRenewalIntervalInSeconds();
 
 	}
 
@@ -201,13 +202,6 @@ public class PipelineConfiguration {
 	}
 
 	/**
-	 * @return the reconnectTimeInMillis
-	 */
-	public synchronized long getReconnectTimeInMillis() {
-		return reconnectTimeInMillis;
-	}
-
-	/**
 	 * @return the forcePamFlush
 	 */
 	synchronized boolean isForcePamFlush() {
@@ -262,6 +256,11 @@ public class PipelineConfiguration {
 		return primaryTcpPerformancePrefsBandwidth;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -291,8 +290,6 @@ public class PipelineConfiguration {
 		builder.append(inputToOutputCopyBufferByteSize);
 		builder.append(", reconnect=");
 		builder.append(reconnect);
-		builder.append(", reconnectTimeInMillis=");
-		builder.append(reconnectTimeInMillis);
 		builder.append(", instrument=");
 		builder.append(instrument);
 		builder.append(", forcePamFlush=");
@@ -321,8 +318,17 @@ public class PipelineConfiguration {
 		builder.append(primaryTcpPerformancePrefsLatency);
 		builder.append(", primaryTcpPerformancePrefsBandwidth=");
 		builder.append(primaryTcpPerformancePrefsBandwidth);
+		builder.append(", socketRenewalIntervalInSeconds=");
+		builder.append(socketRenewalIntervalInSeconds);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * @return the socketRenewalIntervalInSeconds
+	 */
+	public int getSocketRenewalIntervalInSeconds() {
+		return socketRenewalIntervalInSeconds;
 	}
 
 }

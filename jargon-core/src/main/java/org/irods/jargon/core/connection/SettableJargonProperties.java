@@ -65,6 +65,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int primaryTcpPerformancePrefsConnectionTime;
 	private int primaryTcpPerformancePrefsLatency;
 	private int primaryTcpPerformancePrefsBandwidth;
+	private int socketRenewalIntervalInSeconds;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -978,6 +979,11 @@ public class SettableJargonProperties implements JargonProperties {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -1084,8 +1090,32 @@ public class SettableJargonProperties implements JargonProperties {
 		builder.append(primaryTcpPerformancePrefsLatency);
 		builder.append(", primaryTcpPerformancePrefsBandwidth=");
 		builder.append(primaryTcpPerformancePrefsBandwidth);
+		builder.append(", socketRenewalIntervalInSeconds=");
+		builder.append(socketRenewalIntervalInSeconds);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getSocketRenewalIntervalInSeconds()
+	 */
+	@Override
+	public int getSocketRenewalIntervalInSeconds() {
+		return this.socketRenewalIntervalInSeconds;
+	}
+
+	/**
+	 * Set the interval in seconds to renew a socket during long transfers. Set
+	 * to 0 to turn this behavior off.
+	 * 
+	 * @param socketRenewalIntervalInSeconds
+	 */
+	public void setSocketRenewalIntervalInSeconds(
+			final int socketRenewalIntervalInSeconds) {
+		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
 	}
 
 }
