@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.domain;
 
@@ -10,9 +10,9 @@ import java.util.Date;
  * mutable for ease of use, so it is not thread-safe. Jargon will not retain
  * references once returned from a method, and will not alter a domain object
  * passed to it
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 
 public class Zone extends IRODSDomainObject {
@@ -85,7 +85,7 @@ public class Zone extends IRODSDomainObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -149,7 +149,7 @@ public class Zone extends IRODSDomainObject {
 	 * @param host
 	 *            the host to set
 	 */
-	public void setHost(String host) {
+	public void setHost(final String host) {
 		this.host = host;
 	}
 
@@ -164,7 +164,7 @@ public class Zone extends IRODSDomainObject {
 	 * @param port
 	 *            the port to set
 	 */
-	public void setPort(int port) {
+	public void setPort(final int port) {
 		this.port = port;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Helper functions for ResourceAO access object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class ResourceAOHelper extends AOHelper {
 
@@ -36,12 +36,12 @@ class ResourceAOHelper extends AOHelper {
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected ResourceAOHelper(final IRODSAccount irodsAccount,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory)
-			throws JargonException {
+					throws JargonException {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -55,7 +55,7 @@ class ResourceAOHelper extends AOHelper {
 
 	/**
 	 * Build a string with selects for resource
-	 * 
+	 *
 	 * @return <code>String</code> with a select statement to get resource data
 	 *         via GenQuery. "SELECT" is included.
 	 */
@@ -94,7 +94,7 @@ class ResourceAOHelper extends AOHelper {
 
 	/**
 	 * Build selects for resource
-	 * 
+	 *
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder}
 	 */
@@ -107,24 +107,24 @@ class ResourceAOHelper extends AOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
+			.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_INFO)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_R_RESC_COMMENT)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_R_CREATE_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_R_MODIFY_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_R_RESC_STATUS);
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_R_CREATE_TIME)
+									.addSelectAsGenQueryValue(
+											RodsGenQueryEnum.COL_R_MODIFY_TIME)
+											.addSelectAsGenQueryValue(
+													RodsGenQueryEnum.COL_R_RESC_STATUS);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -133,7 +133,7 @@ class ResourceAOHelper extends AOHelper {
 
 	/**
 	 * From a query result row, build a <code>Resource</code> domain object
-	 * 
+	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow} with the result of a gen query.
 	 *            Each row represents resource data
@@ -195,7 +195,7 @@ class ResourceAOHelper extends AOHelper {
 	/**
 	 * From a result set for a resource query, build the <code>Resource</code>
 	 * domain objects.
-	 * 
+	 *
 	 * @param resultSet
 	 *            {@link IRODSQueryResultSetInterface} with a gen query result
 	 * @return <code>List</code> of {@link Resource}, which will be empty if no
@@ -204,7 +204,7 @@ class ResourceAOHelper extends AOHelper {
 	 */
 	protected List<Resource> buildResourceListFromResultSetClassic(
 			final IRODSQueryResultSetInterface resultSet)
-			throws JargonException {
+					throws JargonException {
 
 		List<Resource> resources = new ArrayList<Resource>();
 
@@ -218,7 +218,7 @@ class ResourceAOHelper extends AOHelper {
 	/**
 	 * Build genquery selects for a resource query against the new composable
 	 * resource tree
-	 * 
+	 *
 	 * @return
 	 * @throws GenQueryBuilderException
 	 */
@@ -227,15 +227,15 @@ class ResourceAOHelper extends AOHelper {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_TYPE_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CLASS_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_LOC)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_VAULT_PATH)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_FREE_SPACE)
+		.addSelectAsGenQueryValue(
+				RodsGenQueryEnum.COL_R_FREE_SPACE_TIME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_INFO)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_COMMENT)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_CREATE_TIME)
@@ -253,7 +253,7 @@ class ResourceAOHelper extends AOHelper {
 	 * Given a result of a query as generated by
 	 * <code>buildResourceSelectsComposable()</code>, create
 	 * <code>Resource</code> objects that represent the results
-	 * 
+	 *
 	 * @param resultSet
 	 * @return
 	 * @throws JargonException

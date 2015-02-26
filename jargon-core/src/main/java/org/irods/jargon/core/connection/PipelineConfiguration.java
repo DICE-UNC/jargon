@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -11,9 +11,9 @@ package org.irods.jargon.core.connection;
  * Note that this object does not have synchronization. Through typical usage,
  * this configuration is initialized at connection startup, and a connection is
  * confined to one thread, so this should be just fine.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class PipelineConfiguration {
 
@@ -48,7 +48,7 @@ public class PipelineConfiguration {
 	 * Static initializer method will derive an immutable
 	 * <code>PipelineConfiguration</code> based on the prevailing
 	 * <code>JargonProperties</code> at the time the connection is created.
-	 * 
+	 *
 	 * @param jargonProperties
 	 * @return
 	 */
@@ -84,30 +84,30 @@ public class PipelineConfiguration {
 		defaultEncoding = jargonProperties.getEncoding();
 		forcePamFlush = jargonProperties.isForcePamFlush();
 
-		this.parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
-		this.parallelTcpPerformancePrefsBandwidth = jargonProperties
+		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties
 				.getParallelTcpPerformancePrefsBandwidth();
-		this.parallelTcpPerformancePrefsConnectionTime = jargonProperties
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties
 				.getParallelTcpPerformancePrefsConnectionTime();
-		this.parallelTcpPerformancePrefsLatency = jargonProperties
+		parallelTcpPerformancePrefsLatency = jargonProperties
 				.getParallelTcpPerformancePrefsLatency();
-		this.parallelTcpReceiveWindowSize = jargonProperties
+		parallelTcpReceiveWindowSize = jargonProperties
 				.getParallelTcpReceiveWindowSize();
-		this.parallelTcpSendWindowSize = jargonProperties
+		parallelTcpSendWindowSize = jargonProperties
 				.getParallelTcpSendWindowSize();
 
-		this.primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
-		this.primaryTcpPerformancePrefsBandwidth = jargonProperties
+		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties
 				.getPrimaryTcpPerformancePrefsBandwidth();
-		this.primaryTcpPerformancePrefsConnectionTime = jargonProperties
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties
 				.getPrimaryTcpPerformancePrefsConnectionTime();
-		this.primaryTcpPerformancePrefsLatency = jargonProperties
+		primaryTcpPerformancePrefsLatency = jargonProperties
 				.getPrimaryTcpPerformancePrefsLatency();
-		this.primaryTcpReceiveWindowSize = jargonProperties
+		primaryTcpReceiveWindowSize = jargonProperties
 				.getPrimaryTcpReceiveWindowSize();
-		this.primaryTcpSendWindowSize = jargonProperties
+		primaryTcpSendWindowSize = jargonProperties
 				.getPrimaryTcpSendWindowSize();
-		this.socketRenewalIntervalInSeconds = jargonProperties
+		socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
 
 	}
@@ -258,7 +258,7 @@ public class PipelineConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

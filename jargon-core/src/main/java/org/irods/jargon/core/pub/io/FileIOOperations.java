@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -14,7 +14,7 @@ import org.irods.jargon.core.pub.IRODSAccessObject;
  * interface is not meant for direct access, rather, the various IRODS output
  * and input stream implementations act as a facade and delegate to this access
  * object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public interface FileIOOperations extends IRODSAccessObject {
@@ -34,27 +34,27 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * array of bytes. An attempt is made to read as many as <code>len</code>
 	 * bytes, but a smaller number may be read, possibly zero. The number of
 	 * bytes actually read is returned as an integer.
-	 * 
+	 *
 	 * <p>
 	 * This method blocks until input data is available, end of file is
 	 * detected, or an exception is thrown.
-	 * 
+	 *
 	 * <p>
 	 * If <code>b</code> is <code>null</code>, a
 	 * <code>JargonRuntimeException</code> is thrown.
-	 * 
+	 *
 	 * <p>
 	 * If <code>off</code> is negative, or <code>len</code> is negative, or
 	 * <code>off+len</code> is greater than the length of the array
 	 * <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown.
-	 * 
+	 *
 	 * <p>
 	 * If <code>len</code> is zero, then no bytes are read and <code>0</code> is
 	 * returned; otherwise, there is an attempt to read at least one byte. If no
 	 * byte is available because the stream is at end of file, the value
 	 * <code>-1</code> is returned; otherwise, at least one byte is read and
 	 * stored into <code>b</code>.
-	 * 
+	 *
 	 * <p>
 	 * The first byte read is stored into element <code>b[off]</code>, the next
 	 * one into <code>b[off+1]</code>, and so on. The number of bytes read is,
@@ -63,17 +63,17 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * through <code>b[off+</code><i>k</i><code>-1]</code>, leaving elements
 	 * <code>b[off+</code><i>k</i><code>]</code> through
 	 * <code>b[off+len-1]</code> unaffected.
-	 * 
+	 *
 	 * <p>
 	 * In every case, elements <code>b[0]</code> through <code>b[off]</code> and
 	 * elements <code>b[off+len]</code> through <code>b[b.length-1]</code> are
 	 * unaffected.
-	 * 
+	 *
 	 * <p>
 	 * If the first byte cannot be read for any reason other than end of file,
 	 * then an <code>IOException</code> is thrown. In particular, an
 	 * <code>IOException</code> is thrown if the input stream has been closed.
-	 * 
+	 *
 	 * <p>
 	 * The <code>read(b,</code> <code>off,</code> <code>len)</code> method for
 	 * class <code>InputStream</code> simply calls the method
@@ -86,7 +86,7 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * <code>b</code> and the number of bytes read before the exception occurred
 	 * is returned. Subclasses are encouraged to provide a more efficient
 	 * implementation of this method.
-	 * 
+	 *
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @param off
@@ -108,7 +108,7 @@ public interface FileIOOperations extends IRODSAccessObject {
 
 	/**
 	 * Set the file position for the IRODS file to the specified position
-	 * 
+	 *
 	 * @param fd
 	 *            <code>int</code> containg the file desriptor for an open IRODS
 	 *            file.

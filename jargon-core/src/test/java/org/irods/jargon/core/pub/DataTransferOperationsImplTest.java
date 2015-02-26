@@ -1307,8 +1307,67 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutMultipleCollectionsMultipleFiles() throws Exception {
 
+		// make sure renewal is off
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setSocketRenewalIntervalInSeconds(0);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String rootCollection = "testPutMultipleCollectionsMultipleFiles";
 		String returnedCollection = "testPutMultipleCollectionsMultipleFilesReturned";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String returnedCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 3, 5, 3, "testFile",
+						".txt", 10, 9, 20, 200);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.close();
+
+		// File returnedData = new File(returnedCollectionAbsolutePath + "/" +
+		// rootCollection);
+
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/"
+				+ rootCollection, returnedCollectionAbsolutePath, "", null,
+				null);
+
+		File returnedData = new File(returnedCollectionAbsolutePath + "/"
+				+ rootCollection);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, returnedData);
+	}
+
+	@Test
+	public void testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOn()
+			throws Exception {
+
+		String rootCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOn";
+		String returnedCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOnReturned";
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setSocketRenewalIntervalInSeconds(30);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);

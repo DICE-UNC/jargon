@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSFileInputStream extends InputStream {
 
@@ -41,7 +41,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * If the named file does not exist, is a directory rather than a regular
 	 * file, or for some other reason cannot be opened for reading then a
 	 * <code>FileNotFoundException</code> is thrown.
-	 * 
+	 *
 	 * @param name
 	 *            the system-dependent file name.
 	 * @exception IOException
@@ -51,7 +51,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-			throws FileNotFoundException {
+					throws FileNotFoundException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -74,10 +74,10 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		/*
-		 * 
+		 *
 		 * TODO: replace(?) when bug is resolved: [#621] error reading file
 		 * w/group permissions
-		 * 
+		 *
 		 * if (!irodsFile.canRead()) { final String msg =
 		 * "cannot read the file:" + irodsFile.getAbsolutePath();
 		 * log.error(msg); throw new FileNotFoundException(msg); }
@@ -96,7 +96,7 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private void openFile() {
 
@@ -119,7 +119,7 @@ public class IRODSFileInputStream extends InputStream {
 	/**
 	 * Create an <code>IRODSFileInputStream</code> providing an already-opened
 	 * file handle.
-	 * 
+	 *
 	 * @param irodsFile
 	 * @param fileIOOperations
 	 * @param fd
@@ -127,7 +127,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final int fd)
-			throws FileNotFoundException {
+					throws FileNotFoundException {
 
 		super();
 
@@ -188,7 +188,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * has been reached, the value <code>-1</code> is returned. This method
 	 * blocks until input data is available, the end of the stream is detected,
 	 * or an exception is thrown.
-	 * 
+	 *
 	 * @return the next byte of data, or <code>-1</code> if the end of the
 	 *         stream is reached.
 	 * @exception IOException
@@ -221,27 +221,27 @@ public class IRODSFileInputStream extends InputStream {
 	 * array of bytes. An attempt is made to read as many as <code>len</code>
 	 * bytes, but a smaller number may be read, possibly zero. The number of
 	 * bytes actually read is returned as an integer.
-	 * 
+	 *
 	 * <p/>
 	 * This method blocks until input data is available, end of file is
 	 * detected, or an exception is thrown.
-	 * 
+	 *
 	 * <p/>
 	 * If <code>b</code> is <code>null</code>, a
 	 * <code>JargonRuntimeException</code> is thrown.
-	 * 
+	 *
 	 * <p/>
 	 * If <code>off</code> is negative, or <code>len</code> is negative, or
 	 * <code>off+len</code> is greater than the length of the array
 	 * <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown.
-	 * 
+	 *
 	 * <p/>
 	 * If <code>len</code> is zero, then no bytes are read and <code>0</code> is
 	 * returned; otherwise, there is an attempt to read at least one byte. If no
 	 * byte is available because the stream is at end of file, the value
 	 * <code>-1</code> is returned; otherwise, at least one byte is read and
 	 * stored into <code>b</code>.
-	 * 
+	 *
 	 * <p/>
 	 * The first byte read is stored into element <code>b[off]</code>, the next
 	 * one into <code>b[off+1]</code>, and so on. The number of bytes read is,
@@ -250,17 +250,17 @@ public class IRODSFileInputStream extends InputStream {
 	 * through <code>b[off+</code><i>k</i><code>-1]</code>, leaving elements
 	 * <code>b[off+</code><i>k</i><code>]</code> through
 	 * <code>b[off+len-1]</code> unaffected.
-	 * 
+	 *
 	 * <p/>
 	 * In every case, elements <code>b[0]</code> through <code>b[off]</code> and
 	 * elements <code>b[off+len]</code> through <code>b[b.length-1]</code> are
 	 * unaffected.
-	 * 
+	 *
 	 * <p/>
 	 * If the first byte cannot be read for any reason other than end of file,
 	 * then an <code>IOException</code> is thrown. In particular, an
 	 * <code>IOException</code> is thrown if the input stream has been closed.
-	 * 
+	 *
 	 * <p/>
 	 * The <code>read(b,</code> <code>off,</code> <code>len)</code> method for
 	 * class <code>InputStream</code> simply calls the method
@@ -273,7 +273,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * <code>b</code> and the number of bytes read before the exception occurred
 	 * is returned. Subclasses are encouraged to provide a more efficient
 	 * implementation of this method.
-	 * 
+	 *
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @param off
@@ -315,7 +315,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * buffer array <code>b</code>. The number of bytes actually read is
 	 * returned as an integer. This method blocks until input data is available,
 	 * end of file is detected, or an exception is thrown.
-	 * 
+	 *
 	 * <p/>
 	 * If <code>b</code> is <code>null</code>, a
 	 * <code>JargonRuntimeException</code> is thrown. If the length of
@@ -324,7 +324,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * byte is available because the stream is at end of file, the value
 	 * <code>-1</code> is returned; otherwise, at least one byte is read and
 	 * stored into <code>b</code>.
-	 * 
+	 *
 	 * <p/>
 	 * The first byte read is stored into element <code>b[0]</code>, the next
 	 * one into <code>b[1]</code>, and so on. The number of bytes read is, at
@@ -333,20 +333,20 @@ public class IRODSFileInputStream extends InputStream {
 	 * <code>b[0]</code> through <code>b[</code><i>k</i><code>-1]</code>,
 	 * leaving elements <code>b[</code><i>k</i><code>]</code> through
 	 * <code>b[b.length-1]</code> unaffected.
-	 * 
+	 *
 	 * <p/>
 	 * If the first byte cannot be read for any reason other than end of file,
 	 * then an <code>IOException</code> is thrown. In particular, an
 	 * <code>IOException</code> is thrown if the input stream has been closed.
-	 * 
+	 *
 	 * <p/>
 	 * The <code>read(b)</code> method for class <code>InputStream</code> has
 	 * the same effect as:
-	 * 
+	 *
 	 * <pre>
 	 * <code> read(b, 0, b.length) </code>
 	 * </pre>
-	 * 
+	 *
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @return the total number of bytes read into the buffer, or
@@ -369,7 +369,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * stream. The <code>skip</code> method may, for a variety of reasons, end
 	 * up skipping over some smaller number of bytes, possibly <code>0</code>.
 	 * The actual number of bytes skipped is returned.
-	 * 
+	 *
 	 * @param numberOfBytesToSkip
 	 *            the number of bytes to be skipped.
 	 * @return the actual number of bytes skipped.
@@ -413,7 +413,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * array is returned from a socket call for each read operation), Jargon can
 	 * never read without blocking. Because of these reasons this method always
 	 * returns the length of the file as iRODS knows it.
-	 * 
+	 *
 	 * @return the number of bytes that can be read from this file input stream
 	 *         without blocking.
 	 * @exception IOException
@@ -431,7 +431,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * array is returned from a socket call for each read operation), Jargon can
 	 * never read without blocking. Because of these reasons this method always
 	 * returns the length of the file as iRODS knows it.
-	 * 
+	 *
 	 * @return the number of bytes that can be read from this file input stream
 	 *         without blocking.
 	 * @exception IOException
@@ -452,7 +452,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * <p/>
 	 * If this stream has an associated channel then the channel is closed as
 	 * well.
-	 * 
+	 *
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 */

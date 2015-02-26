@@ -16,9 +16,9 @@ import org.irods.jargon.core.connection.StartupResponseData;
  * example, when using PAM, the original account is presented as a PAM login,
  * but the PAM process creates a temporary account and then uses this account in
  * a standard iRODS login.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AuthResponse {
 
@@ -43,7 +43,7 @@ public class AuthResponse {
 
 	/**
 	 * Get the (optional) challenge value used in the iRODS exchange.
-	 * 
+	 *
 	 * @return the challengeValue as an optional <code>String</code>, which is
 	 *         blank if not used
 	 */
@@ -62,7 +62,7 @@ public class AuthResponse {
 	/**
 	 * Get a <code>Map<String,Object></code> with optional properties generated
 	 * as a result of this authentication process.
-	 * 
+	 *
 	 * @return the responseProperties <code>Map<String,Object></code> with
 	 *         optional properties from the authentication. Note that the
 	 *         <code>Map</code> will always be returned, but may be empty.

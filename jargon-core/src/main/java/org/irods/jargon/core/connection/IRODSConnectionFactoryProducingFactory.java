@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -13,10 +13,10 @@ import org.irods.jargon.core.exception.JargonException;
  * initializes the low level networking connection code used by Jargon. This
  * would allow for the later development of an nio based layer or alternative
  * tcp layers going forward with minimal headaches.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class IRODSConnectionFactoryProducingFactory {
 
@@ -29,7 +29,7 @@ public class IRODSConnectionFactoryProducingFactory {
 	/**
 	 * Given the <code>JargonProperties</code>, return the factory that will
 	 * create the networking layer
-	 * 
+	 *
 	 * @param jargonProperties
 	 * @return
 	 * @throws JargonException

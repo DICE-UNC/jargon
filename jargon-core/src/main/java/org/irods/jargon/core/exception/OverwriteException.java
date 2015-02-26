@@ -2,9 +2,9 @@ package org.irods.jargon.core.exception;
 
 /**
  * The operation is an attempted overwrite, but no force option was specified.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class OverwriteException extends JargonException {
 

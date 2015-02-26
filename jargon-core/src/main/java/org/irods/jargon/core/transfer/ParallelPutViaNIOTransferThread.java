@@ -19,13 +19,13 @@ import org.slf4j.LoggerFactory;
  * for file transfers.
  * <p/>
  * This version uses nio for the file and socket operations.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ParallelPutViaNIOTransferThread extends
-		AbstractNIOParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+AbstractNIOParallelTransferThread implements
+Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileViaNIOTransferStrategy parallelPutFileTransferStrategy;
 
@@ -38,7 +38,7 @@ public final class ParallelPutViaNIOTransferThread extends
 	 * <code>ParalellPutFileTransferStrategy</code>. This is an immutable object
 	 * , as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
-	 * 
+	 *
 	 * @param parallelPutFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy}
 	 *            that controls the transfer threads.
@@ -47,14 +47,14 @@ public final class ParallelPutViaNIOTransferThread extends
 	 */
 	public static ParallelPutViaNIOTransferThread instance(
 			final ParallelPutFileViaNIOTransferStrategy parallelPutFileTransferStrategy)
-			throws JargonException {
+					throws JargonException {
 		return new ParallelPutViaNIOTransferThread(
 				parallelPutFileTransferStrategy);
 	}
 
 	private ParallelPutViaNIOTransferThread(
 			final ParallelPutFileViaNIOTransferStrategy parallelPutFileTransferStrategy)
-			throws JargonException {
+					throws JargonException {
 
 		super();
 
@@ -99,7 +99,7 @@ public final class ParallelPutViaNIOTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 				getS().write(bb);
 			}
@@ -137,7 +137,7 @@ public final class ParallelPutViaNIOTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -204,7 +204,7 @@ public final class ParallelPutViaNIOTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				if (length - totalBytes < copyBuffSize) {
@@ -225,10 +225,10 @@ public final class ParallelPutViaNIOTransferThread extends
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-								.getConnectionProgressStatusListener()
-								.connectionProgressStatusCallback(
-										ConnectionProgressStatus
-												.instanceForSend(bytesRead));
+						.getConnectionProgressStatusListener()
+						.connectionProgressStatusCallback(
+								ConnectionProgressStatus
+								.instanceForSend(bytesRead));
 					}
 
 				}

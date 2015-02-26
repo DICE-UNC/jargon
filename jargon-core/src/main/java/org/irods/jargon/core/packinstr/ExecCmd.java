@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -13,9 +13,9 @@ import org.irods.jargon.core.exception.JargonException;
  * versions of ExecCmd prior to the addition of enhanced streaming of large
  * result sets. The method names indicate which version of iRODS the packing
  * instruction will be for.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 
 public final class ExecCmd extends AbstractIRODSPackingInstruction {
@@ -74,7 +74,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script). This version is compatable with versions prior to iRODS 2.5.
 	 * iRODS 2.5 added a dummy field for 64 bit alignment issues on some
 	 * platform.
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -95,7 +95,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script) using the newer API with 64 bit alignment for some platforms.
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -118,7 +118,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script). This initializer indicates to iRODS that large result buffers
 	 * should be transmitted via a stream. This uses an enhanced API post iRODS
 	 * 2.4.1 and is not supported in prior releases.
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -141,7 +141,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script) This version is compatable with versions prior to iRODS 2.5.
 	 * iRODS 2.5 added a dummy field for 64 bit alignment issues on some
 	 * platform.
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -179,7 +179,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
 	 * (script) using the newer API with 64 bit alignment for some platforms.
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -219,7 +219,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script). This initializer indicates to iRODS that large result buffers
 	 * should be transmitted via a stream. This uses an API that only works with
 	 * iRODS releases after 2.5
-	 * 
+	 *
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -256,7 +256,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Constructor for a remote execution service packing instruction call.
-	 * 
+	 *
 	 * @param apiNumber
 	 *            <code>int</code> with the api number to use with this call.
 	 * @param commandToExecuteWithoutArguments
@@ -339,7 +339,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -374,7 +374,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 						new Tag(EXEC_ADDR, executionHost),
 						new Tag(HINT_PATH,
 								absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
-						new Tag(ADD_PATH_TO_ARGV, addPathToArgv) });
+								new Tag(ADD_PATH_TO_ARGV, addPathToArgv) });
 
 		if (!useBackwardCompatableInstruction) {
 			// a dummy tag is in the pi for 64 bit alignment issues starting

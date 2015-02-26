@@ -58,9 +58,9 @@ import org.slf4j.LoggerFactory;
  * cache. The actual operative account is stored within the iRODS protocol. For
  * example, a PAM login may create a temp irods user under the covers, so a user
  * presents his pam iRODS account, but the system uses the derived account.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSSession {
 
@@ -110,7 +110,7 @@ public class IRODSSession {
 	 * behavior of Jargon. This will either be the default, loaded from the
 	 * <code>jargon.properties</code> file, or a custom source that can be
 	 * injected into the <code>IRODSSession</code> object.
-	 * 
+	 *
 	 * @return {@link JargonProperties} with configuration metadata.
 	 */
 	public JargonProperties getJargonProperties() {
@@ -123,7 +123,7 @@ public class IRODSSession {
 	 * Convenience method builds a default <code>TransferControlBlock</code>
 	 * that has default <code>TransferOptions</code> based on the
 	 * <code>JargonProperties</code> configured for the system.
-	 * 
+	 *
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
@@ -144,7 +144,7 @@ public class IRODSSession {
 	/**
 	 * Build an immutable <code>PipelineConfiguration</code> object that
 	 * controls i/o behavior with iRODS
-	 * 
+	 *
 	 * @return {@link PipelineConfiguration} which is an immutable set of
 	 *         properties to control i/o behavior of Jargon
 	 */
@@ -159,7 +159,7 @@ public class IRODSSession {
 	/**
 	 * Get the default transfer options based on the properties that have been
 	 * set. This can then be tuned for an individual transfer
-	 * 
+	 *
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
@@ -194,7 +194,7 @@ public class IRODSSession {
 	 * Close all sessions to iRODS that exist for this Thread. This method can
 	 * be safely called by multiple threads, as the connections are in a
 	 * <code>ThreadLocal</code>
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public void closeSession() throws JargonException {
@@ -212,8 +212,8 @@ public class IRODSSession {
 			log.debug("found and am closing connection to : {}",
 					irodsMidLevelProtocol.getIrodsAccount().toString());
 			// irodsMidLevelProtocol.disconnect();
-			this.getIrodsProtocolManager().returnIRODSProtocol(
-					irodsMidLevelProtocol);
+			getIrodsProtocolManager()
+					.returnIRODSProtocol(irodsMidLevelProtocol);
 			// I don't remove from the map because the map is just going to be
 			// set to null in the ThreadLocal below
 		}
@@ -233,7 +233,7 @@ public class IRODSSession {
 
 	/**
 	 * Create a session with an object that will hand out connections.
-	 * 
+	 *
 	 * @param irodsConnectionManager
 	 *            {@link IRODSProtocolManager} that is in charge of handing out
 	 *            connections
@@ -255,7 +255,7 @@ public class IRODSSession {
 	 * Instance method, still supported (for now) but switching to straight
 	 * setter methods and a default constructor to make it easer to wire with
 	 * dependency injection. Look to see this deprecated.
-	 * 
+	 *
 	 * @param irodsConnectionManager
 	 * @return
 	 * @throws JargonException
@@ -272,7 +272,7 @@ public class IRODSSession {
 	 * connection from the cache. This connection is per-Thread, so if another
 	 * thread has a cached connection, it is not visible from here, and must be
 	 * properly closed on that Thread.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes this connection to
 	 *            iRODS.
@@ -339,7 +339,7 @@ public class IRODSSession {
 	 * using the existing credentials. This is used to seamlessly renew a socket
 	 * during operations 'under the covers', for operations like long running
 	 * transfers that may
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
@@ -356,8 +356,7 @@ public class IRODSSession {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
-		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = this
-				.currentConnection(irodsAccount);
+		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = currentConnection(irodsAccount);
 
 		log.info("evaluate conn for renewal:{}", irodsAccount);
 
@@ -366,7 +365,7 @@ public class IRODSSession {
 			return irodsMidLevelProtocol;
 		} else {
 			log.info("return a refreshed connection");
-			return this.currentConnection(irodsAccount);
+			return currentConnection(irodsAccount);
 		}
 
 	}
@@ -374,7 +373,7 @@ public class IRODSSession {
 	/**
 	 * Based on the configured properties, evaluate the age of the current
 	 * connection and potentially renew the connection if necessary.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 * @return <code>boolean</code> that will be <code>true</code> if the conn
 	 *         was shut down
@@ -396,8 +395,7 @@ public class IRODSSession {
 				+ renewalInterval * 1000;
 		long currTime = System.currentTimeMillis();
 		if (currTime > renewalWindow) {
-			log.debug("renewing the connection:{}", irodsMidLevelProtocol);
-			log.info("renewing:{}", irodsMidLevelProtocol);
+			log.debug("renewing:{}", irodsMidLevelProtocol);
 			this.closeSession(irodsMidLevelProtocol.getIrodsAccount());
 			return true;
 		} else {
@@ -514,7 +512,7 @@ public class IRODSSession {
 
 	/**
 	 * Close an iRODS session for the given account
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the connection that
 	 *            should be closed.
@@ -548,8 +546,7 @@ public class IRODSSession {
 		log.debug("found and am closing connection to : {}",
 				irodsAccount.toString());
 
-		this.getIrodsProtocolManager().returnIRODSProtocol(
-				irodsMidLevelProtocol);
+		getIrodsProtocolManager().returnIRODSProtocol(irodsMidLevelProtocol);
 
 		irodsProtocols.remove(irodsAccount.toString());
 		if (irodsProtocols.isEmpty()) {
@@ -562,7 +559,7 @@ public class IRODSSession {
 	/**
 	 * Signal to the <code>IRODSSession</code> that a connection should be
 	 * terminated and cleared from the cache
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
@@ -584,7 +581,7 @@ public class IRODSSession {
 	 * Signal to the <code>IRODSSession</code> that a connection has been
 	 * forcefully terminated due to errors, and should be removed from the
 	 * cache.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
@@ -600,14 +597,14 @@ public class IRODSSession {
 		}
 		AbstractIRODSMidLevelProtocol badConnection;
 		try {
-			badConnection = this.currentConnection(irodsAccount);
+			badConnection = currentConnection(irodsAccount);
 		} catch (JargonException e) {
 			log.error("unable to retrieve the bad connection from the cache", e);
 			throw new JargonRuntimeException(
 					"unable to retrieve the bad connection to destroy it", e);
 		}
 
-		this.getIrodsProtocolManager().returnWithForce(badConnection);
+		getIrodsProtocolManager().returnWithForce(badConnection);
 		irodsProtocols.remove(irodsAccount.toString());
 
 		if (irodsProtocols.isEmpty()) {
@@ -621,7 +618,7 @@ public class IRODSSession {
 	 * This method is not particularly useful, but does provide a route to get a
 	 * direct handle on the connections for this Thread in cases where such
 	 * status information needs to be kept. Returns null if no map is available.
-	 * 
+	 *
 	 * @return
 	 */
 	public Map<String, AbstractIRODSMidLevelProtocol> getIRODSCommandsMap() {
@@ -644,7 +641,7 @@ public class IRODSSession {
 	 * first request based on the <code>JargonProperties</code>, and once
 	 * created, changing the properties does not reconfigure the pool, it just
 	 * returns the lazily created instance.
-	 * 
+	 *
 	 * @return {@link ExecutorService} that is the pool of threads for the
 	 *         paralllel transfers, or <code>null</code> if the pool is not
 	 *         configured in the jargon properties.
@@ -690,7 +687,7 @@ public class IRODSSession {
 
 	/**
 	 * Set the Jargon properties
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            the jargonProperties to set
 	 */
@@ -701,7 +698,7 @@ public class IRODSSession {
 	}
 
 	/**
-	 * 
+	 *
 	 * Simple cache (tolerating concurrent access) for name/value props. This
 	 * cache is meant to hold user-definable properties about a connected server
 	 * (by host and zone name). This is meant as an efficient way to record
@@ -713,7 +710,7 @@ public class IRODSSession {
 	 * A good example would be if required specific queries, rules,
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
-	 * 
+	 *
 	 * @return
 	 */
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
@@ -723,7 +720,7 @@ public class IRODSSession {
 	/**
 	 * Handy method to see if we're using the dynamic server properties cache.
 	 * This is set in the jargon properties.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isUsingDynamicServerPropertiesCache() {
@@ -734,7 +731,7 @@ public class IRODSSession {
 	/**
 	 * Get a reference to a factory that can return checksum computation
 	 * strategies on local file systems
-	 * 
+	 *
 	 * @return {@link LocalChecksumComputerFactory}
 	 */
 	public LocalChecksumComputerFactory getLocalChecksumComputerFactory() {

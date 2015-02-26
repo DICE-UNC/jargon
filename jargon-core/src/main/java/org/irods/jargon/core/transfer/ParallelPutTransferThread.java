@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
  * and is not meant for public API use. See
  * {@link org.irods.jargon.core.pub.DataTransferOperations} for public API used
  * for file transfers.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ParallelPutTransferThread extends
-		AbstractParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+AbstractParallelTransferThread implements
+Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private BufferedInputStream bis = null;
@@ -40,7 +40,7 @@ public final class ParallelPutTransferThread extends
 	 * <code>ParalellPutFileTransferStrategy</code>. This is an immutable object
 	 * , as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
-	 * 
+	 *
 	 * @param parallelPutFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy}
 	 *            that controls the transfer threads.
@@ -49,13 +49,13 @@ public final class ParallelPutTransferThread extends
 	 */
 	public static ParallelPutTransferThread instance(
 			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
-			throws JargonException {
+					throws JargonException {
 		return new ParallelPutTransferThread(parallelPutFileTransferStrategy);
 	}
 
 	private ParallelPutTransferThread(
 			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
-			throws JargonException {
+					throws JargonException {
 
 		super();
 
@@ -88,9 +88,9 @@ public final class ParallelPutTransferThread extends
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsLatency(),
+					.getParallelTcpPerformancePrefsLatency(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsBandwidth());
+					.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
@@ -177,7 +177,7 @@ public final class ParallelPutTransferThread extends
 					if (Thread.interrupted()) {
 						throw new IOException(
 
-						"interrupted, consider connection corrupted and return IOException to clear");
+								"interrupted, consider connection corrupted and return IOException to clear");
 					}
 					log.warn("did not skip entire offset amount, call skip again");
 					toSkip = offset - totalSkipped;
@@ -211,7 +211,7 @@ public final class ParallelPutTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -291,7 +291,7 @@ public final class ParallelPutTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("read/write loop at top");
@@ -319,10 +319,10 @@ public final class ParallelPutTransferThread extends
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-								.getConnectionProgressStatusListener()
-								.connectionProgressStatusCallback(
-										ConnectionProgressStatus
-												.instanceForSend(read));
+						.getConnectionProgressStatusListener()
+						.connectionProgressStatusCallback(
+								ConnectionProgressStatus
+								.instanceForSend(read));
 					}
 
 					log.debug("wrote data to the buffer");

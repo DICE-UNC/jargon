@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
 /**
  * Handy place to put common constants for connection-related purposes
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ConnectionConstants {
 

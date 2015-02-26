@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -11,10 +11,10 @@ import org.irods.jargon.core.exception.JargonException;
  * networking layer in Jargon.
  * <p/>
  * Other implementations may follow, such as an nio layer.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public abstract class IRODSConnectionFactory {
 
@@ -23,7 +23,7 @@ public abstract class IRODSConnectionFactory {
 
 	/**
 	 * Create the basic network layer connection to iRODS
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} describing the connection host and
 	 *            principal
@@ -37,6 +37,6 @@ public abstract class IRODSConnectionFactory {
 	protected abstract AbstractConnection instance(
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException;
+					throws JargonException;
 
 }

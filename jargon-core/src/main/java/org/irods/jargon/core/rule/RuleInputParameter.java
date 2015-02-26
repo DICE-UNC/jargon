@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
 /**
  * Value class used internally when parsing input parameters for rules
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class RuleInputParameter {
 	private String paramName = "";

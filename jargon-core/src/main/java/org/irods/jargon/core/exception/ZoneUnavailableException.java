@@ -1,19 +1,19 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Maps to a -92111 exception when a federated zone is not available
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class ZoneUnavailableException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3405552956160956894L;
 

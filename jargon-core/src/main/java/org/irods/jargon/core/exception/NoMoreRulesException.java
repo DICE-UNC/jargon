@@ -5,9 +5,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 /**
  * Rule engine exception that can be a side effect of version-inappropriate
  * operations/and or non specified error (sorry)
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class NoMoreRulesException extends JargonException {
 

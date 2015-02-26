@@ -4,13 +4,13 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * The given item is already in the catalog
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CatalogAlreadyHasItemByThatNameException extends JargonException {
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8297408727971695894L;
 	private static final int ERROR_CODE = ErrorEnum.CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME

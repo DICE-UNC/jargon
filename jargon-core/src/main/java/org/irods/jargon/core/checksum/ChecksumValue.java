@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.checksum;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Represents a checksum and the type of checksum
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ChecksumValue {
 
@@ -30,7 +30,7 @@ public class ChecksumValue {
 	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.MD5;
 
 	/**
-	 * 
+	 *
 	 */
 	public ChecksumValue() {
 	}
@@ -83,7 +83,7 @@ public class ChecksumValue {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

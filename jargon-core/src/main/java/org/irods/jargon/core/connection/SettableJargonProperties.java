@@ -13,9 +13,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
  * <code>TransferOptions</code>
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SettableJargonProperties implements JargonProperties {
 
@@ -71,7 +71,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Construct a default properties set based on the provided initial set of
 	 * <code>JargonProperties</code>. This can be used to wire in properties via
 	 * configuration, as in Spring.
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            {@link JargonProperties} that has the initial set of
 	 *            properties.
@@ -83,7 +83,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Construct a default properties set based on the
 	 * <code>jargon.properties</code> in jargon, these can then be overridden.
-	 * 
+	 *
 	 * @throws JargonException
 	 *             if properties cannot be loaded
 	 */
@@ -144,34 +144,34 @@ public class SettableJargonProperties implements JargonProperties {
 		connectionFactory = jargonProperties.getConnectionFactory();
 		checksumEncoding = jargonProperties.getChecksumEncoding();
 
-		this.parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
-		this.parallelTcpPerformancePrefsBandwidth = jargonProperties
+		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties
 				.getParallelTcpPerformancePrefsBandwidth();
-		this.parallelTcpPerformancePrefsConnectionTime = jargonProperties
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties
 				.getParallelTcpPerformancePrefsConnectionTime();
-		this.parallelTcpPerformancePrefsLatency = jargonProperties
+		parallelTcpPerformancePrefsLatency = jargonProperties
 				.getParallelTcpPerformancePrefsLatency();
-		this.parallelTcpReceiveWindowSize = jargonProperties
+		parallelTcpReceiveWindowSize = jargonProperties
 				.getParallelTcpReceiveWindowSize();
-		this.parallelTcpSendWindowSize = jargonProperties
+		parallelTcpSendWindowSize = jargonProperties
 				.getParallelTcpSendWindowSize();
-		this.primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
-		this.primaryTcpPerformancePrefsBandwidth = jargonProperties
+		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties
 				.getPrimaryTcpPerformancePrefsBandwidth();
-		this.primaryTcpPerformancePrefsConnectionTime = jargonProperties
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties
 				.getPrimaryTcpPerformancePrefsConnectionTime();
-		this.primaryTcpPerformancePrefsLatency = jargonProperties
+		primaryTcpPerformancePrefsLatency = jargonProperties
 				.getPrimaryTcpPerformancePrefsLatency();
-		this.primaryTcpReceiveWindowSize = jargonProperties
+		primaryTcpReceiveWindowSize = jargonProperties
 				.getPrimaryTcpReceiveWindowSize();
-		this.primaryTcpSendWindowSize = jargonProperties
+		primaryTcpSendWindowSize = jargonProperties
 				.getPrimaryTcpSendWindowSize();
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
@@ -182,7 +182,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Utilize parallel transfer algorithm for files above the transfer size
-	 * 
+	 *
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> of <code>true</code> if parallel
 	 *            transfers are allowed
@@ -195,7 +195,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the maximum number of threads allowed for parallel transfers. 0 means
 	 * use iRODS limit.
-	 * 
+	 *
 	 * @param maxParallelThreads
 	 *            <code>int</code> with the maximum number of threads to use in
 	 *            a parallel transfer, with 0 meaning use the iRODS default set
@@ -207,7 +207,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
@@ -218,7 +218,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax
 	 * ()
@@ -267,7 +267,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isAllowPutGetResourceRedirects()
 	 */
@@ -278,7 +278,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Allow resource redirects to occur
-	 * 
+	 *
 	 * @param allowPutGetResourceRedirects
 	 *            <code>boolean</code> which allows resource redirects if
 	 *            <code>true</code>
@@ -291,7 +291,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeChecksumAfterTransfer()
 	 */
@@ -302,7 +302,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute (but do not verify) a checksum after a transfer.
-	 * 
+	 *
 	 * @param computeChecksumAfterTransfer
 	 *            <code>boolean</code> that will cause a checksum to be computed
 	 *            by default if <code>true</code>
@@ -315,7 +315,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
@@ -326,7 +326,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute and verify the file checksum after a put/get transfer
-	 * 
+	 *
 	 * @param computeAndVerifyChecksumAfterTransfer
 	 *            <code>boolean</code> that causes a checksum validation if set
 	 *            to <code>true</code>
@@ -340,7 +340,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Set whether intra-file status call-backs for file transfers are enabled.
 	 * This will give progress of bytes within transfers, with a slight
 	 * performance penalty.
-	 * 
+	 *
 	 * @param intraFileStatusCallbacks
 	 *            the intraFileStatusCallbacks to set
 	 */
@@ -351,7 +351,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
 	 * ()
@@ -363,7 +363,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
@@ -378,7 +378,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
@@ -394,7 +394,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getTransferThreadPoolMaxSimultaneousTransfers()
 	 */
@@ -405,7 +405,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalInputStreamBufferSize()
 	 */
@@ -416,7 +416,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalOutputStreamBufferSize()
 	 */
@@ -427,7 +427,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
 	 * ()
@@ -439,7 +439,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSendInputStreamBufferSize()
 	 */
@@ -450,7 +450,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInputToOutputCopyBufferByteSize()
 	 */
@@ -461,7 +461,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getLocalFileOutputStreamBufferSize()
 	 */
@@ -557,7 +557,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -567,7 +567,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -602,7 +602,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
@@ -620,7 +620,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUseNIOForParallelTransfers()
 	 */
@@ -656,7 +656,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * <p/>
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -696,7 +696,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
@@ -709,7 +709,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set a property that will automatically look for /zone/home/public and
 	 * /zone/home/username directories in the process of listing.
-	 * 
+	 *
 	 * @param defaultToPublicIfNothingUnderRootWhenListing
 	 */
 	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
@@ -738,7 +738,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingDiscoveredServerPropertiesCache()
 	 */
@@ -759,7 +759,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
@@ -779,7 +779,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
 	 */
 	@Override
@@ -789,7 +789,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the pam time to live (in seconds)
-	 * 
+	 *
 	 * @param pamTimeToLive
 	 *            <code>int</code> with the time to live for pam passwords
 	 */
@@ -799,7 +799,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
 	 */
 	@Override
@@ -840,7 +840,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
@@ -851,7 +851,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the encoding used for computing checksums
-	 * 
+	 *
 	 * @param checksumEncoding
 	 */
 	public void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
@@ -865,7 +865,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public boolean isParallelTcpKeepAlive() {
-		return this.parallelTcpKeepAlive;
+		return parallelTcpKeepAlive;
 	}
 
 	public void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
@@ -874,7 +874,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getParallelTcpSendWindowSize() {
-		return this.parallelTcpSendWindowSize;
+		return parallelTcpSendWindowSize;
 	}
 
 	public void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
@@ -883,7 +883,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getParallelTcpReceiveWindowSize() {
-		return this.parallelTcpReceiveWindowSize;
+		return parallelTcpReceiveWindowSize;
 	}
 
 	public void setParallelTcpReceiveWindowSize(
@@ -893,7 +893,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getParallelTcpPerformancePrefsConnectionTime() {
-		return this.parallelTcpPerformancePrefsConnectionTime;
+		return parallelTcpPerformancePrefsConnectionTime;
 	}
 
 	public void setParallelTcpPerformancePrefsConnectionTime(
@@ -903,7 +903,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getParallelTcpPerformancePrefsLatency() {
-		return this.parallelTcpPerformancePrefsLatency;
+		return parallelTcpPerformancePrefsLatency;
 	}
 
 	public void setParallelTcpPerformancePrefsLatency(
@@ -913,7 +913,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getParallelTcpPerformancePrefsBandwidth() {
-		return this.parallelTcpPerformancePrefsBandwidth;
+		return parallelTcpPerformancePrefsBandwidth;
 	}
 
 	public void setParallelTcpPerformancePrefsBandwidth(
@@ -923,7 +923,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public boolean isPrimaryTcpKeepAlive() {
-		return this.primaryTcpKeepAlive;
+		return primaryTcpKeepAlive;
 	}
 
 	public void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
@@ -932,7 +932,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getPrimaryTcpSendWindowSize() {
-		return this.primaryTcpSendWindowSize;
+		return primaryTcpSendWindowSize;
 	}
 
 	public void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
@@ -941,7 +941,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getPrimaryTcpReceiveWindowSize() {
-		return this.primaryTcpReceiveWindowSize;
+		return primaryTcpReceiveWindowSize;
 	}
 
 	public void setPrimaryTcpReceiveWindowSize(
@@ -951,7 +951,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getPrimaryTcpPerformancePrefsConnectionTime() {
-		return this.primaryTcpPerformancePrefsConnectionTime;
+		return primaryTcpPerformancePrefsConnectionTime;
 	}
 
 	public void setPrimaryTcpPerformancePrefsConnectionTime(
@@ -961,7 +961,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getPrimaryTcpPerformancePrefsLatency() {
-		return this.primaryTcpPerformancePrefsLatency;
+		return primaryTcpPerformancePrefsLatency;
 	}
 
 	public void setPrimaryTcpPerformancePrefsLatency(
@@ -971,7 +971,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public int getPrimaryTcpPerformancePrefsBandwidth() {
-		return this.primaryTcpPerformancePrefsBandwidth;
+		return primaryTcpPerformancePrefsBandwidth;
 	}
 
 	public void setPrimaryTcpPerformancePrefsBandwidth(
@@ -981,7 +981,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -1098,19 +1098,19 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSocketRenewalIntervalInSeconds()
 	 */
 	@Override
 	public int getSocketRenewalIntervalInSeconds() {
-		return this.socketRenewalIntervalInSeconds;
+		return socketRenewalIntervalInSeconds;
 	}
 
 	/**
 	 * Set the interval in seconds to renew a socket during long transfers. Set
 	 * to 0 to turn this behavior off.
-	 * 
+	 *
 	 * @param socketRenewalIntervalInSeconds
 	 */
 	public void setSocketRenewalIntervalInSeconds(
