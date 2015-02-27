@@ -15,7 +15,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  */
 public class IRODSServerProperties {
 
-	public static final String JARGON_VERSION = "3.3";
+	public static final String JARGON_VERSION = "4.0.2.1";
 
 	public enum IcatEnabled {
 		ICAT_ENABLED, NO_ICAT
@@ -189,8 +189,8 @@ public class IRODSServerProperties {
 				getRelVersion(), releaseVersion);
 
 		/*
-		 *
-		 *
+		 * 
+		 * 
 		 * // The result is a negative integer if this String object //
 		 * lexicographically precedes the argument string. int compValue =
 		 * getRelVersion().compareToIgnoreCase(releaseVersion); return compValue

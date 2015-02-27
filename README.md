@@ -104,8 +104,12 @@ This version includes much greater configurability of TCP/IP parameters for the 
 
 Forgot what this was!
 
-#### Socket renewal for long running get and put tranfers #77
+#### Socket renewal for long running get and put tranfers and large file transfer restart #77
 
 Added a new jargon.properties value for socket connection and renewal that will, on get an put recursive operations, optionally renew the socket by closing the agent and starting a new one. 
 
 This may help in situations where intervening firewalls or other network considerations may otherwise forcefully terminate the connection.
+
+Added a new AbstractRestartManager and a default in-memory restart manager in the IRODSSession.  This can be configured to support large file restarts for get and put operations (work in progress!)
+
+#### 
