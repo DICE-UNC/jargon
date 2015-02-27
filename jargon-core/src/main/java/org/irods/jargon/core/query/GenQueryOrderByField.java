@@ -2,9 +2,9 @@ package org.irods.jargon.core.query;
 
 /**
  * Represents an order by element of a builder query.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class GenQueryOrderByField extends GenQueryField {
 
@@ -16,7 +16,7 @@ public class GenQueryOrderByField extends GenQueryField {
 
 	/**
 	 * Create an order by field in a query.
-	 * 
+	 *
 	 * @param selectFieldColumnName
 	 *            <code>String</code> with the name of the column
 	 * @param selectFieldSource

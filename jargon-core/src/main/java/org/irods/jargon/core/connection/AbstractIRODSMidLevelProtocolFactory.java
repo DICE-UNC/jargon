@@ -170,8 +170,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 							.getIRODSServerProperties());
 
 			// add startup response cookie info indicating if eirods
-			int cookie = Integer.parseInt(irodsMidLevelProtocol.authResponse
-					.getStartupResponse().getCookie());
+			int cookie = Integer.parseInt(irodsMidLevelProtocol
+					.getAuthResponse().getStartupResponse().getCookie());
 
 			if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
 					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {

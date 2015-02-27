@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * -806000 error in iRODS caused by catalog sql exception.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CatalogSQLException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 6150226404159251373L;
 

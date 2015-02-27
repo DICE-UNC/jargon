@@ -471,4 +471,13 @@ public interface JargonProperties {
 	 */
 	String getConnectionFactory();
 
+	/**
+	 * Get the renewal interval in seconds, after which a connection is
+	 * discarded and renewed. Used for preventing timeouts in recursive
+	 * transfers. Expressed as a number of seconds. Set to 0 to turn off this
+	 * behavior
+	 */
+
+	int getSocketRenewalIntervalInSeconds();
+
 }

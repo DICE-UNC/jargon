@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
 /**
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class TransferStatistics {
 
@@ -16,7 +16,7 @@ public class TransferStatistics {
 	private int kbPerSecond = 0;
 
 	/**
-	 * 
+	 *
 	 */
 	public TransferStatistics() {
 	}

@@ -4,9 +4,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * The given user is invalid in iRODS
- * 
+ *
  * @author Mike Conway
- * 
+ *
  */
 public class InvalidUserException extends JargonException {
 	private static final long serialVersionUID = -8718442214402431485L;

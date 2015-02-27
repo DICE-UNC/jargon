@@ -523,4 +523,9 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.bandwidth");
 	}
 
+	@Override
+	public int getSocketRenewalIntervalInSeconds() {
+		return verifyPropExistsAndGetAsInt("socket.renewal.interval.in.seconds");
+	}
+
 }

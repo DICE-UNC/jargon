@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -22,12 +22,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Access object that represents resource groups and related operations in
  * iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ResourceGroupAOImpl extends IRODSGenericAO implements
-		ResourceGroupAO {
+ResourceGroupAO {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ResourceGroupAOImpl.class);
@@ -44,7 +44,7 @@ public class ResourceGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.ResourceGroupAO#listResourceGroupNames()
 	 */
 	@Override

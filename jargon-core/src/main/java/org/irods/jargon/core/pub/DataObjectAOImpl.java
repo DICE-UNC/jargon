@@ -870,7 +870,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.error(
 						"error in parallel transfers, the main connection will be abandoned",
 						e);
-				this.getIRODSProtocol().disconnectWithForce();
+				this.getIRODSAccessObjectFactory().getIrodsSession()
+						.discardSessionForErrors(this.getIRODSAccount());
 				throw new JargonException(e);
 			}
 		}
@@ -1339,7 +1340,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.error(
 							"an exception had occurred within the parallel transfer, so the opr complete is skipped and the connection abandoned..error will be rethrown",
 							e);
-					this.getIRODSProtocol().disconnectWithForce();
+					this.getIRODSAccessObjectFactory().getIrodsSession()
+							.discardSessionForErrors(this.getIRODSAccount());
 					throw e;
 				}
 
@@ -1457,7 +1459,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.error(
 						"exception in parallel transfer, connection will be abandoned",
 						e);
-				this.getIRODSProtocol().disconnectWithForce();
+				this.getIRODSAccessObjectFactory().getIrodsSession()
+						.discardSessionForErrors(this.getIRODSAccount());
 				throw new JargonException(e);
 			}
 		}

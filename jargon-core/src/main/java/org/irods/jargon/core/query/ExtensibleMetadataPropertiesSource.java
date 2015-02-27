@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *         <code>Properties</code> file that will be on the classpath.
  */
 public class ExtensibleMetadataPropertiesSource implements
-		ExtensibleMetaDataSource {
+ExtensibleMetaDataSource {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ExtensibleMetadataPropertiesSource.class);
@@ -29,13 +29,13 @@ public class ExtensibleMetadataPropertiesSource implements
 
 	/**
 	 * Default constructor will look for the file
-	 * 
+	 *
 	 * <pre>
 	 * extended_icat_data.properties
 	 * </pre>
-	 * 
+	 *
 	 * in the classpath.
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public ExtensibleMetadataPropertiesSource() throws JargonException {
@@ -45,7 +45,7 @@ public class ExtensibleMetadataPropertiesSource implements
 	/**
 	 * Constructor takes a specific properties file name that contains the
 	 * desired extensible metadata mappings.
-	 * 
+	 *
 	 * @param propertiesFileName
 	 *            <code>String</code> containing a valid
 	 *            <code>.properties</code> file that exists on the classpath.
@@ -111,7 +111,7 @@ public class ExtensibleMetadataPropertiesSource implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.query.ExtensibleMetaDataSource#
 	 * generateExtensibleMetaDataMapping()
 	 */

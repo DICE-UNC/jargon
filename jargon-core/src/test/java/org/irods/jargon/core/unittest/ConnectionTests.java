@@ -9,7 +9,6 @@ import org.irods.jargon.core.connection.IRODSSessionTest;
 import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
 import org.irods.jargon.core.connection.PAMAuthTest;
-import org.irods.jargon.core.connection.PipelineConfigurationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -19,8 +18,8 @@ import org.junit.runners.Suite;
 		IRODSSimpleProtocolManagerTest.class, IRODSSessionTest.class,
 		IRODSServerPropertiesTest.class,
 		DefaultPropertiesJargonConfigTest.class,
-		ConnectionProgressStatusTest.class, PipelineConfigurationTest.class,
-		PAMAuthTest.class, DiscoveredServerPropertiesCacheTest.class })
+		ConnectionProgressStatusTest.class, PAMAuthTest.class,
+		DiscoveredServerPropertiesCacheTest.class })
 public class ConnectionTests {
 
 }

@@ -6,9 +6,9 @@ import org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO;
  * Represents information about remote commands in the iRODS server/cmd/bin
  * directory. These commands are executable by the
  * {@link RemoteExecutionOfCommandsAO}.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RemoteCommandInformation {
 	private String hostName = "";

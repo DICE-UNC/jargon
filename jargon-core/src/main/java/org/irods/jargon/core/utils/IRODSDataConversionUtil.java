@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.utils;
 
@@ -18,9 +18,9 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Handle iRODS representations of data from GenQuery and translation into
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSDataConversionUtil {
 
@@ -30,7 +30,7 @@ public class IRODSDataConversionUtil {
 	/**
 	 * For a given string that should contain an integer value, return either
 	 * the <code>int</code> value or a zero if empty.
-	 * 
+	 *
 	 * @param irodsValue
 	 * @return <code>int</code> equivilent of irods value
 	 */
@@ -60,7 +60,7 @@ public class IRODSDataConversionUtil {
 	/**
 	 * For a given string that should contain an long value, return either the
 	 * <code>long</code> value or a zero if empty.
-	 * 
+	 *
 	 * @param irodsValue
 	 * @return <code>long</code> equivilent of irods value
 	 */
@@ -89,7 +89,7 @@ public class IRODSDataConversionUtil {
 
 	/**
 	 * Utility to return an irods date value as a <code>java.util.Date</code>
-	 * 
+	 *
 	 * @param irodsValue
 	 *            <code>String</code> containing an IRODS date value as returned
 	 *            from a query to ICAT
@@ -130,11 +130,11 @@ public class IRODSDataConversionUtil {
 	/**
 	 * Utility to determine the collection type contained in an iRODS value.
 	 * Null and empty values are mapped to the normal type.
-	 * 
+	 *
 	 * @param irodsValue
 	 *            <code>String</code> containing an IRODS collection type value
 	 *            as returned from a query to ICAT. May be null.
-	 * 
+	 *
 	 * @return the collection type
 	 */
 	public static SpecColType getCollectionTypeFromIRODSValue(

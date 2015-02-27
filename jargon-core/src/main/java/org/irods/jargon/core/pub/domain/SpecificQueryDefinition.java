@@ -6,9 +6,9 @@ import java.util.List;
 /**
  * Represents a specific query - advanced query for storage in iRODS and use
  * with iquest or SpecificQueryExecutorAO.
- * 
+ *
  * @author Lisa Stillwell (RENCI)
- * 
+ *
  */
 
 public class SpecificQueryDefinition extends IRODSDomainObject {
@@ -23,7 +23,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * user-created instances for operations like adding. When this object is
 	 * retrieved from iRODS, it is addtionally provide with information such as
 	 * parameter counts and column names.
-	 * 
+	 *
 	 * @param alias
 	 * @param sql
 	 */
@@ -66,7 +66,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	/**
 	 * Gets the count of arguments, this is set when this data is retrieved from
 	 * iRODS by query
-	 * 
+	 *
 	 * @return the argumentCount <code>int</code> with the count of arguments in
 	 *         the sql query
 	 */
@@ -85,7 +85,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	/**
 	 * Gets the column names by parsing the SQL query. Note that this is only
 	 * available when querying the object from iRODS.
-	 * 
+	 *
 	 * @return the columnNames <code>List<String></code> with the parsed column
 	 *         names from the query
 	 */

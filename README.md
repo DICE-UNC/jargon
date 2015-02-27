@@ -100,4 +100,12 @@ Additional tweaks to improve parallel file transfer performance. This includes a
 
 This version includes much greater configurability of TCP/IP parameters for the primary and parallel socket connections. Currently these parameters are set to an aggressive window size, and bandwidth-favoring parameters, but can ba adjusted in the jargon.properties file.  
 
+#### add comment here!  #78
 
+Forgot what this was!
+
+#### Socket renewal for long running get and put tranfers #77
+
+Added a new jargon.properties value for socket connection and renewal that will, on get an put recursive operations, optionally renew the socket by closing the agent and starting a new one. 
+
+This may help in situations where intervening firewalls or other network considerations may otherwise forcefully terminate the connection.

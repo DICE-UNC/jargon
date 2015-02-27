@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for parsing rules for processing by Jargon.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class RuleParsingUtils {
 
@@ -28,7 +28,7 @@ class RuleParsingUtils {
 	 * name and parameter value. This essentially splits on the first '=' sign. <br/>
 	 * This routine will trim the param names and strip leading $ in the value
 	 * that typically mark interactive variables
-	 * 
+	 *
 	 * @param parameter
 	 *            <code>String<code> which should reflect an individual rule parameter in *parmName=parmValue format
 	 * @return {@link RuleInputParameter}

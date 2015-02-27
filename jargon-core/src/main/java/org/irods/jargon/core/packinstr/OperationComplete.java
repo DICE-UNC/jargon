@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Simple packing instruction for operation complete messages
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class OperationComplete extends AbstractIRODSPackingInstruction {
 
@@ -23,7 +23,7 @@ public class OperationComplete extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Private constructor
-	 * 
+	 *
 	 * @param status
 	 *            <code>int</code> >= 0 that is the status to send with the
 	 *            operation complete message
@@ -39,7 +39,7 @@ public class OperationComplete extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
