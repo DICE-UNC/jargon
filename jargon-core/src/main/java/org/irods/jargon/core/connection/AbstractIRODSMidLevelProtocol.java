@@ -767,6 +767,24 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
+	 * Specialized method for direct disconnects of a connection. This may be
+	 * used by cache and pool implementations that want to do gymnastics about
+	 * how conns are created and closed.
+	 * <p/>
+	 * <b>You should probably call disconnect() instead of this method</b>
+	 * <p/>
+	 * These special cases need more thought, so consider this a potential
+	 * kludge that will go away! As we clarify some of the conn handling this
+	 * came up as an edge case.
+	 * 
+	 * @throws JargonException
+	 */
+	public synchronized void directDisconnect() throws JargonException {
+		log.info("directDisconnect()");
+		this.shutdown();
+	}
+
+	/**
 	 * Method that will cause the connection to be released, returning it to the
 	 * <code>IRODSProtocolManager</code> for shutdown when something has gone
 	 * wrong with the agent or connection, and the connection should not be
