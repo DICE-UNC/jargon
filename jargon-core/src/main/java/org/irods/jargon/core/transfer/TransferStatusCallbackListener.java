@@ -42,7 +42,7 @@ public interface TransferStatusCallbackListener {
 	 *         response
 	 * @throws JargonException
 	 */
-	FileStatusCallbackResponse statusCallback(
+	public FileStatusCallbackResponse statusCallback(
 			final TransferStatus transferStatus) throws JargonException;
 
 	/**
@@ -52,7 +52,7 @@ public interface TransferStatusCallbackListener {
 	 *
 	 * @throws JargonException
 	 */
-	void overallStatusCallback(final TransferStatus transferStatus)
+	public void overallStatusCallback(final TransferStatus transferStatus)
 			throws JargonException;
 
 	/**
@@ -70,6 +70,6 @@ public interface TransferStatusCallbackListener {
 	 * @return {@link CallbackResponse} enum value determining the behavior of
 	 *         overwrites for the given transfer.
 	 */
-	CallbackResponse transferAsksWhetherToForceOperation(
+	public CallbackResponse transferAsksWhetherToForceOperation(
 			final String irodsAbsolutePath, final boolean isCollection);
 }
