@@ -100,7 +100,9 @@ Additional tweaks to improve parallel file transfer performance. This includes a
 
 This version includes much greater configurability of TCP/IP parameters for the primary and parallel socket connections. Currently these parameters are set to an aggressive window size, and bandwidth-favoring parameters, but can ba adjusted in the jargon.properties file.  
 
-#### add comment here!  #78
+#### Path interpolation when browsing across federations #78
+
+Improved ability of Jargon to at least get some view into an iRODS tree starting at root, down into the user directory, when StictACL is enabled.  It uses a heuristic to drill down into a user home and public directoy in the home and federated zone when it cannot actually access the tree.  This might be configurable at a later point to get 'hints'.
 
 Forgot what this was!
 
