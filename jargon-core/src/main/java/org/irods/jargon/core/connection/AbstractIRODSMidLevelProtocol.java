@@ -779,7 +779,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * connections in a pool or cache.
 	 */
 	public synchronized void disconnectWithForce() throws JargonException {
-		getIrodsSession().discardSessionForErrors(getIrodsAccount());
+		if (getIrodsAccount() != null) {
+			getIrodsSession().discardSessionForErrors(getIrodsAccount());
+		}
 	}
 
 	/**
