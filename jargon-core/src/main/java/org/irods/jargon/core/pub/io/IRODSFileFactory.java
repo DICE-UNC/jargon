@@ -285,7 +285,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            that will be read and streamed.
-	 * @return{@link
+	 * @return{@link 
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -302,7 +302,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
 	 *            file that will be opened and streamed.
-	 * @return{@link
+	 * @return{@link 
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -322,7 +322,7 @@ public interface IRODSFileFactory {
 	 *            that will be read and streamed.
 	 * @param fd
 	 *            <code>int</code> with the file descriptor
-	 * @return{@link
+	 * @return{@link 
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -339,7 +339,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
 	 *            file that will be opened and streamed.
-	 * @return{@link
+	 * @return{@link 
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws NoResourceDefinedException
@@ -363,5 +363,26 @@ public interface IRODSFileFactory {
 	 */
 	IRODSFile instanceIRODSFileUserHomeDir(String userName)
 			throws JargonException;
+
+	/**
+	 * Create an IRODSRandomAccessFile given the absolutePath. Note that this
+	 * method will check if the file exists. This variant observes the open
+	 * flags, so if the file needs to be created, it must have a flags setting
+	 * for 'create if not exists'
+	 *
+	 * @param name
+	 *            <code>String</code> with the absolute path to the file.
+	 * @param openFlags
+	 *            {@link OpenFlags} that defines how the file is to be opened
+	 *            (e.g. Read only versus Read/write)
+	 * @return
+	 * @throws NoResourceDefinedException
+	 *             if no storage resource is defined and no default rule is set
+	 *             up on iRODS
+	 * @throws JargonException
+	 */
+	IRODSRandomAccessFile instanceIRODSRandomAccessFile(String name,
+			OpenFlags openFlags) throws NoResourceDefinedException,
+			JargonException;
 
 }

@@ -30,6 +30,7 @@ import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
 import org.irods.jargon.core.transfer.AbstractRestartManager;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.MemoryBasedTransferRestartManager;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -241,6 +242,14 @@ public class IRODSSession {
 		try {
 			jargonProperties = new SettableJargonProperties(
 					new DefaultPropertiesJargonConfig());
+			if (jargonProperties.isLongTransferRestart()) {
+				// by default, at startup, if the long transfer restart is
+				// selected, then start out with the default
+				// in-memory implementation. If the dev futzes with this, they
+				// have to make sure
+				// a restart manager is available.
+				this.restartManager = new MemoryBasedTransferRestartManager();
+			}
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties");
 		}

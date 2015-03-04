@@ -477,7 +477,14 @@ public interface JargonProperties {
 	 * transfers. Expressed as a number of seconds. Set to 0 to turn off this
 	 * behavior
 	 */
-
 	int getSocketRenewalIntervalInSeconds();
+
+	/**
+	 * Indicates whether long file transfer retarts should be done.
+	 * 
+	 * @return <code>boolean<code> of <code>true</code> if long file restarts
+	 *         should be done
+	 */
+	boolean isLongTransferRestart();
 
 }

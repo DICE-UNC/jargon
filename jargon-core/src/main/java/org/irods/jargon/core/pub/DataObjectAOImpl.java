@@ -723,6 +723,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			myTransferOptions.setMaxThreads(-1);
 		}
 
+		if (this.getJargonProperties().isLongTransferRestart()) {
+			if (this.getIRODSSession().getRestartManager() == null) {
+				log.error("jargon.properties set to restart, but no restart manager is configured");
+				throw new JargonRuntimeException(
+						"restart manager is not configured in IRODSSession, but jargon.properties has restart behavior set");
+			}
+		}
+
 		ConnectionProgressStatusListener intraFileStatusListener = null;
 
 		boolean execFlag = false;

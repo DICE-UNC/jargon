@@ -46,7 +46,7 @@ public interface TransferStatusCallbackListener {
 			final TransferStatus transferStatus) throws JargonException;
 
 	/**
-	 * Method will reeive a callback at the initiation and completion of an
+	 * Method will receive a callback at the initiation and completion of an
 	 * overall transfer {@link org.irods.jargon.core.transfer.TransferStatus}
 	 * with information on the transfer.
 	 *

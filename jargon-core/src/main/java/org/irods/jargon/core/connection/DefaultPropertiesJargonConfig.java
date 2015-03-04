@@ -528,4 +528,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("socket.renewal.interval.in.seconds");
 	}
 
+	@Override
+	public boolean isLongTransferRestart() {
+		return verifyPropExistsAndGetAsBoolean("transfer.long.file.restart");
+	}
 }

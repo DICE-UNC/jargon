@@ -66,6 +66,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int primaryTcpPerformancePrefsLatency;
 	private int primaryTcpPerformancePrefsBandwidth;
 	private int socketRenewalIntervalInSeconds;
+	private boolean longTransferRestart = true;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -168,6 +169,7 @@ public class SettableJargonProperties implements JargonProperties {
 				.getPrimaryTcpSendWindowSize();
 		this.socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
+		this.longTransferRestart = jargonProperties.isLongTransferRestart();
 
 	}
 
@@ -1094,6 +1096,8 @@ public class SettableJargonProperties implements JargonProperties {
 		builder.append(primaryTcpPerformancePrefsBandwidth);
 		builder.append(", socketRenewalIntervalInSeconds=");
 		builder.append(socketRenewalIntervalInSeconds);
+		builder.append(", longTransferRestart=");
+		builder.append(longTransferRestart);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1118,6 +1122,20 @@ public class SettableJargonProperties implements JargonProperties {
 	public void setSocketRenewalIntervalInSeconds(
 			final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
+	}
+
+	@Override
+	public boolean isLongTransferRestart() {
+		return this.longTransferRestart;
+	}
+
+	/**
+	 * Sets the ability to restart long file transfers if needed
+	 * 
+	 * @param longFileTransferRestart
+	 */
+	public void setLongTransferRestart(final boolean longFileTransferRestart) {
+		this.longTransferRestart = longFileTransferRestart;
 	}
 
 }
