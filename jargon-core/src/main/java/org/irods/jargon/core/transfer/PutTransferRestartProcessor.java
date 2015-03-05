@@ -133,6 +133,11 @@ public class PutTransferRestartProcessor extends
 
 			}
 		}
+
+		log.info("restart completed..remove from the cache");
+		this.getRestartManager().deleteRestart(fileRestartInfoIdentifier);
+		log.info("removed restart");
+
 	}
 
 	private void putSegment(final long gap,

@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - (DICE) Restart processor abstract superclass. This
  *         defines a service that can restart a get or put transfer within a
  *         file.
- *
+ * 
  */
 public abstract class AbstractTransferRestartProcessor extends
 		AbstractJargonService {
@@ -65,8 +65,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @return {@link RestartResult} with details of the restart processing
 	 * @throws JargonException
 	 */
-	public abstract void restartIfNecessary(final String irodsAbsolutePath,
-			final FileRestartInfo.RestartType restartType)
+	public abstract void restartIfNecessary(final String irodsAbsolutePath)
 			throws JargonException;
 
 	/**

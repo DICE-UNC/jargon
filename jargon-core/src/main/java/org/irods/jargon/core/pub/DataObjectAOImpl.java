@@ -63,6 +63,7 @@ import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileViaNIOTransferStrategy;
+import org.irods.jargon.core.transfer.PutTransferRestartProcessor;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -728,6 +729,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.error("jargon.properties set to restart, but no restart manager is configured");
 				throw new JargonRuntimeException(
 						"restart manager is not configured in IRODSSession, but jargon.properties has restart behavior set");
+			} else {
+				log.info(
+						"checking to see if a restart is needed for the irodsFile:[]",
+						targetFile.getAbsolutePath());
+				PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
+						this.getIRODSAccessObjectFactory(),
+						this.getIRODSAccount(), this.getIRODSSession()
+								.getRestartManager());
+				putTransferRestartProcessor.restartIfNecessary(targetFile
+						.getAbsolutePath());
 			}
 		}
 
