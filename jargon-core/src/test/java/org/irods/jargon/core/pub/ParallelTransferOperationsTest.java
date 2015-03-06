@@ -167,21 +167,14 @@ public class ParallelTransferOperationsTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 
+		TransferKillingCallbackListener listener = new TransferKillingCallbackListener(
+				irodsFileSystem.getIRODSAccessObjectFactory(),
+				10 * 1024 * 1024, irodsAccount);
+
 		File localSourceFile = new File(localFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
-				null);
-
-		System.out.println("closing irodsfilesystem for put");
-		irodsFileSystem.close();
-
-		System.out.println("new file system for get");
-		irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
-		destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
-		dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile,
+				listener, null);
 
 	}
 

@@ -19,12 +19,19 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 public class TransferKillingCallbackListener implements
 		TransferStatusCallbackListener {
 
+	private IRODSAccessObjectFactory irodsAccessObjectFactory;
+	private long killAfter = 0L;
+	private IRODSAccount irodsAccount;
+
 	/**
 	 * 
 	 */
 	public TransferKillingCallbackListener(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final int killAfter, final IRODSAccount irodsAccount) {
+			final long killAfter, final IRODSAccount irodsAccount) {
+		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
+		this.killAfter = killAfter;
+		this.irodsAccount = irodsAccount;
 	}
 
 	/*
@@ -37,6 +44,12 @@ public class TransferKillingCallbackListener implements
 	@Override
 	public FileStatusCallbackResponse statusCallback(
 			TransferStatus transferStatus) throws JargonException {
+
+		if (transferStatus.getBytesTransfered() > killAfter) {
+			throw new JargonException("I am killing this");
+		} else {
+			return FileStatusCallbackResponse.CONTINUE;
+		}
 
 	}
 
@@ -61,7 +74,7 @@ public class TransferKillingCallbackListener implements
 	@Override
 	public CallbackResponse transferAsksWhetherToForceOperation(
 			String irodsAbsolutePath, boolean isCollection) {
-
+		return CallbackResponse.YES_FOR_ALL;
 	}
 
 }
