@@ -751,6 +751,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw new JargonException(
 						"numberOfThreads returned from iRODS is < 0, some error occurred");
 			} else if (numberOfThreads > 0) {
+				/*
+				 * restart processing is done inside of the parallel put code
+				 */
 				parallelPutTransfer(localFile, targetFile.getAbsolutePath(),
 						responseToInitialCallForPut, numberOfThreads,
 						localFile.length(), transferControlBlock,
@@ -820,14 +823,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw new JargonRuntimeException(
 						"restart manager is not configured in IRODSSession, but jargon.properties has restart behavior set");
 			} else {
-				log.info("setting up restart info:[]", irodsAbsolutePath);
-				FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
-				identifier.setAbsolutePath(irodsAbsolutePath);
-				identifier.setIrodsAccountIdentifier(this.getIRODSAccount()
-						.toString());
-				identifier.setRestartType(RestartType.PUT);
-				fileRestartInfo = this.getIRODSSession().getRestartManager()
-						.retrieveRestartAndBuildIfNotStored(identifier);
+
+				if (transferLength < ConnectionConstants.MIN_FILE_RESTART_SIZE) {
+					log.info("file size is not appropriate for restart processing");
+				} else {
+
+					log.info("setting up restart info:[]", irodsAbsolutePath);
+					FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
+					identifier.setAbsolutePath(irodsAbsolutePath);
+					identifier.setIrodsAccountIdentifier(this.getIRODSAccount()
+							.toString());
+					identifier.setRestartType(RestartType.PUT);
+					fileRestartInfo = this.getIRODSSession()
+							.getRestartManager()
+							.retrieveRestartAndBuildIfNotStored(identifier);
+				}
 			}
 		}
 
