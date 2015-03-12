@@ -13,7 +13,7 @@ import java.util.List;
  * as in rcPortalOpr.c
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FileRestartInfo {
 
@@ -36,6 +36,10 @@ public class FileRestartInfo {
 	private RestartStatus restartStatus = RestartStatus.OFF;
 	private RestartType restartType = RestartType.PUT;
 	private long fileSize = 0L;
+	/**
+	 * Cached count of the number of restart attempts
+	 */
+	private int numberRestarts = 0;
 	private List<FileRestartDataSegment> fileRestartDataSegments = new ArrayList<FileRestartDataSegment>();
 
 	public String getLocalAbsolutePath() {
@@ -79,6 +83,26 @@ public class FileRestartInfo {
 		this.fileRestartDataSegments = fileRestartDataSegments;
 	}
 
+	/**
+	 * Get the identifier associated with this info
+	 * 
+	 * @return {@link FileRestartInfoIdentifier} that points to this info. The
+	 *         restart info is keyed by various attributes in hashes, or for
+	 *         generating file names
+	 */
+	public FileRestartInfoIdentifier identifierFromThisInfo() {
+		FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
+		identifier.setAbsolutePath(irodsAbsolutePath);
+		identifier.setIrodsAccountIdentifier(irodsAccountIdentifier);
+		identifier.setRestartType(this.restartType);
+		return identifier;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		final int maxLen = 10;
@@ -111,6 +135,8 @@ public class FileRestartInfo {
 		}
 		builder.append("fileSize=");
 		builder.append(fileSize);
+		builder.append(", numberRestarts=");
+		builder.append(numberRestarts);
 		builder.append(", ");
 		if (fileRestartDataSegments != null) {
 			builder.append("fileRestartDataSegments=");
@@ -135,6 +161,21 @@ public class FileRestartInfo {
 
 	public void setRestartType(RestartType restartType) {
 		this.restartType = restartType;
+	}
+
+	/**
+	 * @return the numberRestarts
+	 */
+	public int getNumberRestarts() {
+		return numberRestarts;
+	}
+
+	/**
+	 * @param numberRestarts
+	 *            the numberRestarts to set
+	 */
+	public void setNumberRestarts(int numberRestarts) {
+		this.numberRestarts = numberRestarts;
 	}
 
 }

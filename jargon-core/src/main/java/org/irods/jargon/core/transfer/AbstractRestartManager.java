@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.transfer;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclass for a manager of file restarts. This allows in-memory,
@@ -13,9 +15,40 @@ package org.irods.jargon.core.transfer;
  * {@link FileRestartInfo} for a given path
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public abstract class AbstractRestartManager {
+
+	private static final Logger log = LoggerFactory
+			.getLogger(AbstractRestartManager.class);
+
+	/**
+	 * Either return existing, or create a new restart identifier
+	 * 
+	 * @param fileRestartInfoIdentifier
+	 * @return
+	 * @throws FileRestartManagementException
+	 */
+	public FileRestartInfo retrieveRestartAndBuildIfNotStored(
+			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
+			throws FileRestartManagementException {
+
+		log.info("retrieveRestartAndBuildIfNotStored()");
+
+		FileRestartInfo info = retrieveRestart(fileRestartInfoIdentifier);
+
+		if (info == null) {
+			log.info("no restart saved, create and store a new one");
+			info = new FileRestartInfo();
+			info.setIrodsAbsolutePath(fileRestartInfoIdentifier
+					.getAbsolutePath());
+			info.setIrodsAccountIdentifier(fileRestartInfoIdentifier
+					.getIrodsAccountIdentifier());
+			info.setRestartType(fileRestartInfoIdentifier.getRestartType());
+			storeRestart(info);
+		}
+		return info;
+	}
 
 	/**
 	 * Store the restart information
