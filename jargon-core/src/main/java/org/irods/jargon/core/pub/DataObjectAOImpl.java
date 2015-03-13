@@ -60,12 +60,12 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.FileRestartDataSegment;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.irods.jargon.core.transfer.FileRestartInfoIdentifier;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
-import org.irods.jargon.core.transfer.ParallelPutFileViaNIOTransferStrategy;
 import org.irods.jargon.core.transfer.PutTransferRestartProcessor;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
@@ -837,6 +837,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					fileRestartInfo = this.getIRODSSession()
 							.getRestartManager()
 							.retrieveRestartAndBuildIfNotStored(identifier);
+					fileRestartInfo
+							.setFileRestartDataSegments(new ArrayList<FileRestartDataSegment>(
+									numberOfThreads));
 				}
 			}
 		}
@@ -852,48 +855,35 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getTag(IRODSConstants.PortList_PI)
 				.getTag(IRODSConstants.cookie).getIntValue();
 
-		if (getJargonProperties().isUseNIOForParallelTransfers()) {
-			log.info(">>>>>>using NIO for parallel put");
-			ParallelPutFileViaNIOTransferStrategy parallelPutFileStrategy = ParallelPutFileViaNIOTransferStrategy
-					.instance(host, port, numberOfThreads, pass, localFile,
-							getIRODSAccessObjectFactory(), transferLength,
-							transferControlBlock,
-							transferStatusCallbackListener);
-			log.info(
-					"getting ready to initiate parallel file transfer strategy:{}",
-					parallelPutFileStrategy);
+		ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
+				.instance(host, port, numberOfThreads, pass, localFile,
+						getIRODSAccessObjectFactory(), transferLength,
+						transferControlBlock, transferStatusCallbackListener,
+						fileRestartInfo);
+		log.info(
+				"getting ready to initiate parallel file transfer strategy:{}",
+				parallelPutFileStrategy);
+
+		try {
 			parallelPutFileStrategy.transfer();
-		} else {
-			log.info(">>>>>>using standard i/o for parallel put");
-			ParallelPutFileTransferStrategy parallelPutFileStrategy = ParallelPutFileTransferStrategy
-					.instance(host, port, numberOfThreads, pass, localFile,
-							getIRODSAccessObjectFactory(), transferLength,
-							transferControlBlock,
-							transferStatusCallbackListener);
-			log.info(
-					"getting ready to initiate parallel file transfer strategy:{}",
-					parallelPutFileStrategy);
+			log.info("transfer process is complete");
+			int statusForComplete = responseToInitialCallForPut.getTag(
+					IRODSConstants.L1_DESC_INX).getIntValue();
+			log.debug("status for complete:{}", statusForComplete);
 
-			try {
-				parallelPutFileStrategy.transfer();
-				log.info("transfer process is complete");
-				int statusForComplete = responseToInitialCallForPut.getTag(
-						IRODSConstants.L1_DESC_INX).getIntValue();
-				log.debug("status for complete:{}", statusForComplete);
+			log.info("sending operation complete at termination of parallel transfer");
+			getIRODSProtocol().operationComplete(statusForComplete);
+		} catch (Exception e) {
 
-				log.info("sending operation complete at termination of parallel transfer");
-				getIRODSProtocol().operationComplete(statusForComplete);
-			} catch (Exception e) {
+			log.error(
+					"error in parallel transfers, the main connection will be abandoned",
+					e);
+			this.getIRODSAccessObjectFactory().getIrodsSession()
+					.discardSessionForErrors(this.getIRODSAccount());
 
-				log.error(
-						"error in parallel transfers, the main connection will be abandoned",
-						e);
-				this.getIRODSAccessObjectFactory().getIrodsSession()
-						.discardSessionForErrors(this.getIRODSAccount());
-
-				throw new JargonException(e);
-			}
+			throw new JargonException(e);
 		}
+
 	}
 
 	/**

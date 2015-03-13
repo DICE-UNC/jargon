@@ -30,6 +30,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final File localFile;
 	protected final long transferLength;
 	private final PipelineConfiguration pipelineConfiguration;
+	private final FileRestartInfo fileRestartInfo;
 
 	public PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;
@@ -70,17 +71,23 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
+	 * @param fileRestartInfo
+	 *            {@link FileRestartinfo} or <code>null</code> if not supporting
+	 *            a restart of this transfer
 	 * 
 	 * @throws JargonException
 	 */
-	protected AbstractParallelFileTransferStrategy(final String host,
-			final int port, final int numberOfThreads, final int password,
+	protected AbstractParallelFileTransferStrategy(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -125,6 +132,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 				.getJargonProperties();
 		this.pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
+		this.fileRestartInfo = fileRestartInfo;
 
 		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
@@ -222,6 +230,10 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 */
 	protected JargonProperties getJargonProperties() {
 		return jargonProperties;
+	}
+
+	public FileRestartInfo getFileRestartInfo() {
+		return fileRestartInfo;
 	}
 
 }

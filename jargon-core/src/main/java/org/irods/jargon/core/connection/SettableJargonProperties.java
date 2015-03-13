@@ -100,8 +100,6 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		useParallelTransfer = jargonProperties.isUseParallelTransfer();
-		useNIOForParallelTransfers = jargonProperties
-				.isUseNIOForParallelTransfers();
 		maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
 		allowPutGetResourceRedirects = jargonProperties
 				.isAllowPutGetResourceRedirects();
@@ -620,27 +618,6 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		this.encoding = encoding;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public synchronized boolean isUseNIOForParallelTransfers() {
-		return useNIOForParallelTransfers;
-	}
-
-	/**
-	 * @param useNIOForParallelTransfers
-	 *            <code>boolean</code> that is set to <code>true</code> if NIO
-	 *            should be used for parallel file transfers
-	 */
-	public synchronized void setUseNIOForParallelTransfers(
-			final boolean useNIOForParallelTransfers) {
-		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
 	}
 
 	/**

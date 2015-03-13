@@ -323,17 +323,6 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public boolean isUseNIOForParallelTransfers() {
-		return verifyPropExistsAndGetAsBoolean("transfer.use.nio.for.parallel");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isReconnect()
 	 */
 	@Override

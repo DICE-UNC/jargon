@@ -35,7 +35,6 @@ public class FileRestartInfo {
 	private String irodsAbsolutePath = "";
 	private RestartStatus restartStatus = RestartStatus.OFF;
 	private RestartType restartType = RestartType.PUT;
-	private long fileSize = 0L;
 	/**
 	 * Cached count of the number of restart attempts
 	 */
@@ -64,14 +63,6 @@ public class FileRestartInfo {
 
 	public void setRestartStatus(RestartStatus restartStatus) {
 		this.restartStatus = restartStatus;
-	}
-
-	public long getFileSize() {
-		return fileSize;
-	}
-
-	public void setFileSize(long fileSize) {
-		this.fileSize = fileSize;
 	}
 
 	public List<FileRestartDataSegment> getFileRestartDataSegments() {
@@ -133,8 +124,7 @@ public class FileRestartInfo {
 			builder.append(restartType);
 			builder.append(", ");
 		}
-		builder.append("fileSize=");
-		builder.append(fileSize);
+
 		builder.append(", numberRestarts=");
 		builder.append(numberRestarts);
 		builder.append(", ");

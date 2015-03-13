@@ -49,17 +49,6 @@ public interface JargonProperties {
 	int getMaxParallelThreads();
 
 	/**
-	 * <h2>Experimental setting!!</h2>
-	 * <p/>
-	 * Use NIO to transfer between the local file system and iRODS for parallel
-	 * transfer operations
-	 * 
-	 * @return <code>boolean</code> of <code>true</code> if NIO should be used
-	 *         for parallel transfers
-	 */
-	boolean isUseNIOForParallelTransfers();
-
-	/**
 	 * The file length above which a numThreads will be sent to iRODS in
 	 * DataObjInp. This is done for backwards compatibility. Older versions of
 	 * iRODS will default to parallel processing if any nonzero number is sent
