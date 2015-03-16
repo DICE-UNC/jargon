@@ -27,12 +27,17 @@ public class AbstractParallelTransferThread {
 	public static final int DONE_OPR = 9999;
 	public static final int PUT_OPR = 1;
 	public static final int GET_OPR = 2;
+	/**
+	 * Index of the given thread. 0 based index
+	 */
+	private final int threadNumber;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AbstractParallelTransferThread.class);
 
-	protected AbstractParallelTransferThread() {
+	protected AbstractParallelTransferThread(final int threadNumber) {
 		super();
+		this.threadNumber = threadNumber;
 	}
 
 	protected int readInt() throws JargonException {
@@ -140,5 +145,12 @@ public class AbstractParallelTransferThread {
 
 	protected void setExceptionInTransfer(final Exception exceptionInTransfer) {
 		this.exceptionInTransfer = exceptionInTransfer;
+	}
+
+	/**
+	 * @return the threadNumber
+	 */
+	protected int getThreadNumber() {
+		return threadNumber;
 	}
 }

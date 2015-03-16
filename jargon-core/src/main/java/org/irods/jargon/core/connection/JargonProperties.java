@@ -401,6 +401,14 @@ public interface JargonProperties {
 	int getParallelTcpPerformancePrefsBandwidth();
 
 	/**
+	 * Get the size of the buffer used in reads and writes to iRODS for parallel
+	 * transfer threads, in bytes
+	 * 
+	 * @return <code>int</code> with the buffer size for parallel transfer
+	 */
+	int getParallelCopyBufferSize();
+
+	/**
 	 * Is TCP keep alive set for the primary irods Socket?
 	 * 
 	 * @return

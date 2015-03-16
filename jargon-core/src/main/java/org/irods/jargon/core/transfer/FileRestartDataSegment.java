@@ -7,11 +7,25 @@ package org.irods.jargon.core.transfer;
  * Data segment in iRODS file, analagous to dataSeg_t in iRODS
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FileRestartDataSegment {
+	/**
+	 * Current lenght of the restart
+	 */
 	private long length = 0L;
+	/**
+	 * Current offset of the restart
+	 */
 	private long offset = 0L;
+	/**
+	 * thread number associated with this thread
+	 */
+	private final int threadNumber;
+
+	public FileRestartDataSegment(final int threadNumber) {
+		this.threadNumber = threadNumber;
+	}
 
 	public long getLength() {
 		return length;
@@ -39,4 +53,12 @@ public class FileRestartDataSegment {
 		builder.append("]");
 		return builder.toString();
 	}
+
+	/**
+	 * @return the threadNumber
+	 */
+	public int getThreadNumber() {
+		return threadNumber;
+	}
+
 }

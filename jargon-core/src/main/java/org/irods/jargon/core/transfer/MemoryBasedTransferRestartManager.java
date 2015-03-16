@@ -11,18 +11,17 @@ import org.slf4j.LoggerFactory;
 /**
  * Simple restart manager that exists in an in-memory map. This version is
  * fairly naive and doesn't really support concurrent restarts.
- * <p/>
- * TODO: Perhaps some sort of locking mechanism is needed?
+ * 
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(MemoryBasedTransferRestartManager.class);
 
-	private ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo> cacheOfRestartInfo = new ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo>(
+	private final ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo> cacheOfRestartInfo = new ConcurrentHashMap<FileRestartInfoIdentifier, FileRestartInfo>(
 			8, 0.9f, 1);
 
 	public MemoryBasedTransferRestartManager() {
@@ -45,9 +44,13 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 			throw new IllegalArgumentException("null fileRestartInfo");
 		}
 
-		FileRestartInfoIdentifier identifier = FileRestartInfoIdentifier
-				.instanceFromFileRestartInfo(fileRestartInfo);
-		cacheOfRestartInfo.put(identifier, fileRestartInfo);
+		FileRestartInfoIdentifier identifier;
+
+		synchronized (this) {
+			identifier = FileRestartInfoIdentifier
+					.instanceFromFileRestartInfo(fileRestartInfo);
+			cacheOfRestartInfo.put(identifier, fileRestartInfo);
+		}
 		return identifier;
 
 	}
@@ -69,7 +72,9 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
 
-		cacheOfRestartInfo.remove(fileRestartInfoIdentifier);
+		synchronized (this) {
+			cacheOfRestartInfo.remove(fileRestartInfoIdentifier);
+		}
 
 	}
 
@@ -89,8 +94,68 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
+		synchronized (this) {
+			return cacheOfRestartInfo.get(fileRestartInfoIdentifier);
+		}
 
-		return cacheOfRestartInfo.get(fileRestartInfoIdentifier);
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.transfer.AbstractRestartManager#updateSegment(org
+	 * .irods.jargon.core.transfer.FileRestartInfo,
+	 * org.irods.jargon.core.transfer.FileRestartDataSegment)
+	 */
+	@Override
+	public void updateSegment(FileRestartInfo fileRestartInfo,
+			FileRestartDataSegment fileRestartDataSegment)
+			throws FileRestartManagementException {
+
+		log.info("updateSegment()");
+
+		if (fileRestartInfo == null) {
+			throw new IllegalArgumentException("null fileRestartInfo");
+		}
+
+		if (fileRestartDataSegment == null) {
+			throw new IllegalArgumentException("null fileRestartDataSegment");
+		}
+
+		log.info("updating fileRestartInfo:{}", fileRestartInfo);
+		log.info("updating fileRestartDataSegment:{}", fileRestartDataSegment);
+
+		synchronized (this) {
+			FileRestartInfo actualRestartInfo = this
+					.retrieveRestart(fileRestartInfo.identifierFromThisInfo());
+			if (actualRestartInfo.getFileRestartDataSegments().size() < fileRestartDataSegment
+					.getThreadNumber()) {
+				log.error(
+						"fileRestartInfo does not contain the given segment:{}",
+						fileRestartInfo);
+				throw new FileRestartManagementException(
+						"unable to find segment");
+			}
+			FileRestartDataSegment actualSegment = actualRestartInfo
+					.getFileRestartDataSegments().get(
+							fileRestartDataSegment.getThreadNumber());
+			if (actualSegment.getThreadNumber() != fileRestartDataSegment
+					.getThreadNumber()) {
+				log.error(
+						"mismatch in thread number in update request for segment:{}",
+						fileRestartDataSegment);
+				throw new FileRestartManagementException(
+						"file segment does not match thread number");
+			}
+
+			/*
+			 * Update the segment
+			 */
+
+			actualRestartInfo.getFileRestartDataSegments().set(
+					actualSegment.getThreadNumber(), fileRestartDataSegment);
+			storeRestart(actualRestartInfo);
+		}
 	}
 }

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Strategy object for parallell put file transfer. This is an immutable object.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ParallelPutFileTransferStrategy extends
 		AbstractParallelFileTransferStrategy {
@@ -31,7 +31,7 @@ public final class ParallelPutFileTransferStrategy extends
 
 	/**
 	 * Create an instance of a strategy to accomplish a parallel file transfer.
-	 *
+	 * 
 	 * @param host
 	 *            <code>String</code> with the host name to transfer to.
 	 * @param port
@@ -160,10 +160,9 @@ public final class ParallelPutFileTransferStrategy extends
 
 		for (int i = 0; i < numberOfThreads; i++) {
 
-			parallelTransferThread = ParallelPutTransferThread.instance(this);
-
+			parallelTransferThread = ParallelPutTransferThread
+					.instance(this, i);
 			parallelPutTransferThreads.add(parallelTransferThread);
-
 			log.info("created transfer thread:{}", parallelTransferThread);
 
 		}

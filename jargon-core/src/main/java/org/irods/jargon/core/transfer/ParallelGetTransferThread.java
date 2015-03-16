@@ -48,19 +48,23 @@ public final class ParallelGetTransferThread extends
 	 * @param parallelFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy}
 	 *            that controls the transfer threads.
+	 * @param threadNumber
+	 *            <code>int</code> with the thread number
 	 * @return <code>ParallelGetTransferThread</code>
 	 * @throws JargonException
 	 */
 	public static ParallelGetTransferThread instance(
-			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy)
-			throws JargonException {
-		return new ParallelGetTransferThread(parallelGetFileTransferStrategy);
+			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy,
+			final int threadNumber) throws JargonException {
+		return new ParallelGetTransferThread(parallelGetFileTransferStrategy,
+				threadNumber);
 	}
 
 	private ParallelGetTransferThread(
-			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy)
-			throws JargonException {
+			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy,
+			final int threadNumber) throws JargonException {
 
+		super(threadNumber);
 		if (parallelGetFileTransferStrategy == null) {
 			throw new JargonException("parallelGetFileTransferStrategy is null");
 		}

@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.Callable;
@@ -20,16 +21,16 @@ import org.slf4j.LoggerFactory;
  * and is not meant for public API use. See
  * {@link org.irods.jargon.core.pub.DataTransferOperations} for public API used
  * for file transfers.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ParallelPutTransferThread extends
-AbstractParallelTransferThread implements
-Callable<ParallelTransferResult> {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
-	private BufferedInputStream bis = null;
+	private InputStream bis = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -40,7 +41,7 @@ Callable<ParallelTransferResult> {
 	 * <code>ParalellPutFileTransferStrategy</code>. This is an immutable object
 	 * , as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
-	 *
+	 * 
 	 * @param parallelPutFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy}
 	 *            that controls the transfer threads.
@@ -48,16 +49,17 @@ Callable<ParallelTransferResult> {
 	 * @throws JargonException
 	 */
 	public static ParallelPutTransferThread instance(
-			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
-					throws JargonException {
-		return new ParallelPutTransferThread(parallelPutFileTransferStrategy);
+			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy,
+			final int threadNumber) throws JargonException {
+		return new ParallelPutTransferThread(parallelPutFileTransferStrategy,
+				threadNumber);
 	}
 
 	private ParallelPutTransferThread(
-			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy)
-					throws JargonException {
+			final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy,
+			final int threadNumber) throws JargonException {
 
-		super();
+		super(threadNumber);
 
 		if (parallelPutFileTransferStrategy == null) {
 			throw new JargonException("parallelPutFileTransferStrategy is null");
@@ -88,9 +90,9 @@ Callable<ParallelTransferResult> {
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsLatency(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsBandwidth());
+							.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
@@ -121,9 +123,20 @@ Callable<ParallelTransferResult> {
 		try {
 
 			log.info("getting input stream for local file");
-			bis = new BufferedInputStream(new FileInputStream(
-					parallelPutFileTransferStrategy.getLocalFile()),
-					ConnectionConstants.OUTPUT_BUFFER_LENGTH);
+
+			int bufferSize = parallelPutFileTransferStrategy
+					.getJargonProperties().getLocalFileInputStreamBufferSize();
+			if (bufferSize < 0) {
+				bis = new FileInputStream(
+						parallelPutFileTransferStrategy.getLocalFile());
+			} else if (bufferSize == 0) {
+				bis = new BufferedInputStream(new FileInputStream(
+						parallelPutFileTransferStrategy.getLocalFile()));
+			} else {
+				bis = new BufferedInputStream(new FileInputStream(
+						parallelPutFileTransferStrategy.getLocalFile()),
+						bufferSize);
+			}
 
 			log.info("writing the cookie (password) for the output thread");
 
@@ -177,7 +190,7 @@ Callable<ParallelTransferResult> {
 					if (Thread.interrupted()) {
 						throw new IOException(
 
-								"interrupted, consider connection corrupted and return IOException to clear");
+						"interrupted, consider connection corrupted and return IOException to clear");
 					}
 					log.warn("did not skip entire offset amount, call skip again");
 					toSkip = offset - totalSkipped;
@@ -202,7 +215,8 @@ Callable<ParallelTransferResult> {
 		byte[] buffer = null;
 		boolean done = false;
 
-		buffer = new byte[ConnectionConstants.OUTPUT_BUFFER_LENGTH];
+		buffer = new byte[this.parallelPutFileTransferStrategy
+				.getJargonProperties().getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -211,7 +225,7 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -242,6 +256,20 @@ Callable<ParallelTransferResult> {
 				if (log.isInfoEnabled()) {
 					log.info("   offset:" + offset);
 				}
+
+				/*
+				 * If restarting, maintain a reference to the offset
+				 */
+
+				if (this.parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
+					this.parallelPutFileTransferStrategy.getRestartManager()
+							.updateOffsetForSegment(
+									this.parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									this.getThreadNumber(), offset);
+				}
+
 				// How much to read/write
 				long length = readLong();
 				if (log.isInfoEnabled()) {
@@ -285,13 +313,14 @@ Callable<ParallelTransferResult> {
 		long totalRead = 0;
 		long transferLength = length;
 		long totalWritten = 0;
+		long totalWrittenSinceLastRestartUpdate = 0;
 		log.debug("readWriteLoopForCurrentHeaderDirective()");
 		try {
 			while (transferLength > 0) {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("read/write loop at top");
@@ -319,14 +348,39 @@ Callable<ParallelTransferResult> {
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-						.getConnectionProgressStatusListener()
-						.connectionProgressStatusCallback(
-								ConnectionProgressStatus
-								.instanceForSend(read));
+								.getConnectionProgressStatusListener()
+								.connectionProgressStatusCallback(
+										ConnectionProgressStatus
+												.instanceForSend(read));
 					}
 
 					log.debug("wrote data to the buffer");
 					totalWritten += read;
+					totalWrittenSinceLastRestartUpdate += read;
+
+					/*
+					 * See if I need to do restart stuff, see if restart is on
+					 * by checking null, and then see if I have written enough
+					 * to save the restart info
+					 */
+
+					if (this.parallelPutFileTransferStrategy
+							.getFileRestartInfo() != null) {
+						log.debug("checking total written for this thread");
+						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
+							this.parallelPutFileTransferStrategy
+									.getRestartManager()
+									.updateLengthForSegment(
+											this.parallelPutFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											this.getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
+							totalWrittenSinceLastRestartUpdate = 0;
+							log.debug("signal storage of new info");
+						}
+
+					}
 
 				} else {
 					log.debug("no read...break out of read/write");

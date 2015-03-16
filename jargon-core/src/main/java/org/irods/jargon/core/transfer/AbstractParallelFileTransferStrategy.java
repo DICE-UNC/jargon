@@ -236,4 +236,16 @@ public abstract class AbstractParallelFileTransferStrategy {
 		return fileRestartInfo;
 	}
 
+	/**
+	 * Retrieves a reference to the restart manager, if configured. It may be
+	 * <code>null</code>
+	 * 
+	 * @return {@link AbstractRestartManager}
+	 * 
+	 */
+	public AbstractRestartManager getRestartManager() {
+		return this.getIrodsAccessObjectFactory().getIrodsSession()
+				.getRestartManager();
+	}
+
 }

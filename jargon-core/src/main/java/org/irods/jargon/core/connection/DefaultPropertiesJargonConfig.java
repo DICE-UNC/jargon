@@ -20,7 +20,7 @@ import org.irods.jargon.core.utils.PropertyUtils;
  */
 /**
  * @author Mike
- *
+ * 
  */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
@@ -520,5 +520,10 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	@Override
 	public boolean isLongTransferRestart() {
 		return verifyPropExistsAndGetAsBoolean("transfer.long.file.restart");
+	}
+
+	@Override
+	public int getParallelCopyBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.parallel.copy.buffer.size");
 	}
 }

@@ -60,10 +60,10 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
-import org.irods.jargon.core.transfer.FileRestartDataSegment;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.irods.jargon.core.transfer.FileRestartInfoIdentifier;
+import org.irods.jargon.core.transfer.FileRestartManagementException;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.transfer.PutTransferRestartProcessor;
@@ -683,22 +683,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			myTransferOptions.setMaxThreads(-1);
 		}
 
-		if (this.getJargonProperties().isLongTransferRestart()) {
-			if (this.getIRODSSession().getRestartManager() == null) {
-				log.error("jargon.properties set to restart, but no restart manager is configured");
-				throw new JargonRuntimeException(
-						"restart manager is not configured in IRODSSession, but jargon.properties has restart behavior set");
-			} else {
-				log.info(
-						"checking to see if a restart is needed for the irodsFile:[]",
-						targetFile.getAbsolutePath());
-				PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
-						this.getIRODSAccessObjectFactory(),
-						this.getIRODSAccount(), this.getIRODSSession()
-								.getRestartManager());
-				putTransferRestartProcessor.restartIfNecessary(targetFile
-						.getAbsolutePath());
-			}
+		FileRestartInfo fileRestartInfo = this.retrieveRestartInfoIfAvailable(
+				RestartType.PUT, targetFile.getAbsolutePath());
+
+		if (fileRestartInfo != null) {
+			log.info("have file restart info:{}", fileRestartInfo);
+			PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
+					this.getIRODSAccessObjectFactory(), this.getIRODSAccount(),
+					this.getIRODSSession().getRestartManager());
+			putTransferRestartProcessor.restartIfNecessary(targetFile
+					.getAbsolutePath());
+
 		}
 
 		ConnectionProgressStatusListener intraFileStatusListener = null;
@@ -815,34 +810,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Info may remain null if restart processing is not configured,
 		 * otherwise, it will hold info on the current file restart status
 		 */
-		FileRestartInfo fileRestartInfo = null;
-
-		if (this.getJargonProperties().isLongTransferRestart()) {
-			if (this.getIRODSSession().getRestartManager() == null) {
-				log.error("jargon.properties set to restart, but no restart manager is configured");
-				throw new JargonRuntimeException(
-						"restart manager is not configured in IRODSSession, but jargon.properties has restart behavior set");
-			} else {
-
-				if (transferLength < ConnectionConstants.MIN_FILE_RESTART_SIZE) {
-					log.info("file size is not appropriate for restart processing");
-				} else {
-
-					log.info("setting up restart info:[]", irodsAbsolutePath);
-					FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
-					identifier.setAbsolutePath(irodsAbsolutePath);
-					identifier.setIrodsAccountIdentifier(this.getIRODSAccount()
-							.toString());
-					identifier.setRestartType(RestartType.PUT);
-					fileRestartInfo = this.getIRODSSession()
-							.getRestartManager()
-							.retrieveRestartAndBuildIfNotStored(identifier);
-					fileRestartInfo
-							.setFileRestartDataSegments(new ArrayList<FileRestartDataSegment>(
-									numberOfThreads));
-				}
-			}
-		}
+		FileRestartInfo fileRestartInfo = retrieveOrCreateRestartInfoIfConfigured(
+				RestartType.PUT, irodsAbsolutePath, numberOfThreads,
+				transferLength);
 
 		log.info("transfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
@@ -873,6 +843,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			log.info("sending operation complete at termination of parallel transfer");
 			getIRODSProtocol().operationComplete(statusForComplete);
+
+			if (fileRestartInfo != null) {
+				log.info("delete old restart stuff");
+				this.getIRODSSession()
+						.getRestartManager()
+						.deleteRestart(fileRestartInfo.identifierFromThisInfo());
+			}
+
 		} catch (Exception e) {
 
 			log.error(
@@ -1448,7 +1426,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					localFileToHoldData, irodsFileLength, transferOptions, fd,
 					transferControlBlock, transferStatusCallbackListener);
 		} else {
-
 			log.info("process as a parallel transfer");
 			if (transferStatusCallbackListener == null) {
 				log.info("no callback listener specified");
@@ -1457,10 +1434,18 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-					.instance(host, port, numberOfThreads, password,
-							localFileToHoldData, getIRODSAccessObjectFactory(),
-							irodsFileLength, transferControlBlock,
-							transferStatusCallbackListener);
+					.instance(
+							host,
+							port,
+							numberOfThreads,
+							password,
+							localFileToHoldData,
+							getIRODSAccessObjectFactory(),
+							irodsFileLength,
+							transferControlBlock,
+							transferStatusCallbackListener,
+							retrieveRestartInfoIfAvailable(RestartType.GET,
+									irodsSourceFile.getAbsolutePath()));
 
 			try {
 				parallelGetTransferStrategy.transfer();
@@ -1473,6 +1458,110 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw new JargonException(e);
 			}
 		}
+	}
+
+	/**
+	 * See if jargon props say to do long file restarts, and a restart manager
+	 * is configured
+	 * 
+	 * @return
+	 */
+	private boolean checkIfConfiguredForLongFileRestart() {
+		if (!this.getIRODSSession().getJargonProperties()
+				.isLongTransferRestart()) {
+			log.debug("not configured for restarts");
+			return false;
+		}
+		if (this.getIRODSSession().getRestartManager() == null) {
+			log.error("configured for restarts, but there is no restart manager in IRODSSession");
+			throw new JargonRuntimeException(
+					"restart specified but no restart manager in IRODSSession");
+		}
+		return true;
+	}
+
+	/**
+	 * Only retrieve a restart if it exists, <code>null</code> if it does not
+	 * 
+	 * @param restartType
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileRestartManagementException
+	 */
+	private FileRestartInfo retrieveRestartInfoIfAvailable(
+			final RestartType restartType, final String irodsAbsolutePath)
+			throws FileRestartManagementException {
+
+		log.info("retrieveRestartInfoIfAvailable()");
+
+		/*
+		 * Check if props are set for restart, and if a restart manager was
+		 * configured
+		 */
+		boolean configuredForRestart = checkIfConfiguredForLongFileRestart();
+
+		if (!configuredForRestart) {
+			return null;
+		}
+
+		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
+		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
+		fileRestartInfoIdentifier.setRestartType(restartType);
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
+				.getIRODSAccount().toString());
+
+		/*
+		 * May just be null
+		 */
+		return this.getIRODSSession().getRestartManager()
+				.retrieveRestart(fileRestartInfoIdentifier);
+
+	}
+
+	/**
+	 * Only retrieve a restart if it exists, <code>null</code> if it does not
+	 * 
+	 * @param restartType
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileRestartManagementException
+	 */
+	private FileRestartInfo retrieveOrCreateRestartInfoIfConfigured(
+			final RestartType restartType, final String irodsAbsolutePath,
+			final int numberOfThreads, final long dataSize)
+			throws FileRestartManagementException {
+
+		log.info("retrieveRestartInfoIfAvailable()");
+
+		/*
+		 * Check if props are set for restart, and if a restart manager was
+		 * configured
+		 */
+		boolean configuredForRestart = checkIfConfiguredForLongFileRestart();
+
+		if (!configuredForRestart) {
+			return null;
+		}
+
+		/*
+		 * If it's not big enough don't bother
+		 */
+		if (dataSize < ConnectionConstants.MIN_FILE_RESTART_SIZE) {
+			return null;
+		}
+
+		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
+		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
+		fileRestartInfoIdentifier.setRestartType(restartType);
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
+				.getIRODSAccount().toString());
+
+		return this
+				.getIRODSSession()
+				.getRestartManager()
+				.retrieveRestartAndBuildIfNotStored(fileRestartInfoIdentifier,
+						numberOfThreads);
+
 	}
 
 	/*

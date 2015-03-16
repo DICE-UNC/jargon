@@ -29,9 +29,9 @@ public abstract class AbstractRestartManager {
 	 * @return
 	 * @throws FileRestartManagementException
 	 */
-	public FileRestartInfo retrieveRestartAndBuildIfNotStored(
-			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException {
+	public synchronized FileRestartInfo retrieveRestartAndBuildIfNotStored(
+			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
+			final int numberOfThreads) throws FileRestartManagementException {
 
 		log.info("retrieveRestartAndBuildIfNotStored()");
 
@@ -45,9 +45,112 @@ public abstract class AbstractRestartManager {
 			info.setIrodsAccountIdentifier(fileRestartInfoIdentifier
 					.getIrodsAccountIdentifier());
 			info.setRestartType(fileRestartInfoIdentifier.getRestartType());
+			/*
+			 * Add a segment for each row
+			 */
+			for (int i = 0; i < numberOfThreads; i++) {
+				info.getFileRestartDataSegments().add(
+						new FileRestartDataSegment(i));
+			}
 			storeRestart(info);
 		}
 		return info;
+	}
+
+	/**
+	 * Method to properly update a segment, allowing the implementation to do
+	 * synchronization of that update
+	 * 
+	 * @param fileRestartInfo
+	 *            {@link FileRestartInfo} that contains the segments
+	 * @param fileRestartDataSegment
+	 *            {@link FileRestartDataSegment} that contains the segment to
+	 * @throws FileRestartMangementException
+	 */
+	public abstract void updateSegment(final FileRestartInfo fileRestartInfo,
+			final FileRestartDataSegment fileRestartDataSegment)
+			throws FileRestartManagementException;
+
+	/**
+	 * Given an identifier and thread number, find the segment and update the
+	 * length on that segment
+	 * 
+	 * @param fileRestartInfoIdentifier
+	 *            {@link FileRestartInfoIdentifier}
+	 * @param threadNumber
+	 *            <code>int</code> with the thread number
+	 * @param length
+	 *            <code>long</code> with the length to add to the segment
+	 * @throws FileRestartManagementException
+	 */
+	public void updateLengthForSegment(
+			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
+			final int threadNumber, final long length)
+			throws FileRestartManagementException {
+		log.info("updateLengthForSegment()");
+		if (fileRestartInfoIdentifier == null) {
+			throw new IllegalArgumentException("null identifier");
+		}
+
+		synchronized (this) {
+			FileRestartInfo info = retrieveRestart(fileRestartInfoIdentifier);
+			if (info == null) {
+				throw new FileRestartManagementException(
+						"unable to find restart info");
+			}
+
+			if (info.getFileRestartDataSegments().size() - 1 < threadNumber) {
+				throw new FileRestartManagementException(
+						"unable to locate thread number");
+			}
+
+			FileRestartDataSegment dataSegment = info
+					.getFileRestartDataSegments().get(threadNumber);
+			dataSegment.setLength(dataSegment.getLength() + length);
+			this.storeRestart(info);
+		}
+
+	}
+
+	/**
+	 * Given an identifier and thread number, find the segment and update the
+	 * offset on that segment
+	 * 
+	 * @param fileRestartInfoIdentifier
+	 *            {@link FileRestartInfoIdentifier}
+	 * @param threadNumber
+	 *            <code>int</code> with the thread number
+	 * @param offset
+	 *            <code>long</code> with the length to add to the segment
+	 * @throws FileRestartManagementException
+	 */
+	public void updateOffsetForSegment(
+			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
+			final int threadNumber, final long offset)
+			throws FileRestartManagementException {
+		log.info("updateLenghtForSegment()");
+		if (fileRestartInfoIdentifier == null) {
+			throw new IllegalArgumentException("null identifier");
+		}
+
+		synchronized (this) {
+			FileRestartInfo info = retrieveRestart(fileRestartInfoIdentifier);
+			if (info == null) {
+				throw new FileRestartManagementException(
+						"unable to find restart info");
+			}
+
+			if (info.getFileRestartDataSegments().size() - 1 < threadNumber) {
+				throw new FileRestartManagementException(
+						"unable to locate thread number");
+			}
+
+			FileRestartDataSegment dataSegment = info
+					.getFileRestartDataSegments().get(threadNumber);
+			dataSegment.setOffset(offset);
+			this.storeRestart(info);
+		}
+
 	}
 
 	/**

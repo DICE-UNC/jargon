@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -135,7 +136,7 @@ public class ParallelTransferOperationsTest {
 	public final void testParallelFilePutWithRestart() throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutWithRestart.txt";
-		long testFileLength = 32 * 1024 * 1014;
+		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE + 10;
 		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		props.setLongTransferRestart(true);
@@ -167,14 +168,10 @@ public class ParallelTransferOperationsTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 
-		TransferKillingCallbackListener listener = new TransferKillingCallbackListener(
-				irodsFileSystem.getIRODSAccessObjectFactory(),
-				10 * 1024 * 1024, irodsAccount);
-
 		File localSourceFile = new File(localFileName);
 
-		dataTransferOperationsAO.putOperation(localSourceFile, destFile,
-				listener, null);
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
+				null);
 
 	}
 
