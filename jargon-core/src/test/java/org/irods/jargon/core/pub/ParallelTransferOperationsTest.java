@@ -73,6 +73,12 @@ public class ParallelTransferOperationsTest {
 	public void tearDown() throws Exception {
 	}
 
+	/**
+	 * test runs 1 transfer by default, can be tweaked (nbrTimes) to do this
+	 * repeatedly
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public final void testParallelFilePutThenGet() throws Exception {
 		// make up a test file that triggers parallel transfer
@@ -80,7 +86,7 @@ public class ParallelTransferOperationsTest {
 		String testRetrievedFileName = "testParallelFilePutThenGetRetrieved.txt";
 		long testFileLength = 1 * 1024 * 1024 * 2014;
 
-		int nbrTimes = 100;
+		int nbrTimes = 20;
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -99,6 +105,7 @@ public class ParallelTransferOperationsTest {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
 		jargonProperties.setLongTransferRestart(false);
+		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem

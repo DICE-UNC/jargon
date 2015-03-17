@@ -109,8 +109,28 @@ public final class ParallelPutTransferThread extends
 			s.setTcpNoDelay(false);
 			s.connect(address);
 			setS(s);
-			setOut(new BufferedOutputStream(getS().getOutputStream()));
-			setIn(new BufferedInputStream(getS().getInputStream()));
+			int inputBuffSize = this.parallelPutFileTransferStrategy
+					.getJargonProperties().getInternalInputStreamBufferSize();
+			int outputBuffSize = this.parallelPutFileTransferStrategy
+					.getJargonProperties().getInternalOutputStreamBufferSize();
+
+			if (inputBuffSize < 0) {
+				setIn(getS().getInputStream());
+			} else if (inputBuffSize == 0) {
+				setIn(new BufferedInputStream(getS().getInputStream()));
+			} else {
+				setIn(new BufferedInputStream(getS().getInputStream(),
+						inputBuffSize));
+			}
+
+			if (outputBuffSize < 0) {
+				setOut(getS().getOutputStream());
+			} else if (outputBuffSize == 0) {
+				setOut(new BufferedOutputStream(getS().getOutputStream()));
+			} else {
+				setOut(new BufferedOutputStream(getS().getOutputStream(),
+						outputBuffSize));
+			}
 		} catch (Exception e) {
 			log.error("unable to create transfer thread", e);
 			throw new JargonException(e);
@@ -214,7 +234,8 @@ public final class ParallelPutTransferThread extends
 
 		byte[] buffer = null;
 		boolean done = false;
-
+		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
+		// );
 		buffer = new byte[this.parallelPutFileTransferStrategy
 				.getJargonProperties().getParallelCopyBufferSize()];
 		long currentOffset = 0;
@@ -326,8 +347,9 @@ public final class ParallelPutTransferThread extends
 				log.debug("read/write loop at top");
 
 				read = bis.read(buffer, 0, (int) Math.min(
-						ConnectionConstants.OUTPUT_BUFFER_LENGTH,
-						transferLength));
+						this.parallelPutFileTransferStrategy
+								.getJargonProperties()
+								.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
 

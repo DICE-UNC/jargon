@@ -5,6 +5,7 @@ import java.io.File;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.PipelineConfiguration;
+import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
@@ -128,8 +129,12 @@ public abstract class AbstractParallelFileTransferStrategy {
 		this.transferControlBlock = transferControlBlock;
 		this.transferStatusCallbackListener = transferStatusCallbackListener;
 		this.transferLength = transferLength;
-		jargonProperties = irodsAccessObjectFactory.getIrodsSession()
-				.getJargonProperties();
+		/*
+		 * Make a clone of the jargon props to avoid synchronization
+		 */
+		jargonProperties = new SettableJargonProperties(
+				irodsAccessObjectFactory.getIrodsSession()
+						.getJargonProperties());
 		this.pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;

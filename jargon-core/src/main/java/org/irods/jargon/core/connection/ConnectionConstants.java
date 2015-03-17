@@ -61,11 +61,6 @@ public final class ConnectionConstants {
 	public static final int LONG_LENGTH = 8;
 
 	/**
-	 * Size of the socket send buffer
-	 */
-	public static int OUTPUT_BUFFER_LENGTH = 524288; // FIXME: remove this
-
-	/**
 	 * 4 bytes at the front of the header, outside XML
 	 */
 	public static final int HEADER_INT_LENGTH = 4;
