@@ -224,7 +224,6 @@ public final class ParallelGetTransferThread extends
 
 		log.info("seeking to offset: {}", offset);
 		try {
-
 			if (length <= 0) {
 				return;
 			} else {
