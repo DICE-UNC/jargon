@@ -79,7 +79,7 @@ public class IRODSTestSetupUtilities {
 						"error clearing irods scratch dir", e);
 			}
 		} catch (Exception e) {
-
+			throw new TestingUtilsException("error clearing scratch dir", e);
 		} finally {
 			if (irodsFileSystem != null) {
 				irodsFileSystem.closeAndEatExceptions();
@@ -103,7 +103,7 @@ public class IRODSTestSetupUtilities {
 			String targetIrodsCollection = testingPropertiesHelper
 					.buildIRODSCollectionAbsolutePathFromTestProperties(
 							testingProperties, testingProperties
-							.getProperty(IRODS_SCRATCH_DIR_KEY));
+									.getProperty(IRODS_SCRATCH_DIR_KEY));
 			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(targetIrodsCollection);
 
@@ -141,9 +141,9 @@ public class IRODSTestSetupUtilities {
 					.buildIRODSAccountFromTestProperties(testingProperties);
 
 			testingPropertiesHelper
-			.buildIRODSCollectionAbsolutePathFromTestProperties(
-					testingProperties, testingProperties
-					.getProperty(IRODS_SCRATCH_DIR_KEY));
+					.buildIRODSCollectionAbsolutePathFromTestProperties(
+							testingProperties, testingProperties
+									.getProperty(IRODS_SCRATCH_DIR_KEY));
 			IRODSFile testScratchFile = irodsFileSystem.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(scratchDir.toString());
 
