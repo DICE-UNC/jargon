@@ -301,7 +301,7 @@ public final class ParallelGetTransferThread extends
 							break;
 						}
 
-						local.seek(offset);
+						seekToOffset(local, offset);
 
 					} else if (length < 0) {
 						String msg = "length < 0 passed in header from iRODS during parallel get operation";
@@ -337,7 +337,7 @@ public final class ParallelGetTransferThread extends
 					parallelGetFileTransferStrategy.toString());
 			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error("exception in parallel transfer", e);
 			throw new JargonException(
 					"unexpected exception in parallel transfer", e);
@@ -352,7 +352,20 @@ public final class ParallelGetTransferThread extends
 		int totalRead = 0;
 
 		while (myLength > 0) {
+			if (ptr > buffer.length) {
+				log.error("ptr out of synch");
+				log.error("buffer size:{}", buffer.length);
+				log.error("ptr:{}", ptr);
+				log.error("myLength:{}", myLength);
+				log.error("totalRead:{}", totalRead);
+			}
 			read = in.read(buffer, ptr, myLength);
+
+			if (read < 0) {
+				log.error("read < 0");
+				break;
+			}
+
 			myLength -= read;
 			totalRead += read;
 			ptr += read;
@@ -362,7 +375,7 @@ public final class ParallelGetTransferThread extends
 			log.error("did not read expected length in myRead()");
 			throw new JargonException("did not read expected length");
 		}
-		return totalRead;
+		return length - totalRead;
 	}
 
 	/**
