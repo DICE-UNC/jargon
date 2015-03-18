@@ -2,7 +2,6 @@ package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +22,7 @@ public abstract class IRODSProtocolManager {
 
 	private AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory;
 
-	Logger log = LoggerFactory.getLogger(IRODSProtocolManager.class);
+	private Logger log = LoggerFactory.getLogger(IRODSProtocolManager.class);
 
 	/**
 	 * Get the factory object that will create various authentication methods on
@@ -53,39 +52,6 @@ public abstract class IRODSProtocolManager {
 	}
 
 	/**
-	 * A connection is returned to the connection manager with an IO Exception.
-	 * This can indicate a problem with the underlying socket, and the
-	 * connection manager may choose to abandon the connection and
-	 * re-initialize.
-	 * 
-	 * This implementation of a connection manager will do a callback to the
-	 * {@link IRODSBasicTCPConnection IRODSConnection} and the connection will
-	 * be closed.
-	 * 
-	 * @see org.irods.jargon.core.connection.IRODSConnectionManager#returnIRODSConnection(org.irods.jargon.core.connection.AbstractConnection)
-	 */
-
-	public void returnConnectionWithForce(
-			final AbstractConnection irodsConnection) {
-		log.warn("connection returned with force, will forcefully close and remove from session cache");
-		if (irodsConnection != null) {
-			irodsConnection.obliterateConnectionAndDiscardErrors();
-			try {
-				if (irodsConnection.getIrodsSession() == null) {
-					log.debug("returning connection, no session, so do not discard in session, this can be a normal case in authentication processing, or in areas where a connection is manually done outside of the normal access object factory scheme, otherwise, it might signify a logic error");
-				} else {
-					irodsConnection.getIrodsSession().discardSessionForErrors(
-							irodsConnection.getIrodsAccount());
-				}
-			} catch (JargonException e) {
-				log.error("unable to obliterate connection");
-				throw new JargonRuntimeException(
-						"unable to obliterate connection", e);
-			}
-		}
-	}
-
-	/**
 	 * For an account provided by the caller, return an open IRODS connection.
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
@@ -95,6 +61,11 @@ public abstract class IRODSProtocolManager {
 	 * creating a fresh protocol layer when this protocol is not originating
 	 * from a pool or cache when invoked. Other variants will just create a new
 	 * protocol layer each time it is asked.
+	 * <p/>
+	 * This methods is typically not used by clients of this API. Instead, use
+	 * the methods in {@link IRODSSession} to manage the connection life cycle.
+	 * An exception would be a situation where one is implementing a custom pool
+	 * or cache of connections
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
@@ -127,7 +98,7 @@ public abstract class IRODSProtocolManager {
 	 * @param abstractIRODSMidLevelProtocol
 	 * @throws JargonException
 	 */
-	public abstract void returnIRODSProtocol(
+	protected abstract void returnIRODSProtocol(
 			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
 			throws JargonException;
 
@@ -177,41 +148,22 @@ public abstract class IRODSProtocolManager {
 	}
 
 	/**
-	 * Abandon a connection to iRODS by shutting down the socket, and ensure
-	 * that the session is cleared.
+	 * Abandon a connection to iRODS for some error by forcefully shutting it
+	 * down.
 	 * <p/>
-	 * This is called from a client that no longer needs the connection, and
-	 * wishes to signal that there was an error or other condition that gives
-	 * reason to suspect that the agent or connection is corrupted and should
-	 * not be returned to a cache or pool.
-	 * <p/>
-	 * There also exists a method that can do the same operation usign the
-	 * low-level <code>AbstractIRODSConnection</code>. That method is used
-	 * internally.
+	 * This is called by the {@link IRODSSession} when a signal has been sent
+	 * that it longer needs the connection, and wishes to signal that there was
+	 * an error or other condition that gives reason to suspect that the agent
+	 * or connection is corrupted and should not be returned to a cache or pool.
 	 * 
-	 * @param abstractIRODSMidLevelProtocol
+	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} to be returned
 	 */
-	public void returnWithForce(
-			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol) {
+	protected void returnWithForce(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
-		if (abstractIRODSMidLevelProtocol != null) {
-			abstractIRODSMidLevelProtocol
-					.obliterateConnectionAndDiscardErrors();
-			try {
-
-				if (abstractIRODSMidLevelProtocol.getIrodsSession() != null) {
-
-					abstractIRODSMidLevelProtocol.getIrodsSession()
-							.discardSessionForErrors(
-									abstractIRODSMidLevelProtocol
-											.getIrodsAccount());
-				}
-			} catch (JargonException e) {
-				log.error("unable to obliterate connection");
-				throw new JargonRuntimeException(
-						"unable to obliterate connection", e);
-			}
+		if (irodsMidLevelProtocol != null) {
+			irodsMidLevelProtocol.obliterateConnectionAndDiscardErrors();
 		}
 	}
 
@@ -222,8 +174,9 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @throws JargonException
 	 */
-	public void destroy() throws JargonException {
-		log.debug("destroy called, does nothing by default");
+	protected void destroy() throws JargonException {
+		log.debug("destroy called, this will terminate the session and clear it");
+
 	}
 
 	/**
@@ -270,14 +223,5 @@ public abstract class IRODSProtocolManager {
 			final AbstractIRODSMidLevelProtocolFactory irodsMidLevelProtocolFactory) {
 		this.irodsMidLevelProtocolFactory = irodsMidLevelProtocolFactory;
 	}
-
-	/*
-	 * protected synchronized AuthMechanism getAuthMechanismForIRODSAccount(
-	 * final IRODSAccount irodsAccount) throws AuthUnavailableException,
-	 * JargonException { if (irodsAccount == null) { throw new
-	 * IllegalArgumentException("null irodsAccount"); }
-	 * 
-	 * return authenticationFactory.instanceAuthMechanism(irodsAccount); }
-	 */
 
 }

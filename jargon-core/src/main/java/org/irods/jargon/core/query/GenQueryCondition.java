@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -7,9 +7,9 @@ package org.irods.jargon.core.query;
  * Represents the field name, operator, and value for a condition in an IRODS
  * query. This is an internal representation for the query parser. This is an
  * immutable object, and is thread-safe.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class GenQueryCondition {
 	private final String fieldName;
@@ -18,7 +18,7 @@ public class GenQueryCondition {
 
 	public static GenQueryCondition instance(final String fieldName,
 			final String operator, final String value)
-			throws JargonQueryException {
+					throws JargonQueryException {
 		return new GenQueryCondition(fieldName, operator, value);
 	}
 

@@ -1307,8 +1307,67 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutMultipleCollectionsMultipleFiles() throws Exception {
 
+		// make sure renewal is off
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setSocketRenewalIntervalInSeconds(0);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String rootCollection = "testPutMultipleCollectionsMultipleFiles";
 		String returnedCollection = "testPutMultipleCollectionsMultipleFilesReturned";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String returnedCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + returnedCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 3, 5, 3, "testFile",
+						".txt", 10, 9, 20, 200);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		destFile.close();
+
+		// File returnedData = new File(returnedCollectionAbsolutePath + "/" +
+		// rootCollection);
+
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/"
+				+ rootCollection, returnedCollectionAbsolutePath, "", null,
+				null);
+
+		File returnedData = new File(returnedCollectionAbsolutePath + "/"
+				+ rootCollection);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, returnedData);
+	}
+
+	@Test
+	public void testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOn()
+			throws Exception {
+
+		String rootCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOn";
+		String returnedCollection = "testPutMultipleCollectionsMultipleFilesWithRenewalTurnedOnReturned";
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setSocketRenewalIntervalInSeconds(30);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ '/' + rootCollection);
@@ -1465,8 +1524,8 @@ public class DataTransferOperationsImplTest {
 	@Test
 	public void testPutThenGetOneFileWithSpecialChars() throws Exception {
 		// generate a local scratch file
-		String testFileName = "testPutThenGetOneFileWithSpecialChars���������������������������������������.txt";
-		String testRetrievedFileName = "testPutThenGetOneFileRetreived������������������������������������������������������������������������������������������u,1o���������������������������������������.txt";
+		String testFileName = "testPutThenGetOneFileWithSpecialChars������������.txt";
+		String testRetrievedFileName = "testPutThenGetOneFileRetreived��￿,���������.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
@@ -2952,7 +3011,7 @@ public class DataTransferOperationsImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	public void testMoveSourceCollectionTargetCollectionBug63()
 			throws Exception {
 
@@ -2985,7 +3044,6 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(irodsCollectionRoot2AbsolutePath);
 
 		rootFile.mkdirs();
-		root2File.mkdirs();
 
 		FileGenerator.generateFileOfFixedLengthGivenName(
 				localCollectionAbsolutePath, testFileName, 10);
@@ -2993,10 +3051,10 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
-		File localFile = new File(localCollectionAbsolutePath);
+		File localFile = new File(localCollectionAbsolutePath + "/"
+				+ testFileName);
 
 		dataTransferOperationsAO.putOperation(localFile, rootFile, null, null);
-
 		dataTransferOperationsAO.move(rootFile, root2File);
 
 	}
@@ -3044,7 +3102,6 @@ public class DataTransferOperationsImplTest {
 
 		IRODSFile targetParent = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		// targetParent.mkdirs();
 
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, targetParent.getAbsolutePath());
@@ -3056,185 +3113,6 @@ public class DataTransferOperationsImplTest {
 
 		Assert.assertTrue("did not find expected targetcollection",
 				destFile.isDirectory());
-	}
-
-	@Test
-	public void testMoveCollectionRenameUnderParent() throws Exception {
-
-		// this test case passes if no error, tests code to avoid irods error
-		// -837000
-		String rootCollection = "testMoveCollectionRenameUnderParent";
-
-		String lvl1 = "lvl1";
-		String lvl2 = "lvl2";
-		String lvl3 = "lvl3";
-
-		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ rootCollection);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile dirFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-
-		dirFile.mkdirs();
-
-		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
-				lvl1);
-		dirFile.mkdir();
-
-		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
-				lvl2);
-
-		String dirFileLvl2Name = dirFile.getAbsolutePath();
-
-		dirFile.mkdir();
-
-		dirFile = irodsFileFactory.instanceIRODSFile(dirFile.getAbsolutePath(),
-				lvl3);
-		dirFile.mkdir();
-
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-
-		// rename lvl2 to lvl2 renamed
-
-		dataTransferOperationsAO.move(dirFileLvl2Name,
-				irodsCollectionRootAbsolutePath + "/lvl1/lvl2-renamed");
-
-		IRODSFile actualFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath
-						+ "/lvl1/lvl2-renamed");
-		Assert.assertTrue("renamed file does not exist", actualFile.exists());
-
-		String[] actualChildren = actualFile.list();
-
-		Assert.assertEquals("should be 1 child", 1, actualChildren.length);
-
-		String actualChildName = actualChildren[0];
-
-		Assert.assertEquals("did not find expected child file", lvl3,
-				actualChildName);
-
-	}
-
-	@Ignore
-	// FIXME: possible irods bug when source and new parent under same tree
-	public void testMoveCollectionWithTwoFilesUnderneathWithSameName()
-			throws Exception {
-
-		// this test case passes if no error, tests code to avoid irods error
-		// -837000
-		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
-		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
-
-		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
-
-		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ targetCollection);
-
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathAParent", 1,
-						1, 1, "testFile", ".txt", 2, 2, 1, 2);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		File localFile = new File(localCollectionAbsolutePath);
-
-		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-
-		// make the target
-
-		IRODSFile targetParent = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		targetParent.mkdirs();
-
-		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
-				+ rootCollection, targetParent.getAbsolutePath());
-
-		Assert.assertTrue(true);
-	}
-
-	// see note in release notes...potential bug?
-	@Ignore
-	public void testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree()
-			throws Exception {
-
-		// this test case passes if no error, tests code to avoid irods error
-		// -837000
-		String rootCollection = "testMoveCollectionWithTwoFilesUnderneathAParent";
-		String targetCollection = "testMoveCollectionWithTwoFilesUnderneathAParentNewTarget";
-
-		String localCollectionAbsolutePath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ '/' + rootCollection);
-
-		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		String irodsCollectionTargetAbsolutePath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ targetCollection);
-
-		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testMoveCollectionWithTwoFilesUnderneathNewParentDifferentTree",
-						1, 1, 1, "testFile", ".txt", 2, 2, 1, 2);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSFileFactory irodsFileFactory = irodsFileSystem
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile destFile = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
-		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		File localFile = new File(localCollectionAbsolutePath);
-
-		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-
-		// make the target
-
-		IRODSFile targetParent = irodsFileFactory
-				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		targetParent.mkdirs();
-
-		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath,
-				irodsCollectionTargetAbsolutePath);
-
-		IRODSFile actualFile = irodsFileFactory.instanceIRODSFile(targetParent
-				.getAbsolutePath() + "/" + rootCollection);
-
-		Assert.assertTrue(actualFile.exists());
 	}
 
 	@Test

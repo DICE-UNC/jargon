@@ -63,9 +63,9 @@ import org.slf4j.LoggerFactory;
  * exposed in the <code>IRODSFileSystem</code> and
  * <code>IRODSAccesObjectFactory</code> as well. Do not attempt to manipulate
  * the connection using the methods here!
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
@@ -78,7 +78,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
@@ -109,22 +109,39 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	/**
 	 * Check server version and see if I need extra flushes for SSL processing
 	 * (for PAM). This is needed for PAM pre iRODS 3.3.
-	 * 
+	 *
 	 * @return
 	 */
-	boolean isPamFlush() {
+	boolean isPamFlush() { // FIXME: pam flush issue for 3.3.1?
 
 		boolean postThreeDotThree = MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 						getStartupResponseData().getRelVersion(), "rods3.3");
 
+		boolean beforeFourPointOne = !MiscIRODSUtils
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+						getStartupResponseData().getRelVersion(), "rods4.1.0");
+
 		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
 				&& !postThreeDotThree) {
 			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) {
+		} else if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
+			// can be
+			// set by a
+			// jargon.properties
+			// setting
 			return true;
-		} else if (postThreeDotThree) {
-			return false;
+			/*
+			 * Is the server 4.0.X and not yet 4.1? Then I need to worry about
+			 * pam flushes per https://github.com/DICE-UNC/jargon/issues/70 This
+			 * overhead will force the pam flush based on the forceSslFlush
+			 * flag, which will only be turned on to bracket the necessary calls
+			 * to the protocol, preventing a performance drop from unneeded
+			 * flushes later
+			 */
+		} else if (postThreeDotThree && beforeFourPointOne && isForceSslFlush()) {
+			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+			return true;
 		} else {
 			return false;
 		}
@@ -135,7 +152,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * return the iRODS response as a <code>Tag</code> object. This method has
 	 * detailed parameters, and there are other methods in the class with
 	 * simpler signatures that should be used.
-	 * 
+	 *
 	 * @param type
 	 *            <code>String</code> with the type of request, typically an
 	 *            iRODS protocol request
@@ -164,7 +181,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteStringLength, final int intInfo)
-			throws JargonException {
+					throws JargonException {
 
 		log.debug("calling irods function with byte array");
 		log.debug("calling irods function with:{}", message);

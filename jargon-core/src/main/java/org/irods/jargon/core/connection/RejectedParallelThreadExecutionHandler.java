@@ -9,18 +9,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handler for rejected executions of parallel threads
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RejectedParallelThreadExecutionHandler implements
-		RejectedExecutionHandler {
+RejectedExecutionHandler {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(RejectedParallelThreadExecutionHandler.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public RejectedParallelThreadExecutionHandler() {
 
@@ -28,7 +28,7 @@ public class RejectedParallelThreadExecutionHandler implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.
 	 * lang.Runnable, java.util.concurrent.ThreadPoolExecutor)

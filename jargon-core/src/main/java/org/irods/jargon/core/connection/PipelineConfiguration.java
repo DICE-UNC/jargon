@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -11,9 +11,9 @@ package org.irods.jargon.core.connection;
  * Note that this object does not have synchronization. Through typical usage,
  * this configuration is initialized at connection startup, and a connection is
  * confined to one thread, so this should be just fine.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class PipelineConfiguration {
 
@@ -28,15 +28,27 @@ public class PipelineConfiguration {
 	private final String defaultEncoding;
 	private final int inputToOutputCopyBufferByteSize;
 	private final boolean reconnect;
-	private final long reconnectTimeInMillis;
 	private final boolean instrument;
 	private final boolean forcePamFlush;
+	private final boolean parallelTcpKeepAlive;
+	private final int parallelTcpSendWindowSize;
+	private final int parallelTcpReceiveWindowSize;
+	private final int parallelTcpPerformancePrefsConnectionTime;
+	private final int parallelTcpPerformancePrefsLatency;
+	private final int parallelTcpPerformancePrefsBandwidth;
+	private final boolean primaryTcpKeepAlive;
+	private final int primaryTcpSendWindowSize;
+	private final int primaryTcpReceiveWindowSize;
+	private final int primaryTcpPerformancePrefsConnectionTime;
+	private final int primaryTcpPerformancePrefsLatency;
+	private final int primaryTcpPerformancePrefsBandwidth;
+	private final int socketRenewalIntervalInSeconds;
 
 	/**
 	 * Static initializer method will derive an immutable
 	 * <code>PipelineConfiguration</code> based on the prevailing
 	 * <code>JargonProperties</code> at the time the connection is created.
-	 * 
+	 *
 	 * @param jargonProperties
 	 * @return
 	 */
@@ -69,42 +81,35 @@ public class PipelineConfiguration {
 				.getInputToOutputCopyBufferByteSize();
 		instrument = jargonProperties.isInstrument();
 		reconnect = jargonProperties.isReconnect();
-		reconnectTimeInMillis = jargonProperties.getReconnectTimeInMillis();
 		defaultEncoding = jargonProperties.getEncoding();
 		forcePamFlush = jargonProperties.isForcePamFlush();
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("PipelineConfiguration");
-		sb.append("\n   irodsSocketTimeout:");
-		sb.append(irodsSocketTimeout);
-		sb.append("\n   irodsParallelSocketTimeout:");
-		sb.append(irodsParallelSocketTimeout);
-		sb.append("\n   internalInputStreamBufferSize:");
-		sb.append(internalInputStreamBufferSize);
-		sb.append("\n   internalOutputStreamBufferSize:");
-		sb.append(internalOutputStreamBufferSize);
-		sb.append("\n   internalCacheBufferSize:");
-		sb.append(internalCacheBufferSize);
-		sb.append("\n  localFileOutputStreamBufferSize:");
-		sb.append(localFileOutputStreamBufferSize);
-		sb.append("\n  localFileInputStreamBufferSize:");
-		sb.append(localFileInputStreamBufferSize);
-		sb.append("\n   defaultEncoding:");
-		sb.append(defaultEncoding);
-		sb.append("\n   inputToOutputCopyBufferByteSize:");
-		sb.append(inputToOutputCopyBufferByteSize);
-		sb.append("\n  instrument:");
-		sb.append(instrument);
-		sb.append("\n   reconnect:");
-		sb.append(reconnect);
-		sb.append("\n   reconnect time in millis:");
-		sb.append(reconnectTimeInMillis);
-		sb.append("\n   forcePamFlush:");
-		sb.append(forcePamFlush);
-		return sb.toString();
+		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties
+				.getParallelTcpPerformancePrefsBandwidth();
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties
+				.getParallelTcpPerformancePrefsConnectionTime();
+		parallelTcpPerformancePrefsLatency = jargonProperties
+				.getParallelTcpPerformancePrefsLatency();
+		parallelTcpReceiveWindowSize = jargonProperties
+				.getParallelTcpReceiveWindowSize();
+		parallelTcpSendWindowSize = jargonProperties
+				.getParallelTcpSendWindowSize();
+
+		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties
+				.getPrimaryTcpPerformancePrefsBandwidth();
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties
+				.getPrimaryTcpPerformancePrefsConnectionTime();
+		primaryTcpPerformancePrefsLatency = jargonProperties
+				.getPrimaryTcpPerformancePrefsLatency();
+		primaryTcpReceiveWindowSize = jargonProperties
+				.getPrimaryTcpReceiveWindowSize();
+		primaryTcpSendWindowSize = jargonProperties
+				.getPrimaryTcpSendWindowSize();
+		socketRenewalIntervalInSeconds = jargonProperties
+				.getSocketRenewalIntervalInSeconds();
+
 	}
 
 	/**
@@ -197,17 +202,133 @@ public class PipelineConfiguration {
 	}
 
 	/**
-	 * @return the reconnectTimeInMillis
-	 */
-	public synchronized long getReconnectTimeInMillis() {
-		return reconnectTimeInMillis;
-	}
-
-	/**
 	 * @return the forcePamFlush
 	 */
 	synchronized boolean isForcePamFlush() {
 		return forcePamFlush;
+	}
+
+	public boolean isParallelTcpKeepAlive() {
+		return parallelTcpKeepAlive;
+	}
+
+	public int getParallelTcpSendWindowSize() {
+		return parallelTcpSendWindowSize;
+	}
+
+	public int getParallelTcpReceiveWindowSize() {
+		return parallelTcpReceiveWindowSize;
+	}
+
+	public int getParallelTcpPerformancePrefsConnectionTime() {
+		return parallelTcpPerformancePrefsConnectionTime;
+	}
+
+	public int getParallelTcpPerformancePrefsLatency() {
+		return parallelTcpPerformancePrefsLatency;
+	}
+
+	public int getParallelTcpPerformancePrefsBandwidth() {
+		return parallelTcpPerformancePrefsBandwidth;
+	}
+
+	public boolean isPrimaryTcpKeepAlive() {
+		return primaryTcpKeepAlive;
+	}
+
+	public int getPrimaryTcpSendWindowSize() {
+		return primaryTcpSendWindowSize;
+	}
+
+	public int getPrimaryTcpReceiveWindowSize() {
+		return primaryTcpReceiveWindowSize;
+	}
+
+	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+		return primaryTcpPerformancePrefsConnectionTime;
+	}
+
+	public int getPrimaryTcpPerformancePrefsLatency() {
+		return primaryTcpPerformancePrefsLatency;
+	}
+
+	public int getPrimaryTcpPerformancePrefsBandwidth() {
+		return primaryTcpPerformancePrefsBandwidth;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PipelineConfiguration [irodsSocketTimeout=");
+		builder.append(irodsSocketTimeout);
+		builder.append(", irodsParallelSocketTimeout=");
+		builder.append(irodsParallelSocketTimeout);
+		builder.append(", internalInputStreamBufferSize=");
+		builder.append(internalInputStreamBufferSize);
+		builder.append(", internalOutputStreamBufferSize=");
+		builder.append(internalOutputStreamBufferSize);
+		builder.append(", internalCacheBufferSize=");
+		builder.append(internalCacheBufferSize);
+		builder.append(", sendInputStreamBufferSize=");
+		builder.append(sendInputStreamBufferSize);
+		builder.append(", localFileInputStreamBufferSize=");
+		builder.append(localFileInputStreamBufferSize);
+		builder.append(", localFileOutputStreamBufferSize=");
+		builder.append(localFileOutputStreamBufferSize);
+		builder.append(", ");
+		if (defaultEncoding != null) {
+			builder.append("defaultEncoding=");
+			builder.append(defaultEncoding);
+			builder.append(", ");
+		}
+		builder.append("inputToOutputCopyBufferByteSize=");
+		builder.append(inputToOutputCopyBufferByteSize);
+		builder.append(", reconnect=");
+		builder.append(reconnect);
+		builder.append(", instrument=");
+		builder.append(instrument);
+		builder.append(", forcePamFlush=");
+		builder.append(forcePamFlush);
+		builder.append(", parallelTcpKeepAlive=");
+		builder.append(parallelTcpKeepAlive);
+		builder.append(", parallelTcpSendWindowSize=");
+		builder.append(parallelTcpSendWindowSize);
+		builder.append(", parallelTcpReceiveWindowSize=");
+		builder.append(parallelTcpReceiveWindowSize);
+		builder.append(", parallelTcpPerformancePrefsConnectionTime=");
+		builder.append(parallelTcpPerformancePrefsConnectionTime);
+		builder.append(", parallelTcpPerformancePrefsLatency=");
+		builder.append(parallelTcpPerformancePrefsLatency);
+		builder.append(", parallelTcpPerformancePrefsBandwidth=");
+		builder.append(parallelTcpPerformancePrefsBandwidth);
+		builder.append(", primaryTcpKeepAlive=");
+		builder.append(primaryTcpKeepAlive);
+		builder.append(", primaryTcpSendWindowSize=");
+		builder.append(primaryTcpSendWindowSize);
+		builder.append(", primaryTcpReceiveWindowSize=");
+		builder.append(primaryTcpReceiveWindowSize);
+		builder.append(", primaryTcpPerformancePrefsConnectionTime=");
+		builder.append(primaryTcpPerformancePrefsConnectionTime);
+		builder.append(", primaryTcpPerformancePrefsLatency=");
+		builder.append(primaryTcpPerformancePrefsLatency);
+		builder.append(", primaryTcpPerformancePrefsBandwidth=");
+		builder.append(primaryTcpPerformancePrefsBandwidth);
+		builder.append(", socketRenewalIntervalInSeconds=");
+		builder.append(socketRenewalIntervalInSeconds);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * @return the socketRenewalIntervalInSeconds
+	 */
+	public int getSocketRenewalIntervalInSeconds() {
+		return socketRenewalIntervalInSeconds;
 	}
 
 }

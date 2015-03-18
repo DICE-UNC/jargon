@@ -1082,8 +1082,15 @@ public class TestingPropertiesHelper {
 		return pathBuilder.toString();
 	}
 
-	public static IRODSAccount buildDummyIrodsAccount() throws JargonException {
-		return IRODSAccount.instance("host", 1247, "user", "password", "",
+
+	/**
+	 * Just build any old IRODSAccount when it's not important what it contains
+	 * 
+	 * @return {@link IRODSAccount} with basic fake data
+	 * @throws JargonException
+	 */
+	public static IRODSAccount buildBogusIrodsAccount() throws JargonException {
+		return IRODSAccount.instance("host", 1247, "userName", "password", "",
 				"zone", "");
 
 	}

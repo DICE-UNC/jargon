@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -29,6 +29,12 @@ public final class ConnectionConstants {
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_SIZE = 10;
 
 	/**
+	 * Minimum size of a file to be subject to restart processing in get/put
+	 * transfers
+	 */
+	public static final long MIN_FILE_RESTART_SIZE = 64 * 1024 * 1024;
+
+	/**
 	 * Maximum threads to open for a parallel transfer. More than this usually
 	 * won't help, might even be slower.
 	 */
@@ -55,11 +61,6 @@ public final class ConnectionConstants {
 	public static final int LONG_LENGTH = 8;
 
 	/**
-	 * Size of the socket send buffer
-	 */
-	public static int OUTPUT_BUFFER_LENGTH = 32768;
-
-	/**
 	 * 4 bytes at the front of the header, outside XML
 	 */
 	public static final int HEADER_INT_LENGTH = 4;
@@ -83,7 +84,7 @@ public final class ConnectionConstants {
 	/**
 	 * Set to true to add gen query out xml protocol messages to debug log
 	 */
-	public static final boolean DUMP_GEN_QUERY_OUT = true;
+	public static final boolean DUMP_GEN_QUERY_OUT = false;
 
 	private ConnectionConstants() {
 	}

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.checksum;
 
@@ -13,18 +13,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Compute an MD5 checksum on a local file
- * 
+ *
  * @author Mike Conway - DICE
  */
 public class MD5LocalChecksumComputerStrategy extends
-		AbstractChecksumComputeStrategy {
+AbstractChecksumComputeStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(MD5LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.AbstractChecksumComputer#
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */

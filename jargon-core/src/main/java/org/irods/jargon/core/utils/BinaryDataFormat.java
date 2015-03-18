@@ -61,7 +61,7 @@ package org.irods.jargon.core.utils;
  * shortValue(bytes*b), intValue(bytes*b), longValue(bytes*b), and
  * longLongValue(bytes*b) methods to convert to the host's format:
  * <P>
- * 
+ *
  * <PRE>
  * // Define the file's binary data attributes
  * BinaryDataFormat fileFormat = new BinaryDataFormat();
@@ -70,11 +70,11 @@ package org.irods.jargon.core.utils;
  * fileFormat.setIntSize(4);
  * fileFormat.setLongSize(4);
  * fileFormat.setLongLongSize(8);
- * 
+ *
  * // Read a 4-byte long from the file
  * byte b = new byte[4];
  * read(fd, b, 4);
- * 
+ *
  * // Convert it from the file's format to the host's format
  * long lng = fileFormat.longValue(b);
  * </PRE>
@@ -152,7 +152,7 @@ package org.irods.jargon.core.utils;
  * </DL>
  * </DIV>
  * <P>
- * 
+ *
  * @author David R. Nadeau, San Diego Supercomputer Center
  */
 public final class BinaryDataFormat extends Object {
@@ -317,7 +317,7 @@ public final class BinaryDataFormat extends Object {
 	 * from the given binary data format. If the given format is null, a
 	 * NullPointerException is thrown.
 	 * <P>
-	 * 
+	 *
 	 * @param format
 	 *            a BinaryDataFormat to copy
 	 * @throws NullPointerException
@@ -363,7 +363,7 @@ public final class BinaryDataFormat extends Object {
 	 * such an object to be equal, it must describe the same byte order and data
 	 * type sizes as this object.
 	 * <P>
-	 * 
+	 *
 	 * @return true if the objects are equal; false otherwise
 	 */
 	public final boolean equals(final BinaryDataFormat bdf) {
@@ -398,7 +398,7 @@ public final class BinaryDataFormat extends Object {
 	 * Selects the byte order for binary data to be Most-significant-Byte-First
 	 * (MBF).
 	 * <P>
-	 * 
+	 *
 	 * @see #setLBFByteOrder()
 	 * @see #isMBFByteOrder()
 	 * @see #isLBFByteOrder()
@@ -412,7 +412,7 @@ public final class BinaryDataFormat extends Object {
 	 * Selects the byte order for binary data to be Least-significant-Byte-First
 	 * (LBF).
 	 * <P>
-	 * 
+	 *
 	 * @see #setMBFByteOrder()
 	 * @see #isMBFByteOrder()
 	 * @see #isLBFByteOrder()
@@ -427,7 +427,7 @@ public final class BinaryDataFormat extends Object {
 	 * (MBF); otherwise false when the byte order is instead
 	 * Least-significant-Byte-First (LBF).
 	 * <P>
-	 * 
+	 *
 	 * @return true if MBF; false if LBF
 	 * @see #setMBFByteOrder()
 	 * @see #setLBFByteOrder()
@@ -441,7 +441,7 @@ public final class BinaryDataFormat extends Object {
 	 * Least-significant-Byte-First (LBF); otherwise false when the byte order
 	 * is instead Most-significant-Byte-First (MBF).
 	 * <P>
-	 * 
+	 *
 	 * @return true if LBF; false if MBF
 	 * @see #setMBFByteOrder()
 	 * @see #setLBFByteOrder()
@@ -456,7 +456,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a short integer.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a short
 	 * @throws IllegalArgumentException
@@ -474,7 +474,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by an integer.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up an int
 	 * @throws IllegalArgumentException
@@ -492,7 +492,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a long integer.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long
 	 * @throws IllegalArgumentException
@@ -515,7 +515,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long long
 	 * @throws IllegalArgumentException
@@ -537,7 +537,7 @@ public final class BinaryDataFormat extends Object {
 	 * 8, or 16 bytes in size. An IllegalArgumentException is thrown if the
 	 * given size is not one of these.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a float
 	 * @throws IllegalArgumentException
@@ -562,7 +562,7 @@ public final class BinaryDataFormat extends Object {
 	 * 8, or 16 bytes in size. An IllegalArgumentException is thrown if the
 	 * given size is not one of these.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a double
 	 * @throws IllegalArgumentException
@@ -592,7 +592,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long double
 	 * @throws IllegalArgumentException
@@ -613,7 +613,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a short integer.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a short
 	 */
 	public final int getShortSize() {
@@ -623,7 +623,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by an integer.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up an int
 	 */
 	public final int getIntSize() {
@@ -633,7 +633,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a long integer.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a long
 	 */
 	public final int getLongSize() {
@@ -648,7 +648,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a long long
 	 */
 	public final int getLongLongSize() {
@@ -658,7 +658,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a single-precision float.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a float
 	 */
 	public final int getFloatSize() {
@@ -668,7 +668,7 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a double-precision float.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a double
 	 */
 	public final int getDoubleSize() {
@@ -683,7 +683,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @return the number of file bytes that make up a long double
 	 */
 	public final int getLongDoubleSize() {
@@ -718,7 +718,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -773,7 +773,7 @@ public final class BinaryDataFormat extends Object {
 	 * therefore returned as an int, but with the upper bytes padded with
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value (as an int)
@@ -825,7 +825,7 @@ public final class BinaryDataFormat extends Object {
 	 * zeroes or ones (sign-extension) depending upon if the value is positive
 	 * or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -880,7 +880,7 @@ public final class BinaryDataFormat extends Object {
 	 * therefore returned as a long, but with the upper bytes padded with
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value (as a long)
@@ -932,7 +932,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -986,7 +986,7 @@ public final class BinaryDataFormat extends Object {
 	 * Java doesn't support unsigned types directly. The unsigned long value is
 	 * therefore returned as a long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1041,7 +1041,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1097,7 +1097,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1142,7 +1142,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's float is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1194,7 +1194,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's double is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1251,7 +1251,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @return the host-format value
@@ -1311,7 +1311,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1368,7 +1368,7 @@ public final class BinaryDataFormat extends Object {
 	 * therefore returned as an int, but with the upper bytes padded with
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1422,7 +1422,7 @@ public final class BinaryDataFormat extends Object {
 	 * zeroes or ones (sign-extension) depending upon if the value is positive
 	 * or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1479,7 +1479,7 @@ public final class BinaryDataFormat extends Object {
 	 * therefore returned as a long, but with the upper bytes padded with
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1535,7 +1535,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1591,7 +1591,7 @@ public final class BinaryDataFormat extends Object {
 	 * Java doesn't support unsigned types directly. The unsigned long value is
 	 * therefore returned as a long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1650,7 +1650,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1708,7 +1708,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1757,7 +1757,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's float is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1811,7 +1811,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's double is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1870,7 +1870,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param offset
@@ -1935,7 +1935,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -1979,7 +1979,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extension) depending upon if the value is
 	 * positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2023,7 +2023,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2070,7 +2070,7 @@ public final class BinaryDataFormat extends Object {
 	 * Java doesn't support unsigned types directly. This method is identical to
 	 * the signed version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2114,7 +2114,7 @@ public final class BinaryDataFormat extends Object {
 	 * or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2158,7 +2158,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extension) depending upon if the value is
 	 * positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2207,7 +2207,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2256,7 +2256,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2295,7 +2295,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's float is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2334,7 +2334,7 @@ public final class BinaryDataFormat extends Object {
 	 * If the number of bytes in this binary format's double is larger than that
 	 * of the host, truncation may occur.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2376,7 +2376,7 @@ public final class BinaryDataFormat extends Object {
 	 * Java doesn't support long doubles types directly. This method is
 	 * identical to the double version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            the byte array supplying the data
 	 * @param values
@@ -2419,7 +2419,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2470,7 +2470,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2521,7 +2521,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2571,7 +2571,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2623,7 +2623,7 @@ public final class BinaryDataFormat extends Object {
 	 * padded with zeroes or ones (sign-extensions) depending upon if the given
 	 * value is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2674,7 +2674,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2725,7 +2725,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2776,7 +2776,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2826,7 +2826,7 @@ public final class BinaryDataFormat extends Object {
 	 * of the host, then the most significant bytes of the byte array will be
 	 * padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2882,7 +2882,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2937,7 +2937,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -2987,7 +2987,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3045,7 +3045,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3103,7 +3103,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3166,7 +3166,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3228,7 +3228,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3282,7 +3282,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3336,7 +3336,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3389,7 +3389,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3444,7 +3444,7 @@ public final class BinaryDataFormat extends Object {
 	 * padded with zeroes or ones (sign-extensions) depending upon if the given
 	 * value is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3497,7 +3497,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3551,7 +3551,7 @@ public final class BinaryDataFormat extends Object {
 	 * that of the host, then the most significant bytes of the byte array will
 	 * be padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3606,7 +3606,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3658,7 +3658,7 @@ public final class BinaryDataFormat extends Object {
 	 * of the host, then the most significant bytes of the byte array will be
 	 * padded with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3717,7 +3717,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3775,7 +3775,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3828,7 +3828,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3889,7 +3889,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -3950,7 +3950,7 @@ public final class BinaryDataFormat extends Object {
 	 * host, then the most significant bytes of the byte array will be padded
 	 * with zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -4016,7 +4016,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to convert
 	 * @param bytes
@@ -4079,7 +4079,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4119,7 +4119,7 @@ public final class BinaryDataFormat extends Object {
 	 * be padded with zeroes or ones (sign-extensions) depending upon if the
 	 * given value is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4157,7 +4157,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4196,7 +4196,7 @@ public final class BinaryDataFormat extends Object {
 	 * padded with zeroes or ones (sign-extensions) depending upon if the given
 	 * value is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4234,7 +4234,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4277,7 +4277,7 @@ public final class BinaryDataFormat extends Object {
 	 * Java doesn't support unsigned types directly. This method is identical to
 	 * the signed version.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4320,7 +4320,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4365,7 +4365,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long long is a Java long. Similarly, the largest encodable
 	 * value into a long long is one from a Java long.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4403,7 +4403,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4441,7 +4441,7 @@ public final class BinaryDataFormat extends Object {
 	 * with zeroes or ones (sign-extensions) depending upon if the given value
 	 * is positive or negative, respectively.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues
@@ -4484,7 +4484,7 @@ public final class BinaryDataFormat extends Object {
 	 * portion of the long double is a Java double. Similarly, the largest
 	 * encodable value into a long double is one from a Java double.
 	 * <P>
-	 * 
+	 *
 	 * @param values
 	 *            the array of values to convert
 	 * @param nValues

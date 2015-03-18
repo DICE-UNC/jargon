@@ -18,6 +18,10 @@ import org.irods.jargon.core.utils.PropertyUtils;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+/**
+ * @author Mike
+ * 
+ */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private final Properties jargonProperties;
@@ -319,17 +323,6 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public boolean isUseNIOForParallelTransfers() {
-		return verifyPropExistsAndGetAsBoolean("transfer.use.nio.for.parallel");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isReconnect()
 	 */
 	@Override
@@ -459,4 +452,78 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	}
 
+	@Override
+	public boolean isParallelTcpKeepAlive() {
+		return verifyPropExistsAndGetAsBoolean("parallelTcpKeepAlive");
+	}
+
+	@Override
+	public int getParallelTcpSendWindowSize() {
+		return verifyPropExistsAndGetAsInt("parallelTcpSendWindowSize");
+	}
+
+	@Override
+	public int getParallelTcpReceiveWindowSize() {
+		return verifyPropExistsAndGetAsInt("parallelTcpReceiveWindowSize");
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsConnectionTime() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.connectionTime");
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsLatency() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.latency");
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsBandwidth() {
+		return verifyPropExistsAndGetAsInt("parallelTcpPrefs.bandwidth");
+	}
+
+	@Override
+	public boolean isPrimaryTcpKeepAlive() {
+		return verifyPropExistsAndGetAsBoolean("primaryTcpKeepAlive");
+	}
+
+	@Override
+	public int getPrimaryTcpSendWindowSize() {
+		return verifyPropExistsAndGetAsInt("primaryTcpSendWindowSize");
+	}
+
+	@Override
+	public int getPrimaryTcpReceiveWindowSize() {
+		return verifyPropExistsAndGetAsInt("primaryTcpReceiveWindowSize");
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.connectionTime");
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsLatency() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.latency");
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsBandwidth() {
+		return verifyPropExistsAndGetAsInt("primaryTcpPrefs.bandwidth");
+	}
+
+	@Override
+	public int getSocketRenewalIntervalInSeconds() {
+		return verifyPropExistsAndGetAsInt("socket.renewal.interval.in.seconds");
+	}
+
+	@Override
+	public boolean isLongTransferRestart() {
+		return verifyPropExistsAndGetAsBoolean("transfer.long.file.restart");
+	}
+
+	@Override
+	public int getParallelCopyBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.parallel.copy.buffer.size");
+	}
 }

@@ -3,6 +3,7 @@ package org.irods.jargon.core.connection;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -23,9 +24,9 @@ import org.slf4j.LoggerFactory;
  * <code>IRODScommands</code> object wrapping this connection, and
  * <code>IRODSCommands</code> does maintain synchronized access to operations
  * that read and write to this connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class IRODSBasicTCPConnection extends AbstractConnection {
 
@@ -35,7 +36,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * <p/>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -48,7 +49,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
+					throws JargonException {
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
 	}
 
@@ -64,7 +65,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * <p/>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -81,7 +82,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager, final Socket socket)
-			throws JargonException {
+					throws JargonException {
 
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
 
@@ -102,7 +103,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractConnection#connect(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -128,8 +129,36 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			try {
 
 				log.debug("normal iRODS connection");
-				connection = new Socket(irodsAccount.getHost(),
-						irodsAccount.getPort());
+				connection = new Socket();
+				connection.setSoTimeout(getPipelineConfiguration()
+						.getIrodsSocketTimeout() * 1000); // time is specified
+				// in seconds
+
+				if (getPipelineConfiguration().getPrimaryTcpSendWindowSize() > 0) {
+					connection.setSendBufferSize(getPipelineConfiguration()
+							.getPrimaryTcpSendWindowSize() * 1024);
+				}
+
+				if (getPipelineConfiguration().getPrimaryTcpReceiveWindowSize() > 0) {
+					connection.setReceiveBufferSize(getPipelineConfiguration()
+							.getPrimaryTcpReceiveWindowSize() * 1024);
+				}
+
+				connection.setPerformancePreferences(getPipelineConfiguration()
+						.getPrimaryTcpPerformancePrefsConnectionTime(),
+						getPipelineConfiguration()
+						.getPrimaryTcpPerformancePrefsLatency(),
+						getPipelineConfiguration()
+						.getPrimaryTcpPerformancePrefsBandwidth());
+				InetSocketAddress address = new InetSocketAddress(
+						irodsAccount.getHost(), irodsAccount.getPort());
+				connection.setKeepAlive(getPipelineConfiguration()
+						.isPrimaryTcpKeepAlive());
+
+				// assume reuse, nodelay
+				connection.setReuseAddress(true);
+				connection.setTcpNoDelay(false);
+				connection.connect(address);
 
 				// success, so break out of reconnect loop
 				log.debug("connection to socket made...");
@@ -138,14 +167,15 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} catch (UnknownHostException e) {
 				log.error(
 						"exception opening socket to:" + irodsAccount.getHost()
-								+ " port:" + irodsAccount.getPort(), e);
+						+ " port:" + irodsAccount.getPort(), e);
 				throw new JargonException(e);
 			} catch (IOException ioe) {
 
 				if (i < attemptCount - 1) {
 					log.error("IOExeption, sleep and attempt a reconnect", ioe);
+
 					try {
-						Thread.sleep(3000);
+						Thread.sleep(1000);
 					} catch (InterruptedException e) {
 						// ignore
 					}
@@ -195,11 +225,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} else {
 				log.debug("buffer of size:{} on input stream",
 						pipelineConfiguration
-								.getInternalInputStreamBufferSize());
+						.getInternalInputStreamBufferSize());
 				irodsInputStream = new BufferedInputStream(
 						connection.getInputStream(),
 						pipelineConfiguration
-								.getInternalInputStreamBufferSize());
+						.getInternalInputStreamBufferSize());
 			}
 
 			if (pipelineConfiguration.getInternalOutputStreamBufferSize() <= -1) {
@@ -214,11 +244,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} else {
 				log.debug("buffer of size:{} on output stream",
 						pipelineConfiguration
-								.getInternalOutputStreamBufferSize());
+						.getInternalOutputStreamBufferSize());
 				irodsOutputStream = new BufferedOutputStream(
 						connection.getOutputStream(),
 						pipelineConfiguration
-								.getInternalOutputStreamBufferSize());
+						.getInternalOutputStreamBufferSize());
 			}
 
 		} catch (UnknownHostException e) {
@@ -228,13 +258,13 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		} catch (IOException ioe) {
 			log.error(
 					"io exception opening socket to:" + irodsAccount.getHost()
-							+ " port:" + irodsAccount.getPort(), ioe);
+					+ " port:" + irodsAccount.getPort(), ioe);
 			throw new JargonException(ioe);
 		}
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	void closeDownSocketAndEatAnyExceptions() {
 		if (isConnected()) {
@@ -253,7 +283,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractConnection#shutdown()
 	 */
 	@Override
@@ -264,7 +294,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */

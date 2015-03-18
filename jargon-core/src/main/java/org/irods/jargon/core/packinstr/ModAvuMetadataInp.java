@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -11,9 +11,9 @@ import org.irods.jargon.core.pub.domain.AvuData;
 
 /**
  * Translation of a ModifyAvuMetadataInp operation into XML protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
@@ -24,7 +24,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Type of metadata to be modified
-	 * 
+	 *
 	 */
 	public enum MetadataTargetType {
 		RESOURCE, USER, COLLECTION, DATA_OBJECT
@@ -46,7 +46,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * collection.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -61,7 +61,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will modify the AVU on
 	 * a collection.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -83,7 +83,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * collection.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -98,7 +98,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * data object.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -113,7 +113,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will modify the AVU on
 	 * a data object.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -135,7 +135,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * data object.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -151,7 +151,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * resource.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -166,7 +166,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will modify the AVU on
 	 * a resource.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -188,7 +188,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will remove the AVU
 	 * from a resource .
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -203,7 +203,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will add the AVU to a
 	 * user.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -218,7 +218,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will modify the AVU on
 	 * a user.
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
@@ -239,7 +239,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction that will remove the AVU
 	 * from a user .
-	 * 
+	 *
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added

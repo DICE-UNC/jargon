@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * protocol manager and initializes itself, this will probably remain for
  * backwards compatability and another implementation may be created that allows
  * initialization of all of these factories.
- * 
+ *
  * @author Mike Conway - DICE
  */
 public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
@@ -36,7 +36,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
 	 * (org.irods.jargon.core.connection.IRODSAccount,
@@ -72,7 +72,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	/**
 	 * This is an interim fix to initialize the mid level protocol factory
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	private synchronized void checkMidLevelProtocolFactory(
@@ -88,18 +88,17 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
 	 */
 	@Override
 	public void returnIRODSProtocol(
-			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-			throws JargonException {
-		log.debug("abstractIRODSMidLevelProtocol returned:{}",
-				abstractIRODSMidLevelProtocol);
-		abstractIRODSMidLevelProtocol.shutdown();
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
+					throws JargonException {
+		log.debug("irodsMidLevelProtocol returned:{}", irodsMidLevelProtocol);
+		irodsMidLevelProtocol.shutdown();
 
 	}
 

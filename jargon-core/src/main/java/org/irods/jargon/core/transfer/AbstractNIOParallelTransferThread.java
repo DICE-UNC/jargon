@@ -55,7 +55,7 @@ public class AbstractNIOParallelTransferThread {
 				read = getS().read(b);
 
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);

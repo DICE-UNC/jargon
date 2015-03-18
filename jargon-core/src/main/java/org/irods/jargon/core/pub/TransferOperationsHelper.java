@@ -20,11 +20,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  *         Functions to support transfer operations. These are used internally.
  *         See {@link org.irods.jargon.core.pub.DataTransferOperations} for
  *         public methods.
- * 
+ *
  */
 final class TransferOperationsHelper {
 
@@ -34,7 +34,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Initializer creates an instance of this class.
-	 * 
+	 *
 	 * @param irodsSession
 	 *            <code>IRODSSession</code> that can connect to iRODS
 	 * @param irodsAccount
@@ -63,7 +63,7 @@ final class TransferOperationsHelper {
 	 * Recursively get a file from iRODS. This utility method is used
 	 * internally, and can process call-backs as well as filtering and
 	 * cancellation.
-	 * 
+	 *
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
 	 *            the file or collection to retrieve.
@@ -100,6 +100,16 @@ final class TransferOperationsHelper {
 			if (Thread.interrupted()) {
 				log.info("cancellation detected, set cancelled in tcb");
 				transferControlBlock.setCancelled(true);
+			}
+
+			/**
+			 * See if I want to close and renew the socket
+			 */
+			if (collectionAO.getIRODSProtocol().getPipelineConfiguration()
+					.getSocketRenewalIntervalInSeconds() > 0) {
+				collectionAO.getIRODSSession()
+						.currentConnectionCheckRenewalOfSocket(
+								collectionAO.getIRODSAccount());
 			}
 
 			// for each file in the given source collection, put the data file,
@@ -190,7 +200,7 @@ final class TransferOperationsHelper {
 	/**
 	 * In a transfer operation, process the given iRODS file as a data object to
 	 * be retrieved.
-	 * 
+	 *
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the get.
@@ -292,9 +302,25 @@ final class TransferOperationsHelper {
 
 			}
 
-			dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
-					targetLocalFile, transferControlBlock,
-					transferStatusCallbackListener);
+			try {
+				dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
+						targetLocalFile, transferControlBlock,
+						transferStatusCallbackListener);
+			} catch (JargonException e) {
+				log.error(
+						"exception in transfer, will abandon the connection and rethrow",
+						e);
+				throw e;
+			} catch (Exception e) {
+				log.error(
+						"exception in transfer, will abandon the connection and rethrow",
+						e);
+				dataObjectAO
+						.getIRODSAccessObjectFactory()
+						.getIrodsSession()
+						.discardSessionForErrors(dataObjectAO.getIRODSAccount());
+				throw new JargonException(e);
+			}
 
 			transferControlBlock.incrementFilesTransferredSoFar();
 
@@ -353,7 +379,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Method to recursively put a collection. This method can monitor for a
 	 * cancellation, and can also provide callbacks to a process.
-	 * 
+	 *
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file
 	 *            that should be replicated.
@@ -412,6 +438,16 @@ final class TransferOperationsHelper {
 					break;
 				}
 
+				/**
+				 * See if I want to close and renew the socket
+				 */
+				if (collectionAO.getIRODSProtocol().getPipelineConfiguration()
+						.getSocketRenewalIntervalInSeconds() > 0) {
+					collectionAO.getIRODSSession()
+							.currentConnectionCheckRenewalOfSocket(
+									collectionAO.getIRODSAccount());
+				}
+
 				if (fileInSourceCollection.isDirectory()) {
 					recursivelyPutACollection(targetIrodsCollection,
 							transferStatusCallbackListener,
@@ -438,7 +474,7 @@ final class TransferOperationsHelper {
 	/**
 	 * A put operation has been cancelled or paused, give the appropraite
 	 * callback
-	 * 
+	 *
 	 * @param targetIrodsCollection
 	 *            {@link IRODSFile} that was the source
 	 * @param transferStatusCallbackListener
@@ -595,7 +631,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Method to recursively replicate a collection. This method can monitor for
 	 * a cancellation, and can also provide callbacks to a process.
-	 * 
+	 *
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file
 	 *            that should be replicated.
@@ -758,7 +794,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Put a single file to iRODS.
-	 * 
+	 *
 	 * @param sourceFile
 	 *            <code>File</code> on the local file system that will be the
 	 *            source of the put.
@@ -864,8 +900,16 @@ final class TransferOperationsHelper {
 				}
 			}
 
-			dataObjectAO.putLocalDataObjectToIRODS(sourceFile, targetIrodsFile,
-					transferControlBlock, transferStatusCallbackListener);
+			try {
+				dataObjectAO.putLocalDataObjectToIRODS(sourceFile,
+						targetIrodsFile, transferControlBlock,
+						transferStatusCallbackListener);
+			} catch (Exception e) {
+				log.info("an exception occurred, check if restart is available, and if I should autonomously restart or call it an exception");
+				evaluateAndDoPutRestart(sourceFile, targetIrodsFile,
+						transferControlBlock);
+			}
+
 			transferControlBlock.incrementFilesTransferredSoFar();
 
 			if (transferStatusCallbackListener != null) {
@@ -922,9 +966,15 @@ final class TransferOperationsHelper {
 		}
 	}
 
+	private void evaluateAndDoPutRestart(File sourceFile,
+			IRODSFile targetIrodsFile, TransferControlBlock transferControlBlock) {
+		// TODO Auto-generated method stub
+
+	}
+
 	/**
 	 * Replicate a single file and process any exceptions or success callbacks.
-	 * 
+	 *
 	 * @param irodsFileAbsolutePath
 	 * @param targetResource
 	 * @param transferStatusCallbackListener
@@ -1135,7 +1185,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Process the copy of a source file to a given target file. This is an
 	 * iRODS to iRODS copy.
-	 * 
+	 *
 	 * @param irodsSourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file,
 	 *            which is an iRODS data object, not a collection

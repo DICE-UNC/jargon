@@ -1,6 +1,6 @@
 /**
  * Tools and classes to manage checksum handling in iRODS
- * 
+ *
  * @author Mike Conway - DICE
  *
  */

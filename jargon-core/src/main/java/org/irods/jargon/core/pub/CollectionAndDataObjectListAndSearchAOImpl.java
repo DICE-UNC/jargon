@@ -294,6 +294,30 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return entries;
 	}
 
+	@Override
+	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
+			final ObjStat objStat) throws FileNotFoundException,
+			JargonException {
+
+		log.info("listDataObjectsAndCollectionsUnderPath(");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat  is null");
+		}
+
+		log.info("objStat:{}", objStat);
+
+		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat,
+				0));
+		entries.addAll(collectionListingUtils.listDataObjectsUnderPath(objStat,
+				0));
+
+		return entries;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1378,5 +1402,4 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
 
 	}
-
 }

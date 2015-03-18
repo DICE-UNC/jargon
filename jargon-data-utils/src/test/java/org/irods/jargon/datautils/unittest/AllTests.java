@@ -38,11 +38,9 @@ import org.junit.runners.Suite;
 		DiffTreePostProcessorTest.class,
 		FileTreeIteratorVisitorInvokerTest.class,
 		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-<<<<<<< HEAD
+
 		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class })
-=======
-		LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
->>>>>>> master
+ ConnectionTesterImplTest.class })
 public class AllTests {
 
 }

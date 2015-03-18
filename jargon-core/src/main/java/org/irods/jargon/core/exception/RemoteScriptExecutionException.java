@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Error in locating a remote execution script
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RemoteScriptExecutionException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3569078752323506006L;
 

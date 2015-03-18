@@ -1,11 +1,17 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.connectiontester;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -15,7 +21,6 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.datautils.connectiontester.TestResultEntry.OperationType;
 import org.irods.jargon.testutils.TestingUtilsException;
-import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +30,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ConnectionTesterImpl extends AbstractJargonService implements
 		ConnectionTester {
+
+	private static final Random RANDOM = new Random();
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ConnectionTesterImpl.class);
@@ -53,7 +60,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	 * Run the given tests in the list, returning a result
 	 * 
 	 * @param testTypes
-	 *            <code>List</code> of type {@TestType}
+	 *            <code>List</code> of type {
+	 * @TestType
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException
 	 */
@@ -92,6 +100,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	private List<TestResultEntry> processTest(TestType testType)
 			throws JargonException {
 
+		log.info("processTest:{}", testType);
 		List<TestResultEntry> entries = new ArrayList<TestResultEntry>();
 
 		log.info("processTest() for type:{}", testType);
@@ -117,6 +126,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			dataSize = 1 * 1024 * 1024 * 1024;
 		}
 
+		log.info("dataSize:{}", dataSize);
+
 		result.setTotalBytes(dataSize);
 
 		StringBuilder sb = new StringBuilder();
@@ -124,136 +135,236 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 		sb.append(testType.name());
 		sb.append(suffix);
 		String testFileSourceName = sb.toString();
-
-		File localFile = new File(
-				connectionTesterConfiguration.getLocalSourceParentDirectory(),
-				testFileSourceName);
-		log.info("delete previous files and generate a local file for:{}",
-				localFile);
-		localFile.delete();
-
-		log.info("using configuration:{}", connectionTesterConfiguration);
+		boolean putSucceeded = true;
+		File localFile = null;
+		IRODSFile irodsFile = null;
+		File localGetFile = null;
 
 		try {
-			FileGenerator.generateFileOfFixedLengthGivenName(
+			localFile = new File(
+					connectionTesterConfiguration
+							.getLocalSourceParentDirectory(),
+					testFileSourceName);
+			log.info("delete previous files and generate a local file for:{}",
+					localFile);
+			localFile.delete();
+
+			File parentFile = new File(
+					connectionTesterConfiguration
+							.getLocalSourceParentDirectory());
+			parentFile.mkdirs();
+
+			log.info("using configuration:{}", connectionTesterConfiguration);
+			DataTransferOperations dataTransferOperations = this
+					.getIrodsAccessObjectFactory().getDataTransferOperations(
+							getIrodsAccount());
+
+			generateFileOfFixedLengthGivenName(
 					connectionTesterConfiguration
 							.getLocalSourceParentDirectory(),
 					testFileSourceName, dataSize);
-		} catch (TestingUtilsException e) {
-			log.error("error generating local file", e);
-			throw new JargonException(e);
-		}
+			log.info("test file generated at:{}", testFileSourceName);
+			sb = new StringBuilder();
+			sb.append("get");
+			sb.append(testFileSourceName);
+			String testFileGetName = sb.toString();
+			localGetFile = new File(localFile.getParent(), testFileGetName);
+			localGetFile.delete();
+			long startTime = System.currentTimeMillis();
 
-		sb = new StringBuilder();
-		sb.append("get");
-		sb.append(testFileSourceName);
-		String testFileGetName = sb.toString();
-		File localGetFile = new File(localFile.getParent(), testFileGetName);
-		localGetFile.delete();
+			irodsFile = this
+					.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFile(
+							connectionTesterConfiguration
+									.getIrodsParentDirectory(),
+							testFileSourceName);
+			log.info("delete old irods file:{}", irodsFile);
+			irodsFile.deleteWithForceOption();
 
-		IRODSFile irodsFile = this
-				.getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount())
-				.instanceIRODSFile(
-						connectionTesterConfiguration.getIrodsParentDirectory(),
-						testFileSourceName);
-		log.info("delete old irods file:{}", irodsFile);
-		irodsFile.deleteWithForceOption();
+			log.info("initiating put operation to:{}",
+					connectionTesterConfiguration.getIrodsParentDirectory());
 
-		log.info("initiating put operation to:{}",
-				connectionTesterConfiguration.getIrodsParentDirectory());
+			result.setOperationType(OperationType.PUT);
 
-		result.setOperationType(OperationType.PUT);
-
-		DataTransferOperations dataTransferOperations = this
-				.getIrodsAccessObjectFactory().getDataTransferOperations(
-						getIrodsAccount());
-		long startTime = System.currentTimeMillis();
-		boolean putSucceeded = true;
-		try {
 			dataTransferOperations.putOperation(localFile, irodsFile, null,
 					null);
-		} catch (Exception e) {
-			log.error("exception in transfer reported back in status", e);
-			putSucceeded = false;
-			result.setException(e);
-			result.setSuccess(false);
 
-		}
-		long endTime = System.currentTimeMillis();
-		result.setTotalMilliseconds(endTime - startTime);
+			long endTime = System.currentTimeMillis();
+			result.setTotalMilliseconds(endTime - startTime);
 
-		float totalSeconds = result.getTotalMilliseconds() / 1000;
+			float totalSeconds = result.getTotalMilliseconds() / 1000;
 
-		if (totalSeconds == 0) {
-			totalSeconds = 1;
-		}
+			if (totalSeconds == 0) {
+				totalSeconds = 1;
+			}
 
-		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
-		result.setSuccess(true);
-		entries.add(result);
+			result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
+			result.setSuccess(true);
+			entries.add(result);
+			if (!putSucceeded) {
+				log.warn("put failed, do not try get");
+				return entries;
+			}
 
-		if (!putSucceeded) {
-			log.warn("put failed, do not try get");
+			// put succeeded, continue
+			log.info("result for put done, do a get");
+
+			result = new TestResultEntry();
+
+			result.setTestType(testType);
+
+			result.setTotalBytes(dataSize);
+			result.setOperationType(OperationType.GET);
+
+			startTime = System.currentTimeMillis();
+
+			try {
+				dataTransferOperations.getOperation(irodsFile, localGetFile,
+						null, null);
+			} catch (Exception e) {
+				log.error("exception in transfer reported back in status", e);
+				result.setException(e);
+				result.setSuccess(false);
+				entries.add(result);
+				return entries;
+			}
+
+			endTime = System.currentTimeMillis();
+			result.setTotalMilliseconds(endTime - startTime);
+			totalSeconds = result.getTotalMilliseconds() / 1000;
+
+			if (totalSeconds == 0) {
+				totalSeconds = 1;
+			}
+
+			result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
+			result.setSuccess(true);
+			entries.add(result);
 			return entries;
-		}
 
-		// put succeeded, continue
-
-		log.info("result for put done, do a get");
-
-		result = new TestResultEntry();
-
-		result.setTestType(testType);
-
-		result.setTotalBytes(dataSize);
-		result.setOperationType(OperationType.GET);
-
-		startTime = System.currentTimeMillis();
-
-		try {
-			dataTransferOperations.getOperation(irodsFile, localGetFile, null,
-					null);
-		} catch (Exception e) {
-			log.error("exception in transfer reported back in status", e);
+		} catch (TestingUtilsException e) {
+			log.error("error generating local file", e);
+			putSucceeded = false;
 			result.setException(e);
 			result.setSuccess(false);
 			entries.add(result);
 			return entries;
+
+		} catch (JargonException e) {
+			log.error("error generating local file", e);
+			putSucceeded = false;
+			result.setException(e);
+			result.setSuccess(false);
+			entries.add(result);
+			return entries;
+		} catch (Throwable t) {
+			log.error("some error occurred", t);
+			putSucceeded = false;
+			result.setException(t);
+			result.setSuccess(false);
+			entries.add(result);
+			return entries;
+		} finally {
+
+			if (this.connectionTesterConfiguration.isCleanupOnCompletion()) {
+				log.info("cleanup");
+				try {
+					localFile.delete();
+				} catch (Exception e) {
+					// ignore
+				}
+				try {
+					localGetFile.delete();
+				} catch (Exception e) {
+					// ignore
+				}
+				try {
+					irodsFile.deleteWithForceOption();
+				} catch (Exception e) {
+					// ignore
+				}
+			}
 		}
 
-		endTime = System.currentTimeMillis();
-		result.setTotalMilliseconds(endTime - startTime);
-		totalSeconds = result.getTotalMilliseconds() / 1000;
+	}
 
-		if (totalSeconds == 0) {
-			totalSeconds = 1;
+	public static String generateFileOfFixedLengthGivenName(
+			final String fileDirectory, final String fileName, final long length)
+			throws TestingUtilsException {
+
+		// 1023 bytes of random stuff should be plenty, then just repeat it as
+		// needed, this is odd number to prevent lining up on even number buffer
+		// offsets
+		if (fileDirectory == null || fileDirectory.isEmpty()) {
+			throw new IllegalArgumentException("null or empty FileDirectory");
 		}
 
-		result.setTransferRateBytesPerSecond((int) (dataSize / totalSeconds));
-		result.setSuccess(true);
-		entries.add(result);
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
 
-		if (this.connectionTesterConfiguration.isCleanupOnCompletion()) {
-			log.info("cleanup");
-			try {
-				localFile.delete();
-			} catch (Exception e) {
-				// ignore
+		File dir = new File(fileDirectory);
+		dir.mkdirs();
+
+		long chunkSize = 1023;
+		if (length <= chunkSize) {
+			chunkSize = length;
+		}
+
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+		int generatedLength = 0;
+
+		while (generatedLength < chunkSize) {
+			bos.write(RANDOM.nextInt());
+			generatedLength += 1;
+		}
+
+		byte[] fileChunk = bos.toByteArray();
+
+		// take the chunk and fill up the file
+		File randFile = new File(fileDirectory, fileName);
+		OutputStream outStream = null;
+
+		long generatedFileLength = 0;
+		long nextChunkSize = 0;
+		try {
+			outStream = new BufferedOutputStream(new FileOutputStream(randFile));
+
+			while (generatedFileLength < length) {
+
+				// if more than chunk size to go, just write the chunk
+				nextChunkSize = length - generatedFileLength;
+				if (nextChunkSize > chunkSize) {
+					outStream.write(fileChunk);
+					generatedFileLength += chunkSize;
+				} else {
+					outStream.write(fileChunk, 0, (int) nextChunkSize);
+					generatedFileLength += nextChunkSize;
+				}
+
 			}
-			try {
-				localGetFile.delete();
-			} catch (Exception e) {
-				// ignore
-			}
-			try {
-				irodsFile.deleteWithForceOption();
-			} catch (Exception e) {
-				// ignore
+
+		} catch (IOException ioe) {
+			throw new TestingUtilsException(
+					"error generating random file with dir:" + fileDirectory
+							+ " and generated name:" + fileName, ioe);
+		} finally {
+			if (outStream != null) {
+				try {
+
+					outStream.close();
+				} catch (Exception ex) {
+					// ignore
+				}
 			}
 		}
 
-		return entries;
+		StringBuilder fullPath = new StringBuilder();
+		fullPath.append(fileDirectory);
+		// fullPath.append("/");
+		fullPath.append(fileName);
+		return fullPath.toString();
 
 	}
 }

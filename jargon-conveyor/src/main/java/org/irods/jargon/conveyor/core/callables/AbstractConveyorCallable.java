@@ -467,6 +467,7 @@ public abstract class AbstractConveyorCallable implements
 		try {
 			if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_INITIATION) {
 				// potentially handle any pre proc for operation flow specs
+                                log.info("handle overall initiation");
 				handleOverallInitiation(transferStatus);
 			} else if (transferStatus.getTransferState() == TransferStatus.TransferState.OVERALL_COMPLETION) {
 				log.info("overall completion...updating status of transfer...");
@@ -484,11 +485,15 @@ public abstract class AbstractConveyorCallable implements
 				doComplete = true;
 				log.error("transfer cancelled, this will be handled by the conveyor execution service, and the callback here will be ignored");
 				processOverallCompletionOfTransferWithCancel(transferStatus);
-			}
+			} else {
+                            log.info("unhandled transfer status of:{}", transferStatus);
+                        }
 		} catch (ConveyorExecutionException ex) {
+                        log.error("conveyorExecutionException during handling of overall status callback:{}", transferStatus, ex);
 			throw new JargonException(ex.getMessage(), ex.getCause());
 		} finally {
 			if (conveyorService.getConveyorCallbackListener() != null) {
+                                log.info("sending overall status callback to client");
 				conveyorService.getConveyorCallbackListener()
 						.overallStatusCallback(transferStatus);
 			}
@@ -671,6 +676,7 @@ public abstract class AbstractConveyorCallable implements
 		log.info("status was:{}", evaluatedStatus);
 
 		if (evaluatedStatus == TransferStatusEnum.OK) {
+			log.info("evaluated status is OK");
 			if (getTransferControlBlock().getTotalFilesTransferredSoFar() == 0) {
 				conveyorService.getConveyorExecutorService().setErrorStatus(
 						ErrorStatus.WARNING);

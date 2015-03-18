@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -14,9 +14,9 @@ import java.util.List;
  * This object returns such a mixed listing from the multiple queries, along
  * with properties that can assist in comprehending the paging status so that
  * subsequent queries can be made.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class PagingAwareCollectionListing {
 
@@ -31,6 +31,8 @@ public class PagingAwareCollectionListing {
 	 * with a paging status reflected in this object.
 	 */
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries;
+
+	
 
 	/**
 	 * Default (no-values) constructor for simple value object
@@ -62,18 +64,20 @@ public class PagingAwareCollectionListing {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PagingAwareCollectionListing [");
 		if (pagingAwareCollectionListingDescriptor != null) {
-			builder.append("pagingAwareCollectionListingDescriptor=")
-					.append(pagingAwareCollectionListingDescriptor)
-					.append(", ");
+			builder.append("pagingAwareCollectionListingDescriptor=");
+			builder.append(pagingAwareCollectionListingDescriptor);
+			builder.append(", ");
 		}
 		if (collectionAndDataObjectListingEntries != null) {
-			builder.append("collectionAndDataObjectListingEntries=").append(
-					collectionAndDataObjectListingEntries.subList(0, Math.min(
-							collectionAndDataObjectListingEntries.size(),
+			builder.append("collectionAndDataObjectListingEntries=");
+			builder.append(collectionAndDataObjectListingEntries.subList(0,
+					Math.min(collectionAndDataObjectListingEntries.size(),
 							maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
 	}
+
+	
 
 }
