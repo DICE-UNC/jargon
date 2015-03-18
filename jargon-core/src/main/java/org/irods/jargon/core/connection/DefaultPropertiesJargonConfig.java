@@ -20,7 +20,7 @@ import org.irods.jargon.core.utils.PropertyUtils;
  */
 /**
  * @author Mike
- *
+ * 
  */
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
@@ -323,17 +323,6 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public boolean isUseNIOForParallelTransfers() {
-		return verifyPropExistsAndGetAsBoolean("transfer.use.nio.for.parallel");
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isReconnect()
 	 */
 	@Override
@@ -528,4 +517,13 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		return verifyPropExistsAndGetAsInt("socket.renewal.interval.in.seconds");
 	}
 
+	@Override
+	public boolean isLongTransferRestart() {
+		return verifyPropExistsAndGetAsBoolean("transfer.long.file.restart");
+	}
+
+	@Override
+	public int getParallelCopyBufferSize() {
+		return verifyPropExistsAndGetAsInt("jargon.parallel.copy.buffer.size");
+	}
 }

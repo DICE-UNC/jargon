@@ -64,31 +64,38 @@ public final class ParallelGetFileTransferStrategy extends
 	 * @return
 	 * @throws JargonException
 	 */
-	public static ParallelGetFileTransferStrategy instance(final String host,
-			final int port, final int numberOfThreads, final int password,
+	public static ParallelGetFileTransferStrategy instance(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
-				transferControlBlock, transferStatusCallbackListener);
+				transferControlBlock, transferStatusCallbackListener,
+				fileRestartInfo);
 	}
 
-	private ParallelGetFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password,
+	private ParallelGetFileTransferStrategy(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, fileRestartInfo);
 
 		log.info("transfer options in transfer control block:{}",
 				transferControlBlock.getTransferOptions());
@@ -149,7 +156,7 @@ public final class ParallelGetFileTransferStrategy extends
 
 			for (int i = 0; i < numberOfThreads; i++) {
 				final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
-						.instance(this);
+						.instance(this, i);
 				parallelGetTransferThreads.add(parallelTransfer);
 			}
 			log.info("invoking executor threads for get");

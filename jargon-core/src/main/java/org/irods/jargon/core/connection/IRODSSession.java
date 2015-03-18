@@ -28,7 +28,9 @@ import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.query.TranslatedIRODSGenQuery;
+import org.irods.jargon.core.transfer.AbstractRestartManager;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
+import org.irods.jargon.core.transfer.MemoryBasedTransferRestartManager;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -83,6 +85,19 @@ public class IRODSSession {
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
+
+	/**
+	 * Manager for long file restarts. Defaults to a simple in-memory manager,
+	 * but can have an alternative manager injected. There is no harm in leaving
+	 * this as <code>null</code> if not needed, as Jargon will guard against
+	 * null access and assume restarts are not supported
+	 */
+	private AbstractRestartManager restartManager = null;
+
+	/**
+	 * General configuration properties for operation of jargon, buffer sizes,
+	 * thread counts, etc.
+	 */
 	private JargonProperties jargonProperties;
 
 	/**
@@ -227,6 +242,14 @@ public class IRODSSession {
 		try {
 			jargonProperties = new SettableJargonProperties(
 					new DefaultPropertiesJargonConfig());
+			if (jargonProperties.isLongTransferRestart()) {
+				// by default, at startup, if the long transfer restart is
+				// selected, then start out with the default
+				// in-memory implementation. If the dev futzes with this, they
+				// have to make sure
+				// a restart manager is available.
+				this.restartManager = new MemoryBasedTransferRestartManager();
+			}
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties");
 		}
@@ -737,6 +760,15 @@ public class IRODSSession {
 	 */
 	public LocalChecksumComputerFactory getLocalChecksumComputerFactory() {
 		return localChecksumComputerFactory;
+	}
+
+	public synchronized AbstractRestartManager getRestartManager() {
+		return restartManager;
+	}
+
+	public synchronized void setRestartManager(
+			AbstractRestartManager restartManager) {
+		this.restartManager = restartManager;
 	}
 
 }

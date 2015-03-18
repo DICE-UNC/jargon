@@ -18,7 +18,8 @@ import org.junit.runners.Suite;
 		PackingInstructionTests.class, DomainTests.class, TransferTests.class,
 		LocalFileUtilsTest.class, RemoteExecuteServiceImplTest.class,
 		IRODSPasswordUtilitiesTest.class, IRODSUriUtilsTest.class,
-		MiscIRODSUtilsTest.class, AuthTests.class, ChecksumTests.class })
+		MiscIRODSUtilsTest.class, AuthTests.class, ChecksumTests.class,
+		TransferRestartTests.class })
 /**
  * Suite to run all tests (except long running and functional), further refined by settings in testing.properites.  Some subtests may be shut
  * off by these properties.

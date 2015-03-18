@@ -19,19 +19,19 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Strategy object for parallell put file transfer. This is an immutable object.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ParallelPutFileTransferStrategy extends
-AbstractParallelFileTransferStrategy {
+		AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutFileTransferStrategy.class);
 
 	/**
 	 * Create an instance of a strategy to accomplish a parallel file transfer.
-	 *
+	 * 
 	 * @param host
 	 *            <code>String</code> with the host name to transfer to.
 	 * @param port
@@ -56,20 +56,25 @@ AbstractParallelFileTransferStrategy {
 	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
+	 * @param fileRestartInfo
 	 * @return
 	 * @throws JargonException
 	 */
-	public static ParallelPutFileTransferStrategy instance(final String host,
-			final int port, final int numberOfThreads, final int password,
+	public static ParallelPutFileTransferStrategy instance(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-					throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
-				transferControlBlock, transferStatusCallbackListener);
+				transferControlBlock, transferStatusCallbackListener,
+				fileRestartInfo);
 	}
 
 	@Override
@@ -90,17 +95,20 @@ AbstractParallelFileTransferStrategy {
 
 	}
 
-	private ParallelPutFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password,
+	private ParallelPutFileTransferStrategy(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-					throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, fileRestartInfo);
 
 		if (transferControlBlock.getTransferOptions()
 				.isIntraFileStatusCallbacks()
@@ -116,7 +124,7 @@ AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()
@@ -152,10 +160,9 @@ AbstractParallelFileTransferStrategy {
 
 		for (int i = 0; i < numberOfThreads; i++) {
 
-			parallelTransferThread = ParallelPutTransferThread.instance(this);
-
+			parallelTransferThread = ParallelPutTransferThread
+					.instance(this, i);
 			parallelPutTransferThreads.add(parallelTransferThread);
-
 			log.info("created transfer thread:{}", parallelTransferThread);
 
 		}

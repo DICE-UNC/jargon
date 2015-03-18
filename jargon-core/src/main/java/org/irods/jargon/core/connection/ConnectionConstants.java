@@ -5,9 +5,9 @@ package org.irods.jargon.core.connection;
 
 /**
  * Handy place to put common constants for connection-related purposes
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ConnectionConstants {
 
@@ -27,6 +27,12 @@ public final class ConnectionConstants {
 	 * message
 	 */
 	public static final int SYS_CLI_TO_SVR_COLL_STAT_SIZE = 10;
+
+	/**
+	 * Minimum size of a file to be subject to restart processing in get/put
+	 * transfers
+	 */
+	public static final long MIN_FILE_RESTART_SIZE = 64 * 1024 * 1024;
 
 	/**
 	 * Maximum threads to open for a parallel transfer. More than this usually
@@ -53,11 +59,6 @@ public final class ConnectionConstants {
 	 * 64 bit long
 	 */
 	public static final int LONG_LENGTH = 8;
-
-	/**
-	 * Size of the socket send buffer
-	 */
-	public static int OUTPUT_BUFFER_LENGTH = 524288;
 
 	/**
 	 * 4 bytes at the front of the header, outside XML

@@ -13,14 +13,14 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
  * <code>TransferOptions</code>
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class SettableJargonProperties implements JargonProperties {
 
 	private boolean useParallelTransfer = true;
-	private boolean useNIOForParallelTransfers = false;
+	private final boolean useNIOForParallelTransfers = false;
 	private int maxParallelThreads = 4;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
@@ -66,12 +66,18 @@ public class SettableJargonProperties implements JargonProperties {
 	private int primaryTcpPerformancePrefsLatency;
 	private int primaryTcpPerformancePrefsBandwidth;
 	private int socketRenewalIntervalInSeconds;
+	private boolean longTransferRestart = true;
+	/**
+	 * Size (in bytes) of the buffer used to copy between input and output for
+	 * parallel transfers
+	 */
+	private int parallelCopyBufferSize;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
 	 * <code>JargonProperties</code>. This can be used to wire in properties via
 	 * configuration, as in Spring.
-	 *
+	 * 
 	 * @param jargonProperties
 	 *            {@link JargonProperties} that has the initial set of
 	 *            properties.
@@ -83,7 +89,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Construct a default properties set based on the
 	 * <code>jargon.properties</code> in jargon, these can then be overridden.
-	 *
+	 * 
 	 * @throws JargonException
 	 *             if properties cannot be loaded
 	 */
@@ -99,8 +105,6 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		useParallelTransfer = jargonProperties.isUseParallelTransfer();
-		useNIOForParallelTransfers = jargonProperties
-				.isUseNIOForParallelTransfers();
 		maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
 		allowPutGetResourceRedirects = jargonProperties
 				.isAllowPutGetResourceRedirects();
@@ -168,6 +172,9 @@ public class SettableJargonProperties implements JargonProperties {
 				.getPrimaryTcpSendWindowSize();
 		this.socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
+		this.longTransferRestart = jargonProperties.isLongTransferRestart();
+		this.parallelCopyBufferSize = jargonProperties
+				.getParallelCopyBufferSize();
 
 	}
 
@@ -184,7 +191,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Utilize parallel transfer algorithm for files above the transfer size
-	 *
+	 * 
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> of <code>true</code> if parallel
 	 *            transfers are allowed
@@ -197,7 +204,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the maximum number of threads allowed for parallel transfers. 0 means
 	 * use iRODS limit.
-	 *
+	 * 
 	 * @param maxParallelThreads
 	 *            <code>int</code> with the maximum number of threads to use in
 	 *            a parallel transfer, with 0 meaning use the iRODS default set
@@ -280,7 +287,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Allow resource redirects to occur
-	 *
+	 * 
 	 * @param allowPutGetResourceRedirects
 	 *            <code>boolean</code> which allows resource redirects if
 	 *            <code>true</code>
@@ -304,7 +311,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute (but do not verify) a checksum after a transfer.
-	 *
+	 * 
 	 * @param computeChecksumAfterTransfer
 	 *            <code>boolean</code> that will cause a checksum to be computed
 	 *            by default if <code>true</code>
@@ -328,7 +335,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute and verify the file checksum after a put/get transfer
-	 *
+	 * 
 	 * @param computeAndVerifyChecksumAfterTransfer
 	 *            <code>boolean</code> that causes a checksum validation if set
 	 *            to <code>true</code>
@@ -342,7 +349,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Set whether intra-file status call-backs for file transfers are enabled.
 	 * This will give progress of bytes within transfers, with a slight
 	 * performance penalty.
-	 *
+	 * 
 	 * @param intraFileStatusCallbacks
 	 *            the intraFileStatusCallbacks to set
 	 */
@@ -620,27 +627,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encoding = encoding;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public synchronized boolean isUseNIOForParallelTransfers() {
-		return useNIOForParallelTransfers;
-	}
-
-	/**
-	 * @param useNIOForParallelTransfers
-	 *            <code>boolean</code> that is set to <code>true</code> if NIO
-	 *            should be used for parallel file transfers
-	 */
-	public synchronized void setUseNIOForParallelTransfers(
-			final boolean useNIOForParallelTransfers) {
-		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
-	}
-
 	/**
 	 * @return <code>boolean</code> that indicates whether a reconnect of long
 	 *         running connections is done. This is equvalent to the -T icommand
@@ -658,7 +644,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * <p/>
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
-	 *
+	 * 
 	 * @return
 	 */
 	@Override
@@ -711,7 +697,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set a property that will automatically look for /zone/home/public and
 	 * /zone/home/username directories in the process of listing.
-	 *
+	 * 
 	 * @param defaultToPublicIfNothingUnderRootWhenListing
 	 */
 	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
@@ -791,7 +777,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the pam time to live (in seconds)
-	 *
+	 * 
 	 * @param pamTimeToLive
 	 *            <code>int</code> with the time to live for pam passwords
 	 */
@@ -853,7 +839,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the encoding used for computing checksums
-	 *
+	 * 
 	 * @param checksumEncoding
 	 */
 	public void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
@@ -1094,6 +1080,10 @@ public class SettableJargonProperties implements JargonProperties {
 		builder.append(primaryTcpPerformancePrefsBandwidth);
 		builder.append(", socketRenewalIntervalInSeconds=");
 		builder.append(socketRenewalIntervalInSeconds);
+		builder.append(", longTransferRestart=");
+		builder.append(longTransferRestart);
+		builder.append(", parallelCopyBufferSize=");
+		builder.append(parallelCopyBufferSize);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1112,12 +1102,41 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the interval in seconds to renew a socket during long transfers. Set
 	 * to 0 to turn this behavior off.
-	 *
+	 * 
 	 * @param socketRenewalIntervalInSeconds
 	 */
 	public void setSocketRenewalIntervalInSeconds(
 			final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
+	}
+
+	@Override
+	public boolean isLongTransferRestart() {
+		return this.longTransferRestart;
+	}
+
+	/**
+	 * Sets the ability to restart long file transfers if needed
+	 * 
+	 * @param longFileTransferRestart
+	 */
+	public void setLongTransferRestart(final boolean longFileTransferRestart) {
+		this.longTransferRestart = longFileTransferRestart;
+	}
+
+	@Override
+	public int getParallelCopyBufferSize() {
+		return this.parallelCopyBufferSize;
+	}
+
+	/**
+	 * Set the size (in bytes) of the copy buffer used between streams in
+	 * parallel transfer
+	 * 
+	 * @param parallelCopyBufferSize
+	 */
+	public void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
+		this.parallelCopyBufferSize = parallelCopyBufferSize;
 	}
 
 }

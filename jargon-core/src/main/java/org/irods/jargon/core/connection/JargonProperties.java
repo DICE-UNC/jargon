@@ -49,17 +49,6 @@ public interface JargonProperties {
 	int getMaxParallelThreads();
 
 	/**
-	 * <h2>Experimental setting!!</h2>
-	 * <p/>
-	 * Use NIO to transfer between the local file system and iRODS for parallel
-	 * transfer operations
-	 * 
-	 * @return <code>boolean</code> of <code>true</code> if NIO should be used
-	 *         for parallel transfers
-	 */
-	boolean isUseNIOForParallelTransfers();
-
-	/**
 	 * The file length above which a numThreads will be sent to iRODS in
 	 * DataObjInp. This is done for backwards compatibility. Older versions of
 	 * iRODS will default to parallel processing if any nonzero number is sent
@@ -412,6 +401,14 @@ public interface JargonProperties {
 	int getParallelTcpPerformancePrefsBandwidth();
 
 	/**
+	 * Get the size of the buffer used in reads and writes to iRODS for parallel
+	 * transfer threads, in bytes
+	 * 
+	 * @return <code>int</code> with the buffer size for parallel transfer
+	 */
+	int getParallelCopyBufferSize();
+
+	/**
 	 * Is TCP keep alive set for the primary irods Socket?
 	 * 
 	 * @return
@@ -477,7 +474,14 @@ public interface JargonProperties {
 	 * transfers. Expressed as a number of seconds. Set to 0 to turn off this
 	 * behavior
 	 */
-
 	int getSocketRenewalIntervalInSeconds();
+
+	/**
+	 * Indicates whether long file transfer retarts should be done.
+	 * 
+	 * @return <code>boolean<code> of <code>true</code> if long file restarts
+	 *         should be done
+	 */
+	boolean isLongTransferRestart();
 
 }
