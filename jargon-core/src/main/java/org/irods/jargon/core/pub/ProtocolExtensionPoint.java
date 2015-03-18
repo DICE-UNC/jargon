@@ -8,16 +8,16 @@ import org.irods.jargon.core.packinstr.Tag;
  * Interface describing an extension point to jargon, such that higher level
  * packages may implement subsets of the iRODS client protocol directly. This is
  * the object through which these protocol operations should flow.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface ProtocolExtensionPoint {
 
 	/**
 	 * Execute an iRODS packing instruction and return the <code>Tag</code> data
 	 * encapsulating the iRODS response.
-	 * 
+	 *
 	 * @param irodsPI
 	 *            {@link IRodsPI} instance that represents the given packing
 	 *            instruction

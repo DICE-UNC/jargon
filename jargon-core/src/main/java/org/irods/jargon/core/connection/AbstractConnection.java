@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * indicators to determine which techniques are available depending on the lower
  * level implementation. This will evolve over time but will not change the
  * public API.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public abstract class AbstractConnection {
 
@@ -41,6 +41,7 @@ public abstract class AbstractConnection {
 	private IRODSSession irodsSession = null;
 	protected final IRODSAccount irodsAccount;
 	protected final PipelineConfiguration pipelineConfiguration;
+	private final long connectTimeInMillis = System.currentTimeMillis();
 
 	public enum EncryptionType {
 		NONE, SSL_WRAPPED
@@ -63,7 +64,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Constructor with account info to set up socket and information about
 	 * buffering and other networking details
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -76,7 +77,7 @@ public abstract class AbstractConnection {
 	protected AbstractConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
+					throws JargonException {
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -101,7 +102,7 @@ public abstract class AbstractConnection {
 			log.info("using internal cache buffer of size:{}",
 					pipelineConfiguration.getInternalCacheBufferSize());
 			outputBuffer = new byte[pipelineConfiguration
-					.getInternalCacheBufferSize()];
+			                        .getInternalCacheBufferSize()];
 		}
 		initializeConnection(irodsAccount);
 
@@ -151,7 +152,7 @@ public abstract class AbstractConnection {
 	 * <p/>
 	 * At the successful completion of this method, the networking is created,
 	 * though the handshake and authentication steps remain
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains information on host/port
 	 * @param startupResponseData
@@ -162,13 +163,6 @@ public abstract class AbstractConnection {
 	 */
 	protected abstract void connect(final IRODSAccount irodsAccount)
 			throws JargonException;
-
-	public void disconnectWithForce() {
-
-		log.info("disconnecting...");
-		// disconnect from irods and close
-		irodsProtocolManager.returnConnectionWithForce(this);
-	}
 
 	public boolean isConnected() {
 		return connected;
@@ -185,7 +179,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Writes value.length bytes to this output stream.
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws NullPointerException
@@ -223,7 +217,7 @@ public abstract class AbstractConnection {
 
 			}
 		} catch (IOException ioe) {
-			disconnectWithForce();
+			getIrodsSession().discardSessionForErrors(getIrodsAccount());
 			throw ioe;
 		}
 	}
@@ -232,7 +226,7 @@ public abstract class AbstractConnection {
 	 * Writes a certain length of bytes at some offset in the value array to the
 	 * output stream, by converting the value to a byte array and calling send(
 	 * byte[] value ).
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @param offset
@@ -259,7 +253,6 @@ public abstract class AbstractConnection {
 		if (offset > value.length) {
 			String err = "trying to send a byte buffer from an offset that is out of range";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -267,7 +260,6 @@ public abstract class AbstractConnection {
 			// nothing to send, warn and ignore
 			String err = "send length is zero";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -275,17 +267,12 @@ public abstract class AbstractConnection {
 
 		System.arraycopy(value, offset, temp, 0, length);
 
-		try {
-			send(temp);
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
+		send(temp);
 	}
 
 	/**
 	 * Writes value.length bytes to this output stream.
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws IOException
@@ -296,19 +283,14 @@ public abstract class AbstractConnection {
 			log.debug("null input packing instruction, do not send");
 			return;
 		}
-		try {
-			send(value.getBytes(pipelineConfiguration.getDefaultEncoding()));
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
+		send(value.getBytes(pipelineConfiguration.getDefaultEncoding()));
 
 	}
 
 	/**
 	 * Writes an int to the output stream as four bytes, network order (high
 	 * byte first).
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws IOException
@@ -317,21 +299,15 @@ public abstract class AbstractConnection {
 	protected void sendInNetworkOrder(final int value) throws IOException {
 		byte bytes[] = new byte[INT_LENGTH];
 
-		try {
-			Host.copyInt(value, bytes);
-			send(bytes);
-			flush();
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
-		}
-
+		Host.copyInt(value, bytes);
+		send(bytes);
+		flush();
 	}
 
 	/**
 	 * Writes the given input stream content, for the given length, to the iRODS
 	 * agent
-	 * 
+	 *
 	 * @param source
 	 *            <code>InputStream</code> to the data to be written. This
 	 *            stream will have been buffered by the caller, no buffering is
@@ -350,7 +326,7 @@ public abstract class AbstractConnection {
 			final InputStream source,
 			long length,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-			throws IOException {
+					throws IOException {
 
 		if (source == null) {
 			String err = "value is null";
@@ -358,60 +334,55 @@ public abstract class AbstractConnection {
 			throw new IllegalArgumentException(err);
 		}
 
-		try {
-			int lenThisRead = 0;
-			long lenOfTemp = Math.min(
-					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
-					length);
-			long dataSent = 0;
+		int lenThisRead = 0;
+		long lenOfTemp = Math.min(
+				pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
+				length);
+		long dataSent = 0;
 
-			byte[] temp = new byte[(int) lenOfTemp];
+		byte[] temp = new byte[(int) lenOfTemp];
 
-			while (length > 0) {
+		while (length > 0) {
 
-				if (Thread.interrupted()) {
-					throw new IOException(
+			if (Thread.interrupted()) {
+				throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
-				}
-
-				if (temp.length > length) {
-					temp = new byte[(int) length];
-				}
-				lenThisRead = source.read(temp);
-
-				if (lenThisRead == -1) {
-					log.info("done with stream");
-					break;
-				}
-
-				length -= lenThisRead;
-				dataSent += lenThisRead;
-				send(temp, 0, lenThisRead);
-				/*
-				 * If a listener is specified, send call-backs with progress
-				 */
-				if (connectionProgressStatusListener != null) {
-					connectionProgressStatusListener
-							.connectionProgressStatusCallback(ConnectionProgressStatus
-									.instanceForSend(lenThisRead));
-				}
+						"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
-			log.debug("final flush of data sent");
-			flush();
-			log.info("total sent:{}", dataSent);
-			return dataSent;
+			if (temp.length > length) {
+				temp = new byte[(int) length];
+			}
+			lenThisRead = source.read(temp);
 
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
+			if (lenThisRead == -1) {
+				log.info("done with stream");
+				break;
+			}
+
+			length -= lenThisRead;
+			dataSent += lenThisRead;
+			send(temp, 0, lenThisRead);
+			/*
+			 * If a listener is specified, send call-backs with progress
+			 */
+			if (connectionProgressStatusListener != null) {
+				connectionProgressStatusListener
+				.connectionProgressStatusCallback(ConnectionProgressStatus
+						.instanceForSend(lenThisRead));
+			}
 		}
+
+		log.debug("final flush of data sent");
+		flush();
+		log.info("total sent:{}", dataSent);
+		return dataSent;
+
 	}
 
 	/**
 	 * Flushes all data in the output stream and sends it to the server.
-	 * 
+	 *
 	 * @throws NullPointerException
 	 *             Send buffer empty
 	 * @throws IOException
@@ -423,55 +394,39 @@ public abstract class AbstractConnection {
 			throw new ClosedChannelException();
 		}
 
-		try {
-			if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-				irodsOutputStream.write(outputBuffer, 0, outputOffset);
-				irodsOutputStream.flush();
-				byte zerByte = (byte) 0;
-				java.util.Arrays.fill(outputBuffer, zerByte);
-				outputOffset = 0;
-			} else {
-				irodsOutputStream.flush();
-			}
-
-		} catch (IOException ioe) {
-			disconnectWithForce();
-			throw ioe;
+		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
+			irodsOutputStream.write(outputBuffer, 0, outputOffset);
+			irodsOutputStream.flush();
+			byte zerByte = (byte) 0;
+			java.util.Arrays.fill(outputBuffer, zerByte);
+			outputOffset = 0;
+		} else {
+			irodsOutputStream.flush();
 		}
 
 	}
 
 	/**
 	 * Reads a byte from the server.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	protected byte read() throws JargonException {
-		try {
-			return (byte) irodsInputStream.read();
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw new JargonException(ioe);
-		}
+	protected byte read() throws IOException {
+		return (byte) irodsInputStream.read();
+
 	}
 
 	/**
 	 * Reads an int from the server
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 * @throws JargonException
 	 */
-	protected int read(final byte[] value) throws JargonException {
-		try {
-			return read(value, 0, value.length);
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw new JargonException(ioe);
-		}
+	protected int read(final byte[] value) throws IOException {
+		return read(value, 0, value.length);
+
 	}
 
 	/**
@@ -486,7 +441,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
 	 * from iRODS to the given <code>OutputStream</code>.
-	 * 
+	 *
 	 * @param destination
 	 *            <code>OutputStream</code> to which data will be streamed from
 	 *            iRODS. Note that this method will wrap the output stream with
@@ -501,7 +456,7 @@ public abstract class AbstractConnection {
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-			throws IOException {
+					throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";
@@ -516,7 +471,6 @@ public abstract class AbstractConnection {
 		}
 
 		BufferedOutputStream bos = new BufferedOutputStream(destination);
-
 		try {
 			byte[] temp = new byte[Math.min(
 					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
@@ -529,7 +483,7 @@ public abstract class AbstractConnection {
 					bos.close();
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				n = read(temp, 0, Math.min(pipelineConfiguration
@@ -543,8 +497,8 @@ public abstract class AbstractConnection {
 					 */
 					if (intraFileStatusListener != null) {
 						intraFileStatusListener
-								.connectionProgressStatusCallback(ConnectionProgressStatus
-										.instanceForSend(n));
+						.connectionProgressStatusCallback(ConnectionProgressStatus
+								.instanceForSend(n));
 					}
 				} else {
 					length = n;
@@ -553,10 +507,6 @@ public abstract class AbstractConnection {
 
 			bos.flush();
 
-		} catch (IOException ioe) {
-			log.error("io exception reading", ioe);
-			disconnectWithForce();
-			throw ioe;
 		} finally {
 			try {
 				bos.close();
@@ -569,7 +519,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Reads a byte array from the server. Blocks until <code>length</code>
 	 * number of bytes are read.
-	 * 
+	 *
 	 * @param length
 	 *            length of byte array to be read
 	 * @return byte[] bytes read from the server
@@ -588,7 +538,6 @@ public abstract class AbstractConnection {
 		if (value == null) {
 			String err = "no data sent";
 			log.error(err);
-			disconnectWithForce();
 			throw new IllegalArgumentException(err);
 		}
 
@@ -602,14 +551,12 @@ public abstract class AbstractConnection {
 		if (length == 0) {
 			String err = "read length is set to zero";
 			log.error(err);
-			disconnectWithForce();
 			throw new IOException(err);
 		}
 
 		int result = 0;
 		if (length + offset > value.length) {
 			log.error("index out of bounds exception, length + offset larger then byte array");
-			disconnectWithForce();
 			throw new IllegalArgumentException(
 					"length + offset larger than byte array");
 		}
@@ -633,17 +580,14 @@ public abstract class AbstractConnection {
 			return result;
 		} catch (ClosedChannelException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 
 		} catch (InterruptedIOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 
 		} catch (IOException e) {
 			log.error("exception reading from socket", e);
-			disconnectWithForce();
 			throw e;
 		}
 	}
@@ -684,7 +628,7 @@ public abstract class AbstractConnection {
 			log.error("********  connection is:{}, will attempt to disconnect",
 					connectionInternalIdentifier);
 			log.error("**************************************************************************************");
-			triggerSessionCacheCleanupViaConnection();
+			shutdown();
 		}
 
 		super.finalize();
@@ -734,7 +678,7 @@ public abstract class AbstractConnection {
 	 * <code>IRODSConnection</code> is created outside of the normal factory.
 	 * <p/>
 	 * For general usage, this method should not called.
-	 * 
+	 *
 	 * @param connected
 	 *            the connected to set
 	 */
@@ -744,40 +688,16 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Close down the actual network connection
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract void shutdown() throws JargonException;
 
 	/**
-	 * Close doen the actual connection and quash any errors (avoids
+	 * Close down the actual connection and quash any errors (avoids
 	 * boiler-plate try-catch in code)
 	 */
 	protected abstract void obliterateConnectionAndDiscardErrors();
-
-	/**
-	 * Clean up class, when finalizing, that can trigger the removal of any
-	 * cached AbstractIRODSMidLevelProtocol implemenetion to iRODS when a
-	 * connection is being finalized.
-	 * <p/>
-	 * Typically, connections are cleaned up when the containing
-	 * <code>AbstractIRODSMidLevelProtocol</code> is closed in an orderly
-	 * fashion. The cleanup via a handle to the connection is a recovery
-	 * procedure when this doesn't occur.
-	 * 
-	 * @throws JargonException
-	 */
-	protected void triggerSessionCacheCleanupViaConnection()
-			throws JargonException {
-		if (!connection.isConnected()) {
-			log.debug("not connected, just bypass");
-		}
-		log.info("disconnecting...");
-		// disconnect from irods and close
-		irodsProtocolManager.returnConnectionWithForce(this);
-
-		log.info("disconnected");
-	}
 
 	/**
 	 * @return the connectionInternalIdentifier
@@ -799,6 +719,13 @@ public abstract class AbstractConnection {
 	 */
 	protected void setEncryptionType(final EncryptionType encryptionType) {
 		this.encryptionType = encryptionType;
+	}
+
+	/**
+	 * @return the connectTimeInMillis
+	 */
+	public long getConnectTimeInMillis() {
+		return connectTimeInMillis;
 	}
 
 }

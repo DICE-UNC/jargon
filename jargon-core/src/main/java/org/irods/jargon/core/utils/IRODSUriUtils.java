@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
  * Helpful methods for parsing and dealing with IRODS URIs, also supports the
  * creation of <code>IRODSAccount</code> based on a given iRODS uri format
  * (irods://).
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSUriUtils {
 
@@ -22,7 +22,7 @@ public class IRODSUriUtils {
 	 * Retrieve the iRODS user name from the <code>URI</code>, or
 	 * <code>null</code> if this componenet cannot be derived from the
 	 * <code>URI</code>
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the discovered iRODS user name, or
@@ -36,7 +36,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the parsed user information from the URI
-	 * 
+	 *
 	 * @param irodsURI
 	 * @return
 	 */
@@ -110,7 +110,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the password (if available) from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS password, or <code>null</code>
@@ -123,7 +123,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the zone (if available) from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS zone, or <code>null</code> if
@@ -136,7 +136,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the host (if available) from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS host, or <code>null</code> if
@@ -148,7 +148,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the port from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>int</code> with the iRODS port.
@@ -159,7 +159,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the path from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS path
@@ -171,7 +171,7 @@ public class IRODSUriUtils {
 	/**
 	 * Build an <code>IRODSAccount</code> from the <code>URI</code> in iRODS
 	 * format.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in irods:// form
 	 * @return {@link IRODSAccount} based on the URI information
@@ -210,7 +210,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Test to see if the URI is of the iRODS scheme "irods://".
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} to check
 	 * @return <code>boolean</code> which is <code>true</code> if this is the
@@ -228,7 +228,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Build a URI appropriate for a given iRODS account and absolute path.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
 	 * @param isFile
@@ -238,7 +238,7 @@ public class IRODSUriUtils {
 	 */
 	public static URI buildURIForAnAccountAndPath(
 			final IRODSAccount irodsAccount, final String irodsPath)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null iRODSAccount");
@@ -277,7 +277,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Build a URI appropriate for a given iRODS account and absolute path.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
 	 * @param isFile
@@ -287,7 +287,7 @@ public class IRODSUriUtils {
 	 */
 	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
 			final IRODSAccount irodsAccount, final String irodsPath)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null iRODSAccount");
@@ -329,9 +329,9 @@ public class IRODSUriUtils {
 /**
  * Internal value class for parts of user info in the irods <code>URI</code>
  * scheme
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class URIUserParts {
 	private String userName = "";

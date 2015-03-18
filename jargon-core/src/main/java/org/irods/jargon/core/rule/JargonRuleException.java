@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.rule;
 
@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Represents a rule translation exception due to the structure or parameters of
  * a rule.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class JargonRuleException extends JargonException {
 

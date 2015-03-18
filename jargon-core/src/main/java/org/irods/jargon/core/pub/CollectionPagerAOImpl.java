@@ -11,10 +11,10 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoMoreDataException;
 import org.irods.jargon.core.pub.domain.ObjStat;
-import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.query.PagingAwareCollectionListing.PagingStyle;
+import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +53,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Constructor allows specification of a collection listing utils, this is
-	 * actually an affordence for testing.
+	 * actually an affordance for testing.
 	 * 
 	 * @param irodsSession
 	 * @param irodsAccount
@@ -70,6 +70,117 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		this.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		this.collectionListingUtils = collectionListingUtils;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor)
+	 */
+	@Override
+	public PagingAwareCollectionListing retrieveNextPage(
+			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
+			throws FileNotFoundException, NoMoreDataException, JargonException {
+
+		log.info("retrieveNextPage()");
+
+		if (lastListingDescriptor == null) {
+			throw new IllegalArgumentException("null lastListingDescriptor");
+		}
+
+		log.info("next page based on descriptor:{}", lastListingDescriptor);
+
+		if (!lastListingDescriptor.isCollectionsComplete()) {
+			log.info("more collections to page..");
+			PagingAwareCollectionListing listing = pageForwardInCollections(lastListingDescriptor);
+			// if I've paged out of collections add the first page of data
+			// objects
+			if (listing.getPagingAwareCollectionListingDescriptor()
+					.isCollectionsComplete()) {
+				log.info("colletions complete, page into data objects");
+				addDataObjectsToExistingListing(listing);
+			}
+			return listing;
+
+		} else if (!lastListingDescriptor.isDataObjectsComplete()) {
+			log.info("more data objects to page...");
+			return pageForwardInDataObjects(lastListingDescriptor);
+		} else {
+			log.error("no more listings to page for:{}", lastListingDescriptor);
+			throw new NoMoreDataException(
+					"no more listings, cannot page forward");
+		}
+
+	}
+
+	private PagingAwareCollectionListing pageForwardInDataObjects(
+			PagingAwareCollectionListingDescriptor lastListingDescriptor)
+			throws FileNotFoundException, JargonException {
+
+		log.info("pageForwardInDataObjects()");
+		// since I fold the provided descriptor into the listing I generate, it
+		// should propagate most of its information forward
+
+		PagingAwareCollectionListing pagingAwareCollectionListing = this
+				.obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(lastListingDescriptor);
+		ListAndCount listAndCount = listDataObjectsGivenObjStat(
+				pagingAwareCollectionListing
+						.getPagingAwareCollectionListingDescriptor()
+						.getObjStat(),
+				lastListingDescriptor.getDataObjectsCount());
+
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsTotalRecords(listAndCount.getCountTotal());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsCount(listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsOffset(listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsComplete(listAndCount.isEndOfRecords());
+
+		pagingAwareCollectionListing
+				.setCollectionAndDataObjectListingEntries(listAndCount
+						.getCollectionAndDataObjectListingEntries());
+
+		return pagingAwareCollectionListing;
+
+	}
+
+	private PagingAwareCollectionListing pageForwardInCollections(
+			PagingAwareCollectionListingDescriptor lastListingDescriptor)
+			throws FileNotFoundException, JargonException {
+		log.info("pageForwardInCollections()");
+
+		// since I fold the provided descriptor into the listing I generate, it
+		// should propagate most of its information forward
+		PagingAwareCollectionListing pagingAwareCollectionListing = this
+				.obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(lastListingDescriptor);
+		ListAndCount listAndCount = listCollectionsGivenObjStat(
+				pagingAwareCollectionListing
+						.getPagingAwareCollectionListingDescriptor()
+						.getObjStat(), lastListingDescriptor.getCount());
+
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setTotalRecords(
+						listAndCount.getCountTotal());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setCount(
+						listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setOffset(
+						listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setCollectionsComplete(listAndCount.isEndOfRecords());
+
+		pagingAwareCollectionListing
+				.setCollectionAndDataObjectListingEntries(listAndCount
+						.getCollectionAndDataObjectListingEntries());
+
+		return pagingAwareCollectionListing;
+
 	}
 
 	/*
@@ -91,52 +202,27 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 					"null or empty irodsAbsolutePath");
 		}
 
-		log.info("obtain objStat for path:{}", irodsAbsolutePath);
-
-		ObjStat objStat;
-		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setParentAbsolutePath(irodsAbsolutePath);
-		pagingAwareCollectionListing.setPathComponents(MiscIRODSUtils
-				.breakIRODSPathIntoComponents(irodsAbsolutePath));
-		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
-		objStat = collectionListingUtils
-				.retrieveObjectStatForPath(irodsAbsolutePath);
-		log.info("objStat:{}", objStat);
-
-		if (!objStat.isSomeTypeOfCollection()) {
-			log.error("this is not a collection:{}", irodsAbsolutePath);
-			throw new JargonException(
-					"cannot list contents under a dataObject, must be a collection");
-		}
-
-		/*
-		 * See if jargon supports the given object type
-		 */
-		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
-		/*
-		 * Special collections like mounted collections dont support paging, and
-		 * will just retrieve everything
-		 */
-		if (objStat.getSpecColType() == SpecColType.NORMAL
-				|| objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			pagingAwareCollectionListing.setPagingStyle(PagingStyle.NONE);
-		} else {
-			pagingAwareCollectionListing
-					.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
-		}
-
 		log.info("try and list collections");
 
-		ListAndCount listAndCount = listCollectionsGivenObjStat(objStat, 0);
+		PagingAwareCollectionListing pagingAwareCollectionListing = this
+				.obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(irodsAbsolutePath);
+		ListAndCount listAndCount = listCollectionsGivenObjStat(
+				pagingAwareCollectionListing
+						.getPagingAwareCollectionListingDescriptor()
+						.getObjStat(), 0);
 
-		pagingAwareCollectionListing.setTotalRecords(listAndCount
-				.getCountTotal());
-		pagingAwareCollectionListing.setCount(listAndCount.getCountThisPage());
-		pagingAwareCollectionListing.setOffset(listAndCount.getOffsetStart());
-		pagingAwareCollectionListing.setCollectionsComplete(listAndCount
-				.isEndOfRecords());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setTotalRecords(
+						listAndCount.getCountTotal());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setCount(
+						listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor().setOffset(
+						listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setCollectionsComplete(listAndCount.isEndOfRecords());
 
 		pagingAwareCollectionListing
 				.setCollectionAndDataObjectListingEntries(listAndCount
@@ -147,30 +233,110 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.getMaxFilesAndDirsQueryMax()) {
 			log.info("collections are empty or less then max, so get data objects");
 
-			listAndCount = listDataObjectsGivenObjStat(objStat, 0);
-
-			pagingAwareCollectionListing
-					.setDataObjectsTotalRecords(listAndCount.getCountTotal());
-			pagingAwareCollectionListing.setDataObjectsCount(listAndCount
-					.getCountThisPage());
-			pagingAwareCollectionListing.setDataObjectsOffset(listAndCount
-					.getOffsetStart());
-			pagingAwareCollectionListing.setDataObjectsComplete(listAndCount
-					.isEndOfRecords());
-			pagingAwareCollectionListing
-					.getCollectionAndDataObjectListingEntries()
-					.addAll(listAndCount
-							.getCollectionAndDataObjectListingEntries());
+			addDataObjectsToExistingListing(pagingAwareCollectionListing);
 		}
 
 		return pagingAwareCollectionListing;
 
 	}
 
+	private void addDataObjectsToExistingListing(
+			PagingAwareCollectionListing pagingAwareCollectionListing)
+			throws JargonException {
+		ListAndCount listAndCount = listDataObjectsGivenObjStat(
+				pagingAwareCollectionListing
+						.getPagingAwareCollectionListingDescriptor()
+						.getObjStat(), 0);
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsTotalRecords(listAndCount.getCountTotal());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsCount(listAndCount.getCountThisPage());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsOffset(listAndCount.getOffsetStart());
+		pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor()
+				.setDataObjectsComplete(listAndCount.isEndOfRecords());
+		pagingAwareCollectionListing
+				.getCollectionAndDataObjectListingEntries()
+				.addAll(listAndCount.getCollectionAndDataObjectListingEntries());
+	}
+
+	/**
+	 * Wraps the provided path as a descriptor for initially obtaining the first
+	 * page
+	 * 
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	private PagingAwareCollectionListing obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(
+			String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
+
+		log.info("obtainObjStatAndBuildSkeletonPagingAwareCollectionListing()");
+
+		PagingAwareCollectionListingDescriptor descriptor = new PagingAwareCollectionListingDescriptor();
+		descriptor.setParentAbsolutePath(irodsAbsolutePath);
+		return obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(descriptor);
+
+	}
+
+	private PagingAwareCollectionListing obtainObjStatAndBuildSkeletonPagingAwareCollectionListing(
+			final PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor)
+			throws FileNotFoundException, JargonException {
+		log.info("obtain objStat for path:{}",
+				pagingAwareCollectionListingDescriptor);
+
+		ObjStat objStat;
+		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
+		pagingAwareCollectionListing
+				.setPagingAwareCollectionListingDescriptor(pagingAwareCollectionListingDescriptor);
+
+		objStat = collectionListingUtils
+				.retrieveObjectStatForPath(pagingAwareCollectionListingDescriptor
+						.getParentAbsolutePath());
+		pagingAwareCollectionListingDescriptor
+				.setPathComponents(MiscIRODSUtils
+						.breakIRODSPathIntoComponents(pagingAwareCollectionListingDescriptor
+								.getParentAbsolutePath()));
+		pagingAwareCollectionListingDescriptor.setObjStat(objStat);
+		pagingAwareCollectionListingDescriptor.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
+
+		log.info("objStat:{}", objStat);
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error("this is not a collection:{}",
+					pagingAwareCollectionListingDescriptor
+							.getParentAbsolutePath());
+			throw new JargonException(
+					"cannot list contents under a dataObject, must be a collection");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		/*
+		 * if (objStat.getSpecColType() == SpecColType.NORMAL ||
+		 * objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+		 * descriptor.setPagingStyle(PagingStyle.NONE); } else {
+		 * descriptor.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES); }
+		 */
+
+		return pagingAwareCollectionListing;
+	}
+
 	private ListAndCount listCollectionsGivenObjStat(final ObjStat objStat,
 			final int offset) throws JargonException {
 
 		log.info("listCollectionsGivenObjStat()");
+		log.info("objStat:{}", objStat);
+		log.info("offset:{}", offset);
 		ListAndCount listAndCount = new ListAndCount();
 		listAndCount
 				.setCollectionAndDataObjectListingEntries(collectionListingUtils
@@ -272,7 +438,6 @@ class ListAndCount {
 	private int countThisPage = 0;
 	private boolean endOfRecords = false;
 	private int offsetStart = 0;
-	private int offsetEnd = 0;
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries;
 
 	/**
@@ -351,21 +516,6 @@ class ListAndCount {
 		this.offsetStart = offsetStart;
 	}
 
-	/**
-	 * @return the offsetEnd
-	 */
-	int getOffsetEnd() {
-		return offsetEnd;
-	}
-
-	/**
-	 * @param offsetEnd
-	 *            the offsetEnd to set
-	 */
-	void setOffsetEnd(int offsetEnd) {
-		this.offsetEnd = offsetEnd;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -383,8 +533,6 @@ class ListAndCount {
 		builder.append(endOfRecords);
 		builder.append(", offsetStart=");
 		builder.append(offsetStart);
-		builder.append(", offsetEnd=");
-		builder.append(offsetEnd);
 		builder.append(", ");
 		if (collectionAndDataObjectListingEntries != null) {
 			builder.append("collectionAndDataObjectListingEntries=");

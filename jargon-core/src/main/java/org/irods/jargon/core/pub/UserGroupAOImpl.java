@@ -151,6 +151,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		try {
 			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (DataNotFoundException dnf) {
+			log.warn("user group does not exist, ignoring remove");
 		} catch (InvalidUserException e) {
 			log.warn("user group {} does not exist, ignoring remove", userGroup);
 		} catch (NoMoreRulesException nmr) {

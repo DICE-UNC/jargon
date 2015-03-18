@@ -354,7 +354,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(ruleBody);
-		sb.append("\n");
+		sb.append(System.getProperty("line.separator"));
 		sb.append("INPUT ");
 
 		if (inputParameters.isEmpty()) {
@@ -369,7 +369,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			}
 		}
 
-		sb.append("\n");
+		sb.append(System.getProperty("line.separator"));
 		sb.append("OUTPUT ");
 
 		if (outputParameters.isEmpty()) {
@@ -384,7 +384,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			}
 		}
 
-		sb.append("\n");
+		sb.append(System.getProperty("line.separator"));
 
 		String ruleAsString = sb.toString();
 		return ruleAsString;

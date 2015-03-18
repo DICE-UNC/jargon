@@ -27,11 +27,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Helpful object for stream to stream copies, also handles byte arrays (as
  * contracts fill out). Allows streaming from one source into or out of iRODS.
- * 
+ *
  * (methods to be filled out as needed, this is a new service)
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		Stream2StreamAO {
@@ -65,6 +65,10 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		if (irodsTargetFile == null) {
 			throw new IllegalArgumentException("null irodsTargetFile");
 		}
+
+		// delete the target file for overwrite
+
+		irodsTargetFile.delete();
 
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
@@ -341,6 +345,49 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		log.info("transfer stats:{}", transferStatistics);
 
 		return transferStatistics;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see <<<<<<< HEAD =======
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
+	 * InputStream, java.io.OutputStream)
+	 */
+	@Override
+	public void streamToStreamCopy(final InputStream inputStream,
+			final OutputStream outputStream) throws JargonException {
+
+		if (inputStream == null) {
+			throw new IllegalArgumentException("null inputStream");
+		}
+
+		if (outputStream == null) {
+			throw new IllegalArgumentException("null outputStream");
+		}
+
+		log.info("streamToStreamCopy()");
+
+		final ReadableByteChannel inputChannel = Channels
+				.newChannel(inputStream);
+		final WritableByteChannel outputChannel = Channels
+				.newChannel(outputStream);
+		// copy the channels
+		try {
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
+					bufferSize);
+		} catch (IOException e) {
+			log.error("IO Exception copying buffers", e);
+			throw new JargonException("io exception copying buffers", e);
+		} finally {
+			try {
+				inputChannel.close();
+				outputChannel.close();
+			} catch (Exception e) {
+
+			}
+		}
+
 	}
 
 	/*

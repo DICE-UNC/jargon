@@ -363,8 +363,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final DataObjInp instanceForOpen(
 			final String fileAbsolutePath, final OpenFlags openFlags)
 			throws JargonException {
-		return new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags,
-				0L, 0L, "", null);
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath,
+				DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
+		if (openFlags == OpenFlags.WRITE
+				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
+			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
+		}
+		return dataObjInp;
 	}
 
 	/**
@@ -996,6 +1002,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 */
 	public void setLocalPath(final String localPath) {
 		this.localPath = localPath;
+	}
+
+	/**
+	 * @param operationType
+	 *            the operationType to set
+	 */
+	public void setOperationType(int operationType) {
+		this.operationType = operationType;
 	}
 
 }

@@ -732,6 +732,7 @@ public class IRODSGenQueryExecutorImplTest {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			current = row.getColumn(0);
 			if (!last.isEmpty()) {
+				@SuppressWarnings("unused")
 				int compare = current.compareTo(last);
 				// FIXME: overheaded until resolved
 				// https://github.com/irods/irods/issues/2339
@@ -779,6 +780,7 @@ public class IRODSGenQueryExecutorImplTest {
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			current = row.getColumn(0);
 			if (!last.isEmpty()) {
+				@SuppressWarnings("unused")
 				int compare = current.compareTo(last);
 				// FIXME: overhead until resolved, at least can run the test and
 				// check for iRODS errors

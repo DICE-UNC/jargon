@@ -4,9 +4,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * XML API packing instruction for modifying data object system metadata
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) FIXME: implement...
- * 
+ *
  */
 public class ModDataObjMetaInp extends AbstractIRODSPackingInstruction {
 

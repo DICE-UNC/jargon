@@ -1,14 +1,14 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.aohelper;
 
 /**
  * Abstract top-level class for objects that act as 'helpers' to an Access
  * Object
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class AOHelper {
 

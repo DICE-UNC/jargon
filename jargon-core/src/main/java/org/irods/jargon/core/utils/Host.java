@@ -103,7 +103,7 @@ package org.irods.jargon.core.utils;
  * </DL>
  * </DIV>
  * <P>
- * 
+ *
  * @author David R. Nadeau, San Diego Supercomputer Center
  */
 public final class Host extends Object {
@@ -189,7 +189,7 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final String typeName[] = { "char", "short", "int", "long",
-			"long long", "float", "double", "long double" };
+		"long long", "float", "double", "long double" };
 
 	/**
 	 * Holds the size, in bytes, of each of the language primitive types.
@@ -198,13 +198,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final byte typeSize[] = { 1, // char
-			2, // short
-			4, // int
-			8, // long
-			8, // long long (doesn't exist in Java)
-			4, // float
-			8, // double
-			8, // long double (doesn't exist in Java)
+		2, // short
+		4, // int
+		8, // long
+		8, // long long (doesn't exist in Java)
+		4, // float
+		8, // double
+		8, // long double (doesn't exist in Java)
 	};
 
 	/**
@@ -215,13 +215,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final short typeBits[] = { 8, // char
-			16, // short
-			32, // int
-			64, // long
-			64, // long long (doesn't exist in Java)
-			32, // float
-			64, // double
-			64, // long double (doesn't exist in Java)
+		16, // short
+		32, // int
+		64, // long
+		64, // long long (doesn't exist in Java)
+		32, // float
+		64, // double
+		64, // long double (doesn't exist in Java)
 	};
 
 	/**
@@ -237,13 +237,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final byte typeCompilerAlignment[] = { 1, // char
-			2, // short
-			4, // int
-			8, // long
-			8, // long long (doesn't exist in Java)
-			4, // float
-			8, // double
-			8, // long double (doesn't exist in Java)
+		2, // short
+		4, // int
+		8, // long
+		8, // long long (doesn't exist in Java)
+		4, // float
+		8, // double
+		8, // long double (doesn't exist in Java)
 	};
 
 	// ----------------------------------------------------------------------
@@ -253,7 +253,7 @@ public final class Host extends Object {
 	 * Returns true if the host's byte order is "big endian" or
 	 * Most-significant-Byte-First (MBF); otherwise false.
 	 * <P>
-	 * 
+	 *
 	 * @return true if MBF; false if LBF
 	 */
 	public final static boolean isMBFByteOrder() {
@@ -264,7 +264,7 @@ public final class Host extends Object {
 	 * Returns true if the host's byte order is "little endian" or
 	 * Least-significant-Byte-First (LBF); otherwise false.
 	 * <P>
-	 * 
+	 *
 	 * @return true if LBF; false if MBF
 	 */
 	public final static boolean isLBFByteOrder() {
@@ -274,7 +274,7 @@ public final class Host extends Object {
 	/**
 	 * Gets the name of the type.
 	 * <P>
-	 * 
+	 *
 	 * @param type
 	 *            the type code for the data type
 	 * @return the type name
@@ -286,7 +286,7 @@ public final class Host extends Object {
 	/**
 	 * Gets the number of bytes occupied by the type.
 	 * <P>
-	 * 
+	 *
 	 * @param type
 	 *            the type code for the data type
 	 * @return the number of bytes
@@ -298,7 +298,7 @@ public final class Host extends Object {
 	/**
 	 * Gets the number of significant bits of the type.
 	 * <P>
-	 * 
+	 *
 	 * @param type
 	 *            the type code for the data type
 	 * @return the number of bytes
@@ -311,7 +311,7 @@ public final class Host extends Object {
 	 * Gets the alignment boundary, in bytes, imposed by the compiler for the
 	 * type.
 	 * <P>
-	 * 
+	 *
 	 * @param type
 	 *            the type code for the data type
 	 * @return the alignment in bytes
@@ -331,7 +331,7 @@ public final class Host extends Object {
 	 * The swap is done in-place, reversing the order of bytes in the given
 	 * array.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            an array of bytes to swap the order of
 	 * @param nBytes
@@ -396,7 +396,7 @@ public final class Host extends Object {
 	 * The swap is done in-place, reversing the order of bytes in the given
 	 * array.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            an array of bytes to swap the order of
 	 * @param offset
@@ -465,7 +465,7 @@ public final class Host extends Object {
 	 * The swap is done in-place, reversing the order of bytes in the given
 	 * array.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            an array of bytes to swap the order of
 	 * @param nBytes
@@ -492,7 +492,7 @@ public final class Host extends Object {
 	 * The swap is done in-place, reversing the order of bytes in the given
 	 * array.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            an array of bytes to swap the order of
 	 * @param offset
@@ -528,7 +528,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the unsigned byte value (as an short)
@@ -544,7 +544,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the short value
@@ -564,7 +564,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the unsigned short value (as an int)
@@ -580,7 +580,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the int value
@@ -601,7 +601,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the unsigned int value (as a long)
@@ -620,7 +620,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the long value
@@ -643,7 +643,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the unsigned long value
@@ -672,7 +672,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the long long value
@@ -698,7 +698,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the unsigned long long value
@@ -724,7 +724,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the float value
@@ -742,7 +742,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the double value
@@ -769,7 +769,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long double types, this method is
 	 * identical to the double version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @return the long double value
@@ -800,7 +800,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -818,7 +818,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -840,7 +840,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -860,7 +860,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -885,7 +885,7 @@ public final class Host extends Object {
 	 * returns the value in the next larger data type, with the high bits set to
 	 * zeroes.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -907,7 +907,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -932,7 +932,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -964,7 +964,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -992,7 +992,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -1021,7 +1021,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -1043,7 +1043,7 @@ public final class Host extends Object {
 	 * the type. The array is assumed to contain a legal value for the type with
 	 * sizeof(type) bytes in the Java byte order.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -1072,7 +1072,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long double types, this method is
 	 * identical to the double version.
 	 * <P>
-	 * 
+	 *
 	 * @param bytes
 	 *            byte array
 	 * @param offset
@@ -1105,7 +1105,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1121,7 +1121,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1136,7 +1136,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1152,7 +1152,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1169,7 +1169,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1185,7 +1185,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1201,7 +1201,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1218,7 +1218,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1236,7 +1236,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1254,7 +1254,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1272,7 +1272,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1289,7 +1289,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1308,7 +1308,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1326,7 +1326,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1344,7 +1344,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1361,7 +1361,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1381,7 +1381,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1403,7 +1403,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1425,7 +1425,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1447,7 +1447,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1469,7 +1469,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1491,7 +1491,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1513,7 +1513,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1535,7 +1535,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1561,7 +1561,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1586,7 +1586,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1611,7 +1611,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1636,7 +1636,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1661,7 +1661,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1686,7 +1686,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1711,7 +1711,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1736,7 +1736,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1759,7 +1759,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1777,7 +1777,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1796,7 +1796,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1822,7 +1822,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long double types, this method is
 	 * identical to the double version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1849,7 +1849,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1868,7 +1868,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1886,7 +1886,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1905,7 +1905,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1925,7 +1925,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1943,7 +1943,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1961,7 +1961,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -1980,7 +1980,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2000,7 +2000,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2021,7 +2021,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2042,7 +2042,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2062,7 +2062,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2084,7 +2084,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2104,7 +2104,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2124,7 +2124,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2144,7 +2144,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2166,7 +2166,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2191,7 +2191,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2216,7 +2216,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2241,7 +2241,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2266,7 +2266,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2290,7 +2290,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2314,7 +2314,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2338,7 +2338,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2366,7 +2366,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2394,7 +2394,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2422,7 +2422,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2450,7 +2450,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2478,7 +2478,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2505,7 +2505,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2532,7 +2532,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2559,7 +2559,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long long types, this method is
 	 * identical to the long version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2584,7 +2584,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2605,7 +2605,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2627,7 +2627,7 @@ public final class Host extends Object {
 	 * Copies the given value of the type into the given byte array. The array
 	 * is assumed to be large enough to hold a value of sizeof(type) bytes.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes
@@ -2656,7 +2656,7 @@ public final class Host extends Object {
 	 * Note: Since Java does not support long double types, this method is
 	 * identical to the double version.
 	 * <P>
-	 * 
+	 *
 	 * @param value
 	 *            the value to copy
 	 * @param bytes

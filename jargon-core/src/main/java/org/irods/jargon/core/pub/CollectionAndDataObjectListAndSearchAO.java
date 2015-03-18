@@ -583,4 +583,19 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	int countDataObjectsUnderPath(String absolutePathToParent)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * List data objects and collections found underneath the parent described
+	 * in the given objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that describes the file
+	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
+	 * } that represents the
+	 *         collections and data objects beneath the parent
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
+			ObjStat objStat) throws FileNotFoundException, JargonException;
+
 }

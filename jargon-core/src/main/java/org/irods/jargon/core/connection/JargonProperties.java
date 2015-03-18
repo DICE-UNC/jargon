@@ -49,17 +49,6 @@ public interface JargonProperties {
 	int getMaxParallelThreads();
 
 	/**
-	 * <h2>Experimental setting!!</h2>
-	 * <p/>
-	 * Use NIO to transfer between the local file system and iRODS for parallel
-	 * transfer operations
-	 * 
-	 * @return <code>boolean</code> of <code>true</code> if NIO should be used
-	 *         for parallel transfers
-	 */
-	boolean isUseNIOForParallelTransfers();
-
-	/**
 	 * The file length above which a numThreads will be sent to iRODS in
 	 * DataObjInp. This is done for backwards compatibility. Older versions of
 	 * iRODS will default to parallel processing if any nonzero number is sent
@@ -361,6 +350,116 @@ public interface JargonProperties {
 	boolean isForcePamFlush();
 
 	/**
+	 * Is TCP keep alive set for the primary (1247) irods Socket?
+	 * 
+	 * @return
+	 */
+	boolean isParallelTcpKeepAlive();
+
+	/**
+	 * parallel TCP send window size, set in a number that will be multiplied by
+	 * 1024. Set to 0 if no window size set. This is for parallel transfer
+	 * sockets.
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         send window size
+	 */
+	int getParallelTcpSendWindowSize();
+
+	/**
+	 * parallel TCP receive window size, set in a number that will be multiplied
+	 * by 1024. Set to 0 if no window size set. This is for the parallel socket
+	 * 
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         receive window size
+	 */
+	int getParallelTcpReceiveWindowSize();
+
+	/**
+	 * parallel TCP preference for connection time for parallel TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int getParallelTcpPerformancePrefsConnectionTime();
+
+	/**
+	 * parallel TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int getParallelTcpPerformancePrefsLatency();
+
+	/**
+	 * parallel TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for bandwidth
+	 */
+	int getParallelTcpPerformancePrefsBandwidth();
+
+	/**
+	 * Get the size of the buffer used in reads and writes to iRODS for parallel
+	 * transfer threads, in bytes
+	 * 
+	 * @return <code>int</code> with the buffer size for parallel transfer
+	 */
+	int getParallelCopyBufferSize();
+
+	/**
+	 * Is TCP keep alive set for the primary irods Socket?
+	 * 
+	 * @return
+	 */
+	boolean isPrimaryTcpKeepAlive();
+
+	/**
+	 * Primary TCP send window size, set in a number that will be multiplied by
+	 * 1024. Set to 0 if no window size set. This is for the primary socket
+	 * (1247)
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         send window size
+	 */
+	int getPrimaryTcpSendWindowSize();
+
+	/**
+	 * Primary TCP receive window size, set in a number that will be multiplied
+	 * by 1024. Set to 0 if no window size set. This is for the primary socket
+	 * (1247)
+	 * 
+	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 *         receive window size
+	 */
+	int getPrimaryTcpReceiveWindowSize();
+
+	/**
+	 * Primary TCP preference for connection time for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int getPrimaryTcpPerformancePrefsConnectionTime();
+
+	/**
+	 * Primary TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for conn time
+	 */
+	int getPrimaryTcpPerformancePrefsLatency();
+
+	/**
+	 * Primary TCP preference for latency for TCP sockets
+	 * (socket.setPerformancePreferences())
+	 * 
+	 * @return <code>int</code> with preference for bandwidth
+	 */
+	int getPrimaryTcpPerformancePrefsBandwidth();
+
+	/**
 	 * Get the type of networking layer that will be used in the low level
 	 * connections to iRODS (currently the values are limited to 'tcp'). If no
 	 * property is found, then 'tcp' will be defaulted.
@@ -368,5 +467,21 @@ public interface JargonProperties {
 	 * @return
 	 */
 	String getConnectionFactory();
+
+	/**
+	 * Get the renewal interval in seconds, after which a connection is
+	 * discarded and renewed. Used for preventing timeouts in recursive
+	 * transfers. Expressed as a number of seconds. Set to 0 to turn off this
+	 * behavior
+	 */
+	int getSocketRenewalIntervalInSeconds();
+
+	/**
+	 * Indicates whether long file transfer retarts should be done.
+	 * 
+	 * @return <code>boolean<code> of <code>true</code> if long file restarts
+	 *         should be done
+	 */
+	boolean isLongTransferRestart();
 
 }

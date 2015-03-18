@@ -15,9 +15,9 @@ import org.irods.jargon.core.exception.JargonException;
  * the imcoll icommand: https://www.irods.org/index.php/imcoll
  * <p/>
  * See also: https://www.irods.org/index.php/Mounted_iRODS_Collection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface MountedCollectionAO {
 
@@ -29,7 +29,7 @@ public interface MountedCollectionAO {
 	 * link. the first argument is the iRODS collection to be linked or the
 	 * target collection name. The second argument is the link collection name
 	 * The link collection must not exist or must be an empty collection
-	 * 
+	 *
 	 * @param absolutePathToTheIRODSCollectionToBeMounted
 	 *            <code>String</code> with the absolute path to an existing
 	 *            iRODS collection that will be soft linked at the name provided
@@ -38,7 +38,7 @@ public interface MountedCollectionAO {
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection that will be created, pointing to the soft link. If
 	 *            this does not exist, it will be created.
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 *             occurs if the
 	 *             <code>absolutePathToTheIRODSCollectionToBeMounted</code> does
@@ -50,12 +50,12 @@ public interface MountedCollectionAO {
 	void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-			throws FileNotFoundException, CollectionNotEmptyException,
-			JargonException;
+					throws FileNotFoundException, CollectionNotEmptyException,
+					JargonException;
 
 	/**
 	 * Unmount the collection at the given absolute path
-	 * 
+	 *
 	 * @param absolutePathToCollectionToUnmount
 	 *            <code>String</code> with the absolute path to the collection
 	 *            to be unmounted
@@ -77,7 +77,7 @@ public interface MountedCollectionAO {
 	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
 	 * given the provided path to the desired collection, and the .wss file that
 	 * was just
-	 * 
+	 *
 	 * @param absolutePathToTheMSSOToBeMounted
 	 *            <code>String</code> with the absolute path to msso structured
 	 *            object to mount
@@ -90,7 +90,7 @@ public interface MountedCollectionAO {
 	void createAnMSSOMountForWorkflow(String absoluteLocalPathToWssFile,
 			String absoluteIRODSTargetPathToTheWssToBeMounted,
 			String absolutePathToMountedCollection)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * Create a file system mount point in iRODS. Mounting the file system at
@@ -101,7 +101,7 @@ public interface MountedCollectionAO {
 	 * <p/>
 	 * See https://www.irods.org/index.php/Mounted_iRODS_Collection for notes on
 	 * mounted collections
-	 * 
+	 *
 	 * @param absolutePhysicalPathOnServer
 	 *            <code>String</code> with the absolute path to the local file
 	 *            system (local to the iRODS server) that is to be mounted.
@@ -119,7 +119,7 @@ public interface MountedCollectionAO {
 	 */
 	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
 			String absoluteIRODSTargetPathToBeMounted, String storageResource)
-			throws CollectionNotMountedException, FileNotFoundException,
-			JargonException;
+					throws CollectionNotMountedException, FileNotFoundException,
+					JargonException;
 
 }

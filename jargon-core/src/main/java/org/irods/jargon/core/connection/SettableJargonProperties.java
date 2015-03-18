@@ -20,7 +20,7 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 public class SettableJargonProperties implements JargonProperties {
 
 	private boolean useParallelTransfer = true;
-	private boolean useNIOForParallelTransfers = false;
+	private final boolean useNIOForParallelTransfers = false;
 	private int maxParallelThreads = 4;
 	private int maxFilesAndDirsQueryMax = 5000;
 	private boolean useTransferThreadsPool = false;
@@ -53,6 +53,25 @@ public class SettableJargonProperties implements JargonProperties {
 	private boolean forcePamFlush = false;
 	private String connectionFactory = "tcp";
 	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.DEFAULT;
+	private boolean parallelTcpKeepAlive;
+	private int parallelTcpSendWindowSize;
+	private int parallelTcpReceiveWindowSize;
+	private int parallelTcpPerformancePrefsConnectionTime;
+	private int parallelTcpPerformancePrefsLatency;
+	private int parallelTcpPerformancePrefsBandwidth;
+	private boolean primaryTcpKeepAlive;
+	private int primaryTcpSendWindowSize;
+	private int primaryTcpReceiveWindowSize;
+	private int primaryTcpPerformancePrefsConnectionTime;
+	private int primaryTcpPerformancePrefsLatency;
+	private int primaryTcpPerformancePrefsBandwidth;
+	private int socketRenewalIntervalInSeconds;
+	private boolean longTransferRestart = true;
+	/**
+	 * Size (in bytes) of the buffer used to copy between input and output for
+	 * parallel transfers
+	 */
+	private int parallelCopyBufferSize;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -86,8 +105,6 @@ public class SettableJargonProperties implements JargonProperties {
 		}
 
 		useParallelTransfer = jargonProperties.isUseParallelTransfer();
-		useNIOForParallelTransfers = jargonProperties
-				.isUseNIOForParallelTransfers();
 		maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
 		allowPutGetResourceRedirects = jargonProperties
 				.isAllowPutGetResourceRedirects();
@@ -130,6 +147,35 @@ public class SettableJargonProperties implements JargonProperties {
 		setForcePamFlush(jargonProperties.isForcePamFlush());
 		connectionFactory = jargonProperties.getConnectionFactory();
 		checksumEncoding = jargonProperties.getChecksumEncoding();
+
+		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties
+				.getParallelTcpPerformancePrefsBandwidth();
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties
+				.getParallelTcpPerformancePrefsConnectionTime();
+		parallelTcpPerformancePrefsLatency = jargonProperties
+				.getParallelTcpPerformancePrefsLatency();
+		parallelTcpReceiveWindowSize = jargonProperties
+				.getParallelTcpReceiveWindowSize();
+		parallelTcpSendWindowSize = jargonProperties
+				.getParallelTcpSendWindowSize();
+		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties
+				.getPrimaryTcpPerformancePrefsBandwidth();
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties
+				.getPrimaryTcpPerformancePrefsConnectionTime();
+		primaryTcpPerformancePrefsLatency = jargonProperties
+				.getPrimaryTcpPerformancePrefsLatency();
+		primaryTcpReceiveWindowSize = jargonProperties
+				.getPrimaryTcpReceiveWindowSize();
+		primaryTcpSendWindowSize = jargonProperties
+				.getPrimaryTcpSendWindowSize();
+		this.socketRenewalIntervalInSeconds = jargonProperties
+				.getSocketRenewalIntervalInSeconds();
+		this.longTransferRestart = jargonProperties.isLongTransferRestart();
+		this.parallelCopyBufferSize = jargonProperties
+				.getParallelCopyBufferSize();
+
 	}
 
 	/*
@@ -581,27 +627,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encoding = encoding;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUseNIOForParallelTransfers()
-	 */
-	@Override
-	public synchronized boolean isUseNIOForParallelTransfers() {
-		return useNIOForParallelTransfers;
-	}
-
-	/**
-	 * @param useNIOForParallelTransfers
-	 *            <code>boolean</code> that is set to <code>true</code> if NIO
-	 *            should be used for parallel file transfers
-	 */
-	public synchronized void setUseNIOForParallelTransfers(
-			final boolean useNIOForParallelTransfers) {
-		this.useNIOForParallelTransfers = useNIOForParallelTransfers;
-	}
-
 	/**
 	 * @return <code>boolean</code> that indicates whether a reconnect of long
 	 *         running connections is done. This is equvalent to the -T icommand
@@ -824,6 +849,294 @@ public class SettableJargonProperties implements JargonProperties {
 
 		this.checksumEncoding = checksumEncoding;
 
+	}
+
+	@Override
+	public boolean isParallelTcpKeepAlive() {
+		return parallelTcpKeepAlive;
+	}
+
+	public void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
+		this.parallelTcpKeepAlive = parallelTcpKeepAlive;
+	}
+
+	@Override
+	public int getParallelTcpSendWindowSize() {
+		return parallelTcpSendWindowSize;
+	}
+
+	public void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
+		this.parallelTcpSendWindowSize = parallelTcpSendWindowSize;
+	}
+
+	@Override
+	public int getParallelTcpReceiveWindowSize() {
+		return parallelTcpReceiveWindowSize;
+	}
+
+	public void setParallelTcpReceiveWindowSize(
+			final int parallelTcpReceiveWindowSize) {
+		this.parallelTcpReceiveWindowSize = parallelTcpReceiveWindowSize;
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsConnectionTime() {
+		return parallelTcpPerformancePrefsConnectionTime;
+	}
+
+	public void setParallelTcpPerformancePrefsConnectionTime(
+			final int parallelTcpPerformancePrefsConnectionTime) {
+		this.parallelTcpPerformancePrefsConnectionTime = parallelTcpPerformancePrefsConnectionTime;
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsLatency() {
+		return parallelTcpPerformancePrefsLatency;
+	}
+
+	public void setParallelTcpPerformancePrefsLatency(
+			final int parallelTcpPerformancePrefsLatency) {
+		this.parallelTcpPerformancePrefsLatency = parallelTcpPerformancePrefsLatency;
+	}
+
+	@Override
+	public int getParallelTcpPerformancePrefsBandwidth() {
+		return parallelTcpPerformancePrefsBandwidth;
+	}
+
+	public void setParallelTcpPerformancePrefsBandwidth(
+			final int parallelTcpPerformancePrefsBandwidth) {
+		this.parallelTcpPerformancePrefsBandwidth = parallelTcpPerformancePrefsBandwidth;
+	}
+
+	@Override
+	public boolean isPrimaryTcpKeepAlive() {
+		return primaryTcpKeepAlive;
+	}
+
+	public void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
+		this.primaryTcpKeepAlive = primaryTcpKeepAlive;
+	}
+
+	@Override
+	public int getPrimaryTcpSendWindowSize() {
+		return primaryTcpSendWindowSize;
+	}
+
+	public void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
+		this.primaryTcpSendWindowSize = primaryTcpSendWindowSize;
+	}
+
+	@Override
+	public int getPrimaryTcpReceiveWindowSize() {
+		return primaryTcpReceiveWindowSize;
+	}
+
+	public void setPrimaryTcpReceiveWindowSize(
+			final int primaryTcpReceiveWindowSize) {
+		this.primaryTcpReceiveWindowSize = primaryTcpReceiveWindowSize;
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+		return primaryTcpPerformancePrefsConnectionTime;
+	}
+
+	public void setPrimaryTcpPerformancePrefsConnectionTime(
+			final int primaryTcpPerformancePrefsConnectionTime) {
+		this.primaryTcpPerformancePrefsConnectionTime = primaryTcpPerformancePrefsConnectionTime;
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsLatency() {
+		return primaryTcpPerformancePrefsLatency;
+	}
+
+	public void setPrimaryTcpPerformancePrefsLatency(
+			final int primaryTcpPerformancePrefsLatency) {
+		this.primaryTcpPerformancePrefsLatency = primaryTcpPerformancePrefsLatency;
+	}
+
+	@Override
+	public int getPrimaryTcpPerformancePrefsBandwidth() {
+		return primaryTcpPerformancePrefsBandwidth;
+	}
+
+	public void setPrimaryTcpPerformancePrefsBandwidth(
+			final int primaryTcpPerformancePrefsBandwidth) {
+		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("SettableJargonProperties [useParallelTransfer=");
+		builder.append(useParallelTransfer);
+		builder.append(", useNIOForParallelTransfers=");
+		builder.append(useNIOForParallelTransfers);
+		builder.append(", maxParallelThreads=");
+		builder.append(maxParallelThreads);
+		builder.append(", maxFilesAndDirsQueryMax=");
+		builder.append(maxFilesAndDirsQueryMax);
+		builder.append(", useTransferThreadsPool=");
+		builder.append(useTransferThreadsPool);
+		builder.append(", transferThreadPoolMaxSimultaneousTransfers=");
+		builder.append(transferThreadPoolMaxSimultaneousTransfers);
+		builder.append(", transferThreadPoolTimeoutMillis=");
+		builder.append(transferThreadPoolTimeoutMillis);
+		builder.append(", allowPutGetResourceRedirects=");
+		builder.append(allowPutGetResourceRedirects);
+		builder.append(", computeChecksumAfterTransfer=");
+		builder.append(computeChecksumAfterTransfer);
+		builder.append(", computeAndVerifyChecksumAfterTransfer=");
+		builder.append(computeAndVerifyChecksumAfterTransfer);
+		builder.append(", intraFileStatusCallbacks=");
+		builder.append(intraFileStatusCallbacks);
+		builder.append(", irodsSocketTimeout=");
+		builder.append(irodsSocketTimeout);
+		builder.append(", irodsParallelSocketTimeout=");
+		builder.append(irodsParallelSocketTimeout);
+		builder.append(", internalInputStreamBufferSize=");
+		builder.append(internalInputStreamBufferSize);
+		builder.append(", internalOutputStreamBufferSize=");
+		builder.append(internalOutputStreamBufferSize);
+		builder.append(", internalCacheBufferSize=");
+		builder.append(internalCacheBufferSize);
+		builder.append(", sendInputStreamBufferSize=");
+		builder.append(sendInputStreamBufferSize);
+		builder.append(", localFileOutputStreamBufferSize=");
+		builder.append(localFileOutputStreamBufferSize);
+		builder.append(", localFileInputStreamBufferSize=");
+		builder.append(localFileInputStreamBufferSize);
+		builder.append(", putBufferSize=");
+		builder.append(putBufferSize);
+		builder.append(", getBufferSize=");
+		builder.append(getBufferSize);
+		builder.append(", inputToOutputCopyBufferByteSize=");
+		builder.append(inputToOutputCopyBufferByteSize);
+		builder.append(", ");
+		if (encoding != null) {
+			builder.append("encoding=");
+			builder.append(encoding);
+			builder.append(", ");
+		}
+		builder.append("instrument=");
+		builder.append(instrument);
+		builder.append(", reconnect=");
+		builder.append(reconnect);
+		builder.append(", defaultToPublicIfNothingUnderRootWhenListing=");
+		builder.append(defaultToPublicIfNothingUnderRootWhenListing);
+		builder.append(", reconnectTimeInMillis=");
+		builder.append(reconnectTimeInMillis);
+		builder.append(", usingDiscoveredServerPropertiesCache=");
+		builder.append(usingDiscoveredServerPropertiesCache);
+		builder.append(", usingSpecificQueryForCollectionListingsWithPermissions=");
+		builder.append(usingSpecificQueryForCollectionListingsWithPermissions);
+		builder.append(", usingSpecQueryForDataObjPermissionsForUserInGroup=");
+		builder.append(usingSpecQueryForDataObjPermissionsForUserInGroup);
+		builder.append(", pamTimeToLive=");
+		builder.append(pamTimeToLive);
+		builder.append(", forcePamFlush=");
+		builder.append(forcePamFlush);
+		builder.append(", ");
+		if (connectionFactory != null) {
+			builder.append("connectionFactory=");
+			builder.append(connectionFactory);
+			builder.append(", ");
+		}
+		if (checksumEncoding != null) {
+			builder.append("checksumEncoding=");
+			builder.append(checksumEncoding);
+			builder.append(", ");
+		}
+		builder.append("parallelTcpKeepAlive=");
+		builder.append(parallelTcpKeepAlive);
+		builder.append(", parallelTcpSendWindowSize=");
+		builder.append(parallelTcpSendWindowSize);
+		builder.append(", parallelTcpReceiveWindowSize=");
+		builder.append(parallelTcpReceiveWindowSize);
+		builder.append(", parallelTcpPerformancePrefsConnectionTime=");
+		builder.append(parallelTcpPerformancePrefsConnectionTime);
+		builder.append(", parallelTcpPerformancePrefsLatency=");
+		builder.append(parallelTcpPerformancePrefsLatency);
+		builder.append(", parallelTcpPerformancePrefsBandwidth=");
+		builder.append(parallelTcpPerformancePrefsBandwidth);
+		builder.append(", primaryTcpKeepAlive=");
+		builder.append(primaryTcpKeepAlive);
+		builder.append(", primaryTcpSendWindowSize=");
+		builder.append(primaryTcpSendWindowSize);
+		builder.append(", primaryTcpReceiveWindowSize=");
+		builder.append(primaryTcpReceiveWindowSize);
+		builder.append(", primaryTcpPerformancePrefsConnectionTime=");
+		builder.append(primaryTcpPerformancePrefsConnectionTime);
+		builder.append(", primaryTcpPerformancePrefsLatency=");
+		builder.append(primaryTcpPerformancePrefsLatency);
+		builder.append(", primaryTcpPerformancePrefsBandwidth=");
+		builder.append(primaryTcpPerformancePrefsBandwidth);
+		builder.append(", socketRenewalIntervalInSeconds=");
+		builder.append(socketRenewalIntervalInSeconds);
+		builder.append(", longTransferRestart=");
+		builder.append(longTransferRestart);
+		builder.append(", parallelCopyBufferSize=");
+		builder.append(parallelCopyBufferSize);
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getSocketRenewalIntervalInSeconds()
+	 */
+	@Override
+	public int getSocketRenewalIntervalInSeconds() {
+		return socketRenewalIntervalInSeconds;
+	}
+
+	/**
+	 * Set the interval in seconds to renew a socket during long transfers. Set
+	 * to 0 to turn this behavior off.
+	 * 
+	 * @param socketRenewalIntervalInSeconds
+	 */
+	public void setSocketRenewalIntervalInSeconds(
+			final int socketRenewalIntervalInSeconds) {
+		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
+	}
+
+	@Override
+	public boolean isLongTransferRestart() {
+		return this.longTransferRestart;
+	}
+
+	/**
+	 * Sets the ability to restart long file transfers if needed
+	 * 
+	 * @param longFileTransferRestart
+	 */
+	public void setLongTransferRestart(final boolean longFileTransferRestart) {
+		this.longTransferRestart = longFileTransferRestart;
+	}
+
+	@Override
+	public int getParallelCopyBufferSize() {
+		return this.parallelCopyBufferSize;
+	}
+
+	/**
+	 * Set the size (in bytes) of the copy buffer used between streams in
+	 * parallel transfer
+	 * 
+	 * @param parallelCopyBufferSize
+	 */
+	public void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
+		this.parallelCopyBufferSize = parallelCopyBufferSize;
 	}
 
 }

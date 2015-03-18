@@ -4,14 +4,14 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * Invalid input parameter
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class InvalidInputParameterException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 8360268535568188141L;
 	private static final int ERROR_CODE = ErrorEnum.INVALID_INPUT_PARAM

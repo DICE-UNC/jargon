@@ -59,12 +59,12 @@ import org.slf4j.LoggerFactory;
  * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
  * class represents operations that are outside of the contracts one would
  * expect from an <code>java.io.File</code> object or the various streams.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
-		CollectionAO {
+CollectionAO {
 
 	public static final String ERROR_IN_COLECTION_QUERY = "An error occurred in the query for the collection";
 	private final IRODSFileFactory irodsFileFactory = new IRODSFileFactoryImpl(
@@ -76,7 +76,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsSession
 	 * @param irodsAccount
 	 * @throws JargonException
@@ -88,7 +88,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#instanceIRODSFileForCollectionPath
 	 * (java.lang.String)
@@ -104,7 +104,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List)
@@ -112,7 +112,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<Collection> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		return findDomainByMetadataQuery(avuQueryElements, 0);
 
@@ -120,7 +120,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List, int)
@@ -137,7 +137,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findDomainByMetadataQuery(java
 	 * .util.List, int, boolean)
@@ -146,7 +146,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public List<Collection> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex, final boolean caseInsensitive)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		log.info("findDomainByMetadataQuery()");
 
@@ -185,8 +185,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS);
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS);
 
 			for (AVUQueryElement queryElement : avuQueryElements) {
 				CollectionAOHelper.appendConditionPartToBuilderQuery(
@@ -212,7 +212,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int)
@@ -220,14 +220,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final int offset)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "",
 				offset, false);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int, boolean)
@@ -243,7 +243,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
@@ -257,7 +257,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, boolean)
@@ -265,14 +265,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final boolean caseInsensitive)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery, "", 0,
 				caseInsensitive);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String)
@@ -289,7 +289,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String, int)
@@ -298,7 +298,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath, final int partialStartIndex)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		return findMetadataValuesByMetadataQueryForCollection(avuQuery,
 				collectionAbsolutePath, partialStartIndex, false);
@@ -306,7 +306,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValuesByMetadataQueryForCollection(java.util.List,
 	 * java.lang.String, int, boolean)
@@ -372,7 +372,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 								partialStartIndex, MiscIRODSUtils
-										.getZoneInPath(collectionAbsolutePath));
+								.getZoneInPath(collectionAbsolutePath));
 			}
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -389,7 +389,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#addBulkAVUMetadataToCollection
 	 * (java.lang.String, java.util.List)
@@ -397,7 +397,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
 			final String absolutePath, final List<AvuData> avuData)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("addBulkAVUMetadataToCollection()");
 
@@ -443,7 +443,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#deleteBulkAVUMetadataFromCollection
 	 * (java.lang.String, java.util.List)
@@ -451,7 +451,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromCollection(
 			final String absolutePath, final List<AvuData> avuData)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("deleteBulkAVUMetadataToCollection()");
 
@@ -486,7 +486,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -538,7 +538,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#deleteAVUMetadata(java.lang.String
 	 * , org.irods.jargon.core.pub.domain.AvuData)
@@ -583,7 +583,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#deleteAllAVUMetadata(java.lang
 	 * .String)
@@ -632,7 +632,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -640,7 +640,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
 			final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -693,7 +693,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#modifyAVUMetadata(java.lang.String
 	 * , org.irods.jargon.core.pub.domain.AvuData,
@@ -702,7 +702,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void modifyAVUMetadata(final String absolutePath,
 			final AvuData currentAvuData, final AvuData newAvuData)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
@@ -748,7 +748,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection
 	 * (java.lang.String, int)
@@ -756,7 +756,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
-			throws FileNotFoundException, JargonException, JargonQueryException {
+					throws FileNotFoundException, JargonException, JargonQueryException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -781,15 +781,15 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * findMetadataValueForCollectionByMetadataId(java.lang.String, int)
 	 */
 	@Override
 	public MetaDataAndDomainData findMetadataValueForCollectionByMetadataId(
 			final String collectionAbsolutePath, final int id)
-			throws FileNotFoundException, DataNotFoundException,
-			JargonException {
+					throws FileNotFoundException, DataNotFoundException,
+					JargonException {
 
 		log.info("findMetadataValueForCollectionByMetadataId()");
 
@@ -815,7 +815,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValueForCollectionById
 	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
@@ -848,9 +848,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		try {
 			addSelectsForMetadataAndDomainDataToBuilder(builder)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, absPath)
+			.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, absPath)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_META_COLL_ATTR_ID,
 							QueryConditionOperators.EQUAL, id);
@@ -879,7 +879,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private IRODSGenQueryBuilder addSelectsForMetadataAndDomainDataToBuilder(
-			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		return builder
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
@@ -887,17 +887,17 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
 				.addSelectAsGenQueryValue(
 						RodsGenQueryEnum.COL_META_COLL_ATTR_NAME)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_COLL_ATTR_ID);
+						.addSelectAsGenQueryValue(
+								RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE)
+								.addSelectAsGenQueryValue(
+										RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS)
+										.addSelectAsGenQueryValue(
+												RodsGenQueryEnum.COL_META_COLL_ATTR_ID);
 	}
 
 	private List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final ObjStat objStat, final int partialStartIndex)
-			throws FileNotFoundException, JargonException, JargonQueryException {
+					throws FileNotFoundException, JargonException, JargonQueryException {
 
 		if (objStat == null) {
 			throw new IllegalArgumentException("null or empty objStat");
@@ -923,9 +923,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		try {
 			addSelectsForMetadataAndDomainDataToBuilder(builder)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, absPath);
+			.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, absPath);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
@@ -952,7 +952,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findMetadataValuesForCollection
 	 * (java.lang.String)
@@ -968,7 +968,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findGivenObjStat(org.irods.jargon
 	 * .core.pub.domain.ObjStat)
@@ -1053,7 +1053,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#findByAbsolutePath(java.lang.String
 	 * )
@@ -1061,7 +1061,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public Collection findByAbsolutePath(
 			final String irodsCollectionAbsolutePath)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		log.info("findByAbsolutePath()");
 
@@ -1080,7 +1080,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	@Override
 	public Collection findById(final int id) throws DataNotFoundException,
-			JargonException {
+	JargonException {
 
 		log.info("findById() with id:{}", id);
 
@@ -1111,14 +1111,14 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.CollectionAO#
 	 * countAllFilesUnderneathTheGivenCollection(java.lang.String)
 	 */
 	@Override
 	public int countAllFilesUnderneathTheGivenCollection(
 			final String irodsCollectionAbsolutePath)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null) {
 			throw new IllegalArgumentException(
@@ -1162,13 +1162,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.addSelectAsAgregateGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							SelectFieldTypes.COUNT)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_REPL_NUM,
-							QueryConditionOperators.EQUAL, 0)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.LIKE,
-							effectiveAbsolutePath + "%");
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_DATA_REPL_NUM,
+									QueryConditionOperators.EQUAL, 0)
+									.addConditionAsGenQueryField(
+											RodsGenQueryEnum.COL_COLL_NAME,
+											QueryConditionOperators.LIKE,
+											effectiveAbsolutePath + "%");
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
 
@@ -1197,7 +1197,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInherit(java
 	 * .lang.String, java.lang.String, boolean)
@@ -1205,7 +1205,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionInherit(final String zone,
 			final String absolutePath, final boolean recursive)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -1233,7 +1233,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionInheritAsAdmin
 	 * (java.lang.String, java.lang.String, boolean)
@@ -1241,7 +1241,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionInheritAsAdmin(final String zone,
 			final String absolutePath, final boolean recursive)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -1269,7 +1269,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionToNotInherit
 	 * (java.lang.String, java.lang.String, boolean)
@@ -1277,7 +1277,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionToNotInherit(final String zone,
 			final String absolutePath, final boolean recursive)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -1306,7 +1306,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * setAccessPermissionToNotInheritInAdminMode(java.lang.String,
 	 * java.lang.String, boolean)
@@ -1314,7 +1314,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionToNotInheritInAdminMode(final String zone,
 			final String absolutePath, final boolean recursive)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -1343,7 +1343,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionRead(java.lang
 	 * .String, java.lang.String, java.lang.String, boolean)
@@ -1382,7 +1382,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionReadAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1426,7 +1426,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void setAccessPermission(final String zone,
 			final String absolutePath, final String userName,
 			final boolean recursive, final FilePermissionEnum filePermission)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -1464,7 +1464,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWrite(java.
 	 * lang.String, java.lang.String, java.lang.String, boolean)
@@ -1508,7 +1508,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionWriteAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1551,7 +1551,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwn(java.lang
 	 * .String, java.lang.String, java.lang.String, boolean)
@@ -1595,7 +1595,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#setAccessPermissionOwnAsAdmin(
 	 * java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1638,7 +1638,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUser(
 	 * java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1681,7 +1681,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#removeAccessPermissionForUserAsAdmin
 	 * (java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -1724,7 +1724,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.CollectionAO#
 	 * isCollectionSetForPermissionInheritance(java.lang.String)
 	 */
@@ -1778,7 +1778,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#getPermissionForCollection(java
 	 * .lang.String, java.lang.String, java.lang.String)
@@ -1821,7 +1821,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * Method overheads an iRODS protocol issue where recursive flag when
 	 * collection has no children causes no permissions to be set.
-	 * 
+	 *
 	 * @param absolutePath
 	 * @param recursive
 	 * @return
@@ -1865,7 +1865,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#getPermissionForUserName(java.
 	 * lang.String, java.lang.String)
@@ -1874,7 +1874,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@FederationEnabled
 	public UserFilePermission getPermissionForUserName(
 			final String irodsCollectionAbsolutePath, final String userName)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -1914,7 +1914,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	private UserFilePermission getPermissionViaSpecQueryAsGroupMember(
 			final String userName, final ObjStat objStat, final String absPath)
-			throws JargonException {
+					throws JargonException {
 		log.info("see if there is a permission based on group membership...");
 		UserFilePermission permissionViaGroup = null;
 
@@ -1933,7 +1933,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
 			final String userName, final String zone, final String absPath)
-			throws JargonException {
+					throws JargonException {
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
 		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(absPath);
@@ -1965,7 +1965,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				specificQueryResultSet = specificQueryAO
 						.executeSpecificQueryUsingAlias(specificQuery,
 								getJargonProperties()
-										.getMaxFilesAndDirsQueryMax(), 0);
+								.getMaxFilesAndDirsQueryMax(), 0);
 				row = specificQueryResultSet.getFirstResult();
 				userFilePermission = buildUserFilePermissionFromResultRow(row);
 
@@ -1997,8 +1997,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				row.getColumn(1),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-				UserTypeEnum.findTypeByString(row.getColumn(3)),
-				row.getColumn(4));
+						UserTypeEnum.findTypeByString(row.getColumn(3)),
+						row.getColumn(4));
 		return userFilePermission;
 	}
 
@@ -2060,7 +2060,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					row.getColumn(2),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
 							.getIntOrZeroFromIRODSValue(row.getColumn(3))),
-					user.getUserType(), row.getColumn(1));
+							user.getUserType(), row.getColumn(1));
 			log.info("loaded filePermission:{}", userFilePermission);
 			return userFilePermission;
 
@@ -2083,7 +2083,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#listPermissionsForCollection(java
 	 * .lang.String)
@@ -2092,7 +2092,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	@FederationEnabled
 	public List<UserFilePermission> listPermissionsForCollection(
 			final String irodsCollectionAbsolutePath)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -2146,7 +2146,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 						row.getColumn(2),
 						FilePermissionEnum.valueOf(IRODSDataConversionUtil
 								.getIntOrZeroFromIRODSValue(row.getColumn(3))),
-						user.getUserType(), row.getColumn(1));
+								user.getUserType(), row.getColumn(1));
 				log.debug("loaded filePermission:{}", userFilePermission);
 				userFilePermissions.add(userFilePermission);
 			}
@@ -2169,7 +2169,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAOImpl#isUserHasAccess(java
 	 * .lang.String, java.lang.String)
@@ -2205,7 +2205,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAO#replicateCollectionAsynchronously
 	 * (java.lang.String, java.lang.String, int)
@@ -2214,7 +2214,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 	public void replicateCollectionAsynchronously(
 			final String irodsCollectionAbsolutePath,
 			final String resourceName, final int delayInMinutes)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("replicateCollectionAsynchronously()");
 
@@ -2247,8 +2247,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
 
 		irodsRuleParameters
-				.add(new IRODSRuleParameter("*SourceFile", MiscIRODSUtils
-						.wrapStringInQuotes(irodsCollectionAbsolutePath)));
+		.add(new IRODSRuleParameter("*SourceFile", MiscIRODSUtils
+				.wrapStringInQuotes(irodsCollectionAbsolutePath)));
 
 		irodsRuleParameters.add(new IRODSRuleParameter("*Resource",
 				MiscIRODSUtils.wrapStringInQuotes(resourceName)));

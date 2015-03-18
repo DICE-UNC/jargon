@@ -6,7 +6,6 @@ import java.io.OutputStream;
 import java.net.Socket;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,12 +27,17 @@ public class AbstractParallelTransferThread {
 	public static final int DONE_OPR = 9999;
 	public static final int PUT_OPR = 1;
 	public static final int GET_OPR = 2;
+	/**
+	 * Index of the given thread. 0 based index
+	 */
+	private final int threadNumber;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AbstractParallelTransferThread.class);
 
-	protected AbstractParallelTransferThread() {
+	protected AbstractParallelTransferThread(final int threadNumber) {
 		super();
+		this.threadNumber = threadNumber;
 	}
 
 	protected int readInt() throws JargonException {
@@ -41,7 +45,7 @@ public class AbstractParallelTransferThread {
 		int read;
 		try {
 			read = in.read(b);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
@@ -61,14 +65,14 @@ public class AbstractParallelTransferThread {
 		int read;
 		try {
 			read = in.read(b);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER);
-			throw new JargonRuntimeException(
+			throw new JargonException(
 					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		}
 		if (read != 8) {
 			log.error("did not read 8 bytes for long");
-			throw new RuntimeException(
+			throw new JargonException(
 					"unable to read all the bytes for an expected long value");
 		}
 
@@ -141,5 +145,12 @@ public class AbstractParallelTransferThread {
 
 	protected void setExceptionInTransfer(final Exception exceptionInTransfer) {
 		this.exceptionInTransfer = exceptionInTransfer;
+	}
+
+	/**
+	 * @return the threadNumber
+	 */
+	protected int getThreadNumber() {
+		return threadNumber;
 	}
 }

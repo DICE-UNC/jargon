@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.checksum;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Value of a checksum stored in iRODS
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class IrodsChecksumValue {
 	/**
@@ -47,7 +47,7 @@ public class IrodsChecksumValue {
 		}
 		if (checksumEncodingEnum != null) {
 			builder.append("checksumEncodingEnum=")
-					.append(checksumEncodingEnum);
+			.append(checksumEncodingEnum);
 		}
 		builder.append("]");
 		return builder.toString();

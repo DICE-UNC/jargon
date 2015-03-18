@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory to create IRODS File objects, will handle initialization of iRODS
  * connections and other non-file aspects
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		IRODSFileFactory {
@@ -127,6 +127,8 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	public IRODSFile instanceIRODSFile(final String parent, final String child)
 			throws JargonException {
 
+		log.info("instanceIRODSFile()");
+
 		if (parent == null) {
 			throw new JargonException("parent is null");
 		}
@@ -134,6 +136,9 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (child == null) {
 			throw new JargonException("child is null");
 		}
+
+		log.info("parent:{}", parent);
+		log.info("child:{}", child);
 
 		if (child.isEmpty() && parent.isEmpty()) {
 			throw new JargonException("both child and parent names are blank");
@@ -663,6 +668,37 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 		// open the file if it is not opened
 		irodsFile.open();
+		return new IRODSRandomAccessFile(irodsFile, fileIOOperations);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSRandomAccessFile
+	 * (java.lang.String, org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
+	 */
+	@Override
+	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(
+			final String name, final OpenFlags openFlags)
+			throws NoResourceDefinedException, JargonException {
+
+		if (name == null || name.isEmpty()) {
+			throw new IllegalArgumentException("null or empty name");
+		}
+
+		if (openFlags == null) {
+			throw new IllegalArgumentException("null openFlags");
+		}
+
+		FileIOOperations fileIOOperations = new FileIOOperationsAOImpl(
+				getIRODSSession(), getIRODSAccount());
+		log.info("opening IRODSFileImpl for: {}", name);
+		IRODSFile irodsFile = instanceIRODSFile(name);
+
+		// open the file if it is not opened
+		irodsFile.open(openFlags);
 		return new IRODSRandomAccessFile(irodsFile, fileIOOperations);
 
 	}

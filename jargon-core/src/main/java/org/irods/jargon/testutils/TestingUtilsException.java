@@ -5,20 +5,20 @@ package org.irods.jargon.testutils;
 
 /**
  * General exception caused by using Test utilities
- * 
+ *
  * @author Mike Conway, DICE (10/16/2009)
  * @since 10/16/2009
- * 
+ *
  */
 public class TestingUtilsException extends Exception {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 2124699560973645080L;
 
 	/**
-	 * 
+	 *
 	 */
 	public TestingUtilsException() {
 		super();

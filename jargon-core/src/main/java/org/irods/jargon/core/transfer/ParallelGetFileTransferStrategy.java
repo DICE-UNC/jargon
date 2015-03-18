@@ -6,8 +6,10 @@ package org.irods.jargon.core.transfer;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
@@ -62,31 +64,38 @@ public final class ParallelGetFileTransferStrategy extends
 	 * @return
 	 * @throws JargonException
 	 */
-	public static ParallelGetFileTransferStrategy instance(final String host,
-			final int port, final int numberOfThreads, final int password,
+	public static ParallelGetFileTransferStrategy instance(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
-				transferControlBlock, transferStatusCallbackListener);
+				transferControlBlock, transferStatusCallbackListener,
+				fileRestartInfo);
 	}
 
-	private ParallelGetFileTransferStrategy(final String host, final int port,
-			final int numberOfThreads, final int password,
+	private ParallelGetFileTransferStrategy(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
 			final File localFile,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, fileRestartInfo);
 
 		log.info("transfer options in transfer control block:{}",
 				transferControlBlock.getTransferOptions());
@@ -143,18 +152,33 @@ public final class ParallelGetFileTransferStrategy extends
 			throws JargonException {
 		final List<ParallelGetTransferThread> parallelGetTransferThreads = new ArrayList<ParallelGetTransferThread>();
 
-		for (int i = 0; i < numberOfThreads; i++) {
-			final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
-					.instance(this);
-			parallelGetTransferThreads.add(parallelTransfer);
-		}
-
 		try {
+
+			for (int i = 0; i < numberOfThreads; i++) {
+				final ParallelGetTransferThread parallelTransfer = ParallelGetTransferThread
+						.instance(this, i);
+				parallelGetTransferThreads.add(parallelTransfer);
+			}
 			log.info("invoking executor threads for get");
-			executor.invokeAll(parallelGetTransferThreads);
+			log.info("invoking executor threads for put");
+			List<Future<ParallelTransferResult>> transferThreadStates = executor
+					.invokeAll(parallelGetTransferThreads);
+
+			for (Future<ParallelTransferResult> transferState : transferThreadStates) {
+				try {
+					transferState.get();
+				} catch (ExecutionException e) {
+					throw new JargonException(e.getCause());
+				}
+
+			}
+
 			log.info("executor completed");
 		} catch (InterruptedException e) {
 			log.error("interrupted exception in thread", e);
+			throw new JargonException(e);
+		} catch (Exception e) {
+			log.error("an error occurred in a parallel get", e);
 			throw new JargonException(e);
 		}
 	}

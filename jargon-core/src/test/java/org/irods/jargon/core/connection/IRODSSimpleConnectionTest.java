@@ -9,7 +9,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 public class IRODSSimpleConnectionTest {
 	private static Properties testingProperties = new Properties();
@@ -34,16 +33,11 @@ public class IRODSSimpleConnectionTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		AbstractIRODSMidLevelProtocol connection = irodsFileSystem
-				.getIrodsProtocolManager()
-				.getIRODSProtocol(
-						irodsAccount,
-						irodsFileSystem
-								.getIrodsSession()
-								.buildPipelineConfigurationBasedOnJargonProperties(),
-						irodsFileSystem.getIrodsSession());
-		connection.setIrodsSession(Mockito.mock(IRODSSession.class));
+				.getIrodsSession().currentConnection(irodsAccount);
 		connection.disconnect();
-		Assert.assertFalse(connection.isConnected());
+
+		Assert.assertFalse("connection should not be connected",
+				connection.isConnected());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
