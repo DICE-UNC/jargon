@@ -819,6 +819,23 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
+	 * Get the given property as a boolean
+	 * 
+	 * @param testingProperties
+	 * @param key
+	 * @return
+	 */
+	public boolean getPropertyValueAsBoolean(
+			final Properties testingProperties, final String key) {
+		String val = (String) testingProperties.get(key);
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
 	 * Check if optional kerberos testing to be done
 	 * 
 	 * @param testingProperties
