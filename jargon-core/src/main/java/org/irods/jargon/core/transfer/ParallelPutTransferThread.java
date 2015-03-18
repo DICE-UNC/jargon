@@ -421,10 +421,12 @@ public final class ParallelPutTransferThread extends
 			log.info("   total written: {}", totalWritten);
 			log.info("   transferLength: {}", transferLength);
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
+			// this is throwable to prevent unchecked exceptions from leaking
 			log.error("error writing to iRODS parallel transfer socket", e);
-			setExceptionInTransfer(e);
-			throw new JargonException(e);
+			JargonException je = new JargonException(e);
+			setExceptionInTransfer(je);
+			throw je;
 		}
 
 		if (totalRead != totalWritten) {
