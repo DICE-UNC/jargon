@@ -325,7 +325,7 @@ public final class ParallelGetTransferThread extends
 					}
 				} else {
 					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
-					// length = 0;
+					length = 0;
 					throw new JargonException(
 							"possible loop condition in parallel file get");
 				}
@@ -351,15 +351,30 @@ public final class ParallelGetTransferThread extends
 		int read = 0;
 		int totalRead = 0;
 
+		if (buffer.length < length) {
+			throw new JargonException("attempting to read more than buffer");
+		}
+
 		while (myLength > 0) {
+			log.info(">>>>>>>>>>>>> top of while, my length:{} <<<<<<<<<<<",
+					myLength);
 			if (ptr > buffer.length) {
 				log.error("ptr out of synch");
 				log.error("buffer size:{}", buffer.length);
 				log.error("ptr:{}", ptr);
 				log.error("myLength:{}", myLength);
 				log.error("totalRead:{}", totalRead);
+				throw new JargonException(
+						"pointer is pointing out of range of the buffer");
 			}
+
+			log.info("===========================");
+			log.info("ptr:{}", ptr);
+			log.info("myLength:{}", myLength);
+
 			read = in.read(buffer, ptr, myLength);
+
+			log.info(">>> read:{}", read);
 
 			if (read < 0) {
 				log.error("read < 0");
@@ -369,13 +384,18 @@ public final class ParallelGetTransferThread extends
 			myLength -= read;
 			totalRead += read;
 			ptr += read;
+
+			log.info("total read now:{}", totalRead);
+			log.info("out of original length:{}", length);
+			log.info("makes my length:{}", myLength);
+
 		}
 
 		if (totalRead != length) {
 			log.error("did not read expected length in myRead()");
 			throw new JargonException("did not read expected length");
 		}
-		return length - totalRead;
+		return totalRead;
 	}
 
 	/**
