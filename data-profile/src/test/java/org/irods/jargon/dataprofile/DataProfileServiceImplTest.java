@@ -27,7 +27,7 @@ public class DataProfileServiceImplTest {
 	public void testRetrieveDataProfileDataObject() throws Exception {
 
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
@@ -116,7 +116,7 @@ public class DataProfileServiceImplTest {
 	public void testRetrieveDataProfileDataObjectWithTags() throws Exception {
 
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
@@ -178,7 +178,7 @@ public class DataProfileServiceImplTest {
 	public void testRetrieveDataProfileCollection() throws Exception {
 
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 

@@ -48,7 +48,6 @@ class CollectionListingUtils {
 
 	private final IRODSAccount irodsAccount;
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
-	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
 	static final Logger log = LoggerFactory
@@ -68,7 +67,7 @@ class CollectionListingUtils {
 	 * user name, see if a public dir. For foreign zone, add a dir for
 	 * user#homeZone and see if a public dir
 	 * 
-	 *
+	 * 
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the current parent
@@ -110,7 +109,6 @@ class CollectionListingUtils {
 			return collectionAndDataObjectListingEntries;
 		}
 
-
 		/*
 		 * Phase2 - under a zone, add a home
 		 */
@@ -132,8 +130,7 @@ class CollectionListingUtils {
 		components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
 		if (components.size() == 3 && components.get(2).equals("home")) {
 			log.info("under home, see if same zone as login");
-			if (irodsAccount
-					.getZone().equals(components.get(1))) {
+			if (irodsAccount.getZone().equals(components.get(1))) {
 				log.info("under logged in zone, add user and public dirs");
 				collectionAndDataObjectListingEntries
 						.addAll(createStandInsUnderHomeInLoggedInZone(path));
@@ -150,7 +147,6 @@ class CollectionListingUtils {
 		 * Fall through is a legit file not found exception
 		 */
 
-
 		log.info("really is a not found for file:{}", path);
 		throw new FileNotFoundException("unable to find file under path");
 
@@ -165,6 +161,8 @@ class CollectionListingUtils {
 		StringBuilder sb = new StringBuilder(path);
 		sb.append("/public");
 		ObjStat statForPublic;
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		try {
 			statForPublic = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(sb.toString());
@@ -197,11 +195,12 @@ class CollectionListingUtils {
 		// user dir in zone and public
 		log.info("under home in federated zone, look for public and home dir");
 
-
 		StringBuilder sb = new StringBuilder();
 		sb.append("/");
 		sb.append(zone);
 		sb.append("/home/public");
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.irodsAccessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		try {
 			ObjStat statForPublic = collectionAndDataObjectListAndSearchAO
@@ -218,8 +217,7 @@ class CollectionListingUtils {
 			ObjStat homeStat = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(MiscIRODSUtils
 							.computeHomeDirectoryForIRODSAccountInFederatedZone(
-									this.collectionAndDataObjectListAndSearchAO
-											.getIRODSAccount(), zone));
+									irodsAccount, zone));
 			collectionAndDataObjectListingEntries
 					.add(createStandInForUserDir(homeStat));
 		} catch (FileNotFoundException fnf) {
@@ -235,10 +233,7 @@ class CollectionListingUtils {
 		CollectionAndDataObjectListingEntry entry;
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		StringBuilder sb;
-		ZoneAO zoneAO = this.collectionAndDataObjectListAndSearchAO
-				.getIRODSAccessObjectFactory().getZoneAO(
-						this.collectionAndDataObjectListAndSearchAO
-								.getIRODSAccount());
+		ZoneAO zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
 		List<Zone> zones = zoneAO.listZones();
 
 		for (Zone zone : zones) {
@@ -257,7 +252,8 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * @param data.getCollectionAndDataObjectListingEntries()
+	 * @param data
+	 *            .getCollectionAndDataObjectListingEntries()
 	 */
 	private CollectionAndDataObjectListingEntry createStandInForHomeDir(
 			final String path) {
@@ -267,8 +263,7 @@ class CollectionListingUtils {
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
 
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setParentPath(path);
 		StringBuilder sb = new StringBuilder();
 		sb.append(path);
@@ -313,8 +308,7 @@ class CollectionListingUtils {
 		entry.setLastResult(true);
 		entry.setObjectType(ObjectType.COLLECTION);
 
-		entry.setOwnerZone(collectionAndDataObjectListAndSearchAO
-				.getIRODSAccount().getZone());
+		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setPathOrName(objStat.getAbsolutePath());
 		entry.setSpecColType(objStat.getSpecColType());
 		entry.setCreatedAt(objStat.getCreatedAt());
@@ -974,7 +968,6 @@ class CollectionListingUtils {
 
 		this.irodsAccount = irodsAccount;
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
-		this.collectionAndDataObjectListAndSearchAO = irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 	}
 
