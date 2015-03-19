@@ -86,7 +86,7 @@ public class ParallelTransferOperationsTest {
 		String testRetrievedFileName = "testParallelFilePutThenGetRetrieved.txt";
 		long testFileLength = 1 * 1024 * 1024 * 2014;
 
-		int nbrTimes = 20;
+		int nbrTimes = 1;
 
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
