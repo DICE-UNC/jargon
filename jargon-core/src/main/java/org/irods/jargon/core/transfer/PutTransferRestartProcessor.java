@@ -3,18 +3,16 @@
  */
 package org.irods.jargon.core.transfer;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.RandomAccessFile;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.slf4j.Logger;
@@ -124,13 +122,11 @@ public class PutTransferRestartProcessor extends
 					"cannot get irodsRandomAccessFile", e1);
 		}
 
-		InputStream localFileInputStream;
-		File localFile = null;
+		RandomAccessFile localFile = null;
 		byte[] buffer;
 		try {
 			localFile = localFileAsFileAndCheckExists(fileRestartInfo);
-			localFileInputStream = new BufferedInputStream(new FileInputStream(
-					localFile));
+
 			// now put each segment
 			buffer = new byte[getIrodsAccessObjectFactory()
 					.getJargonProperties().getPutBufferSize()];
@@ -158,11 +154,20 @@ public class PutTransferRestartProcessor extends
 						lengthToUpdate = fileRestartInfo
 								.getFileRestartDataSegments().get(i - 1)
 								.getLength();
-						putSegment(gap, localFileInputStream, buffer,
-								fileRestartInfo, segment, i, lengthToUpdate,
-								irodsRandomAccessFile);
-
 					}
+
+					putSegment(gap, localFile, buffer, fileRestartInfo,
+							segment, i, lengthToUpdate, irodsRandomAccessFile);
+					currentOffset += gap;
+				}
+
+				if (fileRestartInfo.getFileRestartDataSegments().get(i)
+						.getLength() > 0) {
+					currentOffset += fileRestartInfo
+							.getFileRestartDataSegments().get(i).getLength();
+					localFile.seek(currentOffset);
+					irodsRandomAccessFile.seek(currentOffset,
+							SeekWhenceType.SEEK_CURRENT);
 				}
 			}
 
@@ -176,13 +181,15 @@ public class PutTransferRestartProcessor extends
 		} catch (JargonException e) {
 			log.error("general jargon error getting irods random file", e);
 			throw new RestartFailedException("cannot get local file", e);
+		} catch (IOException e) {
+			log.error("end of file exception with localFile:{}", localFile, e);
+			throw new RestartFailedException(e);
 		}
 
 	}
 
-	private void putSegment(final long gap,
-			final InputStream localFileInputStream, final byte[] buffer,
-			final FileRestartInfo fileRestartInfo,
+	private void putSegment(final long gap, final RandomAccessFile localFile,
+			final byte[] buffer, final FileRestartInfo fileRestartInfo,
 			final FileRestartDataSegment segment,
 			final int indexOfCurrentSegment, final long lengthToUpdate,
 			final IRODSRandomAccessFile irodsRandomAccessFile)
@@ -202,7 +209,7 @@ public class PutTransferRestartProcessor extends
 			log.info("reading buffer from input file...");
 			int amountRead;
 			try {
-				amountRead = localFileInputStream.read(buffer, 0, toRead);
+				amountRead = localFile.read(buffer, 0, toRead);
 				irodsRandomAccessFile.write(buffer, 0, amountRead);
 				myGap -= amountRead;
 				writtenSinceUpdated += amountRead;

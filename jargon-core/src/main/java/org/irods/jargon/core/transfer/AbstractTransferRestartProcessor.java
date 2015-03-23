@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.transfer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -81,15 +81,13 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	protected File localFileAsFileAndCheckExists(
+	protected RandomAccessFile localFileAsFileAndCheckExists(
 			final FileRestartInfo fileRestartInfo)
 			throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
-		File localFile = localFileAsFile(fileRestartInfo);
-		if (!localFile.exists()) {
-			throw new FileNotFoundException("unable to find local file");
-		}
+		RandomAccessFile localFile = localFileAsFile(fileRestartInfo);
+
 		return localFile;
 
 	}
@@ -100,11 +98,12 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @param fileRestartInfo
 	 *            fileRestartInfo {@link FileRestartInfo} that describes the
 	 *            transfer
-	 * @return {@link File} that represents the local part of the transfer
+	 * @return {@link RandomAccessFile} that represents the local part of the
+	 *         transfer
 	 * @throws JargonException
 	 */
-	protected File localFileAsFile(final FileRestartInfo fileRestartInfo)
-			throws JargonException {
+	protected RandomAccessFile localFileAsFile(
+			final FileRestartInfo fileRestartInfo) throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
@@ -118,7 +117,14 @@ public abstract class AbstractTransferRestartProcessor extends
 					"unable to find a local file path in the restart info");
 		}
 
-		return new File(fileRestartInfo.getLocalAbsolutePath());
+		try {
+			return new RandomAccessFile(fileRestartInfo.getLocalAbsolutePath(),
+					"r");
+		} catch (FileNotFoundException e) {
+			log.error("local file not found:{}",
+					fileRestartInfo.getLocalAbsolutePath());
+			throw new JargonException("cannot find local file");
+		}
 
 	}
 
