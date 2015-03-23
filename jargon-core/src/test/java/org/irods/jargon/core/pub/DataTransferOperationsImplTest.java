@@ -3542,7 +3542,7 @@ public class DataTransferOperationsImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);
@@ -3591,7 +3591,7 @@ public class DataTransferOperationsImplTest {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);
@@ -3639,9 +3639,10 @@ public class DataTransferOperationsImplTest {
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
+				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
+		irodsFile.deleteWithForceOption();
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, true);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);

@@ -141,10 +141,11 @@ public class ParallelTransferOperationsTest {
 	}
 
 	@Test
-	public final void testParallelFilePutWithRestart() throws Exception {
+	public final void testParallelFilePutWithRestartNoDefaultManager()
+			throws Exception {
 		// make up a test file that triggers parallel transfer
-		String testFileName = "testParallelFilePutWithRestart.txt";
-		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE * 10;
+		String testFileName = "testParallelFilePutWithRestartNoDefaultManager.txt";
+		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE * 60;
 		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		props.setMaxParallelThreads(4);

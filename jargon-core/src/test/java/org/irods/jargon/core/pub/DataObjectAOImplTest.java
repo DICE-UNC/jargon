@@ -227,7 +227,7 @@ public class DataObjectAOImplTest {
 				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
-				transferControlBlock, null);
+				transferControlBlock, null, false);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile,
 				accessObjectFactory, irodsAccount);
 	}
@@ -326,7 +326,8 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, false);
 		// second put to do test
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, null, null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, null, null,
+				false);
 	}
 
 	/**
@@ -366,7 +367,8 @@ public class DataObjectAOImplTest {
 		TransferControlBlock tcb = accessObjectFactory
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
 		tcb.getTransferOptions().setForceOption(ForceOption.NO_FORCE);
-		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, null, null);
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, null, null,
+				false);
 	}
 
 	/**
@@ -418,7 +420,7 @@ public class DataObjectAOImplTest {
 		transferStatusCallbackListener
 				.setForceOption(CallbackResponse.NO_THIS_FILE);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, false);
 
 		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
@@ -478,7 +480,7 @@ public class DataObjectAOImplTest {
 		transferStatusCallbackListener
 				.setForceOption(CallbackResponse.NO_FOR_ALL);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, false);
 
 		Assert.assertEquals("should have skipped file and not overwritten",
 				firstLength, destFile.length());
@@ -536,7 +538,7 @@ public class DataObjectAOImplTest {
 		transferStatusCallbackListener
 				.setForceOption(CallbackResponse.YES_THIS_FILE);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, false);
 
 		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
@@ -595,7 +597,7 @@ public class DataObjectAOImplTest {
 		transferStatusCallbackListener
 				.setForceOption(CallbackResponse.YES_FOR_ALL);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
-				transferStatusCallbackListener);
+				transferStatusCallbackListener, false);
 
 		Assert.assertEquals("should have overwritten file", secondLength,
 				destFile.length());
@@ -2656,7 +2658,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);
@@ -2840,7 +2842,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);
@@ -2888,7 +2890,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + "/" + testFileName);
@@ -3441,7 +3443,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		dataObjectAO.setAccessPermissionRead("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -3486,7 +3488,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -3549,7 +3551,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -3612,7 +3614,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -3694,7 +3696,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -3782,7 +3784,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -3830,7 +3832,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, null, null);
+				irodsFile, null, null, false);
 
 		dataObjectAO.setAccessPermissionOwn("", targetIrodsCollection + "/"
 				+ testFileName, testingProperties
@@ -4905,7 +4907,7 @@ public class DataObjectAOImplTest {
 		TestingStatusCallbackListener transferStatusCallbackListener = new TestingStatusCallbackListener();
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
-				transferControlBlock, transferStatusCallbackListener);
+				transferControlBlock, transferStatusCallbackListener, false);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile,
 				accessObjectFactory, irodsAccount);
 		Assert.assertTrue(
@@ -4956,7 +4958,7 @@ public class DataObjectAOImplTest {
 		transferControlBlock.setTransferOptions(transferOptions);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
-				transferControlBlock, null);
+				transferControlBlock, null, false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile,
 				accessObjectFactory, irodsAccount);
@@ -5006,7 +5008,7 @@ public class DataObjectAOImplTest {
 		transferControlBlock.setTransferOptions(transferOptions);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile,
-				targetIrodsCollectionFile, transferControlBlock, null);
+				targetIrodsCollectionFile, transferControlBlock, null, false);
 
 		targetIrodsCollectionFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
@@ -5052,7 +5054,7 @@ public class DataObjectAOImplTest {
 		transferControlBlock.setTransferOptions(transferOptions);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
-				transferControlBlock, null);
+				transferControlBlock, null, false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile,
 				accessObjectFactory, irodsAccount);
@@ -5094,7 +5096,7 @@ public class DataObjectAOImplTest {
 		transferControlBlock.setTransferOptions(transferOptions);
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
-				transferControlBlock, null);
+				transferControlBlock, null, false);
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsFile,
 				accessObjectFactory, irodsAccount);
 	}

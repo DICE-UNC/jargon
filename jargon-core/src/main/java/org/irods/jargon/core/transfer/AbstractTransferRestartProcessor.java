@@ -63,10 +63,14 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * needed, based on the data held by the restart manager.
 	 * 
 	 * @return {@link RestartResult} with details of the restart processing
-	 * @throws JargonException
+	 * @throws RestartFailedException
+	 *             if the actual restart process failed
+	 * @throws FileRestartManagementException
+	 *             if the restart failed for configuration or other reasons, and
+	 *             restart should not be attempted again
 	 */
 	public abstract void restartIfNecessary(final String irodsAbsolutePath)
-			throws JargonException;
+			throws RestartFailedException, FileRestartManagementException;
 
 	/**
 	 * Given the restart info return the local file and make sure it exists

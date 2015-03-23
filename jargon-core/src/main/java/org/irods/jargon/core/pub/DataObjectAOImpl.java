@@ -391,17 +391,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws DataNotFoundException
 	 *             if the source local file does not exist or the target iRODS
 	 *             collection does not exist
+	 * @ignoreChecks ignores overwrite checks, for operations like restarts. If
+	 *               doing a long file restart, set this to <code>true</code> to
+	 *               bypass certain prerequisite checks
 	 * @throws JargonException
 	 */
-	void putLocalDataObjectToIRODS(final File localFile,
+	void putLocalDataObjectToIRODS(
+			final File localFile,
 			final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final boolean ignoreChecks) throws JargonException {
 
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
 
-		putCommonProcessing(localFile, irodsFileDestination, false,
+		putCommonProcessing(localFile, irodsFileDestination, ignoreChecks,
 				effectiveTransferControlBlock, transferStatusCallbackListener);
 
 	}
@@ -1465,8 +1469,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * is configured
 	 * 
 	 * @return
+	 * @throws FileRestartManagementException
 	 */
-	private boolean checkIfConfiguredForLongFileRestart() {
+	private boolean checkIfConfiguredForLongFileRestart()
+			throws FileRestartManagementException {
 		if (!this.getIRODSSession().getJargonProperties()
 				.isLongTransferRestart()) {
 			log.debug("not configured for restarts");
@@ -1474,21 +1480,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 		if (this.getIRODSSession().getRestartManager() == null) {
 			log.error("configured for restarts, but there is no restart manager in IRODSSession");
-			throw new JargonRuntimeException(
+			throw new FileRestartManagementException(
 					"restart specified but no restart manager in IRODSSession");
 		}
 		return true;
 	}
 
-	/**
-	 * Only retrieve a restart if it exists, <code>null</code> if it does not
-	 * 
-	 * @param restartType
-	 * @param irodsAbsolutePath
-	 * @return
-	 * @throws FileRestartManagementException
-	 */
-	private FileRestartInfo retrieveRestartInfoIfAvailable(
+	@Override
+	public FileRestartInfo retrieveRestartInfoIfAvailable(
 			final RestartType restartType, final String irodsAbsolutePath)
 			throws FileRestartManagementException {
 

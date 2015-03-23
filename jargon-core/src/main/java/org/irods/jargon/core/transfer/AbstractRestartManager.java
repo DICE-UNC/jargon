@@ -72,6 +72,18 @@ public abstract class AbstractRestartManager {
 			throws FileRestartManagementException;
 
 	/**
+	 * Method to properly increment the restart count, allowing an
+	 * implementation to do synchronization
+	 * 
+	 * @param fileRestartInfo
+	 *            {@link FileRestartInfo} that contains the attempt count
+	 * @throws FileRestartManagementException
+	 */
+	public abstract void incrementRestartAttempts(
+			final FileRestartInfo fileRestartInfo)
+			throws FileRestartManagementException;
+
+	/**
 	 * Given an identifier and thread number, find the segment and update the
 	 * length on that segment
 	 * 
