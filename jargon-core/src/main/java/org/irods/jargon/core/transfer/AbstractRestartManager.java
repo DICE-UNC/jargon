@@ -26,14 +26,25 @@ public abstract class AbstractRestartManager {
 	 * Either return existing, or create a new restart identifier
 	 * 
 	 * @param fileRestartInfoIdentifier
+	 * @param localFilePath
+	 *            <code>String</code> with the local file name
 	 * @return
 	 * @throws FileRestartManagementException
 	 */
 	public synchronized FileRestartInfo retrieveRestartAndBuildIfNotStored(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
-			final int numberOfThreads) throws FileRestartManagementException {
+			String localFilePath, final int numberOfThreads)
+			throws FileRestartManagementException {
 
 		log.info("retrieveRestartAndBuildIfNotStored()");
+
+		if (fileRestartInfoIdentifier == null) {
+			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
+		}
+
+		if (localFilePath == null || localFilePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty localFilePath");
+		}
 
 		FileRestartInfo info = retrieveRestart(fileRestartInfoIdentifier);
 
@@ -45,6 +56,7 @@ public abstract class AbstractRestartManager {
 			info.setIrodsAccountIdentifier(fileRestartInfoIdentifier
 					.getIrodsAccountIdentifier());
 			info.setRestartType(fileRestartInfoIdentifier.getRestartType());
+			info.setLocalAbsolutePath(localFilePath);
 			/*
 			 * Add a segment for each row
 			 */

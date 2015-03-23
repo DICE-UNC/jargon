@@ -140,7 +140,8 @@ public class PutTransferRestartProcessor extends
 			FileRestartDataSegment segment = null;
 			for (int i = 0; i < fileRestartInfo.getFileRestartDataSegments()
 					.size(); i++) {
-				log.info("process segment:{}", segment);
+				log.info("process segment:{}", fileRestartInfo
+						.getFileRestartDataSegments().get(i));
 				gap = fileRestartInfo.getFileRestartDataSegments().get(i)
 						.getOffset()
 						- currentOffset;

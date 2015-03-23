@@ -815,8 +815,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * otherwise, it will hold info on the current file restart status
 		 */
 		FileRestartInfo fileRestartInfo = retrieveOrCreateRestartInfoIfConfigured(
-				RestartType.PUT, irodsAbsolutePath, numberOfThreads,
-				transferLength);
+				RestartType.PUT, irodsAbsolutePath,
+				localFile.getAbsolutePath(), numberOfThreads, transferLength);
 
 		log.info("transfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
@@ -1527,8 +1527,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private FileRestartInfo retrieveOrCreateRestartInfoIfConfigured(
 			final RestartType restartType, final String irodsAbsolutePath,
-			final int numberOfThreads, final long dataSize)
-			throws FileRestartManagementException {
+			final String localFilePath, final int numberOfThreads,
+			final long dataSize) throws FileRestartManagementException {
 
 		log.info("retrieveRestartInfoIfAvailable()");
 
@@ -1559,7 +1559,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getIRODSSession()
 				.getRestartManager()
 				.retrieveRestartAndBuildIfNotStored(fileRestartInfoIdentifier,
-						numberOfThreads);
+						localFilePath, numberOfThreads);
 
 	}
 
