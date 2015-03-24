@@ -198,6 +198,23 @@ public class PutTransferRestartProcessor extends
 		} catch (IOException e) {
 			log.error("end of file exception with localFile:{}", localFile, e);
 			throw new RestartFailedException(e);
+		} finally {
+
+			try {
+				irodsRandomAccessFile.close();
+			} catch (IOException e) {
+				log.error(
+						"error closing irods random access file during restart",
+						e);
+				throw new RestartFailedException(
+						"exception closing irods restart file", e);
+			}
+			try {
+				localFile.close();
+			} catch (IOException e) {
+				log.warn("error closing local file, logged and ignored", e);
+			}
+
 		}
 
 	}

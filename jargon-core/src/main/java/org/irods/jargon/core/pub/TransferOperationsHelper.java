@@ -8,6 +8,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OverwriteException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
@@ -24,11 +25,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  *         Functions to support transfer operations. These are used internally.
  *         See {@link org.irods.jargon.core.pub.DataTransferOperations} for
  *         public methods.
- *
+ * 
  */
 final class TransferOperationsHelper {
 
@@ -38,7 +39,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Initializer creates an instance of this class.
-	 *
+	 * 
 	 * @param irodsSession
 	 *            <code>IRODSSession</code> that can connect to iRODS
 	 * @param irodsAccount
@@ -67,7 +68,7 @@ final class TransferOperationsHelper {
 	 * Recursively get a file from iRODS. This utility method is used
 	 * internally, and can process call-backs as well as filtering and
 	 * cancellation.
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
 	 *            the file or collection to retrieve.
@@ -204,7 +205,7 @@ final class TransferOperationsHelper {
 	/**
 	 * In a transfer operation, process the given iRODS file as a data object to
 	 * be retrieved.
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the get.
@@ -383,7 +384,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Method to recursively put a collection. This method can monitor for a
 	 * cancellation, and can also provide callbacks to a process.
-	 *
+	 * 
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file
 	 *            that should be replicated.
@@ -478,7 +479,7 @@ final class TransferOperationsHelper {
 	/**
 	 * A put operation has been cancelled or paused, give the appropraite
 	 * callback
-	 *
+	 * 
 	 * @param targetIrodsCollection
 	 *            {@link IRODSFile} that was the source
 	 * @param transferStatusCallbackListener
@@ -635,7 +636,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Method to recursively replicate a collection. This method can monitor for
 	 * a cancellation, and can also provide callbacks to a process.
-	 *
+	 * 
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file
 	 *            that should be replicated.
@@ -798,7 +799,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Put a single file to iRODS.
-	 *
+	 * 
 	 * @param sourceFile
 	 *            <code>File</code> on the local file system that will be the
 	 *            source of the put.
@@ -916,37 +917,51 @@ final class TransferOperationsHelper {
 			 * don't apply if I am attempting a file restart.
 			 */
 			boolean inRestart = false;
-			while (tryIt) {
-				try {
-					dataObjectAO.putLocalDataObjectToIRODS(sourceFile,
-							targetIrodsFile, transferControlBlock,
-							transferStatusCallbackListener, inRestart);
+			ForceOption existingForceOption = transferControlBlock
+					.getTransferOptions().getForceOption();
 
-					/*
-					 * The way this works in jargon is that exceptions in the
-					 * transfer are thrown 'below' this method in the transfer
-					 * process. If something went wrong, see if I can
-					 * autonomously restart the transfer. I will loop until
-					 * tryIt is false.
-					 */
+			try {
 
-					tryIt = false;
-				} catch (Exception e) {
+				while (tryIt) {
+					try {
+						if (inRestart) {
+							transferControlBlock.getTransferOptions()
+									.setForceOption(ForceOption.USE_FORCE);
+						}
+						dataObjectAO.putLocalDataObjectToIRODS(sourceFile,
+								targetIrodsFile, transferControlBlock,
+								transferStatusCallbackListener, inRestart);
 
-					log.info("an exception occurred, check if restart is available, and if I should autonomously restart or call it an exception");
-					evaluateAndDoPutRestart(sourceFile, targetIrodsFile,
-							transferControlBlock, e);
+						/*
+						 * The way this works in jargon is that exceptions in
+						 * the transfer are thrown 'below' this method in the
+						 * transfer process. If something went wrong, see if I
+						 * can autonomously restart the transfer. I will loop
+						 * until tryIt is false.
+						 */
 
-					/*
-					 * either the exception was rethrown in the evaluate or it
-					 * falls through and we tryIt again this will not endlessly
-					 * restart because the restart process itself may fail, and/
-					 * that exception is tracked
-					 */
+						tryIt = false;
+					} catch (Exception e) {
 
-					inRestart = true;
+						log.info("an exception occurred, check if restart is available, and if I should autonomously restart or call it an exception");
+						evaluateAndDoPutRestart(sourceFile, targetIrodsFile,
+								transferControlBlock, e);
 
+						/*
+						 * either the exception was rethrown in the evaluate or
+						 * it falls through and we tryIt again this will not
+						 * endlessly restart because the restart process itself
+						 * may fail, and/ that exception is tracked
+						 */
+
+						inRestart = true;
+
+					}
 				}
+
+			} finally {
+				transferControlBlock.getTransferOptions().setForceOption(
+						existingForceOption);
 			}
 
 			transferControlBlock.incrementFilesTransferredSoFar();
@@ -1049,7 +1064,7 @@ final class TransferOperationsHelper {
 
 	/**
 	 * Replicate a single file and process any exceptions or success callbacks.
-	 *
+	 * 
 	 * @param irodsFileAbsolutePath
 	 * @param targetResource
 	 * @param transferStatusCallbackListener
@@ -1260,7 +1275,7 @@ final class TransferOperationsHelper {
 	/**
 	 * Process the copy of a source file to a given target file. This is an
 	 * iRODS to iRODS copy.
-	 *
+	 * 
 	 * @param irodsSourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file,
 	 *            which is an iRODS data object, not a collection

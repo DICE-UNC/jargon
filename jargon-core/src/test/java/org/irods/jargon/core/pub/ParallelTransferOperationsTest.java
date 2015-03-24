@@ -150,6 +150,7 @@ public class ParallelTransferOperationsTest {
 				.getJargonProperties();
 		props.setMaxParallelThreads(4);
 		props.setLongTransferRestart(true);
+		props.setComputeAndVerifyChecksumAfterTransfer(true);
 		irodsFileSystem.getIrodsSession().setJargonProperties(props);
 
 		String absPath = scratchFileUtils
