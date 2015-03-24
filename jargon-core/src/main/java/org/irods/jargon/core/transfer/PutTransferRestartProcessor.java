@@ -124,6 +124,9 @@ public class PutTransferRestartProcessor extends
 
 		RandomAccessFile localFile = null;
 		byte[] buffer;
+		/*
+		 * See rcPortalOpr.cpp lfRestartPutWithInfo at about line 1522
+		 */
 		try {
 			localFile = localFileAsFileAndCheckExists(fileRestartInfo);
 
@@ -136,11 +139,9 @@ public class PutTransferRestartProcessor extends
 			FileRestartDataSegment segment = null;
 			for (int i = 0; i < fileRestartInfo.getFileRestartDataSegments()
 					.size(); i++) {
-				log.info("process segment:{}", fileRestartInfo
-						.getFileRestartDataSegments().get(i));
-				gap = fileRestartInfo.getFileRestartDataSegments().get(i)
-						.getOffset()
-						- currentOffset;
+				segment = fileRestartInfo.getFileRestartDataSegments().get(i);
+				log.info("process segment:{}", segment);
+				gap = segment.getOffset() - currentOffset;
 				if (gap < 0) {
 					log.warn("my segment has a gap < 0..continuing:{}", segment);
 				} else if (gap > 0) {
@@ -163,12 +164,25 @@ public class PutTransferRestartProcessor extends
 
 				if (fileRestartInfo.getFileRestartDataSegments().get(i)
 						.getLength() > 0) {
-					currentOffset += fileRestartInfo
-							.getFileRestartDataSegments().get(i).getLength();
+					currentOffset += segment.getLength();
 					localFile.seek(currentOffset);
 					irodsRandomAccessFile.seek(currentOffset,
 							SeekWhenceType.SEEK_CURRENT);
 				}
+			}
+
+			// put final segment based on file size
+
+			/*
+			 * See rcPortalOpr.cpp at about line 1616
+			 */
+			gap = localFile.length() - currentOffset;
+			if (gap > 0) {
+				log.info("writing last segment based on file length");
+				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
+
+				putSegment(gap, localFile, buffer, fileRestartInfo, segment, i,
+						segment.getLength(), irodsRandomAccessFile);
 			}
 
 			log.info("restart completed..remove from the cache");
@@ -188,6 +202,20 @@ public class PutTransferRestartProcessor extends
 
 	}
 
+	/**
+	 * Put the segment to iRODS, and update the length of the given segment
+	 * 
+	 * @param gap
+	 * @param localFile
+	 * @param buffer
+	 * @param fileRestartInfo
+	 * @param segment
+	 * @param indexOfCurrentSegment
+	 * @param lengthToUpdate
+	 * @param irodsRandomAccessFile
+	 * @throws RestartFailedException
+	 * @throws FileRestartManagementException
+	 */
 	private void putSegment(final long gap, final RandomAccessFile localFile,
 			final byte[] buffer, final FileRestartInfo fileRestartInfo,
 			final FileRestartDataSegment segment,
@@ -197,7 +225,6 @@ public class PutTransferRestartProcessor extends
 
 		long myGap = gap;
 		long writtenSinceUpdated = 0L;
-		long myLengthToUpdate = lengthToUpdate;
 		int toRead = 0;
 		while (myGap > 0) {
 			if (myGap > buffer.length) {
@@ -213,12 +240,12 @@ public class PutTransferRestartProcessor extends
 				irodsRandomAccessFile.write(buffer, 0, amountRead);
 				myGap -= amountRead;
 				writtenSinceUpdated += amountRead;
-				myLengthToUpdate += amountRead;
 
 				if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
 					log.info("need to update restart");
-					segment.setLength(myLengthToUpdate);
-					this.getRestartManager().storeRestart(fileRestartInfo);
+					this.getRestartManager().updateLengthForSegment(
+							fileRestartInfo.identifierFromThisInfo(),
+							segment.getThreadNumber(), writtenSinceUpdated);
 					writtenSinceUpdated = 0;
 				}
 
