@@ -14,7 +14,6 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
-import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,43 +49,15 @@ public class PutTransferRestartProcessor extends
 			throws RestartFailedException, FileRestartManagementException {
 		log.info("restartIfNecessary()");
 
-		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
-		}
-
-		try {
-			if (this.getIrodsAccessObjectFactory().getJargonProperties()
-					.isLongTransferRestart()) {
-				if (this.getRestartManager() == null) {
-					log.error("no restart manager configured");
-					throw new FileRestartManagementException(
-							"retart manager not configured");
-				}
-			}
-		} catch (JargonException e) {
-			log.error("exception accessing restart manager", e);
-			throw new FileRestartManagementException("retart manager error", e);
-		}
-
-		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
-		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
-		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIrodsAccount()
-				.toString());
-		fileRestartInfoIdentifier.setRestartType(RestartType.PUT);
-
-		log.info("see if restart for:{}", fileRestartInfoIdentifier);
-
-		FileRestartInfo fileRestartInfo = getRestartManager().retrieveRestart(
-				fileRestartInfoIdentifier);
+		FileRestartInfo fileRestartInfo = retrieveRestartIfConfiguredOrNull(
+				irodsAbsolutePath, FileRestartInfo.RestartType.PUT);
 		if (fileRestartInfo == null) {
 			log.info("no restart");
 			return;
 		}
 
 		try {
-			processRestart(irodsAbsolutePath, fileRestartInfoIdentifier,
-					fileRestartInfo);
+			processRestart(irodsAbsolutePath, fileRestartInfo);
 		} catch (JargonException e) {
 			log.error("exception accessing restart manager", e);
 			throw new FileRestartManagementException("restart manager error", e);
@@ -99,13 +70,12 @@ public class PutTransferRestartProcessor extends
 	 *             calling method
 	 * 
 	 * @param irodsAbsolutePath
-	 * @param fileRestartInfoIdentifier
 	 * @param fileRestartInfo
 	 * @throws
 	 */
 	private void processRestart(final String irodsAbsolutePath,
-			FileRestartInfoIdentifier fileRestartInfoIdentifier,
-			FileRestartInfo fileRestartInfo) throws RestartFailedException {
+
+	FileRestartInfo fileRestartInfo) throws RestartFailedException {
 		IRODSRandomAccessFile irodsRandomAccessFile;
 		try {
 			irodsRandomAccessFile = getIrodsAccessObjectFactory()
@@ -128,7 +98,8 @@ public class PutTransferRestartProcessor extends
 		 * See rcPortalOpr.cpp lfRestartPutWithInfo at about line 1522
 		 */
 		try {
-			localFile = localFileAsFileAndCheckExists(fileRestartInfo);
+			localFile = localFileAsFileAndCheckExists(fileRestartInfo,
+					OpenType.READ);
 
 			// now put each segment
 			buffer = new byte[getIrodsAccessObjectFactory()
@@ -186,7 +157,8 @@ public class PutTransferRestartProcessor extends
 			}
 
 			log.info("restart completed..remove from the cache");
-			this.getRestartManager().deleteRestart(fileRestartInfoIdentifier);
+			this.getRestartManager().deleteRestart(
+					fileRestartInfo.identifierFromThisInfo());
 			log.info("removed restart");
 		} catch (FileNotFoundException e) {
 			log.error("file not found exception with localFile:{}", localFile,

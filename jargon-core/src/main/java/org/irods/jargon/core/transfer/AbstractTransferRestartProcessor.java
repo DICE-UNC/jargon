@@ -29,6 +29,10 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	public static final long RESTART_FILE_UPDATE_SIZE = 32 * 1024 * 1024;
 
+	public enum OpenType {
+		READ, WRITE
+	}
+
 	/**
 	 * Constructor with required dependencies
 	 * 
@@ -82,11 +86,11 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @throws JargonException
 	 */
 	protected RandomAccessFile localFileAsFileAndCheckExists(
-			final FileRestartInfo fileRestartInfo)
+			final FileRestartInfo fileRestartInfo, final OpenType openType)
 			throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
-		RandomAccessFile localFile = localFileAsFile(fileRestartInfo);
+		RandomAccessFile localFile = localFileAsFile(fileRestartInfo, openType);
 
 		return localFile;
 
@@ -98,15 +102,20 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @param fileRestartInfo
 	 *            fileRestartInfo {@link FileRestartInfo} that describes the
 	 *            transfer
+	 * @param openType
 	 * @return {@link RandomAccessFile} that represents the local part of the
 	 *         transfer
 	 * @throws JargonException
 	 */
 	protected RandomAccessFile localFileAsFile(
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo, OpenType openType)
+			throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
+		}
+		if (openType == null) {
+			throw new IllegalArgumentException("null openType");
 		}
 
 		if (fileRestartInfo.getLocalAbsolutePath() == null
@@ -117,9 +126,15 @@ public abstract class AbstractTransferRestartProcessor extends
 					"unable to find a local file path in the restart info");
 		}
 
+		String openFlag;
+		if (openType == OpenType.READ) {
+			openFlag = "r";
+		} else {
+			openFlag = "w";
+		}
 		try {
 			return new RandomAccessFile(fileRestartInfo.getLocalAbsolutePath(),
-					"r");
+					openFlag);
 		} catch (FileNotFoundException e) {
 			log.error("local file not found:{}",
 					fileRestartInfo.getLocalAbsolutePath());
@@ -151,7 +166,11 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	/**
 	 * Retrieve the restart info if it exists and Jargon is configured to do
-	 * restarts
+	 * restarts.
+	 * <p/>
+	 * This method will check the configuration as well as the actual restart
+	 * manager, and will return <code>null</code>
+	 * 
 	 * 
 	 * @param irodsAbsolutePath
 	 * @param restartType
