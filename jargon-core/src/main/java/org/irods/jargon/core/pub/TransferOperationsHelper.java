@@ -839,6 +839,25 @@ final class TransferOperationsHelper {
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
 
+		/*
+		 * This is a transfer of a single file, normalize the target path to be
+		 * a file, rather then the parent collection, so restarts can find the
+		 * previous attempt.
+		 */
+
+		IRODSFile targetFileAsFile = null;
+		if (targetIrodsFile.isDirectory()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(targetIrodsFile.getAbsolutePath());
+			sb.append("/");
+			sb.append(sourceFile.getName());
+			targetFileAsFile = this.collectionAO.getIRODSFileFactory()
+					.instanceIRODSFile(sb.toString());
+			targetFileAsFile.setResource(targetIrodsFile.getResource());
+		} else {
+			targetFileAsFile = targetIrodsFile;
+		}
+
 		try {
 
 			// if I am restarting, see if I need to transfer this file
@@ -848,7 +867,7 @@ final class TransferOperationsHelper {
 				transferControlBlock.incrementFilesSkippedSoFar();
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),
-						targetIrodsFile.getAbsolutePath(), "", 0, 0,
+						targetFileAsFile.getAbsolutePath(), "", 0, 0,
 						transferControlBlock.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
 						transferControlBlock.getTotalFilesToTransfer(),
@@ -864,7 +883,7 @@ final class TransferOperationsHelper {
 
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),
-						targetIrodsFile.getAbsolutePath(), targetIrodsFile
+						targetFileAsFile.getAbsolutePath(), targetFileAsFile
 								.getResource(), sourceFile.length(), sourceFile
 								.length(), transferControlBlock
 								.getTotalFilesTransferredSoFar(),
@@ -890,7 +909,7 @@ final class TransferOperationsHelper {
 					transferControlBlock.incrementFilesSkippedSoFar();
 
 					status = TransferStatus.instance(TransferType.PUT,
-							sourceFile.getAbsolutePath(), targetIrodsFile
+							sourceFile.getAbsolutePath(), targetFileAsFile
 									.getAbsolutePath(), "", 0, 0,
 							transferControlBlock
 									.getTotalFilesTransferredSoFar(),
@@ -929,7 +948,7 @@ final class TransferOperationsHelper {
 									.setForceOption(ForceOption.USE_FORCE);
 						}
 						dataObjectAO.putLocalDataObjectToIRODS(sourceFile,
-								targetIrodsFile, transferControlBlock,
+								targetFileAsFile, transferControlBlock,
 								transferStatusCallbackListener, inRestart);
 
 						/*
@@ -944,7 +963,7 @@ final class TransferOperationsHelper {
 					} catch (Exception e) {
 
 						log.info("an exception occurred, check if restart is available, and if I should autonomously restart or call it an exception");
-						evaluateAndDoPutRestart(sourceFile, targetIrodsFile,
+						evaluateAndDoPutRestart(sourceFile, targetFileAsFile,
 								transferControlBlock, e);
 
 						/*
@@ -970,7 +989,7 @@ final class TransferOperationsHelper {
 
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),
-						targetIrodsFile.getAbsolutePath(), targetIrodsFile
+						targetFileAsFile.getAbsolutePath(), targetFileAsFile
 								.getResource(), sourceFile.length(), sourceFile
 								.length(), transferControlBlock
 								.getTotalFilesTransferredSoFar(),
@@ -996,10 +1015,10 @@ final class TransferOperationsHelper {
 
 					TransferStatus status = TransferStatus
 							.instanceForException(TransferType.PUT, sourceFile
-									.getAbsolutePath(), targetIrodsFile
-									.getAbsolutePath(), targetIrodsFile
+									.getAbsolutePath(), targetFileAsFile
+									.getAbsolutePath(), targetFileAsFile
 									.getResource(), sourceFile.length(),
-									targetIrodsFile.length(),
+									targetFileAsFile.length(),
 									transferControlBlock
 											.getTotalFilesTransferredSoFar(),
 									transferControlBlock

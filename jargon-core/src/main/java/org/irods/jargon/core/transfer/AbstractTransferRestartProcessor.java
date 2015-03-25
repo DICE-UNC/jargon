@@ -149,4 +149,52 @@ public abstract class AbstractTransferRestartProcessor extends
 		return getRestartManager().retrieveRestart(fileRestartInfoIdentifier);
 	}
 
+	/**
+	 * Retrieve the restart info if it exists and Jargon is configured to do
+	 * restarts
+	 * 
+	 * @param irodsAbsolutePath
+	 * @param restartType
+	 * @return
+	 * @throws FileRestartManagementException
+	 */
+	protected FileRestartInfo retrieveRestartIfConfiguredOrNull(
+			final String irodsAbsolutePath,
+			final FileRestartInfo.RestartType restartType)
+			throws FileRestartManagementException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		try {
+			if (this.getIrodsAccessObjectFactory().getJargonProperties()
+					.isLongTransferRestart()) {
+				if (this.getRestartManager() == null) {
+					log.error("no restart manager configured");
+					throw new FileRestartManagementException(
+							"retart manager not configured");
+				}
+			}
+		} catch (JargonException e) {
+			log.error("exception accessing restart manager", e);
+			throw new FileRestartManagementException("retart manager error", e);
+		}
+
+		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
+		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIrodsAccount()
+				.toString());
+		fileRestartInfoIdentifier.setRestartType(restartType);
+
+		log.info("see if restart for:{}", fileRestartInfoIdentifier);
+
+		FileRestartInfo fileRestartInfo = getRestartManager().retrieveRestart(
+				fileRestartInfoIdentifier);
+
+		return fileRestartInfo;
+
+	}
+
 }

@@ -532,8 +532,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("put error, local file does not exist: {}",
 					localFile.getAbsolutePath());
 			throw new DataNotFoundException(
-					"put attempt where local file does not exist:"
-							+ localFile.getAbsolutePath());
+					"put attempt where local file does not exist");
 		}
 
 		/*
@@ -673,6 +672,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (transferControlBlock == null) {
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
+
+		/*
+		 * This is a transfer of a single file,the target path should be
+		 * normalized to the full file name
+		 */
 
 		TransferOptions myTransferOptions = new TransferOptions(
 				transferControlBlock.getTransferOptions());
