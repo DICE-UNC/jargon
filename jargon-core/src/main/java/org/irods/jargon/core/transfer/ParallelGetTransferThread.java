@@ -5,7 +5,6 @@ package org.irods.jargon.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -175,20 +174,13 @@ public final class ParallelGetTransferThread extends
 			log.info("connection listener configured, will produce callbacks");
 		}
 
-		RandomAccessFile local;
+		RandomAccessFile local = null;
+
 		try {
 			log.info("opening local randomAccessFile");
 			local = new RandomAccessFile(
 					parallelGetFileTransferStrategy.getLocalFile(), "rw");
 			log.info("random access file opened rw mode");
-		} catch (FileNotFoundException e) {
-			log.error("FileNotFoundException in parallel get operation", e);
-			throw new JargonException(
-					"FileNotFoundException in parallel get operation", e);
-		}
-
-		try {
-
 			processingLoopForGetData(local);
 
 		} catch (JargonException je) {
@@ -299,6 +291,21 @@ public final class ParallelGetTransferThread extends
 
 						if (operation == DONE_OPR) {
 							break;
+						}
+
+						/*
+						 * If restarting, maintain a reference to the offset
+						 */
+
+						if (this.parallelGetFileTransferStrategy
+								.getFileRestartInfo() != null) {
+							this.parallelGetFileTransferStrategy
+									.getRestartManager()
+									.updateOffsetForSegment(
+											this.parallelGetFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											this.getThreadNumber(), offset);
 						}
 
 						seekToOffset(local, offset);

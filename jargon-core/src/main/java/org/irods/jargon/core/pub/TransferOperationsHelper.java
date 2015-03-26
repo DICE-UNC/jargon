@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.irods.jargon.core.transfer.FileRestartManagementException;
+import org.irods.jargon.core.transfer.GetTransferRestartProcessor;
 import org.irods.jargon.core.transfer.PutTransferRestartProcessor;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus;
@@ -233,6 +234,33 @@ final class TransferOperationsHelper {
 			final TransferControlBlock transferControlBlock)
 			throws OverwriteException, FileNotFoundException, JargonException {
 
+		log.info("processGetOfSingleFile()");
+
+		if (irodsSourceFile == null) {
+			throw new IllegalArgumentException("null irodsSourceFile");
+		}
+
+		if (targetLocalFile == null) {
+			throw new IllegalArgumentException("null targetLocalFile");
+		}
+
+		/*
+		 * This is a transfer of a single file, normalize the target path to be
+		 * a file, rather then the parent collection, so restarts can find the
+		 * previous attempt.
+		 */
+
+		File targetLocalFileAsFile = null;
+		if (targetLocalFile.isDirectory()) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(targetLocalFile.getAbsolutePath());
+			sb.append("/");
+			sb.append(irodsSourceFile.getName());
+			targetLocalFileAsFile = new File(sb.toString());
+		} else {
+			targetLocalFileAsFile = targetLocalFile;
+		}
+
 		log.info("get of single file...filtered?");
 
 		int totalFiles = 0;
@@ -248,7 +276,7 @@ final class TransferOperationsHelper {
 			if (transferStatusCallbackListener != null) {
 				TransferStatus status = TransferStatus.instance(
 						TransferType.GET, irodsSourceFile.getAbsolutePath(),
-						targetLocalFile.getAbsolutePath(), "", 0, 0,
+						targetLocalFileAsFile.getAbsolutePath(), "", 0, 0,
 						transferControlBlock.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
 						totalFiles, TransferState.RESTARTING, dataObjectAO
@@ -271,7 +299,7 @@ final class TransferOperationsHelper {
 				long sourceFileLength = irodsSourceFile.length();
 				TransferStatus status = TransferStatus.instance(
 						TransferType.GET, irodsSourceFile.getAbsolutePath(),
-						targetLocalFile.getAbsolutePath(), "",
+						targetLocalFileAsFile.getAbsolutePath(), "",
 						sourceFileLength, sourceFileLength,
 						transferControlBlock.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
@@ -292,8 +320,8 @@ final class TransferOperationsHelper {
 							irodsSourceFile.getAbsolutePath());
 					transferControlBlock.incrementFilesSkippedSoFar();
 					status = TransferStatus.instance(TransferType.GET,
-							irodsSourceFile.getAbsolutePath(), targetLocalFile
-									.getAbsolutePath(), "", 0, 0,
+							irodsSourceFile.getAbsolutePath(),
+							targetLocalFileAsFile.getAbsolutePath(), "", 0, 0,
 							transferControlBlock
 									.getTotalFilesTransferredSoFar(),
 							transferControlBlock.getTotalFilesSkippedSoFar(),
@@ -307,9 +335,68 @@ final class TransferOperationsHelper {
 
 			}
 
+			/*
+			 * restart logic, will attempt to do the transfer, and if it fails,
+			 * do a restart and try again, up to a limit. At the limit the
+			 * 'evaluateAndDoPutRestart' will throw a restart failed exception
+			 */
+			boolean tryIt = true;
+			/*
+			 * inRestart is a flag that will be sent with the put request.
+			 * Setting to true will ignore overwrite checks and things that
+			 * don't apply if I am attempting a file restart.
+			 */
+			boolean inRestart = false;
+			ForceOption existingForceOption = transferControlBlock
+					.getTransferOptions().getForceOption();
+
+			try {
+
+				while (tryIt) {
+					try {
+						if (inRestart) {
+							transferControlBlock.getTransferOptions()
+									.setForceOption(ForceOption.USE_FORCE);
+						}
+						dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
+								targetLocalFileAsFile, transferControlBlock,
+								transferStatusCallbackListener);
+
+						/*
+						 * The way this works in jargon is that exceptions in
+						 * the transfer are thrown 'below' this method in the
+						 * transfer process. If something went wrong, see if I
+						 * can autonomously restart the transfer. I will loop
+						 * until tryIt is false.
+						 */
+
+						tryIt = false;
+					} catch (Exception e) {
+
+						log.info("an exception occurred, check if restart is available, and if I should autonomously restart or call it an exception");
+						evaluateAndDoGetRestart(irodsSourceFile,
+								targetLocalFileAsFile, transferControlBlock, e);
+
+						/*
+						 * either the exception was rethrown in the evaluate or
+						 * it falls through and we tryIt again this will not
+						 * endlessly restart because the restart process itself
+						 * may fail, and/ that exception is tracked
+						 */
+
+						inRestart = true;
+
+					}
+				}
+
+			} finally {
+				transferControlBlock.getTransferOptions().setForceOption(
+						existingForceOption);
+			}
+
 			try {
 				dataObjectAO.getDataObjectFromIrods(irodsSourceFile,
-						targetLocalFile, transferControlBlock,
+						targetLocalFileAsFile, transferControlBlock,
 						transferStatusCallbackListener);
 			} catch (JargonException e) {
 				log.error(
@@ -334,7 +421,7 @@ final class TransferOperationsHelper {
 				long sourceFileLength = irodsSourceFile.length();
 				TransferStatus status = TransferStatus.instance(
 						TransferType.GET, irodsSourceFile.getAbsolutePath(),
-						targetLocalFile.getAbsolutePath(), "",
+						targetLocalFileAsFile.getAbsolutePath(), "",
 						sourceFileLength, sourceFileLength,
 						transferControlBlock.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
@@ -360,9 +447,10 @@ final class TransferOperationsHelper {
 					TransferStatus status = TransferStatus
 							.instanceForException(TransferType.GET,
 									irodsSourceFile.getAbsolutePath(),
-									targetLocalFile.getAbsolutePath(), "",
-									targetLocalFile.length(), targetLocalFile
-											.length(), transferControlBlock
+									targetLocalFileAsFile.getAbsolutePath(),
+									"", targetLocalFileAsFile.length(),
+									targetLocalFileAsFile.length(),
+									transferControlBlock
 											.getTotalFilesTransferredSoFar(),
 									transferControlBlock
 											.getTotalFilesSkippedSoFar(),
@@ -379,6 +467,46 @@ final class TransferOperationsHelper {
 				}
 			}
 		}
+	}
+
+	private void evaluateAndDoGetRestart(IRODSFile irodsSourceFile,
+			File targetLocalFileAsFile,
+			TransferControlBlock transferControlBlock, Exception e)
+			throws JargonException {
+		// if there is an issue with the restart manager, then rethrow the
+		// exception and do not restart
+		if (e instanceof FileRestartManagementException) {
+			log.error("unable to restart here", e);
+			throw new JargonException("exception processing restart", e);
+		} else if (e instanceof OverwriteException) {
+			log.error("overwrite situation, no restart done");
+			throw (OverwriteException) e;
+		}
+
+		log.info("check if I can restart");
+
+		/*
+		 * will be null if restart not configured
+		 */
+		FileRestartInfo fileRestartInfo = this.dataObjectAO
+				.retrieveRestartInfoIfAvailable(RestartType.GET,
+						irodsSourceFile.getAbsolutePath());
+
+		if (fileRestartInfo == null) {
+			log.info("cannot restart, so go ahead and rethrow the original exception");
+			throw new JargonException(
+					"unable to restart, rethrow original exception", e);
+		}
+
+		log.info("letting the restart happen");
+		GetTransferRestartProcessor restartProcessor = new GetTransferRestartProcessor(
+				this.dataObjectAO.getIRODSAccessObjectFactory(),
+				this.dataObjectAO.getIRODSAccount(), this.dataObjectAO
+						.getIRODSSession().getRestartManager());
+		restartProcessor.restartIfNecessary(irodsSourceFile.getAbsolutePath());
+
+		// if I succeed in the restart without errors the transfer will
+		// continue. An exception in restart will stop the retry of the get
 	}
 
 	/**
@@ -1044,7 +1172,7 @@ final class TransferOperationsHelper {
 			TransferControlBlock transferControlBlock, Exception e)
 			throws OverwriteException, JargonException {
 
-		// if there is an issue with the restart manager, then rethrow the
+		// if there is an issue with the restart manager, then re-throw the
 		// exception and do not restart
 		if (e instanceof FileRestartManagementException) {
 			log.error("unable to restart here", e);
