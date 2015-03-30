@@ -133,8 +133,7 @@ public class PutTransferRestartProcessor extends
 					currentOffset += gap;
 				}
 
-				if (fileRestartInfo.getFileRestartDataSegments().get(i)
-						.getLength() > 0) {
+				if (segment.getLength() > 0) {
 					currentOffset += segment.getLength();
 					localFile.seek(currentOffset);
 					irodsRandomAccessFile.seek(currentOffset,
@@ -147,7 +146,12 @@ public class PutTransferRestartProcessor extends
 			/*
 			 * See rcPortalOpr.cpp at about line 1616
 			 */
+			log.info("computing gap for last segment");
+			log.info("local file length:{}", localFile.length());
+			log.info("current offset:{}", currentOffset);
+
 			gap = localFile.length() - currentOffset;
+			log.info("last segment gap:{}", gap);
 			if (gap > 0) {
 				log.info("writing last segment based on file length");
 				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
@@ -237,7 +241,6 @@ public class PutTransferRestartProcessor extends
 							segment.getThreadNumber(), writtenSinceUpdated);
 					writtenSinceUpdated = 0;
 				}
-
 			} catch (IOException e) {
 				log.error("IOException reading local file", e);
 				throw new RestartFailedException(
