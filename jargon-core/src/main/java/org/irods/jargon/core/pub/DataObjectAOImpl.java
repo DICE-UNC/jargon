@@ -2856,6 +2856,57 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		return returnedChecksum;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#verifyChecksumBetweenLocalAndIrods
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
+	 */
+	@Override
+	public boolean verifyChecksumBetweenLocalAndIrods(
+			final IRODSFile irodsFile, final File localFile)
+			throws FileNotFoundException, JargonException {
+
+		log.info("verifyChecksumBetweenLocalAndIrods()");
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("null irodsFile");
+		}
+
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+
+		log.info("irodsfile:{}", irodsFile.getAbsolutePath());
+		log.info("localFile:{}", localFile.getAbsolutePath());
+
+		if (!irodsFile.exists()) {
+			throw new FileNotFoundException("irodsFile does not exist");
+		}
+
+		if (!localFile.exists()) {
+			throw new FileNotFoundException("localFile does not exist");
+		}
+
+		try {
+			ChecksumValue irodsChecksum = this
+					.computeChecksumOnDataObject(irodsFile);
+			ChecksumValue localChecksum = this
+					.getIRODSSession()
+					.getLocalChecksumComputerFactory()
+					.instance(irodsChecksum.getChecksumEncoding())
+					.instanceChecksumForPackingInstruction(
+							localFile.getAbsolutePath());
+			return irodsChecksum.getChecksumStringValue().equals(
+					localChecksum.getChecksumStringValue());
+		} catch (java.io.FileNotFoundException e) {
+			log.error("did not find local file", e);
+			throw new FileNotFoundException(
+					"local file not found when computing checksum", e);
+		}
+
+	}
+
 	/**
 	 * @param irodsFile
 	 * @param checksumEncoding

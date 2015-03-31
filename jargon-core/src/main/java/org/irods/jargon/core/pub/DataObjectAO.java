@@ -1,5 +1,6 @@
 package org.irods.jargon.core.pub;
 
+import java.io.File;
 import java.util.List;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
@@ -1211,5 +1212,22 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	FileRestartInfo retrieveRestartInfoIfAvailable(
 			final RestartType restartType, final String irodsAbsolutePath)
 			throws FileRestartManagementException;
+
+	/**
+	 * Convenience method to compare the checksum of a given local file and a
+	 * complementary iRODS file, returning a <code>boolean</code> indicating
+	 * whether the files match
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSfile} to checksum
+	 * @param localFile
+	 *            {@link File} to checksum
+	 * @return <code>boolean</code> indicating whether the checksums match
+	 * @throws FileNotFoundException
+	 *             if either file is missing
+	 * @throws JargonException
+	 */
+	boolean verifyChecksumBetweenLocalAndIrods(final IRODSFile irodsFile,
+			final File localFile) throws FileNotFoundException, JargonException;
 
 }

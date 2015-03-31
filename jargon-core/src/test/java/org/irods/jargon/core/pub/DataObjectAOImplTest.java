@@ -3037,6 +3037,40 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+	public final void testVerifyChecksum() throws Exception {
+
+		// generate a local scratch file
+		String testFileName = "testVerifyChecksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+		File localFile = new File(fileNameOrig);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameOrig, targetIrodsCollection, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
+				null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		Assert.assertTrue("checksums do not match", dataObjectAO
+				.verifyChecksumBetweenLocalAndIrods(testFile, localFile));
+	}
+
+	@Test
 	public final void testReplicateToResourceGroup() throws Exception {
 		// generate a local scratch file
 

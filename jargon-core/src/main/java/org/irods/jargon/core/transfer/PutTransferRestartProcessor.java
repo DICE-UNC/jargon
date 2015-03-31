@@ -157,7 +157,7 @@ public class PutTransferRestartProcessor extends
 				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
 
 				putSegment(gap, localFile, buffer, fileRestartInfo, segment, i,
-						segment.getLength(), irodsRandomAccessFile);
+						gap, irodsRandomAccessFile);
 			}
 
 			log.info("restart completed..remove from the cache");

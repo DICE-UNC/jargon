@@ -8,6 +8,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -179,6 +180,13 @@ public class ParallelTransferOperationsTest {
 
 		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
 				null);
+
+		// validate checksum here
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		ChecksumValue checksumIrods = dataObjectAO
+				.computeChecksumOnDataObject(destFile);
 
 	}
 
