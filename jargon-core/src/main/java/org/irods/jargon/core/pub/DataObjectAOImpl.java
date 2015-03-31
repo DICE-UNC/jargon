@@ -2891,12 +2891,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			ChecksumValue irodsChecksum = this
 					.computeChecksumOnDataObject(irodsFile);
+			log.info("irodsChecksum:{}", irodsChecksum);
 			ChecksumValue localChecksum = this
 					.getIRODSSession()
 					.getLocalChecksumComputerFactory()
 					.instance(irodsChecksum.getChecksumEncoding())
 					.instanceChecksumForPackingInstruction(
 							localFile.getAbsolutePath());
+			log.info("localChecksum:{}", localChecksum);
 			return irodsChecksum.getChecksumStringValue().equals(
 					localChecksum.getChecksumStringValue());
 		} catch (java.io.FileNotFoundException e) {

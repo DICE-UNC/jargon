@@ -8,7 +8,6 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -23,6 +22,7 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -185,8 +185,12 @@ public class ParallelTransferOperationsTest {
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		ChecksumValue checksumIrods = dataObjectAO
-				.computeChecksumOnDataObject(destFile);
+
+		Assert.assertEquals("did not get equal file lengths",
+				localSourceFile.length(), destFile.length());
+
+		Assert.assertTrue("checksums do not match", dataObjectAO
+				.verifyChecksumBetweenLocalAndIrods(destFile, localSourceFile));
 
 	}
 
