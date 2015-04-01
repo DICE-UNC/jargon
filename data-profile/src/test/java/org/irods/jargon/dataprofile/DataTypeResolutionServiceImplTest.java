@@ -21,7 +21,7 @@ public class DataTypeResolutionServiceImplTest {
 			throws Exception {
 
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
@@ -50,7 +50,7 @@ public class DataTypeResolutionServiceImplTest {
 			throws Exception {
 
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 
@@ -72,7 +72,7 @@ public class DataTypeResolutionServiceImplTest {
 	@Test
 	public void testGetDataTypeFromExtension() throws Exception {
 		IRODSAccount irodsAccount = TestingPropertiesHelper
-				.buildDummyIrodsAccount();
+				.buildBogusIrodsAccount();
 		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
 				.mock(IRODSAccessObjectFactory.class);
 

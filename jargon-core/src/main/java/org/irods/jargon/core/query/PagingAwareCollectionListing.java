@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -14,9 +15,9 @@ import java.util.List;
  * This object returns such a mixed listing from the multiple queries, along
  * with properties that can assist in comprehending the paging status so that
  * subsequent queries can be made.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class PagingAwareCollectionListing {
 
@@ -32,12 +33,12 @@ public class PagingAwareCollectionListing {
 	 */
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries;
 
-	
-
 	/**
 	 * Default (no-values) constructor for simple value object
 	 */
 	public PagingAwareCollectionListing() {
+		this.pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
+		this.collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 	}
 
 	public List<CollectionAndDataObjectListingEntry> getCollectionAndDataObjectListingEntries() {
@@ -77,7 +78,5 @@ public class PagingAwareCollectionListing {
 		builder.append("]");
 		return builder.toString();
 	}
-
-	
 
 }
