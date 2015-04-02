@@ -85,7 +85,8 @@ public abstract class AbstractRestartManager {
 
 	/**
 	 * Method to properly increment the restart count, allowing an
-	 * implementation to do synchronization
+	 * implementation to do synchronization. <code>null</code> is returned if no
+	 * restart info is found.
 	 * 
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that contains the attempt count

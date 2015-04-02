@@ -173,13 +173,18 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 		log.info("incrementRestartAttempts()");
 		if (fileRestartInfo == null) {
-			throw new IllegalArgumentException("null incrementRestartAttempts");
+			log.info("no restart to increment, returning null");
+			return null;
 		}
 		log.info("fileRestartInfo:{}", fileRestartInfo);
 
 		synchronized (this) {
 			FileRestartInfo actualRestartInfo = this
 					.retrieveRestart(fileRestartInfo.identifierFromThisInfo());
+			if (actualRestartInfo == null) {
+				log.error("nothing to increment!");
+				return null;
+			}
 			int currentRestarts = actualRestartInfo.getNumberRestarts();
 			currentRestarts++;
 			if (currentRestarts > ConnectionConstants.MAX_FILE_RESTART_ATTEMPTS) {

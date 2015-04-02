@@ -686,6 +686,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			try {
 				myFileRestartInfo = this.getRestartManager()
 						.incrementRestartAttempts(myFileRestartInfo);
+				if (myFileRestartInfo == null) {
+					log.info("restart info no longer available, complete the operation");
+					break;
+
+				}
 				putRestartProcess(transferControlBlock, targetFile,
 						existingForceOption, myFileRestartInfo);
 			} catch (RestartFailedException rfe) {
