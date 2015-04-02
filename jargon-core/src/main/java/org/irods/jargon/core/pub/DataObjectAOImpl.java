@@ -59,6 +59,7 @@ import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.transfer.AbstractRestartManager;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
@@ -605,7 +606,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (fileRestartInfo != null) {
 			log.info("setting force for restart processing..");
 
-			putRestartProcess(transferControlBlock, targetFile,
+			putRestartRetryTillMaxLoop(transferControlBlock, targetFile,
 					existingForceOption, fileRestartInfo);
 
 		} else if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
@@ -640,12 +641,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				fileRestartInfo = this
 						.retrieveRestartInfoIfAvailable(RestartType.PUT,
 								irodsFileDestination.getAbsolutePath());
-
 				if (fileRestartInfo != null) {
-					log.info("setting force for restart processing..");
+					log.info("carrying out restart process..");
 
-					putRestartProcess(transferControlBlock, targetFile,
-							existingForceOption, fileRestartInfo);
+					putRestartRetryTillMaxLoop(transferControlBlock,
+							targetFile, existingForceOption, fileRestartInfo);
 				}
 			}
 
@@ -654,6 +654,59 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
+	}
+
+	/**
+	 * Attempt a put restart across multiple failures, up until a max number of
+	 * retries
+	 * 
+	 * @param transferControlBlock
+	 * @param targetFile
+	 * @param existingForceOption
+	 * @param fileRestartInfo
+	 * @throws JargonException
+	 * @throws RestartFailedException
+	 * @throws FileRestartManagementException
+	 */
+	private void putRestartRetryTillMaxLoop(
+			final TransferControlBlock transferControlBlock,
+			IRODSFile targetFile, ForceOption existingForceOption,
+			FileRestartInfo fileRestartInfo) throws JargonException,
+			RestartFailedException, FileRestartManagementException {
+
+		log.info("putRestartRetryTillMaxLoop()");
+
+		FileRestartInfo myFileRestartInfo = this
+				.retrieveRestartInfoIfAvailable(
+						fileRestartInfo.getRestartType(),
+						fileRestartInfo.getIrodsAbsolutePath());
+		boolean restarted = false;
+		while (!restarted) {
+			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				myFileRestartInfo = this.getRestartManager()
+						.incrementRestartAttempts(myFileRestartInfo);
+				putRestartProcess(transferControlBlock, targetFile,
+						existingForceOption, myFileRestartInfo);
+			} catch (RestartFailedException rfe) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, rfe);
+				throw rfe;
+			} catch (FileRestartManagementException frm) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, frm);
+				throw frm;
+			} catch (JargonException e) {
+				log.error(
+						"restart failed with a JargonException, will loop again:{}",
+						myFileRestartInfo, e);
+				continue;
+			} catch (Throwable t) {
+				log.error(
+						"unanticipated exception in retry will loop again:{}",
+						myFileRestartInfo, t);
+				continue;
+			}
+		}
+
 	}
 
 	/**
@@ -668,8 +721,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private void putRestartProcess(
 			final TransferControlBlock transferControlBlock,
 			IRODSFile targetFile, ForceOption existingForceOption,
-			FileRestartInfo fileRestartInfo) throws JargonException,
-			RestartFailedException, FileRestartManagementException {
+			FileRestartInfo fileRestartInfo) throws RestartFailedException,
+			FileRestartManagementException, JargonException {
 		try {
 			// restarts need 'force'
 			transferControlBlock.getTransferOptions().setForceOption(
@@ -4464,6 +4517,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("computed");
 		return mdbytes;
 
+	}
+
+	/**
+	 * Handy method to get a ref to a configured restart manager (may be null)
+	 * 
+	 * @return
+	 */
+	private AbstractRestartManager getRestartManager() {
+		return this.getIRODSSession().getRestartManager();
 	}
 
 	private void evaluateAndDoGetRestart(IRODSFile irodsSourceFile,

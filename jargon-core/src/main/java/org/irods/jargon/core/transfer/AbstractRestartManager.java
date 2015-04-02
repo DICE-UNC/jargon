@@ -89,11 +89,14 @@ public abstract class AbstractRestartManager {
 	 * 
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that contains the attempt count
+	 * @return FileRestartInfo
+	 * @exception RestartFailedException
+	 *                if the count is exceeded or the restart fails
 	 * @throws FileRestartManagementException
 	 */
-	public abstract void incrementRestartAttempts(
+	public abstract FileRestartInfo incrementRestartAttempts(
 			final FileRestartInfo fileRestartInfo)
-			throws FileRestartManagementException;
+			throws RestartFailedException, FileRestartManagementException;
 
 	/**
 	 * Given an identifier and thread number, find the segment and update the

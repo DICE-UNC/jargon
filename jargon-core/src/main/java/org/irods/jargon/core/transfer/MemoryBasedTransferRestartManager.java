@@ -167,8 +167,9 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	 * incrementRestartAttempts(org.irods.jargon.core.transfer.FileRestartInfo)
 	 */
 	@Override
-	public void incrementRestartAttempts(FileRestartInfo fileRestartInfo)
-			throws RestartFailedException, FileRestartManagementException {
+	public FileRestartInfo incrementRestartAttempts(
+			FileRestartInfo fileRestartInfo) throws RestartFailedException,
+			FileRestartManagementException {
 
 		log.info("incrementRestartAttempts()");
 		if (fileRestartInfo == null) {
@@ -188,6 +189,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 			}
 			actualRestartInfo.setNumberRestarts(currentRestarts);
 			this.storeRestart(actualRestartInfo);
+			return fileRestartInfo;
 		}
 
 	}
