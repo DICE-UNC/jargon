@@ -82,6 +82,7 @@ public class PutTransferRestartProcessor extends
 					.getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSRandomAccessFile(irodsAbsolutePath,
 							OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS);
+			irodsRandomAccessFile.seek(0, SeekWhenceType.SEEK_START);
 		} catch (NoResourceDefinedException e1) {
 			log.error("no resource defined", e1);
 			throw new RestartFailedException(
@@ -90,6 +91,10 @@ public class PutTransferRestartProcessor extends
 			log.error("general jargon error getting irods random file", e1);
 			throw new RestartFailedException(
 					"cannot get irodsRandomAccessFile", e1);
+		} catch (IOException e) {
+			log.error("io exception getting irods random file", e);
+			throw new RestartFailedException(
+					"cannot get irodsRandomAccessFile", e);
 		}
 
 		RandomAccessFile localFile = null;
@@ -137,7 +142,7 @@ public class PutTransferRestartProcessor extends
 					currentOffset += segment.getLength();
 					localFile.seek(currentOffset);
 					irodsRandomAccessFile.seek(currentOffset,
-							SeekWhenceType.SEEK_CURRENT);
+							SeekWhenceType.SEEK_START);
 				}
 			}
 
@@ -151,13 +156,17 @@ public class PutTransferRestartProcessor extends
 			log.info("current offset:{}", currentOffset);
 
 			gap = localFile.length() - currentOffset;
+			lengthToUpdate = fileRestartInfo
+					.getFileRestartDataSegments()
+					.get(fileRestartInfo.getFileRestartDataSegments().size() - 1)
+					.getLength();
 			log.info("last segment gap:{}", gap);
 			if (gap > 0) {
 				log.info("writing last segment based on file length");
 				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
 
 				putSegment(gap, localFile, buffer, fileRestartInfo, segment, i,
-						gap, irodsRandomAccessFile);
+						lengthToUpdate, irodsRandomAccessFile);
 			}
 
 			log.info("restart completed..remove from the cache");
@@ -217,7 +226,7 @@ public class PutTransferRestartProcessor extends
 			throws RestartFailedException, FileRestartManagementException {
 
 		long myGap = gap;
-		long writtenSinceUpdated = 0L;
+		long writtenSinceUpdated = lengthToUpdate;
 		int toRead = 0;
 		while (myGap > 0) {
 			if (myGap > buffer.length) {
@@ -247,5 +256,14 @@ public class PutTransferRestartProcessor extends
 						"IO Exception reading local file", e);
 			}
 		}
+
+		if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
+			log.info("need to update restart");
+			this.getRestartManager().updateLengthForSegment(
+					fileRestartInfo.identifierFromThisInfo(),
+					segment.getThreadNumber(), writtenSinceUpdated);
+			writtenSinceUpdated = 0;
+		}
+
 	}
 }

@@ -397,7 +397,7 @@ public final class ParallelPutTransferThread extends
 													.getFileRestartInfo()
 													.identifierFromThisInfo(),
 											this.getThreadNumber(),
-											totalWritten);
+											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 						}
