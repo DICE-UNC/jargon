@@ -95,7 +95,7 @@ import org.slf4j.LoggerFactory;
  * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
  * specifically indicated in the method signatures or comments, the defaults
  * control such aspects as whether parallel file transfers are done.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
@@ -117,7 +117,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession} that
 	 *            will manage connecting to iRODS.
@@ -369,7 +369,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -429,7 +429,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -482,7 +482,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -600,14 +600,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("checking to see if this is a restart...");
 
-		FileRestartInfo fileRestartInfo = this.retrieveRestartInfoIfAvailable(
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
 				RestartType.PUT, irodsFileDestination.getAbsolutePath());
 
 		if (fileRestartInfo != null) {
 			log.info("setting force for restart processing..");
 
 			putRestartRetryTillMaxLoop(transferControlBlock, targetFile,
-					existingForceOption, fileRestartInfo);
+					existingForceOption, fileRestartInfo,
+					transferStatusCallbackListener);
 
 		} else if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
@@ -638,14 +639,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				throw e;
 			} catch (JargonException je) {
 				log.info("attempting a restart after exception", je);
-				fileRestartInfo = this
-						.retrieveRestartInfoIfAvailable(RestartType.PUT,
-								irodsFileDestination.getAbsolutePath());
+				fileRestartInfo = retrieveRestartInfoIfAvailable(
+						RestartType.PUT, irodsFileDestination.getAbsolutePath());
 				if (fileRestartInfo != null) {
 					log.info("carrying out restart process..");
 
 					putRestartRetryTillMaxLoop(transferControlBlock,
-							targetFile, existingForceOption, fileRestartInfo);
+							targetFile, existingForceOption, fileRestartInfo,
+							transferStatusCallbackListener);
 				}
 			}
 
@@ -659,7 +660,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * Attempt a put restart across multiple failures, up until a max number of
 	 * retries
-	 * 
+	 *
 	 * @param transferControlBlock
 	 * @param targetFile
 	 * @param existingForceOption
@@ -670,21 +671,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private void putRestartRetryTillMaxLoop(
 			final TransferControlBlock transferControlBlock,
-			IRODSFile targetFile, ForceOption existingForceOption,
-			FileRestartInfo fileRestartInfo) throws JargonException,
-			RestartFailedException, FileRestartManagementException {
+			final IRODSFile targetFile, final ForceOption existingForceOption,
+			final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException, RestartFailedException,
+			FileRestartManagementException {
 
 		log.info("putRestartRetryTillMaxLoop()");
 
-		FileRestartInfo myFileRestartInfo = this
-				.retrieveRestartInfoIfAvailable(
-						fileRestartInfo.getRestartType(),
-						fileRestartInfo.getIrodsAbsolutePath());
+		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
+				fileRestartInfo.getRestartType(),
+				fileRestartInfo.getIrodsAbsolutePath());
 		boolean restarted = false;
 		while (!restarted) {
 			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
 			try {
-				myFileRestartInfo = this.getRestartManager()
+				myFileRestartInfo = getRestartManager()
 						.incrementRestartAttempts(myFileRestartInfo);
 				if (myFileRestartInfo == null) {
 					log.info("restart info no longer available, complete the operation");
@@ -692,7 +694,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 				}
 				putRestartProcess(transferControlBlock, targetFile,
-						existingForceOption, myFileRestartInfo);
+						existingForceOption, myFileRestartInfo,
+						transferStatusCallbackListener);
 			} catch (RestartFailedException rfe) {
 				log.error("restart failed, rethrow:{}", myFileRestartInfo, rfe);
 				throw rfe;
@@ -725,9 +728,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private void putRestartProcess(
 			final TransferControlBlock transferControlBlock,
-			IRODSFile targetFile, ForceOption existingForceOption,
-			FileRestartInfo fileRestartInfo) throws RestartFailedException,
-			FileRestartManagementException, JargonException {
+			final IRODSFile targetFile, final ForceOption existingForceOption,
+			final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 		try {
 			// restarts need 'force'
 			transferControlBlock.getTransferOptions().setForceOption(
@@ -736,7 +741,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.info("have file restart info:{}", fileRestartInfo);
 			PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
 					getIRODSAccessObjectFactory(), getIRODSAccount(),
-					getIRODSSession().getRestartManager());
+					getIRODSSession().getRestartManager(),
+					transferStatusCallbackListener, transferControlBlock);
 			putTransferRestartProcessor.restartIfNecessary(targetFile
 					.getAbsolutePath());
 		} finally {
@@ -760,7 +766,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * If we are in the realm of a parallel transfer, this method will, if
 	 * configured, autonomously process restarts of long transfers in the case
 	 * of failure up to a threshold value.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with source of the transfer in the local
 	 *            file system
@@ -911,7 +917,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfer. Any restart processing has already been done Do the transfer,
 	 * and catch and process any transfer errors, if configured, so that a
 	 * restart can be attempted.
-	 * 
+	 *
 	 * @param localFile
 	 * @param irodsAbosolutePath
 	 * @param responseToInitialCallForPut
@@ -968,9 +974,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (fileRestartInfo != null) {
 				log.info("delete old restart stuff");
-				this.getIRODSSession()
-						.getRestartManager()
-						.deleteRestart(fileRestartInfo.identifierFromThisInfo());
+				getIRODSSession().getRestartManager().deleteRestart(
+						fileRestartInfo.identifierFromThisInfo());
 			}
 
 		} catch (Throwable e) {
@@ -978,8 +983,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(
 					"error in parallel transfers, the main connection will be abandoned",
 					e);
-			this.getIRODSAccessObjectFactory().getIrodsSession()
-					.discardSessionForErrors(this.getIRODSAccount());
+			getIRODSAccessObjectFactory().getIrodsSession()
+					.discardSessionForErrors(getIRODSAccount());
 
 			throw new JargonException(e);
 		}
@@ -1001,7 +1006,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Other method signatures for get operations allow specification of force
 	 * options, and also allow interaction between the caller and the
 	 * transferring process when an overwrite is detected.
-	 * 
+	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer
@@ -1039,13 +1044,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. Setting the resource name in the
 	 *            <code>irodsFileToGet</code> will specify that the file is
 	 *            retrieved from that particular resource.
-	 * 
+	 *
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
@@ -1158,7 +1163,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Incorporate user responses in the case of a potential overwrite of data
-	 * 
+	 *
 	 * @param sourceFile
 	 * @param transferControlBlock
 	 * @param transferStatusCallbackListener
@@ -1266,7 +1271,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * client-side rule actions, or other occasions where the get operation
 	 * needs to be directly processed and there can be no other intervening XML
 	 * protocol operations.
-	 * 
+	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. The resource of the
@@ -1340,8 +1345,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * in iRODS may 'turn off' such parallel transfers. In that case, the length
 	 * usually referred to returns as a zero, and the number of threads will be
 	 * zero. This must be handled.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
@@ -1449,8 +1454,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.error(
 							"an exception had occurred within the parallel transfer, so the opr complete is skipped and the connection abandoned..error will be rethrown",
 							e);
-					this.getIRODSAccessObjectFactory().getIrodsSession()
-							.discardSessionForErrors(this.getIRODSAccount());
+					getIRODSAccessObjectFactory().getIrodsSession()
+							.discardSessionForErrors(getIRODSAccount());
 					throw e;
 				}
 
@@ -1508,7 +1513,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * An initial request to get the file has been sent. iRODS may come back and
 	 * decide (based on a rule) to not do a parallel transfer, in which case,
 	 * the file will be streamed normally.
-	 * 
+	 *
 	 * @param irodsSourceFile
 	 * @param localFileToHoldData
 	 * @param transferOptions
@@ -1575,8 +1580,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.error(
 						"exception in parallel transfer, connection will be abandoned",
 						e);
-				this.getIRODSAccessObjectFactory().getIrodsSession()
-						.discardSessionForErrors(this.getIRODSAccount());
+				getIRODSAccessObjectFactory().getIrodsSession()
+						.discardSessionForErrors(getIRODSAccount());
 				throw new JargonException(e);
 			}
 		}
@@ -1585,18 +1590,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * See if jargon props say to do long file restarts, and a restart manager
 	 * is configured
-	 * 
+	 *
 	 * @return
 	 * @throws FileRestartManagementException
 	 */
 	private boolean checkIfConfiguredForLongFileRestart()
 			throws FileRestartManagementException {
-		if (!this.getIRODSSession().getJargonProperties()
-				.isLongTransferRestart()) {
+		if (!getIRODSSession().getJargonProperties().isLongTransferRestart()) {
 			log.debug("not configured for restarts");
 			return false;
 		}
-		if (this.getIRODSSession().getRestartManager() == null) {
+		if (getIRODSSession().getRestartManager() == null) {
 			log.error("configured for restarts, but there is no restart manager in IRODSSession");
 			throw new FileRestartManagementException(
 					"restart specified but no restart manager in IRODSSession");
@@ -1624,20 +1628,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
 		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
 		fileRestartInfoIdentifier.setRestartType(restartType);
-		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
-				.getIRODSAccount().toString());
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIRODSAccount()
+				.toString());
 
 		/*
 		 * May just be null
 		 */
-		return this.getIRODSSession().getRestartManager()
-				.retrieveRestart(fileRestartInfoIdentifier);
+		return getIRODSSession().getRestartManager().retrieveRestart(
+				fileRestartInfoIdentifier);
 
 	}
 
 	/**
 	 * Only retrieve a restart if it exists, <code>null</code> if it does not
-	 * 
+	 *
 	 * @param restartType
 	 * @param irodsAbsolutePath
 	 * @return
@@ -1670,12 +1674,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
 		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
 		fileRestartInfoIdentifier.setRestartType(restartType);
-		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
-				.getIRODSAccount().toString());
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIRODSAccount()
+				.toString());
 
-		return this
-				.getIRODSSession()
-				.getRestartManager()
+		return getIRODSSession().getRestartManager()
 				.retrieveRestartAndBuildIfNotStored(fileRestartInfoIdentifier,
 						localFilePath, numberOfThreads);
 
@@ -2260,7 +2262,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private void addMetadataAndDomainDataSelectsToBuilder(
-			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
@@ -2485,8 +2487,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
 	 * <p/>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer
@@ -2947,11 +2949,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		try {
-			ChecksumValue irodsChecksum = this
-					.computeChecksumOnDataObject(irodsFile);
+			ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFile);
 			log.info("irodsChecksum:{}", irodsChecksum);
-			ChecksumValue localChecksum = this
-					.getIRODSSession()
+			ChecksumValue localChecksum = getIRODSSession()
 					.getLocalChecksumComputerFactory()
 					.instance(irodsChecksum.getChecksumEncoding())
 					.instanceChecksumForPackingInstruction(
@@ -3773,7 +3773,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Get permission value via specific query for qroup based permissions
-	 * 
+	 *
 	 * @param dataName
 	 * @param userName
 	 * @param objStat
@@ -4166,7 +4166,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Check the provided <code>TransferControlBlock</code> to make sure the
 	 * <code>TransferOptions</code> are specified. If they are not specified,
 	 * then put in defaults.
-	 * 
+	 *
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} to check for
 	 *            <code>TransferOptions</code>, can be <code>null</code>
@@ -4290,7 +4290,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * General method to trim replicas for a resource or resource group. Check
 	 * the parameter notes carefully.
-	 * 
+	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS parent
 	 *            collection
@@ -4526,17 +4526,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Handy method to get a ref to a configured restart manager (may be null)
-	 * 
+	 *
 	 * @return
 	 */
 	private AbstractRestartManager getRestartManager() {
-		return this.getIRODSSession().getRestartManager();
+		return getIRODSSession().getRestartManager();
 	}
 
-	private void evaluateAndDoGetRestart(IRODSFile irodsSourceFile,
-			File targetLocalFileAsFile,
-			TransferControlBlock transferControlBlock, Exception e)
-			throws JargonException {
+	private void evaluateAndDoGetRestart(
+			final IRODSFile irodsSourceFile,
+			final File targetLocalFileAsFile,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final Exception e) throws JargonException {
 		// if there is an issue with the restart manager, then rethrow the
 		// exception and do not restart
 		if (e instanceof FileRestartManagementException) {
@@ -4564,7 +4566,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("letting the restart happen");
 		GetTransferRestartProcessor restartProcessor = new GetTransferRestartProcessor(
 				getIRODSAccessObjectFactory(), getIRODSAccount(),
-				getIRODSSession().getRestartManager());
+				getIRODSSession().getRestartManager(),
+				transferStatusCallbackListener, transferControlBlock);
 		restartProcessor.restartIfNecessary(irodsSourceFile.getAbsolutePath());
 
 		// if I succeed in the restart without errors the transfer will

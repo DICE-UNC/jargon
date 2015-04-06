@@ -7,13 +7,17 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
+import org.irods.jargon.core.connection.ConnectionProgressStatus;
+import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
+import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.core.pub.io.IRODSRandomAccessFile;
+import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,8 +38,11 @@ public class PutTransferRestartProcessor extends
 	public PutTransferRestartProcessor(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractRestartManager restartManager) {
-		super(irodsAccessObjectFactory, irodsAccount, restartManager);
+			final AbstractRestartManager restartManager,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock) {
+		super(irodsAccessObjectFactory, irodsAccount, restartManager,
+				transferStatusCallbackListener, transferControlBlock);
 	}
 
 	/*
@@ -76,6 +83,13 @@ public class PutTransferRestartProcessor extends
 	private void processRestart(final String irodsAbsolutePath,
 
 	FileRestartInfo fileRestartInfo) throws RestartFailedException {
+
+		/*
+		 * If specified by options, and with a call-back listener registered,
+		 * create an object to aggregate and channel within-file progress
+		 * reports to the caller.
+		 */
+
 		IRODSRandomAccessFile irodsRandomAccessFile;
 		try {
 			irodsRandomAccessFile = getIrodsAccessObjectFactory()
@@ -106,47 +120,54 @@ public class PutTransferRestartProcessor extends
 			localFile = localFileAsFileAndCheckExists(fileRestartInfo,
 					OpenType.READ);
 
+			ConnectionProgressStatusListener intraFileStatusListener = null;
+			if (this.getTransferStatusCallbackListener() != null
+					&& this.getTransferControlBlock().getTransferOptions()
+							.isIntraFileStatusCallbacks()) {
+				intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+						.instanceSettingInterval(TransferType.PUT,
+								localFile.length(),
+								this.getTransferControlBlock(),
+								this.getTransferStatusCallbackListener(), 100);
+			}
+
 			// now put each segment
 			buffer = new byte[getIrodsAccessObjectFactory()
 					.getJargonProperties().getPutBufferSize()];
 			long currentOffset = 0L;
 			long gap;
-			long lengthToUpdate;
 			FileRestartDataSegment segment = null;
 			for (int i = 0; i < fileRestartInfo.getFileRestartDataSegments()
 					.size(); i++) {
+
+				if (this.getTransferControlBlock().isCancelled()) {
+					break;
+				}
+
 				segment = fileRestartInfo.getFileRestartDataSegments().get(i);
 				log.info("process segment:{}", segment);
 				gap = segment.getOffset() - currentOffset;
+				log.debug("gap:{}", gap);
 				if (gap < 0) {
 					log.warn("my segment has a gap < 0..continuing:{}", segment);
 				} else if (gap > 0) {
 
 					// ok, have a gap > 0, let's get our restart on
 
-					if (i == 0) {
-						// should not be here
-						lengthToUpdate = 0;
-					} else {
-						lengthToUpdate = fileRestartInfo
-								.getFileRestartDataSegments().get(i - 1)
-								.getLength();
-					}
-
-					putSegment(gap, localFile, buffer, fileRestartInfo,
-							segment, i, lengthToUpdate, irodsRandomAccessFile);
+					putSegment(gap, localFile, buffer, fileRestartInfo, i - 1,
+							irodsRandomAccessFile, intraFileStatusListener);
 					currentOffset += gap;
 				}
 
 				if (segment.getLength() > 0) {
 					currentOffset += segment.getLength();
+					log.info("currentOffset after putSegment:{}", currentOffset);
 					localFile.seek(currentOffset);
 					irodsRandomAccessFile.seek(currentOffset,
 							SeekWhenceType.SEEK_START);
 				}
-			}
 
-			// put final segment based on file size
+			}
 
 			/*
 			 * See rcPortalOpr.cpp at about line 1616
@@ -156,20 +177,24 @@ public class PutTransferRestartProcessor extends
 			log.info("current offset:{}", currentOffset);
 
 			gap = localFile.length() - currentOffset;
-			lengthToUpdate = fileRestartInfo
-					.getFileRestartDataSegments()
-					.get(fileRestartInfo.getFileRestartDataSegments().size() - 1)
-					.getLength();
 			log.info("last segment gap:{}", gap);
 			if (gap > 0) {
 				log.info("writing last segment based on file length");
 				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
 
-				putSegment(gap, localFile, buffer, fileRestartInfo, segment, i,
-						lengthToUpdate, irodsRandomAccessFile);
+				putSegment(gap, localFile, buffer, fileRestartInfo, i,
+						irodsRandomAccessFile, intraFileStatusListener);
 			}
 
-			log.info("restart completed..remove from the cache");
+			log.info("restart completed..remove from the cache");// put final
+																	// segment
+																	// based on
+																	// file size
+
+			if (this.getTransferControlBlock().isCancelled()) {
+				log.info("cancelled");
+				return;
+			}
 			this.getRestartManager().deleteRestart(
 					fileRestartInfo.identifierFromThisInfo());
 			log.info("removed restart");
@@ -215,30 +240,41 @@ public class PutTransferRestartProcessor extends
 	 * @param indexOfCurrentSegment
 	 * @param lengthToUpdate
 	 * @param irodsRandomAccessFile
+	 * @param intraFileStatusListener
 	 * @throws RestartFailedException
 	 * @throws FileRestartManagementException
 	 */
 	private void putSegment(final long gap, final RandomAccessFile localFile,
 			final byte[] buffer, final FileRestartInfo fileRestartInfo,
-			final FileRestartDataSegment segment,
-			final int indexOfCurrentSegment, final long lengthToUpdate,
-			final IRODSRandomAccessFile irodsRandomAccessFile)
+			final int indexOfSegmentToUpdateLength,
+			final IRODSRandomAccessFile irodsRandomAccessFile,
+			ConnectionProgressStatusListener intraFileStatusListener)
 			throws RestartFailedException, FileRestartManagementException {
 
 		long myGap = gap;
-		long writtenSinceUpdated = lengthToUpdate;
+		long writtenSinceUpdated = 0;
 		int toRead = 0;
 		while (myGap > 0) {
+
+			// put final segment based on file size
+
+			if (this.getTransferControlBlock().isCancelled()) {
+				return;
+			}
+
 			if (myGap > buffer.length) {
 				toRead = buffer.length;
 			} else {
 				toRead = (int) myGap;
 			}
 
+			log.debug("toRead:{}", toRead);
+
 			log.info("reading buffer from input file...");
 			int amountRead;
 			try {
 				amountRead = localFile.read(buffer, 0, toRead);
+				log.debug("amountRead:{}", amountRead);
 				irodsRandomAccessFile.write(buffer, 0, amountRead);
 				myGap -= amountRead;
 				writtenSinceUpdated += amountRead;
@@ -247,7 +283,7 @@ public class PutTransferRestartProcessor extends
 					log.info("need to update restart");
 					this.getRestartManager().updateLengthForSegment(
 							fileRestartInfo.identifierFromThisInfo(),
-							segment.getThreadNumber(), writtenSinceUpdated);
+							indexOfSegmentToUpdateLength, writtenSinceUpdated);
 					writtenSinceUpdated = 0;
 				}
 			} catch (IOException e) {
@@ -257,11 +293,21 @@ public class PutTransferRestartProcessor extends
 			}
 		}
 
-		if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
+		/*
+		 * Start file progress callbacks with what had been sent so far
+		 */
+		if (intraFileStatusListener != null) {
+			ConnectionProgressStatus connectionProgressStatus = ConnectionProgressStatus
+					.instanceForSend(fileRestartInfo.estimateLengthSoFar());
+			intraFileStatusListener
+					.connectionProgressStatusCallback(connectionProgressStatus);
+		}
+
+		if (writtenSinceUpdated > 0) {
 			log.info("need to update restart");
 			this.getRestartManager().updateLengthForSegment(
 					fileRestartInfo.identifierFromThisInfo(),
-					segment.getThreadNumber(), writtenSinceUpdated);
+					indexOfSegmentToUpdateLength, writtenSinceUpdated);
 			writtenSinceUpdated = 0;
 		}
 

@@ -26,6 +26,8 @@ public abstract class AbstractTransferRestartProcessor extends
 	private final AbstractRestartManager restartManager;
 	private static Logger log = LoggerFactory
 			.getLogger(AbstractTransferRestartProcessor.class);
+	private final TransferStatusCallbackListener transferStatusCallbackListener;
+	private final TransferControlBlock transferControlBlock;
 
 	public static final long RESTART_FILE_UPDATE_SIZE = 32 * 1024 * 1024;
 
@@ -47,11 +49,19 @@ public abstract class AbstractTransferRestartProcessor extends
 	public AbstractTransferRestartProcessor(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractRestartManager restartManager) {
+			final AbstractRestartManager restartManager,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock) {
 		super(irodsAccessObjectFactory, irodsAccount);
 		if (restartManager == null) {
 			throw new IllegalArgumentException("null restartManager");
 		}
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+		this.transferControlBlock = transferControlBlock;
+		this.transferStatusCallbackListener = transferStatusCallbackListener;
+
 		this.restartManager = restartManager;
 	}
 
@@ -214,6 +224,20 @@ public abstract class AbstractTransferRestartProcessor extends
 
 		return fileRestartInfo;
 
+	}
+
+	/**
+	 * @return the transferStatusCallbackListener
+	 */
+	public TransferStatusCallbackListener getTransferStatusCallbackListener() {
+		return transferStatusCallbackListener;
+	}
+
+	/**
+	 * @return the transferControlBlock
+	 */
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
 	}
 
 }

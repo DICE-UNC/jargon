@@ -168,4 +168,19 @@ public class FileRestartInfo {
 		this.numberRestarts = numberRestarts;
 	}
 
+	/**
+	 * Get an estimate of the length returned so far, helpful for progress
+	 * indicators
+	 * 
+	 * @return <code>long</code> with an estimate of the total transferred so
+	 *         far.
+	 */
+	public long estimateLengthSoFar() {
+		long total = 0;
+		for (FileRestartDataSegment fileRestartDataSegment : this.fileRestartDataSegments) {
+			total += fileRestartDataSegment.getLength();
+		}
+		return total;
+	}
+
 }

@@ -37,8 +37,11 @@ public class GetTransferRestartProcessor extends
 	public GetTransferRestartProcessor(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractRestartManager restartManager) {
-		super(irodsAccessObjectFactory, irodsAccount, restartManager);
+			final AbstractRestartManager restartManager,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock) {
+		super(irodsAccessObjectFactory, irodsAccount, restartManager,
+				transferStatusCallbackListener, transferControlBlock);
 	}
 
 	@Override
