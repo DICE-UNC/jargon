@@ -134,6 +134,16 @@ public abstract class AbstractRestartManager {
 
 			FileRestartDataSegment dataSegment = info
 					.getFileRestartDataSegments().get(threadNumber);
+
+			if (dataSegment.getThreadNumber() != threadNumber) {
+				log.error(
+						"thread number in segment odos not match requested:{}",
+						threadNumber);
+				log.error("segment was:{}", dataSegment);
+				throw new FileRestartManagementException(
+						"thread number mismatch");
+			}
+
 			dataSegment.setLength(dataSegment.getLength() + length);
 			this.storeRestart(info);
 		}
@@ -142,7 +152,7 @@ public abstract class AbstractRestartManager {
 
 	/**
 	 * Given an identifier and thread number, find the segment and update the
-	 * offset on that segment
+	 * offset on that segment. Also sets the length to zero.
 	 * 
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
@@ -176,6 +186,7 @@ public abstract class AbstractRestartManager {
 			FileRestartDataSegment dataSegment = info
 					.getFileRestartDataSegments().get(threadNumber);
 			dataSegment.setOffset(offset);
+			dataSegment.setLength(0);
 			this.storeRestart(info);
 		}
 

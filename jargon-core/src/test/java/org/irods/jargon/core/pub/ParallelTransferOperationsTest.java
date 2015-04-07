@@ -141,6 +141,14 @@ public class ParallelTransferOperationsTest {
 		}
 	}
 
+	/**
+	 * Currently this is a framework for bench testing restarts and involves
+	 * manual manipulation of the iRODS grid. In normal operation it just serves
+	 * as a put test and no restart occurs For Large file transfer restart #77
+	 * https://github.com/DICE-UNC/jargon/issues/77
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public final void testParallelFilePutWithRestartNoDefaultManager()
 			throws Exception {
