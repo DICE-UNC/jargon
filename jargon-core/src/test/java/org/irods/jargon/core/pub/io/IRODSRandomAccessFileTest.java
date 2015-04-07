@@ -207,6 +207,16 @@ public class IRODSRandomAccessFileTest {
 		long offset = 5 * 1024 * 1024;
 		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
 
+		// go 4m in, put 4m of data
+		ptr = 4 * 1024 * 1024;
+		offset = 4 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 5m in, put 40m of data
+		ptr = 5 * 1024 * 1024;
+		offset = 40 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
 		// go 15m in, put 10m of data
 		ptr = 15 * 1024 * 1024;
 		offset = 10 * 1024 * 1024;
@@ -228,8 +238,17 @@ public class IRODSRandomAccessFileTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount)
 				.computeChecksumOnDataObject(destFile);
 
-		Assert.assertEquals("checksum values don't match", expectedChecksum,
-				actualChecksum);
+		Assert.assertEquals("irods checksum values don't match",
+				expectedChecksum, actualChecksum);
+
+		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
+				.getLocalChecksumComputerFactory()
+				.instance(actualChecksum.getChecksumEncoding())
+				.instanceChecksumForPackingInstruction(localFileName);
+
+		Assert.assertEquals(
+				"irods checksum value doesnt match local after operations",
+				localChecksum, actualChecksum);
 
 	}
 
