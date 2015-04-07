@@ -254,6 +254,7 @@ public class PutTransferRestartProcessor extends
 		long myGap = gap;
 		long writtenSinceUpdated = 0;
 		int toRead = 0;
+		long totalWrittenOverall = 0L;
 		while (myGap > 0) {
 
 			// put final segment based on file size
@@ -275,9 +276,17 @@ public class PutTransferRestartProcessor extends
 			try {
 				amountRead = localFile.read(buffer, 0, toRead);
 				log.debug("amountRead:{}", amountRead);
+
+				if (amountRead <= 0) {
+					log.error("read 0 or less from localFile:{}", amountRead);
+					throw new RestartFailedException(
+							"restart failed in read of local file");
+				}
+
 				irodsRandomAccessFile.write(buffer, 0, amountRead);
 				myGap -= amountRead;
 				writtenSinceUpdated += amountRead;
+				totalWrittenOverall += amountRead;
 
 				if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
 					log.info("need to update restart");
@@ -290,6 +299,39 @@ public class PutTransferRestartProcessor extends
 				log.error("IOException reading local file", e);
 				throw new RestartFailedException(
 						"IO Exception reading local file", e);
+			}
+		}
+
+		if (myGap != 0) {
+			log.error("final gap should be exactly zero, something is out of balance!");
+			throw new RestartFailedException(
+					"control balance error in putSeq, myGap should be zero at end");
+		}
+
+		if (totalWrittenOverall != gap) {
+			log.error("total written does not equal the gap I originally had, something is out of balance!");
+			throw new RestartFailedException(
+					"control balance error in putSeq, total written does not equal gap");
+		}
+
+		if (log.isDebugEnabled()) {
+			log.debug("verifying pointers at end");
+			try {
+				long irodsPointer = irodsRandomAccessFile.getFilePointer();
+				long localPointer = localFile.getFilePointer();
+				if (irodsPointer != localPointer) {
+					log.error("pointers out of synch!");
+					log.error("local:{}", localPointer);
+					log.error("irods:{}", irodsPointer);
+					throw new RestartFailedException(
+							"pointers do not match after putseg!");
+				}
+				log.debug("pointers verified at:{} after putSeg", localPointer);
+			} catch (IOException e) {
+				log.error("exception obtaining current pointers for local and iRODS");
+				throw new RestartFailedException(
+						"unable to obtain current pointers for local and iRODS",
+						e);
 			}
 		}
 
