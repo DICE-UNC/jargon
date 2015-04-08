@@ -5066,7 +5066,7 @@ public class DataObjectAOImplTest {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						80000 * 1024);
+						33 * 1024 * 1024);
 
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -5089,6 +5089,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsFile);
 		TransferOptions transferOptions = new TransferOptions();
 		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		transferOptions.setMaxThreads(5);
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
 				.instance();
 		transferControlBlock.setTransferOptions(transferOptions);

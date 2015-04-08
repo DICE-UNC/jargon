@@ -673,12 +673,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		TransferOptions myTransferOptions = new TransferOptions(
 				transferControlBlock.getTransferOptions());
 
-		if (myTransferOptions.isUseParallelTransfer()) {
-			myTransferOptions.setMaxThreads(getJargonProperties()
-					.getMaxParallelThreads());
-			log.info("setting max threads cap to:{}",
-					myTransferOptions.getMaxThreads());
-		} else {
+		if (!myTransferOptions.isUseParallelTransfer()) {
 			log.info("no parallel transfer set in transferOptions");
 			myTransferOptions.setMaxThreads(-1);
 		}
@@ -971,6 +966,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		TransferControlBlock operativeTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
 		TransferOptions thisFileTransferOptions = new TransferOptions(
 				operativeTransferControlBlock.getTransferOptions());
+
+		if (!thisFileTransferOptions.isUseParallelTransfer()) {
+			log.info("no parallel transfer set in transferOptions");
+			thisFileTransferOptions.setMaxThreads(-1);
+		}
 
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
