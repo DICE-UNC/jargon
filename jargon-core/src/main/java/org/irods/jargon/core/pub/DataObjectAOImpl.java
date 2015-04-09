@@ -552,6 +552,33 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				localFile, irodsFileDestination, ignoreChecks,
 				getIRODSFileFactory());
 
+		/*
+		 * Save the previous force option in case restart processing alters it.
+		 * It will be reinstated in the finally block below
+		 */
+		ForceOption existingForceOption = transferControlBlock
+				.getTransferOptions().getForceOption();
+
+		long localFileLength = localFile.length();
+		log.debug("localFileLength:{}", localFileLength);
+		long startTime = System.currentTimeMillis();
+
+		log.info("checking to see if this is a restart...");
+
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+				RestartType.PUT, targetFile.getAbsolutePath());
+
+		if (fileRestartInfo != null) {
+			log.info("setting force for restart processing..");
+
+			putRestartRetryTillMaxLoop(transferControlBlock, targetFile,
+					existingForceOption, fileRestartInfo,
+					transferStatusCallbackListener);
+			return;
+		}
+
+		// this is not a restart, will fall through to normal processing
+
 		boolean force = false;
 
 		/*
@@ -582,35 +609,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		} else {
 			// ignore options set, so set force to true if use force is set in
 			// transfer options
-			if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
+			if (existingForceOption == ForceOption.USE_FORCE) {
 				force = true;
 			}
 		}
 
-		/*
-		 * Save the previous force option in case restart processing alters it.
-		 * It will be reinstated in the finally block below
-		 */
-		ForceOption existingForceOption = transferControlBlock
-				.getTransferOptions().getForceOption();
-
-		long localFileLength = localFile.length();
-		log.debug("localFileLength:{}", localFileLength);
-		long startTime = System.currentTimeMillis();
-
-		log.info("checking to see if this is a restart...");
-
-		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
-				RestartType.PUT, irodsFileDestination.getAbsolutePath());
-
-		if (fileRestartInfo != null) {
-			log.info("setting force for restart processing..");
-
-			putRestartRetryTillMaxLoop(transferControlBlock, targetFile,
-					existingForceOption, fileRestartInfo,
-					transferStatusCallbackListener);
-
-		} else if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
 			log.info("processing transfer as normal, length below max");
 			try {
@@ -643,7 +647,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						RestartType.PUT, irodsFileDestination.getAbsolutePath());
 				if (fileRestartInfo != null) {
 					log.info("carrying out restart process..");
-
 					putRestartRetryTillMaxLoop(transferControlBlock,
 							targetFile, existingForceOption, fileRestartInfo,
 							transferStatusCallbackListener);
@@ -1076,52 +1079,88 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		/*
-		 * Handle potential overwrites, will consult the client if so configured
+		 * Save the previous force option in case restart processing alters it.
+		 * It will be reinstated in the finally block below
 		 */
-		OverwriteResponse overwriteResponse = evaluateOverwrite(
-				(File) irodsFileToGet, transferControlBlock,
-				transferStatusCallbackListener, thisFileTransferOptions,
-				localFile);
+		ForceOption existingForceOption = operativeTransferControlBlock
+				.getTransferOptions().getForceOption();
 
-		if (overwriteResponse == OverwriteResponse.SKIP) {
-			log.info("skipping due to overwrite status");
-			return;
-		}
+		log.info("checking to see if this is a restart...");
 
-		long irodsFileLength = irodsFileToGet.length();
-		log.info("testing file length to set parallel transfer options");
-		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			if (thisFileTransferOptions.isUseParallelTransfer()) {
-				thisFileTransferOptions.setMaxThreads(getJargonProperties()
-						.getMaxParallelThreads());
-				log.info("setting max threads cap to:{}",
-						thisFileTransferOptions.getMaxThreads());
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+				RestartType.GET, irodsFileToGet.getAbsolutePath());
+
+		try {
+
+			if (fileRestartInfo != null) {
+				log.info("setting force for restart processing..");
+
+				getRestartRetryTillMaxLoop(transferControlBlock,
+						irodsFileToGet, existingForceOption, fileRestartInfo,
+						transferStatusCallbackListener);
 			} else {
-				log.info("no parallel transfer set in transferOptions");
-				thisFileTransferOptions.setMaxThreads(-1);
+
+				/*
+				 * Handle potential overwrites, will consult the client if so
+				 * configured
+				 */
+				OverwriteResponse overwriteResponse = evaluateOverwrite(
+						(File) irodsFileToGet, transferControlBlock,
+						transferStatusCallbackListener,
+						thisFileTransferOptions, localFile);
+
+				if (overwriteResponse == OverwriteResponse.SKIP) {
+					log.info("skipping due to overwrite status");
+					return;
+				}
+
+				long irodsFileLength = irodsFileToGet.length();
+				log.info("testing file length to set parallel transfer options");
+				if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+					if (!thisFileTransferOptions.isUseParallelTransfer()) {
+						log.info("no parallel transfer set in transferOptions");
+						thisFileTransferOptions.setMaxThreads(-1);
+					}
+				} else {
+					thisFileTransferOptions.setMaxThreads(0);
+				}
+
+				log.info("target local file: {}", localFile.getAbsolutePath());
+				log.info("from source file: {}",
+						irodsFileToGet.getAbsolutePath());
+
+				final DataObjInp dataObjInp;
+				if (irodsFileToGet.getResource().isEmpty()) {
+					dataObjInp = DataObjInp.instanceForGet(
+							irodsFileToGet.getAbsolutePath(), irodsFileLength,
+							thisFileTransferOptions);
+				} else {
+					dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
+							irodsFileToGet.getAbsolutePath(),
+							irodsFileToGet.getResource(), "",
+							thisFileTransferOptions);
+				}
+
+				processGetAfterResourceDetermined(irodsFileToGet, localFile,
+						dataObjInp, thisFileTransferOptions, irodsFileLength,
+						operativeTransferControlBlock,
+						transferStatusCallbackListener, false);
 			}
-		} else {
-			thisFileTransferOptions.setMaxThreads(0);
+		} finally {
+			// reset the force option after any potential restart to original
+			// value
+			operativeTransferControlBlock.getTransferOptions().setForceOption(
+					existingForceOption);
 		}
+	}
 
-		log.info("target local file: {}", localFile.getAbsolutePath());
-		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
+	private void getRestartRetryTillMaxLoop(
+			TransferControlBlock transferControlBlock,
+			IRODSFile irodsFileToGet, ForceOption existingForceOption,
+			FileRestartInfo fileRestartInfo,
+			TransferStatusCallbackListener transferStatusCallbackListener) {
+		// TODO Auto-generated method stub
 
-		final DataObjInp dataObjInp;
-		if (irodsFileToGet.getResource().isEmpty()) {
-			dataObjInp = DataObjInp.instanceForGet(
-					irodsFileToGet.getAbsolutePath(), irodsFileLength,
-					thisFileTransferOptions);
-		} else {
-			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
-					irodsFileToGet.getAbsolutePath(),
-					irodsFileToGet.getResource(), "", thisFileTransferOptions);
-		}
-
-		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, thisFileTransferOptions, irodsFileLength,
-				operativeTransferControlBlock, transferStatusCallbackListener,
-				false);
 	}
 
 	/**
@@ -1540,6 +1579,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			try {
 				parallelGetTransferStrategy.transfer();
 			} catch (Exception e) {
+
+				// FIXME: #77 impl here!
+
 				log.error(
 						"exception in parallel transfer, connection will be abandoned",
 						e);
