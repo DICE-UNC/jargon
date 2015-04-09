@@ -974,7 +974,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -1029,10 +1029,10 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 		// now I know the local file exits, get again and see an overwrite
 		// errror
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 	}
 
@@ -1092,7 +1092,7 @@ public class DataObjectAOImplTest {
 		transferStatusCallbackListener
 				.setForceOption(CallbackResponse.YES_THIS_FILE);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 		// now I know the local file exits, get again and it should overwrite
 		// with no error
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
@@ -1561,7 +1561,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 		// now I know the local file exits, get again and see an overwrite
 		// errror
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile,
@@ -1617,7 +1617,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ sourceFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + targetFileName);
@@ -1670,7 +1670,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -1734,7 +1734,7 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
 				+ '/' + getFileName);
@@ -2069,7 +2069,7 @@ public class DataObjectAOImplTest {
 				.setResource(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile);
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper
 				.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/"

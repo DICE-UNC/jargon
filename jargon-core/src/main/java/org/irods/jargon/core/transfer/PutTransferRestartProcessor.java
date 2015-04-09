@@ -81,8 +81,7 @@ public class PutTransferRestartProcessor extends
 	 * @throws
 	 */
 	private void processRestart(final String irodsAbsolutePath,
-
-	FileRestartInfo fileRestartInfo) throws RestartFailedException {
+			FileRestartInfo fileRestartInfo) throws RestartFailedException {
 
 		/*
 		 * If specified by options, and with a call-back listener registered,
@@ -191,10 +190,6 @@ public class PutTransferRestartProcessor extends
 																	// based on
 																	// file size
 
-			if (this.getTransferControlBlock().isCancelled()) {
-				log.info("cancelled");
-				return;
-			}
 			this.getRestartManager().deleteRestart(
 					fileRestartInfo.identifierFromThisInfo());
 			log.info("removed restart");
@@ -256,8 +251,6 @@ public class PutTransferRestartProcessor extends
 		int toRead = 0;
 		long totalWrittenOverall = 0L;
 		while (myGap > 0) {
-
-			// put final segment based on file size
 
 			if (this.getTransferControlBlock().isCancelled()) {
 				return;
