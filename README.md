@@ -79,6 +79,11 @@ Fixes that work with 4.0.3 protocols for streaming data to iRODS
 
 Fix Stream2StreamAO so that streaming from a stream into an iRODS file replaces all file contents, this was causing erroneous rules to be written back to iRODS
 
+#### Custom setting in transfer options is overridden with default from properties #91
+
+Fixed unnecessary override of custom set transfer options for max parallel threads
+
+
 ## Features
 
 #### Setting inheritance on collection as admin #55
