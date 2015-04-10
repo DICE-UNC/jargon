@@ -8,9 +8,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for parsing rules for processing by Jargon.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 class RuleParsingUtils {
 
@@ -28,7 +28,7 @@ class RuleParsingUtils {
 	 * name and parameter value. This essentially splits on the first '=' sign. <br/>
 	 * This routine will trim the param names and strip leading $ in the value
 	 * that typically mark interactive variables
-	 *
+	 * 
 	 * @param parameter
 	 *            <code>String<code> which should reflect an individual rule parameter in *parmName=parmValue format
 	 * @return {@link RuleInputParameter}
@@ -48,30 +48,26 @@ class RuleParsingUtils {
 			if (parameter.toUpperCase().indexOf("NULL") > -1) {
 				return null;
 			} else {
-
 				throw new IllegalArgumentException(
 						"missing equal sign in given input parameter");
 			}
 		}
 
+		String paramName = parameter.substring(0, idx).trim();
+		String paramVal = null;
 		if (idx + 1 == parameter.length()) {
 			// have parm name but no value, this is ok, it may be overridden
 			// later in code
 			log.info("no value given for parameter");
-			new RuleInputParameter(parameter.substring(0, idx), "");
-		}
+			paramVal = "";
+		} else {
+			paramVal = parameter.substring(idx + 1);
+			// strip $ leading char as interactive
 
-		String paramName = parameter.substring(0, idx).trim();
-		String paramVal = parameter.substring(idx + 1);
+			if (paramVal.charAt(0) == '$') {
+				paramVal = paramVal.substring(1);
+			}
 
-		if (paramVal.isEmpty()) {
-			throw new IllegalArgumentException("emptyParamVal");
-		}
-
-		// strip $ leading char as interactive
-
-		if (paramVal.charAt(0) == '$') {
-			paramVal = paramVal.substring(1);
 		}
 
 		return new RuleInputParameter(paramName, paramVal);

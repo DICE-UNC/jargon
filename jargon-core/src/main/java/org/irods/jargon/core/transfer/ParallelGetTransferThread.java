@@ -195,7 +195,8 @@ public final class ParallelGetTransferThread extends
 				log.info("closing sockets, this close eats exceptions");
 				close();
 				log.info("closing local file");
-				local.close();
+				if (local != null)
+					local.close();
 				log.info("local file closed, exiting get() method");
 			} catch (IOException e) {
 			}

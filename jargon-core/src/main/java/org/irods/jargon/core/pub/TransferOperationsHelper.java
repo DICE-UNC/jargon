@@ -437,6 +437,14 @@ final class TransferOperationsHelper {
 			final TransferControlBlock transferControlBlock)
 			throws OverwriteException, DataNotFoundException, JargonException {
 
+		if (sourceFile == null) {
+			throw new IllegalArgumentException("null source file");
+		}
+
+		if (targetIrodsCollection == null) {
+			throw new IllegalArgumentException("null targetIrodsCollection");
+		}
+
 		if (!sourceFile.isDirectory()) {
 			throw new JargonException(
 					"source file is not a directory, cannot recursively put");
@@ -449,44 +457,49 @@ final class TransferOperationsHelper {
 		log.info("     to resource:{}", targetIrodsCollection.getResource());
 
 		try {
-			for (File fileInSourceCollection : sourceFile.listFiles()) {
+			File[] files = sourceFile.listFiles();
+			if (files != null) {
+				for (File fileInSourceCollection : files) {
 
-				if (Thread.interrupted()) {
-					log.info("cancellation detected, set cancelled in tcb");
-					transferControlBlock.setCancelled(true);
-				}
+					if (Thread.interrupted()) {
+						log.info("cancellation detected, set cancelled in tcb");
+						transferControlBlock.setCancelled(true);
+					}
 
-				// check for a cancel or pause at the top of the loop
-				if (transferControlBlock.isCancelled()
-						|| transferControlBlock.isPaused()) {
-					log.info("will notify pause or cancel for this put");
-					notifyPauseOrCancelCallbackForPut(targetIrodsCollection,
-							transferStatusCallbackListener,
-							transferControlBlock, fileInSourceCollection);
-					break;
-				}
+					// check for a cancel or pause at the top of the loop
+					if (transferControlBlock.isCancelled()
+							|| transferControlBlock.isPaused()) {
+						log.info("will notify pause or cancel for this put");
+						notifyPauseOrCancelCallbackForPut(
+								targetIrodsCollection,
+								transferStatusCallbackListener,
+								transferControlBlock, fileInSourceCollection);
+						break;
+					}
 
-				/**
-				 * See if I want to close and renew the socket
-				 */
-				if (collectionAO.getIRODSProtocol().getPipelineConfiguration()
-						.getSocketRenewalIntervalInSeconds() > 0) {
-					collectionAO.getIRODSSession()
-							.currentConnectionCheckRenewalOfSocket(
-									collectionAO.getIRODSAccount());
-				}
+					/**
+					 * See if I want to close and renew the socket
+					 */
+					if (collectionAO.getIRODSProtocol()
+							.getPipelineConfiguration()
+							.getSocketRenewalIntervalInSeconds() > 0) {
+						collectionAO.getIRODSSession()
+								.currentConnectionCheckRenewalOfSocket(
+										collectionAO.getIRODSAccount());
+					}
 
-				if (fileInSourceCollection.isDirectory()) {
-					recursivelyPutACollection(targetIrodsCollection,
-							transferStatusCallbackListener,
-							transferControlBlock, fileInSourceCollection);
+					if (fileInSourceCollection.isDirectory()) {
+						recursivelyPutACollection(targetIrodsCollection,
+								transferStatusCallbackListener,
+								transferControlBlock, fileInSourceCollection);
 
-				} else {
+					} else {
 
-					processPutOfSingleFile(fileInSourceCollection,
-							targetIrodsCollection,
-							transferStatusCallbackListener,
-							transferControlBlock);
+						processPutOfSingleFile(fileInSourceCollection,
+								targetIrodsCollection,
+								transferStatusCallbackListener,
+								transferControlBlock);
+					}
 				}
 			}
 		} catch (Exception e) {

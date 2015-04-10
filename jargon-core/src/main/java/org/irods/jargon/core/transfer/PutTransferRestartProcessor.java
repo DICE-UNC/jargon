@@ -215,7 +215,8 @@ public class PutTransferRestartProcessor extends
 						"exception closing irods restart file", e);
 			}
 			try {
-				localFile.close();
+				if (localFile != null)
+					localFile.close();
 			} catch (IOException e) {
 				log.warn("error closing local file, logged and ignored", e);
 			}
