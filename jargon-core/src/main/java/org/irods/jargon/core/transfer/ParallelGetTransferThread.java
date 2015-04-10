@@ -250,6 +250,8 @@ public final class ParallelGetTransferThread extends
 
 			seekToOffset(local, offset);
 
+			long totalWrittenSinceLastRestartUpdate = 0;
+
 			while (length > 0) {
 
 				if (Thread.interrupted()) {
@@ -264,6 +266,8 @@ public final class ParallelGetTransferThread extends
 						this.parallelGetFileTransferStrategy
 								.getJargonProperties()
 								.getParallelCopyBufferSize(), (int) length));
+
+				totalWrittenSinceLastRestartUpdate += read;
 
 				if (read > 0) {
 					length -= read;
@@ -298,17 +302,6 @@ public final class ParallelGetTransferThread extends
 						 * If restarting, maintain a reference to the offset
 						 */
 
-						if (this.parallelGetFileTransferStrategy
-								.getFileRestartInfo() != null) {
-							this.parallelGetFileTransferStrategy
-									.getRestartManager()
-									.updateOffsetForSegment(
-											this.parallelGetFileTransferStrategy
-													.getFileRestartInfo()
-													.identifierFromThisInfo(),
-											this.getThreadNumber(), offset);
-						}
-
 						seekToOffset(local, offset);
 
 					} else if (length < 0) {
@@ -330,6 +323,7 @@ public final class ParallelGetTransferThread extends
 											ConnectionProgressStatus
 													.instanceForReceive(read));
 						}
+
 					}
 				} else {
 					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
@@ -340,6 +334,21 @@ public final class ParallelGetTransferThread extends
 
 				Thread.yield();
 			}
+
+			if (this.parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
+
+				this.parallelGetFileTransferStrategy.getRestartManager()
+						.updateLengthForSegment(
+								this.parallelGetFileTransferStrategy
+										.getFileRestartInfo()
+										.identifierFromThisInfo(),
+								this.getThreadNumber(),
+								totalWrittenSinceLastRestartUpdate);
+				totalWrittenSinceLastRestartUpdate = 0;
+				log.debug("signal storage of new info");
+
+			}
+
 		} catch (IOException e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 					parallelGetFileTransferStrategy.toString());
@@ -423,6 +432,14 @@ public final class ParallelGetTransferThread extends
 					return; // at current location
 				}
 				local.seek(offset);
+				if (this.parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
+					this.parallelGetFileTransferStrategy.getRestartManager()
+							.updateOffsetForSegment(
+									this.parallelGetFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									this.getThreadNumber(), offset);
+				}
 				// log.debug("seek completed");
 			} catch (Exception e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,

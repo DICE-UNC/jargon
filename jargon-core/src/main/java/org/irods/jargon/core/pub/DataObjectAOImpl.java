@@ -1063,26 +1063,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				RestartType.GET, irodsFileToGet.getAbsolutePath());
 
 		if (fileRestartInfo != null) {
-			log.info("setting force for restart processing..");
+			log.info("restart processing for get..");
 
-			/*
-			 * Save the previous force option in case restart processing alters
-			 * it. It will be reinstated in the finally block below
-			 */
-			ForceOption existingForceOption = operativeTransferControlBlock
-					.getTransferOptions().getForceOption();
+			getRestartRetryTillMaxLoop(transferControlBlock, irodsFileToGet,
+					fileRestartInfo, transferStatusCallbackListener);
 
-			try {
-				getRestartRetryTillMaxLoop(transferControlBlock,
-						irodsFileToGet, fileRestartInfo,
-						transferStatusCallbackListener);
-			} finally {
-				// reset the force option after any potential restart to
-				// original
-				// value
-				operativeTransferControlBlock.getTransferOptions()
-						.setForceOption(existingForceOption);
-			}
 		} else {
 
 			/*
@@ -1483,15 +1468,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
 					getIRODSProtocol().operationComplete(l1descInx);
-				} catch (Exception e) {
-					log.error(
-							"an exception had occurred within the parallel transfer, so the opr complete is skipped and the connection abandoned..error will be rethrown",
-							e);
-					getIRODSAccessObjectFactory().getIrodsSession()
-							.discardSessionForErrors(getIRODSAccount());
-					throw e;
-				}
 
+				} catch (FileRestartManagementException e) {
+					log.error("transfer and restart failed", e);
+					throw e;
+				} catch (JargonException je) {
+					log.info("attempting a restart after exception", je);
+					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+							RestartType.GET, irodsFileToGet.getAbsolutePath());
+					if (fileRestartInfo != null) {
+						log.info("carrying out restart process..");
+						getRestartRetryTillMaxLoop(transferControlBlock,
+								irodsFileToGet, fileRestartInfo,
+								transferStatusCallbackListener);
+					}
+				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						lengthFromIrodsResponse, getIRODSProtocol(),

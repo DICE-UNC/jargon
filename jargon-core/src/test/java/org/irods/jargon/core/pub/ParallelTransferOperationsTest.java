@@ -202,6 +202,74 @@ public class ParallelTransferOperationsTest {
 
 	}
 
+	/**
+	 * Currently this is a framework for bench testing restarts and involves
+	 * manual manipulation of the iRODS grid. In normal operation it just serves
+	 * as a put test and no restart occurs For Large file transfer restart #77
+	 * https://github.com/DICE-UNC/jargon/issues/77
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testParallelFileGetWithRestartNoDefaultManager()
+			throws Exception {
+		// make up a test file that triggers parallel transfer
+		String testFileName = "testParallelFileGetWithRestartNoDefaultManager.txt";
+		String testRetrievedFileName = "testParallelFileGetWithRestartNoDefaultManagerRetreived.txt";
+
+		long testFileLength = ConnectionConstants.MIN_FILE_RESTART_SIZE * 120;
+		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		props.setMaxParallelThreads(4);
+		props.setLongTransferRestart(true);
+		props.setComputeAndVerifyChecksumAfterTransfer(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(props);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLength);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localSourceFile = new File(localFileName);
+
+		File localDestFile = new File(absPath + "/" + testRetrievedFileName);
+
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
+				null);
+
+		dataTransferOperationsAO.getOperation(destFile, localDestFile, null,
+				null);
+
+		// validate checksum here
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		Assert.assertEquals("did not get equal file lengths",
+				localDestFile.length(), destFile.length());
+
+		Assert.assertTrue("checksums do not match", dataObjectAO
+				.verifyChecksumBetweenLocalAndIrods(destFile, localDestFile));
+
+	}
+
 	@Test
 	public final void testParallelFilePutThenenGetUsingExecutor()
 			throws Exception {
