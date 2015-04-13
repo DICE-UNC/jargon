@@ -53,7 +53,8 @@ public class PutTransferRestartProcessor extends
 	 */
 	@Override
 	public void restartIfNecessary(final String irodsAbsolutePath)
-			throws RestartFailedException, FileRestartManagementException {
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 		log.info("restartIfNecessary()");
 
 		FileRestartInfo fileRestartInfo = retrieveRestartIfConfiguredOrNull(
@@ -63,25 +64,24 @@ public class PutTransferRestartProcessor extends
 			return;
 		}
 
-		try {
-			processRestart(irodsAbsolutePath, fileRestartInfo);
-		} catch (JargonException e) {
-			log.error("exception accessing restart manager", e);
-			throw new FileRestartManagementException("restart manager error", e);
-		}
+		processRestart(irodsAbsolutePath, fileRestartInfo);
+
 	}
 
 	/**
-	 * @throws RestartFailedException
-	 *             Wraps restart processing to neatly catch exceptions in
-	 *             calling method
+	 * Note that jargon exceptions are passed back so the restart may be
+	 * retried, versus RestartFailedException and FileRestartManagerException
+	 * where I don't want to try a restart again.
 	 * 
 	 * @param irodsAbsolutePath
 	 * @param fileRestartInfo
-	 * @throws
+	 * @throws RestartFailedException
+	 * @throws FileRestartManagementException
+	 * @throws JargonException
 	 */
 	private void processRestart(final String irodsAbsolutePath,
-			FileRestartInfo fileRestartInfo) throws RestartFailedException {
+			FileRestartInfo fileRestartInfo) throws RestartFailedException,
+			FileRestartManagementException, JargonException {
 
 		/*
 		 * If specified by options, and with a call-back listener registered,
@@ -102,12 +102,10 @@ public class PutTransferRestartProcessor extends
 					"cannot get irodsRandomAccessFile", e1);
 		} catch (JargonException e1) {
 			log.error("general jargon error getting irods random file", e1);
-			throw new RestartFailedException(
-					"cannot get irodsRandomAccessFile", e1);
+			throw e1;
 		} catch (IOException e) {
 			log.error("io exception getting irods random file", e);
-			throw new RestartFailedException(
-					"cannot get irodsRandomAccessFile", e);
+			throw new JargonException("cannot get irodsRandomAccessFile", e);
 		}
 
 		RandomAccessFile localFile = null;

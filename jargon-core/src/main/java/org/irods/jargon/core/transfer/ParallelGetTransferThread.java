@@ -219,11 +219,11 @@ public final class ParallelGetTransferThread extends
 
 		// Where to seek into the data
 		long offset = readLong();
-		// log.info("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-		// log.info("   length:{}", length);
+		log.info(">>>new offset:{}", offset);
+		log.info(">>>new length:{}", length);
 
 		// Holds all the data for transfer
 		byte[] buffer = null;
@@ -288,11 +288,30 @@ public final class ParallelGetTransferThread extends
 													.instanceForReceive(read));
 						}
 
+						if (this.parallelGetFileTransferStrategy
+								.getFileRestartInfo() != null) {
+
+							this.parallelGetFileTransferStrategy
+									.getRestartManager()
+									.updateLengthForSegment(
+											this.parallelGetFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											this.getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
+							totalWrittenSinceLastRestartUpdate = 0;
+							log.debug("signal storage of new info");
+
+						}
+
 						// read the next header
 						operation = readInt();
 						readInt();
 						offset = readLong();
 						length = readLong();
+
+						log.info(">>>new offset:{}", offset);
+						log.info(">>>new length:{}", length);
 
 						if (operation == DONE_OPR) {
 							break;
@@ -333,20 +352,6 @@ public final class ParallelGetTransferThread extends
 				}
 
 				Thread.yield();
-			}
-
-			if (this.parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
-
-				this.parallelGetFileTransferStrategy.getRestartManager()
-						.updateLengthForSegment(
-								this.parallelGetFileTransferStrategy
-										.getFileRestartInfo()
-										.identifierFromThisInfo(),
-								this.getThreadNumber(),
-								totalWrittenSinceLastRestartUpdate);
-				totalWrittenSinceLastRestartUpdate = 0;
-				log.debug("signal storage of new info");
-
 			}
 
 		} catch (IOException e) {

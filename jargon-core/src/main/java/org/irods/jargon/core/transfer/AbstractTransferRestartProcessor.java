@@ -82,9 +82,12 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @throws FileRestartManagementException
 	 *             if the restart failed for configuration or other reasons, and
 	 *             restart should not be attempted again
+	 * @throws JargonException
+	 *             general exception that may trigger another restart attempt
 	 */
 	public abstract void restartIfNecessary(final String irodsAbsolutePath)
-			throws RestartFailedException, FileRestartManagementException;
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException;
 
 	/**
 	 * Given the restart info return the local file and make sure it exists
@@ -140,7 +143,7 @@ public abstract class AbstractTransferRestartProcessor extends
 		if (openType == OpenType.READ) {
 			openFlag = "r";
 		} else {
-			openFlag = "w";
+			openFlag = "rw";
 		}
 		try {
 			return new RandomAccessFile(fileRestartInfo.getLocalAbsolutePath(),

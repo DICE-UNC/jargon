@@ -675,9 +675,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
 				fileRestartInfo.getRestartType(),
 				fileRestartInfo.getIrodsAbsolutePath());
-		boolean restarted = false;
-		while (!restarted) {
+		// will do a sleep and then double the sleep time if it takes multiple
+		// attempts
+		int offsetInMillis = 10000;
+		while (true) {
 			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				Thread.sleep(offsetInMillis);
+			} catch (InterruptedException e) {
+				return;
+			}
+			offsetInMillis *= 2;
 			try {
 				myFileRestartInfo = getRestartManager()
 						.incrementRestartAttempts(myFileRestartInfo);
@@ -979,7 +987,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <p/>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
 	 * option is set to ask the callback listener, then the
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
@@ -1129,8 +1137,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				fileRestartInfo.getRestartType(),
 				fileRestartInfo.getIrodsAbsolutePath());
 
-		boolean restarted = false;
-		while (!restarted) {
+		int offsetInMillis = 10000;
+		while (true) {
+			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				Thread.sleep(offsetInMillis);
+			} catch (InterruptedException e) {
+				return;
+			}
+			offsetInMillis *= 2;
+
 			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
 			try {
 				myFileRestartInfo = getRestartManager()
@@ -1142,6 +1158,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				}
 				getRestartProcess(transferControlBlock, irodsFileToGet,
 						myFileRestartInfo, transferStatusCallbackListener);
+				log.info("restart done");
 			} catch (RestartFailedException rfe) {
 				log.error("restart failed, rethrow:{}", myFileRestartInfo, rfe);
 				throw rfe;
@@ -1570,6 +1587,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("number of threads for this transfer = {} ", numberOfThreads);
 
+		/*
+		 * Info may remain null if restart processing is not configured,
+		 * otherwise, it will hold info on the current file restart status
+		 */
+		FileRestartInfo fileRestartInfo = retrieveOrCreateRestartInfoIfConfigured(
+				RestartType.GET, irodsSourceFile.getAbsolutePath(),
+				localFileToHoldData.getAbsolutePath(), numberOfThreads,
+				irodsFileLength);
+
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
 			int fd = message.getTag(IRODSConstants.L1_DESC_INX).getIntValue();
@@ -1585,18 +1611,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-					.instance(
-							host,
-							port,
-							numberOfThreads,
-							password,
-							localFileToHoldData,
-							getIRODSAccessObjectFactory(),
-							irodsFileLength,
-							transferControlBlock,
-							transferStatusCallbackListener,
-							retrieveRestartInfoIfAvailable(RestartType.GET,
-									irodsSourceFile.getAbsolutePath()));
+					.instance(host, port, numberOfThreads, password,
+							localFileToHoldData, getIRODSAccessObjectFactory(),
+							irodsFileLength, transferControlBlock,
+							transferStatusCallbackListener, fileRestartInfo);
 
 			try {
 				parallelGetTransferStrategy.transfer();

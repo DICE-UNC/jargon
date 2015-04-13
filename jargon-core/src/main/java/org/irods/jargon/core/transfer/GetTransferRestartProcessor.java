@@ -79,7 +79,9 @@ public class GetTransferRestartProcessor extends
 	}
 
 	private void processRestart(final String irodsAbsolutePath,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 
 		log.info("processRestart()");
 		log.info("get local file as rw random access file...");

@@ -271,7 +271,7 @@ public class ParallelTransferOperationsTest {
 	}
 
 	@Test
-	public final void testParallelFilePutThenenGetUsingExecutor()
+	public final void testParallelFilePutThenGetUsingExecutor()
 			throws Exception {
 		// make up a test file that triggers parallel transfer
 		String testFileName = "testParallelFilePutThenGetUsingExecutor.txt";
