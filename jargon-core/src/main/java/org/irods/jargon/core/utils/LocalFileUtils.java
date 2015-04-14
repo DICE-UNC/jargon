@@ -137,18 +137,25 @@ public class LocalFileUtils {
 	 * @return the total number of files as <code>int</code>
 	 */
 	public static int countFilesInDirectory(final File directory) {
+
+		if (directory == null) {
+			throw new IllegalArgumentException("null directory");
+		}
+
 		int count = 0;
 
 		if (directory.isFile()) {
 			count = 1;
 		} else {
-
-			for (File file : directory.listFiles()) {
-				if (file.isFile()) {
-					count++;
-				}
-				if (file.isDirectory()) {
-					count += countFilesInDirectory(file);
+			File[] files = directory.listFiles();
+			if (files != null) {
+				for (File file : files) {
+					if (file.isFile()) {
+						count++;
+					}
+					if (file.isDirectory()) {
+						count += countFilesInDirectory(file);
+					}
 				}
 			}
 		}

@@ -1,5 +1,5 @@
 /**
- *
+ * 
  */
 package org.irods.jargon.core.transfer;
 
@@ -22,20 +22,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Handle a restart of a get operation
+ * 
  * @author Mike Conway - DICE
+ * 
  */
-public class PutTransferRestartProcessor extends
+public class GetTransferRestartProcessor extends
 		AbstractTransferRestartProcessor {
 
 	private static Logger log = LoggerFactory
-			.getLogger(PutTransferRestartProcessor.class);
+			.getLogger(GetTransferRestartProcessor.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 * @param restartManager
 	 */
-	public PutTransferRestartProcessor(
+	public GetTransferRestartProcessor(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
 			final AbstractRestartManager restartManager,
@@ -45,56 +48,60 @@ public class PutTransferRestartProcessor extends
 				transferStatusCallbackListener, transferControlBlock);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.irods.jargon.core.transfer.AbstractTransferRestartProcessor#
-	 * restartIfNecessary()
-	 */
 	@Override
 	public void restartIfNecessary(final String irodsAbsolutePath)
-			throws RestartFailedException, FileRestartManagementException,
-			JargonException {
+			throws RestartFailedException, FileRestartManagementException {
+
 		log.info("restartIfNecessary()");
 
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
 		FileRestartInfo fileRestartInfo = retrieveRestartIfConfiguredOrNull(
-				irodsAbsolutePath, FileRestartInfo.RestartType.PUT);
+				irodsAbsolutePath, FileRestartInfo.RestartType.GET);
+
 		if (fileRestartInfo == null) {
 			log.info("no restart");
 			return;
 		}
 
-		processRestart(irodsAbsolutePath, fileRestartInfo);
+		try {
+			processRestart(irodsAbsolutePath, fileRestartInfo);
+		} catch (JargonException e) {
+			log.error("exception accessing restart manager", e);
+			throw new FileRestartManagementException("restart manager error", e);
+		}
 
 	}
 
-	/**
-	 * Note that jargon exceptions are passed back so the restart may be
-	 * retried, versus RestartFailedException and FileRestartManagerException
-	 * where I don't want to try a restart again.
-	 * 
-	 * @param irodsAbsolutePath
-	 * @param fileRestartInfo
-	 * @throws RestartFailedException
-	 * @throws FileRestartManagementException
-	 * @throws JargonException
-	 */
 	private void processRestart(final String irodsAbsolutePath,
-			FileRestartInfo fileRestartInfo) throws RestartFailedException,
-			FileRestartManagementException, JargonException {
+			final FileRestartInfo fileRestartInfo)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 
-		/*
-		 * If specified by options, and with a call-back listener registered,
-		 * create an object to aggregate and channel within-file progress
-		 * reports to the caller.
-		 */
+		log.info("processRestart()");
+		log.info("get local file as rw random access file...");
+		RandomAccessFile localFile = null;
+		try {
+			localFile = localFileAsFileAndCheckExists(fileRestartInfo,
+					OpenType.WRITE);
+		} catch (FileNotFoundException e) {
+			log.error("local file not found", e);
+			throw new RestartFailedException("local file not found", e);
+		}
+
+		log.info("open iRODS file as read only random access...");
 
 		IRODSRandomAccessFile irodsRandomAccessFile;
 		try {
 			irodsRandomAccessFile = getIrodsAccessObjectFactory()
 					.getIRODSFileFactory(getIrodsAccount())
 					.instanceIRODSRandomAccessFile(irodsAbsolutePath,
-							OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS);
+							OpenFlags.READ);
 			irodsRandomAccessFile.seek(0, SeekWhenceType.SEEK_START);
 		} catch (NoResourceDefinedException e1) {
 			log.error("no resource defined", e1);
@@ -102,30 +109,26 @@ public class PutTransferRestartProcessor extends
 					"cannot get irodsRandomAccessFile", e1);
 		} catch (JargonException e1) {
 			log.error("general jargon error getting irods random file", e1);
-			throw e1;
+			throw new RestartFailedException(
+					"cannot get irodsRandomAccessFile", e1);
 		} catch (IOException e) {
-			log.error("io exception getting irods random file", e);
-			throw new JargonException("cannot get irodsRandomAccessFile", e);
+			log.error("io exception in initial seek of irods random file", e);
+			throw new RestartFailedException(
+					"cannot seek in irodsRandomAccessFile", e);
 		}
 
-		RandomAccessFile localFile = null;
 		byte[] buffer;
-		/*
-		 * See rcPortalOpr.cpp lfRestartPutWithInfo at about line 1522
-		 */
+
 		try {
-			localFile = localFileAsFileAndCheckExists(fileRestartInfo,
-					OpenType.READ);
 
 			ConnectionProgressStatusListener intraFileStatusListener = null;
-			if (this.getTransferStatusCallbackListener() != null
-					&& this.getTransferControlBlock().getTransferOptions()
+			if (getTransferStatusCallbackListener() != null
+					&& getTransferControlBlock().getTransferOptions()
 							.isIntraFileStatusCallbacks()) {
 				intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-						.instanceSettingInterval(TransferType.PUT,
-								localFile.length(),
-								this.getTransferControlBlock(),
-								this.getTransferStatusCallbackListener(), 100);
+						.instanceSettingInterval(TransferType.GET,
+								localFile.length(), getTransferControlBlock(),
+								getTransferStatusCallbackListener(), 100);
 			}
 
 			// now put each segment
@@ -144,51 +147,36 @@ public class PutTransferRestartProcessor extends
 				segment = fileRestartInfo.getFileRestartDataSegments().get(i);
 				log.info("process segment:{}", segment);
 				gap = segment.getOffset() - currentOffset;
-				log.debug("gap:{}", gap);
 				if (gap < 0) {
 					log.warn("my segment has a gap < 0..continuing:{}", segment);
 				} else if (gap > 0) {
 
 					// ok, have a gap > 0, let's get our restart on
 
-					putSegment(gap, localFile, buffer, fileRestartInfo, i - 1,
+					getSegment(gap, localFile, buffer, fileRestartInfo, i - 1,
 							irodsRandomAccessFile, intraFileStatusListener);
 					currentOffset += gap;
 				}
 
 				if (segment.getLength() > 0) {
 					currentOffset += segment.getLength();
-					log.info("currentOffset after putSegment:{}", currentOffset);
 					localFile.seek(currentOffset);
 					irodsRandomAccessFile.seek(currentOffset,
 							SeekWhenceType.SEEK_START);
 				}
-
 			}
 
-			/*
-			 * See rcPortalOpr.cpp at about line 1616
-			 */
-			log.info("computing gap for last segment");
-			log.info("local file length:{}", localFile.length());
-			log.info("current offset:{}", currentOffset);
-
-			gap = localFile.length() - currentOffset;
-			log.info("last segment gap:{}", gap);
+			// put final segment based on file size
+			gap = irodsRandomAccessFile.length() - currentOffset;
 			if (gap > 0) {
 				log.info("writing last segment based on file length");
 				int i = fileRestartInfo.getFileRestartDataSegments().size() - 1;
-
-				putSegment(gap, localFile, buffer, fileRestartInfo, i,
+				getSegment(gap, localFile, buffer, fileRestartInfo, i,
 						irodsRandomAccessFile, intraFileStatusListener);
 			}
 
-			log.info("restart completed..remove from the cache");// put final
-																	// segment
-																	// based on
-																	// file size
-
-			this.getRestartManager().deleteRestart(
+			log.info("restart completed..remove from the cache");
+			getRestartManager().deleteRestart(
 					fileRestartInfo.identifierFromThisInfo());
 			log.info("removed restart");
 		} catch (FileNotFoundException e) {
@@ -213,8 +201,7 @@ public class PutTransferRestartProcessor extends
 						"exception closing irods restart file", e);
 			}
 			try {
-				if (localFile != null)
-					localFile.close();
+				localFile.close();
 			} catch (IOException e) {
 				log.warn("error closing local file, logged and ignored", e);
 			}
@@ -223,35 +210,20 @@ public class PutTransferRestartProcessor extends
 
 	}
 
-	/**
-	 * Put the segment to iRODS, and update the length of the given segment
-	 * 
-	 * @param gap
-	 * @param localFile
-	 * @param buffer
-	 * @param fileRestartInfo
-	 * @param segment
-	 * @param indexOfCurrentSegment
-	 * @param lengthToUpdate
-	 * @param irodsRandomAccessFile
-	 * @param intraFileStatusListener
-	 * @throws RestartFailedException
-	 * @throws FileRestartManagementException
-	 */
-	private void putSegment(final long gap, final RandomAccessFile localFile,
+	private void getSegment(final long gap, final RandomAccessFile localFile,
 			final byte[] buffer, final FileRestartInfo fileRestartInfo,
 			final int indexOfSegmentToUpdateLength,
 			final IRODSRandomAccessFile irodsRandomAccessFile,
-			ConnectionProgressStatusListener intraFileStatusListener)
+			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws RestartFailedException, FileRestartManagementException {
 
 		long myGap = gap;
-		long writtenSinceUpdated = 0;
-		int toRead = 0;
+		long writtenSinceUpdated = 0L;
 		long totalWrittenOverall = 0L;
+		int toRead = 0;
 		while (myGap > 0) {
 
-			if (this.getTransferControlBlock().isCancelled()) {
+			if (getTransferControlBlock().isCancelled()) {
 				return;
 			}
 
@@ -261,32 +233,30 @@ public class PutTransferRestartProcessor extends
 				toRead = (int) myGap;
 			}
 
-			log.debug("toRead:{}", toRead);
-
 			log.info("reading buffer from input file...");
 			int amountRead;
 			try {
-				amountRead = localFile.read(buffer, 0, toRead);
-				log.debug("amountRead:{}", amountRead);
+				amountRead = irodsRandomAccessFile.read(buffer, 0, toRead);
 
 				if (amountRead <= 0) {
-					log.error("read 0 or less from localFile:{}", amountRead);
+					log.error("read 0 or less from irodsFile:{}", amountRead);
 					throw new RestartFailedException(
-							"restart failed in read of local file");
+							"restart failed in read of irods file");
 				}
 
-				irodsRandomAccessFile.write(buffer, 0, amountRead);
+				localFile.write(buffer, 0, amountRead);
 				myGap -= amountRead;
 				writtenSinceUpdated += amountRead;
 				totalWrittenOverall += amountRead;
 
 				if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
 					log.info("need to update restart");
-					this.getRestartManager().updateLengthForSegment(
+					getRestartManager().updateLengthForSegment(
 							fileRestartInfo.identifierFromThisInfo(),
 							indexOfSegmentToUpdateLength, writtenSinceUpdated);
 					writtenSinceUpdated = 0;
 				}
+
 			} catch (IOException e) {
 				log.error("IOException reading local file", e);
 				throw new RestartFailedException(
@@ -339,7 +309,7 @@ public class PutTransferRestartProcessor extends
 
 		if (writtenSinceUpdated > 0) {
 			log.info("need to update restart");
-			this.getRestartManager().updateLengthForSegment(
+			getRestartManager().updateLengthForSegment(
 					fileRestartInfo.identifierFromThisInfo(),
 					indexOfSegmentToUpdateLength, writtenSinceUpdated);
 			writtenSinceUpdated = 0;

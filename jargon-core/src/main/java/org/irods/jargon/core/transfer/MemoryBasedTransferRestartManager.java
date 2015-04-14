@@ -5,6 +5,7 @@ package org.irods.jargon.core.transfer;
 
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.irods.jargon.core.connection.ConnectionConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -157,5 +158,44 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 					actualSegment.getThreadNumber(), fileRestartDataSegment);
 			storeRestart(actualRestartInfo);
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#
+	 * incrementRestartAttempts(org.irods.jargon.core.transfer.FileRestartInfo)
+	 */
+	@Override
+	public FileRestartInfo incrementRestartAttempts(
+			FileRestartInfo fileRestartInfo) throws RestartFailedException,
+			FileRestartManagementException {
+
+		log.info("incrementRestartAttempts()");
+		if (fileRestartInfo == null) {
+			log.info("no restart to increment, returning null");
+			return null;
+		}
+		log.info("fileRestartInfo:{}", fileRestartInfo);
+
+		synchronized (this) {
+			FileRestartInfo actualRestartInfo = this
+					.retrieveRestart(fileRestartInfo.identifierFromThisInfo());
+			if (actualRestartInfo == null) {
+				log.error("nothing to increment!");
+				return null;
+			}
+			int currentRestarts = actualRestartInfo.getNumberRestarts();
+			currentRestarts++;
+			if (currentRestarts > ConnectionConstants.MAX_FILE_RESTART_ATTEMPTS) {
+				log.error("violates max restart attempts, go ahead and fail the restart attempt");
+				throw new RestartFailedException(
+						"restart failed with too many attempts");
+			}
+			actualRestartInfo.setNumberRestarts(currentRestarts);
+			this.storeRestart(actualRestartInfo);
+			return fileRestartInfo;
+		}
+
 	}
 }

@@ -763,6 +763,14 @@ public class IRODSSession {
 	}
 
 	public synchronized AbstractRestartManager getRestartManager() {
+
+		if (this.restartManager == null) {
+			if (this.jargonProperties.isLongTransferRestart()) {
+				log.warn("no restart manager provided, long file restart is on, create default memory based manager");
+				this.restartManager = new MemoryBasedTransferRestartManager();
+			}
+		}
+
 		return restartManager;
 	}
 

@@ -4,16 +4,20 @@
 package org.irods.jargon.core.pub.io;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.RandomAccessFile;
 import java.util.Arrays;
 import java.util.Properties;
 
 import junit.framework.Assert;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -147,6 +151,132 @@ public class IRODSRandomAccessFileTest {
 				"byte I read does not match the first byte I wrote",
 				expectedReadData, readData);
 
+	}
+
+	/**
+	 * Bug: Large file transfer restart #77
+	 * https://github.com/DICE-UNC/jargon/issues/77
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testLargeRandomAccessPutThenOverwrite() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testLargeRandomAccessPutThenOverwrite.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						60 * 1024 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		ChecksumValue expectedChecksum = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount)
+				.computeChecksumOnDataObject(destFile);
+
+		byte[] buffer = new byte[irodsFileSystem.getIRODSAccessObjectFactory()
+				.getJargonProperties().getPutBufferSize()];
+
+		IRODSRandomAccessFile irodsRaFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSRandomAccessFile(destFile);
+
+		RandomAccessFile localRaFile = new RandomAccessFile(localFile, "r");
+		// go 8m in, put 5m of data
+		long ptr = 8 * 1024 * 1024;
+		long offset = 5 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 4m in, put 4m of data
+		ptr = 4 * 1024 * 1024;
+		offset = 4 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 5m in, put 40m of data
+		ptr = 5 * 1024 * 1024;
+		offset = 40 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 15m in, put 10m of data
+		ptr = 15 * 1024 * 1024;
+		offset = 10 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 30m in, put 3m of data
+		ptr = 30 * 1024 * 1024;
+		offset = 3 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		// go 50m in, put 8m of data
+		ptr = 50 * 1024 * 1024;
+		offset = 8 * 1024 * 1024;
+		copyDataIntoRaFile(localRaFile, irodsRaFile, ptr, offset, buffer);
+
+		localRaFile.close();
+		irodsRaFile.close();
+		ChecksumValue actualChecksum = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount)
+				.computeChecksumOnDataObject(destFile);
+
+		Assert.assertEquals("irods checksum values don't match",
+				expectedChecksum, actualChecksum);
+
+		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
+				.getLocalChecksumComputerFactory()
+				.instance(actualChecksum.getChecksumEncoding())
+				.instanceChecksumForPackingInstruction(localFileName);
+
+		Assert.assertEquals(
+				"irods checksum value doesnt match local after operations",
+				localChecksum, actualChecksum);
+
+	}
+
+	private void copyDataIntoRaFile(RandomAccessFile localRaFile,
+			IRODSRandomAccessFile irodsRaFile, long ptr, long offset,
+			byte[] buffer) throws Exception {
+
+		long gap = offset;
+		localRaFile.seek(ptr);
+		irodsRaFile.seek(ptr, SeekWhenceType.SEEK_START);
+
+		int toRead = 0;
+		while (gap > 0) {
+
+			// put final segment based on file size
+
+			if (gap > buffer.length) {
+				toRead = buffer.length;
+			} else {
+				toRead = (int) gap;
+			}
+
+			int amountRead;
+
+			amountRead = localRaFile.read(buffer, 0, toRead);
+			irodsRaFile.write(buffer, 0, amountRead);
+			gap -= amountRead;
+		}
 	}
 
 	@Test

@@ -78,7 +78,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
@@ -181,7 +181,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteStringLength, final int intInfo)
-					throws JargonException {
+			throws JargonException {
 
 		log.debug("calling irods function with byte array");
 		log.debug("calling irods function with:{}", message);
@@ -212,13 +212,10 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			}
 
 			getIrodsConnection().send(message);
+			getIrodsConnection().flush();
 
 			if (byteStringLength > 0) {
 				getIrodsConnection().send(bytes, byteOffset, byteStringLength);
-				if (isPamFlush()) {
-					log.debug("doing extra pam flush for iRODS 3.2 after byte send");
-					getIrodsConnection().flush();
-				}
 			}
 
 			getIrodsConnection().flush();
