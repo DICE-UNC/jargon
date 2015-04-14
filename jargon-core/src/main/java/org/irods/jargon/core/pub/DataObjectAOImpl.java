@@ -1023,6 +1023,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
+	@SuppressWarnings("unused")
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
@@ -1066,9 +1067,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("checking to see if this is a restart...");
+		/*
+		 * FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+		 * RestartType.GET, irodsFileToGet.getAbsolutePath());
+		 */
 
-		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
-				RestartType.GET, irodsFileToGet.getAbsolutePath());
+		FileRestartInfo fileRestartInfo = null; // TODO: issue77 for now get not
+												// supported
 
 		if (fileRestartInfo != null) {
 			log.info("restart processing for get..");
@@ -1490,15 +1495,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.error("transfer and restart failed", e);
 					throw e;
 				} catch (JargonException je) {
-					log.info("attempting a restart after exception", je);
-					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
-							RestartType.GET, irodsFileToGet.getAbsolutePath());
-					if (fileRestartInfo != null) {
-						log.info("carrying out restart process..");
-						getRestartRetryTillMaxLoop(transferControlBlock,
-								irodsFileToGet, fileRestartInfo,
-								transferStatusCallbackListener);
-					}
+					/*
+					 * log.info("attempting a restart after exception", je);
+					 * FileRestartInfo fileRestartInfo =
+					 * retrieveRestartInfoIfAvailable( RestartType.GET,
+					 * irodsFileToGet.getAbsolutePath()); if (fileRestartInfo !=
+					 * null) { log.info("carrying out restart process..");
+					 * getRestartRetryTillMaxLoop(transferControlBlock,
+					 * irodsFileToGet, fileRestartInfo,
+					 * transferStatusCallbackListener); }
+					 */
+					log.error(
+							"jargon exception in get transfer, currently restart is not supported for get",
+							je);
+					throw je;
 				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
