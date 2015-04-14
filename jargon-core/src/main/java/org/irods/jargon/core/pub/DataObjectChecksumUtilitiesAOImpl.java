@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * checksums between local files and iRODS files.
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO {
 
@@ -57,6 +57,7 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO {
 
 		log.info("checksumEncoding:{}", checksumEncoding);
 		log.info("irodsDataObjectAbsolutePath:{}", irodsDataObjectAbsolutePath);
+		return null;
 
 	}
 
