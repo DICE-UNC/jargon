@@ -41,7 +41,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	boolean isFileWriteable(IRODSFile irodsFile) throws FileNotFoundException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Check if the given file exists in iRODS.
@@ -150,7 +150,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 */
 	int createFileInResource(String absolutePath,
 			DataObjInp.OpenFlags openFlags, int createMode, String resource)
-					throws JargonException, JargonFileOrCollAlreadyExistsException;
+			throws JargonException, JargonFileOrCollAlreadyExistsException;
 
 	/**
 	 * Create the directories in IRODS as specified by the given
@@ -166,15 +166,6 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 */
 	void mkdir(IRODSFile irodsFile, boolean recursiveOpr)
 			throws JargonException;
-
-	/**
-	 * Close the iRODS File
-	 *
-	 * @param fileDescriptor
-	 *            <code>int<code> with the file descriptor assigned when the file was opened or created in iRODS.
-	 * @throws JargonException
-	 */
-	void fileClose(int fileDescriptor) throws JargonException;
 
 	/**
 	 * Delete the given directory, and do not move the file to trash. This
@@ -372,6 +363,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	ObjStat getObjStat(String irodsAbsolutePath) throws FileNotFoundException,
-	JargonException;
+			JargonException;
+
+	void fileClose(int fileDescriptor, boolean putOpr) throws JargonException;
 
 }

@@ -291,4 +291,8 @@ public interface IRODSFile {
 	 */
 	public abstract URL toFileBasedURL();
 
+	public abstract void setOpenFlags(OpenFlags openFlags);
+
+	public abstract OpenFlags getOpenFlags();
+
 }

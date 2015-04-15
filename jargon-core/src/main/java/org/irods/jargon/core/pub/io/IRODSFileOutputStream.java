@@ -70,8 +70,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-					throws NoResourceDefinedException, FileNotFoundException,
-					JargonException {
+			throws NoResourceDefinedException, FileNotFoundException,
+			JargonException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -106,6 +106,8 @@ public class IRODSFileOutputStream extends OutputStream {
 		 * Check exists with open flags and throw error or create as needed
 		 */
 
+		irodsFile.setOpenFlags(openFlags);
+
 		if (exists) {
 			if (openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
 					|| openFlags == OpenFlags.READ_WRITE_FAIL_IF_EXISTS) {
@@ -120,6 +122,7 @@ public class IRODSFileOutputStream extends OutputStream {
 		} else {
 			log.info("file does not exist, create it");
 			irodsFile.createNewFileCheckNoResourceFound();
+
 		}
 
 		fileDescriptor = irodsFile.getFileDescriptor();
@@ -157,7 +160,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#close()
 	 */
 	@Override
@@ -181,7 +184,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#write(byte[], int, int)
 	 */
 	@Override
@@ -206,7 +209,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#write(byte[])
 	 */
 	@Override
