@@ -920,9 +920,8 @@ final class TransferOperationsHelper {
 				TransferStatus status = TransferStatus.instance(
 						TransferType.PUT, sourceFile.getAbsolutePath(),
 						targetFileAsFile.getAbsolutePath(), targetFileAsFile
-								.getResource(), sourceFile.length(), sourceFile
-								.length(), transferControlBlock
-								.getTotalFilesTransferredSoFar(),
+								.getResource(), sourceFile.length(), 0,
+						transferControlBlock.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
 						transferControlBlock.getTotalFilesToTransfer(),
 						TransferState.IN_PROGRESS_START_FILE, dataObjectAO
