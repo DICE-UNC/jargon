@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.packinstr;
 
+import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+
 /**
  * Options to control checksum processing
  * 
@@ -11,6 +13,7 @@ package org.irods.jargon.core.packinstr;
  */
 public class ChecksumOptions {
 
+	private ChecksumEncodingEnum checksumEncodingEnum = ChecksumEncodingEnum.DEFAULT;
 	/**
 	 * Force the checksum operation, even if a previous checksum was registered
 	 * in iCAT
@@ -25,6 +28,11 @@ public class ChecksumOptions {
 	 * If the checksum does not exist in the iCAT, compute and store it
 	 */
 	private boolean verifyChecksumInIcat = true;
+
+	/**
+	 * Checksum all files in a collection, including subtrees
+	 */
+	private boolean recursive = false;
 
 	/**
 	 * @return the force
@@ -79,14 +87,53 @@ public class ChecksumOptions {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ChecksumOptions [force=");
+		builder.append("ChecksumOptions [");
+		if (checksumEncodingEnum != null) {
+			builder.append("checksumEncodingEnum=");
+			builder.append(checksumEncodingEnum);
+			builder.append(", ");
+		}
+		builder.append("force=");
 		builder.append(force);
 		builder.append(", checksumAllReplicas=");
 		builder.append(checksumAllReplicas);
 		builder.append(", verifyChecksumInIcat=");
 		builder.append(verifyChecksumInIcat);
+		builder.append(", recursive=");
+		builder.append(recursive);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * @return the checksumEncodingEnum
+	 */
+	protected ChecksumEncodingEnum getChecksumEncodingEnum() {
+		return checksumEncodingEnum;
+	}
+
+	/**
+	 * @param checksumEncodingEnum
+	 *            the checksumEncodingEnum to set
+	 */
+	protected void setChecksumEncodingEnum(
+			ChecksumEncodingEnum checksumEncodingEnum) {
+		this.checksumEncodingEnum = checksumEncodingEnum;
+	}
+
+	/**
+	 * @return the recursive
+	 */
+	protected boolean isRecursive() {
+		return recursive;
+	}
+
+	/**
+	 * @param recursive
+	 *            the recursive to set
+	 */
+	protected void setRecursive(boolean recursive) {
+		this.recursive = recursive;
 	}
 
 }

@@ -6,10 +6,7 @@ package org.irods.jargon.core.packinstr;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.exception.JargonException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
@@ -19,18 +16,16 @@ import org.slf4j.LoggerFactory;
  */
 public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 
-	public static final String PI_TAG = "DataObjInp_PI";
+	public static final String PI_TAG = DataObjInp.PI_TAG;
 
-	public static final String MY_STR = "myStr";
-	public static final String LOCAL_PATH = "localPath";
+	public static final String MY_STR = DataObjInp.MY_STR;
 	public static final String FORCE_CHECKSUM_KW = "forceChecksum";
 	public static final String VERIFY_CHECKSUM_KW = "verifyChecksum";
+	public static final String CHECKSUM_ALL_KW = "chksumAll";
 	public static final String REPL_NUM_KW = "replNum";
 	public static final String RESC_NAME_KW = "rescName";
+	public static final String TRANSLATED_PATH_KW = "translatedPath";
 	public static final int CHECKSUM_API_NBR = 629;
-
-	private static Logger log = LoggerFactory
-			.getLogger(DataObjInpForChecksum.class);
 
 	private String fileAbsolutePath = "";
 
@@ -40,15 +35,16 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 	 * <p/>
 	 * Can be set to <code>null</code> if no checksum is specified
 	 */
-	private final ChecksumValue checksumValue;
 	private final ChecksumOptions checksumOptions;
 	private final String resourceName;
 	private final int replicaNumber;
 
+	// public static DataObjInpForChecksum instanceForChecksumDataObject(final
+	// String irodsAbsolutePath )
+
 	private DataObjInpForChecksum(final String fileAbsolutePath,
 			final String resourceName, final int replicaNumber,
-			final ChecksumOptions checksumOptions,
-			final ChecksumValue checksumValue) {
+			final ChecksumOptions checksumOptions) {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
@@ -67,7 +63,6 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.checksumOptions = checksumOptions;
-		this.checksumValue = checksumValue;
 		this.replicaNumber = replicaNumber;
 		this.resourceName = resourceName;
 	}
@@ -85,6 +80,33 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.OPR_TYPE, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+
+		if (checksumOptions.isForce()) {
+			kvps.add(KeyValuePair.instance(FORCE_CHECKSUM_KW, ""));
+		}
+
+		if (checksumOptions.isChecksumAllReplicas()) {
+			kvps.add(KeyValuePair.instance(CHECKSUM_ALL_KW, ""));
+		}
+
+		if (checksumOptions.isVerifyChecksumInIcat()) {
+			kvps.add(KeyValuePair.instance(VERIFY_CHECKSUM_KW, ""));
+		}
+
+		if (checksumOptions.isRecursive()) {
+			kvps.add(KeyValuePair.instance(TRANSLATED_PATH_KW, ""));
+		}
+
+		/*
+		 * If a resource name is provided, use that, otherwise look and see if a
+		 * replica number is added
+		 */
+
+		if (!this.resourceName.isEmpty()) {
+			kvps.add(KeyValuePair.instance(RESC_NAME_KW, this.resourceName));
+		} else if (this.replicaNumber > -1) {
+			kvps.add(KeyValuePair.instance(REPL_NUM_KW, this.resourceName));
+		}
 
 		/*
 		 * if (getOperationType() == REPLICATE_OPERATION_TYPE &&
