@@ -28,9 +28,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory to create IRODS File objects, will handle initialization of iRODS
  * connections and other non-file aspects
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		IRODSFileFactory {
@@ -422,6 +422,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 				log.info("creating IRODSFileWriter for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
+			irodsFile.setOpenFlags(OpenFlags.READ_WRITE);
 			irodsFile.createNewFileCheckNoResourceFound();
 			return new IRODSFileWriter(irodsFile, this);
 		} catch (FileNotFoundException e) {
