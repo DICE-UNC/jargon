@@ -25,7 +25,7 @@ public class RuleParsingUtilsTest {
 		Assert.assertEquals("no value given", "value", rip.getParamValue());
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public final void testParseInputParameterForNameAndBlankValue() {
 		String parameter = "*name=";
 		RuleParsingUtils.parseInputParameterForNameAndValue(parameter);

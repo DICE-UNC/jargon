@@ -387,11 +387,12 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	@Override
-	public synchronized boolean createNewFileCheckNoResourceFound()
-			throws NoResourceDefinedException, JargonException {
+	public synchronized boolean createNewFileCheckNoResourceFound(
+			final OpenFlags openFlags) throws NoResourceDefinedException,
+			JargonException {
 		try {
 			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(),
-					this.openFlags, DataObjInp.DEFAULT_CREATE_MODE);
+					openFlags, DataObjInp.DEFAULT_CREATE_MODE);
 
 			log.debug("file descriptor from new file create: {}",
 					fileDescriptor);

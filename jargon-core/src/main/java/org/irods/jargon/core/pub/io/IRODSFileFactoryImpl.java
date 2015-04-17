@@ -334,7 +334,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		try {
 			if (!file.exists()) {
 				log.info("file does not exist, creating a new file");
-				file.createNewFileCheckNoResourceFound();
+				file.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
 			}
 
 			/*
@@ -422,8 +422,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 				log.info("creating IRODSFileWriter for:" + name);
 			}
 			IRODSFile irodsFile = instanceIRODSFile(name);
-			irodsFile.setOpenFlags(OpenFlags.READ_WRITE);
-			irodsFile.createNewFileCheckNoResourceFound();
+			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
 			return new IRODSFileWriter(irodsFile, this);
 		} catch (FileNotFoundException e) {
 			log.error("FileNotFound creating FileWriter", e);
@@ -664,7 +663,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (!irodsFile.exists()) {
 			log.info("requested file does not exist, will be created");
 
-			irodsFile.createNewFileCheckNoResourceFound();
+			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
 		}
 
 		// open the file if it is not opened
@@ -722,7 +721,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 		if (!irodsFile.exists()) {
 			log.info("requested file does not exist, will be created");
 
-			irodsFile.createNewFileCheckNoResourceFound();
+			irodsFile.createNewFileCheckNoResourceFound(OpenFlags.READ_WRITE);
 		}
 
 		// open the file if it is not opened

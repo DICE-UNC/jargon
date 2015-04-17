@@ -138,7 +138,7 @@ public class IRODSAccessObjectFactoryImplTest {
 	@Test
 	public final void authenticateWithInvalidMultipleTimes() throws Exception {
 
-		int ctr = 200;
+		int ctr = 300;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

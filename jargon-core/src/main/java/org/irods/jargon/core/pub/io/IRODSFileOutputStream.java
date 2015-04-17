@@ -121,7 +121,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 		} else {
 			log.info("file does not exist, create it");
-			irodsFile.createNewFileCheckNoResourceFound();
+			irodsFile.createNewFileCheckNoResourceFound(openFlags);
 
 		}
 

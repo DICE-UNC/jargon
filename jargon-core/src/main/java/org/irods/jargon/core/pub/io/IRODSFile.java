@@ -280,7 +280,7 @@ public interface IRODSFile {
 	 *             rule is installed in iRODS
 	 * @throws JargonException
 	 */
-	boolean createNewFileCheckNoResourceFound()
+	boolean createNewFileCheckNoResourceFound(OpenFlags openFlags)
 			throws NoResourceDefinedException, JargonException;
 
 	/**
