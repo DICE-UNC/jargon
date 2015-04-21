@@ -121,6 +121,7 @@ public class IRODSAccessObjectFactoryImplTest {
 				.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull("no auth response", authResponse);
 		irodsFileSystem.closeAndEatExceptions();
+
 	}
 
 	@Test(expected = AuthenticationException.class)

@@ -799,6 +799,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	public synchronized void disconnectWithForce() throws JargonException {
 		if (getIrodsAccount() != null) {
 			getIrodsSession().discardSessionForErrors(getIrodsAccount());
+		} else {
+			log.warn("partial connection, not authenticated, forcefully shut down the socket");
+			this.getIrodsConnection().obliterateConnectionAndDiscardErrors();
 		}
 	}
 
