@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
  * Instances of this class support I/O on random-access binary files. Methods on
  * the class support conversion between host and file byte orders and word
  * sizes.
- *
+ * 
  * Two sets of read methods are provided:
  * <P>
  * <UL>
@@ -51,10 +51,10 @@ import org.slf4j.LoggerFactory;
  * java.io.RandomAccessFile. However, it <I>is not</I> a subclass, due to the
  * unfortunate use of final methods in java.io.RandomAccessFile. </DIV>
  * <P>
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org) adopted from original Jargon
  *         implementation by Lucas Gilbert
- *
+ * 
  */
 public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
@@ -66,7 +66,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * Create an instance of the IRODS implementation of a random access file
-	 *
+	 * 
 	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} that
 	 *            describes the file.
@@ -111,7 +111,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * the byte written by the writeBooleans method of interface
 	 * BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @param values
 	 *            the array of values to set
 	 * @param nValues
@@ -138,7 +138,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Although <code>GeneralRandomAccessFile</code> is not a subclass of
 	 * <code>InputStream</code>, this method behaves in the exactly the same way
 	 * as java.io.InputStream.read(byte[]).
-	 *
+	 * 
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @return the total number of bytes read into the buffer, or
@@ -157,16 +157,16 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * in order, are <code>b1</code> and <code>b2</code>, where
 	 * <code>0&nbsp;&lt;=&nbsp;b1,&nbsp;b2&nbsp;&lt;=&nbsp;255</code>, then the
 	 * result is equal to: <blockquote>
-	 *
+	 * 
 	 * <pre>
 	 * (char) ((b1 &lt;&lt; 8) | b2)
 	 * </pre>
-	 *
+	 * 
 	 * </blockquote>
 	 * <p>
 	 * This method blocks until the two bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @return the next two bytes of this file as a Unicode character.
 	 * @throws EOFException
 	 *             if this file reaches the end before reading two bytes.
@@ -195,7 +195,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeDouble
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the value read
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -220,7 +220,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeFloat
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the value read
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -240,7 +240,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * the file until the requested number of bytes are read. This method blocks
 	 * until the requested number of bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @throws EOFException
@@ -259,7 +259,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * the file until the requested number of bytes are read. This method blocks
 	 * until the requested number of bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @param off
@@ -297,7 +297,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeInt
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the value read
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -318,19 +318,19 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * into a character by taking the byte's value for the lower eight bits of
 	 * the character and setting the high eight bits of the character to zero.
 	 * This method does not, therefore, support the full Unicode character set.
-	 *
+	 * 
 	 * <p>
 	 * A line of text is terminated by a carriage-return character (
 	 * <code>'&#92;r'</code>), a newline character (<code>'&#92;n'</code>), a
 	 * carriage-return character immediately followed by a newline character, or
 	 * the end of the file. Line-terminating characters are discarded and are
 	 * not included as part of the string returned.
-	 *
+	 * 
 	 * <p>
 	 * This method blocks until a newline character is read, a carriage return
 	 * and the byte following it are read (to see if it is a newline), the end
 	 * of the file is reached, or an exception is thrown.
-	 *
+	 * 
 	 * @return the next line of text from this file, or null if end of file is
 	 *         encountered before even one byte is read.
 	 * @throws IOException
@@ -366,7 +366,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeLong
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the value read
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -391,7 +391,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeShort
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the value read
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -418,19 +418,19 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <p>
 	 * This method blocks until all the bytes are read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @return a Unicode string.
-	 *
+	 * 
 	 * @throws EOFException
 	 *             if this file reaches the end before reading all the bytes.
-	 *
+	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
-	 *
+	 * 
 	 * @throws UTFDataFormatException
 	 *             if the bytes do not represent valid UTF-8 encoding of a
 	 *             Unicode string.
-	 *
+	 * 
 	 * @see edu.sdsc.grid.io.GeneralRandomAccessFile#readUnsignedShort()
 	 */
 	@Override
@@ -445,7 +445,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <P>
 	 * This method blocks until the byte is read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @return the next byte of this file, interpreted as an unsigned eight-bit
 	 *         number.
 	 * @throws EOFException
@@ -475,7 +475,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * This method is suitable for reading the bytes written by the writeInt
 	 * method of interface BinaryDataOutput.
 	 * <P>
-	 *
+	 * 
 	 * @return the unsigned value
 	 * @throws EOFException
 	 *             if this stream reaches the end before reading all the bytes
@@ -493,14 +493,14 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Attempts to skip over <code>n</code> bytes of input discarding the
 	 * skipped bytes.
 	 * <p>
-	 *
+	 * 
 	 * This method may skip over some smaller number of bytes, possibly zero.
 	 * This may result from any of a number of conditions; reaching end of file
 	 * before <code>n</code> bytes have been skipped is only one possibility.
 	 * This method never throws an <code>EOFException</code>. The actual number
 	 * of bytes skipped is returned. If <code>n</code> is negative, no bytes are
 	 * skipped.
-	 *
+	 * 
 	 * @param n
 	 *            the number of bytes to be skipped.
 	 * @return the actual number of bytes skipped.
@@ -527,7 +527,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Writes the specified byte to this file. The write starts at the current
 	 * file pointer.
-	 *
+	 * 
 	 * @param b
 	 *            the <code>byte</code> to be written.
 	 * @throws IOException
@@ -543,7 +543,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Writes <code>b.length</code> bytes from the specified byte array to this
 	 * file, starting at the current file pointer.
-	 *
+	 * 
 	 * @param b
 	 *            the data.
 	 * @throws IOException
@@ -557,7 +557,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Writes <code>len</code> bytes from the specified byte array starting at
 	 * offset <code>off</code> to this file.
-	 *
+	 * 
 	 * @param b
 	 *            the data.
 	 * @param off
@@ -578,7 +578,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <code>true</code> is written out as the value <code>(byte)1</code>; the
 	 * value <code>false</code> is written out as the value <code>(byte)0</code>
 	 * . The write starts at the current position of the file pointer.
-	 *
+	 * 
 	 * @param v
 	 *            a <code>boolean</code> value to be written.
 	 * @throws IOException
@@ -592,7 +592,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	/**
 	 * Writes a <code>byte</code> to the file as a one-byte value. The write
 	 * starts at the current position of the file pointer.
-	 *
+	 * 
 	 * @param v
 	 *            a <code>byte</code> value to be written.
 	 * @throws IOException
@@ -607,7 +607,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes the string to the file as a sequence of bytes. Each character in
 	 * the string is written out, in sequence, by discarding its high eight
 	 * bits. The write starts at the current position of the file pointer.
-	 *
+	 * 
 	 * @param s
 	 *            a string of bytes to be written.
 	 * @throws IOException
@@ -631,7 +631,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a char equal to
 	 * (char)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the short value to be written
 	 * @throws IOException
@@ -648,7 +648,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Writes a string to the file as a sequence of characters. Each character
 	 * is written to the data output stream as if by the <code>writeChar</code>
 	 * method. The write starts at the current position of the file pointer.
-	 *
+	 * 
 	 * @param s
 	 *            a <code>String</code> value to be written.
 	 * @throws IOException
@@ -676,7 +676,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a double equal to
 	 * (double)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the double value to be written
 	 * @throws IOException
@@ -702,7 +702,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a float equal to
 	 * (float)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the float value to be written
 	 * @throws IOException
@@ -727,7 +727,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * The bytes written by this method may be read by the readInt method of
 	 * interface BinaryDataInput, which will then return a int equal to (int)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the int value to be written
 	 * @throws IOException
@@ -753,7 +753,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a long equal to
 	 * (long)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the long value to be written
 	 * @throws IOException
@@ -779,7 +779,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * interface BinaryDataInput, which will then return a short equal to
 	 * (short)v.
 	 * <P>
-	 *
+	 * 
 	 * @param v
 	 *            the short value to be written
 	 * @throws IOException
@@ -802,7 +802,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * not the length of the string. Following the length, each character of the
 	 * string is output, in sequence, using the UTF-8 encoding for each
 	 * character.
-	 *
+	 * 
 	 * @param str
 	 *            a string to be written.
 	 * @throws IOException
@@ -863,7 +863,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Although <code>IRODSRandomAccessFile</code> is not a subclass of
 	 * <code>InputStream</code>, this method behaves in exactly the same way as
 	 * java.io.InputStream.read().
-	 *
+	 * 
 	 * @return the next byte of data, or <code>-1</code> if the end of the file
 	 *         has been reached.
 	 * @throws IOException
@@ -892,7 +892,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * Reads a sub array as a sequence of bytes.
-	 *
+	 * 
 	 * @param buffer
 	 *            the buffer into which the data is read.
 	 * @param offset
@@ -919,7 +919,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * Writes a sub array as a sequence of bytes.
-	 *
+	 * 
 	 * @param buffer
 	 *            the data to be written
 	 * @param offset
@@ -942,7 +942,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * Returns the current offset in this file.
-	 *
+	 * 
 	 * @return the offset from the beginning of the file, in bytes, at which the
 	 *         next read or write occurs.
 	 * @throws IOException
@@ -958,7 +958,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * the end of the file does not change the file length. The file length will
 	 * change only by writing after the offset has been set beyond the end of
 	 * the file.
-	 *
+	 * 
 	 * @param pos
 	 *            the offset position, measured in bytes from the at which to
 	 *            set the file pointer.
@@ -968,7 +968,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            SEEK_CURRENT - sets the offset from the current position of
 	 *            the filePointer.<br>
 	 *            SEEK_END - sets the offset from the end of the file.<br>
-	 *
+	 * 
 	 * @throws IOException
 	 *             if <code>pos</code> is less than <code>0</code> or if an I/O
 	 *             error occurs.
@@ -997,7 +997,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * Although <code>GeneralRandomAccessFile</code> is not a subclass of
 	 * <code>InputStream</code>, this method behaves in the exactly the same way
 	 * as java.io.InputStream.read(byte[], int, int).
-	 *
+	 * 
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @param off
@@ -1017,7 +1017,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * Returns the length of this file.
-	 *
+	 * 
 	 * @return the length of this file, measured in bytes.
 	 * @throws IOException
 	 *             if an I/O error occurs.
@@ -1032,7 +1032,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * <code>0</code> represents <code>false</code>. Any other value represents
 	 * <code>true</code>. This method blocks until the byte is read, the end of
 	 * the stream is detected, or an exception is thrown.
-	 *
+	 * 
 	 * @return the <code>boolean</code> value read.
 	 * @throws EOFException
 	 *             if this file has reached the end.
@@ -1055,16 +1055,16 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * is <code>b</code>, where
 	 * <code>0&nbsp;&lt;=&nbsp;b&nbsp;&lt;=&nbsp;255</code>, then the result is:
 	 * <blockquote>
-	 *
+	 * 
 	 * <pre>
 	 * (byte) (b)
 	 * </pre>
-	 *
+	 * 
 	 * </blockquote>
 	 * <P>
 	 * This method blocks until the byte is read, the end of the stream is
 	 * detected, or an exception is thrown.
-	 *
+	 * 
 	 * @return the next byte of this file as a signed eight-bit
 	 *         <code>byte</code>.
 	 * @throws EOFException

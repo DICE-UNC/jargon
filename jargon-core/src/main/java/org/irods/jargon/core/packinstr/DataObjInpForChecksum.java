@@ -102,10 +102,10 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 		 * replica number is added
 		 */
 
-		if (!this.resourceName.isEmpty()) {
-			kvps.add(KeyValuePair.instance(RESC_NAME_KW, this.resourceName));
-		} else if (this.replicaNumber > -1) {
-			kvps.add(KeyValuePair.instance(REPL_NUM_KW, this.resourceName));
+		if (!resourceName.isEmpty()) {
+			kvps.add(KeyValuePair.instance(RESC_NAME_KW, resourceName));
+		} else if (replicaNumber > -1) {
+			kvps.add(KeyValuePair.instance(REPL_NUM_KW, resourceName));
 		}
 
 		/*

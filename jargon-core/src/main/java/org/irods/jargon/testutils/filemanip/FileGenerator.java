@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Helper methods to generate dummy files and directories useful for Jargon
  * testing
- *
+ * 
  * @author Mike Conway, DICE (www.irods.org)
  * @since 10/16/2009
- *
+ * 
  */
 public class FileGenerator {
 
@@ -54,7 +54,7 @@ public class FileGenerator {
 	/**
 	 * Create a random file extension selected from the
 	 * <code>fileExtensions</code> options
-	 *
+	 * 
 	 * @return <code>String</code> containing a random, though valid, file
 	 *         extension prepended with a '.' character
 	 * @throws TestingUtilsException
@@ -67,7 +67,7 @@ public class FileGenerator {
 
 	/**
 	 * Generate a random string
-	 *
+	 * 
 	 * @param length
 	 *            <code>int</code> that determines the length of the
 	 *            <code>String</code> that is generated.
@@ -94,7 +94,7 @@ public class FileGenerator {
 
 	/**
 	 * Generate a random file name + extension
-	 *
+	 * 
 	 * @param length
 	 *            <code>int</code> that determines the length of the file name
 	 *            (not including the extension this will be appended)
@@ -113,7 +113,7 @@ public class FileGenerator {
 	/**
 	 * Given a directory, generate a randomly named file with random data of
 	 * provided length.
-	 *
+	 * 
 	 * @param fileDirectory
 	 *            <code>String</code> containing a an absolute path to valid
 	 *            directory on the local file system. This absolute path must
@@ -226,7 +226,7 @@ public class FileGenerator {
 	 * to a given depth, and containing files and subcollections given the
 	 * various size and range parameters. This method can provide a test-bed for
 	 * various functional testing scenarios.
-	 *
+	 * 
 	 * @param collectionPrefix
 	 * @param numberOfCollectionsMin
 	 * @param numberOfCollectionsMax

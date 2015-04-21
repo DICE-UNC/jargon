@@ -14,16 +14,16 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
 
 /**
  * Interface for an object to interact with specific query in IRODS.
- *
+ * 
  * @author Lisa Stillwell RENCI (www.renci.org)
- *
+ * 
  **/
 
 public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Add a specific query to iRODS
-	 *
+	 * 
 	 * @param sqlQuery
 	 *            <code>String</code> with the a valid SQL query
 	 * @param alias
@@ -37,7 +37,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Remove a specific query from iRODS
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition}
 	 *            to be added to iRODS.
@@ -49,7 +49,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Remove a specific query from iRODS using alias name as identifier
-	 *
+	 * 
 	 * @param alias
 	 *            <code>String</code> with a unique alias name for this SQL
 	 *            query
@@ -63,15 +63,15 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * <p>
 	 * Please note that this method will remove all existing Specific Queries
 	 * that match the provided SQL query String
-	 *
+	 * 
 	 * @param sqlQuery
 	 *            <code>String</code> with the a valid SQL query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
-	 *
+	 * 
 	 */
 	void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException,
-	DuplicateDataException;
+			DuplicateDataException;
 
 	/**
 	 * Execute a specific query by providing the alias that the sql had been
@@ -84,7 +84,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * <p/>
 	 * Note that a <code>DataNotFoundException</code> will occur if the query
 	 * alias is not found.
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
@@ -103,7 +103,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			SpecificQuery specificQuery, int maxRows)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the alias that the sql had been
@@ -116,24 +116,24 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * <p/>
 	 * Note that a <code>DataNotFoundException</code> will occur if the query
 	 * alias is not found.
-	 *
+	 * 
 	 * <p/>
-	 *
+	 * 
 	 * This variant supports a common user practice with specific query, where
 	 * the provided SQL has parameterized options for offset and result set
 	 * size, for example, this query:
-	 *
+	 * 
 	 * <code>
 	 * SELECT c.parent_coll_name, c.coll_name, c.create_ts, c.modify_ts, c.coll_id, c.coll_owner_name, c.coll_owner_zone, c.coll_type,
 	 *  u.user_name, u.zone_name, a.access_type_id, u.user_id FROM r_coll_main c JOIN r_objt_access a ON c.coll_id = a.object_id
 	 *  JOIN r_user_main u ON a.user_id = u.user_id WHERE c.parent_coll_name = ? LIMIT ? OFFSET ?
 	 * </code>
-	 *
+	 * 
 	 * The 'userDefinedOffset' is a clue that sends this OFFSET value to the
 	 * code that prepares the returned result set, so that the 'count' fields in
 	 * the result accurately reflect the
-	 *
-	 *
+	 * 
+	 * 
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
@@ -159,7 +159,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			SpecificQuery specificQuery, int maxRows, int userDefinedOffset)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the exact sql that was registered
@@ -169,7 +169,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * out, instead, it supports paging by the specification of the
 	 * <code>continueIndex</code> that may have been returned in a previous
 	 * query paging call.
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
@@ -188,7 +188,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingSql(
 			SpecificQuery specificQuery, int maxRows)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the exact sql that was registered
@@ -198,7 +198,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * out, instead, it supports paging by the specification of the
 	 * <code>continueIndex</code> that may have been returned in a previous
 	 * query paging call.
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
@@ -224,14 +224,14 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingSql(
 			SpecificQuery specificQuery, int maxRows, int userDefinedOffset)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Given a portion of a query alias, find matching specific queries as
 	 * stored in iRODS. Note that wildcards in the 'like' statement are not
 	 * imposed by this method and must be provided by the caller in the provided
 	 * <code>specificQueryAlias</code>.
-	 *
+	 * 
 	 * @param specificQueryAlias
 	 *            <code>String</code> with a part of a query alias to search
 	 *            for.
@@ -250,7 +250,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * indicates which federated zone to query. Note that wildcards in the
 	 * 'like' statement are not imposed by this method and must be provided by
 	 * the caller in the provided <code>specificQueryAlias</code>.
-	 *
+	 * 
 	 * @param specificQueryAlias
 	 *            <code>String</code> with a part of a query alias to search
 	 *            for.
@@ -258,7 +258,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *            <code>String</code> with a zone hint used to decide which
 	 *            federated zone to query. Note that this should be set to blank
 	 *            if not used
-	 *
+	 * 
 	 * @return <code>List</code> of {@link SpecificQueryDefinition}
 	 * @throws DataNotFoundException
 	 *             if no queries found with a matching alias
@@ -266,12 +266,12 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
 			String specificQueryAlias, String zoneHint)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a specific query alias name, return the associated specific query
 	 * definition information.
-	 *
+	 * 
 	 * @param specificQueryAlias
 	 *            <code>String</code> with the given alias for the query
 	 * @return {@list SpecificQueryDefinition} with details about the given
@@ -286,7 +286,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	/**
 	 * Given a specific query alias name, return the associated specific query
 	 * definition information.
-	 *
+	 * 
 	 * @param specificQueryAlias
 	 *            <code>String</code> with the given alias for the query
 	 * @param zoneHint
@@ -310,7 +310,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * I have not checked previously, or I am not using the dynamic properties
 	 * cache, which is configured via {@link JargonProperties}, then a
 	 * <code>false</code> will be returned.
-	 *
+	 * 
 	 * @return <code>boolean</code> that will only be <code>true</code> if I
 	 *         know that the jargon specific query support is not configured.
 	 *         This can be used to determine whether it is worth bothering to
@@ -326,7 +326,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * see if I have specific query support. This needs to be done by actually
 	 * trying a specific query. This should only be done once if the jargon
 	 * properties are set to cache discovered server properties.
-	 *
+	 * 
 	 * @return <code>boolean</code> if I support specific query
 	 * @throws JargonException
 	 */

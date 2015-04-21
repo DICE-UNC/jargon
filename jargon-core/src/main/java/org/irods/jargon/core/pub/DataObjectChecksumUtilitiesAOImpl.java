@@ -32,10 +32,10 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	public DataObjectChecksumUtilitiesAOImpl(IRODSSession irodsSession,
-			IRODSAccount irodsAccount) throws JargonException {
+	public DataObjectChecksumUtilitiesAOImpl(final IRODSSession irodsSession,
+			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.dataObjectAO = this.getIRODSAccessObjectFactory().getDataObjectAO(
+		dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
 				irodsAccount);
 	}
 

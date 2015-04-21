@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Represents an iRule in the iRODS system, representing the various parts of a
  * rule, such as parameters and outputs, as an object model.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org) TODO: document
- *
+ * 
  */
 public final class IRODSRule {
 	private final String ruleAsOriginalText;
@@ -23,7 +23,7 @@ public final class IRODSRule {
 
 	/**
 	 * Return an immutable instance of an <code>IRODSRule</code>
-	 *
+	 * 
 	 * @param ruleAsOriginalText
 	 *            <code>String</code> with the plain text version of the rule
 	 * @param irodsRuleInputParameters

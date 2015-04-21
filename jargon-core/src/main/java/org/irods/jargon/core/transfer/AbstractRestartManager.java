@@ -33,7 +33,7 @@ public abstract class AbstractRestartManager {
 	 */
 	public synchronized FileRestartInfo retrieveRestartAndBuildIfNotStored(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
-			String localFilePath, final int numberOfThreads)
+			final String localFilePath, final int numberOfThreads)
 			throws FileRestartManagementException {
 
 		log.info("retrieveRestartAndBuildIfNotStored()");
@@ -145,7 +145,7 @@ public abstract class AbstractRestartManager {
 			}
 
 			dataSegment.setLength(dataSegment.getLength() + length);
-			this.storeRestart(info);
+			storeRestart(info);
 		}
 
 	}
@@ -187,7 +187,7 @@ public abstract class AbstractRestartManager {
 					.getFileRestartDataSegments().get(threadNumber);
 			dataSegment.setOffset(offset);
 			dataSegment.setLength(0);
-			this.storeRestart(info);
+			storeRestart(info);
 		}
 
 	}

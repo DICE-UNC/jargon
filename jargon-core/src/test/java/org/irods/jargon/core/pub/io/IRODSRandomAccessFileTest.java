@@ -252,9 +252,9 @@ public class IRODSRandomAccessFileTest {
 
 	}
 
-	private void copyDataIntoRaFile(RandomAccessFile localRaFile,
-			IRODSRandomAccessFile irodsRaFile, long ptr, long offset,
-			byte[] buffer) throws Exception {
+	private void copyDataIntoRaFile(final RandomAccessFile localRaFile,
+			final IRODSRandomAccessFile irodsRaFile, final long ptr,
+			final long offset, final byte[] buffer) throws Exception {
 
 		long gap = offset;
 		localRaFile.seek(ptr);

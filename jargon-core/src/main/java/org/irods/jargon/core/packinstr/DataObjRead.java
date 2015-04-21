@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Translation of a DataObjRead operation into XML protocol format.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class DataObjRead extends AbstractIRODSPackingInstruction {
 
@@ -53,7 +53,7 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getParsedTags
 	 * ()
@@ -74,12 +74,12 @@ public class DataObjRead extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 *
+	 * 
 	 * 16237 [main] INFO edu.sdsc.grid.io.irods.IRODSConnection readMessage 632-
 	 * 2 millisecs 16237 [main] DEBUG edu.sdsc.grid.io.irods.IRODSCommands
 	 * irodsFunction 704- <dataObjReadInp_PI><L1_DESC_INX>3</L1_DESC_INX>
 	 * <len>1</len> </dataObjReadInp_PI> (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

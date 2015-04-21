@@ -1131,9 +1131,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private void getRestartRetryTillMaxLoop(
-			TransferControlBlock transferControlBlock,
-			IRODSFile irodsFileToGet, FileRestartInfo fileRestartInfo,
-			TransferStatusCallbackListener transferStatusCallbackListener)
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile irodsFileToGet,
+			final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws FileRestartManagementException {
 
 		log.info("getRestartRetryTillMaxLoop()");
@@ -1185,9 +1186,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
-	private void getRestartProcess(TransferControlBlock transferControlBlock,
-			IRODSFile irodsFileToGet, FileRestartInfo myFileRestartInfo,
-			TransferStatusCallbackListener transferStatusCallbackListener)
+	private void getRestartProcess(
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile irodsFileToGet,
+			final FileRestartInfo myFileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws RestartFailedException, FileRestartManagementException,
 			JargonException {
 

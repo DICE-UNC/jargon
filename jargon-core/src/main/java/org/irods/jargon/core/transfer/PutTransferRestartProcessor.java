@@ -80,8 +80,9 @@ public class PutTransferRestartProcessor extends
 	 * @throws JargonException
 	 */
 	private void processRestart(final String irodsAbsolutePath,
-			FileRestartInfo fileRestartInfo) throws RestartFailedException,
-			FileRestartManagementException, JargonException {
+			final FileRestartInfo fileRestartInfo)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 
 		/*
 		 * If specified by options, and with a call-back listener registered,
@@ -118,14 +119,13 @@ public class PutTransferRestartProcessor extends
 					OpenType.READ);
 
 			ConnectionProgressStatusListener intraFileStatusListener = null;
-			if (this.getTransferStatusCallbackListener() != null
-					&& this.getTransferControlBlock().getTransferOptions()
+			if (getTransferStatusCallbackListener() != null
+					&& getTransferControlBlock().getTransferOptions()
 							.isIntraFileStatusCallbacks()) {
 				intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 						.instanceSettingInterval(TransferType.PUT,
-								localFile.length(),
-								this.getTransferControlBlock(),
-								this.getTransferStatusCallbackListener(), 100);
+								localFile.length(), getTransferControlBlock(),
+								getTransferStatusCallbackListener(), 100);
 			}
 
 			// now put each segment
@@ -137,7 +137,7 @@ public class PutTransferRestartProcessor extends
 			for (int i = 0; i < fileRestartInfo.getFileRestartDataSegments()
 					.size(); i++) {
 
-				if (this.getTransferControlBlock().isCancelled()) {
+				if (getTransferControlBlock().isCancelled()) {
 					break;
 				}
 
@@ -188,7 +188,7 @@ public class PutTransferRestartProcessor extends
 																	// based on
 																	// file size
 
-			this.getRestartManager().deleteRestart(
+			getRestartManager().deleteRestart(
 					fileRestartInfo.identifierFromThisInfo());
 			log.info("removed restart");
 		} catch (FileNotFoundException e) {
@@ -213,8 +213,9 @@ public class PutTransferRestartProcessor extends
 						"exception closing irods restart file", e);
 			}
 			try {
-				if (localFile != null)
+				if (localFile != null) {
 					localFile.close();
+				}
 			} catch (IOException e) {
 				log.warn("error closing local file, logged and ignored", e);
 			}
@@ -242,7 +243,7 @@ public class PutTransferRestartProcessor extends
 			final byte[] buffer, final FileRestartInfo fileRestartInfo,
 			final int indexOfSegmentToUpdateLength,
 			final IRODSRandomAccessFile irodsRandomAccessFile,
-			ConnectionProgressStatusListener intraFileStatusListener)
+			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws RestartFailedException, FileRestartManagementException {
 
 		long myGap = gap;
@@ -251,7 +252,7 @@ public class PutTransferRestartProcessor extends
 		long totalWrittenOverall = 0L;
 		while (myGap > 0) {
 
-			if (this.getTransferControlBlock().isCancelled()) {
+			if (getTransferControlBlock().isCancelled()) {
 				return;
 			}
 
@@ -282,7 +283,7 @@ public class PutTransferRestartProcessor extends
 
 				if (writtenSinceUpdated >= AbstractTransferRestartProcessor.RESTART_FILE_UPDATE_SIZE) {
 					log.info("need to update restart");
-					this.getRestartManager().updateLengthForSegment(
+					getRestartManager().updateLengthForSegment(
 							fileRestartInfo.identifierFromThisInfo(),
 							indexOfSegmentToUpdateLength, writtenSinceUpdated);
 					writtenSinceUpdated = 0;
@@ -339,7 +340,7 @@ public class PutTransferRestartProcessor extends
 
 		if (writtenSinceUpdated > 0) {
 			log.info("need to update restart");
-			this.getRestartManager().updateLengthForSegment(
+			getRestartManager().updateLengthForSegment(
 					fileRestartInfo.identifierFromThisInfo(),
 					indexOfSegmentToUpdateLength, writtenSinceUpdated);
 			writtenSinceUpdated = 0;

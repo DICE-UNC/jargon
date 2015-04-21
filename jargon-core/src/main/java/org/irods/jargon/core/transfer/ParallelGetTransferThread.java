@@ -116,9 +116,9 @@ public final class ParallelGetTransferThread extends
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
 
-			int inputBuffSize = this.parallelGetFileTransferStrategy
+			int inputBuffSize = parallelGetFileTransferStrategy
 					.getJargonProperties().getInternalInputStreamBufferSize();
-			int outputBuffSize = this.parallelGetFileTransferStrategy
+			int outputBuffSize = parallelGetFileTransferStrategy
 					.getJargonProperties().getInternalOutputStreamBufferSize();
 
 			if (inputBuffSize < 0) {
@@ -195,8 +195,9 @@ public final class ParallelGetTransferThread extends
 				log.info("closing sockets, this close eats exceptions");
 				close();
 				log.info("closing local file");
-				if (local != null)
+				if (local != null) {
 					local.close();
+				}
 				log.info("local file closed, exiting get() method");
 			} catch (IOException e) {
 			}
@@ -244,7 +245,7 @@ public final class ParallelGetTransferThread extends
 			} else {
 				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
 				// unsigned char );
-				buffer = new byte[this.parallelGetFileTransferStrategy
+				buffer = new byte[parallelGetFileTransferStrategy
 						.getJargonProperties().getParallelCopyBufferSize()];
 			}
 
@@ -263,8 +264,7 @@ public final class ParallelGetTransferThread extends
 				log.debug("reading....");
 
 				read = myRead(getIn(), buffer, Math.min(
-						this.parallelGetFileTransferStrategy
-								.getJargonProperties()
+						parallelGetFileTransferStrategy.getJargonProperties()
 								.getParallelCopyBufferSize(), (int) length));
 
 				totalWrittenSinceLastRestartUpdate += read;
@@ -288,16 +288,15 @@ public final class ParallelGetTransferThread extends
 													.instanceForReceive(read));
 						}
 
-						if (this.parallelGetFileTransferStrategy
+						if (parallelGetFileTransferStrategy
 								.getFileRestartInfo() != null) {
 
-							this.parallelGetFileTransferStrategy
-									.getRestartManager()
+							parallelGetFileTransferStrategy.getRestartManager()
 									.updateLengthForSegment(
-											this.parallelGetFileTransferStrategy
+											parallelGetFileTransferStrategy
 													.getFileRestartInfo()
 													.identifierFromThisInfo(),
-											this.getThreadNumber(),
+											getThreadNumber(),
 											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
@@ -366,8 +365,8 @@ public final class ParallelGetTransferThread extends
 		}
 	}
 
-	private int myRead(final InputStream in, byte[] buffer, final int length)
-			throws IOException, JargonException {
+	private int myRead(final InputStream in, final byte[] buffer,
+			final int length) throws IOException, JargonException {
 		int myLength = length;
 		int ptr = 0;
 		int read = 0;
@@ -437,13 +436,13 @@ public final class ParallelGetTransferThread extends
 					return; // at current location
 				}
 				local.seek(offset);
-				if (this.parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
-					this.parallelGetFileTransferStrategy.getRestartManager()
+				if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
+					parallelGetFileTransferStrategy.getRestartManager()
 							.updateOffsetForSegment(
-									this.parallelGetFileTransferStrategy
+									parallelGetFileTransferStrategy
 											.getFileRestartInfo()
 											.identifierFromThisInfo(),
-									this.getThreadNumber(), offset);
+									getThreadNumber(), offset);
 				}
 				// log.debug("seek completed");
 			} catch (Exception e) {

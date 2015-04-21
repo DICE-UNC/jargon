@@ -2,7 +2,7 @@ package org.irods.jargon.core.protovalues;
 
 /**
  * types of requested and computed checksums
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum ChecksumEncodingEnum {
@@ -21,7 +21,7 @@ public enum ChecksumEncodingEnum {
 
 	/**
 	 * Given a text value resolve the encoding
-	 *
+	 * 
 	 * @param userType
 	 * @return
 	 */

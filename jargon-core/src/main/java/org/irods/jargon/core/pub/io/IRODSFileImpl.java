@@ -42,9 +42,9 @@ import org.slf4j.LoggerFactory;
  * There are methods in {@link org.irods.jargon.core.pub.io.IRODSFileFactory
  * IRODSFileFactory} that allow an <code>IRODSFileImpl</code> to be attached to
  * another Thread and connection.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 
 public class IRODSFileImpl extends File implements IRODSFile {
@@ -220,7 +220,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/**
 	 * Set the directory.
-	 *
+	 * 
 	 * @param dir
 	 *            The directory path, need not be absolute.
 	 */
@@ -264,7 +264,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/**
 	 * Set the file name.
-	 *
+	 * 
 	 * @param fleName
 	 *            The file name or fileName plus some or all of the directory
 	 *            path.
@@ -1252,7 +1252,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the iRODS file descriptor value. This will be set internally by
 	 * Jargon.
-	 *
+	 * 
 	 * @param fileDescriptor
 	 */
 	protected synchronized void setFileDescriptor(final int fileDescriptor) {
@@ -1454,7 +1454,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *            the openFlags to set
 	 */
 	@Override
-	public void setOpenFlags(OpenFlags openFlags) {
+	public void setOpenFlags(final OpenFlags openFlags) {
 		this.openFlags = openFlags;
 	}
 

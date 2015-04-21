@@ -7,15 +7,15 @@ import java.util.Properties;
 
 /**
  * Utilities that help derive data from properties in usable formats
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class PropertyUtils {
 
 	/**
 	 * Verify the given property exists and return as a <code>String</code>
-	 *
+	 * 
 	 * @param properties
 	 * @param propKey
 	 * @return
@@ -37,7 +37,7 @@ public class PropertyUtils {
 
 	/**
 	 * Verify the given property exists and return as an <code>int</code>
-	 *
+	 * 
 	 * @param propKey
 	 * @return
 	 * @throws
@@ -62,7 +62,7 @@ public class PropertyUtils {
 
 	/**
 	 * Verify the property exists and get as a <code>boolean</code> value
-	 *
+	 * 
 	 * @param properties
 	 * @param propKey
 	 * @return
@@ -81,7 +81,7 @@ public class PropertyUtils {
 
 	/**
 	 * Verify the property exists and get as a <code>long</code>
-	 *
+	 * 
 	 * @param properties
 	 * @param propKey
 	 * @return

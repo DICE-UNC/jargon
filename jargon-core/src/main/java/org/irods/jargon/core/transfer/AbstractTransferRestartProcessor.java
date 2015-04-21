@@ -121,7 +121,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @throws JargonException
 	 */
 	protected RandomAccessFile localFileAsFile(
-			final FileRestartInfo fileRestartInfo, OpenType openType)
+			final FileRestartInfo fileRestartInfo, final OpenType openType)
 			throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
@@ -171,7 +171,7 @@ public abstract class AbstractTransferRestartProcessor extends
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
-		if (this.getRestartManager() == null) {
+		if (getRestartManager() == null) {
 			throw new JargonRuntimeException("no restart manager configured");
 		}
 		return getRestartManager().retrieveRestart(fileRestartInfoIdentifier);
@@ -201,9 +201,9 @@ public abstract class AbstractTransferRestartProcessor extends
 		}
 
 		try {
-			if (this.getIrodsAccessObjectFactory().getJargonProperties()
+			if (getIrodsAccessObjectFactory().getJargonProperties()
 					.isLongTransferRestart()) {
-				if (this.getRestartManager() == null) {
+				if (getRestartManager() == null) {
 					log.error("no restart manager configured");
 					throw new FileRestartManagementException(
 							"retart manager not configured");

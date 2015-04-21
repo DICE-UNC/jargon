@@ -17,7 +17,7 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
 /**
  * Generic interface that desribes an object that accesses an underlying IRODS
  * domain object
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public interface IRODSAccessObject {
@@ -27,14 +27,14 @@ public interface IRODSAccessObject {
 	/**
 	 * Get the <code>IRODSSession</code> that provides connections to the iRODS
 	 * server.
-	 *
+	 * 
 	 * @return {@link IRODSSession}
 	 */
 	IRODSSession getIRODSSession();
 
 	/**
 	 * Get the <code>IRODSAccount</code> that describes the connection.
-	 *
+	 * 
 	 * @return {@link IRODSAccount}
 	 */
 	IRODSAccount getIRODSAccount();
@@ -42,7 +42,7 @@ public interface IRODSAccessObject {
 	/**
 	 * Convenience method that gets the underlying
 	 * <code>IRODSServerProperties</code> associated with the connection.
-	 *
+	 * 
 	 * @return
 	 */
 	IRODSServerProperties getIRODSServerProperties() throws JargonException;
@@ -50,14 +50,14 @@ public interface IRODSAccessObject {
 	/**
 	 * Convenience method gets configuration information that tunes Jargon
 	 * behavior
-	 *
+	 * 
 	 * @return {@link JargonProperties}
 	 */
 	JargonProperties getJargonProperties();
 
 	/**
 	 * Retrieve a factory that can create other access objects
-	 *
+	 * 
 	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
 	 */
@@ -67,7 +67,7 @@ public interface IRODSAccessObject {
 	/**
 	 * Retrieve a factory that can create iRODS file objects for this connected
 	 * account
-	 *
+	 * 
 	 * @return {@link IRODSFileFactory}
 	 * @throws JargonException
 	 */
@@ -77,7 +77,7 @@ public interface IRODSAccessObject {
 	 * Convenience method builds a default <code>TransferControlBlock</code>
 	 * that has default <code>TransferOptions</code> based on the
 	 * <code>JargonProperties</code> configured for the system.
-	 *
+	 * 
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
@@ -89,7 +89,7 @@ public interface IRODSAccessObject {
 	/**
 	 * Get the default transfer options based on the properties that have been
 	 * set. This can then be tuned for an individual transfer
-	 *
+	 * 
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
@@ -99,7 +99,7 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Send an operation complete message
-	 *
+	 * 
 	 * @param status
 	 *            <code>int</code> with the operation complete status to send
 	 * @return {@link Tag} with any response (could be null)
@@ -110,7 +110,7 @@ public interface IRODSAccessObject {
 	/**
 	 * Upon creation, refer to jargon properties and see if this code should be
 	 * instrumented
-	 *
+	 * 
 	 * @return <code>boolean</code> of <code>true</code> if performance
 	 *         instrumentation is desired
 	 */

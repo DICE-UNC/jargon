@@ -155,7 +155,7 @@ public final class ParallelPutTransferThread extends
 			 */
 
 			localRandomAccessFile = new RandomAccessFile(
-					this.parallelPutFileTransferStrategy.getLocalFile(), "r");
+					parallelPutFileTransferStrategy.getLocalFile(), "r");
 
 			log.info("writing the cookie (password) for the output thread");
 
@@ -212,8 +212,8 @@ public final class ParallelPutTransferThread extends
 		boolean done = false;
 		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
 		// );
-		buffer = new byte[this.parallelPutFileTransferStrategy
-				.getJargonProperties().getParallelCopyBufferSize()];
+		buffer = new byte[parallelPutFileTransferStrategy.getJargonProperties()
+				.getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -258,13 +258,13 @@ public final class ParallelPutTransferThread extends
 				 * If restarting, maintain a reference to the offset
 				 */
 
-				if (this.parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
-					this.parallelPutFileTransferStrategy.getRestartManager()
+				if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
+					parallelPutFileTransferStrategy.getRestartManager()
 							.updateOffsetForSegment(
-									this.parallelPutFileTransferStrategy
+									parallelPutFileTransferStrategy
 											.getFileRestartInfo()
 											.identifierFromThisInfo(),
-									this.getThreadNumber(), offset);
+									getThreadNumber(), offset);
 				}
 
 				// How much to read/write
@@ -325,8 +325,7 @@ public final class ParallelPutTransferThread extends
 				log.debug("read/write loop at top");
 
 				read = localRandomAccessFile.read(buffer, 0, (int) Math.min(
-						this.parallelPutFileTransferStrategy
-								.getJargonProperties()
+						parallelPutFileTransferStrategy.getJargonProperties()
 								.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
@@ -364,17 +363,15 @@ public final class ParallelPutTransferThread extends
 					 * to save the restart info
 					 */
 
-					if (this.parallelPutFileTransferStrategy
-							.getFileRestartInfo() != null) {
+					if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 						log.debug("checking total written for this thread");
 						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
-							this.parallelPutFileTransferStrategy
-									.getRestartManager()
+							parallelPutFileTransferStrategy.getRestartManager()
 									.updateLengthForSegment(
-											this.parallelPutFileTransferStrategy
+											parallelPutFileTransferStrategy
 													.getFileRestartInfo()
 													.identifierFromThisInfo(),
-											this.getThreadNumber(),
+											getThreadNumber(),
 											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
@@ -399,15 +396,15 @@ public final class ParallelPutTransferThread extends
 			log.info("   total written: {}", totalWritten);
 			log.info("   transferLength: {}", transferLength);
 
-			if (this.parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
+			if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 				log.debug("checking total written for this thread");
 				if (totalWrittenSinceLastRestartUpdate > 0) {
-					this.parallelPutFileTransferStrategy.getRestartManager()
+					parallelPutFileTransferStrategy.getRestartManager()
 							.updateLengthForSegment(
-									this.parallelPutFileTransferStrategy
+									parallelPutFileTransferStrategy
 											.getFileRestartInfo()
 											.identifierFromThisInfo(),
-									this.getThreadNumber(),
+									getThreadNumber(),
 									totalWrittenSinceLastRestartUpdate);
 					log.debug("signal storage of new info");
 				}

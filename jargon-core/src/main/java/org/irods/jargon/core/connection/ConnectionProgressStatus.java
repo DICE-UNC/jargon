@@ -10,9 +10,9 @@ package org.irods.jargon.core.connection;
  * <p/>
  * This is new development, and can eventually include the ability to provide
  * callbacks on deletes and other operations.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class ConnectionProgressStatus {
 
@@ -40,7 +40,7 @@ public class ConnectionProgressStatus {
 
 	/**
 	 * Create an immutable callback for progress sending data (PUT)
-	 *
+	 * 
 	 * @param byteCount
 	 *            <code>long</code> with the number of bytes instantaneously
 	 *            sent.
@@ -53,7 +53,7 @@ public class ConnectionProgressStatus {
 
 	/**
 	 * Create an immutable callback for progress receiving data (GET)
-	 *
+	 * 
 	 * @param byteCount
 	 *            <code>long</code> with the number of bytes instantaneously
 	 *            sent.

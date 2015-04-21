@@ -31,7 +31,7 @@ public class FileRestartDataSegment {
 		return length;
 	}
 
-	public void setLength(long length) {
+	public void setLength(final long length) {
 		this.length = length;
 	}
 
@@ -39,7 +39,7 @@ public class FileRestartDataSegment {
 		return offset;
 	}
 
-	public void setOffset(long offset) {
+	public void setOffset(final long offset) {
 		this.offset = offset;
 	}
 

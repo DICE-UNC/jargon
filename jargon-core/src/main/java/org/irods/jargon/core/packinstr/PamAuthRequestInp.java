@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * PAM module authorization request for Chris Smith's PAM enhancement to iRODS
  * as of 3.2
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
@@ -23,7 +23,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance method creates a PAM auth request given a user name and password
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the user name for PAM
 	 * @param password
@@ -39,7 +39,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Private constructor (use instance method)
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the user name for PAM
 	 * @param password
@@ -72,7 +72,7 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

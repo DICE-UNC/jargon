@@ -109,7 +109,6 @@ public class PAMAuth extends AuthMechanism {
 		int pamTimeToLive = irodsCommands.getIrodsSession()
 				.getJargonProperties().getPAMTimeToLive();
 
-		
 		Tag response = null;
 		if (startupResponseData.isEirods()) {
 			secureIRODSCommands.setForceSslFlush(true);

@@ -5,16 +5,16 @@ import org.irods.jargon.core.pub.domain.Resource;
 
 /**
  * Packing instructions for manipulating iRODS resources
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	/**
 	 * Generate the packing instruction suitable for creating a
 	 * <code>Resource</code>
-	 *
+	 * 
 	 * @param Resource
 	 *            {@link Resource} to be added to iRODS.
 	 * @return {@link GeneralAdminInp}
@@ -80,7 +80,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	/**
 	 * Packing instruction to add a child to a resource
-	 *
+	 * 
 	 * @param childResourceName
 	 *            <code>String</code> with the resource name for the child
 	 * @param parentResourceName
@@ -117,7 +117,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	public static final GeneralAdminInpForResources instanceForRemoveChildFromResource(
 			final String childResourceName, final String parentResourceName)
-					throws JargonException {
+			throws JargonException {
 
 		if (childResourceName == null || childResourceName.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -138,10 +138,10 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	/**
 	 * Generate the packing instruction suitable for removing a
 	 * <code>Resource</code>
-	 *
+	 * 
 	 * @param resourceName
 	 *            <code>String</code> with the name of the resource
-	 *
+	 * 
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -162,7 +162,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
 				apiNumber);
 	}

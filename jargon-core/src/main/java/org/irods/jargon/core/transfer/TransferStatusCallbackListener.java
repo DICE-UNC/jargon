@@ -4,9 +4,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Listener for callbacks on the status of a transfer operation.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface TransferStatusCallbackListener {
 
@@ -32,7 +32,7 @@ public interface TransferStatusCallbackListener {
 	 * exceptions are transmitted back in the status callback for processing,
 	 * and the callee must decide how to handle an exception.
 	 * <p>
-	 *
+	 * 
 	 * @param transferStatus
 	 *            {@link org.irods.jargon.core.transfer.TransferStatus} with
 	 *            information on the transfer.
@@ -49,7 +49,7 @@ public interface TransferStatusCallbackListener {
 	 * Method will receive a callback at the initiation and completion of an
 	 * overall transfer {@link org.irods.jargon.core.transfer.TransferStatus}
 	 * with information on the transfer.
-	 *
+	 * 
 	 * @throws JargonException
 	 */
 	public void overallStatusCallback(final TransferStatus transferStatus)
@@ -59,7 +59,7 @@ public interface TransferStatusCallbackListener {
 	 * A callback from a running transfer will occur if a file exists during an
 	 * operation, and this method provides an opportunity for the client to
 	 * determine this behavior in real time by answering the call back.
-	 *
+	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the file or
 	 *            collection to be over-written.

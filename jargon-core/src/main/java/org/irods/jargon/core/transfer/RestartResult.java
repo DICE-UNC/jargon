@@ -7,7 +7,7 @@ package org.irods.jargon.core.transfer;
  * Result of restart processing for a file.
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class RestartResult {
 
@@ -24,7 +24,7 @@ public class RestartResult {
 	 * @param restarted
 	 *            the restarted to set
 	 */
-	public void setRestarted(boolean restarted) {
+	public void setRestarted(final boolean restarted) {
 		this.restarted = restarted;
 	}
 

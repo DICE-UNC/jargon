@@ -7,9 +7,9 @@ import java.util.List;
  * Represents a 'specific query' to run against iRODS. Specific Query is a a new
  * facility since iRODS 2.5 to run explicitly defined select queries against
  * iCAT in cases where GenQuery is not specific enough.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class SpecificQuery extends AbstractAliasedQuery {
 
@@ -17,7 +17,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Get the (optional) hint that points to the correct zone to query
-	 *
+	 * 
 	 * @return
 	 */
 	public String getZoneHint() {
@@ -26,7 +26,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Create an instance of a specific (SQL) query with no arguments
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
@@ -48,7 +48,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Create an instance of a specific (SQL) query including one argument
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
@@ -74,7 +74,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Create an instance of a specific (SQL) query including arguments
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
@@ -101,7 +101,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Private constructors, use instance methods to create query instances
-	 *
+	 * 
 	 * @param queryString
 	 * @param arguments
 	 * @param continuationValue

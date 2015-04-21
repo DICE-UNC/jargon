@@ -6,9 +6,9 @@ package org.irods.jargon.core.exception;
 /**
  * Exception caused by an invalid argument to a bound SQL query in iRODS. This
  * is the equivalent of the iRODS CAT_INVALID_ARGUMENT -816000
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class InvalidArgumentException extends JargonException {
 

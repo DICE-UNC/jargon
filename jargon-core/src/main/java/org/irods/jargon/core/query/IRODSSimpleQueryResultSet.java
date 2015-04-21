@@ -9,9 +9,9 @@ import java.util.List;
  * the public API to query iRODS via SimpleQuery and produce this result.
  * <p/>
  * This class is immutable.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
@@ -21,7 +21,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	/**
 	 * Static instance method will create an initialized instance of the result
 	 * set.
-	 *
+	 * 
 	 * @param simpleQuery
 	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created
 	 *            this result set.
@@ -45,7 +45,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/**
 	 * Constructor is private.
-	 *
+	 * 
 	 * @param simpleQuery
 	 * @param results
 	 * @param columnNames
@@ -74,7 +74,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#
 	 * getNumberOfResultColumns()
 	 */
@@ -85,7 +85,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
 	 */

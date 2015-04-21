@@ -45,7 +45,7 @@ public class ChecksumOptions {
 	 * @param force
 	 *            the force to set
 	 */
-	public void setForce(boolean force) {
+	public void setForce(final boolean force) {
 		this.force = force;
 	}
 
@@ -60,7 +60,7 @@ public class ChecksumOptions {
 	 * @param checksumAllReplicas
 	 *            the checksumAllReplicas to set
 	 */
-	public void setChecksumAllReplicas(boolean checksumAllReplicas) {
+	public void setChecksumAllReplicas(final boolean checksumAllReplicas) {
 		this.checksumAllReplicas = checksumAllReplicas;
 	}
 
@@ -75,7 +75,7 @@ public class ChecksumOptions {
 	 * @param verifyChecksumInIcat
 	 *            the verifyChecksumInIcat to set
 	 */
-	public void setVerifyChecksumInIcat(boolean verifyChecksumInIcat) {
+	public void setVerifyChecksumInIcat(final boolean verifyChecksumInIcat) {
 		this.verifyChecksumInIcat = verifyChecksumInIcat;
 	}
 
@@ -117,7 +117,7 @@ public class ChecksumOptions {
 	 *            the checksumEncodingEnum to set
 	 */
 	protected void setChecksumEncodingEnum(
-			ChecksumEncodingEnum checksumEncodingEnum) {
+			final ChecksumEncodingEnum checksumEncodingEnum) {
 		this.checksumEncodingEnum = checksumEncodingEnum;
 	}
 
@@ -132,7 +132,7 @@ public class ChecksumOptions {
 	 * @param recursive
 	 *            the recursive to set
 	 */
-	protected void setRecursive(boolean recursive) {
+	protected void setRecursive(final boolean recursive) {
 		this.recursive = recursive;
 	}
 

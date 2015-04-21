@@ -15,16 +15,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * IRODS-specific implementation of <code>java.io.FileOutputStream</code>
- *
+ * 
  * An IRODSFileOutputStream writes bytes to a file in a file system. What files
  * are available depends on the host environment.
- *
+ * 
  * IRODSFileOutputStream is meant for writing streams of raw bytes such as image
  * data.
- *
- *
+ * 
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSFileOutputStream extends OutputStream {
 
@@ -57,7 +57,7 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * If the named file does not exist, is a directory rather than a regular
 	 * file, or for some other reason cannot be opened for reading then a
 	 * <code>FileNotFoundException</code> is thrown.
-	 *
+	 * 
 	 * @param name
 	 *            the system-dependent file name.
 	 * @exception NoResourceDefinedException

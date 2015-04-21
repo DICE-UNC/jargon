@@ -74,7 +74,7 @@ class CollectionListingUtils {
 	 * user name, see if a public dir. For foreign zone, add a dir for
 	 * user#homeZone and see if a public dir
 	 * 
-	 *
+	 * 
 	 * 
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the current parent
@@ -136,7 +136,7 @@ class CollectionListingUtils {
 		components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
 		if (components.size() == 3 && components.get(2).equals("home")) {
 			log.info("under home, see if same zone as login");
-			if (this.collectionAndDataObjectListAndSearchAO.getIRODSAccount()
+			if (collectionAndDataObjectListAndSearchAO.getIRODSAccount()
 					.getZone().equals(components.get(1))) {
 				log.info("under logged in zone, add user and public dirs");
 				collectionAndDataObjectListingEntries
@@ -160,7 +160,7 @@ class CollectionListingUtils {
 	}
 
 	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInLoggedInZone(
-			String path) throws FileNotFoundException, JargonException {
+			final String path) throws FileNotFoundException, JargonException {
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
@@ -194,7 +194,7 @@ class CollectionListingUtils {
 	}
 
 	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInFederatedZone(
-			String zone) throws FileNotFoundException, JargonException {
+			final String zone) throws FileNotFoundException, JargonException {
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
@@ -220,7 +220,7 @@ class CollectionListingUtils {
 			ObjStat homeStat = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(MiscIRODSUtils
 							.computeHomeDirectoryForIRODSAccountInFederatedZone(
-									this.collectionAndDataObjectListAndSearchAO
+									collectionAndDataObjectListAndSearchAO
 											.getIRODSAccount(), zone));
 			collectionAndDataObjectListingEntries
 					.add(createStandInForUserDir(homeStat));
@@ -236,9 +236,9 @@ class CollectionListingUtils {
 		CollectionAndDataObjectListingEntry entry;
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		StringBuilder sb;
-		ZoneAO zoneAO = this.collectionAndDataObjectListAndSearchAO
+		ZoneAO zoneAO = collectionAndDataObjectListAndSearchAO
 				.getIRODSAccessObjectFactory().getZoneAO(
-						this.collectionAndDataObjectListAndSearchAO
+						collectionAndDataObjectListAndSearchAO
 								.getIRODSAccount());
 		List<Zone> zones = zoneAO.listZones();
 

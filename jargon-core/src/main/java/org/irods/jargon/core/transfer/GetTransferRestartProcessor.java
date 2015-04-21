@@ -140,7 +140,7 @@ public class GetTransferRestartProcessor extends
 			for (int i = 0; i < fileRestartInfo.getFileRestartDataSegments()
 					.size(); i++) {
 
-				if (this.getTransferControlBlock().isCancelled()) {
+				if (getTransferControlBlock().isCancelled()) {
 					break;
 				}
 

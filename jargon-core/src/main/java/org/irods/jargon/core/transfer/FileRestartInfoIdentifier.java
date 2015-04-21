@@ -10,7 +10,7 @@ import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
  * will be used to store the restart file
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FileRestartInfoIdentifier {
 
@@ -50,7 +50,7 @@ public class FileRestartInfoIdentifier {
 		return irodsAccountIdentifier;
 	}
 
-	public void setIrodsAccountIdentifier(String irodsAccountIdentifier) {
+	public void setIrodsAccountIdentifier(final String irodsAccountIdentifier) {
 		this.irodsAccountIdentifier = irodsAccountIdentifier;
 	}
 
@@ -58,7 +58,7 @@ public class FileRestartInfoIdentifier {
 		return restartType;
 	}
 
-	public void setRestartType(RestartType restartType) {
+	public void setRestartType(final RestartType restartType) {
 		this.restartType = restartType;
 	}
 
@@ -66,29 +66,28 @@ public class FileRestartInfoIdentifier {
 		return absolutePath;
 	}
 
-	public void setAbsolutePath(String absolutePath) {
+	public void setAbsolutePath(final String absolutePath) {
 		this.absolutePath = absolutePath;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
+	public boolean equals(final Object obj) {
 
 		if (!(obj instanceof FileRestartInfoIdentifier)) {
 			return false;
 		}
 
 		FileRestartInfoIdentifier other = (FileRestartInfoIdentifier) obj;
-		return (this.absolutePath.equals(other.getAbsolutePath())
-				&& this.irodsAccountIdentifier.equals(other
-						.getIrodsAccountIdentifier()) && this.getRestartType() == other
-				.getRestartType());
+		return (absolutePath.equals(other.getAbsolutePath())
+				&& irodsAccountIdentifier.equals(other
+						.getIrodsAccountIdentifier()) && getRestartType() == other
+					.getRestartType());
 
 	}
 
 	@Override
 	public int hashCode() {
-		return this.absolutePath.hashCode()
-				+ this.irodsAccountIdentifier.hashCode()
-				+ this.restartType.hashCode();
+		return absolutePath.hashCode() + irodsAccountIdentifier.hashCode()
+				+ restartType.hashCode();
 	}
 }

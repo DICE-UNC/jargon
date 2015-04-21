@@ -45,7 +45,7 @@ public class FileRestartInfo {
 		return localAbsolutePath;
 	}
 
-	public void setLocalAbsolutePath(String localAbsolutePath) {
+	public void setLocalAbsolutePath(final String localAbsolutePath) {
 		this.localAbsolutePath = localAbsolutePath;
 	}
 
@@ -53,7 +53,7 @@ public class FileRestartInfo {
 		return irodsAbsolutePath;
 	}
 
-	public void setIrodsAbsolutePath(String irodsAbsolutePath) {
+	public void setIrodsAbsolutePath(final String irodsAbsolutePath) {
 		this.irodsAbsolutePath = irodsAbsolutePath;
 	}
 
@@ -61,7 +61,7 @@ public class FileRestartInfo {
 		return restartStatus;
 	}
 
-	public void setRestartStatus(RestartStatus restartStatus) {
+	public void setRestartStatus(final RestartStatus restartStatus) {
 		this.restartStatus = restartStatus;
 	}
 
@@ -70,7 +70,7 @@ public class FileRestartInfo {
 	}
 
 	public void setFileRestartDataSegments(
-			List<FileRestartDataSegment> fileRestartDataSegments) {
+			final List<FileRestartDataSegment> fileRestartDataSegments) {
 		this.fileRestartDataSegments = fileRestartDataSegments;
 	}
 
@@ -85,7 +85,7 @@ public class FileRestartInfo {
 		FileRestartInfoIdentifier identifier = new FileRestartInfoIdentifier();
 		identifier.setAbsolutePath(irodsAbsolutePath);
 		identifier.setIrodsAccountIdentifier(irodsAccountIdentifier);
-		identifier.setRestartType(this.restartType);
+		identifier.setRestartType(restartType);
 		return identifier;
 	}
 
@@ -141,7 +141,7 @@ public class FileRestartInfo {
 		return irodsAccountIdentifier;
 	}
 
-	public void setIrodsAccountIdentifier(String irodsAccountIdentifier) {
+	public void setIrodsAccountIdentifier(final String irodsAccountIdentifier) {
 		this.irodsAccountIdentifier = irodsAccountIdentifier;
 	}
 
@@ -149,7 +149,7 @@ public class FileRestartInfo {
 		return restartType;
 	}
 
-	public void setRestartType(RestartType restartType) {
+	public void setRestartType(final RestartType restartType) {
 		this.restartType = restartType;
 	}
 
@@ -164,7 +164,7 @@ public class FileRestartInfo {
 	 * @param numberRestarts
 	 *            the numberRestarts to set
 	 */
-	public void setNumberRestarts(int numberRestarts) {
+	public void setNumberRestarts(final int numberRestarts) {
 		this.numberRestarts = numberRestarts;
 	}
 
@@ -177,7 +177,7 @@ public class FileRestartInfo {
 	 */
 	public long estimateLengthSoFar() {
 		long total = 0;
-		for (FileRestartDataSegment fileRestartDataSegment : this.fileRestartDataSegments) {
+		for (FileRestartDataSegment fileRestartDataSegment : fileRestartDataSegments) {
 			total += fileRestartDataSegment.getLength();
 		}
 		return total;

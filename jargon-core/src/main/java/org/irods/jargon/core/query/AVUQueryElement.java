@@ -16,9 +16,9 @@ import java.util.List;
  * <p/>
  * This is a partial implementation of the code, and currently is limited in
  * usage.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class AVUQueryElement {
 	public enum AVUQueryPart {
@@ -35,7 +35,7 @@ public class AVUQueryElement {
 	 * Create an instance of an <code>AVUQueryElement</code> that represents a
 	 * component of a larger AVU query, specifiying the part (attrib, value, or
 	 * unit), the operator, and the value to test agains
-	 *
+	 * 
 	 * @param avuQueryPart
 	 *            {@link AVUQueryPart} discriminating between an attribute,
 	 *            value, or unit
@@ -51,7 +51,7 @@ public class AVUQueryElement {
 	public static AVUQueryElement instanceForValueQuery(
 			final AVUQueryPart avuQueryPart,
 			final AVUQueryOperatorEnum operator, final String value)
-					throws JargonQueryException {
+			throws JargonQueryException {
 		return new AVUQueryElement(avuQueryPart, operator, value, null, null);
 	}
 
@@ -71,7 +71,7 @@ public class AVUQueryElement {
 	private AVUQueryElement(final AVUQueryPart avuQueryPart,
 			final AVUQueryOperatorEnum operator, final String value,
 			final String valueEndOfRange, final List<Object> valuesTable)
-					throws JargonQueryException {
+			throws JargonQueryException {
 
 		if (avuQueryPart == null) {
 			throw new JargonQueryException("avuQueryPart is null");
@@ -137,7 +137,7 @@ public class AVUQueryElement {
 
 		return (avuQueryPart.equals(otherObj.avuQueryPart)
 				&& operator.equals(otherObj.operator) && value
-				.equals(otherObj.value));
+					.equals(otherObj.value));
 
 	}
 

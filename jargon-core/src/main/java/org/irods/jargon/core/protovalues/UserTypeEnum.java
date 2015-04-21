@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Possible header values for irods user type
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum UserTypeEnum {

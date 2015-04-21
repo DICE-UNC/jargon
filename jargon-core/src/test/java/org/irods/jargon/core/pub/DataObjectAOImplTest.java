@@ -5402,7 +5402,7 @@ public class DataObjectAOImplTest {
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+				.buildIRODSAccountFromTertiaryTestProperties(testingProperties);
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);

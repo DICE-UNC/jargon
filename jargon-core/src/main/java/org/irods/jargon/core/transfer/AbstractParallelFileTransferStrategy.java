@@ -135,7 +135,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		jargonProperties = new SettableJargonProperties(
 				irodsAccessObjectFactory.getIrodsSession()
 						.getJargonProperties());
-		this.pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
+		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
 
@@ -249,7 +249,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * 
 	 */
 	public AbstractRestartManager getRestartManager() {
-		return this.getIrodsAccessObjectFactory().getIrodsSession()
+		return getIrodsAccessObjectFactory().getIrodsSession()
 				.getRestartManager();
 	}
 

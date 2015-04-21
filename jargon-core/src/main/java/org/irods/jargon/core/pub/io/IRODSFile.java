@@ -31,9 +31,9 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
  * <p/>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface IRODSFile {
 
@@ -59,7 +59,7 @@ public interface IRODSFile {
 	 * Delete the given iRODS file. Note that, by default, the data is moved to
 	 * the trash (no force option). Note that for a collection, the iRODS
 	 * collection is recursively deleted.
-	 *
+	 * 
 	 * @return <code>boolean<code> with the success of the delete operation.
 	 */
 	boolean delete();
@@ -175,7 +175,7 @@ public interface IRODSFile {
 	 * file, instead, this is used by any Jargon methods that have
 	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
 	 * operate with.
-	 *
+	 * 
 	 * @return
 	 * @throws JargonException
 	 */
@@ -187,7 +187,7 @@ public interface IRODSFile {
 	 * file, instead, this is used by any Jargon methods that have
 	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
 	 * operate with.
-	 *
+	 * 
 	 * @param resource
 	 */
 	void setResource(String resource);
@@ -201,7 +201,7 @@ public interface IRODSFile {
 	/**
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read/write mode.
-	 *
+	 * 
 	 * @return <code>int</code> with the iRODS file descriptor.
 	 * @throws JargonException
 	 */
@@ -210,7 +210,7 @@ public interface IRODSFile {
 	/**
 	 * Open the iRODS file (obtaining a file descritor from iRODS). THis method
 	 * will open the file according to the provided flags
-	 *
+	 * 
 	 * @param openFlags
 	 *            {@link OpenFlags} enum value that will dictate the open
 	 *            behavior
@@ -222,7 +222,7 @@ public interface IRODSFile {
 	/**
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
-	 *
+	 * 
 	 * @return <code>int</code> with the irods file descriptor.
 	 * @throws JargonException
 	 * @deprecated use the <code>open(OpenFlags)</code method
@@ -242,7 +242,7 @@ public interface IRODSFile {
 	 * iRODS file is a collection, the delete will be automatically recursive.
 	 * This particular method is not part of the standard
 	 * <code>java.io.File</code> contracts.
-	 *
+	 * 
 	 * @return <code>boolean</code> with success of operation.
 	 */
 	boolean deleteWithForceOption();
@@ -260,7 +260,7 @@ public interface IRODSFile {
 	 * special uses for narrow cases in Jargon, and should not typically be
 	 * used. In normal usage, the <code>IRODSFile</code> keeps track of its file
 	 * descriptor.
-	 *
+	 * 
 	 * @param fd
 	 *            <code>int<code> with the file descriptor associated with this file that should be closed in iRODS.
 	 * @throws JargonException
@@ -272,7 +272,7 @@ public interface IRODSFile {
 	 * available. This is an iRODS oriented variation on the
 	 * <code>java.io.File createNewFile()</code> method to handle cases where no
 	 * defautl storage resource is found
-	 *
+	 * 
 	 * @return <code>boolean</code> of <code>true</code> if the file could be
 	 *         created
 	 * @throws NoResourceDefinedException
@@ -286,7 +286,7 @@ public interface IRODSFile {
 	/**
 	 * Handy method to return a file:// based URL from the iRODS file, instead
 	 * of the irods:// protocol format
-	 *
+	 * 
 	 * @return {@link URL} in file:// format
 	 */
 	public abstract URL toFileBasedURL();

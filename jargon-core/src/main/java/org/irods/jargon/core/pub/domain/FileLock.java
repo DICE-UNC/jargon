@@ -9,7 +9,7 @@ import org.irods.jargon.core.packinstr.DataObjInpForFileLock;
  * Information regarding file locks in iRODS
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FileLock {
 
@@ -29,7 +29,7 @@ public class FileLock {
 	 * @param irodsAbsolutePath
 	 *            the irodsAbsolutePath to set
 	 */
-	public void setIrodsAbsolutePath(String irodsAbsolutePath) {
+	public void setIrodsAbsolutePath(final String irodsAbsolutePath) {
 		this.irodsAbsolutePath = irodsAbsolutePath;
 	}
 
@@ -44,7 +44,7 @@ public class FileLock {
 	 * @param fd
 	 *            the fd to set
 	 */
-	public void setFd(int fd) {
+	public void setFd(final int fd) {
 		this.fd = fd;
 	}
 
@@ -59,7 +59,7 @@ public class FileLock {
 	 * @param lockType
 	 *            the lockType to set
 	 */
-	public void setLockType(DataObjInpForFileLock.LockType lockType) {
+	public void setLockType(final DataObjInpForFileLock.LockType lockType) {
 		this.lockType = lockType;
 	}
 
@@ -75,7 +75,7 @@ public class FileLock {
 	 *            the approximateSystemTimeWhenLockObtained to set
 	 */
 	public void setApproximateSystemTimeWhenLockObtained(
-			long approximateSystemTimeWhenLockObtained) {
+			final long approximateSystemTimeWhenLockObtained) {
 		this.approximateSystemTimeWhenLockObtained = approximateSystemTimeWhenLockObtained;
 	}
 

@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * An implementation of a factory that can create an implementation of
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class AuthenticationFactoryImpl implements AuthenticationFactory {
 

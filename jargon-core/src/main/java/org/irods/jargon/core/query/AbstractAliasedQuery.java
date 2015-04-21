@@ -12,7 +12,7 @@ public class AbstractAliasedQuery {
 
 	/**
 	 * Base constructor
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> query string or alias, required
 	 * @param arguments

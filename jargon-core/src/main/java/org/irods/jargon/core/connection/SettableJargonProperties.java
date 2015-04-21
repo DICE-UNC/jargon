@@ -170,11 +170,10 @@ public class SettableJargonProperties implements JargonProperties {
 				.getPrimaryTcpReceiveWindowSize();
 		primaryTcpSendWindowSize = jargonProperties
 				.getPrimaryTcpSendWindowSize();
-		this.socketRenewalIntervalInSeconds = jargonProperties
+		socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
-		this.longTransferRestart = jargonProperties.isLongTransferRestart();
-		this.parallelCopyBufferSize = jargonProperties
-				.getParallelCopyBufferSize();
+		longTransferRestart = jargonProperties.isLongTransferRestart();
+		parallelCopyBufferSize = jargonProperties.getParallelCopyBufferSize();
 
 	}
 
@@ -1112,7 +1111,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	@Override
 	public boolean isLongTransferRestart() {
-		return this.longTransferRestart;
+		return longTransferRestart;
 	}
 
 	/**
@@ -1121,12 +1120,12 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param longFileTransferRestart
 	 */
 	public void setLongTransferRestart(final boolean longFileTransferRestart) {
-		this.longTransferRestart = longFileTransferRestart;
+		longTransferRestart = longFileTransferRestart;
 	}
 
 	@Override
 	public int getParallelCopyBufferSize() {
-		return this.parallelCopyBufferSize;
+		return parallelCopyBufferSize;
 	}
 
 	/**

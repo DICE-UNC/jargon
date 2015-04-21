@@ -9,9 +9,9 @@ import org.irods.jargon.core.pub.domain.ObjStat;
  * object is the parent of access objects that deal with iRODS collections
  * (directories) and data objects (files), and contains common operations for
  * both.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface FileCatalogObjectAO extends IRODSAccessObject {
 
@@ -22,7 +22,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * <p/>
 	 * Note that this method will return <code>null</code> if no rerouting is
 	 * done
-	 *
+	 * 
 	 * @param targetAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file or
 	 *            collection
@@ -43,7 +43,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * <p/>
 	 * Note that this method will return <code>null</code> if no rerouting is
 	 * done
-	 *
+	 * 
 	 * @param targetAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file or
 	 *            collection
@@ -60,7 +60,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	/**
 	 * Given an iRODS absolute path, retrive the <code>ObjStat</code> object
 	 * that represents the basic information about the iRODS file
-	 *
+	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 * @return {@link ObjStat} with the status information for the given iRODS
@@ -76,7 +76,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	/**
 	 * Check if the given user at least read access to the given iRODS absolute
 	 * path
-	 *
+	 * 
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 * @param userName

@@ -27,12 +27,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Access to CRUD and query operations on IRODS Zone.
- *
+ * 
  * AO objects are not shared between threads. Jargon services will confine
  * activities to one connection per thread.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
@@ -45,7 +45,7 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.accessobject.ZoneAO#listZones()
 	 */
 	@Override
@@ -59,17 +59,17 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_TYPE)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_ZONE_CONNECTION)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_TYPE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_ZONE_CONNECTION)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_COMMENT)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_ZONE_CREATE_TIME)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_ZONE_MODIFY_TIME)
-									.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
-											OrderByType.ASC);
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_ZONE_MODIFY_TIME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
+							OrderByType.ASC);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(50);
@@ -137,12 +137,12 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ZoneAO#getZoneByName(java.lang.String)
 	 */
 	@Override
 	public Zone getZoneByName(final String zoneName) throws JargonException,
-	DataNotFoundException {
+			DataNotFoundException {
 
 		if (zoneName.equals("tempZone")) {
 			Zone tempZone = new Zone();

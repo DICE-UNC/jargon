@@ -19,9 +19,9 @@ import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
  * This class is not thread-safe, but really does not need to be. The queries
  * produced by the builder are immutable references to the fields in this
  * builder.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSGenQueryBuilder {
 
@@ -37,7 +37,7 @@ public class IRODSGenQueryBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -64,7 +64,7 @@ public class IRODSGenQueryBuilder {
 	 * extensible metadata is to be used in the query processing.
 	 * <p/>
 	 * This version allows the specification of case insensitive queries
-	 *
+	 * 
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the select is
 	 *            distinct
@@ -89,7 +89,7 @@ public class IRODSGenQueryBuilder {
 	 * extensible metadata is to be used in the query processing.
 	 * <p/>
 	 * This version allows the specification of case insensitive queries
-	 *
+	 * 
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the select is
 	 *            distinct
@@ -117,7 +117,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
-	 *
+	 * 
 	 * @param distinct
 	 *            <code>boolean</code> that indicates whether the select is
 	 *            distinct
@@ -136,7 +136,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Add a select represented by a value in <code>RodsGenQueryEnum</code>.
 	 * These are standard select fields.
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnum} value
 	 * @return a reference to this builder, so that builder statements may be
@@ -145,7 +145,7 @@ public class IRODSGenQueryBuilder {
 	 */
 	public IRODSGenQueryBuilder addSelectAsGenQueryValue(
 			final RodsGenQueryEnum rodsGenQueryEnumValue)
-					throws GenQueryBuilderException {
+			throws GenQueryBuilderException {
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
 		}
@@ -168,7 +168,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Add a select field represented by a value in
 	 * <code>RodsGenQueryEnum</code> as an aggregate field (e.g. a count()).
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnum} value
 	 * @param selectFieldType
@@ -181,7 +181,7 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder addSelectAsAgregateGenQueryValue(
 			final RodsGenQueryEnum rodsGenQueryEnumValue,
 			final GenQueryField.SelectFieldTypes selectFieldType)
-					throws GenQueryBuilderException {
+			throws GenQueryBuilderException {
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
 		}
@@ -202,7 +202,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a gen query condition to the builder query.
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the condition
 	 * @param operator
@@ -224,7 +224,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a gen query condition to the builder query.
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the condition
 	 * @param operator
@@ -248,7 +248,7 @@ public class IRODSGenQueryBuilder {
 	 * Add a condition that is multi-value operator condition such as IN and
 	 * BETWEEN, with a <code>List<String></code> of values provided without
 	 * quotes (these are added later)
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the condition
 	 * @param operator
@@ -283,19 +283,19 @@ public class IRODSGenQueryBuilder {
 		if (operator == QueryConditionOperators.IN) {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 
-					.instanceForIn(rodsGenQueryEnumValue.getName(),
-							SelectFieldSource.DEFINED_QUERY_FIELD,
-							String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-							nonQuotedValues);
+			.instanceForIn(rodsGenQueryEnumValue.getName(),
+					SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+					nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 
 		} else if (operator == QueryConditionOperators.BETWEEN) {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 
-					.instanceForBetween(rodsGenQueryEnumValue.getName(),
-							SelectFieldSource.DEFINED_QUERY_FIELD,
-							String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-							nonQuotedValues);
+			.instanceForBetween(rodsGenQueryEnumValue.getName(),
+					SelectFieldSource.DEFINED_QUERY_FIELD,
+					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+					nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 		} else {
 			throw new UnsupportedOperationException(
@@ -308,7 +308,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a gen query condition to the builder query.
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the condition
 	 * @param operator
@@ -344,9 +344,9 @@ public class IRODSGenQueryBuilder {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 					.instance(rodsGenQueryEnumValue.getName(),
 							SelectFieldSource.DEFINED_QUERY_FIELD, String
-							.valueOf(rodsGenQueryEnumValue
-									.getNumericValue()), operator,
-									value);
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator,
+							value);
 
 			conditions.add(genQueryBuilderCondition);
 		} else {
@@ -358,8 +358,8 @@ public class IRODSGenQueryBuilder {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 					.instance(rodsGenQueryEnumValue.getName(),
 							SelectFieldSource.DEFINED_QUERY_FIELD, String
-							.valueOf(rodsGenQueryEnumValue
-									.getNumericValue()), operator, sb
+									.valueOf(rodsGenQueryEnumValue
+											.getNumericValue()), operator, sb
 									.toString());
 
 			conditions.add(genQueryBuilderCondition);
@@ -372,7 +372,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Add an order by field. Note that this field has to be already in the
 	 * selects, and must be ascending or descending
-	 *
+	 * 
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnumValue} for the given field
 	 * @param orderByType
@@ -383,7 +383,7 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder addOrderByGenQueryField(
 			final RodsGenQueryEnum rodsGenQueryEnumValue,
 			final GenQueryOrderByField.OrderByType orderByType)
-					throws GenQueryBuilderException {
+			throws GenQueryBuilderException {
 
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
@@ -428,7 +428,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a gen query select field to the bulder query.
-	 *
+	 * 
 	 * @param genQuerySelectField
 	 *            {@link GenQuerySelectField} with the select to add. These are
 	 *            translated into a query in the order they are added.
@@ -439,7 +439,7 @@ public class IRODSGenQueryBuilder {
 	 */
 	private IRODSGenQueryBuilder addSelect(
 			final GenQuerySelectField genQuerySelectField)
-					throws GenQueryBuilderException {
+			throws GenQueryBuilderException {
 		if (genQuerySelectField == null) {
 			throw new IllegalArgumentException("null genQuerySelectField");
 		}
@@ -467,7 +467,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Return a query that can be executed by the general query execution
 	 * service
-	 *
+	 * 
 	 * @param numberOfResultsDesired
 	 *            <code>int</code> that is >= 1 indicating the number of desired
 	 *            results
@@ -497,7 +497,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Is this a case-insensitive query? (supported in iRODS 3.2 and higher)
-	 *
+	 * 
 	 * @return
 	 */
 	public boolean isUpperCase() {

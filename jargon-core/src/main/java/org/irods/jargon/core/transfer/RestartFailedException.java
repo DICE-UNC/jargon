@@ -8,7 +8,7 @@ package org.irods.jargon.core.transfer;
  * should not be tried
  * 
  * @author Mike Conway -DICE
- *
+ * 
  */
 public class RestartFailedException extends FileRestartManagementException {
 
@@ -20,7 +20,7 @@ public class RestartFailedException extends FileRestartManagementException {
 	/**
 	 * @param message
 	 */
-	public RestartFailedException(String message) {
+	public RestartFailedException(final String message) {
 		super(message);
 	}
 
@@ -28,14 +28,14 @@ public class RestartFailedException extends FileRestartManagementException {
 	 * @param message
 	 * @param cause
 	 */
-	public RestartFailedException(String message, Throwable cause) {
+	public RestartFailedException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public RestartFailedException(Throwable cause) {
+	public RestartFailedException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -44,8 +44,8 @@ public class RestartFailedException extends FileRestartManagementException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public RestartFailedException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public RestartFailedException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -53,8 +53,8 @@ public class RestartFailedException extends FileRestartManagementException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public RestartFailedException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public RestartFailedException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -62,8 +62,8 @@ public class RestartFailedException extends FileRestartManagementException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public RestartFailedException(String message,
-			int underlyingIRODSExceptionCode) {
+	public RestartFailedException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

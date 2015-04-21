@@ -5,9 +5,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Signals a request to iRODS to start SSL on the connection (this is currently
  * limited to exchange of credentials)
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class SSLStartInp extends AbstractIRODSPackingInstruction {
 
@@ -16,7 +16,7 @@ public class SSLStartInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Static initializer creates SSL start request
-	 *
+	 * 
 	 * @return <code>SSLStartInp</code> packing instruction
 	 */
 	public static final SSLStartInp instance() {
@@ -32,7 +32,7 @@ public class SSLStartInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

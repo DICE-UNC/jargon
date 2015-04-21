@@ -11,7 +11,7 @@ import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 /**
  * Contains immutable metadata values and values that identify the domain
  * (Resource, Collection, etc) that is associated with the metadata values
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class MetaDataAndDomainData extends IRODSDomainObject {
@@ -42,7 +42,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	/**
 	 * Create an immutable instance
-	 *
+	 * 
 	 * @param metadataDomain
 	 *            <code>MetadataDomain</code> enum value that indicates the
 	 *            domain (RESOURCE, USER, etc) that this metadata applies to
@@ -76,7 +76,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	/**
 	 * Create an immutable instance
-	 *
+	 * 
 	 * @param metadataDomain
 	 *            <code>MetadataDomain</code> enum value that indicates the
 	 *            domain (RESOURCE, USER, etc) that this metadata applies to
@@ -169,7 +169,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 
 	/**
 	 * Note that createdAt and modifiedAt can be null
-	 *
+	 * 
 	 * @param metadataDomain
 	 * @param domainObjectId
 	 * @param domainObjectUniqueName

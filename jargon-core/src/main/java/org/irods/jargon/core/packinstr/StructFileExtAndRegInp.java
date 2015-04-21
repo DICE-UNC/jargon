@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
  * Translation of a StructFileExtAndRegInp operation into XML protocol format.
  * This packing instruction is used to create, extract and manipulate bundled
  * files.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class StructFileExtAndRegInp extends
-AbstractIRODSPackingInstruction {
+		AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "StructFileExtAndRegInp_PI";
 	public static final String OBJ_PATH = "objPath";
@@ -55,7 +55,7 @@ AbstractIRODSPackingInstruction {
 	/**
 	 * Create a packing instruction to cause the specified tar file that exists
 	 * in iRODS to be extracted to the given collection in iRODS.
-	 *
+	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
@@ -85,7 +85,7 @@ AbstractIRODSPackingInstruction {
 	 * in iRODS to be extracted to the given collection in iRODS. This version
 	 * of the packing instruction will use the bulk facility in iRODS to
 	 * register the files, resulting in reduced overhead.
-	 *
+	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
@@ -114,7 +114,7 @@ AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to cause the specified tar file that exists
 	 * in iRODS to be extracted to the given collection in iRODS. A force option
 	 * is specified.
-	 *
+	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
@@ -144,7 +144,7 @@ AbstractIRODSPackingInstruction {
 	 * in iRODS to be extracted to the given collection in iRODS. A force option
 	 * is specified. This version of the packing instruction will use the bulk
 	 * facility in iRODS to register the files, resulting in reduced overhead.
-	 *
+	 * 
 	 * @param tarFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
@@ -172,7 +172,7 @@ AbstractIRODSPackingInstruction {
 	/**
 	 * Packing instruction to create a tar file using the given iRODS collection
 	 * as the source.
-	 *
+	 * 
 	 * @param tarFileToCreateAbsolutePath
 	 *            <code>String</code> with the absolute path to the tar file
 	 *            that will be created.
@@ -199,7 +199,7 @@ AbstractIRODSPackingInstruction {
 	 * Packing instruction to create a tar file using the given iRODS collection
 	 * as the source. This version of the packing instruction uses the force
 	 * option which will overwrite the bun file if already existing.
-	 *
+	 * 
 	 * @param tarFileToCreateAbsolutePath
 	 *            <code>String</code> with the absolute path to the tar file
 	 *            that will be created.

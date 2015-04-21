@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
@@ -31,7 +31,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction for a move of a data object
 	 * (not a collection, there is a different initializer for that).
-	 *
+	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
@@ -51,7 +51,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance that will do a file copy between two iRODS directories
-	 *
+	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
@@ -71,7 +71,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource,
 			final long sourceFileLength, final boolean force)
-					throws JargonException {
+			throws JargonException {
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
 				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
@@ -82,7 +82,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction for a move of a collection
 	 * (not a data object, there is a different initializer for that).
-	 *
+	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
@@ -102,7 +102,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the packing instruction for a copy of a collection.
-	 *
+	 * 
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
@@ -130,7 +130,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String fromFileAbsolutePath, final String toFileAbsolutePath,
 			final int operationType, final String resourceName,
 			final long sourceFileLength, final boolean force)
-					throws JargonException {
+			throws JargonException {
 		super();
 
 		if (fromFileAbsolutePath == null || fromFileAbsolutePath.length() == 0) {
@@ -233,7 +233,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag buildDataObjInpTagForCopySource(
 			final String fromFileAbsolutePath, final long sourceFileLength)
-					throws JargonException {
+			throws JargonException {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
 		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
@@ -245,7 +245,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.NUM_THREADS, 0),
 				new Tag(DataObjInp.OPR_TYPE,
 						DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
-						createKeyValueTag(kvps) });
+				createKeyValueTag(kvps) });
 		return fileTag;
 	}
 

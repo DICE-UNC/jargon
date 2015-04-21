@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Translates an iRODS user defined rule in plain text form into an
  * {@link org.irods.jargon.core.rule.IRODSRule} for processing by IRODS.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSRuleTranslator {
 
@@ -33,7 +33,7 @@ public class IRODSRuleTranslator {
 	 * Given a string representing an iRODS rule (including the rule body, as
 	 * well as input and output lines, produce a translated rule object to send
 	 * to iRODS.
-	 *
+	 * 
 	 * @param ruleAsPlainText
 	 *            <code>String</code> with the rule body and input and output
 	 *            parameters
@@ -52,7 +52,7 @@ public class IRODSRuleTranslator {
 	 * Given a string representing an iRODS rule (including the rule body, as
 	 * well as input and output lines, produce a translated rule object to send
 	 * to iRODS.
-	 *
+	 * 
 	 * @param ruleAsPlainText
 	 *            <code>String</code> with the rule body and input and output
 	 *            parameters
@@ -63,7 +63,7 @@ public class IRODSRuleTranslator {
 	public IRODSRule translatePlainTextRuleIntoIRODSRule(
 			final String ruleAsPlainText,
 			final List<IRODSRuleParameter> overrideInputParameters)
-					throws JargonRuleException, JargonException {
+			throws JargonRuleException, JargonException {
 
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty rule text");
@@ -155,7 +155,7 @@ public class IRODSRuleTranslator {
 	/**
 	 * Given a set of derived input parameters (coming from the supplied rule
 	 * body), and a set of overrides, arrive at the combined set.
-	 *
+	 * 
 	 * @param overrideInputParameters
 	 *            <code>List</code> of {@link IRODSRuleParameter} which contains
 	 *            the supplied set of input parameters that should override
@@ -300,7 +300,7 @@ public class IRODSRuleTranslator {
 	/**
 	 * Break the line containing rule output parameters into a
 	 * <code>List<IRODSRuleParameter></code>
-	 *
+	 * 
 	 * @param tokens
 	 * @return
 	 * @throws JargonException
@@ -372,7 +372,7 @@ public class IRODSRuleTranslator {
 	/**
 	 * Break the line containing rule input parameters into a
 	 * <code>List<IRODSRuleParameter></code>
-	 *
+	 * 
 	 * @param inputAttributesLine
 	 * @return
 	 * @throws JargonRuleException
@@ -494,7 +494,7 @@ public class IRODSRuleTranslator {
 	/**
 	 * Convenience method that uses a simple heuristic to determine whether the
 	 * given rule uses the 'new' rule syntax.
-	 *
+	 * 
 	 * @param ruleText
 	 *            <code>String</code> with the rule body
 	 * @return <code>boolean</code> that will be <code>true</code> if the rule

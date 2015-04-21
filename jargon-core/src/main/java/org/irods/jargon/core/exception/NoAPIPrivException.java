@@ -4,9 +4,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * Security exception when no API privilege for user.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class NoAPIPrivException extends JargonException {
 

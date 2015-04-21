@@ -27,14 +27,14 @@ import org.slf4j.LoggerFactory;
 /**
  * Helpful object for stream to stream copies, also handles byte arrays (as
  * contracts fill out). Allows streaming from one source into or out of iRODS.
- *
+ * 
  * (methods to be filled out as needed, this is a new service)
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class Stream2StreamAOImpl extends IRODSGenericAO implements
-Stream2StreamAO {
+		Stream2StreamAO {
 
 	// private final int bufferSize = this.getJargonProperties().get
 	private static final int bufferSize = 32 * 1024; // FIXME: temp code
@@ -49,7 +49,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamBytesToIRODSFile(byte[],
 	 * org.irods.jargon.core.pub.io.IRODSFile)
@@ -98,7 +98,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#transferStreamToFileUsingIOStreams
 	 * (java.io.InputStream, java.io.File, long, int)
@@ -107,7 +107,7 @@ Stream2StreamAO {
 	public TransferStatistics transferStreamToFileUsingIOStreams(
 			final InputStream inputStream, final File targetFile,
 			final long length, final int readBuffSize)
-					throws NoResourceDefinedException, JargonException {
+			throws NoResourceDefinedException, JargonException {
 
 		// FIXME: deprecate length, not needed
 
@@ -257,7 +257,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopyUsingStandardIO
 	 * (java.io.InputStream, java.io.OutputStream)
@@ -265,7 +265,7 @@ Stream2StreamAO {
 	@Override
 	public TransferStatistics streamToStreamCopyUsingStandardIO(
 			final InputStream inputStream, final OutputStream outputStream)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("streamToStreamCopyUsingStandardIO()");
 
@@ -302,7 +302,7 @@ Stream2StreamAO {
 		}
 
 		final byte[] buffer = new byte[getJargonProperties()
-		                               .getInputToOutputCopyBufferByteSize()];
+				.getInputToOutputCopyBufferByteSize()];
 
 		log.info("buffer length for read/write will be:{}", buffer.length);
 
@@ -349,7 +349,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
 	 * InputStream, java.io.OutputStream)
@@ -392,7 +392,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
 	 * jargon.core.pub.io.IRODSFile)
@@ -441,7 +441,7 @@ Stream2StreamAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamClasspathResourceToIRODSFile
 	 * (java.lang.String, java.lang.String)

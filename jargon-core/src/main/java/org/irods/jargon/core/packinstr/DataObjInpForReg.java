@@ -9,9 +9,9 @@ import org.irods.jargon.core.exception.ProtocolFormException;
 /**
  * Translation of a DataObjInp operation to register a path (as in the ireg
  * icommand)
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 
@@ -35,7 +35,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance for an ireg operation
-	 *
+	 * 
 	 * @param physicalFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the physical
 	 *            file to be registered
@@ -74,7 +74,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 			final String resourceToStoreTo, final boolean force,
 			final boolean recursive, final ChecksumHandling checksumHandling,
 			final boolean registerAsReplica, final String localFileChecksumValue)
-					throws JargonException {
+			throws JargonException {
 		return new DataObjInpForReg(physicalFileAbsolutePath,
 				irodsFileAbsolutePath, resourceGroup, resourceToStoreTo, force,
 				recursive, checksumHandling, registerAsReplica,
@@ -86,7 +86,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 			final String resourceToStoreTo, final boolean force,
 			final boolean recursive, final ChecksumHandling checksumHandling,
 			final boolean registerAsReplica, final String localFileChecksumValue)
-					throws JargonException {
+			throws JargonException {
 
 		super();
 		if (physicalFileAbsolutePath == null

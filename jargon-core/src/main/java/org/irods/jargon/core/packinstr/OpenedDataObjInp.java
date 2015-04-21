@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of an OpenedDataObjInp operation into XML protocol format. This
  * is a 'newer' version of a seek operation.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 
 public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
@@ -48,7 +48,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the OpenedDataObjInp packing instruction for a file
 	 * seek operation
-	 *
+	 * 
 	 * @param offset
 	 *            <code>long</code> with the offset into the file to seek to.
 	 * @param fileDescriptor
@@ -67,7 +67,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing insruction for a file read operation
-	 *
+	 * 
 	 * @param fileDescriptor
 	 * @param length
 	 * @return
@@ -80,7 +80,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction for a file write
-	 *
+	 * 
 	 * @param fileDescriptor
 	 * @param offset
 	 * @param length
@@ -93,7 +93,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 *
+	 * 
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
 	 * @param length
@@ -109,7 +109,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * Instance for a close operation specifying putOpr to trigger
 	 * postProcForPut per More enhancements to file close to trigger
 	 * acPostProcForPut #93
-	 *
+	 * 
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
 	 * @return
@@ -122,7 +122,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance for a close operation
-	 *
+	 * 
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
 	 * @return
@@ -160,7 +160,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 
 		int myOprType = 0;
-		if (this.putOprNeeded) {
+		if (putOprNeeded) {
 			myOprType = DataObjInp.PUT_OPERATION_TYPE;
 		}
 		Tag message = new Tag(PI_TAG, new Tag[] {

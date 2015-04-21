@@ -7,9 +7,9 @@ import org.irods.jargon.core.packinstr.Tag;
 
 /**
  * Constants used for IRODS/Jargon
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class IRODSConstants {
 

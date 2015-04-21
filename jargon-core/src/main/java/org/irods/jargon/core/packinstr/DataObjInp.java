@@ -1008,7 +1008,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param operationType
 	 *            the operationType to set
 	 */
-	public void setOperationType(int operationType) {
+	public void setOperationType(final int operationType) {
 		this.operationType = operationType;
 	}
 

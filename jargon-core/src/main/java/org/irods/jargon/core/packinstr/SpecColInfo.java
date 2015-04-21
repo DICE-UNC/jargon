@@ -145,7 +145,7 @@ public class SpecColInfo {
 		return builder.toString();
 	}
 
-	public void setUseResourceHierarchy(boolean useResourceHierarchy) {
+	public void setUseResourceHierarchy(final boolean useResourceHierarchy) {
 		this.useResourceHierarchy = useResourceHierarchy;
 	}
 

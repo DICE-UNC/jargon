@@ -5,11 +5,11 @@ package org.irods.jargon.core.exception;
 
 /**
  * Equivalent to UNIX_FILE_CREATE_ERR -511000 and variants
- *
+ * 
  * The given file cannot be created
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class UnixFileCreateException extends JargonException {
 

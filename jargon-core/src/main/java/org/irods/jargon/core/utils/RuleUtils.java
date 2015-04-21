@@ -5,9 +5,9 @@ package org.irods.jargon.core.utils;
 
 /**
  * Helper methods for dealing with rules
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class RuleUtils {
 

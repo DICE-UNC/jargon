@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.DataNotFoundException;
  * Interface that represents a result from some type of query of iRODS data.
  * Each query type (GenQuery, SimpleQuery) will have a different implementation
  * that represents the result.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface IRODSQueryResultSetInterface {
 
@@ -24,7 +24,7 @@ public interface IRODSQueryResultSetInterface {
 	/**
 	 * Get the first result returned from the query, or a
 	 * <code>DataNotFoundException</code> if no rows were returned.
-	 *
+	 * 
 	 * @return {@link IRODSQueryResultRow} with the first result
 	 * @throws DataNotFoundException
 	 *             if no results were returned
@@ -36,14 +36,14 @@ public interface IRODSQueryResultSetInterface {
 	/**
 	 * Convenience method to get the number of result columns, based on the
 	 * number of selects.
-	 *
+	 * 
 	 * @return <code>int</code> with count of result columns.
 	 */
 	int getNumberOfResultColumns();
 
 	/**
 	 * Returns a list of the column names in the results;
-	 *
+	 * 
 	 * @return <code>List<String></code> with the query column names.
 	 */
 	List<String> getColumnNames();
@@ -52,7 +52,7 @@ public interface IRODSQueryResultSetInterface {
 	 * If it is supported, and has been requested, based on the the query type,
 	 * this method returns the total count of records that were the result of
 	 * this query
-	 *
+	 * 
 	 * @return <code>int</code> with the total records that match this query.
 	 */
 	int getTotalRecords();

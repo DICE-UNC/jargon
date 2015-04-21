@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  *         Access object that encapsulates file IO operations. This is a
  *         delegate class for the <code>IRODSFileInputStream</code> and
  *         <code>IRODSFileOutputStream</code> classes. This class is not
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *         should be used.
  */
 final class FileIOOperationsAOImpl extends IRODSGenericAO implements
-FileIOOperations {
+		FileIOOperations {
 
 	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
 
@@ -42,7 +42,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#write(int, byte[],
 	 * int, int)
 	 */
@@ -101,7 +101,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int,
 	 * java.io.OutputStream, long)
 	 */
@@ -138,7 +138,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int, byte[],
 	 * int, int)
 	 */
@@ -181,7 +181,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#seek(int, long,
 	 * org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType)
 	 */

@@ -47,12 +47,12 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Note that this object handles soft linked files and collections, and will
  * operate as expected whether a soft link or a canonical path is provided.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class DataTransferOperationsImpl extends IRODSGenericAO implements
-DataTransferOperations {
+		DataTransferOperations {
 
 	private static Logger log = LoggerFactory
 			.getLogger(DataTransferOperationsImpl.class);
@@ -80,7 +80,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#physicalMove(java.lang
 	 * .String, java.lang.String)
@@ -93,12 +93,12 @@ DataTransferOperations {
 		final IRODSFileSystemAO irodsFileSystemAO = getIRODSAccessObjectFactory()
 				.getIRODSFileSystemAO(getIRODSAccount());
 		irodsFileSystemAO
-		.physicalMove(absolutePathToSourceFile, targetResource);
+				.physicalMove(absolutePathToSourceFile, targetResource);
 	}
 
 	private void moveOperation(final IRODSFile irodsSourceFile,
 			final IRODSFile irodsTargetFile)
-					throws JargonFileOrCollAlreadyExistsException, JargonException {
+			throws JargonFileOrCollAlreadyExistsException, JargonException {
 
 		log.info("moveOperation()");
 		log.info("target file:{}", irodsTargetFile.getAbsolutePath());
@@ -146,7 +146,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#move(java.lang.String,
 	 * java.lang.String)
@@ -179,7 +179,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#move(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
@@ -241,7 +241,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#getOperation(org.irods
 	 * .jargon.core.pub.io.IRODSFile, java.io.File,
@@ -254,7 +254,7 @@ DataTransferOperations {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperation()");
 
@@ -293,7 +293,7 @@ DataTransferOperations {
 			if (operativeTransferControlBlock.getTransferOptions()
 					.isAllowPutGetResourceRedirects()
 					&& getIRODSServerProperties()
-					.isSupportsConnectionRerouting()) {
+							.isSupportsConnectionRerouting()) {
 				reroutedAccount = checkForReroutedConnectionDuringGetOperation(irodsSourceFile);
 			}
 
@@ -303,11 +303,11 @@ DataTransferOperations {
 				DataTransferOperationsImpl reroutedDataTransferOperations = (DataTransferOperationsImpl) getIRODSAccessObjectFactory()
 						.getDataTransferOperations(reroutedAccount);
 				reroutedDataTransferOperations
-				.processGetAfterAnyConnectionRerouting(irodsSourceFile,
-						targetLocalFile,
-						transferStatusCallbackListener,
-						operativeTransferControlBlock,
-						targetLocalFileNameForCallbacks);
+						.processGetAfterAnyConnectionRerouting(irodsSourceFile,
+								targetLocalFile,
+								transferStatusCallbackListener,
+								operativeTransferControlBlock,
+								targetLocalFileNameForCallbacks);
 
 			} else {
 				processGetAfterAnyConnectionRerouting(irodsSourceFile,
@@ -342,7 +342,7 @@ DataTransferOperations {
 	/**
 	 * See if the file in the get operation exists on another resource server,
 	 * and must be rerouted
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 * @return
 	 * @throws JargonException
@@ -360,7 +360,7 @@ DataTransferOperations {
 
 		if (detectedHost == null
 				|| detectedHost
-				.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)
+						.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)
 				|| detectedHost.equals("localhost")) {
 			log.info("using given resource connection");
 			reroutedAccount = getIRODSAccount();
@@ -375,7 +375,7 @@ DataTransferOperations {
 	/**
 	 * Process a get transfer, having established any re-routed connections
 	 * necessary.
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 * @param targetLocalFile
 	 * @param transferStatusCallbackListener
@@ -390,7 +390,7 @@ DataTransferOperations {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final File targetLocalFileNameForCallbacks)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (operativeTransferControlBlock == null) {
 			throw new IllegalArgumentException(
@@ -429,7 +429,7 @@ DataTransferOperations {
 								.getAbsolutePath());
 				log.info("get will transfer {} files)", fileCount);
 				operativeTransferControlBlock
-				.setTotalFilesToTransfer(fileCount);
+						.setTotalFilesToTransfer(fileCount);
 			}
 
 			// send a 0th file status callback that indicates initiation
@@ -438,20 +438,20 @@ DataTransferOperations {
 						.instance(TransferType.GET, irodsSourceFile
 								.getAbsolutePath(),
 								targetLocalFileNameForCallbacks
-								.getAbsolutePath(), "",
+										.getAbsolutePath(), "",
 								operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
@@ -470,19 +470,19 @@ DataTransferOperations {
 							irodsSourceFile.getAbsolutePath(),
 							targetLocalFileNameForCallbacks.getAbsolutePath(),
 							"", operativeTransferControlBlock
-							.getTotalBytesToTransfer(),
+									.getTotalBytesToTransfer(),
 							operativeTransferControlBlock
-							.getTotalBytesTransferredSoFar(),
+									.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesSkippedSoFar(),
+									.getTotalFilesSkippedSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesTransferredSoFar(),
+									.getTotalFilesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesToTransfer(),
+									.getTotalFilesToTransfer(),
 							TransferState.CANCELLED, getIRODSAccount()
-							.getHost(), getIRODSAccount().getZone());
+									.getHost(), getIRODSAccount().getZone());
 					transferStatusCallbackListener
-					.overallStatusCallback(status);
+							.overallStatusCallback(status);
 				}
 
 				return;
@@ -499,20 +499,20 @@ DataTransferOperations {
 						.instance(TransferType.GET, irodsSourceFile
 								.getAbsolutePath(),
 								targetLocalFileNameForCallbacks
-								.getAbsolutePath(), "",
+										.getAbsolutePath(), "",
 								operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
@@ -529,10 +529,10 @@ DataTransferOperations {
 								.getAbsolutePath(), targetLocalFile
 								.getAbsolutePath(), "", 0, 0, 0, 0,
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
@@ -548,10 +548,10 @@ DataTransferOperations {
 								.getAbsolutePath(), targetLocalFile
 								.getAbsolutePath(), "", 0, 0, 0, 0,
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
@@ -561,7 +561,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#getOperation(java.lang
 	 * .String, java.lang.String, java.lang.String,
@@ -575,7 +575,7 @@ DataTransferOperations {
 			final String sourceResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, OverwriteException, JargonException {
+			throws FileNotFoundException, OverwriteException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -613,7 +613,7 @@ DataTransferOperations {
 	 * to see if there is a callback listener. If there is, the exception is
 	 * reported to the listener and quashed. If there is not a callback
 	 * listener, the error is rethrown from this method.
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 * @param targetLocalFile
 	 * @param transferStatusCallbackListener
@@ -652,7 +652,7 @@ DataTransferOperations {
 	/**
 	 * Initiate a recursive get operation. The iRODS source file is a
 	 * collection, and will be recursively processed.
-	 *
+	 * 
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the get.
@@ -678,7 +678,7 @@ DataTransferOperations {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("getOperationWhenSourceFileIsDirectory");
 
@@ -713,7 +713,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#putOperation(java.io
 	 * .File, org.irods.jargon.core.pub.io.IRODSFile,
@@ -726,7 +726,7 @@ DataTransferOperations {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		TransferControlBlock operativeTransferControlBlock = buildTransferControlBlockAndOptionsBasedOnParameters(transferControlBlock);
 		IRODSAccount reroutedAccount = null;
@@ -760,7 +760,7 @@ DataTransferOperations {
 			if (operativeTransferControlBlock.getTransferOptions()
 					.isAllowPutGetResourceRedirects()
 					&& getIRODSServerProperties()
-					.isSupportsConnectionRerouting()) {
+							.isSupportsConnectionRerouting()) {
 				log.info("redirects are available, check to see if I need to redirect to a resource server");
 
 				// make a call to see if I need to go to a different host
@@ -770,7 +770,7 @@ DataTransferOperations {
 						targetIrodsFile.getResource());
 				if (detectedHost == null
 						|| detectedHost
-						.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
+								.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
 					log.info("using given resource connection");
 				} else {
 
@@ -789,10 +789,10 @@ DataTransferOperations {
 				DataTransferOperationsImpl reroutedDataTransferOperations = (DataTransferOperationsImpl) getIRODSAccessObjectFactory()
 						.getDataTransferOperations(reroutedAccount);
 				reroutedDataTransferOperations
-				.processPutAfterAnyConnectionRerouting(sourceFile,
-						targetIrodsFile,
-						transferStatusCallbackListener,
-						operativeTransferControlBlock);
+						.processPutAfterAnyConnectionRerouting(sourceFile,
+								targetIrodsFile,
+								transferStatusCallbackListener,
+								operativeTransferControlBlock);
 			} else {
 				log.info("process put with no rerouting");
 				processPutAfterAnyConnectionRerouting(sourceFile,
@@ -827,7 +827,7 @@ DataTransferOperations {
 	 * Do the actual put operation using the current account information. This
 	 * account information may have been recomputed if connection re-routing was
 	 * enabled.
-	 *
+	 * 
 	 * @param sourceFile
 	 *            <code>File</code> that will be the source
 	 * @param targetIrodsFile
@@ -845,7 +845,7 @@ DataTransferOperations {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock)
-					throws JargonException {
+			throws JargonException {
 		/*
 		 * If a callback listener is given, make sure there is a transfer
 		 * control block, and do a pre-scan of the iRODS collection to get a
@@ -882,14 +882,14 @@ DataTransferOperations {
 			if (targetIrodsFile.exists() && targetIrodsFile.isDirectory()) {
 				log.info("target is a directory, source is file");
 				targetIrodsPathBuilder
-				.append(targetIrodsFile.getAbsolutePath());
+						.append(targetIrodsFile.getAbsolutePath());
 				targetIrodsPathBuilder.append("/");
 				targetIrodsPathBuilder.append(sourceFile.getName());
 			} else if (targetIrodsFile.getParentFile().exists()
 					&& targetIrodsFile.getParentFile().isDirectory()) {
 				log.info("treating target as a file, using the whole path");
 				targetIrodsPathBuilder
-				.append(targetIrodsFile.getAbsolutePath());
+						.append(targetIrodsFile.getAbsolutePath());
 			}
 
 			String callbackTargetIrodsPath = targetIrodsPathBuilder.toString();
@@ -904,18 +904,18 @@ DataTransferOperations {
 						.instance(TransferType.PUT, sourceFile
 								.getAbsolutePath(), callbackTargetIrodsPath,
 								"", operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
@@ -932,19 +932,19 @@ DataTransferOperations {
 							TransferType.PUT, sourceFile.getAbsolutePath(),
 							callbackTargetIrodsPath, "",
 							operativeTransferControlBlock
-							.getTotalBytesToTransfer(),
+									.getTotalBytesToTransfer(),
 							operativeTransferControlBlock
-							.getTotalBytesTransferredSoFar(),
+									.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesSkippedSoFar(),
+									.getTotalFilesSkippedSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesTransferredSoFar(),
+									.getTotalFilesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesToTransfer(),
+									.getTotalFilesToTransfer(),
 							TransferState.CANCELLED, getIRODSAccount()
-							.getHost(), getIRODSAccount().getZone());
+									.getHost(), getIRODSAccount().getZone());
 					transferStatusCallbackListener
-					.overallStatusCallback(status);
+							.overallStatusCallback(status);
 				}
 
 				return;
@@ -961,18 +961,18 @@ DataTransferOperations {
 						.instance(TransferType.PUT, sourceFile
 								.getAbsolutePath(), callbackTargetIrodsPath,
 								"", operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 
 			}
@@ -987,7 +987,7 @@ DataTransferOperations {
 	 */
 	private TransferControlBlock buildTransferControlBlockAndOptionsBasedOnParameters(
 			final TransferControlBlock transferControlBlock)
-					throws JargonException {
+			throws JargonException {
 
 		TransferControlBlock operativeTransferControlBlock = transferControlBlock;
 
@@ -1006,7 +1006,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#putOperation(java.lang
 	 * .String, java.lang.String, java.lang.String,
@@ -1020,7 +1020,7 @@ DataTransferOperations {
 			String targetResourceName,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws JargonException {
+			throws JargonException {
 
 		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -1074,7 +1074,7 @@ DataTransferOperations {
 	 * the existence of a callback listener for status. If one is supplied, the
 	 * exception is reported to the callback listener and quashed. If no
 	 * callback listener was supplied, the error is rethrown to the caller.
-	 *
+	 * 
 	 * @param sourceFile
 	 * @param targetIrodsFile
 	 * @param transferStatusCallbackListener
@@ -1130,7 +1130,7 @@ DataTransferOperations {
 	 * Jargon will recursively process the put operation. The containing folder
 	 * of the source will be used as the new subdirectory in iRODS under which
 	 * the data will be moved.
-	 *
+	 * 
 	 * @param sourceFile
 	 *            <code>File</code> that is the source of the transfer.
 	 * @param targetIrodsFile
@@ -1154,7 +1154,7 @@ DataTransferOperations {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("this put operation is recursive");
 
@@ -1183,14 +1183,14 @@ DataTransferOperations {
 		if (transferStatusCallbackListener != null) {
 			TransferStatus status = TransferStatus.instance(TransferType.PUT,
 					sourceFile.getAbsolutePath(), newIrodsParentDirectory
-					.getAbsolutePath(), "", transferControlBlock
-					.getTotalBytesToTransfer(), transferControlBlock
-					.getTotalBytesTransferredSoFar(),
+							.getAbsolutePath(), "", transferControlBlock
+							.getTotalBytesToTransfer(), transferControlBlock
+							.getTotalBytesTransferredSoFar(),
 					transferControlBlock.getTotalFilesTransferredSoFar(),
 					transferControlBlock.getTotalFilesSkippedSoFar(),
 					transferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
-					.getHost(), getIRODSAccount().getZone());
+							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 
@@ -1273,7 +1273,7 @@ DataTransferOperations {
 						transferControlBlock.getTotalFilesSkippedSoFar(),
 						transferControlBlock.getTotalFilesToTransfer(),
 						TransferState.OVERALL_COMPLETION, getIRODSAccount()
-						.getHost(), getIRODSAccount().getZone());
+								.getHost(), getIRODSAccount().getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 		}
@@ -1281,7 +1281,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#replicate(java.lang.
 	 * String, java.lang.String,
@@ -1294,7 +1294,7 @@ DataTransferOperations {
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
 			throw new JargonException("irodsFileAbsolutePath is null or empty");
@@ -1331,18 +1331,18 @@ DataTransferOperations {
 						.instance(TransferType.REPLICATE, sourceFile
 								.getAbsolutePath(), "", targetResource,
 								operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
@@ -1356,21 +1356,21 @@ DataTransferOperations {
 
 					TransferStatus status = TransferStatus.instance(
 							TransferType.REPLICATE, sourceFile
-							.getAbsolutePath(), "", targetResource,
+									.getAbsolutePath(), "", targetResource,
 							operativeTransferControlBlock
-							.getTotalBytesToTransfer(),
+									.getTotalBytesToTransfer(),
 							operativeTransferControlBlock
-							.getTotalBytesTransferredSoFar(),
+									.getTotalBytesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesTransferredSoFar(),
+									.getTotalFilesTransferredSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesSkippedSoFar(),
+									.getTotalFilesSkippedSoFar(),
 							operativeTransferControlBlock
-							.getTotalFilesToTransfer(),
+									.getTotalFilesToTransfer(),
 							TransferState.OVERALL_COMPLETION, getIRODSAccount()
-							.getHost(), getIRODSAccount().getZone());
+									.getHost(), getIRODSAccount().getZone());
 					transferStatusCallbackListener
-					.overallStatusCallback(status);
+							.overallStatusCallback(status);
 				}
 			} catch (Exception e) {
 				log.error("error during processing of a replication", e);
@@ -1382,20 +1382,20 @@ DataTransferOperations {
 									sourceFile.getAbsolutePath(), "",
 									targetResource,
 									operativeTransferControlBlock
-									.getTotalBytesToTransfer(),
+											.getTotalBytesToTransfer(),
 									operativeTransferControlBlock
-									.getTotalBytesTransferredSoFar(),
+											.getTotalBytesTransferredSoFar(),
 									operativeTransferControlBlock
-									.getTotalFilesTransferredSoFar(),
+											.getTotalFilesTransferredSoFar(),
 									operativeTransferControlBlock
-									.getTotalFilesSkippedSoFar(),
+											.getTotalFilesSkippedSoFar(),
 									operativeTransferControlBlock
-									.getTotalFilesToTransfer(), e,
+											.getTotalFilesToTransfer(), e,
 									getIRODSAccount().getHost(),
 									getIRODSAccount().getZone());
 
 					transferStatusCallbackListener
-					.overallStatusCallback(status);
+							.overallStatusCallback(status);
 
 				} else {
 					log.error("no callback listener, rethrow exception as a jargon exception");
@@ -1415,18 +1415,18 @@ DataTransferOperations {
 						.instance(TransferType.REPLICATE, sourceFile
 								.getAbsolutePath(), "", targetResource,
 								operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_INITIATION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 
@@ -1440,18 +1440,18 @@ DataTransferOperations {
 						.instance(TransferType.REPLICATE, sourceFile
 								.getAbsolutePath(), "", targetResource,
 								operativeTransferControlBlock
-								.getTotalBytesToTransfer(),
+										.getTotalBytesToTransfer(),
 								operativeTransferControlBlock
-								.getTotalBytesTransferredSoFar(),
+										.getTotalBytesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesTransferredSoFar(),
+										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesSkippedSoFar(),
+										.getTotalFilesSkippedSoFar(),
 								operativeTransferControlBlock
-								.getTotalFilesToTransfer(),
+										.getTotalFilesToTransfer(),
 								TransferState.OVERALL_COMPLETION,
 								getIRODSAccount().getHost(), getIRODSAccount()
-								.getZone());
+										.getZone());
 				transferStatusCallbackListener.overallStatusCallback(status);
 			}
 		}
@@ -1459,7 +1459,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String,
 	 * java.lang.String, java.lang.String,
@@ -1473,7 +1473,7 @@ DataTransferOperations {
 			final String irodsTargetFileAbsolutePath,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final boolean force, final TransferControlBlock transferControlBlock)
-					throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -1537,7 +1537,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#copy(java.lang.String,
 	 * java.lang.String, java.lang.String,
@@ -1551,7 +1551,7 @@ DataTransferOperations {
 			final String irodsTargetFileAbsolutePath,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws OverwriteException, DataNotFoundException, JargonException {
+			throws OverwriteException, DataNotFoundException, JargonException {
 
 		if (irodsSourceFileAbsolutePath == null
 				|| irodsSourceFileAbsolutePath.isEmpty()) {
@@ -1589,7 +1589,7 @@ DataTransferOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.DataTransferOperations#copy(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile,
@@ -1602,7 +1602,7 @@ DataTransferOperations {
 			final IRODSFile irodsTargetFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws OverwriteException, FileNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (irodsSourceFile == null) {
 			throw new IllegalArgumentException("irodsSourceFile is null");
@@ -1660,7 +1660,7 @@ DataTransferOperations {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-					throws OverwriteException, FileNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 
 		if (targetFile.getAbsolutePath().equals(sourceFile.getParent())) {
 			log.error("source file is being copied to own parent:{}",
@@ -1688,15 +1688,15 @@ DataTransferOperations {
 			TransferStatus status = TransferStatus.instance(TransferType.COPY,
 					sourceFile.getAbsolutePath(), targetFile.getAbsolutePath(),
 					targetResource, operativeTransferControlBlock
-					.getTotalBytesToTransfer(),
+							.getTotalBytesToTransfer(),
 					operativeTransferControlBlock
-					.getTotalBytesTransferredSoFar(),
+							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
-					.getTotalFilesTransferredSoFar(),
+							.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
-					.getHost(), getIRODSAccount().getZone());
+							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 
@@ -1711,15 +1711,15 @@ DataTransferOperations {
 			TransferStatus status = TransferStatus.instance(TransferType.COPY,
 					sourceFile.getAbsolutePath(), targetFile.getAbsolutePath(),
 					targetResource, operativeTransferControlBlock
-					.getTotalBytesToTransfer(),
+							.getTotalBytesToTransfer(),
 					operativeTransferControlBlock
-					.getTotalBytesTransferredSoFar(),
+							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
-					.getTotalFilesTransferredSoFar(),
+							.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_COMPLETION, getIRODSAccount()
-					.getHost(), getIRODSAccount().getZone());
+							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 	}
@@ -1729,7 +1729,7 @@ DataTransferOperations {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock operativeTransferControlBlock,
 			final IRODSFile sourceFile, IRODSFile targetFile)
-					throws OverwriteException, FileNotFoundException, JargonException {
+			throws OverwriteException, FileNotFoundException, JargonException {
 		log.info("this copy operation is recursive");
 
 		preCountIrodsFilesBeforeTransfer(sourceFile.getAbsolutePath(),
@@ -1770,15 +1770,15 @@ DataTransferOperations {
 			TransferStatus status = TransferStatus.instance(TransferType.COPY,
 					sourceFile.getAbsolutePath(), targetFile.getAbsolutePath(),
 					targetResource, operativeTransferControlBlock
-					.getTotalBytesToTransfer(),
+							.getTotalBytesToTransfer(),
 					operativeTransferControlBlock
-					.getTotalBytesTransferredSoFar(),
+							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
-					.getTotalFilesTransferredSoFar(),
+							.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_INITIATION, getIRODSAccount()
-					.getHost(), getIRODSAccount().getZone());
+							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 
@@ -1791,22 +1791,22 @@ DataTransferOperations {
 			TransferStatus status = TransferStatus.instance(TransferType.COPY,
 					sourceFile.getAbsolutePath(), targetFile.getAbsolutePath(),
 					targetResource, operativeTransferControlBlock
-					.getTotalBytesToTransfer(),
+							.getTotalBytesToTransfer(),
 					operativeTransferControlBlock
-					.getTotalBytesTransferredSoFar(),
+							.getTotalBytesTransferredSoFar(),
 					operativeTransferControlBlock
-					.getTotalFilesTransferredSoFar(),
+							.getTotalFilesTransferredSoFar(),
 					operativeTransferControlBlock.getTotalFilesSkippedSoFar(),
 					operativeTransferControlBlock.getTotalFilesToTransfer(),
 					TransferState.OVERALL_COMPLETION, getIRODSAccount()
-					.getHost(), getIRODSAccount().getZone());
+							.getHost(), getIRODSAccount().getZone());
 			transferStatusCallbackListener.overallStatusCallback(status);
 		}
 	}
 
 	/**
 	 * Do a pre-transfer count of files for progress indications.
-	 *
+	 * 
 	 * @param irodsFileAbsolutePath
 	 * @param operativeTransferControlBlock
 	 * @throws FileNotFoundException
@@ -1815,7 +1815,7 @@ DataTransferOperations {
 	private void preCountIrodsFilesBeforeTransfer(
 			final String irodsFileAbsolutePath,
 			final TransferControlBlock operativeTransferControlBlock)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 		IRODSAccessObjectFactory irodsAccessObjectFactory = getIRODSAccessObjectFactory();
 		CollectionAO collectionAO = irodsAccessObjectFactory
 				.getCollectionAO(getIRODSAccount());
@@ -1827,7 +1827,7 @@ DataTransferOperations {
 
 	/**
 	 * Replicate a single file and process any exceptions or success callbacks.
-	 *
+	 * 
 	 * @param irodsFileAbsolutePath
 	 * @param targetResource
 	 * @param transferStatusCallbackListener
@@ -1849,7 +1849,7 @@ DataTransferOperations {
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws JargonException {
+			throws JargonException {
 		log.info("replicate single file");
 
 		transferOperationsHelper.processReplicationOfSingleFile(

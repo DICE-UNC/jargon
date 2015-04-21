@@ -8,9 +8,9 @@ import org.irods.jargon.core.pub.domain.UserGroup;
 /**
  * Represents a packing instruction for iRODS general admin functionality. These
  * functions are equivalent to operations done using the iadmin icommands.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
@@ -52,7 +52,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * bug where it gets truncated. The <code>UserAO</code> methods will instead
 	 * add a call to the equivalent of 'iadmin aua' to insert the user DN. See
 	 * comments for that class.
-	 *
+	 * 
 	 * @param user
 	 *            {@link org.irods.jargon.core.pub.domain.User} to be added to
 	 *            iRODS.
@@ -82,7 +82,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the comment
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param comment
@@ -109,7 +109,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the info
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param info
@@ -134,7 +134,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Generate the packing instruction suitable for removing a user from iRODS.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name to be removed.
 	 * @return {@link GeneralAdminInp}
@@ -153,7 +153,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the packing instruction to set user quota total for a user
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the user name
 	 * @param quotaValue
@@ -164,7 +164,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForSetUserQuotaTotal(
 			final String userName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -182,7 +182,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Set the 'total' quota for a user group
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the user group name
 	 * @param quotaValue
@@ -192,7 +192,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(
 			final String userGroupName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
@@ -210,7 +210,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the packing instruction to set the user quota for a given resource
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the user name
 	 * @param resourceName
@@ -244,7 +244,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the packing instruction to set the user group quota for a given
 	 * resource
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the user group name
 	 * @param resourceName
@@ -277,7 +277,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the command to cause quota usage to be calculated
-	 *
+	 * 
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -290,7 +290,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the zone
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param zone
@@ -316,7 +316,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the iadmin command that is analogous to the aua command that adds
 	 * a user DN
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name
 	 * @param userDN
@@ -343,7 +343,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the iadmin command that is analogous to the rua command that
 	 * removes a user DN
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name
 	 * @param userDN
@@ -370,7 +370,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the password
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param password
@@ -380,7 +380,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(
 			final String userName, final String password)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -398,7 +398,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the password
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param password
@@ -408,7 +408,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserPassword(
 			final String userName, final String password)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -426,7 +426,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create a packing instruction to add the given iRODS user group to the
 	 * zone
-	 *
+	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @return {@link GeneralAdminInp}
@@ -444,7 +444,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the packing instruction to add a user to a given iRODS user group
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the user group name to which the user
 	 *            will be added
@@ -483,7 +483,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the packing instruction to remove a user from a group
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the user group name from which the
 	 *            user will be removed
@@ -522,7 +522,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction to remove a given iRODS user group
-	 *
+	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to remove
 	 * @return {@link GeneralAdminInp}
@@ -541,7 +541,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for modifying the type
 	 * associated with the given user.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the iRODS user name.
 	 * @param userType
@@ -552,7 +552,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserType(
 			final String userName, final UserTypeEnum userType)
-					throws JargonException {
+			throws JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
 		}
@@ -574,7 +574,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super();
 
 		if (apiNumber <= 0) {
@@ -597,7 +597,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg0() {
@@ -606,7 +606,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg1() {
@@ -615,7 +615,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg2() {
@@ -624,7 +624,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg3() {
@@ -633,7 +633,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg4() {
@@ -642,7 +642,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg5() {
@@ -651,7 +651,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg6() {
@@ -660,7 +660,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg7() {
@@ -669,7 +669,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg8() {
@@ -678,7 +678,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Get the argument
-	 *
+	 * 
 	 * @return <code>String</code> with the argument at this position
 	 */
 	public String getArg9() {
@@ -687,7 +687,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

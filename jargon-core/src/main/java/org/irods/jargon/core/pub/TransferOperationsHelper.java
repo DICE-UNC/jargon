@@ -887,7 +887,7 @@ final class TransferOperationsHelper {
 			sb.append(targetIrodsFile.getAbsolutePath());
 			sb.append("/");
 			sb.append(sourceFile.getName());
-			targetFileAsFile = this.collectionAO.getIRODSFileFactory()
+			targetFileAsFile = collectionAO.getIRODSFileFactory()
 					.instanceIRODSFile(sb.toString());
 			targetFileAsFile.setResource(targetIrodsFile.getResource());
 		} else {

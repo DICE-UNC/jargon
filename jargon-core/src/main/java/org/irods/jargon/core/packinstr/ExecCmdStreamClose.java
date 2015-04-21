@@ -9,9 +9,9 @@ import org.irods.jargon.core.exception.JargonException;
  * Immutable object gives translation of an ExecCmd operation into XML in order
  * to close a stream opened by ExecCmd. For simplicity, this variant of the
  * packing instruction is factored into its own class.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 
 public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
@@ -25,7 +25,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the packing instruction to close the given stream.
-	 *
+	 * 
 	 * @param fileDescriptor
 	 *            <code>int</code> with the file descriptor representing the
 	 *            stream to close
@@ -49,7 +49,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	/**
 	 * Constructor for a remote execution service close stream packing
 	 * instruction call.
-	 *
+	 * 
 	 * @param apiNumber
 	 *            <code>int</code> with the api number to use with this call.
 	 * @param fileDescriptor
@@ -74,7 +74,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

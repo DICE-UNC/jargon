@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Packing instruction to modify access permissions for a file. This is an
  * immutable and thread-safe object.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
@@ -40,7 +40,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to change permissions on
 	 * the file as an administrator.
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -69,7 +69,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to change permissions on
 	 * the file. This is equivalent to the -M icommand option for ichmod.
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -97,7 +97,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of packing instruction to set a collection to inherit.
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -119,7 +119,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of packing instruction to set a collection to inherit.
 	 * With admin mode
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -141,7 +141,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of packing instruction to set a collection to set no
 	 * inherit.
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -163,7 +163,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of packing instruction to set a collection to set no
 	 * inherit. In admin mode.
-	 *
+	 * 
 	 * @param recursive
 	 *            <code>boolean</code> that indicates whether this is a
 	 *            recursive operation
@@ -185,7 +185,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Private constructor for creating a version of the packing instruction to
 	 * set permissions on a collection or data object.
-	 *
+	 * 
 	 * @param apiNumber
 	 * @param recursive
 	 * @param zone
@@ -255,7 +255,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

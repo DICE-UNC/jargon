@@ -3102,6 +3102,8 @@ public class DataTransferOperationsImplTest {
 
 		IRODSFile targetParent = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+		targetParent.deleteWithForceOption();
+		// targetParent.mkdirs();
 
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, targetParent.getAbsolutePath());
@@ -3424,8 +3426,8 @@ public class DataTransferOperationsImplTest {
 
 	}
 
-	private String getResourceFromFiles(IRODSFile parent,
-			DataObjectAO dataObjectAO) throws Exception {
+	private String getResourceFromFiles(final IRODSFile parent,
+			final DataObjectAO dataObjectAO) throws Exception {
 		String resource = "";
 		for (File child : parent.listFiles()) {
 			if (child.isFile()) {

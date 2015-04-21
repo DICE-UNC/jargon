@@ -590,6 +590,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
 	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
+	 * 
 	 * } that represents the
 	 *         collections and data objects beneath the parent
 	 * @throws FileNotFoundException

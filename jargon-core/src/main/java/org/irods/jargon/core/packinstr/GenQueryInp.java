@@ -13,11 +13,11 @@ import org.irods.jargon.core.utils.IRODSConstants;
  * Wrap a query to IRODS, note that the only shared object is
  * <code>IRODSQuery</code> which is immutable, so this class should be
  * thread-safe.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class GenQueryInp extends AbstractIRODSPackingInstruction implements
-IRodsPI {
+		IRodsPI {
 
 	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 	private final int continueIndex;
@@ -47,7 +47,7 @@ IRodsPI {
 
 	/**
 	 * Return an instance of a query command that defaults to no partial start.
-	 *
+	 * 
 	 * @param translatedIRODSQuery
 	 * @param continueIndex
 	 *            <code>int</code> with a 0 or 1 to indicate continuation of a
@@ -61,14 +61,14 @@ IRodsPI {
 	public static GenQueryInp instance(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final String zoneName)
-					throws JargonException {
+			throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0, zoneName);
 	}
 
 	/**
 	 * Static instance method for version of the packing instruction to close
 	 * the query down.
-	 *
+	 * 
 	 * @param continueIndex
 	 *            <code>int</code> with value passed back from iRODS with the
 	 *            last query result.
@@ -83,7 +83,7 @@ IRodsPI {
 	/**
 	 * Return an instance of a query command that has a partial start index for
 	 * paging behavior.
-	 *
+	 * 
 	 * @param translatedIRODSQuery
 	 * @param continueIndex
 	 *            <code>int</code> with a 0 or 1 to indicate continuation of a
@@ -98,7 +98,7 @@ IRodsPI {
 	public static GenQueryInp instanceWithPartialStart(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int partialStartIndex, final String zoneName)
-					throws JargonException {
+			throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex,
 				zoneName);
 	}
@@ -106,7 +106,7 @@ IRodsPI {
 	/**
 	 * Special private constructor builds the packing instruction when this is a
 	 * close of a result set that had been continued.
-	 *
+	 * 
 	 * @param continueIndex
 	 *            <code>int</code> with value passed back from iRODS with the
 	 *            last query result.
@@ -183,7 +183,7 @@ IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -225,7 +225,7 @@ IRodsPI {
 
 		Tag[] subTags = null;
 		int[] orderByFlags = new int[translatedIRODSQuery.getSelectFields()
-		                             .size()];
+				.size()];
 		int j = 1;
 		int k = 0;
 
@@ -295,7 +295,7 @@ IRodsPI {
 			// package the conditions
 
 			subTags = new Tag[translatedIRODSQuery
-			                  .getTranslatedQueryConditions().size() * 2 + 1];
+					.getTranslatedQueryConditions().size() * 2 + 1];
 			subTags[0] = new Tag(ISLEN, translatedIRODSQuery
 					.getTranslatedQueryConditions().size());
 			j = 1;

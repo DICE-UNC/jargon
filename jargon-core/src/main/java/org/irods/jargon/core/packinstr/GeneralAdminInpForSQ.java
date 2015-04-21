@@ -28,7 +28,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for creating a Specific Query
 	 * iadmin asq
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition}
 	 *            to be added to iRODS.
@@ -60,13 +60,13 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 * removing more than this Specific Query object. <br>
 	 * Use GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL for
 	 * explicitly removing Specific Queries by SQL query.
-	 *
+	 * 
 	 * @param specificQuery
 	 *            {@link org.irods.jargon.core.pub.domain.SpecificQueryDefinition}
 	 *            to be removed from iRODS.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
-	 *
+	 * 
 	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(
 			final SpecificQueryDefinition specificQuery) throws JargonException {
@@ -82,12 +82,12 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for removing a Specific Query
 	 * (iadmin rsq)
-	 *
+	 * 
 	 * @param alias
 	 *            <code>String</code> with the Specific Query alias identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
-	 *
+	 * 
 	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQueryByAlias(
 			final String alias) throws JargonException {
@@ -104,17 +104,17 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	/**
 	 * Generate the packing instruction suitable for removing a Specific Query
 	 * (iadmin rsq)
-	 *
+	 * 
 	 * <p>
 	 * NOTE: This method will remove all Specific Queries whose SQL query
 	 * strings match the one provided
-	 *
+	 * 
 	 * @param query
 	 *            <code>String</code> with the Specific Query SQL query
 	 *            identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
-	 *
+	 * 
 	 **/
 	public static final GeneralAdminInpForSQ instanceForRemoveAllSpecificQueryBySQL(
 			final String query) throws JargonException {
