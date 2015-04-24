@@ -998,6 +998,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		}
 
 		if (operativeTransferControlBlock.getTransferOptions() == null) {
+			log.info("no transfer options are set, override with defaults");
 			operativeTransferControlBlock.setTransferOptions(getIRODSSession()
 					.buildTransferOptionsBasedOnJargonProperties());
 		}
