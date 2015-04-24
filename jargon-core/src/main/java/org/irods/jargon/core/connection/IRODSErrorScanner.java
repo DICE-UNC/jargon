@@ -3,32 +3,7 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.AuthenticationException;
-import org.irods.jargon.core.exception.CatNoAccessException;
-import org.irods.jargon.core.exception.CatalogSQLException;
-import org.irods.jargon.core.exception.CollectionNotEmptyException;
-import org.irods.jargon.core.exception.CollectionNotMountedException;
-import org.irods.jargon.core.exception.DataNotFoundException;
-import org.irods.jargon.core.exception.DuplicateDataException;
-import org.irods.jargon.core.exception.FileDriverError;
-import org.irods.jargon.core.exception.FileIntegrityException;
-import org.irods.jargon.core.exception.FileNotFoundException;
-import org.irods.jargon.core.exception.InvalidArgumentException;
-import org.irods.jargon.core.exception.InvalidGroupException;
-import org.irods.jargon.core.exception.InvalidInputParameterException;
-import org.irods.jargon.core.exception.InvalidResourceException;
-import org.irods.jargon.core.exception.InvalidUserException;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
-import org.irods.jargon.core.exception.NoAPIPrivException;
-import org.irods.jargon.core.exception.NoMoreRulesException;
-import org.irods.jargon.core.exception.NoResourceDefinedException;
-import org.irods.jargon.core.exception.RemoteScriptExecutionException;
-import org.irods.jargon.core.exception.SpecificQueryException;
-import org.irods.jargon.core.exception.UnixFileCreateException;
-import org.irods.jargon.core.exception.UnixFileMkdirException;
-import org.irods.jargon.core.exception.UnixFileRenameException;
-import org.irods.jargon.core.exception.ZoneUnavailableException;
+import org.irods.jargon.core.exception.*;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -202,6 +177,8 @@ public class IRODSErrorScanner {
 			throw new AuthenticationException("PAM authentication error");
 		case INVALID_INPUT_PARAM:
 			throw new InvalidInputParameterException("Invalid input parameter");
+		case CAT_INVALID_CLIENT_USER:
+			throw new InvalidClientUserException(message);
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {
