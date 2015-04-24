@@ -42,10 +42,12 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
-## Bug Fixes
+## Changes
 
+### Integration misc with CyberDuck #101
 
-## Features
+Misc small changes as we test Cyberduck integration with iRODS.  This is a catch-all issue for many minor changes.
+
 
 
 
