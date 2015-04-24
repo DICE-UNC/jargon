@@ -294,8 +294,8 @@ final class TransferOperationsHelper {
 				TransferStatus status = TransferStatus.instance(
 						TransferType.GET, irodsSourceFile.getAbsolutePath(),
 						targetLocalFileAsFile.getAbsolutePath(), "",
-						sourceFileLength, sourceFileLength,
-						transferControlBlock.getTotalFilesTransferredSoFar(),
+						sourceFileLength, 0, transferControlBlock
+								.getTotalFilesTransferredSoFar(),
 						transferControlBlock.getTotalFilesSkippedSoFar(),
 						totalFiles, TransferState.IN_PROGRESS_START_FILE,
 						dataObjectAO.getIRODSAccount().getHost(), dataObjectAO
@@ -384,7 +384,8 @@ final class TransferOperationsHelper {
 									irodsSourceFile.getAbsolutePath(),
 									targetLocalFileAsFile.getAbsolutePath(),
 									"", targetLocalFileAsFile.length(),
-									targetLocalFileAsFile.length(),
+									transferControlBlock
+											.getTotalBytesTransferredSoFar(),
 									transferControlBlock
 											.getTotalFilesTransferredSoFar(),
 									transferControlBlock
