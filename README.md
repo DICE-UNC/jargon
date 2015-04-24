@@ -48,6 +48,8 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 Misc small changes as we test Cyberduck integration with iRODS.  This is a catch-all issue for many minor changes.
 
+### Authenticates as the proxy instead of client #100
 
+Handle authentication with proxy user, per a patch supplied by Tony Edgin at iPlant (Thanks!) 
 
 
