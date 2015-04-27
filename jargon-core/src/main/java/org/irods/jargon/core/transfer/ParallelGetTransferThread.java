@@ -431,19 +431,22 @@ public final class ParallelGetTransferThread extends
 			return;
 
 		} else if (offset > 0) {
+
+			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
+				parallelGetFileTransferStrategy.getRestartManager()
+						.updateOffsetForSegment(
+								parallelGetFileTransferStrategy
+										.getFileRestartInfo()
+										.identifierFromThisInfo(),
+								getThreadNumber(), offset);
+			}
+
 			try {
 				if (offset == local.getFilePointer()) {
 					return; // at current location
 				}
 				local.seek(offset);
-				if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
-					parallelGetFileTransferStrategy.getRestartManager()
-							.updateOffsetForSegment(
-									parallelGetFileTransferStrategy
-											.getFileRestartInfo()
-											.identifierFromThisInfo(),
-									getThreadNumber(), offset);
-				}
+
 				// log.debug("seek completed");
 			} catch (Exception e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,

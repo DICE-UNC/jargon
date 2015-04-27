@@ -153,7 +153,7 @@ public class GetTransferRestartProcessor extends
 
 					// ok, have a gap > 0, let's get our restart on
 
-					getSegment(gap, localFile, buffer, fileRestartInfo, i - 1,
+					getSegment(gap, localFile, buffer, fileRestartInfo, i,
 							irodsRandomAccessFile, intraFileStatusListener);
 					currentOffset += gap;
 				}

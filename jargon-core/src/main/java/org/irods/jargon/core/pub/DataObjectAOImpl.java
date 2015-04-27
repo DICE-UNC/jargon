@@ -1067,13 +1067,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("checking to see if this is a restart...");
-		/*
-		 * FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
-		 * RestartType.GET, irodsFileToGet.getAbsolutePath());
-		 */
 
-		FileRestartInfo fileRestartInfo = null; // TODO: issue77 for now get not
-												// supported
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+				RestartType.GET, irodsFileToGet.getAbsolutePath());
 
 		if (fileRestartInfo != null) {
 			log.info("restart processing for get..");
@@ -1141,7 +1137,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
 				fileRestartInfo.getRestartType(),
-				fileRestartInfo.getIrodsAbsolutePath());
+				fileRestartInfo.getIrodsAbsolutePath()); // just use file
+															// restart info
 
 		int offsetInMillis = 10000;
 		while (true) {
@@ -1162,6 +1159,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					break;
 
 				}
+
 				getRestartProcess(transferControlBlock, irodsFileToGet,
 						myFileRestartInfo, transferStatusCallbackListener);
 				log.info("restart done");
@@ -1492,26 +1490,35 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							lengthFromIrodsResponse, irodsFileLength,
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
+
 					getIRODSProtocol().operationComplete(l1descInx);
+					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+							RestartType.GET, irodsFileToGet.getAbsolutePath());
+					if (fileRestartInfo != null) {
+						log.info("delete old restart stuff");
+						getIRODSSession().getRestartManager().deleteRestart(
+								fileRestartInfo.identifierFromThisInfo());
+					}
 
 				} catch (FileRestartManagementException e) {
 					log.error("transfer and restart failed", e);
 					throw e;
-				} catch (JargonException je) {
-					/*
-					 * log.info("attempting a restart after exception", je);
-					 * FileRestartInfo fileRestartInfo =
-					 * retrieveRestartInfoIfAvailable( RestartType.GET,
-					 * irodsFileToGet.getAbsolutePath()); if (fileRestartInfo !=
-					 * null) { log.info("carrying out restart process..");
-					 * getRestartRetryTillMaxLoop(transferControlBlock,
-					 * irodsFileToGet, fileRestartInfo,
-					 * transferStatusCallbackListener); }
-					 */
+				} catch (Throwable e) {
+
+					log.info("attempting a restart after exception", e);
+					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+							RestartType.GET, irodsFileToGet.getAbsolutePath());
+					if (fileRestartInfo != null) {
+						log.info("carrying out restart process..");
+						getRestartRetryTillMaxLoop(transferControlBlock,
+								irodsFileToGet, fileRestartInfo,
+								transferStatusCallbackListener);
+					}
+
 					log.error(
-							"jargon exception in get transfer, currently restart is not supported for get",
-							je);
-					throw je;
+							" exception in get transfer, currently restart is not supported for get",
+							e);
+					throw e;
 				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -1604,10 +1611,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * Info may remain null if restart processing is not configured,
 		 * otherwise, it will hold info on the current file restart status
 		 */
-		FileRestartInfo fileRestartInfo = retrieveOrCreateRestartInfoIfConfigured(
-				RestartType.GET, irodsSourceFile.getAbsolutePath(),
-				localFileToHoldData.getAbsolutePath(), numberOfThreads,
-				irodsFileLength);
+		FileRestartInfo fileRestartInfo = null;
+
+		/*
+		 * retrieveOrCreateRestartInfoIfConfigured( RestartType.GET,
+		 * irodsSourceFile.getAbsolutePath(),
+		 * localFileToHoldData.getAbsolutePath(), numberOfThreads,
+		 * irodsFileLength);
+		 */
 
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
@@ -1631,9 +1642,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			try {
 				parallelGetTransferStrategy.transfer();
-			} catch (Exception e) {
 
-				// FIXME: #77 impl here!
+			} catch (Throwable e) {
 
 				log.error(
 						"exception in parallel transfer, connection will be abandoned",
