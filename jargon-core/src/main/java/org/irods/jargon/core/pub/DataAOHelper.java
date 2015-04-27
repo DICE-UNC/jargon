@@ -455,9 +455,9 @@ public final class DataAOHelper extends AOHelper {
 		if (transferStatusCallbackListener != null
 				&& myTransferOptions.isIntraFileStatusCallbacks()) {
 			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-					.instanceSettingInterval(TransferType.PUT,
-							localFile.length(), transferControlBlock,
-							transferStatusCallbackListener, 100);
+					.instance(TransferType.PUT, localFile.length(),
+							transferControlBlock,
+							transferStatusCallbackListener);
 		}
 
 		InputStream fileInputStream = new FileInputStream(localFile);

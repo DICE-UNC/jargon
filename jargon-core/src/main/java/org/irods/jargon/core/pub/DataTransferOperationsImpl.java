@@ -904,9 +904,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 						.instance(TransferType.PUT, sourceFile
 								.getAbsolutePath(), callbackTargetIrodsPath,
 								"", operativeTransferControlBlock
-										.getTotalBytesToTransfer(),
-								operativeTransferControlBlock
-										.getTotalBytesTransferredSoFar(),
+										.getTotalBytesToTransfer(), 0L,
 								operativeTransferControlBlock
 										.getTotalFilesTransferredSoFar(),
 								operativeTransferControlBlock
@@ -932,9 +930,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 							TransferType.PUT, sourceFile.getAbsolutePath(),
 							callbackTargetIrodsPath, "",
 							operativeTransferControlBlock
-									.getTotalBytesToTransfer(),
-							operativeTransferControlBlock
-									.getTotalBytesTransferredSoFar(),
+									.getTotalBytesToTransfer(), 0L,
 							operativeTransferControlBlock
 									.getTotalFilesSkippedSoFar(),
 							operativeTransferControlBlock

@@ -437,6 +437,108 @@ public class DataTransferOperationsImplTest {
 				destFile.getAbsolutePath(), localFile.getAbsolutePath());
 	}
 
+	@Test
+	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerified()
+			throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+		// generate a local scratch file
+		String testFileName = "testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerified.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						30 * 1024 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		TestingStatusCallbackListener testingCallbackListener = new TestingStatusCallbackListener();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile,
+				testingCallbackListener, null);
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+
+		Assert.assertFalse(
+				"no bytes reported in callbacks",
+				testingCallbackListener.getBytesReportedIntraFileCallbacks() == 0);
+	}
+
+	@Test
+	public void testPutOneFileIntraFileCallbacksSpecifiedTransferOptsAndVerified()
+			throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(false);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+		// generate a local scratch file
+		String testFileName = "testPutOneFileIntraFileCallbacksSpecifiedTransferOptsAndVerified.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						30 * 1024 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		TransferControlBlock tcb = irodsFileSystem.getIrodsSession()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setIntraFileStatusCallbacks(true);
+
+		TestingStatusCallbackListener testingCallbackListener = new TestingStatusCallbackListener();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile,
+				testingCallbackListener, tcb);
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+
+		Assert.assertFalse(
+				"no bytes reported in callbacks",
+				testingCallbackListener.getBytesReportedIntraFileCallbacks() == 0);
+		;
+
+	}
+
 	/**
 	 * Bug [#1837] timeout on put using 3.3.2-SNAPSHOT
 	 * 
@@ -705,6 +807,71 @@ public class DataTransferOperationsImplTest {
 		Assert.assertEquals("did not get the full local file name in callback",
 				getLocalFile.getAbsolutePath(),
 				testCallbackListener.getLastTargetPath());
+
+	}
+
+	@Test
+	public void testGetOneFileWithIntraFileInPropsVerifyCallbacks()
+			throws Exception {
+		// generate a local scratch file
+		String testFileName = "testGetOneFileWithIntraFileInPropsVerifyCallbacks.txt";
+		String testRetrievedFileName = "testGetOneFileWithIntraFileInPropsVerifyCallbacksRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						30 * 1024 * 1024);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
+
+		// now get the file
+		dataTransferOperationsAO.getOperation(getIRODSFile, getLocalFile,
+				testCallbackListener, null);
+
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		Assert.assertEquals("did not expect any errors", 0,
+				testCallbackListener.getErrorCallbackCount());
+		Assert.assertEquals("file callback, initial and completion", 3,
+				testCallbackListener.getSuccessCallbackCount());
+		Assert.assertEquals("did not get the full irods file name in callback",
+				targetIrodsFile, testCallbackListener.getLastSourcePath());
+		Assert.assertEquals("did not get the full local file name in callback",
+				getLocalFile.getAbsolutePath(),
+				testCallbackListener.getLastTargetPath());
+		Assert.assertFalse("no intra file callbacks",
+				testCallbackListener.getNumberIntraFileCallbacks() == 0);
 
 	}
 
