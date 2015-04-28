@@ -95,14 +95,21 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 
 		AbstractIRODSMidLevelProtocol protocol = createInitialProtocol(
 				connection, irodsProtocolManager);
-		// add a session reference to the protocol.
-		protocol.setIrodsSession(irodsSession);
+		try {
+			// add a session reference to the protocol.
+			protocol.setIrodsSession(irodsSession);
 
-		log.info("...have connection, now authenticate given the auth scheme in the iRODS account...");
-		protocol = authenticate(protocol, irodsAccount, irodsSession,
-				irodsProtocolManager);
-		log.info("..authenticated...now decorate and return...");
-		return decorate(protocol, irodsAccount, irodsSession);
+			log.info("...have connection, now authenticate given the auth scheme in the iRODS account...");
+			protocol = authenticate(protocol, irodsAccount, irodsSession,
+					irodsProtocolManager);
+			log.info("..authenticated...now decorate and return...");
+			return decorate(protocol, irodsAccount, irodsSession);
+		} catch (AuthenticationException e) {
+			log.warn("auth failure, be sure to abandon agent)", e);
+			protocol.disconnectWithForce();
+			throw e;
+		}
+
 	}
 
 	/**

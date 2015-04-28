@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * This object is immutable, but should not be shared between threads, as it
  * holds a reference to a connection to an iRODS Agent.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
@@ -64,7 +64,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/**
 	 * Static instance method for a remote execution service.
-	 *
+	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -74,7 +74,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * @param executionHost
 	 *            <code>String</code> that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
-	 *
+	 * 
 	 * @return <code>RemoteExecutionService</code>
 	 * @throws JargonException
 	 */
@@ -82,7 +82,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost, "", PathHandlingMode.NONE);
@@ -92,7 +92,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * Static instance method for a remote execution service when using the
 	 * provided iRODS absolute path to compute the physical path and add it as a
 	 * command argument.
-	 *
+	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -116,7 +116,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(
 				irodsCommands,
 				commandToExecuteWithoutArguments,
@@ -129,7 +129,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	/**
 	 * Static instance method for a remote execution service when using the
 	 * provided iRODS absolute path to find the host upon which to execute.
-	 *
+	 * 
 	 * @param commandToExecuteWithoutArguments
 	 *            <code>String</code> with the name of the command to execute.
 	 *            Do not put arguments into this field.
@@ -153,7 +153,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
@@ -163,7 +163,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/**
 	 * Constructor for a remote execution service.
-	 *
+	 * 
 	 * @param irodsCommands
 	 *            {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
 	 *            that will be used to send commands to iRODS. The connection is
@@ -236,7 +236,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override
@@ -303,7 +303,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override

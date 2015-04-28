@@ -3,8 +3,8 @@
  */
 package org.irods.jargon.core.transfer;
 
-import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.RandomAccessFile;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -26,8 +26,14 @@ public abstract class AbstractTransferRestartProcessor extends
 	private final AbstractRestartManager restartManager;
 	private static Logger log = LoggerFactory
 			.getLogger(AbstractTransferRestartProcessor.class);
+	private final TransferStatusCallbackListener transferStatusCallbackListener;
+	private final TransferControlBlock transferControlBlock;
 
 	public static final long RESTART_FILE_UPDATE_SIZE = 32 * 1024 * 1024;
+
+	public enum OpenType {
+		READ, WRITE
+	}
 
 	/**
 	 * Constructor with required dependencies
@@ -43,11 +49,19 @@ public abstract class AbstractTransferRestartProcessor extends
 	public AbstractTransferRestartProcessor(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount,
-			final AbstractRestartManager restartManager) {
+			final AbstractRestartManager restartManager,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final TransferControlBlock transferControlBlock) {
 		super(irodsAccessObjectFactory, irodsAccount);
 		if (restartManager == null) {
 			throw new IllegalArgumentException("null restartManager");
 		}
+		if (transferControlBlock == null) {
+			throw new IllegalArgumentException("null transferControlBlock");
+		}
+		this.transferControlBlock = transferControlBlock;
+		this.transferStatusCallbackListener = transferStatusCallbackListener;
+
 		this.restartManager = restartManager;
 	}
 
@@ -63,10 +77,17 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * needed, based on the data held by the restart manager.
 	 * 
 	 * @return {@link RestartResult} with details of the restart processing
+	 * @throws RestartFailedException
+	 *             if the actual restart process failed
+	 * @throws FileRestartManagementException
+	 *             if the restart failed for configuration or other reasons, and
+	 *             restart should not be attempted again
 	 * @throws JargonException
+	 *             general exception that may trigger another restart attempt
 	 */
 	public abstract void restartIfNecessary(final String irodsAbsolutePath)
-			throws JargonException;
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException;
 
 	/**
 	 * Given the restart info return the local file and make sure it exists
@@ -77,15 +98,13 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	protected File localFileAsFileAndCheckExists(
-			final FileRestartInfo fileRestartInfo)
+	protected RandomAccessFile localFileAsFileAndCheckExists(
+			final FileRestartInfo fileRestartInfo, final OpenType openType)
 			throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
-		File localFile = localFileAsFile(fileRestartInfo);
-		if (!localFile.exists()) {
-			throw new FileNotFoundException("unable to find local file");
-		}
+		RandomAccessFile localFile = localFileAsFile(fileRestartInfo, openType);
+
 		return localFile;
 
 	}
@@ -96,14 +115,20 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * @param fileRestartInfo
 	 *            fileRestartInfo {@link FileRestartInfo} that describes the
 	 *            transfer
-	 * @return {@link File} that represents the local part of the transfer
+	 * @param openType
+	 * @return {@link RandomAccessFile} that represents the local part of the
+	 *         transfer
 	 * @throws JargonException
 	 */
-	protected File localFileAsFile(final FileRestartInfo fileRestartInfo)
+	protected RandomAccessFile localFileAsFile(
+			final FileRestartInfo fileRestartInfo, final OpenType openType)
 			throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
+		}
+		if (openType == null) {
+			throw new IllegalArgumentException("null openType");
 		}
 
 		if (fileRestartInfo.getLocalAbsolutePath() == null
@@ -114,7 +139,20 @@ public abstract class AbstractTransferRestartProcessor extends
 					"unable to find a local file path in the restart info");
 		}
 
-		return new File(fileRestartInfo.getLocalAbsolutePath());
+		String openFlag;
+		if (openType == OpenType.READ) {
+			openFlag = "r";
+		} else {
+			openFlag = "rw";
+		}
+		try {
+			return new RandomAccessFile(fileRestartInfo.getLocalAbsolutePath(),
+					openFlag);
+		} catch (FileNotFoundException e) {
+			log.error("local file not found:{}",
+					fileRestartInfo.getLocalAbsolutePath());
+			throw new JargonException("cannot find local file");
+		}
 
 	}
 
@@ -133,10 +171,76 @@ public abstract class AbstractTransferRestartProcessor extends
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
-		if (this.getRestartManager() == null) {
+		if (getRestartManager() == null) {
 			throw new JargonRuntimeException("no restart manager configured");
 		}
 		return getRestartManager().retrieveRestart(fileRestartInfoIdentifier);
+	}
+
+	/**
+	 * Retrieve the restart info if it exists and Jargon is configured to do
+	 * restarts.
+	 * <p/>
+	 * This method will check the configuration as well as the actual restart
+	 * manager, and will return <code>null</code>
+	 * 
+	 * 
+	 * @param irodsAbsolutePath
+	 * @param restartType
+	 * @return
+	 * @throws FileRestartManagementException
+	 */
+	protected FileRestartInfo retrieveRestartIfConfiguredOrNull(
+			final String irodsAbsolutePath,
+			final FileRestartInfo.RestartType restartType)
+			throws FileRestartManagementException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		try {
+			if (getIrodsAccessObjectFactory().getJargonProperties()
+					.isLongTransferRestart()) {
+				if (getRestartManager() == null) {
+					log.error("no restart manager configured");
+					throw new FileRestartManagementException(
+							"retart manager not configured");
+				}
+			}
+		} catch (JargonException e) {
+			log.error("exception accessing restart manager", e);
+			throw new FileRestartManagementException("retart manager error", e);
+		}
+
+		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
+		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIrodsAccount()
+				.toString());
+		fileRestartInfoIdentifier.setRestartType(restartType);
+
+		log.info("see if restart for:{}", fileRestartInfoIdentifier);
+
+		FileRestartInfo fileRestartInfo = getRestartManager().retrieveRestart(
+				fileRestartInfoIdentifier);
+
+		return fileRestartInfo;
+
+	}
+
+	/**
+	 * @return the transferStatusCallbackListener
+	 */
+	public TransferStatusCallbackListener getTransferStatusCallbackListener() {
+		return transferStatusCallbackListener;
+	}
+
+	/**
+	 * @return the transferControlBlock
+	 */
+	public TransferControlBlock getTransferControlBlock() {
+		return transferControlBlock;
 	}
 
 }

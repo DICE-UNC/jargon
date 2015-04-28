@@ -450,7 +450,7 @@ public class TicketAdminServiceImplTest {
 
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = JargonException.class)
 	public void testCreateTicketForDataObjectBelongingToDifferentUser()
 			throws Exception {
 

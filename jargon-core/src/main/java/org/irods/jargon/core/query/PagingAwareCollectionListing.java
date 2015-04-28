@@ -31,7 +31,41 @@ public class PagingAwareCollectionListing {
 	 * List from the query, will contain a set of collections and data objects
 	 * with a paging status reflected in this object.
 	 */
+<<<<<<< HEAD
 	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries;
+=======
+	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("PagingAwareCollectionListing");
+		sb.append("\n\tcollectionOffset:");
+		sb.append(collectionsOffset);
+		sb.append("\n\tcollectionsCount:");
+		sb.append(collectionsCount);
+		sb.append("\n\tcollectionsTotalRecords:");
+		sb.append(collectionsTotalRecords);
+		sb.append("\n\tcollectionsComplete:");
+		sb.append(collectionsComplete);
+		sb.append("\n\tdataObjectsOffset:");
+		sb.append(dataObjectsOffset);
+		sb.append("\n\tdataObjectsCount:");
+		sb.append(dataObjectsCount);
+		sb.append("\n\tdataObjectsTotalRecords:");
+		sb.append(dataObjectsTotalRecords);
+		sb.append("\n\tdataObjectsComplete:");
+		sb.append(dataObjectsComplete);
+		sb.append("\n\tpageSizeUtilized:");
+		sb.append(pageSizeUtilized);
+		return sb.toString();
+	}
+>>>>>>> master
 
 	/**
 	 * Default (no-values) constructor for simple value object

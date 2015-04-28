@@ -5,7 +5,6 @@ package org.irods.jargon.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
@@ -117,9 +116,9 @@ public final class ParallelGetTransferThread extends
 			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
 					outputBuffer);
 
-			int inputBuffSize = this.parallelGetFileTransferStrategy
+			int inputBuffSize = parallelGetFileTransferStrategy
 					.getJargonProperties().getInternalInputStreamBufferSize();
-			int outputBuffSize = this.parallelGetFileTransferStrategy
+			int outputBuffSize = parallelGetFileTransferStrategy
 					.getJargonProperties().getInternalOutputStreamBufferSize();
 
 			if (inputBuffSize < 0) {
@@ -175,20 +174,13 @@ public final class ParallelGetTransferThread extends
 			log.info("connection listener configured, will produce callbacks");
 		}
 
-		RandomAccessFile local;
+		RandomAccessFile local = null;
+
 		try {
 			log.info("opening local randomAccessFile");
 			local = new RandomAccessFile(
 					parallelGetFileTransferStrategy.getLocalFile(), "rw");
 			log.info("random access file opened rw mode");
-		} catch (FileNotFoundException e) {
-			log.error("FileNotFoundException in parallel get operation", e);
-			throw new JargonException(
-					"FileNotFoundException in parallel get operation", e);
-		}
-
-		try {
-
 			processingLoopForGetData(local);
 
 		} catch (JargonException je) {
@@ -203,7 +195,9 @@ public final class ParallelGetTransferThread extends
 				log.info("closing sockets, this close eats exceptions");
 				close();
 				log.info("closing local file");
-				local.close();
+				if (local != null) {
+					local.close();
+				}
 				log.info("local file closed, exiting get() method");
 			} catch (IOException e) {
 			}
@@ -226,11 +220,11 @@ public final class ParallelGetTransferThread extends
 
 		// Where to seek into the data
 		long offset = readLong();
-		// log.info("   offset:{}", offset);
 
 		// How much to read/write
 		long length = readLong();
-		// log.info("   length:{}", length);
+		log.info(">>>new offset:{}", offset);
+		log.info(">>>new length:{}", length);
 
 		// Holds all the data for transfer
 		byte[] buffer = null;
@@ -251,11 +245,13 @@ public final class ParallelGetTransferThread extends
 			} else {
 				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
 				// unsigned char );
-				buffer = new byte[this.parallelGetFileTransferStrategy
+				buffer = new byte[parallelGetFileTransferStrategy
 						.getJargonProperties().getParallelCopyBufferSize()];
 			}
 
 			seekToOffset(local, offset);
+
+			long totalWrittenSinceLastRestartUpdate = 0;
 
 			while (length > 0) {
 
@@ -268,9 +264,10 @@ public final class ParallelGetTransferThread extends
 				log.debug("reading....");
 
 				read = myRead(getIn(), buffer, Math.min(
-						this.parallelGetFileTransferStrategy
-								.getJargonProperties()
+						parallelGetFileTransferStrategy.getJargonProperties()
 								.getParallelCopyBufferSize(), (int) length));
+
+				totalWrittenSinceLastRestartUpdate += read;
 
 				if (read > 0) {
 					length -= read;
@@ -291,15 +288,37 @@ public final class ParallelGetTransferThread extends
 													.instanceForReceive(read));
 						}
 
+						if (parallelGetFileTransferStrategy
+								.getFileRestartInfo() != null) {
+
+							parallelGetFileTransferStrategy.getRestartManager()
+									.updateLengthForSegment(
+											parallelGetFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
+							totalWrittenSinceLastRestartUpdate = 0;
+							log.debug("signal storage of new info");
+
+						}
+
 						// read the next header
 						operation = readInt();
 						readInt();
 						offset = readLong();
 						length = readLong();
 
+						log.info(">>>new offset:{}", offset);
+						log.info(">>>new length:{}", length);
+
 						if (operation == DONE_OPR) {
 							break;
 						}
+
+						/*
+						 * If restarting, maintain a reference to the offset
+						 */
 
 						seekToOffset(local, offset);
 
@@ -322,6 +341,7 @@ public final class ParallelGetTransferThread extends
 											ConnectionProgressStatus
 													.instanceForReceive(read));
 						}
+
 					}
 				} else {
 					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
@@ -332,6 +352,7 @@ public final class ParallelGetTransferThread extends
 
 				Thread.yield();
 			}
+
 		} catch (IOException e) {
 			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
 					parallelGetFileTransferStrategy.toString());
@@ -344,8 +365,8 @@ public final class ParallelGetTransferThread extends
 		}
 	}
 
-	private int myRead(final InputStream in, byte[] buffer, final int length)
-			throws IOException, JargonException {
+	private int myRead(final InputStream in, final byte[] buffer,
+			final int length) throws IOException, JargonException {
 		int myLength = length;
 		int ptr = 0;
 		int read = 0;
@@ -410,11 +431,22 @@ public final class ParallelGetTransferThread extends
 			return;
 
 		} else if (offset > 0) {
+
+			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
+				parallelGetFileTransferStrategy.getRestartManager()
+						.updateOffsetForSegment(
+								parallelGetFileTransferStrategy
+										.getFileRestartInfo()
+										.identifierFromThisInfo(),
+								getThreadNumber(), offset);
+			}
+
 			try {
 				if (offset == local.getFilePointer()) {
 					return; // at current location
 				}
 				local.seek(offset);
+
 				// log.debug("seek completed");
 			} catch (Exception e) {
 				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,

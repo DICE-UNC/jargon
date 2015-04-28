@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Represents a checksum and the type of checksum
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class ChecksumValue {
 
@@ -83,7 +83,7 @@ public class ChecksumValue {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -106,6 +106,67 @@ public class ChecksumValue {
 		}
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime
+				* result
+				+ ((checksumEncoding == null) ? 0 : checksumEncoding.hashCode());
+		result = prime
+				* result
+				+ ((checksumStringValue == null) ? 0 : checksumStringValue
+						.hashCode());
+		result = prime
+				* result
+				+ ((checksumTransmissionFormat == null) ? 0
+						: checksumTransmissionFormat.hashCode());
+		return result;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		ChecksumValue other = (ChecksumValue) obj;
+		if (checksumEncoding != other.checksumEncoding) {
+			return false;
+		}
+		if (checksumStringValue == null) {
+			if (other.checksumStringValue != null) {
+				return false;
+			}
+		} else if (!checksumStringValue.equals(other.checksumStringValue)) {
+			return false;
+		}
+		if (checksumTransmissionFormat == null) {
+			if (other.checksumTransmissionFormat != null) {
+				return false;
+			}
+		} else if (!checksumTransmissionFormat
+				.equals(other.checksumTransmissionFormat)) {
+			return false;
+		}
+		return true;
 	}
 
 }

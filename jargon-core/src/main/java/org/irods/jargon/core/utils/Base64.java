@@ -11,7 +11,7 @@ import java.io.IOException;
 /**
  * Routines for converting between Strings of base64-encoded data and arrays of
  * binary data.
- *
+ * 
  * @author Brian Wellington
  */
 public class Base64 {
@@ -22,7 +22,7 @@ public class Base64 {
 
 	/**
 	 * Convert binary data to a base64-encoded String
-	 *
+	 * 
 	 * @param b
 	 *            An array containing binary data
 	 * @return A String containing the encoded data
@@ -65,7 +65,7 @@ public class Base64 {
 
 	/**
 	 * Formats data into a nicely formatted base64 encoded String
-	 *
+	 * 
 	 * @param b
 	 *            An array containing binary data
 	 * @param lineLength
@@ -97,7 +97,7 @@ public class Base64 {
 
 	/**
 	 * Convert a base64-encoded String to binary data
-	 *
+	 * 
 	 * @param str
 	 *            A String containing the encoded data
 	 * @return An array containing the binary data, or null if the string is

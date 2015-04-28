@@ -4,9 +4,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * Invalid input parameter
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class InvalidInputParameterException extends JargonException {
 

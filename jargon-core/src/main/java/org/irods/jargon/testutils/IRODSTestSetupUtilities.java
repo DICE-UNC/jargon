@@ -19,10 +19,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Common utilities to prep the test irods for unit tests
- *
- *
+ * 
+ * 
  * @author Mike Conway, DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSTestSetupUtilities {
 	private TestingPropertiesHelper testingPropertiesHelper;
@@ -45,7 +45,7 @@ public class IRODSTestSetupUtilities {
 	/**
 	 * Remove the scratch directory from irods based on the testing.properties
 	 * file
-	 *
+	 * 
 	 * @throws TestingUtilsException
 	 */
 	@Overheaded
@@ -90,7 +90,7 @@ public class IRODSTestSetupUtilities {
 	/**
 	 * Clear and then create a fresh scratch directory in irods based on the
 	 * testing.properties file
-	 *
+	 * 
 	 * @throws TestingUtilsException
 	 */
 	public void initializeIrodsScratchDirectory() throws TestingUtilsException {
@@ -121,7 +121,7 @@ public class IRODSTestSetupUtilities {
 	/**
 	 * Create a directory under scratch with the given name, which is typically
 	 * a name assigned per Junit test class
-	 *
+	 * 
 	 * @param testingDirectory
 	 *            <code>String</code> with a directory to go underneath scratch,
 	 *            do not supply leading '/'

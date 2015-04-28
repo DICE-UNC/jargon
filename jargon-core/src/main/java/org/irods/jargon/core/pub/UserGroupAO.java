@@ -13,16 +13,16 @@ import org.irods.jargon.core.query.JargonQueryException;
 /**
  * Interface for an access object dealing with iRODS user groups. Includes
  * methods to obtain information on, and to manage iRODS user groups.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Given a user group id, return the <code>UserGroup</code>, or return null
 	 * if not found
-	 *
+	 * 
 	 * @param userGroupId
 	 *            <code>String</code> with the numeric key for the user group
 	 * @return <code>UserGroup</code> domain object
@@ -33,7 +33,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	/**
 	 * Given a user name, return the <code>UserGroup</code>, or return null if
 	 * not found
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the name of the user group
 	 * @return <code>UserGroup</code> domain object
@@ -46,7 +46,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * provided 'WHERE" clause. In usage, provide an iquest compatable condition
 	 * omitting the proceeding 'Where" statement. An empty <code>List</code>
 	 * will be returned if no matches were found.
-	 *
+	 * 
 	 * @param whereClause
 	 *            <code>String</code> containing the iquest compatable
 	 *            condition, omitting the "WHERE" token.
@@ -57,12 +57,12 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *             indicates some syntax exception in the provided where clause
 	 */
 	List<UserGroup> findWhere(String whereClause) throws JargonException,
-	JargonQueryException;
+			JargonQueryException;
 
 	/**
 	 * Given a user name, return the user groups that the given user belongs to,
 	 * or an empty <code>List</code> when no user groups are found.
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with an IRODS user name
 	 * @return <code>List</code> of {@UserGroup}
@@ -73,7 +73,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add the given user group to iRODS
-	 *
+	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @throws DuplicateDataException
@@ -81,12 +81,12 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void addUserGroup(UserGroup userGroup) throws DuplicateDataException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Remove the given user group from iRODS. Note that if the user group is
 	 * not found, a warning is logged, and the exception is ignored.
-	 *
+	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to remove
 	 * @throws JargonException
@@ -96,7 +96,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	/**
 	 * List the <code>User</code>s that are members of an iRODS
 	 * <code>UserGroup</code>.
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String<code> with the name of an iRODS user group
 	 * @return <code>List<code> of {@link User} with the group membership. This
@@ -108,7 +108,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Add the given user to the iRODS user group
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the name of the iRODS user group.
 	 *            This group must exist.
@@ -131,7 +131,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	/**
 	 * Remove the given user (with optional zone) from the given group. If the
 	 * user is valid but not in group, the method will return normally.
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the name of the iRODS user group.
 	 * @param userName
@@ -151,7 +151,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * List all user groups
-	 *
+	 * 
 	 * @return <code>List</code> of {@link UserGroup}
 	 * @throws JargonException
 	 */
@@ -159,7 +159,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 
 	/**
 	 * Query the ICAT and see if the given user is in the given group
-	 *
+	 * 
 	 * @param userName
 	 *            <code>String</code> with the user name
 	 * @param groupName
@@ -175,7 +175,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * Handy method to remove a user group in the current zone by simply giving
 	 * the user group name. This method will treat a non-existent group as if it
 	 * had been deleted, logging this situation and proceeding.
-	 *
+	 * 
 	 * @param userGroupName
 	 *            <code>String</code> with the name of the user group to delete.
 	 * @throws JargonException

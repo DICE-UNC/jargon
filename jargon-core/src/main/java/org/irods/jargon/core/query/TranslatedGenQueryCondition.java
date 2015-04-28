@@ -10,9 +10,9 @@ import org.irods.jargon.core.query.GenQueryField.SelectFieldSource;
  * query after translating the field names to the internal IRODS values. This is
  * an internal representation for the query parser. This is an immutable object,
  * and is thread-safe.
- *
+ * 
  * @author mikeconway
- *
+ * 
  */
 public class TranslatedGenQueryCondition {
 	private final String columnName;
@@ -24,7 +24,7 @@ public class TranslatedGenQueryCondition {
 	/**
 	 * Static initializer when the field is given as a value from the
 	 * <code>RodsGenQueryEnum</code> enumeration.
-	 *
+	 * 
 	 * @param fieldName
 	 *            {@link org.irods.jargon.core.query.RodsGenQueryEnum} value for
 	 *            the condition field.
@@ -46,7 +46,7 @@ public class TranslatedGenQueryCondition {
 	 * translated name of the field in a format that GenQuery will understand.
 	 * This can be used when constructing query fields from extensible metadata
 	 * values.
-	 *
+	 * 
 	 * @param fieldName
 	 *            <code>String</code> with the translated value for the
 	 *            condition.
@@ -67,7 +67,7 @@ public class TranslatedGenQueryCondition {
 	/**
 	 * Static initializer when the field is given as a string that is the
 	 * translated name of the field in a format that GenQuery will understand.
-	 *
+	 * 
 	 * @param fieldName
 	 *            <code>String</code> with the translated value for the
 	 *            condition.
@@ -118,7 +118,7 @@ public class TranslatedGenQueryCondition {
 
 	private TranslatedGenQueryCondition(final RodsGenQueryEnum fieldName,
 			final String operator, final String value)
-					throws JargonQueryException {
+			throws JargonQueryException {
 		if (fieldName == null) {
 			throw new JargonQueryException("field name in condition is null");
 		}

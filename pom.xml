@@ -4,7 +4,11 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
+<<<<<<< HEAD
 	<version>4.0.3.1-SNAPSHOT</version>
+=======
+	<version>4.0.2.2-SNAPSHOT</version>
+>>>>>>> master
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>
@@ -266,7 +270,7 @@
 			<dependency>
 				<groupId>org.apache.derby</groupId>
 				<artifactId>derby</artifactId>
-				<version>10.10.1.1</version>
+				<version>10.11.1.1</version>
 			</dependency>
 			<dependency>
 				<groupId>org.dbunit</groupId>

@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * The primary motivation is to create a plug-in point such that Jargon core can
  * remain focused on basic functionality.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class ProtocolExtensionPointImpl extends IRODSGenericAO implements
-ProtocolExtensionPoint {
+		ProtocolExtensionPoint {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ProtocolExtensionPointImpl.class);
@@ -35,7 +35,7 @@ ProtocolExtensionPoint {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ProtocolExtensionPoint#irodsFunction(org.irods
 	 * .jargon.core.packinstr.IRodsPI)

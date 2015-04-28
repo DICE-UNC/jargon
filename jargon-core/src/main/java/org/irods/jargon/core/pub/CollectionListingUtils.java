@@ -130,7 +130,12 @@ class CollectionListingUtils {
 		components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
 		if (components.size() == 3 && components.get(2).equals("home")) {
 			log.info("under home, see if same zone as login");
+<<<<<<< HEAD
 			if (irodsAccount.getZone().equals(components.get(1))) {
+=======
+			if (collectionAndDataObjectListAndSearchAO.getIRODSAccount()
+					.getZone().equals(components.get(1))) {
+>>>>>>> master
 				log.info("under logged in zone, add user and public dirs");
 				collectionAndDataObjectListingEntries
 						.addAll(createStandInsUnderHomeInLoggedInZone(path));
@@ -153,7 +158,7 @@ class CollectionListingUtils {
 	}
 
 	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInLoggedInZone(
-			String path) throws FileNotFoundException, JargonException {
+			final String path) throws FileNotFoundException, JargonException {
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
@@ -189,7 +194,7 @@ class CollectionListingUtils {
 	}
 
 	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInFederatedZone(
-			String zone) throws FileNotFoundException, JargonException {
+			final String zone) throws FileNotFoundException, JargonException {
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
@@ -217,7 +222,12 @@ class CollectionListingUtils {
 			ObjStat homeStat = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(MiscIRODSUtils
 							.computeHomeDirectoryForIRODSAccountInFederatedZone(
+<<<<<<< HEAD
 									irodsAccount, zone));
+=======
+									collectionAndDataObjectListAndSearchAO
+											.getIRODSAccount(), zone));
+>>>>>>> master
 			collectionAndDataObjectListingEntries
 					.add(createStandInForUserDir(homeStat));
 		} catch (FileNotFoundException fnf) {
@@ -233,7 +243,14 @@ class CollectionListingUtils {
 		CollectionAndDataObjectListingEntry entry;
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		StringBuilder sb;
+<<<<<<< HEAD
 		ZoneAO zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
+=======
+		ZoneAO zoneAO = collectionAndDataObjectListAndSearchAO
+				.getIRODSAccessObjectFactory().getZoneAO(
+						collectionAndDataObjectListAndSearchAO
+								.getIRODSAccount());
+>>>>>>> master
 		List<Zone> zones = zoneAO.listZones();
 
 		for (Zone zone : zones) {

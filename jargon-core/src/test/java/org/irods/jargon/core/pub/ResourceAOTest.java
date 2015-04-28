@@ -21,6 +21,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ResourceAOTest {
@@ -228,9 +229,9 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		// initialize the AVU data
-		String expectedAttribName = "testattrib1";
-		String expectedAttribValue = "testvalue1";
-		String expectedAttribUnits = "test1units";
+		String expectedAttribName = "testrattrib1";
+		String expectedAttribValue = "testrvalue1";
+		String expectedAttribUnits = "testr1units";
 
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnits);
@@ -382,15 +383,16 @@ public class ResourceAOTest {
 
 	}
 
-	@Test
+	@Ignore
+	// TODO: see https://github.com/DICE-UNC/jargon/issues/97
 	public final void testDeleteResourceMetadata() throws Exception {
 		String testResource = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
 
 		// initialize the AVU data
-		String expectedAttribName = "testattrib1";
-		String expectedAttribValue = "testvalue1";
-		String expectedAttribUnits = "test1units";
+		String expectedAttribName = "testDeleteResourceMetadataattrib1";
+		String expectedAttribValue = "testDeleteResourceMetadatavalue1";
+		String expectedAttribUnits = "testDeleteResourceMetadataunits";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAdminAccountFromTestProperties(testingProperties);

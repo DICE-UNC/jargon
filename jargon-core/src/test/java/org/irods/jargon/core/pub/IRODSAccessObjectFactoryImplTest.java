@@ -121,6 +121,7 @@ public class IRODSAccessObjectFactoryImplTest {
 				.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull("no auth response", authResponse);
 		irodsFileSystem.closeAndEatExceptions();
+
 	}
 
 	@Test(expected = AuthenticationException.class)
@@ -138,7 +139,7 @@ public class IRODSAccessObjectFactoryImplTest {
 	@Test
 	public final void authenticateWithInvalidMultipleTimes() throws Exception {
 
-		int ctr = 200;
+		int ctr = 300;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

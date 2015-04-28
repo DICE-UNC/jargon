@@ -35,7 +35,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	private final int interval;
 
 	private int countOfMessagesSinceLastSend = 0;
-	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 25;
+	public static final int BYTE_COUNT_MESSAGE_THRESHOLD = 5;
 
 	/**
 	 * Static initializer method to create an immutable call-back listener for

@@ -746,7 +746,7 @@ public class IRODSFileOutputStreamTest {
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
+				100);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(

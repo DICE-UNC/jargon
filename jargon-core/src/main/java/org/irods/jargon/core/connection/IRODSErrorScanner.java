@@ -3,32 +3,7 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.AuthenticationException;
-import org.irods.jargon.core.exception.CatNoAccessException;
-import org.irods.jargon.core.exception.CatalogSQLException;
-import org.irods.jargon.core.exception.CollectionNotEmptyException;
-import org.irods.jargon.core.exception.CollectionNotMountedException;
-import org.irods.jargon.core.exception.DataNotFoundException;
-import org.irods.jargon.core.exception.DuplicateDataException;
-import org.irods.jargon.core.exception.FileDriverError;
-import org.irods.jargon.core.exception.FileIntegrityException;
-import org.irods.jargon.core.exception.FileNotFoundException;
-import org.irods.jargon.core.exception.InvalidArgumentException;
-import org.irods.jargon.core.exception.InvalidGroupException;
-import org.irods.jargon.core.exception.InvalidInputParameterException;
-import org.irods.jargon.core.exception.InvalidResourceException;
-import org.irods.jargon.core.exception.InvalidUserException;
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
-import org.irods.jargon.core.exception.NoAPIPrivException;
-import org.irods.jargon.core.exception.NoMoreRulesException;
-import org.irods.jargon.core.exception.NoResourceDefinedException;
-import org.irods.jargon.core.exception.RemoteScriptExecutionException;
-import org.irods.jargon.core.exception.SpecificQueryException;
-import org.irods.jargon.core.exception.UnixFileCreateException;
-import org.irods.jargon.core.exception.UnixFileMkdirException;
-import org.irods.jargon.core.exception.UnixFileRenameException;
-import org.irods.jargon.core.exception.ZoneUnavailableException;
+import org.irods.jargon.core.exception.*;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Note that this is an early implementation, and a fuller error hierarchy will
  * develop over time.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class IRODSErrorScanner {
 
@@ -54,7 +29,7 @@ public class IRODSErrorScanner {
 	/**
 	 * Scan the response for errors, and incorporate any message information
 	 * that might expand the error
-	 *
+	 * 
 	 * @param infoValue
 	 *            <code>int</code> with the iRODS info value from a packing
 	 *            instruction response header
@@ -79,16 +54,16 @@ public class IRODSErrorScanner {
 
 		// non-zero value, create appropriate exception, first try some ranges
 		// (especially for unix file system exceptions, which can have subcodes
-
-		if (infoValue >= -520013 && infoValue <= -520000) {
+		if (infoValue <= -511000 && infoValue >= -511199) {
+			throw new UnixFileCreateException(
+					"Exception creating file in file system", infoValue);
+		} else if (infoValue >= -520013 && infoValue <= -520000) {
 			throw new UnixFileMkdirException("Exception making unix directory",
 					infoValue);
 		} else if (infoValue >= -528036 && infoValue <= -528000) {
 			throw new UnixFileRenameException(
 					"Exception renaming file in file system", infoValue);
-		} else if (infoValue >= -511000 && infoValue <= -511199) {
-			throw new UnixFileCreateException(
-					"Exception creating file in file system", infoValue);
+
 		}
 
 		ErrorEnum errorEnum;
@@ -127,7 +102,7 @@ public class IRODSErrorScanner {
 	 */
 	private static void checkSpecificCodesAndThrowIfExceptionLocated(
 			final int infoValue, final String message, final ErrorEnum errorEnum)
-					throws JargonException {
+			throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
 			throw new JargonFileOrCollAlreadyExistsException(
@@ -202,6 +177,8 @@ public class IRODSErrorScanner {
 			throw new AuthenticationException("PAM authentication error");
 		case INVALID_INPUT_PARAM:
 			throw new InvalidInputParameterException("Invalid input parameter");
+		case CAT_INVALID_CLIENT_USER:
+			throw new InvalidClientUserException(message);
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {
@@ -222,7 +199,7 @@ public class IRODSErrorScanner {
 	/**
 	 * Inspect the <code>info</code> value from an iRODS packing instruction
 	 * response header and throw an exception if an error was detected
-	 *
+	 * 
 	 * @param infoValue
 	 * @throws JargonException
 	 */

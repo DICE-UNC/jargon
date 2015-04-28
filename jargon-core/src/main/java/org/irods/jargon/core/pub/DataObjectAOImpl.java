@@ -59,14 +59,17 @@ import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.transfer.AbstractRestartManager;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.FileRestartInfo;
 import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 import org.irods.jargon.core.transfer.FileRestartInfoIdentifier;
 import org.irods.jargon.core.transfer.FileRestartManagementException;
+import org.irods.jargon.core.transfer.GetTransferRestartProcessor;
 import org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy;
 import org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy;
 import org.irods.jargon.core.transfer.PutTransferRestartProcessor;
+import org.irods.jargon.core.transfer.RestartFailedException;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
@@ -391,17 +394,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @throws DataNotFoundException
 	 *             if the source local file does not exist or the target iRODS
 	 *             collection does not exist
+	 * @ignoreChecks ignores overwrite checks, for operations like restarts. If
+	 *               doing a long file restart, set this to <code>true</code> to
+	 *               bypass certain prerequisite checks
 	 * @throws JargonException
 	 */
-	void putLocalDataObjectToIRODS(final File localFile,
+	void putLocalDataObjectToIRODS(
+			final File localFile,
 			final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final boolean ignoreChecks) throws JargonException {
 
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
 
-		putCommonProcessing(localFile, irodsFileDestination, false,
+		putCommonProcessing(localFile, irodsFileDestination, ignoreChecks,
 				effectiveTransferControlBlock, transferStatusCallbackListener);
 
 	}
@@ -528,8 +535,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error("put error, local file does not exist: {}",
 					localFile.getAbsolutePath());
 			throw new DataNotFoundException(
-					"put attempt where local file does not exist:"
-							+ localFile.getAbsolutePath());
+					"put attempt where local file does not exist");
 		}
 
 		/*
@@ -545,6 +551,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		IRODSFile targetFile = dataAOHelper.checkTargetFileForPutOperation(
 				localFile, irodsFileDestination, ignoreChecks,
 				getIRODSFileFactory());
+
+		long localFileLength = localFile.length();
+		log.debug("localFileLength:{}", localFileLength);
+		long startTime = System.currentTimeMillis();
+
+		log.info("checking to see if this is a restart...");
+
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+				RestartType.PUT, targetFile.getAbsolutePath());
+
+		if (fileRestartInfo != null) {
+			log.info("doing a restart of this transfer..");
+			putRestartRetryTillMaxLoop(transferControlBlock, targetFile,
+					fileRestartInfo, transferStatusCallbackListener);
+			return;
+		}
+
+		// this is not a restart, will fall through to normal processing
 
 		boolean force = false;
 
@@ -579,11 +603,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
 				force = true;
 			}
-		}
 
-		long localFileLength = localFile.length();
-		log.debug("localFileLength:{}", localFileLength);
-		long startTime = System.currentTimeMillis();
+		}
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
 
@@ -600,20 +621,125 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"localFile not found to put to irods", e);
 			} catch (java.io.FileNotFoundException e) {
 				throw new DataNotFoundException(
-						"localFile not found to put to irods", e);
+						"irods destination not found in put to irods", e);
 			}
 		} else {
 
 			log.info("processing as a parallel transfer, length above max");
+			try {
+				processAsAParallelPutOperationIfMoreThanZeroThreads(localFile,
+						targetFile, force, transferControlBlock,
+						transferStatusCallbackListener);
+			} catch (FileRestartManagementException e) {
+				log.error("transfer and restart failed", e);
+				throw e;
+			} catch (JargonException je) {
+				log.info("attempting a restart after exception", je);
+				fileRestartInfo = retrieveRestartInfoIfAvailable(
+						RestartType.PUT, irodsFileDestination.getAbsolutePath());
+				if (fileRestartInfo != null) {
+					log.info("carrying out restart process..");
+					putRestartRetryTillMaxLoop(transferControlBlock,
+							targetFile, fileRestartInfo,
+							transferStatusCallbackListener);
+				}
+			}
 
-			processAsAParallelPutOperationIfMoreThanZeroThreads(localFile,
-					targetFile, force, transferControlBlock,
-					transferStatusCallbackListener);
 		}
 
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
+	}
+
+	/**
+	 * Attempt a put restart across multiple failures, up until a max number of
+	 * retries
+	 * 
+	 * @param transferControlBlock
+	 * @param targetFile
+	 * @param fileRestartInfo
+	 * @throws JargonException
+	 * @throws RestartFailedException
+	 * @throws FileRestartManagementException
+	 */
+	private void putRestartRetryTillMaxLoop(
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile targetFile, final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws JargonException, RestartFailedException,
+			FileRestartManagementException {
+
+		log.info("putRestartRetryTillMaxLoop()");
+
+		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
+				fileRestartInfo.getRestartType(),
+				fileRestartInfo.getIrodsAbsolutePath());
+		// will do a sleep and then double the sleep time if it takes multiple
+		// attempts
+		int offsetInMillis = 10000;
+		while (true) {
+			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				Thread.sleep(offsetInMillis);
+			} catch (InterruptedException e) {
+				return;
+			}
+			offsetInMillis *= 2;
+			try {
+				myFileRestartInfo = getRestartManager()
+						.incrementRestartAttempts(myFileRestartInfo);
+				if (myFileRestartInfo == null) {
+					log.info("restart info no longer available, complete the operation");
+					break;
+
+				}
+				putRestartProcess(transferControlBlock, targetFile,
+						myFileRestartInfo, transferStatusCallbackListener);
+			} catch (RestartFailedException rfe) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, rfe);
+				throw rfe;
+			} catch (FileRestartManagementException frm) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, frm);
+				throw frm;
+			} catch (JargonException e) {
+				log.error(
+						"restart failed with a JargonException, will loop again:{}",
+						myFileRestartInfo, e);
+				continue;
+			} catch (Throwable t) {
+				log.error(
+						"unanticipated exception in retry will loop again:{}",
+						myFileRestartInfo, t);
+				continue;
+			}
+		}
+
+	}
+
+	/**
+	 * @param transferControlBlock
+	 * @param targetFile
+	 * @param fileRestartInfo
+	 * @throws JargonException
+	 * @throws RestartFailedException
+	 * @throws FileRestartManagementException
+	 */
+	private void putRestartProcess(
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile targetFile, final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
+
+		log.info("have file restart info:{}", fileRestartInfo);
+		PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
+				getIRODSAccessObjectFactory(), getIRODSAccount(),
+				getIRODSSession().getRestartManager(),
+				transferStatusCallbackListener, transferControlBlock);
+		putTransferRestartProcessor.restartIfNecessary(targetFile
+				.getAbsolutePath());
+
 	}
 
 	/**
@@ -670,30 +796,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
 
+		/*
+		 * This is a transfer of a single file,the target path should be
+		 * normalized to the full file name
+		 */
+
 		TransferOptions myTransferOptions = new TransferOptions(
 				transferControlBlock.getTransferOptions());
 
-		if (myTransferOptions.isUseParallelTransfer()) {
-			myTransferOptions.setMaxThreads(getJargonProperties()
-					.getMaxParallelThreads());
-			log.info("setting max threads cap to:{}",
-					myTransferOptions.getMaxThreads());
-		} else {
+		if (!myTransferOptions.isUseParallelTransfer()) {
 			log.info("no parallel transfer set in transferOptions");
 			myTransferOptions.setMaxThreads(-1);
-		}
-
-		FileRestartInfo fileRestartInfo = this.retrieveRestartInfoIfAvailable(
-				RestartType.PUT, targetFile.getAbsolutePath());
-
-		if (fileRestartInfo != null) {
-			log.info("have file restart info:{}", fileRestartInfo);
-			PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
-					this.getIRODSAccessObjectFactory(), this.getIRODSAccount(),
-					this.getIRODSSession().getRestartManager());
-			putTransferRestartProcessor.restartIfNecessary(targetFile
-					.getAbsolutePath());
-
 		}
 
 		ConnectionProgressStatusListener intraFileStatusListener = null;
@@ -811,8 +924,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		 * otherwise, it will hold info on the current file restart status
 		 */
 		FileRestartInfo fileRestartInfo = retrieveOrCreateRestartInfoIfConfigured(
-				RestartType.PUT, irodsAbsolutePath, numberOfThreads,
-				transferLength);
+				RestartType.PUT, irodsAbsolutePath,
+				localFile.getAbsolutePath(), numberOfThreads, transferLength);
 
 		log.info("transfer will be done using {} threads", numberOfThreads);
 		final String host = responseToInitialCallForPut
@@ -846,59 +959,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (fileRestartInfo != null) {
 				log.info("delete old restart stuff");
-				this.getIRODSSession()
-						.getRestartManager()
-						.deleteRestart(fileRestartInfo.identifierFromThisInfo());
+				getIRODSSession().getRestartManager().deleteRestart(
+						fileRestartInfo.identifierFromThisInfo());
 			}
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 
 			log.error(
 					"error in parallel transfers, the main connection will be abandoned",
 					e);
-			this.getIRODSAccessObjectFactory().getIrodsSession()
-					.discardSessionForErrors(this.getIRODSAccount());
+			getIRODSAccessObjectFactory().getIrodsSession()
+					.discardSessionForErrors(getIRODSAccount());
 
 			throw new JargonException(e);
 		}
 
-	}
-
-	/**
-	 * Retrieve a file from iRODS and store it locally.
-	 * <p/>
-	 * Note that this operation is for a single data object, not for recursive
-	 * transfers of collections. See {@link DataTransferOperations} for
-	 * recursive data transfers. This get operation will use the default
-	 * settings for <code>TransferOptions</code>.
-	 * <p/>
-	 * A note about overwrites: This method call does not allow for
-	 * specification of transfer options or registration for a callback
-	 * listener, instead, it will look at the configured
-	 * <code>JargonProperties</code> for any global settings on overwrites.
-	 * Other method signatures for get operations allow specification of force
-	 * options, and also allow interaction between the caller and the
-	 * transferring process when an overwrite is detected.
-	 * 
-	 * @param irodsFileToGet
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
-	 *            source of the transfer
-	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer. If the
-	 *            given target is a collection, the file name of the iRODS file
-	 *            is used as the file name of the local file.
-	 * @throws OverwriteException
-	 *             if an overwrite is attempted and the force option has not
-	 *             been set
-	 * @throws DataNotFoundException
-	 *             if the source iRODS file does not exist
-	 * @throws JargonException
-	 */
-	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
-			final File localFileToHoldData) throws OverwriteException,
-			DataNotFoundException, JargonException {
-
-		getDataObjectFromIrods(irodsFileToGet, localFileToHoldData, null, null);
 	}
 
 	/**
@@ -912,7 +987,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <p/>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
 	 * option is set to ask the callback listener, then the
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
@@ -948,6 +1023,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
+	@SuppressWarnings("unused")
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
@@ -972,6 +1048,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		TransferOptions thisFileTransferOptions = new TransferOptions(
 				operativeTransferControlBlock.getTransferOptions());
 
+		if (!thisFileTransferOptions.isUseParallelTransfer()) {
+			log.info("no parallel transfer set in transferOptions");
+			thisFileTransferOptions.setMaxThreads(-1);
+		}
+
 		File localFile;
 		if (localFileToHoldData.isDirectory()) {
 			log.info("a get to a directory, just use the source file name and accept the directory as a target");
@@ -985,53 +1066,140 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			localFile = localFileToHoldData;
 		}
 
-		/*
-		 * Handle potential overwrites, will consult the client if so configured
-		 */
-		OverwriteResponse overwriteResponse = evaluateOverwrite(
-				(File) irodsFileToGet, transferControlBlock,
-				transferStatusCallbackListener, thisFileTransferOptions,
-				localFile);
+		log.info("checking to see if this is a restart...");
 
-		if (overwriteResponse == OverwriteResponse.SKIP) {
-			log.info("skipping due to overwrite status");
-			return;
-		}
+		FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+				RestartType.GET, irodsFileToGet.getAbsolutePath());
 
-		long irodsFileLength = irodsFileToGet.length();
-		log.info("testing file length to set parallel transfer options");
-		if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
-			if (thisFileTransferOptions.isUseParallelTransfer()) {
-				thisFileTransferOptions.setMaxThreads(getJargonProperties()
-						.getMaxParallelThreads());
-				log.info("setting max threads cap to:{}",
-						thisFileTransferOptions.getMaxThreads());
-			} else {
-				log.info("no parallel transfer set in transferOptions");
-				thisFileTransferOptions.setMaxThreads(-1);
+		if (fileRestartInfo != null) {
+			log.info("restart processing for get..");
+
+			getRestartRetryTillMaxLoop(transferControlBlock, irodsFileToGet,
+					fileRestartInfo, transferStatusCallbackListener);
+
+		} else {
+
+			/*
+			 * Handle potential overwrites, will consult the client if so
+			 * configured
+			 */
+			OverwriteResponse overwriteResponse = evaluateOverwrite(
+					(File) irodsFileToGet, transferControlBlock,
+					transferStatusCallbackListener, thisFileTransferOptions,
+					localFile);
+
+			if (overwriteResponse == OverwriteResponse.SKIP) {
+				log.info("skipping due to overwrite status");
+				return;
 			}
-		} else {
-			thisFileTransferOptions.setMaxThreads(0);
+
+			long irodsFileLength = irodsFileToGet.length();
+			log.info("testing file length to set parallel transfer options");
+			if (irodsFileLength > ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
+				if (!thisFileTransferOptions.isUseParallelTransfer()) {
+					log.info("no parallel transfer set in transferOptions");
+					thisFileTransferOptions.setMaxThreads(-1);
+				}
+			} else {
+				thisFileTransferOptions.setMaxThreads(0);
+			}
+
+			log.info("target local file: {}", localFile.getAbsolutePath());
+			log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
+
+			final DataObjInp dataObjInp;
+			if (irodsFileToGet.getResource().isEmpty()) {
+				dataObjInp = DataObjInp.instanceForGet(
+						irodsFileToGet.getAbsolutePath(), irodsFileLength,
+						thisFileTransferOptions);
+			} else {
+				dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
+						irodsFileToGet.getAbsolutePath(),
+						irodsFileToGet.getResource(), "",
+						thisFileTransferOptions);
+			}
+
+			processGetAfterResourceDetermined(irodsFileToGet, localFile,
+					dataObjInp, thisFileTransferOptions, irodsFileLength,
+					operativeTransferControlBlock,
+					transferStatusCallbackListener, false);
+		}
+	}
+
+	private void getRestartRetryTillMaxLoop(
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile irodsFileToGet,
+			final FileRestartInfo fileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws FileRestartManagementException {
+
+		log.info("getRestartRetryTillMaxLoop()");
+
+		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
+				fileRestartInfo.getRestartType(),
+				fileRestartInfo.getIrodsAbsolutePath()); // just use file
+															// restart info
+
+		int offsetInMillis = 10000;
+		while (true) {
+			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				Thread.sleep(offsetInMillis);
+			} catch (InterruptedException e) {
+				return;
+			}
+			offsetInMillis *= 2;
+
+			log.info("increment and loop to do restart, loop will exit with exception or successful restart");
+			try {
+				myFileRestartInfo = getRestartManager()
+						.incrementRestartAttempts(myFileRestartInfo);
+				if (myFileRestartInfo == null) {
+					log.info("restart info no longer available, complete the operation");
+					break;
+
+				}
+
+				getRestartProcess(transferControlBlock, irodsFileToGet,
+						myFileRestartInfo, transferStatusCallbackListener);
+				log.info("restart done");
+			} catch (RestartFailedException rfe) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, rfe);
+				throw rfe;
+			} catch (FileRestartManagementException frm) {
+				log.error("restart failed, rethrow:{}", myFileRestartInfo, frm);
+				throw frm;
+			} catch (JargonException e) {
+				log.error(
+						"restart failed with a JargonException, will loop again:{}",
+						myFileRestartInfo, e);
+				continue;
+			} catch (Throwable t) {
+				log.error(
+						"unanticipated exception in retry will loop again:{}",
+						myFileRestartInfo, t);
+				continue;
+			}
 		}
 
-		log.info("target local file: {}", localFile.getAbsolutePath());
-		log.info("from source file: {}", irodsFileToGet.getAbsolutePath());
+	}
 
-		final DataObjInp dataObjInp;
-		if (irodsFileToGet.getResource().isEmpty()) {
-			dataObjInp = DataObjInp.instanceForGet(
-					irodsFileToGet.getAbsolutePath(), irodsFileLength,
-					thisFileTransferOptions);
-		} else {
-			dataObjInp = DataObjInp.instanceForGetSpecifyingResource(
-					irodsFileToGet.getAbsolutePath(),
-					irodsFileToGet.getResource(), "", thisFileTransferOptions);
-		}
+	private void getRestartProcess(
+			final TransferControlBlock transferControlBlock,
+			final IRODSFile irodsFileToGet,
+			final FileRestartInfo myFileRestartInfo,
+			final TransferStatusCallbackListener transferStatusCallbackListener)
+			throws RestartFailedException, FileRestartManagementException,
+			JargonException {
 
-		processGetAfterResourceDetermined(irodsFileToGet, localFile,
-				dataObjInp, thisFileTransferOptions, irodsFileLength,
-				operativeTransferControlBlock, transferStatusCallbackListener,
-				false);
+		log.info("have file restart info:{}", myFileRestartInfo);
+		GetTransferRestartProcessor getTransferRestartProcessor = new GetTransferRestartProcessor(
+				getIRODSAccessObjectFactory(), getIRODSAccount(),
+				getIRODSSession().getRestartManager(),
+				transferStatusCallbackListener, transferControlBlock);
+		getTransferRestartProcessor.restartIfNecessary(irodsFileToGet
+				.getAbsolutePath());
+
 	}
 
 	/**
@@ -1322,16 +1490,36 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							lengthFromIrodsResponse, irodsFileLength,
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
+
 					getIRODSProtocol().operationComplete(l1descInx);
-				} catch (Exception e) {
+					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+							RestartType.GET, irodsFileToGet.getAbsolutePath());
+					if (fileRestartInfo != null) {
+						log.info("delete old restart stuff");
+						getIRODSSession().getRestartManager().deleteRestart(
+								fileRestartInfo.identifierFromThisInfo());
+					}
+
+				} catch (FileRestartManagementException e) {
+					log.error("transfer and restart failed", e);
+					throw e;
+				} catch (Throwable e) {
+
+					log.info("attempting a restart after exception", e);
+					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
+							RestartType.GET, irodsFileToGet.getAbsolutePath());
+					if (fileRestartInfo != null) {
+						log.info("carrying out restart process..");
+						getRestartRetryTillMaxLoop(transferControlBlock,
+								irodsFileToGet, fileRestartInfo,
+								transferStatusCallbackListener);
+					}
+
 					log.error(
-							"an exception had occurred within the parallel transfer, so the opr complete is skipped and the connection abandoned..error will be rethrown",
+							" exception in get transfer, currently restart is not supported for get",
 							e);
-					this.getIRODSAccessObjectFactory().getIrodsSession()
-							.discardSessionForErrors(this.getIRODSAccount());
 					throw e;
 				}
-
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
 						lengthFromIrodsResponse, getIRODSProtocol(),
@@ -1419,6 +1607,19 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("number of threads for this transfer = {} ", numberOfThreads);
 
+		/*
+		 * Info may remain null if restart processing is not configured,
+		 * otherwise, it will hold info on the current file restart status
+		 */
+		FileRestartInfo fileRestartInfo = null;
+
+		/*
+		 * retrieveOrCreateRestartInfoIfConfigured( RestartType.GET,
+		 * irodsSourceFile.getAbsolutePath(),
+		 * localFileToHoldData.getAbsolutePath(), numberOfThreads,
+		 * irodsFileLength);
+		 */
+
 		if (numberOfThreads == 0) {
 			log.info("number of threads is zero, possibly parallel transfers were turned off via rule, process as normal");
 			int fd = message.getTag(IRODSConstants.L1_DESC_INX).getIntValue();
@@ -1434,27 +1635,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			}
 
 			ParallelGetFileTransferStrategy parallelGetTransferStrategy = ParallelGetFileTransferStrategy
-					.instance(
-							host,
-							port,
-							numberOfThreads,
-							password,
-							localFileToHoldData,
-							getIRODSAccessObjectFactory(),
-							irodsFileLength,
-							transferControlBlock,
-							transferStatusCallbackListener,
-							retrieveRestartInfoIfAvailable(RestartType.GET,
-									irodsSourceFile.getAbsolutePath()));
+					.instance(host, port, numberOfThreads, password,
+							localFileToHoldData, getIRODSAccessObjectFactory(),
+							irodsFileLength, transferControlBlock,
+							transferStatusCallbackListener, fileRestartInfo);
 
 			try {
 				parallelGetTransferStrategy.transfer();
-			} catch (Exception e) {
+
+			} catch (Throwable e) {
+
 				log.error(
 						"exception in parallel transfer, connection will be abandoned",
 						e);
-				this.getIRODSAccessObjectFactory().getIrodsSession()
-						.discardSessionForErrors(this.getIRODSAccount());
+				getIRODSAccessObjectFactory().getIrodsSession()
+						.discardSessionForErrors(getIRODSAccount());
 				throw new JargonException(e);
 			}
 		}
@@ -1465,30 +1660,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * is configured
 	 * 
 	 * @return
+	 * @throws FileRestartManagementException
 	 */
-	private boolean checkIfConfiguredForLongFileRestart() {
-		if (!this.getIRODSSession().getJargonProperties()
-				.isLongTransferRestart()) {
+	private boolean checkIfConfiguredForLongFileRestart()
+			throws FileRestartManagementException {
+		if (!getIRODSSession().getJargonProperties().isLongTransferRestart()) {
 			log.debug("not configured for restarts");
 			return false;
 		}
-		if (this.getIRODSSession().getRestartManager() == null) {
+		if (getIRODSSession().getRestartManager() == null) {
 			log.error("configured for restarts, but there is no restart manager in IRODSSession");
-			throw new JargonRuntimeException(
+			throw new FileRestartManagementException(
 					"restart specified but no restart manager in IRODSSession");
 		}
 		return true;
 	}
 
-	/**
-	 * Only retrieve a restart if it exists, <code>null</code> if it does not
-	 * 
-	 * @param restartType
-	 * @param irodsAbsolutePath
-	 * @return
-	 * @throws FileRestartManagementException
-	 */
-	private FileRestartInfo retrieveRestartInfoIfAvailable(
+	@Override
+	public FileRestartInfo retrieveRestartInfoIfAvailable(
 			final RestartType restartType, final String irodsAbsolutePath)
 			throws FileRestartManagementException {
 
@@ -1507,14 +1696,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
 		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
 		fileRestartInfoIdentifier.setRestartType(restartType);
-		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
-				.getIRODSAccount().toString());
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIRODSAccount()
+				.toString());
 
 		/*
 		 * May just be null
 		 */
-		return this.getIRODSSession().getRestartManager()
-				.retrieveRestart(fileRestartInfoIdentifier);
+		return getIRODSSession().getRestartManager().retrieveRestart(
+				fileRestartInfoIdentifier);
 
 	}
 
@@ -1528,8 +1717,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private FileRestartInfo retrieveOrCreateRestartInfoIfConfigured(
 			final RestartType restartType, final String irodsAbsolutePath,
-			final int numberOfThreads, final long dataSize)
-			throws FileRestartManagementException {
+			final String localFilePath, final int numberOfThreads,
+			final long dataSize) throws FileRestartManagementException {
 
 		log.info("retrieveRestartInfoIfAvailable()");
 
@@ -1553,14 +1742,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfoIdentifier fileRestartInfoIdentifier = new FileRestartInfoIdentifier();
 		fileRestartInfoIdentifier.setAbsolutePath(irodsAbsolutePath);
 		fileRestartInfoIdentifier.setRestartType(restartType);
-		fileRestartInfoIdentifier.setIrodsAccountIdentifier(this
-				.getIRODSAccount().toString());
+		fileRestartInfoIdentifier.setIrodsAccountIdentifier(getIRODSAccount()
+				.toString());
 
-		return this
-				.getIRODSSession()
-				.getRestartManager()
+		return getIRODSSession().getRestartManager()
 				.retrieveRestartAndBuildIfNotStored(fileRestartInfoIdentifier,
-						numberOfThreads);
+						localFilePath, numberOfThreads);
 
 	}
 
@@ -2143,7 +2330,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	private void addMetadataAndDomainDataSelectsToBuilder(
-			IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
@@ -2795,6 +2982,57 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.getStringValue();
 		log.info("checksum is: {}", returnedChecksum);
 		return returnedChecksum;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.DataObjectAO#verifyChecksumBetweenLocalAndIrods
+	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
+	 */
+	@Override
+	public boolean verifyChecksumBetweenLocalAndIrods(
+			final IRODSFile irodsFile, final File localFile)
+			throws FileNotFoundException, JargonException {
+
+		log.info("verifyChecksumBetweenLocalAndIrods()");
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("null irodsFile");
+		}
+
+		if (localFile == null) {
+			throw new IllegalArgumentException("null localFile");
+		}
+
+		log.info("irodsfile:{}", irodsFile.getAbsolutePath());
+		log.info("localFile:{}", localFile.getAbsolutePath());
+
+		if (!irodsFile.exists()) {
+			throw new FileNotFoundException("irodsFile does not exist");
+		}
+
+		if (!localFile.exists()) {
+			throw new FileNotFoundException("localFile does not exist");
+		}
+
+		try {
+			ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFile);
+			log.info("irodsChecksum:{}", irodsChecksum);
+			ChecksumValue localChecksum = getIRODSSession()
+					.getLocalChecksumComputerFactory()
+					.instance(irodsChecksum.getChecksumEncoding())
+					.instanceChecksumForPackingInstruction(
+							localFile.getAbsolutePath());
+			log.info("localChecksum:{}", localChecksum);
+			return irodsChecksum.getChecksumStringValue().equals(
+					localChecksum.getChecksumStringValue());
+		} catch (java.io.FileNotFoundException e) {
+			log.error("did not find local file", e);
+			throw new FileNotFoundException(
+					"local file not found when computing checksum", e);
+		}
+
 	}
 
 	/**
@@ -4354,4 +4592,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	}
 
+	/**
+	 * Handy method to get a ref to a configured restart manager (may be null)
+	 * 
+	 * @return
+	 */
+	private AbstractRestartManager getRestartManager() {
+		return getIRODSSession().getRestartManager();
+	}
 }

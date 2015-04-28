@@ -9,7 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
  * General exception in the management of restart file information
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class FileRestartManagementException extends JargonException {
 
@@ -21,7 +21,7 @@ public class FileRestartManagementException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public FileRestartManagementException(String message) {
+	public FileRestartManagementException(final String message) {
 		super(message);
 	}
 
@@ -29,14 +29,15 @@ public class FileRestartManagementException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public FileRestartManagementException(String message, Throwable cause) {
+	public FileRestartManagementException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public FileRestartManagementException(Throwable cause) {
+	public FileRestartManagementException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -45,8 +46,8 @@ public class FileRestartManagementException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileRestartManagementException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public FileRestartManagementException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -54,8 +55,8 @@ public class FileRestartManagementException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileRestartManagementException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public FileRestartManagementException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -63,8 +64,8 @@ public class FileRestartManagementException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public FileRestartManagementException(String message,
-			int underlyingIRODSExceptionCode) {
+	public FileRestartManagementException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

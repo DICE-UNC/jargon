@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ChannelTools {
 	private static final Logger log = LoggerFactory
@@ -18,7 +18,7 @@ public final class ChannelTools {
 
 	public static void fastChannelCopy(final ReadableByteChannel src,
 			final WritableByteChannel dest, final int bufferSize)
-					throws IOException {
+			throws IOException {
 		log.info("fast channel copy on streams, buffer length set to:{}",
 				bufferSize);
 		final ByteBuffer buffer = ByteBuffer.allocateDirect(bufferSize);

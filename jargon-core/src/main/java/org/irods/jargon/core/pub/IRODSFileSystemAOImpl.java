@@ -22,6 +22,7 @@ import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.packinstr.CollInp;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.packinstr.MsgHeader;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
@@ -52,12 +53,12 @@ import org.slf4j.LoggerFactory;
  * methods. Methods that back operations not defined in
  * <code>java.io.File</code> are not implemented in this particular access
  * object.
- *
- *
+ * 
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
-IRODSFileSystemAO {
+		IRODSFileSystemAO {
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 
@@ -81,7 +82,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileReadable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -117,7 +118,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -149,7 +150,7 @@ IRODSFileSystemAO {
 
 	/**
 	 * Do a query on the given file to see if it has an executable bit set
-	 *
+	 * 
 	 * @param irodsFile
 	 * @return <code>boolean</code> of <code>true</code> if file is data object,
 	 *         exists, and is executable
@@ -164,10 +165,10 @@ IRODSFileSystemAO {
 		IRODSQueryResultSet resultSet;
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_MODE)
-			.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.EQUAL,
-					irodsFile.getParent())
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							irodsFile.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL, irodsFile.getName());
@@ -206,7 +207,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileWriteable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -241,7 +242,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFilePermissions(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
@@ -264,7 +265,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#getFilePermissionsForGivenUser
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -299,7 +300,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getDirectoryPermissions
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -314,7 +315,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
 	 * getDirectoryPermissionsForGivenUser
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -351,7 +352,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileExists(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -385,7 +386,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isDirectory(org.irods.
 	 * jargon.core.pub.io.IRODSFile)
@@ -419,7 +420,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFile(org.irods.jargon.core
 	 * .pub.io.IRODSFile)
@@ -452,7 +453,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#getObjStat(java.lang.String)
 	 */
@@ -466,7 +467,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDir(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -518,7 +519,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFilter
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FilenameFilter)
@@ -670,7 +671,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFileFilter
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FileFilter)
@@ -821,7 +822,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFileDataType(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -843,7 +844,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#createFile(java.lang.String
 	 * , org.irods.jargon.core.packinstr.DataObjInp.OpenFlags, int)
@@ -851,8 +852,8 @@ IRODSFileSystemAO {
 	@Override
 	public int createFile(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode)
-					throws NoResourceDefinedException,
-					JargonFileOrCollAlreadyExistsException, JargonException {
+			throws NoResourceDefinedException,
+			JargonFileOrCollAlreadyExistsException, JargonException {
 
 		log.info("createFile(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode)");
 
@@ -878,7 +879,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
 	 * .core.pub.io.IRODSFile,
@@ -923,7 +924,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#createFile(java.lang.String
 	 * , org.irods.jargon.core.packinstr.DataObjInp.OpenFlags, int)
@@ -963,6 +964,14 @@ IRODSFileSystemAO {
 
 		DataObjInp dataObjInp = DataObjInp.instance(absolutePath, createMode,
 				openFlags, offset, dataSize, thisResource, null);
+
+		if (openFlags == OpenFlags.WRITE
+				|| openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS
+				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+				|| openFlags == OpenFlags.READ_WRITE) {
+			dataObjInp.setOperationType(DataObjInp.PUT_OPERATION_TYPE);
+		}
+
 		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
 				dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
 		if (response == null) {
@@ -982,7 +991,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#mkdir(org.irods.jargon
 	 * .core.pub.io.IRODSFile, boolean)
@@ -1019,11 +1028,12 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileClose(int)
 	 */
 	@Override
-	public void fileClose(final int fileDescriptor) throws JargonException {
+	public void fileClose(final int fileDescriptor, final boolean putOpr)
+			throws JargonException {
 
 		log.info("fileClose(final int fileDescriptor) :{}", fileDescriptor);
 
@@ -1031,9 +1041,16 @@ IRODSFileSystemAO {
 			throw new JargonException(
 					"attempting to close file with no valid descriptor");
 		}
+		OpenedDataObjInp openedDataObjInp = null;
+		if (putOpr) {
+			log.info("close with putOpr to trigger post proc for put");
+			openedDataObjInp = OpenedDataObjInp
+					.instanceForFileCloseWithPutOpr(fileDescriptor);
 
-		OpenedDataObjInp openedDataObjInp = OpenedDataObjInp
-				.instanceForFileClose(fileDescriptor);
+		} else {
+			openedDataObjInp = OpenedDataObjInp
+					.instanceForFileClose(fileDescriptor);
+		}
 
 		Tag response = getIRODSProtocol().irodsFunction(
 				OpenedDataObjInp.PI_TAG, openedDataObjInp.getParsedTags(),
@@ -1045,12 +1062,12 @@ IRODSFileSystemAO {
 					response.parseTag());
 		}
 
-		log.debug("file close succesful");
+		log.debug("file close successful");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteForce(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -1086,7 +1103,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteNoForce(org.
 	 * irods.jargon.core.pub.io.IRODSFile)
@@ -1125,7 +1142,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteForce(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
@@ -1162,7 +1179,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteNoForce
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -1225,7 +1242,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameDirectory(org.irods
 	 * .jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
@@ -1259,7 +1276,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameFile(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
@@ -1294,7 +1311,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getResourceNameForFile
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -1336,7 +1353,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(org.irods
 	 * .jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -1369,7 +1386,7 @@ IRODSFileSystemAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(java.lang
 	 * .String, java.lang.String)
@@ -1406,7 +1423,7 @@ IRODSFileSystemAO {
 
 	/**
 	 * Respond to client status messages for an operation until exhausted.
-	 *
+	 * 
 	 * @param reply
 	 *            <code>Tag</code> containing status messages from IRODS
 	 * @throws IOException

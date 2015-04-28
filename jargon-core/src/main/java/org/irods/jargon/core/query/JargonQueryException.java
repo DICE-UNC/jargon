@@ -5,9 +5,9 @@ package org.irods.jargon.core.query;
 
 /**
  * Exception with the format or content of a query.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class JargonQueryException extends Exception {
 

@@ -36,8 +36,8 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p/>
 	 * If the rule is internal, 10 is interpreted as a "value", so the value is
 	 * string "10".
-	 *
-	 *
+	 * 
+	 * 
 	 * @param irodsRuleAsString
 	 *            <code>String</code> containing an iRODS rule as would be
 	 *            submitted via irule
@@ -53,7 +53,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * TODO: work in progress Purge all rules from the delayed exec queue.
 	 * <p/>
 	 * <b>Note: this method purges ALL rules in the queue</b>
-	 *
+	 * 
 	 * @return <code>int</code> with a count of the rules purged from the
 	 *         delayed execution queue
 	 * @throws JargonException
@@ -62,7 +62,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
 	 * TODO: work in progress
-	 *
+	 * 
 	 * @param partialStartIndex
 	 * @return
 	 * @throws JargonException
@@ -78,7 +78,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p/>
 	 * The rule will be run based on the default values in the given rule,
 	 * overridden by any values passed in as an input parameter.
-	 *
+	 * 
 	 * @param resourcePath
 	 *            <code>String<code> that will be a path from which the resource will be loaded, using the rules
 	 * associated with <code>Class.getResourceAsStream(String)</code>.
@@ -97,7 +97,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	IRODSRuleExecResult executeRuleFromResource(String resourcePath,
 			List<IRODSRuleParameter> irodsRuleInputParameters,
 			RuleProcessingType ruleProcessingType)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a rule file that exists as an iRODS file. This will be a rule file
@@ -106,7 +106,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p/>
 	 * The rule will be run based on the default values in the given rule,
 	 * overridden by any values passed in as an input parameter.
-	 *
+	 * 
 	 * @param ruleFileAbsolutePath
 	 *            <code>String</code> with the absolute path to a file in iRODS
 	 *            containing the rule
@@ -156,7 +156,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p/>
 	 * If the rule is internal, 10 is interpreted as a "value", so the value is
 	 * string "10".
-	 *
+	 * 
 	 * @param irodsRuleAsString
 	 *            <code>String</code> with the rule body, as well as input and
 	 *            output parameters.
@@ -184,7 +184,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * Delete selected rule from the delayed execution queue.
 	 * <p/>
 	 * This method will silently ignore a rule not on the queue
-	 *
+	 * 
 	 * @param queueId
 	 *            <code>int</code> with an id that relates to a stored rule to
 	 *            be removed

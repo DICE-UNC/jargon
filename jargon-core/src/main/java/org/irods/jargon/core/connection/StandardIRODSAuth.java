@@ -45,7 +45,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		String response = challengeResponse(cachedChallenge,
 				irodsAccount.getPassword(), irodsCommands);
 		AuthResponseInp authResponse_PI = new AuthResponseInp(
-				irodsAccount.getUserName(), response);
+				irodsAccount.getProxyName(), response);
 
 		// should be a header with no body if successful
 		irodsCommands.irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),

@@ -11,12 +11,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Contains an index of extensible meta-data attributes for this query. This
  * object is thread-safe.
- *
+ * 
  * Refer to the README.TXT in the /modules subdirectory of the main IRODS
  * download. Provides bi-directional lookup of extensible meta-data.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public final class ExtensibleMetaDataMapping {
 
@@ -30,7 +30,7 @@ public final class ExtensibleMetaDataMapping {
 	 * Create an object to hold a mapping of extensible metadata columns and
 	 * values. Note that this method will override the stored mappings from a
 	 * previous construction, therefore, the access methods are synchronized.
-	 *
+	 * 
 	 * @param extensibleMappings
 	 *            <code>Map<String,String><code> containing
 	 * @return
@@ -38,7 +38,7 @@ public final class ExtensibleMetaDataMapping {
 	 */
 	public synchronized static ExtensibleMetaDataMapping instance(
 			final Map<String, String> extensibleMappings)
-					throws JargonException {
+			throws JargonException {
 
 		log.debug("cacheing and returning fresh extensibleMetaDataMapping");
 		Map<String, String> copiedExtensibleMappings = new HashMap<String, String>(
@@ -49,7 +49,7 @@ public final class ExtensibleMetaDataMapping {
 
 	private ExtensibleMetaDataMapping(
 			final Map<String, String> extensibleMappings)
-					throws JargonException {
+			throws JargonException {
 		if (extensibleMappings == null || extensibleMappings.size() == 0) {
 			throw new JargonException("null or empty extensible mappings");
 		}
@@ -60,9 +60,9 @@ public final class ExtensibleMetaDataMapping {
 	 * Given a column name (which maps to the ext_col_names_t structure in the
 	 * IRODS extendediCat.h), return the numeric value which should be sent in
 	 * an IRODS query.
-	 *
+	 * 
 	 * Note that method can return <code>null</code>
-	 *
+	 * 
 	 * @param columnName
 	 *            <code>String<code> containing the column name of the extensible metadata
 	 * @return <code>String</code> containing the corresponding index, or
@@ -75,9 +75,9 @@ public final class ExtensibleMetaDataMapping {
 
 	/**
 	 * For a given numeric index, get the equivalent column name.
-	 *
+	 * 
 	 * Note that method can return <code>null</code>
-	 *
+	 * 
 	 * @param index
 	 *            <code>String</code> containing the value of the extensible
 	 *            metadata numeric index.

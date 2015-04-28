@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Immutable object represents the status of a file transfer (get or put)
  * operation. This can be used for progress reporting.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class TransferStatus {
 
@@ -22,7 +22,7 @@ public class TransferStatus {
 	 * A transfer state represents tthe status of individual files. There is an
 	 * OVERALL_ status that indicates the beginning of an entire transfer, which
 	 * is either a file, or a collection of files recursively.
-	 *
+	 * 
 	 * @author Mike Conway - DICE (www.irods.org)
 	 */
 	public enum TransferState {
@@ -52,7 +52,7 @@ public class TransferStatus {
 	 * skipping process and just appears to proceed normally, while apps that
 	 * have more sophisticated accounting can do the delta to get a breakout
 	 * number
-	 *
+	 * 
 	 */
 	private final int totalFilesSkippedSoFar;
 	private final int totalFilesToTransfer;
@@ -62,7 +62,7 @@ public class TransferStatus {
 	/**
 	 * Create an immutable transfer status object for a complete file or overall
 	 * transfer.
-	 *
+	 * 
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
@@ -112,7 +112,7 @@ public class TransferStatus {
 
 	/**
 	 * Create a callback for a step in a synchronization process.
-	 *
+	 * 
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
@@ -166,7 +166,7 @@ public class TransferStatus {
 	/**
 	 * Create an immutable transfer status object for a partial transfer of a
 	 * file. This status object represents partial progress within a file.
-	 *
+	 * 
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
@@ -189,7 +189,7 @@ public class TransferStatus {
 	 *            host name for the transfer
 	 * @param transferZone
 	 *            <code>String</code> with the zone name for the transfer
-	 *
+	 * 
 	 */
 	public static TransferStatus instanceForIntraFileStatus(
 			final TransferType transferType, final long totalSize,
@@ -202,7 +202,7 @@ public class TransferStatus {
 
 	/**
 	 * Create an immutable transfer status object including an exception
-	 *
+	 * 
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
@@ -257,7 +257,7 @@ public class TransferStatus {
 	/**
 	 * Create an instance of a status call-back for an exception during a
 	 * synchronization process
-	 *
+	 * 
 	 * @param transferType
 	 * @param sourceFileAbsolutePath
 	 * @param targetFileAbsolutePath
@@ -337,7 +337,7 @@ public class TransferStatus {
 
 	/**
 	 * Private constructor, use the static instance methods.
-	 *
+	 * 
 	 * @param transferType
 	 * @param transferEnclosingType
 	 * @param sourceFileAbsolutePath

@@ -8,7 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Immutable representation of a query of IRODS data as presented in iquest
  * form, along with other specifications that guide the execution of the query.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class IRODSGenQuery extends AbstractIRODSGenQuery {
@@ -18,7 +18,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	/**
 	 * Creates an immutable description of a general query to IRODS with
 	 * defaults.
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> version of an IRODS Query
 	 * @param numberOfResultsDesired
@@ -36,7 +36,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 
 	/**
 	 * Creates an immutable description of a general query to IRODS.
-	 *
+	 * 
 	 * @param queryString
 	 *            <code>String</code> version of an IRODS Query
 	 * @param numberOfResultsDesired
@@ -58,7 +58,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	private IRODSGenQuery(final String queryString,
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption, final int skip)
-					throws JargonException {
+			throws JargonException {
 
 		super(numberOfResultsDesired);
 

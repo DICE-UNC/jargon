@@ -27,11 +27,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Helpful object for stream to stream copies, also handles byte arrays (as
  * contracts fill out). Allows streaming from one source into or out of iRODS.
- *
+ * 
  * (methods to be filled out as needed, this is a new service)
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		Stream2StreamAO {
@@ -350,7 +350,11 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
+<<<<<<< HEAD
 	 * @see <<<<<<< HEAD =======
+=======
+	 * @see
+>>>>>>> master
 	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
 	 * InputStream, java.io.OutputStream)
 	 */

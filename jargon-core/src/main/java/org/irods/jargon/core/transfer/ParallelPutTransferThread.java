@@ -2,9 +2,8 @@ package org.irods.jargon.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.concurrent.Callable;
@@ -30,7 +29,7 @@ public final class ParallelPutTransferThread extends
 		Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
-	private InputStream bis = null;
+	private RandomAccessFile localRandomAccessFile = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -142,21 +141,21 @@ public final class ParallelPutTransferThread extends
 
 		try {
 
-			log.info("getting input stream for local file");
+			log.info("getting random access file for local file");
+			/*
+			 * int bufferSize = parallelPutFileTransferStrategy
+			 * .getJargonProperties().getLocalFileInputStreamBufferSize(); if
+			 * (bufferSize < 0) { bis = new FileInputStream(
+			 * parallelPutFileTransferStrategy.getLocalFile()); } else if
+			 * (bufferSize == 0) { bis = new BufferedInputStream(new
+			 * FileInputStream(
+			 * parallelPutFileTransferStrategy.getLocalFile())); } else { bis =
+			 * new BufferedInputStream(new FileInputStream(
+			 * parallelPutFileTransferStrategy.getLocalFile()), bufferSize); }
+			 */
 
-			int bufferSize = parallelPutFileTransferStrategy
-					.getJargonProperties().getLocalFileInputStreamBufferSize();
-			if (bufferSize < 0) {
-				bis = new FileInputStream(
-						parallelPutFileTransferStrategy.getLocalFile());
-			} else if (bufferSize == 0) {
-				bis = new BufferedInputStream(new FileInputStream(
-						parallelPutFileTransferStrategy.getLocalFile()));
-			} else {
-				bis = new BufferedInputStream(new FileInputStream(
-						parallelPutFileTransferStrategy.getLocalFile()),
-						bufferSize);
-			}
+			localRandomAccessFile = new RandomAccessFile(
+					parallelPutFileTransferStrategy.getLocalFile(), "r");
 
 			log.info("writing the cookie (password) for the output thread");
 
@@ -183,7 +182,7 @@ public final class ParallelPutTransferThread extends
 			log.info("socket conns for parallel transfer closed, now close the file stream");
 			// close file stream
 			try {
-				bis.close();
+				localRandomAccessFile.close();
 				log.info("streams and files closed");
 			} catch (IOException e) {
 			}
@@ -196,37 +195,14 @@ public final class ParallelPutTransferThread extends
 	 * @throws JargonException
 	 */
 	private void seekToStartingPoint(final long offset) throws JargonException {
-		long totalSkipped = 0;
-		long toSkip = 0;
-
-		// guard against occasions where skip does not skip the full amount
 
 		try {
-			if (offset > 0) {
-				long skipped = bis.skip(offset);
-				totalSkipped += skipped;
-
-				while (totalSkipped < offset) {
-					if (Thread.interrupted()) {
-						throw new IOException(
-
-						"interrupted, consider connection corrupted and return IOException to clear");
-					}
-					log.warn("did not skip entire offset amount, call skip again");
-					toSkip = offset - totalSkipped;
-					skipped = bis.skip(toSkip);
-				}
-
-				if (totalSkipped != offset) {
-					throw new JargonException(
-							"totalSkipped not equal to offset");
-				}
-
-			}
+			localRandomAccessFile.seek(offset);
 		} catch (IOException e) {
 			log.error("IOException in seek", e);
 			throw new JargonException(e);
 		}
+
 	}
 
 	private void put() throws JargonException {
@@ -236,8 +212,8 @@ public final class ParallelPutTransferThread extends
 		boolean done = false;
 		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
 		// );
-		buffer = new byte[this.parallelPutFileTransferStrategy
-				.getJargonProperties().getParallelCopyBufferSize()];
+		buffer = new byte[parallelPutFileTransferStrategy.getJargonProperties()
+				.getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -282,13 +258,13 @@ public final class ParallelPutTransferThread extends
 				 * If restarting, maintain a reference to the offset
 				 */
 
-				if (this.parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
-					this.parallelPutFileTransferStrategy.getRestartManager()
+				if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
+					parallelPutFileTransferStrategy.getRestartManager()
 							.updateOffsetForSegment(
-									this.parallelPutFileTransferStrategy
+									parallelPutFileTransferStrategy
 											.getFileRestartInfo()
 											.identifierFromThisInfo(),
-									this.getThreadNumber(), offset);
+									getThreadNumber(), offset);
 				}
 
 				// How much to read/write
@@ -298,6 +274,8 @@ public final class ParallelPutTransferThread extends
 				}
 
 				if (offset != currentOffset) {
+					// seekToStartingPoint(offset - currentOffset); // FIXME:
+					// test!
 					seekToStartingPoint(offset);
 					currentOffset = offset;
 				}
@@ -346,9 +324,8 @@ public final class ParallelPutTransferThread extends
 
 				log.debug("read/write loop at top");
 
-				read = bis.read(buffer, 0, (int) Math.min(
-						this.parallelPutFileTransferStrategy
-								.getJargonProperties()
+				read = localRandomAccessFile.read(buffer, 0, (int) Math.min(
+						parallelPutFileTransferStrategy.getJargonProperties()
 								.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
@@ -386,17 +363,15 @@ public final class ParallelPutTransferThread extends
 					 * to save the restart info
 					 */
 
-					if (this.parallelPutFileTransferStrategy
-							.getFileRestartInfo() != null) {
+					if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 						log.debug("checking total written for this thread");
 						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
-							this.parallelPutFileTransferStrategy
-									.getRestartManager()
+							parallelPutFileTransferStrategy.getRestartManager()
 									.updateLengthForSegment(
-											this.parallelPutFileTransferStrategy
+											parallelPutFileTransferStrategy
 													.getFileRestartInfo()
 													.identifierFromThisInfo(),
-											this.getThreadNumber(),
+											getThreadNumber(),
 											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
@@ -420,6 +395,21 @@ public final class ParallelPutTransferThread extends
 			log.info("for thread, total read: {}", totalRead);
 			log.info("   total written: {}", totalWritten);
 			log.info("   transferLength: {}", transferLength);
+
+			if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
+				log.debug("checking total written for this thread");
+				if (totalWrittenSinceLastRestartUpdate > 0) {
+					parallelPutFileTransferStrategy.getRestartManager()
+							.updateLengthForSegment(
+									parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
+					log.debug("signal storage of new info");
+				}
+
+			}
 
 		} catch (Throwable e) {
 			// this is throwable to prevent unchecked exceptions from leaking

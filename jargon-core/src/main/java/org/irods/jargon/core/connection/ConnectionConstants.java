@@ -32,7 +32,19 @@ public final class ConnectionConstants {
 	 * Minimum size of a file to be subject to restart processing in get/put
 	 * transfers
 	 */
-	public static final long MIN_FILE_RESTART_SIZE = 64 * 1024 * 1024;
+	public static final long MIN_FILE_RESTART_SIZE = 1 * 1024 * 1024; // FIXME:
+																		// artificially
+																		// low
+																		// 64 *
+																		// 1024
+																		// *
+																		// 1024;
+
+	/**
+	 * Maximum number of restart attempts before failing in large file restart
+	 * TODO: add to jargon props
+	 */
+	public static final int MAX_FILE_RESTART_ATTEMPTS = 4;
 
 	/**
 	 * Maximum threads to open for a parallel transfer. More than this usually

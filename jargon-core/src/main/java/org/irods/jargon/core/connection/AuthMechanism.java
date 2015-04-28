@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * Represents a type of authentication scheme, outlining a life cycle model of
  * connections with events called at appropriate points where authentication
  * processing can be implemented
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 abstract class AuthMechanism {
 
@@ -32,7 +32,7 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called before any startup pack is sent
-	 *
+	 * 
 	 * @throws JargonException
 	 */
 	protected void preConnectionStartup() throws JargonException {
@@ -42,7 +42,7 @@ abstract class AuthMechanism {
 	/**
 	 * Optional method that will be called after the startup pack is sent but
 	 * before the actual authentication attempt
-	 *
+	 * 
 	 * @throws JargonException
 	 */
 	protected void postConnectionStartupPreAuthentication()
@@ -56,7 +56,7 @@ abstract class AuthMechanism {
 	 * method will start the connection by sending the auth request, process the
 	 * startup packet, and then call the authentication method of the actual
 	 * auth mechanism implementation.
-	 *
+	 * 
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -66,7 +66,7 @@ abstract class AuthMechanism {
 	 *         connected, authenticated session with an iRODS agent. Note that
 	 *         the protocol returned may not be the one originally provided,
 	 *         based on the auth method.
-	 *
+	 * 
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
@@ -95,7 +95,7 @@ abstract class AuthMechanism {
 	 * Note that the protocol contains a reference to the {@link AuthResponse}
 	 * that details the authenticating and authenticated accounts and
 	 * identities.
-	 *
+	 * 
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -105,20 +105,20 @@ abstract class AuthMechanism {
 	 *         connected, authenticated session with an iRODS agent. Note that
 	 *         the protocol returned may not be the one originally provided,
 	 *         based on the auth method.
-	 *
+	 * 
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 		return irodsMidLevelProtocol;
 	}
 
 	protected String sendAuthRequestAndGetChallenge(
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 		try {
 			irodsCommands.getIrodsConnection().send(
 					irodsCommands.createHeader(
@@ -156,7 +156,7 @@ abstract class AuthMechanism {
 	 * <p/>
 	 * This abstract method should be implemented in a subclass authentication
 	 * handler
-	 *
+	 * 
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -173,12 +173,12 @@ abstract class AuthMechanism {
 			IRODSAccount irodsAccount,
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException;
+			throws AuthenticationException, JargonException;
 
 	protected StartupResponseData sendStartupPacket(
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
 				.getPipelineConfiguration().isReconnect());
@@ -208,10 +208,10 @@ abstract class AuthMechanism {
 		StartupResponseData startupResponseData = new StartupResponseData(
 				versionPI.getTag("status").getIntValue(), versionPI.getTag(
 						"relVersion").getStringValue(), versionPI.getTag(
-								"apiVersion").getStringValue(), versionPI.getTag(
-										"reconnPort").getIntValue(), versionPI.getTag(
-												"reconnAddr").getStringValue(), versionPI.getTag(
-														"cookie").getStringValue());
+						"apiVersion").getStringValue(), versionPI.getTag(
+						"reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
 
 		log.info("startup response:{}", startupResponseData);
 		irodsCommands.setStartupResponseData(startupResponseData);

@@ -5,11 +5,11 @@ package org.irods.jargon.core.exception;
 
 /**
  * eqivalent to SYS_COLL_NOT_MOUNTED_ERR -74000
- *
+ * 
  * The given collection is not mounted
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class CollectionNotMountedException extends JargonException {
 

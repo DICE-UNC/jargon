@@ -6,9 +6,9 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
  * Represents a runtime exception involving the setup and execution of
  * authentication mechanisms. This exception represents configuration and
  * similar issues, versus communication or credential exceptions.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class AuthRuntimeException extends JargonRuntimeException {
 

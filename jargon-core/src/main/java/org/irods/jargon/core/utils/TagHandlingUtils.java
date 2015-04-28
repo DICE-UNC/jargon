@@ -8,9 +8,9 @@ import org.irods.jargon.core.packinstr.Tag;
 
 /**
  * Utilities for dealing with iRODS XML protocol <code>Tag</code>.
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
- *
+ * 
  */
 public class TagHandlingUtils {
 
@@ -23,7 +23,7 @@ public class TagHandlingUtils {
 	/**
 	 * Given a <code>Tag</code>, extract the key value pairs into a
 	 * <code>Map</code> for ease of parsing
-	 *
+	 * 
 	 * @param keyValPairPi
 	 *            {@link Tag} that is the KeyValuePair_PI head tag
 	 * @return <code>Map<String, String></code> with the key value pairs
