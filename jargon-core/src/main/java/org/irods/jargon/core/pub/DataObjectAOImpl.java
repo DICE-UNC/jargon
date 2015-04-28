@@ -1518,7 +1518,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.error(
 							" exception in get transfer, currently restart is not supported for get",
 							e);
-					throw e;
+					throw new JargonException(e);
 				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
