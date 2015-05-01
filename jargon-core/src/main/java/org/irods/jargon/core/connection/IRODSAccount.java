@@ -184,7 +184,8 @@ public class IRODSAccount implements Serializable {
 		return new IRODSAccount(reroutedHostName, initialAccount.getPort(),
 				initialAccount.getUserName(), initialAccount.getPassword(),
 				initialAccount.getHomeDirectory(), initialAccount.getZone(),
-				initialAccount.getDefaultStorageResource());
+				initialAccount.getDefaultStorageResource(), initialAccount.getProxyName(),
+				initialAccount.getProxyZone());
 
 	}
 
