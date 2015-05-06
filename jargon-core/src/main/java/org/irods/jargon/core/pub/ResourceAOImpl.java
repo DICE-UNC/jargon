@@ -178,7 +178,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
 		log.info("complete");
-		// FIXME: add test that lists tree
 
 	}
 
@@ -653,8 +652,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		StringBuilder query = new StringBuilder();
 		query.append("SELECT ");
 		query.append(RodsGenQueryEnum.COL_R_RESC_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		query.append(COMMA);
