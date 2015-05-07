@@ -46,7 +46,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ####  apparent new resource oriented error messages #105 
 
-Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did some organization of the excepton tree by introducing new superclasses.
+Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did some organization of the exception tree by introducing new super-classes.
 
 ####  resource avu queries failing #104 
 

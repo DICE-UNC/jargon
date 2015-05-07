@@ -2637,10 +2637,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			force = true;
 		}
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				irodsSourceFile.getAbsolutePath(),
-				myTargetFile.getAbsolutePath(), irodsTargetFile.getResource(),
-				irodsSourceFile.length(), force);
+		DataObjCopyInp dataObjCopyInp;
+		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			dataObjCopyInp = DataObjCopyInp.instanceForCopy410(
+					irodsSourceFile.getAbsolutePath(),
+					myTargetFile.getAbsolutePath(),
+					irodsTargetFile.getResource(), irodsSourceFile.length(),
+					force);
+		} else {
+			dataObjCopyInp = DataObjCopyInp.instanceForCopy(
+					irodsSourceFile.getAbsolutePath(),
+					myTargetFile.getAbsolutePath(),
+					irodsTargetFile.getResource(), irodsSourceFile.length(),
+					force);
+		}
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjCopyInp);
