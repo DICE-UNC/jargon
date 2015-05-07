@@ -63,3 +63,7 @@ Added backwards-compatible processing for copy API number and improved overwrite
 ####  Error listing replicas in a resource group (cat unknown table) #108 
 
 Resource groups are no longer a concept, so some operations using resource groups now throw an UnsupportedOperationException when ussued against a 4.1+ iRODS host.  These operations continue to be supported pre 4.1.  Unit test code was adjusted.
+
+#### estTrimReplicasForDataObjectByResourceNameInvalid fails with uncaught -78000 #109
+
+Added a ResourceNotFoundException in the hierarchy.  For prior to 4.1, will maintain current behavior of silently ignoring, which in retrospect might be a bit odd.  But no surprises!  From 4.1+ will throw a DataNotFoundException.  It's a little messy, may rethink that later.

@@ -28,6 +28,7 @@ import org.irods.jargon.core.exception.NoAPIPrivException;
 import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
+import org.irods.jargon.core.exception.ResourceDoesNotExistException;
 import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.exception.SpecificQueryException;
 import org.irods.jargon.core.exception.UnixFileCreateException;
@@ -47,9 +48,9 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Note that this is an early implementation, and a fuller error hierarchy will
  * develop over time.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSErrorScanner {
 
@@ -59,7 +60,7 @@ public class IRODSErrorScanner {
 	/**
 	 * Scan the response for errors, and incorporate any message information
 	 * that might expand the error
-	 * 
+	 *
 	 * @param infoValue
 	 *            <code>int</code> with the iRODS info value from a packing
 	 *            instruction response header
@@ -132,7 +133,7 @@ public class IRODSErrorScanner {
 	 */
 	private static void checkSpecificCodesAndThrowIfExceptionLocated(
 			final int infoValue, final String message, final ErrorEnum errorEnum)
-			throws JargonException {
+					throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
 			throw new JargonFileOrCollAlreadyExistsException(
@@ -311,6 +312,10 @@ public class IRODSErrorScanner {
 			throw new NegotiationException(
 					ErrorEnum.SERVER_NEGOTIATION_ERROR.toString(),
 					ErrorEnum.SERVER_NEGOTIATION_ERROR.getInt());
+		case SYS_RESC_DOES_NOT_EXIST:
+			throw new ResourceDoesNotExistException(
+					ErrorEnum.SYS_RESC_DOES_NOT_EXIST.toString(),
+					ErrorEnum.SYS_RESC_DOES_NOT_EXIST.getInt());
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {
@@ -331,7 +336,7 @@ public class IRODSErrorScanner {
 	/**
 	 * Inspect the <code>info</code> value from an iRODS packing instruction
 	 * response header and throw an exception if an error was detected
-	 * 
+	 *
 	 * @param infoValue
 	 * @throws JargonException
 	 */

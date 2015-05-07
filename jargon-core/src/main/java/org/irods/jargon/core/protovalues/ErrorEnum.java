@@ -33,8 +33,8 @@ public enum ErrorEnum {
 																																																			-58000), SYS_SRC_DEST_SPEC_COLL_CONFLICT(-59000), SYS_UNKNOWN_SPEC_COLL_CLASS(
 																																																					-60000), SYS_MOUNT_MOUNTED_COLL_ERR(-73000), COLLECTION_NOT_MOUNTED(
 																																																							-74000), USER_AUTH_STRING_EMPTY(-60000), COLLECTION_NOT_EMPTY(
-																																																									-79000), FEDERATED_ZONE_NOT_AVAILABLE(-92111), INVALID_INPUT_PARAM(
-																																																											-130000), USER_AUTH_SCHEME_ERR(-300000), USER_RODS_HOST_EMPTY(
+																																																									-79000), FEDERATED_ZONE_NOT_AVAILABLE(-92111), SYS_RESC_DOES_NOT_EXIST(
+																																																											-78000), INVALID_INPUT_PARAM(-130000), USER_AUTH_SCHEME_ERR(-300000), USER_RODS_HOST_EMPTY(
 																																																													-302000), USER_RODS_HOSTNAME_ERR(-303000), USER_SOCK_OPEN_ERR(
 																																																															-304000), USER_SOCK_CONNECT_ERR(-305000), USER_STRLEN_TOOLONG(
 																																																																	-306000), USER_API_INPUT_ERR(-307000), USER_PACKSTRUCT_INPUT_ERR(
@@ -291,6 +291,8 @@ public enum ErrorEnum {
 			return SYS_MOUNT_MOUNTED_COLL_ERR;
 		case -74000:
 			return COLLECTION_NOT_MOUNTED;
+		case -78000:
+			return SYS_RESC_DOES_NOT_EXIST;
 		case -79000:
 			return COLLECTION_NOT_EMPTY;
 		case -92111:

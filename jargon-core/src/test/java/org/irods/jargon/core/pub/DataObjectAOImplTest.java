@@ -5883,8 +5883,17 @@ public class DataObjectAOImplTest {
 				targetIrodsCollection, testFileName);
 		Assert.assertEquals("did not count two replicas", 2, replicas);
 
-		dataObjectAO.trimDataObjectReplicas(targetIrodsCollection,
-				testFileName, "invalid resource name", -1, -1, false);
+		try {
+			dataObjectAO.trimDataObjectReplicas(targetIrodsCollection,
+					testFileName, "invalid resource name", -1, -1, false);
+		} catch (DataNotFoundException dnf) {
+			if (irodsFileSystem.getIRODSAccessObjectFactory()
+					.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
+				return;
+			} else {
+				Assert.fail("should not throw an exception here");
+			}
+		}
 
 		replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);
