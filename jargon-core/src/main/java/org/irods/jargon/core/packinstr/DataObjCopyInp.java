@@ -222,7 +222,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		if (getApiNumber() == COPY_API_NBR) {
+		if (getApiNumber() == COPY_API_NBR
+				|| getApiNumber() == COPY_API_NBR_410) {
 			return getTagValueForCopy();
 		} else {
 			return getTagValueForReplicate();

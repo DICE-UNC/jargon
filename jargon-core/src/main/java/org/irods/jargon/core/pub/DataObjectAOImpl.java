@@ -2618,23 +2618,25 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		TransferControlBlock operativeTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+		boolean force = operativeTransferControlBlock.getTransferOptions()
+				.getForceOption() == ForceOption.USE_FORCE;
 
 		/*
 		 * Handle potential overwrites, will consult the client if so configured
 		 */
-		OverwriteResponse overwriteResponse = evaluateOverwrite(
-				(File) irodsSourceFile, transferControlBlock,
-				transferStatusCallbackListener,
-				operativeTransferControlBlock.getTransferOptions(),
-				(File) myTargetFile);
+		if (!force) {
+			OverwriteResponse overwriteResponse = evaluateOverwrite(
+					(File) irodsSourceFile, transferControlBlock,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock.getTransferOptions(),
+					(File) myTargetFile);
+			if (overwriteResponse == OverwriteResponse.SKIP) {
+				log.info("skipping due to overwrite status");
+				return;
+			} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
+				force = true;
+			}
 
-		boolean force = false;
-
-		if (overwriteResponse == OverwriteResponse.SKIP) {
-			log.info("skipping due to overwrite status");
-			return;
-		} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
-			force = true;
 		}
 
 		DataObjCopyInp dataObjCopyInp;

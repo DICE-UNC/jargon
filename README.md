@@ -55,3 +55,7 @@ Moved resource queries away from old string building approach to the composition
 ####  Read length set to zero on replication with iRODS 4.1 #106 
 
 Added backwards-compatible processing for new replicate API number.  
+
+####  Read length set to zero on copy with iRODS 4.1 #107 
+
+Added backwards-compatible processing for copy API number and improved overwrite logic
