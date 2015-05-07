@@ -10,7 +10,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class InvalidArgumentException extends JargonException {
+public class InvalidArgumentException extends ProtocolException {
 
 	private static final long serialVersionUID = -8059435486261380492L;
 

@@ -3,7 +3,37 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.exception.*;
+import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.CatNoAccessException;
+import org.irods.jargon.core.exception.CatalogSQLException;
+import org.irods.jargon.core.exception.CollectionNotEmptyException;
+import org.irods.jargon.core.exception.CollectionNotMountedException;
+import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileDriverError;
+import org.irods.jargon.core.exception.FileIntegrityException;
+import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.exception.InternalIrodsOperationException;
+import org.irods.jargon.core.exception.InvalidArgumentException;
+import org.irods.jargon.core.exception.InvalidClientUserException;
+import org.irods.jargon.core.exception.InvalidGroupException;
+import org.irods.jargon.core.exception.InvalidInputParameterException;
+import org.irods.jargon.core.exception.InvalidResourceException;
+import org.irods.jargon.core.exception.InvalidUserException;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonFileOrCollAlreadyExistsException;
+import org.irods.jargon.core.exception.KeyException;
+import org.irods.jargon.core.exception.NegotiationException;
+import org.irods.jargon.core.exception.NoAPIPrivException;
+import org.irods.jargon.core.exception.NoMoreRulesException;
+import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.exception.RemoteScriptExecutionException;
+import org.irods.jargon.core.exception.ResourceHierarchyException;
+import org.irods.jargon.core.exception.SpecificQueryException;
+import org.irods.jargon.core.exception.UnixFileCreateException;
+import org.irods.jargon.core.exception.UnixFileMkdirException;
+import org.irods.jargon.core.exception.UnixFileRenameException;
+import org.irods.jargon.core.exception.ZoneUnavailableException;
 import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -179,6 +209,108 @@ public class IRODSErrorScanner {
 			throw new InvalidInputParameterException("Invalid input parameter");
 		case CAT_INVALID_CLIENT_USER:
 			throw new InvalidClientUserException(message);
+		case KEY_NOT_FOUND:
+			throw new KeyException(ErrorEnum.KEY_NOT_FOUND.toString(),
+					ErrorEnum.KEY_NOT_FOUND.getInt());
+		case KEY_TYPE_MISMATCH:
+			throw new KeyException(ErrorEnum.KEY_TYPE_MISMATCH.toString(),
+					ErrorEnum.KEY_TYPE_MISMATCH.getInt());
+		case CHILD_EXISTS:
+			throw new ResourceHierarchyException(
+					ErrorEnum.CHILD_EXISTS.toString(),
+					ErrorEnum.CHILD_EXISTS.getInt());
+		case HIERARCHY_ERROR:
+			throw new ResourceHierarchyException(
+					ErrorEnum.HIERARCHY_ERROR.toString(),
+					ErrorEnum.HIERARCHY_ERROR.getInt());
+		case CHILD_NOT_FOUND:
+			throw new ResourceHierarchyException(
+					ErrorEnum.CHILD_NOT_FOUND.toString(),
+					ErrorEnum.CHILD_NOT_FOUND.getInt());
+		case NO_NEXT_RESOURCE_FOUND:
+			throw new ResourceHierarchyException(
+					ErrorEnum.NO_NEXT_RESOURCE_FOUND.toString(),
+					ErrorEnum.NO_NEXT_RESOURCE_FOUND.getInt());
+		case NO_PDMO_DEFINED:
+			throw new ResourceHierarchyException(
+					ErrorEnum.NO_PDMO_DEFINED.toString(),
+					ErrorEnum.NO_PDMO_DEFINED.getInt());
+		case INVALID_LOCATION:
+			throw new ResourceHierarchyException(
+					ErrorEnum.INVALID_LOCATION.toString(),
+					ErrorEnum.INVALID_LOCATION.getInt());
+		case PLUGIN_ERROR:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.PLUGIN_ERROR.toString(),
+					ErrorEnum.PLUGIN_ERROR.getInt());
+		case INVALID_RESC_CHILD_CONTEXT:
+			throw new ResourceHierarchyException(
+					ErrorEnum.INVALID_RESC_CHILD_CONTEXT.toString(),
+					ErrorEnum.INVALID_RESC_CHILD_CONTEXT.getInt());
+		case INVALID_FILE_OBJECT:
+			throw new ResourceHierarchyException(
+					ErrorEnum.INVALID_FILE_OBJECT.toString(),
+					ErrorEnum.INVALID_FILE_OBJECT.getInt());
+		case INVALID_OPERATION:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.INVALID_OPERATION.toString(),
+					ErrorEnum.INVALID_OPERATION.getInt());
+		case CHILD_HAS_PARENT:
+			throw new ResourceHierarchyException(
+					ErrorEnum.CHILD_HAS_PARENT.toString(),
+					ErrorEnum.CHILD_HAS_PARENT.getInt());
+		case FILE_NOT_IN_VAULT:
+			throw new ResourceHierarchyException(
+					ErrorEnum.FILE_NOT_IN_VAULT.toString(),
+					ErrorEnum.FILE_NOT_IN_VAULT.getInt());
+		case DIRECT_ARCHIVE_ACCESS:
+			throw new ResourceHierarchyException(
+					ErrorEnum.DIRECT_ARCHIVE_ACCESS.toString(),
+					ErrorEnum.DIRECT_ARCHIVE_ACCESS.getInt());
+		case ADVANCED_NEGOTIATION_NOT_SUPPORTED:
+			throw new NegotiationException(
+					ErrorEnum.ADVANCED_NEGOTIATION_NOT_SUPPORTED.toString(),
+					ErrorEnum.ADVANCED_NEGOTIATION_NOT_SUPPORTED.getInt());
+		case DIRECT_CHILD_ACCESS:
+			throw new ResourceHierarchyException(
+					ErrorEnum.DIRECT_CHILD_ACCESS.toString(),
+					ErrorEnum.DIRECT_CHILD_ACCESS.getInt());
+		case INVALID_DYNAMIC_CAST:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.INVALID_DYNAMIC_CAST.toString(),
+					ErrorEnum.INVALID_DYNAMIC_CAST.getInt());
+		case INVALID_ACCESS_TO_IMPOSTOR_RESOURCE:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.INVALID_ACCESS_TO_IMPOSTOR_RESOURCE.toString(),
+					ErrorEnum.INVALID_ACCESS_TO_IMPOSTOR_RESOURCE.getInt());
+		case INVALID_LEXICAL_CAST:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.INVALID_LEXICAL_CAST.toString(),
+					ErrorEnum.INVALID_LEXICAL_CAST.getInt());
+		case CONTROL_PLANE_MESSAGE_ERROR:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.CONTROL_PLANE_MESSAGE_ERROR.toString(),
+					ErrorEnum.CONTROL_PLANE_MESSAGE_ERROR.getInt());
+		case REPLICA_NOT_IN_RESC:
+			throw new ResourceHierarchyException(
+					ErrorEnum.REPLICA_NOT_IN_RESC.toString(),
+					ErrorEnum.REPLICA_NOT_IN_RESC.getInt());
+		case INVALID_ANY_CAST:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.INVALID_ANY_CAST.toString(),
+					ErrorEnum.INVALID_ANY_CAST.getInt());
+		case BAD_FUNCTION_CALL:
+			throw new InternalIrodsOperationException(
+					ErrorEnum.BAD_FUNCTION_CALL.toString(),
+					ErrorEnum.BAD_FUNCTION_CALL.getInt());
+		case CLIENT_NEGOTIATION_ERROR:
+			throw new NegotiationException(
+					ErrorEnum.CLIENT_NEGOTIATION_ERROR.toString(),
+					ErrorEnum.CLIENT_NEGOTIATION_ERROR.getInt());
+		case SERVER_NEGOTIATION_ERROR:
+			throw new NegotiationException(
+					ErrorEnum.SERVER_NEGOTIATION_ERROR.toString(),
+					ErrorEnum.SERVER_NEGOTIATION_ERROR.getInt());
 		default:
 			StringBuilder sb = new StringBuilder();
 			if (message.isEmpty()) {

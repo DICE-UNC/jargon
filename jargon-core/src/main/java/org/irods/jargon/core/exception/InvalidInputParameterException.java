@@ -8,8 +8,7 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class InvalidInputParameterException extends
-		InternalIrodsOperationException {
+public class InvalidInputParameterException extends ProtocolException {
 
 	/**
 	 *

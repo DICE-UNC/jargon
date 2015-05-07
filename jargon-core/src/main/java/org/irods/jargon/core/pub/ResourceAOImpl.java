@@ -17,8 +17,10 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.packinstr.GeneralAdminInpForResources;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
+import org.irods.jargon.core.protovalues.ErrorEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -176,7 +178,17 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
 				.instanceForAddChildToResource(child, parent, optionalContext);
 		log.debug("executing admin PI");
-		getIRODSProtocol().irodsFunction(adminPI);
+		try {
+			getIRODSProtocol().irodsFunction(adminPI);
+		} catch (ResourceHierarchyException e) {
+			if (e.getUnderlyingIRODSExceptionCode() == ErrorEnum.CHILD_HAS_PARENT
+					.getInt()) {
+				log.warn("duplicate child ignored", e);
+			} else {
+				log.error("unknown resource exception", e);
+				throw e;
+			}
+		}
 		log.info("complete");
 
 	}
