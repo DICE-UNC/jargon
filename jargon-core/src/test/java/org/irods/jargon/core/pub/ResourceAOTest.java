@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -774,7 +775,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// Bug 104
 	public final void testAddChildToParentDuplicate() throws Exception {
 
 		String rescName = "testAddChildToParentDuplicate";
@@ -816,9 +816,7 @@ public class ResourceAOTest {
 
 	}
 
-	@Test
-	// Bug 105
-	// FIXME: waits for resolution of https://github.com/irods/irods/issues/2325
+	@Test(expected = ResourceHierarchyException.class)
 	public final void testAddMissingChildToParent() throws Exception {
 
 		String rescName = "testAddMissingChildToParentxxxx";
