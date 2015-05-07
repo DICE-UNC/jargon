@@ -50,4 +50,8 @@ Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did 
 
 ####  resource avu queries failing #104 
 
-Moved resource queries away from old string bulding approach to the composition by builder approach, enhanced the unit testing.  This fixed some errors in resource AVU queries with 4.1.
+Moved resource queries away from old string building approach to the composition by builder approach, enhanced the unit testing.  This fixed some errors in resource AVU queries with 4.1.
+
+####  Read length set to zero on replication with iRODS 4.1 #106 
+
+Added backwards-compatible processing for new replicate API number.  
