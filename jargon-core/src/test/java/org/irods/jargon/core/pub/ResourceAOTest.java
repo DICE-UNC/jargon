@@ -75,7 +75,6 @@ public class ResourceAOTest {
 	 * @throws Exception
 	 */
 	@Test
-	// OK41
 	public final void testListResourceAndResourceGroupNames() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -109,7 +108,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// OK41
 	public final void testGetFirstResourceForFile() throws Exception {
 		String testFileName = "testGetFirstResourceForFile.txt";
 		String absPath = scratchFileUtils
@@ -169,7 +167,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// OK41
 	public final void testFindAll() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -184,7 +181,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// OK41
 	public final void testFindByName() throws Exception {
 		String testResource = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
@@ -202,7 +198,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// OK41
 	public final void testFindById() throws Exception {
 		String testResource = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
@@ -261,7 +256,6 @@ public class ResourceAOTest {
 	}
 
 	@Test(expected = InvalidResourceException.class)
-	// OK41
 	public final void testAddResourceMetadataBadResource() throws Exception {
 		String testResource = "Imabadresource";
 
@@ -285,7 +279,6 @@ public class ResourceAOTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// OK41
 	public final void testAddResourceNullResource() throws Exception {
 		String testResource = null;
 
@@ -309,7 +302,6 @@ public class ResourceAOTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// OK41
 	public final void testAddResourceBlankResource() throws Exception {
 		String testResource = "";
 
@@ -333,7 +325,6 @@ public class ResourceAOTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	// OK41
 	public final void testAddResourceNullAvu() throws Exception {
 		String testResource = "xx";
 
@@ -351,7 +342,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// OK401
 	public final void testListResourceMetadata() throws Exception {
 		String testResource = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
