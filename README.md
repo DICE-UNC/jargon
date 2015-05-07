@@ -48,3 +48,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did some organization of the excepton tree by introducing new superclasses.
 
+####  resource avu queries failing #104 
+
+Moved resource queries away from old string bulding approach to the composition by builder approach, enhanced the unit testing.  This fixed some errors in resource AVU queries with 4.1.
