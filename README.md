@@ -3,16 +3,16 @@ Jargon Core API
 
 
 # Project: Jargon-core API
-#### Date: 04/21/2015
-#### Release Version: 4.0.2.2-SNAPSHOT
+#### Date:
+#### Release Version: 4.0.2.3-SNAPSHOT
 #### git tag:
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Work in progress on misc fixes and features for Cyberduck integration
+Work in progress on misc fixes and features for iRODS 4.1 certification
 
-Release  milestone https://github.com/DICE-UNC/jargon/milestones/Maintenance%20release%204.0.2.2%20with%20misc%20Cyberduck%20integration
+Release  milestone https://github.com/DICE-UNC/jargon/milestones/4.0.2.3%20with%20iRODS%204.1
 
 =======
 
@@ -44,12 +44,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-### Integration misc with CyberDuck #101
+####  apparent new resource oriented error messages #105 
 
-Misc small changes as we test Cyberduck integration with iRODS.  This is a catch-all issue for many minor changes.
-
-### Authenticates as the proxy instead of client #100
-
-Handle authentication with proxy user, per a patch supplied by Tony Edgin at iPlant (Thanks!) 
-
+Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did some organization of the excepton tree by introducing new superclasses.
 
