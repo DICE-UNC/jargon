@@ -45,7 +45,7 @@ public class ResourceAOTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -71,7 +71,7 @@ public class ResourceAOTest {
 
 	/**
 	 * Test a listing that has the resource names and resource group name
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -218,7 +218,6 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// bug #104
 	public final void testFindMetadataValuesByMetadataQuery() throws Exception {
 		String testResource = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
@@ -232,9 +231,9 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		// initialize the AVU data
-		String expectedAttribName = "testrattrib1";
-		String expectedAttribValue = "testrvalue1";
-		String expectedAttribUnits = "testr1units";
+		String expectedAttribName = "testFindMetadataValuesByMetadataQueryattrib1";
+		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryvalue1";
+		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryunits";
 
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnits);
@@ -252,6 +251,14 @@ public class ResourceAOTest {
 		List<MetaDataAndDomainData> result = resourceAO
 				.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		MetaDataAndDomainData result1 = result.get(0);
+		Assert.assertEquals(MetaDataAndDomainData.MetadataDomain.RESOURCE,
+				result1.getMetadataDomain());
+		Assert.assertEquals(expectedAttribName, result1.getAvuAttribute());
+		Assert.assertEquals(expectedAttribValue, result1.getAvuValue());
+		Assert.assertEquals(expectedAttribUnits, result1.getAvuUnit());
+		Assert.assertEquals(testResource, result1.getDomainObjectUniqueName());
 
 	}
 

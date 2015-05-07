@@ -1,12 +1,5 @@
 package org.irods.jargon.core.pub;
 
-import static org.irods.jargon.core.pub.aohelper.AOHelper.AND;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.COMMA;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.DEFAULT_REC_COUNT;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.QUOTE;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.SPACE;
-import static org.irods.jargon.core.pub.aohelper.AOHelper.WHERE;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +20,6 @@ import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
-import org.irods.jargon.core.query.IRODSGenQuery;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -47,9 +39,9 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * AO objects are not shared between threads. Jargon services will confine
  * activities to one connection per thread.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
@@ -593,7 +585,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	/**
 	 * FIXME: implement, add to interface Given a set of metadata query
 	 * parameters, return a list of Resources that match the metadata query
-	 * 
+	 *
 	 * @param avuQueryElements
 	 * @return
 	 * @throws JargonQueryException
@@ -627,15 +619,20 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		IRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME)
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_R_RESC_NAME,
-							QueryConditionOperators.EQUAL, resourceName);
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_ID);
+
+			for (AVUQueryElement queryElement : avuQuery) {
+				this.buildConditionPart(queryElement, builder);
+			}
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -651,48 +648,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		} catch (GenQueryBuilderException e) {
 			log.error("jargon query exception getting results", e);
 			throw new JargonException(e);
-		}
-
-		StringBuilder query = new StringBuilder();
-		query.append("SELECT ");
-		query.append(RodsGenQueryEnum.COL_R_RESC_ID.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS.getName());
-		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_META_USER_ATTR_ID.getName());
-
-		query.append(WHERE);
-		boolean previousElement = false;
-		StringBuilder queryCondition = null;
-
-		for (AVUQueryElement queryElement : avuQuery) {
-
-			queryCondition = new StringBuilder();
-			if (previousElement) {
-				queryCondition.append(AND);
-			}
-			previousElement = true;
-			query.append(buildConditionPart(queryElement));
-		}
-
-		String queryString = query.toString();
-		log.debug("query string for AVU query: {}", queryString);
-
-		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString,
-				DEFAULT_REC_COUNT);
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			resultSet = irodsGenQueryExecutorImpl
-					.executeIRODSQueryAndCloseResult(irodsQuery, 0);
-
-		} catch (JargonQueryException e) {
-			log.error("query exception for query:" + queryString, e);
-			throw new JargonException(ERROR_IN_RESOURCE_QUERY);
 		}
 
 		return buildMetaDataAndDomainDatalistFromResultSet(
@@ -748,45 +703,35 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * @param queryCondition
 	 * @param queryElement
 	 */
-	private StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
-		StringBuilder queryCondition = new StringBuilder();
+	private void buildConditionPart(final AVUQueryElement queryElement,
+			IRODSGenQueryBuilder builder) {
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
+					QueryConditionOperators
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+					queryElement.getValue());
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
+
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE,
+					QueryConditionOperators
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+							queryElement.getValue());
+
+		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
+
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS,
+					QueryConditionOperators
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+					queryElement.getValue());
+
 		}
 
-		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
-		}
-
-		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS
-					.getName());
-			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
-			queryCondition.append(SPACE);
-			queryCondition.append(QUOTE);
-			queryCondition.append(queryElement.getValue());
-			queryCondition.append(QUOTE);
-		}
-
-		return queryCondition;
 	}
 
 	/*
