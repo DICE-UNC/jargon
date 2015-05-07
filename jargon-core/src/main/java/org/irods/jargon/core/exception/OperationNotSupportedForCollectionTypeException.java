@@ -11,7 +11,7 @@ package org.irods.jargon.core.exception;
  * 
  */
 public class OperationNotSupportedForCollectionTypeException extends
-		JargonException {
+		InternalIrodsOperationException {
 
 	/**
 	 * 

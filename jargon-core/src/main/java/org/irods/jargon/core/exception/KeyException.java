@@ -9,7 +9,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE
  *
  */
-public class KeyException extends JargonException {
+public class KeyException extends InternalIrodsOperationException {
 
 	/**
 	 * 

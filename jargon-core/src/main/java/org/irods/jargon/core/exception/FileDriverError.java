@@ -10,7 +10,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class FileDriverError extends JargonException {
+public class FileDriverError extends InternalIrodsOperationException {
 
 	/**
 	 *
