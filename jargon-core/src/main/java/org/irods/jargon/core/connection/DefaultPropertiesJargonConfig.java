@@ -526,4 +526,15 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	public int getParallelCopyBufferSize() {
 		return verifyPropExistsAndGetAsInt("jargon.parallel.copy.buffer.size");
 	}
+
+	@Override
+	public int getIntraFileStatusCallbacksNumberCallsInterval() {
+		return verifyPropExistsAndGetAsInt("transfer.intra.file.callback.after.n.calls");
+
+	}
+
+	@Override
+	public long getIntraFileStatusCallbacksTotalBytesInterval() {
+		return verifyPropExistsAndGetAsLong("transfer.intra.file.callback.after.n.bytes");
+	}
 }
