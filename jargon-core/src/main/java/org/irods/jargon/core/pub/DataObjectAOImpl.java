@@ -871,9 +871,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				if (transferStatusCallbackListener != null
 						|| myTransferOptions.isIntraFileStatusCallbacks()) {
 					intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-							.instanceSettingInterval(TransferType.PUT,
+							.instanceSettingTransferOptions(TransferType.PUT,
 									localFile.length(), transferControlBlock,
-									transferStatusCallbackListener, 100);
+									transferStatusCallbackListener,
+									transferControlBlock.getTransferOptions());
 				}
 				dataAOHelper.putReadWriteLoop(localFile, overwrite, targetFile,
 						fd, getIRODSProtocol(), transferControlBlock,
@@ -1023,7 +1024,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
-	@SuppressWarnings("unused")
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
