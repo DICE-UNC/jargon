@@ -5,6 +5,7 @@ import java.net.URISyntaxException;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 
 /**
  * Helpful methods for parsing and dealing with IRODS URIs, also supports the
@@ -16,7 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
  */
 public class IRODSUriUtils {
 
-	private static final char PATH_SEPARATOR = '/';
+	private static final String PATH_SEPARATOR = "/";
 
 	/**
 	 * Retrieve the iRODS user name from the <code>URI</code>, or
@@ -29,9 +30,8 @@ public class IRODSUriUtils {
 	 *         <code>null</code> if the user name is not present.
 	 */
 	public static String getUserNameFromURI(final URI irodsURI) {
-
-		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
-		return uriUserParts.getUserName();
+		final IRODSUriUserInfo info = getUserInfoFromURI(irodsURI);
+		return info == null ? null : info.getUserName();
 	}
 
 	/**
@@ -40,12 +40,14 @@ public class IRODSUriUtils {
 	 * @param irodsURI
 	 * @return
 	 */
+	@Deprecated
 	protected static URIUserParts getURIUserPartsFromUserInfo(final URI irodsURI) {
 		String userInfo = irodsURI.getUserInfo();
 
 		if (userInfo == null || userInfo.isEmpty()) {
 			return null;
 		}
+
 
 		/*
 		 * parse out the userInfo part of the URI, which can have userName,
@@ -117,8 +119,8 @@ public class IRODSUriUtils {
 	 *         if not available.
 	 */
 	public static String getPasswordFromURI(final URI irodsURI) {
-		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
-		return uriUserParts.getPassword();
+		final IRODSUriUserInfo info = getUserInfoFromURI(irodsURI);
+		return info == null ? null : info.getPassword();
 	}
 
 	/**
@@ -130,8 +132,8 @@ public class IRODSUriUtils {
 	 *         not available.
 	 */
 	public static String getZoneFromURI(final URI irodsURI) {
-		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
-		return uriUserParts.getZone();
+		final IRODSUriUserInfo info = getUserInfoFromURI(irodsURI);
+		return info == null ? null : info.getZone();
 	}
 
 	/**
@@ -187,25 +189,24 @@ public class IRODSUriUtils {
 					"cannot derive IRODSAccount, not an iRODS uri");
 		}
 
-		URIUserParts uriUserParts = getURIUserPartsFromUserInfo(irodsURI);
+		final IRODSUriUserInfo info = getUserInfoFromURI(irodsURI);
 
-		if (uriUserParts.getPassword() == null
-				|| uriUserParts.getUserName() == null
-				|| uriUserParts.getZone() == null) {
+		if (info == null
+				|| info.getPassword() == null
+				|| info.getZone() == null) {
 			throw new JargonException(
 					"No user information in URI, cannot create iRODS account");
 		}
 
-		StringBuilder sb = new StringBuilder();
-		sb.append(PATH_SEPARATOR);
-		sb.append(uriUserParts.getZone());
-		sb.append("/home/");
-		sb.append(uriUserParts.getUserName());
+		final String home = new StringBuilder()
+				.append(PATH_SEPARATOR).append(info.getZone())
+				.append(PATH_SEPARATOR).append("home")
+				.append(PATH_SEPARATOR).append(info.getUserName())
+				.toString();
 
 		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),
-				uriUserParts.getUserName(), uriUserParts.getPassword(),
-				sb.toString(), uriUserParts.getZone(), "");
-
+				info.getUserName(), info.getPassword(), home, info.getZone(),
+				"");
 	}
 
 	/**
@@ -231,14 +232,11 @@ public class IRODSUriUtils {
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param isFile
 	 * @param irodsPath
 	 * @return
-	 * @throws JargonException
 	 */
 	public static URI buildURIForAnAccountAndPath(
-			final IRODSAccount irodsAccount, final String irodsPath)
-			throws JargonException {
+			final IRODSAccount irodsAccount, final String irodsPath) {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null iRODSAccount");
@@ -249,30 +247,13 @@ public class IRODSUriUtils {
 					"null or empty irodsAbsolutePath");
 		}
 
-		String absPath = irodsPath;
-		// if this is a relative path, use the user home directory to fashion an
-		// absolute path
-		if (irodsPath.charAt(0) != '/') {
-			StringBuilder sb = new StringBuilder();
-			sb.append(irodsAccount.getHomeDirectory());
-			sb.append("/");
-			sb.append(irodsPath);
-			absPath = sb.toString();
-		}
-
-		URI uri = null;
-
-		try {
-			uri = new URI("irods", irodsAccount.getUserName(),
-					irodsAccount.getHost(), irodsAccount.getPort(), absPath,
-					null, null);
-
-		} catch (URISyntaxException e) {
-
-			throw new JargonException(e);
-		}
-
-		return uri;
+		final IRODSUriUserInfo info =
+				IRODSUriUserInfo.unauthenticatedLocalInstance(
+						irodsAccount.getUserName());
+		final String absPath = mkPathAbs(irodsAccount.getHomeDirectory(),
+				irodsPath);
+		return buildURI(irodsAccount.getHost(), irodsAccount.getPort(), absPath,
+				info);
 	}
 
 	/**
@@ -280,15 +261,11 @@ public class IRODSUriUtils {
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param isFile
 	 * @param irodsPath
 	 * @return
-	 * @throws JargonException
 	 */
 	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
-			final IRODSAccount irodsAccount, final String irodsPath)
-			throws JargonException {
-
+			final IRODSAccount irodsAccount, final String irodsPath) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null iRODSAccount");
 		}
@@ -298,30 +275,36 @@ public class IRODSUriUtils {
 					"null or empty irodsAbsolutePath");
 		}
 
-		String absPath = irodsPath;
-		// if this is a relative path, use the user home directory to fashion an
-		// absolute path
-		if (irodsPath.charAt(0) != '/') {
-			StringBuilder sb = new StringBuilder();
-			sb.append(irodsAccount.getHomeDirectory());
-			sb.append("/");
-			// URLEncode the iRODS path
-			sb.append(irodsPath);
-			absPath = sb.toString();
-		}
+		final String absPath = mkPathAbs(irodsAccount.getHomeDirectory(),
+				irodsPath);
+		return buildURI(irodsAccount.getHost(), irodsAccount.getPort(), absPath,
+				null);
+	}
 
-		URI uri = null;
+	static IRODSUriUserInfo getUserInfoFromURI(final URI irodsURI) {
+		return IRODSUriUserInfo.fromString(irodsURI.getUserInfo());
+	}
 
+	private static URI buildURI(final String host, final int port,
+								final String path,
+								final IRODSUriUserInfo userInfo) {
 		try {
-			uri = new URI("irods", null, irodsAccount.getHost(),
-					irodsAccount.getPort(), absPath, null, null);
-
-		} catch (URISyntaxException e) {
-
-			throw new JargonException(e);
+			final String info = userInfo == null ? null : userInfo.toString();
+			return new URI("irods", info, host, port, path, null, null);
+		} catch (final URISyntaxException e) {
+			throw new JargonRuntimeException(
+					"there is a URI creation bug in Jargon", e);
 		}
+	}
 
-		return uri;
+	// if this is a relative path, use the user home directory to fashion an
+	// absolute path
+	private static String mkPathAbs(final String homeDir, final String path) {
+		if (path.startsWith(PATH_SEPARATOR)) {
+			return path;
+		} else {
+			return homeDir + PATH_SEPARATOR + path;
+		}
 	}
 
 }
@@ -333,6 +316,7 @@ public class IRODSUriUtils {
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+@Deprecated
 class URIUserParts {
 	private String userName = "";
 	private String password = "";
