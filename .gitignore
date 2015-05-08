@@ -22,3 +22,4 @@ testing.properties
 */test-output
 JargonVersion.java
 **/${test.option.mount.basedir}
+**/*.*~
