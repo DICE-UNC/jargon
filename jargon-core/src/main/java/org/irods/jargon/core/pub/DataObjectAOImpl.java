@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -650,6 +651,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
+		/*
+		 * Send a final 100% callback if intra-file callbacks are desired
+		 */
+
+		if (transferStatusCallbackListener != null
+				&& transferControlBlock.getTransferOptions()
+						.isIntraFileStatusCallbacks()) {
+			ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+					.instanceSettingTransferOptions(TransferType.PUT,
+							localFileLength, transferControlBlock,
+							transferStatusCallbackListener,
+							transferControlBlock.getTransferOptions());
+			ConnectionProgressStatus status = ConnectionProgressStatus
+					.instanceForSend(localFileLength);
+			intraFileStatusListener
+					.finalConnectionProgressStatusCallback(status);
+		}
 	}
 
 	/**
@@ -1525,6 +1543,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						lengthFromIrodsResponse, getIRODSProtocol(),
 						thisFileTransferOptions, transferControlBlock,
 						transferStatusCallbackListener);
+			}
+
+			/*
+			 * Send a final 100% callback if intra-file callbacks are desired
+			 */
+
+			if (transferStatusCallbackListener != null
+					&& transferControlBlock.getTransferOptions()
+							.isIntraFileStatusCallbacks()) {
+				ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+						.instanceSettingTransferOptions(TransferType.GET,
+								irodsFileLength, transferControlBlock,
+								transferStatusCallbackListener,
+								transferControlBlock.getTransferOptions());
+				ConnectionProgressStatus status = ConnectionProgressStatus
+						.instanceForSend(irodsFileLength);
+				intraFileStatusListener
+						.finalConnectionProgressStatusCallback(status);
 			}
 
 			if (thisFileTransferOptions != null

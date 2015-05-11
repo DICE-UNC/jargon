@@ -254,4 +254,26 @@ public class DefaultIntraFileProgressCallbackListener implements
 		builder.append("]");
 		return builder.toString();
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
+	 * finalConnectionProgressStatusCallback
+	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
+	 */
+	@Override
+	public void finalConnectionProgressStatusCallback(
+			ConnectionProgressStatus connectionProgressStatus) {
+		try {
+			TransferStatus transferStatus = TransferStatus
+					.instanceForIntraFileStatus(this.transferType,
+							this.totalBytesToTransfer,
+							this.totalBytesToTransfer);
+			transferStatusCallbackListener.statusCallback(transferStatus);
+		} catch (JargonException e) {
+			throw new JargonRuntimeException("error sending status callback", e);
+		}
+
+	}
 }
