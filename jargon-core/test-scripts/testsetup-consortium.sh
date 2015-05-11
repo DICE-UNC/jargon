@@ -13,11 +13,11 @@ iadmin mkuser test3 rodsuser
 
 iadmin moduser test3 password test
 
-iadmin mkresc test1-resc "unix file system"  dfc-test-irods1.edc.renci.org:/var/lib/irods/iRODS/Vault1
+iadmin mkresc test1-resc "unix file system"  irodsLinux.irods.org:/var/lib/irods/iRODS/Vault1
 
-iadmin mkresc test1-resc2 "unix file system"  dfc-test-irods1.edc.renci.org:/var/lib/irods/iRODS/Vault2
+iadmin mkresc test1-resc2 "unix file system"  irodsLinux.irods.org:/var/lib/irods/iRODS/Vault2
 
-iadmin mkresc test1-resc3 "unix file system"  fedzone1.irods.org:/var/lib/irods/Vault3
+iadmin mkresc test1-resc3 "unix file system"  irodsLinux.irods.org:/var/lib/irods/iRODS/Vault3
 
 iadmin mkuser anonymous rodsuser
 

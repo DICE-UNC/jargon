@@ -72,6 +72,16 @@ public class SettableJargonProperties implements JargonProperties {
 	 * parallel transfers
 	 */
 	private int parallelCopyBufferSize;
+	/**
+	 * Number of callbacks before an intra file callback listener will be
+	 * notified, no matter how many bytes passed
+	 */
+	private int intraFileStatusCallbacksNumberCallsInterval = 5;
+	/**
+	 * Number of bytes in a callback before in intra file callback listener will
+	 * be notified, no matter how many calls have been made
+	 */
+	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -174,6 +184,10 @@ public class SettableJargonProperties implements JargonProperties {
 				.getSocketRenewalIntervalInSeconds();
 		longTransferRestart = jargonProperties.isLongTransferRestart();
 		parallelCopyBufferSize = jargonProperties.getParallelCopyBufferSize();
+		this.intraFileStatusCallbacksNumberCallsInterval = jargonProperties
+				.getIntraFileStatusCallbacksNumberCallsInterval();
+		this.intraFileStatusCallbacksTotalBytesInterval = jargonProperties
+				.getIntraFileStatusCallbacksTotalBytesInterval();
 
 	}
 
@@ -799,29 +813,29 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	@Override
-	public String getConnectionFactory() {
+	public synchronized String getConnectionFactory() {
 		return connectionFactory;
 	}
 
-	public int getPamTimeToLive() {
+	public synchronized int getPamTimeToLive() {
 		return pamTimeToLive;
 	}
 
-	public void setPamTimeToLive(final int pamTimeToLive) {
+	public synchronized void setPamTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
 	}
 
-	public void setUsingDiscoveredServerPropertiesCache(
+	public synchronized void setUsingDiscoveredServerPropertiesCache(
 			final boolean usingDiscoveredServerPropertiesCache) {
 		this.usingDiscoveredServerPropertiesCache = usingDiscoveredServerPropertiesCache;
 	}
 
-	public void setUsingSpecificQueryForCollectionListingsWithPermissions(
+	public synchronized void setUsingSpecificQueryForCollectionListingsWithPermissions(
 			final boolean usingSpecificQueryForCollectionListingsWithPermissions) {
 		this.usingSpecificQueryForCollectionListingsWithPermissions = usingSpecificQueryForCollectionListingsWithPermissions;
 	}
 
-	public void setConnectionFactory(final String connectionFactory) {
+	public synchronized void setConnectionFactory(final String connectionFactory) {
 		this.connectionFactory = connectionFactory;
 	}
 
@@ -832,7 +846,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
 	@Override
-	public ChecksumEncodingEnum getChecksumEncoding() {
+	public synchronized ChecksumEncodingEnum getChecksumEncoding() {
 		return checksumEncoding;
 	}
 
@@ -841,7 +855,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param checksumEncoding
 	 */
-	public void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
+	public synchronized void setChecksumEncoding(
+			final ChecksumEncodingEnum checksumEncoding) {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
 		}
@@ -851,117 +866,121 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	@Override
-	public boolean isParallelTcpKeepAlive() {
+	public synchronized boolean isParallelTcpKeepAlive() {
 		return parallelTcpKeepAlive;
 	}
 
-	public void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
+	public synchronized void setParallelTcpKeepAlive(
+			final boolean parallelTcpKeepAlive) {
 		this.parallelTcpKeepAlive = parallelTcpKeepAlive;
 	}
 
 	@Override
-	public int getParallelTcpSendWindowSize() {
+	public synchronized int getParallelTcpSendWindowSize() {
 		return parallelTcpSendWindowSize;
 	}
 
-	public void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
+	public synchronized void setParallelTcpSendWindowSize(
+			final int parallelTcpSendWindowSize) {
 		this.parallelTcpSendWindowSize = parallelTcpSendWindowSize;
 	}
 
 	@Override
-	public int getParallelTcpReceiveWindowSize() {
+	public synchronized int getParallelTcpReceiveWindowSize() {
 		return parallelTcpReceiveWindowSize;
 	}
 
-	public void setParallelTcpReceiveWindowSize(
+	public synchronized void setParallelTcpReceiveWindowSize(
 			final int parallelTcpReceiveWindowSize) {
 		this.parallelTcpReceiveWindowSize = parallelTcpReceiveWindowSize;
 	}
 
 	@Override
-	public int getParallelTcpPerformancePrefsConnectionTime() {
+	public synchronized int getParallelTcpPerformancePrefsConnectionTime() {
 		return parallelTcpPerformancePrefsConnectionTime;
 	}
 
-	public void setParallelTcpPerformancePrefsConnectionTime(
+	public synchronized void setParallelTcpPerformancePrefsConnectionTime(
 			final int parallelTcpPerformancePrefsConnectionTime) {
 		this.parallelTcpPerformancePrefsConnectionTime = parallelTcpPerformancePrefsConnectionTime;
 	}
 
 	@Override
-	public int getParallelTcpPerformancePrefsLatency() {
+	public synchronized int getParallelTcpPerformancePrefsLatency() {
 		return parallelTcpPerformancePrefsLatency;
 	}
 
-	public void setParallelTcpPerformancePrefsLatency(
+	public synchronized void setParallelTcpPerformancePrefsLatency(
 			final int parallelTcpPerformancePrefsLatency) {
 		this.parallelTcpPerformancePrefsLatency = parallelTcpPerformancePrefsLatency;
 	}
 
 	@Override
-	public int getParallelTcpPerformancePrefsBandwidth() {
+	public synchronized int getParallelTcpPerformancePrefsBandwidth() {
 		return parallelTcpPerformancePrefsBandwidth;
 	}
 
-	public void setParallelTcpPerformancePrefsBandwidth(
+	public synchronized void setParallelTcpPerformancePrefsBandwidth(
 			final int parallelTcpPerformancePrefsBandwidth) {
 		this.parallelTcpPerformancePrefsBandwidth = parallelTcpPerformancePrefsBandwidth;
 	}
 
 	@Override
-	public boolean isPrimaryTcpKeepAlive() {
+	public synchronized boolean isPrimaryTcpKeepAlive() {
 		return primaryTcpKeepAlive;
 	}
 
-	public void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
+	public synchronized void setPrimaryTcpKeepAlive(
+			final boolean primaryTcpKeepAlive) {
 		this.primaryTcpKeepAlive = primaryTcpKeepAlive;
 	}
 
 	@Override
-	public int getPrimaryTcpSendWindowSize() {
+	public synchronized int getPrimaryTcpSendWindowSize() {
 		return primaryTcpSendWindowSize;
 	}
 
-	public void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
+	public synchronized void setPrimaryTcpSendWindowSize(
+			final int primaryTcpSendWindowSize) {
 		this.primaryTcpSendWindowSize = primaryTcpSendWindowSize;
 	}
 
 	@Override
-	public int getPrimaryTcpReceiveWindowSize() {
+	public synchronized int getPrimaryTcpReceiveWindowSize() {
 		return primaryTcpReceiveWindowSize;
 	}
 
-	public void setPrimaryTcpReceiveWindowSize(
+	public synchronized void setPrimaryTcpReceiveWindowSize(
 			final int primaryTcpReceiveWindowSize) {
 		this.primaryTcpReceiveWindowSize = primaryTcpReceiveWindowSize;
 	}
 
 	@Override
-	public int getPrimaryTcpPerformancePrefsConnectionTime() {
+	public synchronized int getPrimaryTcpPerformancePrefsConnectionTime() {
 		return primaryTcpPerformancePrefsConnectionTime;
 	}
 
-	public void setPrimaryTcpPerformancePrefsConnectionTime(
+	public synchronized void setPrimaryTcpPerformancePrefsConnectionTime(
 			final int primaryTcpPerformancePrefsConnectionTime) {
 		this.primaryTcpPerformancePrefsConnectionTime = primaryTcpPerformancePrefsConnectionTime;
 	}
 
 	@Override
-	public int getPrimaryTcpPerformancePrefsLatency() {
+	public synchronized int getPrimaryTcpPerformancePrefsLatency() {
 		return primaryTcpPerformancePrefsLatency;
 	}
 
-	public void setPrimaryTcpPerformancePrefsLatency(
+	public synchronized void setPrimaryTcpPerformancePrefsLatency(
 			final int primaryTcpPerformancePrefsLatency) {
 		this.primaryTcpPerformancePrefsLatency = primaryTcpPerformancePrefsLatency;
 	}
 
 	@Override
-	public int getPrimaryTcpPerformancePrefsBandwidth() {
+	public synchronized int getPrimaryTcpPerformancePrefsBandwidth() {
 		return primaryTcpPerformancePrefsBandwidth;
 	}
 
-	public void setPrimaryTcpPerformancePrefsBandwidth(
+	public synchronized void setPrimaryTcpPerformancePrefsBandwidth(
 			final int primaryTcpPerformancePrefsBandwidth) {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
@@ -972,7 +991,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SettableJargonProperties [useParallelTransfer=");
 		builder.append(useParallelTransfer);
@@ -1083,6 +1102,10 @@ public class SettableJargonProperties implements JargonProperties {
 		builder.append(longTransferRestart);
 		builder.append(", parallelCopyBufferSize=");
 		builder.append(parallelCopyBufferSize);
+		builder.append(", intraFileStatusCallbacksNumberCallsInterval=");
+		builder.append(intraFileStatusCallbacksNumberCallsInterval);
+		builder.append(", intraFileStatusCallbacksTotalBytesInterval=");
+		builder.append(intraFileStatusCallbacksTotalBytesInterval);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1094,7 +1117,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * getSocketRenewalIntervalInSeconds()
 	 */
 	@Override
-	public int getSocketRenewalIntervalInSeconds() {
+	public synchronized int getSocketRenewalIntervalInSeconds() {
 		return socketRenewalIntervalInSeconds;
 	}
 
@@ -1104,13 +1127,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param socketRenewalIntervalInSeconds
 	 */
-	public void setSocketRenewalIntervalInSeconds(
+	public synchronized void setSocketRenewalIntervalInSeconds(
 			final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
 	}
 
 	@Override
-	public boolean isLongTransferRestart() {
+	public synchronized boolean isLongTransferRestart() {
 		return longTransferRestart;
 	}
 
@@ -1119,12 +1142,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param longFileTransferRestart
 	 */
-	public void setLongTransferRestart(final boolean longFileTransferRestart) {
+	public synchronized void setLongTransferRestart(
+			final boolean longFileTransferRestart) {
 		longTransferRestart = longFileTransferRestart;
 	}
 
 	@Override
-	public int getParallelCopyBufferSize() {
+	public synchronized int getParallelCopyBufferSize() {
 		return parallelCopyBufferSize;
 	}
 
@@ -1134,8 +1158,29 @@ public class SettableJargonProperties implements JargonProperties {
 	 * 
 	 * @param parallelCopyBufferSize
 	 */
-	public void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
+	public synchronized void setParallelCopyBufferSize(
+			final int parallelCopyBufferSize) {
 		this.parallelCopyBufferSize = parallelCopyBufferSize;
+	}
+
+	@Override
+	public synchronized int getIntraFileStatusCallbacksNumberCallsInterval() {
+		return intraFileStatusCallbacksNumberCallsInterval;
+	}
+
+	public synchronized void setIntraFileStatusCallbacksNumberCallsInterval(
+			final int intraFileStatusCallbacksNumberCallsInterval) {
+		this.intraFileStatusCallbacksNumberCallsInterval = intraFileStatusCallbacksNumberCallsInterval;
+	}
+
+	@Override
+	public synchronized long getIntraFileStatusCallbacksTotalBytesInterval() {
+		return intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
+			final long intraFileStatusCallbacksTotalBytesInterval) {
+		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
 	}
 
 }

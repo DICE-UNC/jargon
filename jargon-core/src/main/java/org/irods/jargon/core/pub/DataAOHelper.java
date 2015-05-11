@@ -776,9 +776,10 @@ public final class DataAOHelper extends AOHelper {
 					&& transferStatusCallbackListener != null) {
 				log.info("wrapping stream with callback stream wrapper");
 				ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
-						.instanceSettingInterval(TransferType.GET,
+						.instanceSettingTransferOptions(TransferType.GET,
 								irodsFileLength, transferControlBlock,
-								transferStatusCallbackListener, 5);
+								transferStatusCallbackListener,
+								transferControlBlock.getTransferOptions());
 				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
 						connectionProgressStatusListener, ifis);
 

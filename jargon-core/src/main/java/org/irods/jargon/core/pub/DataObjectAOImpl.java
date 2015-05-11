@@ -11,6 +11,7 @@ import java.util.List;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.ConnectionConstants;
+import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
@@ -650,6 +651,23 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		long endTime = System.currentTimeMillis();
 		long duration = endTime - startTime;
 		log.info(">>>>>>>>>>>>>>transfer complete in:{} millis", duration);
+		/*
+		 * Send a final 100% callback if intra-file callbacks are desired
+		 */
+
+		if (transferStatusCallbackListener != null
+				&& transferControlBlock.getTransferOptions()
+						.isIntraFileStatusCallbacks()) {
+			ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+					.instanceSettingTransferOptions(TransferType.PUT,
+							localFileLength, transferControlBlock,
+							transferStatusCallbackListener,
+							transferControlBlock.getTransferOptions());
+			ConnectionProgressStatus status = ConnectionProgressStatus
+					.instanceForSend(localFileLength);
+			intraFileStatusListener
+					.finalConnectionProgressStatusCallback(status);
+		}
 	}
 
 	/**
@@ -871,9 +889,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				if (transferStatusCallbackListener != null
 						|| myTransferOptions.isIntraFileStatusCallbacks()) {
 					intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-							.instanceSettingInterval(TransferType.PUT,
+							.instanceSettingTransferOptions(TransferType.PUT,
 									localFile.length(), transferControlBlock,
-									transferStatusCallbackListener, 100);
+									transferStatusCallbackListener,
+									transferControlBlock.getTransferOptions());
 				}
 				dataAOHelper.putReadWriteLoop(localFile, overwrite, targetFile,
 						fd, getIRODSProtocol(), transferControlBlock,
@@ -1023,7 +1042,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             if the source iRODS file does not exist
 	 * @throws JargonException
 	 */
-	@SuppressWarnings("unused")
 	void getDataObjectFromIrods(final IRODSFile irodsFileToGet,
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
@@ -1525,6 +1543,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						lengthFromIrodsResponse, getIRODSProtocol(),
 						thisFileTransferOptions, transferControlBlock,
 						transferStatusCallbackListener);
+			}
+
+			/*
+			 * Send a final 100% callback if intra-file callbacks are desired
+			 */
+
+			if (transferStatusCallbackListener != null
+					&& transferControlBlock.getTransferOptions()
+							.isIntraFileStatusCallbacks()) {
+				ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
+						.instanceSettingTransferOptions(TransferType.GET,
+								irodsFileLength, transferControlBlock,
+								transferStatusCallbackListener,
+								transferControlBlock.getTransferOptions());
+				ConnectionProgressStatus status = ConnectionProgressStatus
+						.instanceForSend(irodsFileLength);
+				intraFileStatusListener
+						.finalConnectionProgressStatusCallback(status);
 			}
 
 			if (thisFileTransferOptions != null
