@@ -123,9 +123,10 @@ public class PutTransferRestartProcessor extends
 					&& getTransferControlBlock().getTransferOptions()
 							.isIntraFileStatusCallbacks()) {
 				intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-						.instanceSettingInterval(TransferType.PUT,
+						.instanceSettingTransferOptions(TransferType.PUT,
 								localFile.length(), getTransferControlBlock(),
-								getTransferStatusCallbackListener(), 100);
+								getTransferStatusCallbackListener(),
+								getTransferControlBlock().getTransferOptions());
 			}
 
 			// now put each segment

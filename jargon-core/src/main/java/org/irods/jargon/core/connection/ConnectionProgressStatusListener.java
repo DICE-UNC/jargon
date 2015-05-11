@@ -22,4 +22,13 @@ public interface ConnectionProgressStatusListener {
 	void connectionProgressStatusCallback(
 			final ConnectionProgressStatus connectionProgressStatus);
 
+	/**
+	 * Method to directly send a status callback, appropriate for a final
+	 * callback, and bypassing any accumulators
+	 * 
+	 * @param connectionProgressStatus
+	 */
+	void finalConnectionProgressStatusCallback(
+			final ConnectionProgressStatus connectionProgressStatus);
+
 }
