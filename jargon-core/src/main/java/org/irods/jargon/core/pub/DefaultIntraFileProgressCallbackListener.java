@@ -149,7 +149,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 		this.totalBytesToTransfer = totalBytesToTransfer;
 		this.interval = interval;
 
-		if (this.transferOptions == null) {
+		if (transferOptions == null) {
 			this.transferOptions = new TransferOptions();
 			this.transferOptions
 					.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
