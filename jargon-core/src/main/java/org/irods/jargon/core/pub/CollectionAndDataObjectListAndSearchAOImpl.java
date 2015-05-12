@@ -454,6 +454,46 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return collectionListingUtils.countDataObjectsUnderPath(objStat);
 
 	}
+	
+	
+	@Override
+	public long totalDataObjectSizesUnderPath(final String absolutePathToParent)
+			throws FileNotFoundException, JargonException {
+
+		if (absolutePathToParent == null) {
+			throw new IllegalArgumentException("absolutePathToParent is null");
+		}
+
+		log.info("countDataObjectsAndCollectionsUnder: {}",
+				absolutePathToParent);
+
+		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		// I cannot get children if this is not a directory (a file has no
+		// children)
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
+					absolutePathToParent);
+			throw new JargonException(
+					"attempting to count children under a file at path:"
+							+ absolutePathToParent);
+		}
+
+		return collectionListingUtils.totalDataObjectSizesUnderPath(objStat);
+
+	}
 
 	/*
 	 * (non-Javadoc)

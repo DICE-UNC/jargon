@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.zipservice.api;
 
+import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
+
 /**
  * Basic configuration for the zip service.
  * <p/>
@@ -48,6 +50,11 @@ public class ZipServiceConfiguration {
 	 * On an error with an individual file, fail fast, or, if <code>false</code>
 	 */
 	private boolean failFast = true;
+	
+	/**
+	 * Type of bundle to generate, note that for now it should stand at default and generate a tar.
+	 */
+	private BundleType preferredBundleType = BundleType.DEFAULT;
 
 	/**
 	 * @return the maxTotalBytesForZip
@@ -64,26 +71,32 @@ public class ZipServiceConfiguration {
 		this.maxTotalBytesForZip = maxTotalBytesForZip;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ZipServiceConfiguration [maxTotalBytesForZip=")
-				.append(maxTotalBytesForZip)
-				.append(", generateTempDirInUserHome=")
-				.append(generateTempDirInUserHome).append(", ");
+		builder.append("ZipServiceConfiguration [maxTotalBytesForZip=");
+		builder.append(maxTotalBytesForZip);
+		builder.append(", generateTempDirInUserHome=");
+		builder.append(generateTempDirInUserHome);
+		builder.append(", ");
 		if (bundleSubDirPath != null) {
-			builder.append("bundleSubDirPath=").append(bundleSubDirPath)
-					.append(", ");
+			builder.append("bundleSubDirPath=");
+			builder.append(bundleSubDirPath);
+			builder.append(", ");
 		}
 		if (bundlePrefix != null) {
-			builder.append("bundlePrefix=").append(bundlePrefix).append(", ");
+			builder.append("bundlePrefix=");
+			builder.append(bundlePrefix);
+			builder.append(", ");
 		}
-		builder.append("failFast=").append(failFast).append("]");
+		builder.append("failFast=");
+		builder.append(failFast);
+		builder.append(", ");
+		if (preferredBundleType != null) {
+			builder.append("preferredBundleType=");
+			builder.append(preferredBundleType);
+		}
+		builder.append("]");
 		return builder.toString();
 	}
 
@@ -140,6 +153,14 @@ public class ZipServiceConfiguration {
 	 */
 	public void setFailFast(boolean failFast) {
 		this.failFast = failFast;
+	}
+
+	public BundleType getPreferredBundleType() {
+		return preferredBundleType;
+	}
+
+	public void setPreferredBundleType(BundleType preferredBundleType) {
+		this.preferredBundleType = preferredBundleType;
 	}
 
 }

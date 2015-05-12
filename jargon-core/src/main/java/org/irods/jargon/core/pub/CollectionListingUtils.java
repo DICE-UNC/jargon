@@ -819,6 +819,88 @@ class CollectionListingUtils {
 		return queryDataObjectCountsUnderPath(effectiveAbsolutePath);
 
 	}
+	
+	long totalDataObjectSizesUnderPath(final ObjStat objStat)
+			throws FileNotFoundException, JargonException {
+
+		log.info("totalDataObjectsSizeUnderPath()");
+
+		if (objStat == null) {
+			throw new IllegalArgumentException("objStat is null");
+		}
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		String effectiveAbsolutePath = MiscIRODSUtils
+				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}",
+				effectiveAbsolutePath);
+
+		// I cannot get children if this is not a directory (a file has no
+		// children)
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.error(
+					"this is a file, not a directory: {}",
+					objStat.getAbsolutePath());
+			throw new JargonException(
+					"attempting to total children under a file at path:"
+							+ objStat.getAbsolutePath());
+		}
+
+		return queryDataObjectSizesUnderPath(effectiveAbsolutePath);
+
+	}
+
+	long queryDataObjectSizesUnderPath(final String effectiveAbsolutePath)
+			throws JargonException, DataNotFoundException {
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
+				.getIRODSGenQueryExecutor(irodsAccount);
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSet resultSet;
+
+		try {
+			builder
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_SIZE,
+							SelectFieldTypes.SUM)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.LIKE,
+							effectiveAbsolutePath.trim() + "%")
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM,
+							QueryConditionOperators.EQUAL, "0");
+
+			;
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(1);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+		} catch (JargonQueryException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in exists query", e);
+		}
+
+		long fileCtr = 0;
+
+		if (resultSet.getResults().size() > 0) {
+			fileCtr = IRODSDataConversionUtil
+					.getLongOrZeroFromIRODSValue(resultSet.getFirstResult()
+							.getColumn(0));
+		}
+		log.info("got total size of:{}", fileCtr);
+
+		return fileCtr;
+	}
 
 	/**
 	 * Given an objStat, get the count of collections under the path
