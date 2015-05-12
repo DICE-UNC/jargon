@@ -106,6 +106,7 @@ public class GenQueryInpTest {
 
 		GenQueryInp genQueryInp = GenQueryInp.instance(translatedIRODSQuery, 0,
 				null);
+
 		Assert.assertNotNull(genQueryInp.getParsedTags());
 	}
 

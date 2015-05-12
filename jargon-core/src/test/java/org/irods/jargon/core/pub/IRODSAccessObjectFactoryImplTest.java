@@ -54,6 +54,36 @@ public class IRODSAccessObjectFactoryImplTest {
 	}
 
 	@Test
+	public final void testBuildTransferOptionsWhereIntraFileByteAndIntervalConfigured()
+			throws Exception {
+
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+
+		SettableJargonProperties settableProperties = new SettableJargonProperties(
+				irodsSession.getJargonProperties());
+		settableProperties.setIntraFileStatusCallbacks(true);
+		settableProperties.setIntraFileStatusCallbacksNumberCallsInterval(1);
+		settableProperties.setIntraFileStatusCallbacksTotalBytesInterval(2);
+		irodsSession.setJargonProperties(settableProperties);
+
+		IRODSAccessObjectFactory irodsAccessObjectFactory = new IRODSAccessObjectFactoryImpl();
+		irodsAccessObjectFactory.setIrodsSession(irodsSession);
+		TransferControlBlock tcb = irodsAccessObjectFactory
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+
+		Assert.assertEquals("did not set intra file callback interval", 1, tcb
+				.getTransferOptions()
+				.getIntraFileStatusCallbacksNumberCallsInterval());
+		Assert.assertEquals("did not set intra file callback bytes interval",
+				2, tcb.getTransferOptions()
+						.getIntraFileStatusCallbacksTotalBytesInterval());
+
+	}
+
+	@Test
 	public final void testBuildDefaultTransferControlBlockFromJargonPropertiesWithSHA256()
 			throws Exception {
 

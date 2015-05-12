@@ -375,6 +375,7 @@ public abstract class AbstractConnection {
 
 		log.debug("final flush of data sent");
 		flush();
+
 		log.info("total sent:{}", dataSent);
 		return dataSent;
 

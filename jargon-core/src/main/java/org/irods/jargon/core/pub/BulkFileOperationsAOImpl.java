@@ -4,6 +4,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInp;
+import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,31 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	public static final Logger log = LoggerFactory
 			.getLogger(BulkFileOperationsAOImpl.class);
+	
+	/**
+	 * Get the extension typically associated with a bundle type
+	 * @param bundleType {@link BundleType} for an iRODS bundle
+	 * @return
+	 */
+	public static String fileExtensionForBundleType(final BundleType bundleType) {
+		log.info("fileExtensionForBundleType()");
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundleType");
+		}
+		String extension = "";
+		if (bundleType == BundleType.DEFAULT || bundleType == BundleType.TAR) {
+			extension =  ".tar";
+		} else if (bundleType == BundleType.ZIP) {
+			extension = ".zip";
+		}	else if (bundleType == BundleType.GZIP) {
+				extension = ".gzip";
+		}	else if (bundleType == BundleType.BZIP) {
+			extension = ".bzip";
+		} 
+		
+		return extension;
+		
+	}
 
 	/**
 	 * Constructor as called by the <code>IRODSAccessObjectFactory</code>, which
@@ -80,6 +106,51 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	}
 
+	@Override
+	public void createABundleFromIrodsFilesAndStoreInIrods(
+			final String absolutePathToBundleFileToBeCreatedOnIrods,
+			final String absolutePathToIrodsCollectionToBeBundled,
+			final String resourceNameWhereBundleWillBeStored,
+			final StructFileExtAndRegInp.BundleType bundleType)
+			throws JargonException {
+
+		if (absolutePathToBundleFileToBeCreatedOnIrods == null
+				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToBundleFileToBeCreatedOnIrods");
+		}
+
+		if (absolutePathToIrodsCollectionToBeBundled == null
+				|| absolutePathToIrodsCollectionToBeBundled.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToIrodsCollectionToBeBundled");
+		}
+
+		if (resourceNameWhereBundleWillBeStored == null) {
+			throw new IllegalArgumentException(
+					"null resourceNameWhereBundleWillBeStored. set to blank if not used");
+		}
+
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundle type");
+		}
+
+		log.info("createABundleFromIrodsFilesAndStoreInIrods, tar file:{}",
+				absolutePathToBundleFileToBeCreatedOnIrods);
+		log.info("source collection for tar:{}",
+				absolutePathToIrodsCollectionToBeBundled);
+		log.info("resource:{}", resourceNameWhereBundleWillBeStored);
+		log.info("bundle type:{}", bundleType);
+		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
+				.instanceForCreateBundle(
+						absolutePathToBundleFileToBeCreatedOnIrods,
+						absolutePathToIrodsCollectionToBeBundled,
+						resourceNameWhereBundleWillBeStored, bundleType);
+
+		getIRODSProtocol().irodsFunction(structFileExtAndRegInp);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -121,6 +192,60 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 						absolutePathToBundleFileToBeCreatedOnIrods,
 						absolutePathToIrodsCollectionToBeBundled,
 						resourceNameWhereBundleWillBeStored);
+
+		getIRODSProtocol().irodsFunction(structFileExtAndRegInp);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
+	 * createABundleFromIrodsFilesAndStoreInIrodsWithForceOption
+	 * (java.lang.String, java.lang.String, java.lang.String,
+	 * org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType)
+	 */
+	@Override
+	public void createABundleFromIrodsFilesAndStoreInIrodsWithForceOption(
+			final String absolutePathToBundleFileToBeCreatedOnIrods,
+			final String absolutePathToIrodsCollectionToBeBundled,
+			final String resourceNameWhereBundleWillBeStored,
+			final StructFileExtAndRegInp.BundleType bundleType)
+			throws JargonException {
+
+		if (absolutePathToBundleFileToBeCreatedOnIrods == null
+				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToBundleFileToBeCreatedOnIrods");
+		}
+
+		if (absolutePathToIrodsCollectionToBeBundled == null
+				|| absolutePathToIrodsCollectionToBeBundled.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutePathToIrodsCollectionToBeBundled");
+		}
+
+		if (resourceNameWhereBundleWillBeStored == null) {
+			throw new IllegalArgumentException(
+					"null resourceNameWhereBundleWillBeStored. set to blank if not used");
+		}
+
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundle type");
+		}
+
+		log.info("createABundleFromIrodsFilesAndStoreInIrods, tar file:{}",
+				absolutePathToBundleFileToBeCreatedOnIrods);
+		log.info("source collection for tar:{}",
+				absolutePathToIrodsCollectionToBeBundled);
+		log.info("resource:{}", resourceNameWhereBundleWillBeStored);
+		log.info("bundle type:{}", bundleType);
+
+		StructFileExtAndRegInp structFileExtAndRegInp = StructFileExtAndRegInp
+				.instanceForCreateBundleWithForceOption(
+						absolutePathToBundleFileToBeCreatedOnIrods,
+						absolutePathToIrodsCollectionToBeBundled,
+						resourceNameWhereBundleWillBeStored, bundleType);
 
 		getIRODSProtocol().irodsFunction(structFileExtAndRegInp);
 

@@ -599,4 +599,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			ObjStat objStat) throws FileNotFoundException, JargonException;
 
+	/**
+	 * Given a parent path, get a total of the data sizes underneath that path
+	 * @param absolutePathToParent <code>String</code> with the path to the parent collection, children data objects are totaled
+	 * @return <code>long</code> with a total size
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	long totalDataObjectSizesUnderPath(String absolutePathToParent)
+			throws FileNotFoundException, JargonException;
+
 }

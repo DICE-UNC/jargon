@@ -1,5 +1,5 @@
 **/.classpath
-.DS_Store
+**/.DS_Store
 **/nb-configuration.xml
 **/.springBeans
 **/testing.properties
@@ -22,3 +22,4 @@ testing.properties
 */test-output
 JargonVersion.java
 **/${test.option.mount.basedir}
+**/*.*~

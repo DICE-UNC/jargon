@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
@@ -265,6 +266,65 @@ public class BulkFileOperationsAOImplTest {
 
 		bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
 				targetBunFileAbsPath, targetIrodsCollection, "");
+
+	}
+
+	@Test// FIXME: right now just using tar, need to see about unhandled algos
+	// see https://github.com/DICE-UNC/jargon/issues/114
+	public void testCreateBundleZip() throws Exception {
+
+		String tarName = "testCreateBundleZip.tar";
+		String testSubdir = "testCreateBundleZip";
+		String bunSubdir = "testCreateBundleZipSubdir";
+		String fileName = "fileName";
+		int count = 20;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile irodsFile = null;
+
+		String targetBunIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ bunSubdir);
+		String targetBunFileAbsPath = targetBunIrodsCollection + "/" + tarName;
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetBunIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		// create the tar file with the same name as the one I will want to
+		// create later
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetBunFileAbsPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		irodsFile.mkdir();
+		irodsFile.close();
+
+		String myTarget = "";
+
+		for (int i = 0; i < count; i++) {
+			myTarget = targetIrodsCollection + "/c" + (10000 + i) + fileName;
+			irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(myTarget);
+			irodsFile.createNewFile();
+			irodsFile.close();
+		}
+
+		BulkFileOperationsAO bulkFileOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getBulkFileOperationsAO(
+						irodsAccount);
+
+		bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
+				targetBunFileAbsPath, targetIrodsCollection, "",
+				BundleType.TAR);
 
 	}
 
