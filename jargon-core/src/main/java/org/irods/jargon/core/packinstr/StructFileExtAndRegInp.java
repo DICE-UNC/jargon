@@ -31,6 +31,9 @@ public final class StructFileExtAndRegInp extends
 	public static final String DEST_RESOURCE_NAME_KW = "destRescName";
 	public static final String DATA_TYPE = "dataType";
 	public static final String TAR_DATA_TYPE_KW_VALUE = "tar file";
+	public static final String ZIP_DATA_TYPE_KW_VALUE = "zipFile";
+	public static final String GZIP_DATA_TYPE_KW_VALUE = "gzip";
+	public static final String BZIP_DATA_TYPE_KW_VALUE = "bzip";
 
 	public static final int STRUCT_FILE_EXTRACT_AND_REG_API_NBR = 665;
 	public static final int STRUCT_FILE_BUNDLE_API_NBR = 666;
@@ -46,11 +49,16 @@ public final class StructFileExtAndRegInp extends
 		FORCE, NO_FORCE
 	}
 
+	public enum BundleType {
+		DEFAULT, ZIP, TAR, GZIP, BZIP
+	}
+
 	private final String tarFileAbsolutePath;
 	private final String tarCollectionAbsolutePath;
 	private final int operationType;
 	private final String resourceName;
 	private final boolean extractAsBulkOperation;
+	private BundleType bundleType = BundleType.DEFAULT;
 
 	/**
 	 * Create a packing instruction to cause the specified tar file that exists
@@ -222,6 +230,75 @@ public final class StructFileExtAndRegInp extends
 				resourceNameThatIsSourceForTarFile, false);
 	}
 
+	/**
+	 * Packing instruction to create a tar file using the given iRODS collection
+	 * as the source. This version of the packing instruction uses the force
+	 * option which will overwrite the bun file if already existing.
+	 * 
+	 * @param tarFileToCreateAbsolutePath
+	 *            <code>String</code> with the absolute path to the tar file
+	 *            that will be created.
+	 * @param irodsSourceCollectionForTarAbsolutePath
+	 *            <code>String</code> with the absolute path to collection that
+	 *            will be bundled into the tar file.
+	 * @param resourceNameThatIsSourceForTarFile
+	 *            <code>String</code> that is the resource that will be the
+	 *            source, set to blank of not used (not null)
+	 * @param bundleType
+	 *            {@link BundleType} enum value for the resulting bundle type
+	 * @return
+	 */
+	public static final StructFileExtAndRegInp instanceForCreateBundleWithForceOption(
+			final String tarFileToCreateAbsolutePath,
+			final String irodsSourceCollectionForTarAbsolutePath,
+			final String resourceNameThatIsSourceForTarFile,
+			final BundleType bundleType) {
+
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundle type");
+		}
+
+		StructFileExtAndRegInp pi = new StructFileExtAndRegInp(
+				STRUCT_FILE_BUNDLE_API_NBR, tarFileToCreateAbsolutePath,
+				irodsSourceCollectionForTarAbsolutePath, ForceOptions.FORCE,
+				resourceNameThatIsSourceForTarFile, false);
+		pi.bundleType = bundleType;
+		return pi;
+	}
+
+	/**
+	 * Packing instruction to create a tar file using the given iRODS collection
+	 * as the source.
+	 * 
+	 * @param tarFileToCreateAbsolutePath
+	 *            <code>String</code> with the absolute path to the tar file
+	 *            that will be created.
+	 * @param irodsSourceCollectionForTarAbsolutePath
+	 *            <code>String</code> with the absolute path to collection that
+	 *            will be bundled into the tar file.
+	 * @param resourceNameThatIsSourceForTarFile
+	 *            <code>String</code> that is the resource that will be the
+	 *            source, set to blank of not used (not null)
+	 * @return
+	 */
+	public static final StructFileExtAndRegInp instanceForCreateBundle(
+			final String tarFileToCreateAbsolutePath,
+			final String irodsSourceCollectionForTarAbsolutePath,
+			final String resourceNameThatIsSourceForTarFile,
+			final BundleType bundleType) {
+
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundle type");
+		}
+
+		StructFileExtAndRegInp pi = new StructFileExtAndRegInp(
+				STRUCT_FILE_BUNDLE_API_NBR, tarFileToCreateAbsolutePath,
+				irodsSourceCollectionForTarAbsolutePath, ForceOptions.NO_FORCE,
+				resourceNameThatIsSourceForTarFile, false);
+		pi.bundleType = bundleType;
+		return pi;
+	}
+
 	private StructFileExtAndRegInp(final int apiNumber,
 			final String tarFileAbsolutePath,
 			final String tarCollectionAbsolutePath,
@@ -265,7 +342,16 @@ public final class StructFileExtAndRegInp extends
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
+		if (this.bundleType == BundleType.TAR
+				|| bundleType == BundleType.DEFAULT) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, TAR_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.GZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, GZIP_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.BZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, BZIP_DATA_TYPE_KW_VALUE));
+		} else if (this.bundleType == BundleType.ZIP) {
+			kvps.add(KeyValuePair.instance(DATA_TYPE, ZIP_DATA_TYPE_KW_VALUE));
+		}
 
 		// formatted resource keyword
 		if (resourceName.length() > 0) {
