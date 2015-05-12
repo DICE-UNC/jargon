@@ -4,6 +4,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInp;
+import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,6 +21,31 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	public static final Logger log = LoggerFactory
 			.getLogger(BulkFileOperationsAOImpl.class);
+	
+	/**
+	 * Get the extension typically associated with a bundle type
+	 * @param bundleType {@link BundleType} for an iRODS bundle
+	 * @return
+	 */
+	public static String fileExtensionForBundleType(final BundleType bundleType) {
+		log.info("fileExtensionForBundleType()");
+		if (bundleType == null) {
+			throw new IllegalArgumentException("null bundleType");
+		}
+		String extension = "";
+		if (bundleType == BundleType.DEFAULT || bundleType == BundleType.TAR) {
+			extension =  ".tar";
+		} else if (bundleType == BundleType.ZIP) {
+			extension = ".zip";
+		}	else if (bundleType == BundleType.GZIP) {
+				extension = ".gzip";
+		}	else if (bundleType == BundleType.BZIP) {
+			extension = ".bzip";
+		} 
+		
+		return extension;
+		
+	}
 
 	/**
 	 * Constructor as called by the <code>IRODSAccessObjectFactory</code>, which

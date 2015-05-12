@@ -9,6 +9,7 @@ import java.util.Random;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.BulkFileOperationsAO;
+import org.irods.jargon.core.pub.BulkFileOperationsAOImpl;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -139,8 +140,14 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 			throw new ZipServiceException("Jargon exception getting bulkFileOperationsAO", e);
 		}
 		
+		StringBuilder sb = new StringBuilder(parentPath);
+		sb.append("/");
+		sb.append(bundleParent.getName());
+		sb.append(BulkFileOperationsAOImpl.fileExtensionForBundleType(zipServiceConfiguration.getPreferredBundleType()));
+		String zipFileName = sb.toString();
+		
 		try {
-			bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(bundleParent.getAbsolutePath(), parentPath, "", this.getZipServiceConfiguration().getPreferredBundleType());
+			bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(zipFileName, bundleParent.getAbsolutePath(), "", this.getZipServiceConfiguration().getPreferredBundleType());
 		} catch (JargonException e) {
 			log.error("JargonException creating bundle", e);
 			throw new ZipServiceException("Jargon exception creating bundle", e);
@@ -309,7 +316,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		for (String path : irodsAbsolutePaths) {
 			log.info("getting count for path:{}", path);
 			try {
-				totalCount += collectionAndDataObjectAO.countDataObjectsUnderPath(path);
+				totalCount += collectionAndDataObjectAO.totalDataObjectSizesUnderPath(path);
 			} catch (JargonException e) {
 				log.error("JargonException counting under paths", e);
 				throw new ZipServiceException("Jargon exception getting CollectionAndDataObjectListAndSearchAO", e);
