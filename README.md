@@ -52,4 +52,8 @@ Misc small changes as we test Cyberduck integration with iRODS.  This is a catch
 
 Handle authentication with proxy user, per a patch supplied by Tony Edgin at iPlant (Thanks!) 
 
+### Option to obtain MD5 from server after upload is complete #89
+
+Breaking out checksum utilities to its own service object (DataObjectChecksumUtilitiesAO) and beginning to add richer hooks for
+various checksum management scenarios.  This was originally done to have simpler hooks for CyberDuck.  Eventually checksum code in various places will be deprecated and will point to these consolidated services.
 

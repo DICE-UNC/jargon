@@ -3095,7 +3095,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param checksumEncoding
 	 * @return
 	 * @throws JargonException
+	 * @deprecated see {@link DataObjectChecksumUtilitiesAO} for new location
 	 */
+	@Deprecated
 	@Override
 	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile)
 			throws JargonException {
