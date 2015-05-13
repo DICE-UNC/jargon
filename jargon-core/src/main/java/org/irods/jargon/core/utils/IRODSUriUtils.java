@@ -32,6 +32,10 @@ public class IRODSUriUtils {
 	 */
 	public static final class UserInfo {
 
+		private static final String ZONE_INDICATOR = ".";
+		private static final String PASSWORD_INDICATOR = ":";
+		private static final byte ESCAPE_INDICATOR = '%';
+
 		private static final Set<Byte> USER_INFO_ALLOWED_CHARS;
 
 		static {
@@ -244,17 +248,11 @@ public class IRODSUriUtils {
 
 	}
 
-	public static final String SCHEME = "irods";
-	public static final char PATH_SEPARATOR = '/';
-
+	private static final String SCHEME = "irods";
 	private static final String SCHEME_TERMINUS = "://";
-
-	private static final char ZONE_INDICATOR = '.';
-	private static final char PASSWORD_INDICATOR = ':';
-	private static final char USER_INFO_TERMINUS = '@';
-	private static final char PORT_INDICATOR = ':';
-	private static final char ESCAPE_INDICATOR = '%';
-
+	private static final String USER_INFO_TERMINUS = "@";
+	private static final String PORT_INDICATOR = ":";
+	private static final String PATH_SEPARATOR = "/";
 
 	// TODO document
 	public static UserInfo getUserInfoFromURI(final URI irodsURI) {
@@ -466,8 +464,7 @@ public class IRODSUriUtils {
 	}
 
 	private static URI buildBaseURI(final String host, final int port,
-									final UserInfo userInfo)
-	{
+									final UserInfo userInfo) {
 		try {
 			final StringBuilder uriBuilder = new StringBuilder();
 			uriBuilder.append(SCHEME).append(SCHEME_TERMINUS);
@@ -601,7 +598,7 @@ public class IRODSUriUtils {
 	// absolute path
 	@Deprecated
 	private static String mkPathAbs(final String homeDir, final String path) {
-		if (path.charAt(0) == PATH_SEPARATOR) {
+		if (path.startsWith(PATH_SEPARATOR)) {
 			return path;
 		} else {
 			return homeDir + PATH_SEPARATOR + path;
