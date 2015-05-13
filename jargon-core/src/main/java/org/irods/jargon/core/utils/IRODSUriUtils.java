@@ -82,7 +82,8 @@ public class IRODSUriUtils {
 		 * @param password the password used to authenticate the user
 		 * @return It returns an instance.
 		 */
-		static UserInfo localInstance(final String user, final String password)
+		public static UserInfo localInstance(final String user,
+											 final String password)
 		{
 			return new UserInfo(user, null, password);
 		}
@@ -95,8 +96,8 @@ public class IRODSUriUtils {
 		 * @param zone the authentication zone
 		 * @return It returns an instance.
 		 */
-		static UserInfo unauthenticatedInstance(final String user,
-												final String zone) {
+		public static UserInfo unauthenticatedInstance(final String user,
+													   final String zone) {
 			return new UserInfo(user, zone, null);
 		}
 
@@ -107,7 +108,7 @@ public class IRODSUriUtils {
 		 * @param user the username
 		 * @return It returns an instance.
 		 */
-		static UserInfo unauthenticatedLocalInstance(final String user) {
+		public static UserInfo unauthenticatedLocalInstance(final String user) {
 			return new UserInfo(user, null, null);
 		}
 
@@ -463,7 +464,8 @@ public class IRODSUriUtils {
 		return SCHEME.equals(irodsURI.getScheme());
 	}
 
-	private static URI buildBaseURI(final String host, final int port,
+	// TODO document
+	public static URI buildBaseURI(final String host, final int port,
 									final UserInfo userInfo) {
 		try {
 			final StringBuilder uriBuilder = new StringBuilder();
@@ -479,7 +481,6 @@ public class IRODSUriUtils {
 		}
 	}
 
-	// TODO document
 	public static URI buildBaseURI(final String host, final int port,
 								   final String username) {
 		final UserInfo info = UserInfo.instance(username, null, null);
