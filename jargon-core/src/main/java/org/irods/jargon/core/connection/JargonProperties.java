@@ -127,6 +127,25 @@ public interface JargonProperties {
 	boolean isIntraFileStatusCallbacks();
 
 	/**
+	 * Gets the number of calls to ignore when jargon calls the intra-file
+	 * status callback listener. No matter how many bytes have been sent, after
+	 * the minimum number of calls, the callback will be made to the listener.
+	 * 
+	 * @return <code>int</code> with the number of callbacks.
+	 */
+	int getIntraFileStatusCallbacksNumberCallsInterval();
+
+	/**
+	 * Gets the number of bytes to ignore until jargon calls the intra-file
+	 * status callback listener. No matter how many times the listener has been
+	 * called, after the minimum number of bytes, the callback will be made to
+	 * the listener.
+	 * 
+	 * @return <code>long</code> with the number of bytes between a callback
+	 */
+	long getIntraFileStatusCallbacksTotalBytesInterval();
+
+	/**
 	 * Get the time-out, in seconds, for the main iRODS socket. Will be zero or
 	 * less if not specified
 	 * 

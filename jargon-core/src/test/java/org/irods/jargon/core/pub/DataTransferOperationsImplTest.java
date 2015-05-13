@@ -479,6 +479,62 @@ public class DataTransferOperationsImplTest {
 				testingCallbackListener, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
 				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+		// last intra callback should have total length (100%)
+		Assert.assertEquals("intra file last call not 100%",
+				localFile.length(),
+				testingCallbackListener.getBytesReportedIntraFileCallbacks());
+
+		Assert.assertFalse(
+				"no bytes reported in callbacks",
+				testingCallbackListener.getBytesReportedIntraFileCallbacks() == 0);
+	}
+
+	@Test
+	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr()
+			throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+		// generate a local scratch file
+		String testFileName = "testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						33 * 1024 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		TestingStatusCallbackListener testingCallbackListener = new TestingStatusCallbackListener();
+
+		dataTransferOperationsAO.putOperation(localFile, destFile,
+				testingCallbackListener, null);
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+		// last intra callback should have total length (100%)
+		Assert.assertEquals("intra file last call not 100%",
+				localFile.length(),
+				testingCallbackListener.getBytesReportedIntraFileCallbacks());
 
 		Assert.assertFalse(
 				"no bytes reported in callbacks",
@@ -758,6 +814,14 @@ public class DataTransferOperationsImplTest {
 
 	@Test
 	public void testGetOneFileWithCallback() throws Exception {
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
 		// generate a local scratch file
 		String testFileName = "testGetOneFileWithCallback.txt";
 		String testRetrievedFileName = "testGetOneFileWithCallbackRetrieved.txt";
@@ -807,6 +871,75 @@ public class DataTransferOperationsImplTest {
 		Assert.assertEquals("did not get the full local file name in callback",
 				getLocalFile.getAbsolutePath(),
 				testCallbackListener.getLastTargetPath());
+		Assert.assertEquals("intra file last call not 100%",
+				localFile.length(),
+				testCallbackListener.getBytesReportedIntraFileCallbacks());
+
+	}
+
+	@Test
+	public void testGetOneFileWithCallbackParallel() throws Exception {
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				jargonOriginalProperties);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
+
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		// generate a local scratch file
+		String testFileName = "testGetOneFileWithCallbackParallel.txt";
+		String testRetrievedFileName = "testGetOneFileWithCallbackParallelRetrieved.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						33 * 1024 * 1024);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		IRODSFile getIRODSFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		File getLocalFile = new File(absPath + "/" + testRetrievedFileName);
+		TestingStatusCallbackListener testCallbackListener = new TestingStatusCallbackListener();
+
+		// now get the file
+		dataTransferOperationsAO.getOperation(getIRODSFile, getLocalFile,
+				testCallbackListener, null);
+
+		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		Assert.assertEquals("did not expect any errors", 0,
+				testCallbackListener.getErrorCallbackCount());
+		Assert.assertEquals("file callback, initial and completion", 3,
+				testCallbackListener.getSuccessCallbackCount());
+		Assert.assertEquals("did not get the full irods file name in callback",
+				targetIrodsFile, testCallbackListener.getLastSourcePath());
+		Assert.assertEquals("did not get the full local file name in callback",
+				getLocalFile.getAbsolutePath(),
+				testCallbackListener.getLastTargetPath());
+		Assert.assertEquals("intra file last call not 100%",
+				localFile.length(),
+				testCallbackListener.getBytesReportedIntraFileCallbacks());
 
 	}
 

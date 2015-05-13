@@ -12,14 +12,14 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * <p/>
  * Note that UDP options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TransferOptions {
 
 	/**
-	 * Behavior controlling overwrite (some impl still needed here)
+	 * Behavior controlling overwrite
 	 */
 	public enum ForceOption {
 		USE_FORCE, NO_FORCE, ASK_CALLBACK_LISTENER
@@ -41,6 +41,16 @@ public class TransferOptions {
 	private ForceOption forceOption = ForceOption.ASK_CALLBACK_LISTENER;
 	private boolean useParallelTransfer = true;
 	private ChecksumEncodingEnum checksumEncoding = ChecksumEncodingEnum.DEFAULT;
+	/**
+	 * Number of callbacks before an intra file callback listener will be
+	 * notified, no matter how many bytes passed
+	 */
+	private int intraFileStatusCallbacksNumberCallsInterval = 5;
+	/**
+	 * Number of bytes in a callback before in intra file callback listener will
+	 * be notified, no matter how many calls have been made
+	 */
+	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 
 	/**
 	 * DataType option for putting certain types of special files
@@ -61,40 +71,61 @@ public class TransferOptions {
 	 */
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("transferOptions:");
-		sb.append("\n   maxThreads:");
-		sb.append(maxThreads);
-		sb.append("\n   udpSendRate:");
-		sb.append(udpSendRate);
-		sb.append("\n udpPacketSize:");
-		sb.append(udpPacketSize);
-		sb.append("\n allowPutGetResourceRedirects:");
-		sb.append(allowPutGetResourceRedirects);
-		sb.append("\n   computeChecksumAfterTransfer:");
-		sb.append(computeChecksumAfterTransfer);
-		sb.append("\n   computeAndVerifyChecksumAfterTransfer:");
-		sb.append(computeAndVerifyChecksumAfterTransfer);
-		sb.append("\n   intraFileStatusCallbacks:");
-		sb.append(intraFileStatusCallbacks);
-		sb.append("\n   forceOption:");
-		sb.append(forceOption);
-		sb.append("\n  useParallelTransfer:");
-		sb.append(useParallelTransfer);
-		sb.append("\n   putOption:");
-		sb.append(putOption);
-		sb.append("\n   checksumEncoding:");
-		sb.append(checksumEncoding);
-		return sb.toString();
+	public synchronized String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TransferOptions [maxThreads=");
+		builder.append(maxThreads);
+		builder.append(", udpSendRate=");
+		builder.append(udpSendRate);
+		builder.append(", udpPacketSize=");
+		builder.append(udpPacketSize);
+		builder.append(", allowPutGetResourceRedirects=");
+		builder.append(allowPutGetResourceRedirects);
+		builder.append(", intraFileStatusCallbacks=");
+		builder.append(intraFileStatusCallbacks);
+		builder.append(", ");
+		if (forceOption != null) {
+			builder.append("forceOption=");
+			builder.append(forceOption);
+			builder.append(", ");
+		}
+		builder.append("useParallelTransfer=");
+		builder.append(useParallelTransfer);
+		builder.append(", ");
+		if (checksumEncoding != null) {
+			builder.append("checksumEncoding=");
+			builder.append(checksumEncoding);
+			builder.append(", ");
+		}
+		builder.append("intraFileStatusCallbacksNumberCallsInterval=");
+		builder.append(intraFileStatusCallbacksNumberCallsInterval);
+		builder.append(", intraFileStatusCallbacksTotalBytesInterval=");
+		builder.append(intraFileStatusCallbacksTotalBytesInterval);
+		builder.append(", ");
+		if (putOption != null) {
+			builder.append("putOption=");
+			builder.append(putOption);
+			builder.append(", ");
+		}
+		builder.append("computeChecksumAfterTransfer=");
+		builder.append(computeChecksumAfterTransfer);
+		builder.append(", computeAndVerifyChecksumAfterTransfer=");
+		builder.append(computeAndVerifyChecksumAfterTransfer);
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**
 	 * Copy constructor creates a new <code>TransferOptions</code> based on the
 	 * passed-in version. This is done so that the options may be safely passed
 	 * between transfer methods that may update the transfer options.
-	 * 
+	 *
 	 * @param transferOptions
 	 *            <code>TransferOptions</code>
 	 */
@@ -117,6 +148,10 @@ public class TransferOptions {
 				setUseParallelTransfer(transferOptions.isUseParallelTransfer());
 				setPutOption(transferOptions.getPutOption());
 				setChecksumEncoding(transferOptions.getChecksumEncoding());
+				setIntraFileStatusCallbacksNumberCallsInterval(transferOptions
+						.getIntraFileStatusCallbacksNumberCallsInterval());
+				setIntraFileStatusCallbacksTotalBytesInterval(transferOptions
+						.getIntraFileStatusCallbacksTotalBytesInterval());
 			}
 		}
 	}
@@ -130,7 +165,7 @@ public class TransferOptions {
 
 	/**
 	 * Get the desired max threads value for paralell transfers
-	 * 
+	 *
 	 * @return <code>int</code> with the desired max parallel transfer threads.
 	 *         0 means use default in iRODS.
 	 */
@@ -140,7 +175,7 @@ public class TransferOptions {
 
 	/**
 	 * Set the desired max threads value for parallel transfers.
-	 * 
+	 *
 	 * @param maxThreads
 	 *            <code>int</code> with the maximum desired parallel transfer
 	 *            threads, 0 means use the default in iRODS.
@@ -151,7 +186,7 @@ public class TransferOptions {
 
 	/**
 	 * Get the UDP send rate if UDP transfers in use.
-	 * 
+	 *
 	 * @return <code>int</code> with the UDP send rate
 	 */
 	public synchronized int getUdpSendRate() {
@@ -160,7 +195,7 @@ public class TransferOptions {
 
 	/**
 	 * Set the UDP send rate if UDP transfers in use.
-	 * 
+	 *
 	 * @param udpSendRate
 	 *            <code>int</code> with the desired UDP send rate.
 	 */
@@ -170,7 +205,7 @@ public class TransferOptions {
 
 	/**
 	 * Get the desired UDP packet size if UDP transfers are in use.
-	 * 
+	 *
 	 * @return <code>int</code> with desired UDP packet size.
 	 */
 	public synchronized int getUdpPacketSize() {
@@ -179,7 +214,7 @@ public class TransferOptions {
 
 	/**
 	 * Set the desired UDP packet size if UDP transfers are in use.
-	 * 
+	 *
 	 * @param udpPacketSize
 	 */
 	public synchronized void setUdpPacketSize(final int udpPacketSize) {
@@ -189,7 +224,7 @@ public class TransferOptions {
 	/**
 	 * Should puts/gets redirect to the resource server that holds the data?
 	 * (equivalent to the -I in iput/iget>
-	 * 
+	 *
 	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
 	 *         be <code>true</code> if redirecting is desired
 	 */
@@ -200,7 +235,7 @@ public class TransferOptions {
 	/**
 	 * Should puts/gets redirect to the resource server that holds the data?
 	 * (equivalent to the -I in iput/iget>
-	 * 
+	 *
 	 * @param allowPutGetResourceRedirects
 	 *            the allowPutGetResourceRedirects to set
 	 */
@@ -265,7 +300,7 @@ public class TransferOptions {
 
 	/**
 	 * Get the prevailing force option for this transfer
-	 * 
+	 *
 	 * @return {@link ForceOption} enum value that indicates the force mode to
 	 *         use
 	 */
@@ -275,7 +310,7 @@ public class TransferOptions {
 
 	/**
 	 * Set the prevailing force option for this transfer.
-	 * 
+	 *
 	 * @param forceOption
 	 *            {@link ForceOption} enum value
 	 */
@@ -285,7 +320,7 @@ public class TransferOptions {
 
 	/**
 	 * Is parallel transfer allowed for this operation?
-	 * 
+	 *
 	 * @return useParallelTransfer <code>boolean</code> which is
 	 *         <code>true</code> if parallel transfers can be usd
 	 */
@@ -295,7 +330,7 @@ public class TransferOptions {
 
 	/**
 	 * Set whether parallel transfers can be used
-	 * 
+	 *
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> with the useParallelTransfer option
 	 */
@@ -326,7 +361,7 @@ public class TransferOptions {
 	/**
 	 * Set the type of checksum to use for iRODS. The default is MD5, and for
 	 * versions of iRODS 3.3.1 and higher SHA256 is available
-	 * 
+	 *
 	 * @param checksumEncoding
 	 */
 	public synchronized void setChecksumEncoding(
@@ -338,5 +373,37 @@ public class TransferOptions {
 
 		this.checksumEncoding = checksumEncoding;
 
+	}
+
+	/**
+	 * @return the intraFileStatusCallbacksNumberCallsInterval
+	 */
+	public synchronized int getIntraFileStatusCallbacksNumberCallsInterval() {
+		return intraFileStatusCallbacksNumberCallsInterval;
+	}
+
+	/**
+	 * @param intraFileStatusCallbacksNumberCallsInterval
+	 *            the intraFileStatusCallbacksNumberCallsInterval to set
+	 */
+	public synchronized void setIntraFileStatusCallbacksNumberCallsInterval(
+			final int intraFileStatusCallbacksNumberCallsInterval) {
+		this.intraFileStatusCallbacksNumberCallsInterval = intraFileStatusCallbacksNumberCallsInterval;
+	}
+
+	/**
+	 * @return the intraFileStatusCallbacksTotalBytesInterval
+	 */
+	public synchronized long getIntraFileStatusCallbacksTotalBytesInterval() {
+		return intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	/**
+	 * @param intraFileStatusCallbacksTotalBytesInterval
+	 *            the intraFileStatusCallbacksTotalBytesInterval to set
+	 */
+	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
+			final long intraFileStatusCallbacksTotalBytesInterval) {
+		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
 	}
 }

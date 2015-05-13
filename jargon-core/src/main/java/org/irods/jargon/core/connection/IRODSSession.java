@@ -196,8 +196,15 @@ public class IRODSSession {
 					.isComputeChecksumAfterTransfer());
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
+			transferOptions
+					.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
+							.getIntraFileStatusCallbacksNumberCallsInterval());
+			transferOptions
+					.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
+							.getIntraFileStatusCallbacksTotalBytesInterval());
 			transferOptions.setChecksumEncoding(jargonProperties
 					.getChecksumEncoding());
+
 		}
 
 		log.debug("transfer options based on properties:{}", transferOptions);
