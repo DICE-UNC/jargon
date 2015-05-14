@@ -654,7 +654,6 @@ public class IRODSUriUtils {
 	 * @param irodsPath
 	 * @return
 	 */
-	@Deprecated
 	public static URI buildURIForAnAccountAndPath(
 			final IRODSAccount irodsAccount, final String irodsPath) {
 
@@ -671,8 +670,8 @@ public class IRODSUriUtils {
 						irodsAccount.getUserName());
 		final String absPath = mkPathAbs(irodsAccount.getHomeDirectory(),
 				irodsPath);
-		return buildBaseURI(irodsAccount.getHost(), irodsAccount.getPort(), absPath,
-				info);
+		return buildBaseURI(irodsAccount.getHost(), irodsAccount.getPort(),
+				absPath, info);
 	}
 
 	/**
@@ -683,7 +682,6 @@ public class IRODSUriUtils {
 	 * @param irodsPath
 	 * @return
 	 */
-	@Deprecated
 	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
 			final IRODSAccount irodsAccount, final String irodsPath) {
 		if (irodsAccount == null) {
@@ -697,11 +695,10 @@ public class IRODSUriUtils {
 
 		final String absPath = mkPathAbs(irodsAccount.getHomeDirectory(),
 				irodsPath);
-		return buildBaseURI(irodsAccount.getHost(), irodsAccount.getPort(), absPath,
-				null);
+		return buildBaseURI(irodsAccount.getHost(), irodsAccount.getPort(),
+				absPath, null);
 	}
 
-	@Deprecated
 	private static URI buildBaseURI(final String host, final int port,
 									final String absPath,
 									final UserInfo userInfo) {
@@ -721,7 +718,6 @@ public class IRODSUriUtils {
 
 	// if this is a relative path, use the user home directory to fashion an
 	// absolute path
-	@Deprecated
 	private static String mkPathAbs(final String homeDir, final String path) {
 		if (path.startsWith(PATH_SEPARATOR)) {
 			return path;
