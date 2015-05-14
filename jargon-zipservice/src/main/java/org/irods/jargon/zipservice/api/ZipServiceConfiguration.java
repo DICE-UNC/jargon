@@ -35,7 +35,7 @@ public class ZipServiceConfiguration {
 	 * Treat the temp bundle creation dir as a relative path in user home
 	 * currently defaults to true
 	 */
-	private final boolean generateTempDirInUserHome = true;
+	private boolean generateTempDirInUserHome = true;
 	/**
 	 * The subdir that will be used under the bundle directory for creating
 	 * child bundle folders
@@ -50,9 +50,10 @@ public class ZipServiceConfiguration {
 	 * On an error with an individual file, fail fast, or, if <code>false</code>
 	 */
 	private boolean failFast = true;
-	
+
 	/**
-	 * Type of bundle to generate, note that for now it should stand at default and generate a tar.
+	 * Type of bundle to generate, note that for now it should stand at default
+	 * and generate a tar.
 	 */
 	private BundleType preferredBundleType = BundleType.DEFAULT;
 
@@ -161,6 +162,14 @@ public class ZipServiceConfiguration {
 
 	public void setPreferredBundleType(BundleType preferredBundleType) {
 		this.preferredBundleType = preferredBundleType;
+	}
+
+	/**
+	 * @param generateTempDirInUserHome
+	 *            the generateTempDirInUserHome to set
+	 */
+	public void setGenerateTempDirInUserHome(boolean generateTempDirInUserHome) {
+		this.generateTempDirInUserHome = generateTempDirInUserHome;
 	}
 
 }
