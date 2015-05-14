@@ -277,11 +277,10 @@ public class IRODSUriUtils {
 					"No user information in URI, cannot create iRODS account");
 		}
 
-		final String home = new StringBuilder()
-				.append(PATH_SEPARATOR).append(info.getZone())
-				.append(PATH_SEPARATOR).append("home")
-				.append(PATH_SEPARATOR).append(info.getUserName())
-				.toString();
+		final String home
+				= PATH_SEPARATOR + info.getZone()
+				+ PATH_SEPARATOR + "home"
+				+ PATH_SEPARATOR + info.getUserName();
 
 		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),
 				info.getUserName(), info.getPassword(), home, info.getZone(),
@@ -409,12 +408,14 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Build a URI appropriate for a given iRODS account and absolute path.
+	 * Build a URI appropriate for a given iRODS account and path. If the path
+	 * is relative, it is assumed to be relative to the account's home
+	 * collection.
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param irodsPath
-	 * @return
+	 * @param irodsPath the path
+	 * @return the URI
 	 */
 	public static URI buildURIForAnAccountAndPath(
 			final IRODSAccount irodsAccount, final String irodsPath) {
@@ -442,8 +443,8 @@ public class IRODSUriUtils {
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param irodsPath
-	 * @return
+	 * @param irodsPath the path
+	 * @return the URI
 	 */
 	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
 			final IRODSAccount irodsAccount, final String irodsPath) {
