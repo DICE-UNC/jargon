@@ -72,7 +72,7 @@ public class IRODSUriUtilsTest {
 		final URI testURI = new URI(
 				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
 		);
-		String actual = IRODSUriUtils.getAbsolutePathFromURI(testURI);
+		final String actual = IRODSUriUtils.getAbsolutePathFromURI(testURI);
 		Assert.assertNotNull("no path returned", actual);
 	}
 
@@ -110,7 +110,7 @@ public class IRODSUriUtilsTest {
 	public void testBuildURIUserInfo() throws Exception {
 		final URI expectedURI = new URI(
 				"irods://user.zone:password@host.domain:10000/path/to/entity");
-		final IRODSUriUtils.UserInfo info = IRODSUriUtils.UserInfo.instance(
+		final IRODSUriUserInfo info = IRODSUriUserInfo.instance(
 				"user", "zone", "password");
 		final URI actualURI = IRODSUriUtils.buildURI("host.domain", 10000, info,
 				"/path/to/entity");
