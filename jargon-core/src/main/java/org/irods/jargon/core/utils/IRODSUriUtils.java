@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.InvalidIRODSUriException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 
@@ -16,23 +17,6 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
  * 
  */
 public class IRODSUriUtils {
-
-	/**
-	 * Objects of this class represent the case where an iRODS URI was expected,
-	 * but another type of URI was provided.
-	 */
-	public static final class InvalidURIException extends JargonException {
-
-		/**
-		 * the constructor
-		 *
-		 * @param invalidURI the invalid URI
-		 */
-		InvalidURIException(final URI invalidURI) {
-			super("The URI, " + invalidURI + ", is not an iRODS URI.");
-		}
-
-	}
 
 	private static final String SCHEME = "irods";
 	private static final String SCHEME_TERMINUS = "://";
@@ -47,13 +31,13 @@ public class IRODSUriUtils {
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return The user information if any is present, otherwise
 	 * <code>null</code>.
-	 * @throws InvalidURIException This is thrown when <code>irodsURI</code> is
-	 * not an iRODS URI.
+	 * @throws InvalidIRODSUriException This is thrown when
+	 * <code>irodsURI</code> is not an iRODS URI.
 	 */
 	public static IRODSUriUserInfo getUserInfo(final URI irodsURI)
-			throws InvalidURIException {
+			throws InvalidIRODSUriException {
 		if (!isIRODSURIScheme(irodsURI)) {
-			throw new InvalidURIException(irodsURI);
+			throw new InvalidIRODSUriException(irodsURI);
 		}
 		return IRODSUriUserInfo.fromString(irodsURI.getRawUserInfo());
 	}
@@ -67,11 +51,11 @@ public class IRODSUriUtils {
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the discovered iRODS user name, or
 	 *         <code>null</code> if the user name is not present.
-	 * @throws InvalidURIException This is thrown when <code>irodsURI</code> is
-	 * not an iRODS URI.
+	 * @throws InvalidIRODSUriException This is thrown when
+	 * <code>irodsURI</code> is not an iRODS URI.
 	 */
 	public static String getUserName(final URI irodsURI)
-			throws InvalidURIException {
+			throws InvalidIRODSUriException {
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
 		return info == null ? null : info.getUserName();
 	}
@@ -83,10 +67,11 @@ public class IRODSUriUtils {
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the iRODS zone, or <code>null</code> if not
 	 * available.
-	 * @throws InvalidURIException This is thrown when <code>irodsURI</code> is
-	 * not an iRODS URI.
+	 * @throws InvalidIRODSUriException This is thrown when
+	 * <code>irodsURI</code> is not an iRODS URI.
 	 */
-	public static String getZone(final URI irodsURI) throws InvalidURIException
+	public static String getZone(final URI irodsURI)
+			throws InvalidIRODSUriException
 	{
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
 		return info == null ? null : info.getZone();
@@ -99,11 +84,11 @@ public class IRODSUriUtils {
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the iRODS password, or <code>null</code> if
 	 * not available.
-	 * @throws InvalidURIException This is thrown when <code>irodsURI</code> is
-	 * not an iRODS URI.
+	 * @throws InvalidIRODSUriException This is thrown when
+	 * <code>irodsURI</code> is not an iRODS URI.
 	 */
 	public static String getPassword(final URI irodsURI)
-			throws InvalidURIException {
+			throws InvalidIRODSUriException {
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
 		return info == null ? null : info.getPassword();
 	}
@@ -280,7 +265,7 @@ public class IRODSUriUtils {
 			throws JargonException {
 
 		if (!isIRODSURIScheme(irodsURI)) {
-			throw new InvalidURIException(irodsURI);
+			throw new InvalidIRODSUriException(irodsURI);
 		}
 
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
