@@ -478,4 +478,11 @@ public class IRODSFileInputStream extends InputStream {
 		filePointer = 0L;
 	}
 
+	/**
+	 * @return the irodsFile
+	 */
+	protected IRODSFile getIrodsFile() {
+		return irodsFile;
+	}
+
 }
