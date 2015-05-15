@@ -101,6 +101,55 @@ public class JargonZipServiceImplTest {
 	}
 
 	@Test
+	public void testObtainBundleAsInputStreamWithAdditionalMetadataGivenPaths()
+			throws Exception {
+
+		String rootCollection = "testObtainBundleAsInputStreamGivenPaths";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + rootCollection);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 2, 2, "testFile",
+						".txt", 3, 2, 20, 200);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		ZipServiceConfiguration zipServiceConfiguration = new ZipServiceConfiguration();
+		JargonZipService jargonZipService = new JargonZipServiceImpl(
+				zipServiceConfiguration,
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		List<String> paths = new ArrayList<String>();
+		paths.add(irodsCollectionRootAbsolutePath + "/" + rootCollection);
+
+		BundleStreamWrapper wrapper = jargonZipService
+				.obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(paths);
+		Assert.assertNotNull("did not return bundle", wrapper);
+		Assert.assertNotNull("no input stream", wrapper.getInputStream());
+		Assert.assertFalse("length incorrect", wrapper.getLength() == 0);
+		Assert.assertFalse("missing name", wrapper.getBundleFileName()
+				.isEmpty());
+
+	}
+
+	@Test
 	public void testObtainBundleAsInputStreamGivenPaths() throws Exception {
 
 		String rootCollection = "testObtainBundleAsInputStreamGivenPaths";

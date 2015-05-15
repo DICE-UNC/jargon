@@ -56,7 +56,7 @@ public interface JargonZipService {
 
 	/**
 	 * Given a list of iRODS paths, obtain a bundle as an iRODS file that
-	 * represents the files at those paths.
+	 * represents the files at those paths, represented by an input stream
 	 * <p/>
 	 * Note that bundle type, failure modes, etc are all configured in the
 	 * {@link ZipServiceConfiguration}. Note that closing the stream will cause
@@ -68,6 +68,24 @@ public interface JargonZipService {
 	 * @throws ZipServiceException
 	 */
 	InputStream obtainBundleAsInputStreamGivenPaths(
+			List<String> irodsAbsolutePaths) throws ZipServiceException;
+
+	/**
+	 * Given a list of iRODS paths, obtain a bundle as an iRODS file that
+	 * represents the files at those paths, represented by an input stream,
+	 * wrapped in an object that contains data about the length of the file and
+	 * its actual name.
+	 * <p/>
+	 * Note that bundle type, failure modes, etc are all configured in the
+	 * {@link ZipServiceConfiguration}. Note that closing the stream will cause
+	 * the bundle and any temporary files to be cleaned up.
+	 * 
+	 * @param irodsAbsolutePaths
+	 *            <code>List<String></code> of iRODS paths
+	 * @return {@link InputStream} with the reference to the bundle
+	 * @throws ZipServiceException
+	 */
+	BundleStreamWrapper obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(
 			List<String> irodsAbsolutePaths) throws ZipServiceException;
 
 }

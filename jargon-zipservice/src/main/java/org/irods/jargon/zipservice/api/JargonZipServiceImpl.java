@@ -103,6 +103,40 @@ public class JargonZipServiceImpl extends AbstractJargonService implements
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.zipservice.api.JargonZipService#
+	 * obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(java.util.List)
+	 */
+	@Override
+	public BundleStreamWrapper obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(
+			final List<String> irodsAbsolutePaths) throws ZipServiceException {
+		log.info("obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths()");
+		FileIOOperations fileIOOperations;
+		try {
+			fileIOOperations = new FileIOOperationsAOImpl(this
+					.getIrodsAccessObjectFactory().getIrodsSession(),
+					this.getIrodsAccount());
+			IRODSFile bundleFile = obtainBundleAsIrodsFileGivenPaths(irodsAbsolutePaths);
+			BundleClosingInputStream inputStream = new BundleClosingInputStream(
+					bundleFile, fileIOOperations);
+			return new BundleStreamWrapper(inputStream, bundleFile.length(),
+					bundleFile.getName());
+		} catch (JargonException | FileNotFoundException e) {
+			log.error("JargonException getting input stream", e);
+			throw new ZipServiceException(
+					"Jargon exception getting input stream", e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.zipservice.api.JargonZipService#
+	 * obtainBundleAsInputStreamGivenPaths(java.util.List)
+	 */
 	@Override
 	public InputStream obtainBundleAsInputStreamGivenPaths(
 			final List<String> irodsAbsolutePaths) throws ZipServiceException {
