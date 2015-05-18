@@ -53,8 +53,8 @@ import org.slf4j.LoggerFactory;
  * methods. Methods that back operations not defined in
  * <code>java.io.File</code> are not implemented in this particular access
  * object.
- * 
- * 
+ *
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
@@ -150,7 +150,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Do a query on the given file to see if it has an executable bit set
-	 * 
+	 *
 	 * @param irodsFile
 	 * @return <code>boolean</code> of <code>true</code> if file is data object,
 	 *         exists, and is executable
@@ -1409,10 +1409,17 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		DataObjInp dataObjCopyInp = DataObjInp
 				.instanceForPhysicalMoveSpecifyingResource(
 						absolutePathToSourceFile, targetResource);
-		Tag response = getIRODSProtocol()
-				.irodsFunction(DataObjInp.PI_TAG,
-						dataObjCopyInp.getParsedTags(),
-						DataObjInp.PHYMOVE_FILE_API_NBR);
+
+		int apiNbr;
+
+		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			apiNbr = DataObjInp.PHYMOVE_FILE_API_NBR_41;
+		} else {
+			apiNbr = DataObjInp.PHYMOVE_FILE_API_NBR;
+		}
+
+		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
+				dataObjCopyInp.getParsedTags(), apiNbr);
 
 		if (response != null) {
 			log.warn("unexpected response from irods, expected null message - logged and ignored ");
@@ -1423,7 +1430,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Respond to client status messages for an operation until exhausted.
-	 * 
+	 *
 	 * @param reply
 	 *            <code>Tag</code> containing status messages from IRODS
 	 * @throws IOException
