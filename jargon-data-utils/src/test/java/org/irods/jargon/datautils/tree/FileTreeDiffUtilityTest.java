@@ -101,9 +101,10 @@ public class FileTreeDiffUtilityTest {
 				FileTreeDiffEntry.DiffType.DIRECTORY_NO_DIFF,
 				fileTreeDiffEntry.getDiffType());
 
-		//File[] childrenOfLocal = localFile.listFiles();
-		//Enumeration<?> nodes = fileTreeNode.children();
-		//compareFileTreeToNodesForDirMatchesAndNoDiffs(childrenOfLocal, nodes);
+		// File[] childrenOfLocal = localFile.listFiles();
+		// Enumeration<?> nodes = fileTreeNode.children();
+		// compareFileTreeToNodesForDirMatchesAndNoDiffs(childrenOfLocal,
+		// nodes);
 
 	}
 
@@ -261,7 +262,7 @@ public class FileTreeDiffUtilityTest {
 
 	/**
 	 * Bug [#1615] special chars (alpha, beta) causing synch to stop
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -698,7 +699,9 @@ public class FileTreeDiffUtilityTest {
 				0, ctr);
 	}
 
-	@Test
+	@Ignore
+	// FIXME: possible platform specific error Ubuntu:
+	// https://github.com/DICE-UNC/jargon/issues/118
 	public void testFileTreeDiffLocalPlusOneDir() throws Exception {
 
 		String rootCollection = "testFileTreeDiffLocalPlusOneDir";
@@ -1732,7 +1735,7 @@ public class FileTreeDiffUtilityTest {
 	/**
 	 * Tests collating sequence issues (might need to scope test to platform
 	 * specific, applies to mac at least
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
