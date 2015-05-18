@@ -572,40 +572,51 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		// this is not a restart, will fall through to normal processing
 
-		boolean force = false;
+		boolean force;
+
+		if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
+			force = true;
+		} else {
+			force = false;
+		}
 
 		/*
 		 * The check above has set target file to be the data object name, so
 		 * see if this results in an over-write
 		 */
-		if (!ignoreChecks && targetFile.exists()) {
+		// can be cleaned up, but this optimizes away a genquery
+		if (!force) {
+			if (!ignoreChecks && targetFile.exists()) {
 
-			if (transferControlBlock.getTransferOptions() == null) {
-				throw new JargonRuntimeException(
-						"transfer control block does not have a transfer options set");
-			}
-			/*
-			 * Handle potential overwrites, will consult the client if so
-			 * configured
-			 */
-			OverwriteResponse overwriteResponse = evaluateOverwrite(localFile,
-					transferControlBlock, transferStatusCallbackListener,
-					transferControlBlock.getTransferOptions(),
-					(File) targetFile);
+				if (transferControlBlock.getTransferOptions() == null) {
+					throw new JargonRuntimeException(
+							"transfer control block does not have a transfer options set");
+				}
+				/*
+				 * Handle potential overwrites, will consult the client if so
+				 * configured
+				 */
+				OverwriteResponse overwriteResponse = evaluateOverwrite(
+						localFile, transferControlBlock,
+						transferStatusCallbackListener,
+						transferControlBlock.getTransferOptions(),
+						(File) targetFile);
 
-			if (overwriteResponse == OverwriteResponse.SKIP) {
-				log.info("skipping due to overwrite status");
-				return;
-			} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
-				force = true;
-			}
-		} else {
-			// ignore options set, so set force to true if use force is set in
-			// transfer options
-			if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
-				force = true;
-			}
+				if (overwriteResponse == OverwriteResponse.SKIP) {
+					log.info("skipping due to overwrite status");
+					return;
+				} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
+					force = true;
+				}
+			} else {
+				// ignore options set, so set force to true if use force is set
+				// in
+				// transfer options
+				if (transferControlBlock.getTransferOptions().getForceOption() == ForceOption.USE_FORCE) {
+					force = true;
+				}
 
+			}
 		}
 
 		if (localFileLength < ConnectionConstants.MAX_SZ_FOR_SINGLE_BUF) {
@@ -658,7 +669,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		if (transferStatusCallbackListener != null
 				&& transferControlBlock.getTransferOptions()
-						.isIntraFileStatusCallbacks()) {
+						.isIntraFileStatusCallbacks()
+				&& !transferControlBlock.isCancelled()) {
 			ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 					.instanceSettingTransferOptions(TransferType.PUT,
 							localFileLength, transferControlBlock,
@@ -1093,23 +1105,29 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		if (fileRestartInfo != null) {
 			log.info("restart processing for get..");
 
-			getRestartRetryTillMaxLoop(transferControlBlock, irodsFileToGet,
-					fileRestartInfo, transferStatusCallbackListener);
+			getRestartRetryTillMaxLoop(operativeTransferControlBlock,
+					irodsFileToGet, fileRestartInfo,
+					transferStatusCallbackListener);
 
 		} else {
+			// can be cleaned up a bit, but small optimization gets rid of a
+			// query when force is already set
+			if (!(operativeTransferControlBlock.getTransferOptions()
+					.getForceOption() == ForceOption.USE_FORCE)) {
 
-			/*
-			 * Handle potential overwrites, will consult the client if so
-			 * configured
-			 */
-			OverwriteResponse overwriteResponse = evaluateOverwrite(
-					(File) irodsFileToGet, transferControlBlock,
-					transferStatusCallbackListener, thisFileTransferOptions,
-					localFile);
+				/*
+				 * Handle potential overwrites, will consult the client if so
+				 * configured
+				 */
+				OverwriteResponse overwriteResponse = evaluateOverwrite(
+						(File) irodsFileToGet, operativeTransferControlBlock,
+						transferStatusCallbackListener,
+						thisFileTransferOptions, localFile);
 
-			if (overwriteResponse == OverwriteResponse.SKIP) {
-				log.info("skipping due to overwrite status");
-				return;
+				if (overwriteResponse == OverwriteResponse.SKIP) {
+					log.info("skipping due to overwrite status");
+					return;
+				}
 			}
 
 			long irodsFileLength = irodsFileToGet.length();
@@ -1552,7 +1570,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (transferStatusCallbackListener != null
 					&& transferControlBlock.getTransferOptions()
-							.isIntraFileStatusCallbacks()) {
+							.isIntraFileStatusCallbacks()
+					&& !transferControlBlock.isCancelled()) {
 				ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 						.instanceSettingTransferOptions(TransferType.GET,
 								irodsFileLength, transferControlBlock,
@@ -1598,7 +1617,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				}
 			}
 
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
@@ -3095,7 +3114,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param checksumEncoding
 	 * @return
 	 * @throws JargonException
+	 * @deprecated see {@link DataObjectChecksumUtilitiesAO} for new location
 	 */
+	@Deprecated
 	@Override
 	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile)
 			throws JargonException {

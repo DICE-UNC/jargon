@@ -656,6 +656,13 @@ public final class IRODSAccessObjectFactoryImpl implements
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
 	}
 
+	@Override
+	public DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new DataObjectChecksumUtilitiesAOImpl(irodsSession, irodsAccount);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

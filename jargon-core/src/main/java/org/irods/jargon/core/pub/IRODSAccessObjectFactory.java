@@ -510,4 +510,17 @@ public interface IRODSAccessObjectFactory {
 	 */
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
+	/**
+	 * Get a utiltity to deal with checksums in iRODS
+	 * 
+	 * @param irodsAccount
+	 *            {@IRODSAccount} with the authenticating
+	 *            principal
+	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous
+	 *         checksum operations
+	 * @throws JargonException
+	 */
+	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(
+			IRODSAccount irodsAccount) throws JargonException;
+
 }

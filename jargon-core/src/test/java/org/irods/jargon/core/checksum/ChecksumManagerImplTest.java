@@ -242,7 +242,7 @@ public class ChecksumManagerImplTest {
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetEncodingFromIrodsWhenNull() throws Exception {
 		String md5String = null;
 
@@ -253,11 +253,13 @@ public class ChecksumManagerImplTest {
 
 		ChecksumManager checksumManager = new ChecksumManagerImpl(account,
 				irodsAccessObjectFactory);
-		checksumManager.determineChecksumEncodingFromIrodsData(md5String);
+		ChecksumValue actual = checksumManager
+				.determineChecksumEncodingFromIrodsData(md5String);
+		Assert.assertNull(actual);
 
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test
 	public void testGetEncodingFromIrodsWhenBlank() throws Exception {
 		String md5String = "";
 
@@ -268,7 +270,9 @@ public class ChecksumManagerImplTest {
 
 		ChecksumManager checksumManager = new ChecksumManagerImpl(account,
 				irodsAccessObjectFactory);
-		checksumManager.determineChecksumEncodingFromIrodsData(md5String);
+		ChecksumValue actual = checksumManager
+				.determineChecksumEncodingFromIrodsData(md5String);
+		Assert.assertNull(actual);
 
 	}
 
