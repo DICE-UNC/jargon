@@ -67,3 +67,7 @@ Resource groups are no longer a concept, so some operations using resource group
 #### estTrimReplicasForDataObjectByResourceNameInvalid fails with uncaught -78000 #109
 
 Added a ResourceNotFoundException in the hierarchy.  For prior to 4.1, will maintain current behavior of silently ignoring, which in retrospect might be a bit odd.  But no surprises!  From 4.1+ will throw a DataNotFoundException.  It's a little messy, may rethink that later.
+
+####  Read length set to 0 on phymove, likely protocol change #111 
+
+Fixed phymove api numbers, maintains backwards compatability
