@@ -10,6 +10,7 @@ import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.BulkFileOperationsAO;
 import org.irods.jargon.core.pub.BulkFileOperationsAOImpl;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -19,6 +20,7 @@ import org.irods.jargon.core.pub.io.FileIOOperations;
 import org.irods.jargon.core.pub.io.FileIOOperationsAOImpl;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.zipservice.api.exception.ZipServiceConfigurationException;
 import org.irods.jargon.zipservice.api.exception.ZipServiceException;
@@ -257,7 +259,9 @@ public class JargonZipServiceImpl extends AbstractJargonService implements
 		// now bundle parent exists and is blank, start the copies
 		log.info("starting copies, may take a while...");
 		DataTransferOperations dataTransferOperations;
+
 		try {
+
 			dataTransferOperations = this.getIrodsAccessObjectFactory()
 					.getDataTransferOperations(getIrodsAccount());
 		} catch (JargonException e) {
@@ -269,8 +273,11 @@ public class JargonZipServiceImpl extends AbstractJargonService implements
 		for (String path : irodsAbsolutePaths) {
 			log.info("copy {}", path);
 			try {
+				TransferControlBlock tcb = this.irodsAccessObjectFactory
+						.buildDefaultTransferControlBlockBasedOnJargonProperties();
+				tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 				dataTransferOperations.copy(path, "",
-						bundleParent.getAbsolutePath(), null, null);
+						bundleParent.getAbsolutePath(), null, tcb);
 			} catch (JargonException e) {
 				if (this.zipServiceConfiguration.isFailFast()) {
 					log.error(
