@@ -114,14 +114,14 @@ public class PAMAuth extends AuthMechanism {
 			secureIRODSCommands.setForceSslFlush(true);
 			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
-					irodsAccount.getUserName(), irodsAccount.getPassword(),
+					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
 			response = secureIRODSCommands.irodsFunction(pi);
 
 		} else {
 			log.info("using normal irods pam auth request");
 			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
-					irodsAccount.getUserName(), irodsAccount.getPassword(),
+					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
 			response = secureIRODSCommands.irodsFunction(pamAuthRequestInp);
 		}

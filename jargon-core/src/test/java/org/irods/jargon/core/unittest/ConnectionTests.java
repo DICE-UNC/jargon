@@ -4,6 +4,7 @@ import org.irods.jargon.core.connection.ConnectionProgressStatusTest;
 import org.irods.jargon.core.connection.DefaultPropertiesJargonConfigTest;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCacheTest;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessorTest;
+import org.irods.jargon.core.connection.IRODSAccountTest;
 import org.irods.jargon.core.connection.IRODSServerPropertiesTest;
 import org.irods.jargon.core.connection.IRODSSessionTest;
 import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
@@ -19,7 +20,7 @@ import org.junit.runners.Suite;
 		IRODSServerPropertiesTest.class,
 		DefaultPropertiesJargonConfigTest.class,
 		ConnectionProgressStatusTest.class, PAMAuthTest.class,
-		DiscoveredServerPropertiesCacheTest.class })
+		DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class })
 public class ConnectionTests {
 
 }
