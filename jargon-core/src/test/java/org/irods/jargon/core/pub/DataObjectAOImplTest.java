@@ -23,6 +23,7 @@ import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -3034,6 +3035,15 @@ public class DataObjectAOImplTest {
 				.computeMD5ChecksumOnDataObject(testFile);
 		Assert.assertTrue("did not return a checksum",
 				computedChecksum.length() > 0);
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(testFile.getAbsolutePath());
+		Assert.assertFalse("didn't retrieve ObjStat and checksum", objStat
+				.getChecksum().isEmpty());
+
 	}
 
 	@Test

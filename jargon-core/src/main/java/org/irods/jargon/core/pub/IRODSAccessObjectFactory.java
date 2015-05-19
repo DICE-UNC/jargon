@@ -511,7 +511,8 @@ public interface IRODSAccessObjectFactory {
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
 	/**
-	 * Get service to handle pagaeable collection listings
+	 * Get service to handle pagaeable collection listings Get a utiltity to
+	 * deal with checksums in iRODS
 	 * 
 	 * @param irodsAccount
 	 *            {@IRODSAccount} with the authenticating
@@ -521,5 +522,13 @@ public interface IRODSAccessObjectFactory {
 	 */
 	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount)
 			throws JargonException;
+
+	/**
+	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous
+	 *         checksum operations
+	 * @throws JargonException
+	 */
+	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(
+			IRODSAccount irodsAccount) throws JargonException;
 
 }

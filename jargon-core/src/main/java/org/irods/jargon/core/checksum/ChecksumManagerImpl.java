@@ -9,14 +9,18 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service to determine, based on local and remote server properties, the
- * correct checksum hash type.
+ * Various methods to compute and determine checksums
+ * <p/>
+ * Note this implementation is very basic and will be expanded later.
+ * {@link DataObjectAO} has other checksum support that will eventually migrate
+ * here.
  * 
  * @author Mike Conway - DICE
  * 
@@ -171,7 +175,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 		log.info("determineChecksumEncodingFromIrodsData()");
 
 		if (irodsChecksumValue == null || irodsChecksumValue.isEmpty()) {
-			throw new IllegalArgumentException("null or empty checksum value");
+			return null;
 		}
 
 		log.info("irodsChecksumValue:{}", irodsChecksumValue);

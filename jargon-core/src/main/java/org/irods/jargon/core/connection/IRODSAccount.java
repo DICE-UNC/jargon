@@ -184,7 +184,8 @@ public class IRODSAccount implements Serializable {
 		return new IRODSAccount(reroutedHostName, initialAccount.getPort(),
 				initialAccount.getUserName(), initialAccount.getPassword(),
 				initialAccount.getHomeDirectory(), initialAccount.getZone(),
-				initialAccount.getDefaultStorageResource());
+				initialAccount.getDefaultStorageResource(), initialAccount.getProxyName(),
+				initialAccount.getProxyZone());
 
 	}
 
@@ -378,21 +379,29 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Return the URI representation of this Account object.
+	 * Return the URI representation of this Account object. If the account uses a proxy user a
+	 * password cannot be included in the URI.
 	 * 
 	 * @param includePassword
 	 *            If true, the account's password will be included in the URI,
 	 *            if possible.
+	 *
+	 * @throws UnsupportedOperationException  This exception is thrown if an attempt is made to
+	 * create a irods URI that authenticates as a proxy user.
 	 */
 	public URI toURI(final boolean includePassword) throws JargonException {
-		URI uri = null;
 		try {
 			if (includePassword) {
-				uri = new URI("irods://" + getUserName() + "." + getZone()
+				if (proxied()) {
+					throw new UnsupportedOperationException(
+							"irods URI scheme doesn't support authentication through a proxy.");
+				}
+
+				return new URI("irods://" + getUserName() + "." + getZone()
 						+ ":" + getPassword() + "@" + getHost() + ":"
 						+ getPort() + getHomeDirectory());
 			} else {
-				uri = new URI("irods://" + getUserName() + "." + getZone()
+				return new URI("irods://" + getUserName() + "." + getZone()
 						+ "@" + getHost() + ":" + getPort()
 						+ getHomeDirectory());
 			}
@@ -400,7 +409,6 @@ public class IRODSAccount implements Serializable {
 			throw new JargonException("cannot convert this account into a URI:"
 					+ this, e);
 		}
-		return uri;
 	}
 
 	public String getHost() {
@@ -512,6 +520,11 @@ public class IRODSAccount implements Serializable {
 	 */
 	public void setUserName(final String userName) {
 		this.userName = userName;
+	}
+
+
+	private boolean proxied() {
+		return getUserName() != getProxyName() || getZone() != getProxyZone();
 	}
 
 }

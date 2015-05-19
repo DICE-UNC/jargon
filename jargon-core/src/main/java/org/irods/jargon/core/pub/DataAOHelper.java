@@ -539,7 +539,9 @@ public final class DataAOHelper extends AOHelper {
 	 * @param irodsValue
 	 * @return
 	 * @throws JargonException
+	 * @deprecated see {@link DataObjectChecksumUtilitiesAO} in future
 	 */
+	@Deprecated
 	ChecksumValue computeChecksumValueFromIrodsData(final String irodsValue)
 			throws JargonException {
 		// param checks in delegated method
