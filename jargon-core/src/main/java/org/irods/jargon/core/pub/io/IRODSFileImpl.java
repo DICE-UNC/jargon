@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Describes a file or collection on the IRODS data grid. Note that
  * <code>IRODSFileImpl</code> is a variant of an
- * {@link org.irogs.jargon.core.pub.IRODSAccessObject IRODSAccessObject}, and
+ * {@link org.irods.jargon.core.pub.IRODSAccessObject IRODSAccessObject}, and
  * internally holds a connection to IRODS.
  * <p/>
  * This object is not thread-safe, and cannot be shared between threads. This
@@ -265,7 +265,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the file name.
 	 * 
-	 * @param fleName
+	 * @param filePath
 	 *            The file name or fileName plus some or all of the directory
 	 *            path.
 	 */

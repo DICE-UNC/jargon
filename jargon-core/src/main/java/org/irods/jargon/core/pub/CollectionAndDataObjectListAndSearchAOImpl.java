@@ -307,7 +307,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("objStat:{}", objStat);
 
-		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
+		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
+				this.getIRODSAccount(), this.getIRODSAccessObjectFactory());
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		entries.addAll(collectionListingUtils.listCollectionsUnderPath(objStat,
@@ -454,8 +455,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		return collectionListingUtils.countDataObjectsUnderPath(objStat);
 
 	}
-	
-	
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * totalDataObjectSizesUnderPath(java.lang.String)
+	 */
 	@Override
 	public long totalDataObjectSizesUnderPath(final String absolutePathToParent)
 			throws FileNotFoundException, JargonException {
@@ -469,6 +475,11 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+
+		if (!objStat.isSomeTypeOfCollection()) {
+			log.info("not a collection, return 1");
+			return 1;
+		}
 
 		/*
 		 * See if jargon supports the given object type

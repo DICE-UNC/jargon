@@ -3,12 +3,17 @@
  */
 package org.irods.jargon.core.pub;
 
+import org.irods.jargon.core.checksum.ChecksumManager;
+import org.irods.jargon.core.checksum.ChecksumManagerImpl;
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.domain.ObjStat;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,11 +26,13 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  * 
  */
-public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO {
+public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
+		DataObjectChecksumUtilitiesAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectChecksumUtilitiesAOImpl.class);
-	private final DataObjectAO dataObjectAO;
+	private final ChecksumManager checksumManager;
+	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
 	/**
 	 * @param irodsSession
@@ -35,30 +42,86 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO {
 	public DataObjectChecksumUtilitiesAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(
-				irodsAccount);
+		this.checksumManager = new ChecksumManagerImpl(irodsAccount,
+				this.getIRODSAccessObjectFactory());
+		this.collectionAndDataObjectListAndSearchAO = this
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
-	public ChecksumValue retrieveOrComputeIrodsChecksumOfType(
-			final ChecksumEncodingEnum checksumEncoding,
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
+	 * retrieveExistingChecksumForDataObject(java.lang.String)
+	 */
+	@Override
+	public ChecksumValue retrieveExistingChecksumForDataObject(
 			final String irodsDataObjectAbsolutePath)
 			throws FileNotFoundException, JargonException {
 
-		log.info("retrieveOrComputeIrodsChecksumOfType()");
-		if (checksumEncoding == null) {
-			throw new IllegalArgumentException("null checksumEncoding");
-		}
+		log.info("retrieveChecksumForDataObject()");
 
 		if (irodsDataObjectAbsolutePath == null
 				|| irodsDataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
 					"null or empty irodsDataObjectAbsolutePath");
 		}
-
-		log.info("checksumEncoding:{}", checksumEncoding);
 		log.info("irodsDataObjectAbsolutePath:{}", irodsDataObjectAbsolutePath);
-		return null;
+		ObjStat objStat = this.collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPath(irodsDataObjectAbsolutePath);
+		return computeChecksumValueFromIrodsData(objStat.getChecksum());
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
+	 * computeChecksumOnDataObject(org.irods.jargon.core.pub.io.IRODSFile)
+	 */
+	@Override
+	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile)
+			throws JargonException {
+
+		log.info("computeChecksumOnDataObject()");
+
+		if (irodsFile == null) {
+			throw new IllegalArgumentException("irodsFile is null");
+		}
+
+		log.info("computing checksum on irodsFile: {}",
+				irodsFile.getAbsolutePath());
+
+		DataObjInp dataObjInp = DataObjInp
+				.instanceForDataObjectChecksum(irodsFile.getAbsolutePath());
+		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
+
+		if (response == null) {
+			log.error("invalid response to checksum call, response was null, expected checksum value");
+			throw new JargonException(
+					"invalid response to checksum call, received null response when doing checksum on file:"
+							+ irodsFile);
+		}
+
+		String returnedChecksum = response.getTag(DataObjInp.MY_STR)
+				.getStringValue();
+		log.info("checksum is: {}", returnedChecksum);
+
+		return computeChecksumValueFromIrodsData(returnedChecksum);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
+	 * computeChecksumValueFromIrodsData(java.lang.String)
+	 */
+	@Override
+	public ChecksumValue computeChecksumValueFromIrodsData(
+			final String irodsValue) throws JargonException {
+		// param checks in delegated method
+		return checksumManager
+				.determineChecksumEncodingFromIrodsData(irodsValue.trim());
 	}
 
 }

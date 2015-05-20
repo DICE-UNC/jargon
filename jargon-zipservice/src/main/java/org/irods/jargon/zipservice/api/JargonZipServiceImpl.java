@@ -3,18 +3,24 @@
  */
 package org.irods.jargon.zipservice.api;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Random;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
 import org.irods.jargon.core.pub.BulkFileOperationsAO;
 import org.irods.jargon.core.pub.BulkFileOperationsAOImpl;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.FileIOOperations;
+import org.irods.jargon.core.pub.io.FileIOOperationsAOImpl;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.zipservice.api.exception.ZipServiceConfigurationException;
 import org.irods.jargon.zipservice.api.exception.ZipServiceException;
@@ -28,7 +34,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class JargonZipServiceImpl extends AbstractJargonService implements JargonZipService {
+public class JargonZipServiceImpl extends AbstractJargonService implements
+		JargonZipService {
 
 	private ZipServiceConfiguration zipServiceConfiguration = null;
 	private final Random random;
@@ -59,16 +66,24 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#getZipServiceConfiguration()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.zipservice.api.JargonZipService#getZipServiceConfiguration
+	 * ()
 	 */
 	@Override
 	public ZipServiceConfiguration getZipServiceConfiguration() {
 		return zipServiceConfiguration;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#setZipServiceConfiguration(org.irods.jargon.zipservice.api.ZipServiceConfiguration)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.zipservice.api.JargonZipService#setZipServiceConfiguration
+	 * (org.irods.jargon.zipservice.api.ZipServiceConfiguration)
 	 */
 	@Override
 	public void setZipServiceConfiguration(
@@ -90,9 +105,64 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		}
 	}
 
-	
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#obtainBundleAsIrodsFileGivenPaths(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.zipservice.api.JargonZipService#
+	 * obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(java.util.List)
+	 */
+	@Override
+	public BundleStreamWrapper obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(
+			final List<String> irodsAbsolutePaths) throws ZipServiceException {
+		log.info("obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths()");
+		FileIOOperations fileIOOperations;
+		try {
+			fileIOOperations = new FileIOOperationsAOImpl(this
+					.getIrodsAccessObjectFactory().getIrodsSession(),
+					this.getIrodsAccount());
+			IRODSFile bundleFile = obtainBundleAsIrodsFileGivenPaths(irodsAbsolutePaths);
+			BundleClosingInputStream inputStream = new BundleClosingInputStream(
+					bundleFile, fileIOOperations);
+			return new BundleStreamWrapper(inputStream, bundleFile.length(),
+					bundleFile.getName());
+		} catch (JargonException | FileNotFoundException e) {
+			log.error("JargonException getting input stream", e);
+			throw new ZipServiceException(
+					"Jargon exception getting input stream", e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.zipservice.api.JargonZipService#
+	 * obtainBundleAsInputStreamGivenPaths(java.util.List)
+	 */
+	@Override
+	public InputStream obtainBundleAsInputStreamGivenPaths(
+			final List<String> irodsAbsolutePaths) throws ZipServiceException {
+		log.info("obtainInputStreamForBundleGivenPaths()");
+		FileIOOperations fileIOOperations;
+		try {
+			fileIOOperations = new FileIOOperationsAOImpl(this
+					.getIrodsAccessObjectFactory().getIrodsSession(),
+					this.getIrodsAccount());
+			IRODSFile bundleFile = obtainBundleAsIrodsFileGivenPaths(irodsAbsolutePaths);
+			return new BundleClosingInputStream(bundleFile, fileIOOperations);
+		} catch (JargonException | FileNotFoundException e) {
+			log.error("JargonException getting input stream", e);
+			throw new ZipServiceException(
+					"Jargon exception getting input stream", e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.zipservice.api.JargonZipService#
+	 * obtainBundleAsIrodsFileGivenPaths(java.util.List)
 	 */
 	@Override
 	public IRODSFile obtainBundleAsIrodsFileGivenPaths(
@@ -134,26 +204,41 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		log.info("create the bundle...");
 		BulkFileOperationsAO bulkFileOperationsAO;
 		try {
-			 bulkFileOperationsAO = this.getIrodsAccessObjectFactory().getBulkFileOperationsAO(getIrodsAccount());
+			bulkFileOperationsAO = this.getIrodsAccessObjectFactory()
+					.getBulkFileOperationsAO(getIrodsAccount());
 		} catch (JargonException e) {
 			log.error("JargonException getting bulkFileOperationsAO", e);
-			throw new ZipServiceException("Jargon exception getting bulkFileOperationsAO", e);
+			throw new ZipServiceException(
+					"Jargon exception getting bulkFileOperationsAO", e);
 		}
-		
+
 		StringBuilder sb = new StringBuilder(parentPath);
 		sb.append("/");
 		sb.append(bundleParent.getName());
-		sb.append(BulkFileOperationsAOImpl.fileExtensionForBundleType(zipServiceConfiguration.getPreferredBundleType()));
+		sb.append(BulkFileOperationsAOImpl
+				.fileExtensionForBundleType(zipServiceConfiguration
+						.getPreferredBundleType()));
 		String zipFileName = sb.toString();
-		
+		IRODSFile zipFile;
+
 		try {
-			bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(zipFileName, bundleParent.getAbsolutePath(), "", this.getZipServiceConfiguration().getPreferredBundleType());
+			bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
+					zipFileName, bundleParent.getAbsolutePath(), "", this
+							.getZipServiceConfiguration()
+							.getPreferredBundleType());
+			zipFile = this.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(this.getIrodsAccount())
+					.instanceIRODSFile(zipFileName);
+			log.info("delete temp files before returning the bundle file");
+			bundleParent.deleteWithForceOption();
+
 		} catch (JargonException e) {
 			log.error("JargonException creating bundle", e);
 			throw new ZipServiceException("Jargon exception creating bundle", e);
 		}
+
 		log.info("bundle is in file:{}", bundleParent);
-		return bundleParent;
+		return zipFile;
 	}
 
 	/**
@@ -174,7 +259,9 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		// now bundle parent exists and is blank, start the copies
 		log.info("starting copies, may take a while...");
 		DataTransferOperations dataTransferOperations;
+
 		try {
+
 			dataTransferOperations = this.getIrodsAccessObjectFactory()
 					.getDataTransferOperations(getIrodsAccount());
 		} catch (JargonException e) {
@@ -186,8 +273,11 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		for (String path : irodsAbsolutePaths) {
 			log.info("copy {}", path);
 			try {
+				TransferControlBlock tcb = this.irodsAccessObjectFactory
+						.buildDefaultTransferControlBlockBasedOnJargonProperties();
+				tcb.getTransferOptions().setForceOption(ForceOption.USE_FORCE);
 				dataTransferOperations.copy(path, "",
-						bundleParent.getAbsolutePath(), null, null);
+						bundleParent.getAbsolutePath(), null, tcb);
 			} catch (JargonException e) {
 				if (this.zipServiceConfiguration.isFailFast()) {
 					log.error(
@@ -289,8 +379,12 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.zipservice.api.JargonZipService#computeBundleSizeInBytes(java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.zipservice.api.JargonZipService#computeBundleSizeInBytes
+	 * (java.util.List)
 	 */
 	@Override
 	public long computeBundleSizeInBytes(List<String> irodsAbsolutePaths)
@@ -305,27 +399,36 @@ public class JargonZipServiceImpl extends AbstractJargonService implements Jargo
 		}
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectAO;
 		try {
-			 collectionAndDataObjectAO = this.getIrodsAccessObjectFactory().getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
+			collectionAndDataObjectAO = this.getIrodsAccessObjectFactory()
+					.getCollectionAndDataObjectListAndSearchAO(
+							getIrodsAccount());
 		} catch (JargonException e) {
-			log.error("JargonException getting CollectionAndDataObjectListAndSearchAO", e);
-			throw new ZipServiceException("Jargon exception getting CollectionAndDataObjectListAndSearchAO", e);
+			log.error(
+					"JargonException getting CollectionAndDataObjectListAndSearchAO",
+					e);
+			throw new ZipServiceException(
+					"Jargon exception getting CollectionAndDataObjectListAndSearchAO",
+					e);
 		}
-		
+
 		long totalCount = 0;
-		
+
 		for (String path : irodsAbsolutePaths) {
 			log.info("getting count for path:{}", path);
 			try {
-				totalCount += collectionAndDataObjectAO.totalDataObjectSizesUnderPath(path);
+				totalCount += collectionAndDataObjectAO
+						.totalDataObjectSizesUnderPath(path);
 			} catch (JargonException e) {
 				log.error("JargonException counting under paths", e);
-				throw new ZipServiceException("Jargon exception getting CollectionAndDataObjectListAndSearchAO", e);
+				throw new ZipServiceException(
+						"Jargon exception getting CollectionAndDataObjectListAndSearchAO",
+						e);
 			}
 		}
-		
+
 		log.info("total count:{}", totalCount);
 		return totalCount;
-		
+
 	}
 
 }
