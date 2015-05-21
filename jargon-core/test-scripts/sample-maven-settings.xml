@@ -49,7 +49,6 @@ java test resources directory -->
 				<jargon.test.irods.user3>test3</jargon.test.irods.user3>
 				<jargon.test.irods.password3>test</jargon.test.irods.password3>
 				<jargon.test.kerberos.user></jargon.test.kerberos.user>
-				<jargon.test.irods.resource3>test1-resc2</jargon.test.irods.resource3>
 				<jargon.test.irods.host>localhost</jargon.test.irods.host>
 				<jargon.test.irods.port>1247</jargon.test.irods.port>
 				<jargon.test.irods.zone>test1</jargon.test.irods.zone>
