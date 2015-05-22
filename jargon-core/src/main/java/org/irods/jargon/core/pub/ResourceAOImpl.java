@@ -719,7 +719,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
 									.getOperator().getOperatorValue()),
-							queryElement.getValue());
+					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 

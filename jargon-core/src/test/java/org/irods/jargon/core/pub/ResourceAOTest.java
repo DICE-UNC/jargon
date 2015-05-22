@@ -844,8 +844,9 @@ public class ResourceAOTest {
 		String child = "reallybogusresourceherebroxxx";
 		resourceAO.addChildToResource(rescName, child, "");
 		// should have no exception in 4.0.3, this test activates on 4.1
+
 		if (!(accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410())) {
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1"))) {
 			throw new ResourceHierarchyException("simulate for pre 4.1 servers");
 		}
 
