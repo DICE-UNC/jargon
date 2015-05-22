@@ -502,6 +502,21 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 	}
 
 	@Test
+	public void testListDataObjectsUnderRootAndIterate() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		List<CollectionAndDataObjectListingEntry> entries = actual
+				.listDataObjectsUnderPath("/", 0);
+		Assert.assertNotNull(entries);
+
+	}
+
+	@Test
 	public void testListDataObjectsUnderPathGivingPagingAwareCollectionListing()
 			throws Exception {
 
