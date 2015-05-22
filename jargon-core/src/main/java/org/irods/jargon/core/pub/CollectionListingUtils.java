@@ -242,6 +242,7 @@ class CollectionListingUtils {
 								.getIRODSAccount());
 		List<Zone> zones = zoneAO.listZones();
 
+		int count = 1;
 		for (Zone zone : zones) {
 			entry = new CollectionAndDataObjectListingEntry();
 			entry.setParentPath("/");
@@ -250,6 +251,8 @@ class CollectionListingUtils {
 			sb.append(zone.getZoneName());
 			entry.setPathOrName(sb.toString());
 			entry.setObjectType(ObjectType.COLLECTION);
+			entry.setCount(count++);
+			entry.setLastResult(true);
 			entries.add(entry);
 		}
 
@@ -275,6 +278,8 @@ class CollectionListingUtils {
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
 		entry.setSpecColType(SpecColType.NORMAL);
+		entry.setLastResult(true);
+
 		return entry;
 	}
 

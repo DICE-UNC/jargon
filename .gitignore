@@ -15,6 +15,7 @@ bin
 *.war
 *.log
 */nbactions.xml  
+*.eml
 nbactions.xml
 testing.properties
 */test-output

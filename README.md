@@ -24,7 +24,6 @@ Jargon-core consists of the following libraries
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-user-profile - allows management of user profile and related configuration data in a user home directory
-* jargon-conveyor - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
