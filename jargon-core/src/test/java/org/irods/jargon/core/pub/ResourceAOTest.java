@@ -55,6 +55,7 @@ public class ResourceAOTest {
 	}
 
 	@Test
+	// OK41
 	public final void testListResourceNames() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -69,7 +70,7 @@ public class ResourceAOTest {
 
 	/**
 	 * Test a listing that has the resource names and resource group name
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -229,9 +230,9 @@ public class ResourceAOTest {
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		// initialize the AVU data
-		String expectedAttribName = "testrattrib1";
-		String expectedAttribValue = "testrvalue1";
-		String expectedAttribUnits = "testr1units";
+		String expectedAttribName = "testFindMetadataValuesByMetadataQueryattrib1";
+		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryvalue1";
+		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryunits";
 
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnits);
@@ -249,6 +250,14 @@ public class ResourceAOTest {
 		List<MetaDataAndDomainData> result = resourceAO
 				.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertFalse("no query result returned", result.isEmpty());
+
+		MetaDataAndDomainData result1 = result.get(0);
+		Assert.assertEquals(MetaDataAndDomainData.MetadataDomain.RESOURCE,
+				result1.getMetadataDomain());
+		Assert.assertEquals(expectedAttribName, result1.getAvuAttribute());
+		Assert.assertEquals(expectedAttribValue, result1.getAvuValue());
+		Assert.assertEquals(expectedAttribUnits, result1.getAvuUnit());
+		Assert.assertEquals(testResource, result1.getDomainObjectUniqueName());
 
 	}
 
@@ -804,7 +813,7 @@ public class ResourceAOTest {
 	}
 
 	@Test
-	// FIXME: waits for resolution of https://github.com/irods/irods/issues/2325
+	// (expected = ResourceHierarchyException.class)
 	public final void testAddMissingChildToParent() throws Exception {
 
 		String rescName = "testAddMissingChildToParentxxxx";
@@ -834,6 +843,12 @@ public class ResourceAOTest {
 
 		String child = "reallybogusresourceherebroxxx";
 		resourceAO.addChildToResource(rescName, child, "");
+		// should have no exception in 4.0.3, this test activates on 4.1
+		/*
+		 * if (!(accessObjectFactory.getIRODSServerProperties(irodsAccount)
+		 * .isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1"))) { throw
+		 * new ResourceHierarchyException("simulate for pre 4.1 servers"); }
+		 */
 
 	}
 

@@ -646,8 +646,6 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		final IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(
 				getIRODSSession(), getIRODSAccount());
 
-		// TODO: ripe for factoring out as applied to other domain objects
-
 		log.info("building a metadata query for: {}", avuQuery);
 
 		StringBuilder query = new StringBuilder();
@@ -656,7 +654,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
 		query.append(COMMA);
-		query.append(RodsGenQueryEnum.COL_R_RESC_NAME.getName());
+		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_NAME.getName());
 		query.append(COMMA);
 		query.append(RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE.getName());
 		query.append(COMMA);
