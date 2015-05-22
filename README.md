@@ -24,7 +24,6 @@ Jargon-core consists of the following libraries
 * jargon-data-utils - additional functionality for dealing with iRODS data, such as building trees, storing information in iRODS on behalf of applications, and doing diffs between local and iRODS
 * jargon-user-tagging - code for using free tagging and other metadata metaphors on top of iRODS
 * jargon-user-profile - allows management of user profile and related configuration data in a user home directory
-* jargon-conveyor - transfer manager for managing and synchronizing data with iRODS
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
@@ -44,19 +43,4 @@ Note that the following bug and feature requests are logged in GitHub with relat
 
 ## Changes
 
-<<<<<<< HEAD
-=======
-### Integration misc with CyberDuck #101
 
-Misc small changes as we test Cyberduck integration with iRODS.  This is a catch-all issue for many minor changes.
-
-### Authenticates as the proxy instead of client #100
-
-Handle authentication with proxy user, per a patch supplied by Tony Edgin at iPlant (Thanks!) 
-
-### Option to obtain MD5 from server after upload is complete #89
-
-Breaking out checksum utilities to its own service object (DataObjectChecksumUtilitiesAO) and beginning to add richer hooks for
-various checksum management scenarios.  This was originally done to have simpler hooks for CyberDuck.  Eventually checksum code in various places will be deprecated and will point to these consolidated services.
-
->>>>>>> master
