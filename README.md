@@ -60,3 +60,6 @@ various checksum management scenarios.  This was originally done to have simpler
 
 Took jargon-conveyor out of this project to clarify roles.  Conveyor is tied to iDrop, and we are making jargon core libs focused on iRODS interactions and protocols.  This also helps with the move to integrate jargon testing into CI at the consortium
 
+###  stand in entries for unviewable dirs in strictacl code need to set last entry #121 
+
+Fake stand-in dirs when doing listings need to set 'last entry' so that looping code with results can use it in for() loops properly.  Was causing an infininite loop in the irods-webdav code.
