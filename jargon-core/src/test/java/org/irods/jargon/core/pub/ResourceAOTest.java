@@ -45,7 +45,7 @@ public class ResourceAOTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -843,6 +843,11 @@ public class ResourceAOTest {
 
 		String child = "reallybogusresourceherebroxxx";
 		resourceAO.addChildToResource(rescName, child, "");
+		// should have no exception in 4.0.3, this test activates on 4.1
+		if (!(accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410())) {
+			throw new ResourceHierarchyException("simulate for pre 4.1 servers");
+		}
 
 	}
 
