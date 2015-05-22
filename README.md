@@ -3,14 +3,14 @@ Jargon Core API
 
 
 # Project: Jargon-core API
-#### Date: 04/21/2015
-#### Release Version: 4.0.2.2-SNAPSHOT
+#### Date: 05/22/2015
+#### Release Version: 4.0.2.2-RELEASE
 #### git tag:
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Work in progress on misc fixes and features for Cyberduck integration
+Misc fixes and features for Cyberduck integration, other minor fixes
 
 Release  milestone https://github.com/DICE-UNC/jargon/milestones/Maintenance%20release%204.0.2.2%20with%20misc%20Cyberduck%20integration
 
