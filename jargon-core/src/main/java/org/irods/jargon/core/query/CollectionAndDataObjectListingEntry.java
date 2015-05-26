@@ -158,15 +158,57 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		return parentPath.hashCode() + pathOrName.hashCode();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		String thisPath = pathOrName.substring(pathOrName.lastIndexOf('/') + 1);
-
-		if (thisPath.isEmpty()) {
-			thisPath = "/";
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("CollectionAndDataObjectListingEntry [");
+		if (parentPath != null) {
+			builder.append("parentPath=").append(parentPath).append(", ");
 		}
-
-		return thisPath;
+		if (pathOrName != null) {
+			builder.append("pathOrName=").append(pathOrName).append(", ");
+		}
+		if (description != null) {
+			builder.append("description=").append(description).append(", ");
+		}
+		if (specialObjectPath != null) {
+			builder.append("specialObjectPath=").append(specialObjectPath)
+					.append(", ");
+		}
+		if (objectType != null) {
+			builder.append("objectType=").append(objectType).append(", ");
+		}
+		if (createdAt != null) {
+			builder.append("createdAt=").append(createdAt).append(", ");
+		}
+		if (modifiedAt != null) {
+			builder.append("modifiedAt=").append(modifiedAt).append(", ");
+		}
+		builder.append("dataSize=").append(dataSize).append(", ");
+		if (ownerName != null) {
+			builder.append("ownerName=").append(ownerName).append(", ");
+		}
+		if (ownerZone != null) {
+			builder.append("ownerZone=").append(ownerZone).append(", ");
+		}
+		if (userFilePermission != null) {
+			builder.append("userFilePermission=")
+					.append(userFilePermission.subList(0,
+							Math.min(userFilePermission.size(), maxLen)))
+					.append(", ");
+		}
+		builder.append("id=").append(id).append(", ");
+		if (specColType != null) {
+			builder.append("specColType=").append(specColType);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	/**

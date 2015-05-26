@@ -34,41 +34,54 @@ public class ObjStat {
 		NORMAL, STRUCT_FILE_COLL, MOUNTED_COLL, LINKED_COLL
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("objStat:");
-		sb.append("\n  absolutePath:");
-		sb.append(absolutePath);
-		sb.append("\n   dataId:");
-		sb.append(dataId);
-		sb.append("\n   specColType:");
-		sb.append(specColType);
-		sb.append("\n   objectType:");
-		sb.append(objectType);
-		sb.append("\n   collectionPath:");
-		sb.append(collectionPath);
-		sb.append("\n   objectPath:");
-		sb.append(objectPath);
-		sb.append("\n   checksum:");
-		sb.append(checksum);
-		sb.append("\n   ownerName:");
-		sb.append(ownerName);
-		sb.append("\n   ownerZone:");
-		sb.append(ownerZone);
-		sb.append("\n  objSize:");
-		sb.append(objSize);
-		sb.append("\n   cacheDir:");
-		sb.append(cacheDir);
-		sb.append("\n   cacheDirty:");
-		sb.append(cacheDirty);
-		sb.append("\n   createdAt:");
-		sb.append("replNumber:");
-		sb.append(replNumber);
-		sb.append(createdAt);
-		sb.append("\n   modifiedAt:");
-		sb.append(modifiedAt);
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("ObjStat [");
+		if (absolutePath != null) {
+			builder.append("absolutePath=").append(absolutePath).append(", ");
+		}
+		if (objectPath != null) {
+			builder.append("objectPath=").append(objectPath).append(", ");
+		}
+		if (objectType != null) {
+			builder.append("objectType=").append(objectType).append(", ");
+		}
+		builder.append("dataId=").append(dataId).append(", ");
+		if (checksum != null) {
+			builder.append("checksum=").append(checksum).append(", ");
+		}
+		if (ownerName != null) {
+			builder.append("ownerName=").append(ownerName).append(", ");
+		}
+		if (ownerZone != null) {
+			builder.append("ownerZone=").append(ownerZone).append(", ");
+		}
+		builder.append("objSize=").append(objSize).append(", ");
+		if (createdAt != null) {
+			builder.append("createdAt=").append(createdAt).append(", ");
+		}
+		if (modifiedAt != null) {
+			builder.append("modifiedAt=").append(modifiedAt).append(", ");
+		}
+		if (specColType != null) {
+			builder.append("specColType=").append(specColType).append(", ");
+		}
+		if (collectionPath != null) {
+			builder.append("collectionPath=").append(collectionPath)
+					.append(", ");
+		}
+		if (cacheDir != null) {
+			builder.append("cacheDir=").append(cacheDir).append(", ");
+		}
+		builder.append("cacheDirty=").append(cacheDirty)
+				.append(", replNumber=").append(replNumber).append("]");
+		return builder.toString();
 	}
 
 	/**

@@ -43,3 +43,8 @@ Note that the following bug and feature requests are logged in GitHub with relat
 
 ## Changes
 
+### add method to get collection and data object listing entry for path #123
+
+Add a convenience method to get 'objStat' type data in the form of collection and data object listing entries to provide ability to create files and dirs in interfaces more easily.
+
+
