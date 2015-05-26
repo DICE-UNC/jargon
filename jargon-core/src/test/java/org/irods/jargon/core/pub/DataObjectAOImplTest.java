@@ -33,12 +33,15 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener.CallbackResponse;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
+import org.irods.jargon.core.utils.CollectionAndPath;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.AssertionHelper;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -5064,6 +5067,65 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+	public void testGetListingEntryForAbsolutePath() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testGetListingEntryForAbsolutePath.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 20);
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		File localFile = new File(localFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		TransferOptions transferOptions = new TransferOptions();
+		transferOptions.setComputeAndVerifyChecksumAfterTransfer(true);
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
+				.instance();
+		transferControlBlock.setTransferOptions(transferOptions);
+
+		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile,
+				transferControlBlock, null, false);
+
+		ObjStat objStat = dataObjectAO.retrieveObjStat(destFile
+				.getAbsolutePath());
+		CollectionAndDataObjectListingEntry actual = dataObjectAO
+				.getListingEntryForAbsolutePath(destFile.getAbsolutePath());
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(destFile
+						.getAbsolutePath());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(objStat.getAbsolutePath(),
+				actual.getFormattedAbsolutePath());
+		Assert.assertEquals(collectionAndPath.getCollectionParent(),
+				actual.getParentPath());
+		Assert.assertEquals(objStat.getObjSize(), actual.getDataSize());
+		Assert.assertEquals(objStat.getOwnerName(), actual.getOwnerName());
+		Assert.assertEquals(objStat.getOwnerZone(), actual.getOwnerZone());
+		Assert.assertEquals(objStat.getCreatedAt(), actual.getCreatedAt());
+		Assert.assertEquals(objStat.getModifiedAt(), actual.getModifiedAt());
+		Assert.assertEquals(objStat.getObjectType(), actual.getObjectType());
+		Assert.assertEquals(objStat.getSpecColType(), actual.getSpecColType());
+
+	}
+
+	@Test
 	public void testPutFileVerifyChecksum() throws Exception {
 		// generate a local scratch file
 		String testFileName = "testPutFileVerifyChecksum.txt";
@@ -5428,7 +5490,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess(null, "hello");
@@ -5440,7 +5502,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("", "hello");
@@ -5452,7 +5514,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("file", null);
@@ -5464,7 +5526,7 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		FileCatalogObjectAOImpl dataObjectAO = (FileCatalogObjectAOImpl) irodsFileSystem
+		FileCatalogObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO.isUserHasAccess("file", "");
