@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class HttpStreamingServiceImplTest {
@@ -45,7 +46,8 @@ public class HttpStreamingServiceImplTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-	@Test
+	@Ignore
+	// see https://github.com/DICE-UNC/jargon/issues/125
 	public final void testStreamHttpUrlContentsToIRODSFileCollectionIsTarget()
 			throws Exception {
 		// generate a local scratch file
@@ -91,7 +93,8 @@ public class HttpStreamingServiceImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// see https://github.com/DICE-UNC/jargon/issues/125
 	public final void testStreamHttpUrlContentsToIRODSFileFileIsTarget()
 			throws Exception {
 		// generate a local scratch file
@@ -157,8 +160,8 @@ public class HttpStreamingServiceImplTest {
 		destFile.mkdirs();
 		HttpStreamingService httpStreamingService = new HttpStreamingServiceImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
-		httpStreamingService
-				.streamHttpUrlContentsToIRODSFile(testUrl, destFile, null, null);
+		httpStreamingService.streamHttpUrlContentsToIRODSFile(testUrl,
+				destFile, null, null);
 
 	}
 
