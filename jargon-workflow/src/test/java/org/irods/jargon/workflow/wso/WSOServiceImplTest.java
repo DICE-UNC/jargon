@@ -242,7 +242,8 @@ public class WSOServiceImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// see https://github.com/DICE-UNC/jargon/issues/124
 	public void testSubmitLocalParameterFileToWorkflowViaStream()
 			throws Exception {
 
@@ -360,7 +361,8 @@ public class WSOServiceImplTest {
 
 	}
 
-	@Test
+	@Ignore
+	// see https://github.com/DICE-UNC/jargon/issues/124
 	public void testListParamAndRunInWorkflowMountedDir() throws Exception {
 
 		if (!testWorkflow) {
