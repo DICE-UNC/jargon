@@ -4,13 +4,13 @@ Jargon Core API
 
 # Project: Jargon-core API
 #### Date:
-#### Release Version: 4.0.2.3-SNAPSHOT
-#### git tag:
+#### Release Version: 4.0.2.3-RC1
+#### git tag: 4.0.2.3-RC1
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Work in progress on misc fixes and features for iRODS 4.1 certification
+Releae candidate for  misc fixes and features for iRODS 4.1 certification
 
 Release  milestone https://github.com/DICE-UNC/jargon/milestones/4.0.2.3%20with%20iRODS%204.1
 
@@ -63,7 +63,7 @@ Added backwards-compatible processing for copy API number and improved overwrite
 
 Resource groups are no longer a concept, so some operations using resource groups now throw an UnsupportedOperationException when ussued against a 4.1+ iRODS host.  These operations continue to be supported pre 4.1.  Unit test code was adjusted.
 
-#### estTrimReplicasForDataObjectByResourceNameInvalid fails with uncaught -78000 #109
+#### testTrimReplicasForDataObjectByResourceNameInvalid fails with uncaught -78000 #109
 
 Added a ResourceNotFoundException in the hierarchy.  For prior to 4.1, will maintain current behavior of silently ignoring, which in retrospect might be a bit odd.  But no surprises!  From 4.1+ will throw a DataNotFoundException.  It's a little messy, may rethink that later.
 
