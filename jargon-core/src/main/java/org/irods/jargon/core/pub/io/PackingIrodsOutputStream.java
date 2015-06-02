@@ -16,14 +16,14 @@ import org.irods.jargon.core.exception.NoResourceDefinedException;
  * an optimal buffer size before sending to iRODS
  * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class PackingIrodsOutputStream extends OutputStream {
 
 	public final int BUFFER_SIZE = 4 * 1024 * 1024; // FIXME: make this a jargon
 													// props later
-	private int byteBufferSizeMax = 32 * 1024;
-	private int ptr = 0;
+	private final int byteBufferSizeMax = 32 * 1024;
+	private final int ptr = 0;
 	private ByteArrayOutputStream byteArrayOutputStream = null;
 	private final IRODSFileOutputStream irodsFileOutputStream;
 
@@ -65,10 +65,17 @@ public class PackingIrodsOutputStream extends OutputStream {
 			int lenToHoldOver = projectedLen - byteBufferSizeMax;
 			int lenToAddToBuff = len - lenToHoldOver;
 			byteArrayOutputStream.write(b, off, lenToAddToBuff);
-			irodsFileOutputStream
+			flushAndResetBufferStream();
 		}
 
 		super.write(b, off, len);
+	}
+
+	private void flushAndResetBufferStream() throws IOException {
+		irodsFileOutputStream.write(byteArrayOutputStream.toByteArray());
+		byteArrayOutputStream.reset();
+		ptr = 0;
+
 	}
 
 	/*
