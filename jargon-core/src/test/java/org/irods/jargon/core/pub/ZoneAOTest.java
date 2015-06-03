@@ -47,6 +47,22 @@ public class ZoneAOTest {
 	}
 
 	@Test
+	public final void testListZoneNames() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		ZoneAO zoneAO = accessObjectFactory.getZoneAO(irodsAccount);
+		List<String> zones = zoneAO.listZoneNames();
+		irodsSession.closeSession();
+		Assert.assertTrue("no zones returned", zones.size() > 0);
+	}
+
+	@Test
 	public final void testFindZoneByZoneName() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();

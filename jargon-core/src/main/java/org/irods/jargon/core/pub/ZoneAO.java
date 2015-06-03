@@ -17,6 +17,14 @@ public interface ZoneAO extends IRODSAccessObject {
 	List<Zone> listZones() throws JargonException;
 
 	/**
+	 * List all zone names
+	 * 
+	 * @return <code>List<String></code>
+	 * @throws JargonException
+	 */
+	List<String> listZoneNames() throws JargonException;
+
+	/**
 	 * Given a zone name, get the detailed information
 	 * 
 	 * @param zoneName

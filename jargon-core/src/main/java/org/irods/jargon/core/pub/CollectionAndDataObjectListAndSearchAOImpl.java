@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.SpecificQueryException;
 import org.irods.jargon.core.packinstr.DataObjInpForObjStat;
 import org.irods.jargon.core.packinstr.Tag;
@@ -1554,6 +1555,42 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		sb.append('/');
 		sb.append(fileName);
 		return retrieveObjectStatForPath(sb.toString());
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
+	 * retrieveObjectStatForPathWithHeuristicPathGuessing(java.lang.String)
+	 */
+	@Override
+	public ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(
+			final String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
+		log.info("retrieveObjectStatForPathWithHeuristicPathGuessing()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
+				this);
+
+		ObjStat objStat = null;
+		try {
+			objStat = retrieveObjectStatForPath(irodsAbsolutePath);
+		} catch (FileNotFoundException fnf) {
+			log.info("got a file not found, try to heuristically produce an objstat");
+			objStat = collectionListingUtils
+					.handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(irodsAbsolutePath);
+		}
+
+		if (objStat == null) {
+			throw new JargonRuntimeException("should not be a null objStat");
+		}
+
+		return objStat;
 
 	}
 

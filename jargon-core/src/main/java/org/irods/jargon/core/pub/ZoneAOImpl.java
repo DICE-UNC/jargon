@@ -202,4 +202,48 @@ public final class ZoneAOImpl extends IRODSGenericAO implements ZoneAO {
 		IRODSQueryResultRow row = resultSet.getResults().get(0);
 		return buildZoneForRow(row);
 	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.ZoneAO#listZoneNames()
+	 */
+	@Override
+	public List<String> listZoneNames() throws JargonException {
+		log.info("listZoneNames()");
+		IRODSGenQueryExecutor irodsGenQueryExecutor = new IRODSGenQueryExecutorImpl(
+				getIRODSSession(), getIRODSAccount());
+
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSet resultSet;
+
+		try {
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_ZONE_NAME)
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_ZONE_NAME,
+							OrderByType.ASC);
+
+			IRODSGenQueryFromBuilder irodsQuery = builder
+					.exportIRODSQueryFromBuilder(50);
+
+			resultSet = irodsGenQueryExecutor
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, "");
+		} catch (JargonQueryException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in query", e);
+		} catch (GenQueryBuilderException e) {
+			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
+			throw new JargonException("error in query", e);
+		}
+
+		List<String> zones = new ArrayList<String>();
+		String zone;
+
+		for (IRODSQueryResultRow row : resultSet.getResults()) {
+			zone = row.getColumn(0);
+			zones.add(zone);
+			log.info("got zone:{}", zone);
+		}
+
+		return zones;
+	}
 }

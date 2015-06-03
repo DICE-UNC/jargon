@@ -352,7 +352,8 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
+	// TODO: check https://github.com/DICE-UNC/jargon/issues/127
 	public void testListCollectionsUnderPathWithPermissionsIncludingACrossZoneUserQueryFromZone2()
 			throws Exception {
 

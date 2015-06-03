@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.FileDriverError;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -46,6 +47,28 @@ class CollectionListingUtils {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionIteratorAOImpl.class);
+
+	/**
+	 * Convenience method to get the access object factory
+	 * 
+	 * @return
+	 * @throws JargonException
+	 */
+	IRODSAccessObjectFactory getIrodsAccessObjectFactory()
+			throws JargonException {
+		return this.collectionAndDataObjectListAndSearchAO
+				.getIRODSAccessObjectFactory();
+	}
+
+	/**
+	 * Convenience method to get irodsAccount
+	 * 
+	 * @return
+	 * @throws JargonException
+	 */
+	IRODSAccount getIrodsAccount() throws JargonException {
+		return this.collectionAndDataObjectListAndSearchAO.getIRODSAccount();
+	}
 
 	/**
      *
@@ -155,6 +178,110 @@ class CollectionListingUtils {
 		 */
 
 		log.info("really is a not found for file:{}", path);
+		throw new FileNotFoundException("unable to find file under path");
+
+	}
+
+	/**
+	 * Heuristic processing allows ObjStats to be returned (though fake) at
+	 * points in the hierarchy were strict ACLs would otherwise preclude
+	 * 
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(
+			final String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
+
+		log.info("handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		ObjStat objStat = null;
+
+		/*
+		 * Do I have compensating actions configured? If not, it's just a file
+		 * not found
+		 */
+		if (!collectionAndDataObjectListAndSearchAO.getJargonProperties()
+				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
+			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+			throw new FileNotFoundException("the object cannot be found");
+		}
+
+		/*
+		 * Phase1 - under root
+		 * 
+		 * Generate an objStat for root
+		 */
+
+		if (irodsAbsolutePath.equals("/")) {
+			log.info("phase1 - under root");
+			objStat = new ObjStat();
+			objStat.setAbsolutePath(irodsAbsolutePath);
+			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setSpecColType(SpecColType.NORMAL);
+			objStat.setStandInGeneratedObjStat(true);
+			log.info("return a fake objStat for root:{}", objStat);
+			return objStat;
+		}
+
+		List<String> components = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(irodsAbsolutePath);
+
+		/*
+		 * Phase2 - first path under root should be a zone
+		 */
+		if (components.size() == 2) {
+			ZoneAO zoneAO = this.getIrodsAccessObjectFactory().getZoneAO(
+					getIrodsAccount());
+			List<String> zones = zoneAO.listZoneNames();
+			boolean found = false;
+			for (String zone : zones) {
+				if (zone.equals(components.get(1))) {
+					log.info("zone matches:{}", zone);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				log.error("not a valid zone, cannot interpolate this path:{}",
+						irodsAbsolutePath);
+				throw new FileNotFoundException("path does not exist");
+			}
+			objStat = new ObjStat();
+			objStat.setAbsolutePath(irodsAbsolutePath);
+			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setSpecColType(SpecColType.NORMAL);
+			objStat.setStandInGeneratedObjStat(true);
+			log.info("return a fake objStat for zone:{}", objStat);
+			return objStat;
+		}
+
+		/*
+		 * Phase3 - create stand in for home under zone
+		 */
+		if (components.size() == 3) {
+			log.info("under zone, add a home obj stat");
+			if (components.get(2).equals("home")) {
+				objStat = new ObjStat();
+				objStat.setAbsolutePath(irodsAbsolutePath);
+				objStat.setObjectType(ObjectType.COLLECTION);
+				objStat.setSpecColType(SpecColType.NORMAL);
+				objStat.setStandInGeneratedObjStat(true);
+				log.info("return a fake objStat for zone/home:{}", objStat);
+				return objStat;
+			}
+		}
+		/*
+		 * Fall through is a legit file not found exception
+		 */
+
+		log.info("really is a not found for file:{}", irodsAbsolutePath);
 		throw new FileNotFoundException("unable to find file under path");
 
 	}
