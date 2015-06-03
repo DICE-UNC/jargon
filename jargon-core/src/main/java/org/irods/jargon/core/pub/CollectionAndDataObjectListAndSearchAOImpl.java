@@ -1133,7 +1133,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throw new JargonException("absolutePathToParent is null");
 		}
 
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPathWithHeuristicPathGuessing(absolutePathToParent);
 		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
 				this);
 
@@ -1168,7 +1168,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("listDataObjectsUnderPathWithPermissions for: {}",
 				absolutePathToParent);
 
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPathWithHeuristicPathGuessing(absolutePathToParent);
 
 		if (objStat == null) {
 			log.error("unable to find objStat for collection path:{}",

@@ -4,6 +4,7 @@
 package org.irods.jargon.core.pub;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -226,6 +227,8 @@ class CollectionListingUtils {
 			objStat.setObjectType(ObjectType.COLLECTION);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
+			objStat.setModifiedAt(new Date());
+			objStat.setCreatedAt(new Date());
 			log.info("return a fake objStat for root:{}", objStat);
 			return objStat;
 		}
@@ -258,6 +261,8 @@ class CollectionListingUtils {
 			objStat.setObjectType(ObjectType.COLLECTION);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
+			objStat.setModifiedAt(new Date());
+			objStat.setCreatedAt(new Date());
 			log.info("return a fake objStat for zone:{}", objStat);
 			return objStat;
 		}
@@ -273,6 +278,8 @@ class CollectionListingUtils {
 				objStat.setObjectType(ObjectType.COLLECTION);
 				objStat.setSpecColType(SpecColType.NORMAL);
 				objStat.setStandInGeneratedObjStat(true);
+				objStat.setModifiedAt(new Date());
+				objStat.setCreatedAt(new Date());
 				log.info("return a fake objStat for zone/home:{}", objStat);
 				return objStat;
 			}
