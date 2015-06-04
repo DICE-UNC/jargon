@@ -819,4 +819,43 @@ public class MiscIRODSUtils {
 		return sBuilder.toString();
 	}
 
+	/**
+	 * Handy method to lop off the first part of a path based on a prefix.
+	 * <p/>
+	 * Does a verification if the first part of the path is not the prefix
+	 * 
+	 * @param prefix
+	 *            <code>String</code> with the prefix to remove
+	 * @param path
+	 *            <code>String</code> with the path for which the prefix is
+	 *            trimmed
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final String subtractPrefixFromGivenPath(final String prefix,
+			final String path) throws JargonException {
+		if (prefix == null) {
+			throw new IllegalArgumentException("null prefix");
+		}
+
+		if (path == null || path.isEmpty()) {
+			throw new IllegalArgumentException("null or empty path");
+		}
+
+		int prefixSize = prefix.length();
+		int pathSize = path.length();
+
+		if (prefixSize >= pathSize) {
+			return path;
+		}
+
+		String pathFirst = path.substring(0, prefixSize);
+		if (!pathFirst.equals(prefix)) {
+			throw new JargonException("given path does not contain the prefix");
+		}
+
+		return path.substring(prefixSize);
+
+	}
+
 }
