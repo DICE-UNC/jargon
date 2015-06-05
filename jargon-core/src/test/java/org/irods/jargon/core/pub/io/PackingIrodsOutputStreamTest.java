@@ -97,7 +97,6 @@ public class PackingIrodsOutputStreamTest {
 	@Test
 	public void testWriteLargeStream2() throws Exception {
 		String testFileName = "testWriteLargeStream2.txt";
-		;
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = FileGenerator
@@ -126,7 +125,8 @@ public class PackingIrodsOutputStreamTest {
 		InputStream fileInputStream = new BufferedInputStream(
 				new FileInputStream(new File(localFilePath)));
 
-		byte[] buffer = new byte[8 * 1024 + 3];
+		int buffSize = 8 * 1024 + 3;
+		byte[] buffer = new byte[buffSize];
 
 		int n = 0;
 

@@ -16,6 +16,14 @@ import org.slf4j.LoggerFactory;
 /**
  * A stream that presents the normal api, but accumulates bytes written until at
  * an optimal buffer size before sending to iRODS
+ * <p/>
+ * Specifically, this wrapper around the iRODS output stream presents the normal
+ * write methods, but will cache them up the the size of the putBufferSize
+ * specified in jargon properties.
+ * <p/>
+ * Flush and close are used and behave as expected, and will properly handle the
+ * close of the underlying iRODS File and stream.
+ * 
  * 
  * @author Mike Conway - DICE
  * 
@@ -24,12 +32,12 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public final int BUFFER_SIZE = 4 * 1024 * 1024; // FIXME: make this a jargon
-													// props later
-	private int byteBufferSizeMax = 32 * 1024;
+	private int byteBufferSizeMax;
 	private int ptr = 0;
 	private ByteArrayOutputStream byteArrayOutputStream = null;
 	private final IRODSFileOutputStream irodsFileOutputStream;
+	private long controlByteCount = 0;
+	private long controlBytesIn = 0;
 
 	/**
 	 * @param irodsFile
@@ -65,17 +73,20 @@ public class PackingIrodsOutputStream extends OutputStream {
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
 		log.debug("write()");
+		controlBytesIn += len;
 		int projectedLen = this.ptr + len;
 		log.info("projectedLen:{}", projectedLen);
 		int lenToHoldOver = len;
+		int myOff = off;
 
-		if (projectedLen > byteBufferSizeMax) {
+		if (projectedLen >= byteBufferSizeMax) {
 			log.info("greater than buffer max so write cache to iRODS");
 			// would overflow the buff, so write partial to iRODS and start a
 			// new buffer
 			lenToHoldOver = projectedLen - byteBufferSizeMax;
 			log.info("holdingOver:{}", lenToHoldOver);
 			int lenToAddToBuff = len - lenToHoldOver;
+			myOff = off + lenToAddToBuff;
 			if (lenToAddToBuff > 0) {
 				log.info("adding to buffer:{}", lenToAddToBuff);
 				byteArrayOutputStream.write(b, off, lenToAddToBuff);
@@ -83,14 +94,17 @@ public class PackingIrodsOutputStream extends OutputStream {
 			flushAndResetBufferStream();
 		}
 
-		byteArrayOutputStream.write(b, off, lenToHoldOver);
+		byteArrayOutputStream.write(b, myOff, lenToHoldOver);
 		ptr += lenToHoldOver;
 		log.info("ptr after write is:{}", ptr);
 	}
 
 	private void flushAndResetBufferStream() throws IOException {
-		irodsFileOutputStream.write(byteArrayOutputStream.toByteArray());
-		byteArrayOutputStream.reset();
+		if (byteArrayOutputStream.size() > 0) {
+			irodsFileOutputStream.write(byteArrayOutputStream.toByteArray());
+			this.controlByteCount += byteArrayOutputStream.size();
+			byteArrayOutputStream.reset();
+		}
 		ptr = 0;
 
 	}
@@ -126,6 +140,9 @@ public class PackingIrodsOutputStream extends OutputStream {
 	public void close() throws IOException {
 		this.flush();
 		log.info("closing underlying stream");
+		if (this.controlByteCount != controlBytesIn) {
+			throw new IOException("control balance error in stream");
+		}
 		irodsFileOutputStream.close();
 	}
 
