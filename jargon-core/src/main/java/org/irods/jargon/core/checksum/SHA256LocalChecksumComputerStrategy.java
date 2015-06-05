@@ -30,7 +30,7 @@ public class SHA256LocalChecksumComputerStrategy extends
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */
 	@Override
-	public ChecksumValue instanceChecksumForPackingInstruction(
+	public ChecksumValue computeChecksumValueForLocalFile(
 			final String localFileAbsolutePath) throws FileNotFoundException,
 			JargonException {
 

@@ -5599,9 +5599,8 @@ public class DataObjectAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ testDir);
 
-		List<DataObject> resources = dataObjectAO
-				.listReplicationsForFileInResGroup(targetIrodsCollection,
-						testFileName, "bogus name");
+		dataObjectAO.listReplicationsForFileInResGroup(targetIrodsCollection,
+				testFileName, "bogus name");
 
 	}
 

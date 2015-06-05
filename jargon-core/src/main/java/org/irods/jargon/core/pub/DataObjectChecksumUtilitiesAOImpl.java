@@ -3,11 +3,15 @@
  */
 package org.irods.jargon.core.pub;
 
+import java.io.File;
+
+import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
 import org.irods.jargon.core.checksum.ChecksumManager;
 import org.irods.jargon.core.checksum.ChecksumManagerImpl;
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.ChecksumInvalidException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp;
@@ -122,6 +126,83 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 		// param checks in delegated method
 		return checksumManager
 				.determineChecksumEncodingFromIrodsData(irodsValue.trim());
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
+	 * verifyLocalFileAgainstIrodsFileChecksum(java.lang.String,
+	 * java.lang.String)
+	 */
+	@Override
+	public ChecksumValue verifyLocalFileAgainstIrodsFileChecksum(
+			final String localAbsolutePath, final String irodsAbsolutePath)
+			throws FileNotFoundException, ChecksumInvalidException,
+			JargonException {
+		log.info("verifyLocalFileAgainstIrodsFileChecksum()");
+		if (localAbsolutePath == null || localAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty localAbsolutePath");
+		}
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		log.info("localAbsolutePath:{}", localAbsolutePath);
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+
+		File localFile = new File(localAbsolutePath);
+
+		if (!localFile.exists()) {
+			throw new FileNotFoundException("local file does not exist");
+		}
+
+		if (!localFile.isFile()) {
+			throw new JargonException(
+					"local file is not a file, it is a collection");
+		}
+
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsAbsolutePath);
+
+		if (!irodsFile.exists()) {
+			throw new FileNotFoundException("irods file does not exist");
+		}
+
+		if (!irodsFile.isFile()) {
+			throw new JargonException(
+					"irods file is not a file, it is a collection");
+		}
+
+		ChecksumValue checksumValue = this
+				.computeChecksumOnDataObject(irodsFile);
+
+		AbstractChecksumComputeStrategy checksumComputeStrategy = this
+				.getIRODSSession().getLocalChecksumComputerFactory()
+				.instance(checksumValue.getChecksumEncoding());
+		ChecksumValue localValue;
+		try {
+			localValue = checksumComputeStrategy
+					.computeChecksumValueForLocalFile(localAbsolutePath);
+		} catch (java.io.FileNotFoundException e) {
+			// Jargon has it's own file not found exception, dumb or not
+			throw new FileNotFoundException(
+					"local file not found during checksum");
+		}
+
+		if (!localValue.equals(checksumValue)) {
+			log.error("checksum mismatch");
+			log.error("local checksum:{}", localValue);
+			log.error("irods checksum:{}", checksumValue);
+			throw new ChecksumInvalidException(
+					"checksum mismatch between local and iRODS");
+		}
+
+		return checksumValue;
+
 	}
 
 }

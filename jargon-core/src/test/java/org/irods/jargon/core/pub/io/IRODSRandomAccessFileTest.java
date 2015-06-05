@@ -244,7 +244,7 @@ public class IRODSRandomAccessFileTest {
 		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
 				.getLocalChecksumComputerFactory()
 				.instance(actualChecksum.getChecksumEncoding())
-				.instanceChecksumForPackingInstruction(localFileName);
+				.computeChecksumValueForLocalFile(localFileName);
 
 		Assert.assertEquals(
 				"irods checksum value doesnt match local after operations",

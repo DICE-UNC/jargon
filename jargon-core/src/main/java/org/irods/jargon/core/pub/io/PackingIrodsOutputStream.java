@@ -10,6 +10,8 @@ import java.io.OutputStream;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A stream that presents the normal api, but accumulates bytes written until at
@@ -20,10 +22,12 @@ import org.irods.jargon.core.exception.NoResourceDefinedException;
  */
 public class PackingIrodsOutputStream extends OutputStream {
 
+	private final Logger log = LoggerFactory.getLogger(this.getClass());
+
 	public final int BUFFER_SIZE = 4 * 1024 * 1024; // FIXME: make this a jargon
 													// props later
-	private final int byteBufferSizeMax = 32 * 1024;
-	private final int ptr = 0;
+	private int byteBufferSizeMax = 32 * 1024;
+	private int ptr = 0;
 	private ByteArrayOutputStream byteArrayOutputStream = null;
 	private final IRODSFileOutputStream irodsFileOutputStream;
 
@@ -41,6 +45,9 @@ public class PackingIrodsOutputStream extends OutputStream {
 		if (irodsFileOutputStream == null) {
 			throw new IllegalArgumentException("null irodsFileOutputStream");
 		}
+
+		byteBufferSizeMax = irodsFileOutputStream.getFileIOOperations()
+				.getJargonProperties().getPutBufferSize();
 		if (byteBufferSizeMax <= 0) {
 			throw new IllegalStateException(
 					"cannot have a zero or negative buffer size");
@@ -57,18 +64,28 @@ public class PackingIrodsOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(byte[] b, int off, int len) throws IOException {
+		log.debug("write()");
 		int projectedLen = this.ptr + len;
+		log.info("projectedLen:{}", projectedLen);
+		int lenToHoldOver = len;
 
 		if (projectedLen > byteBufferSizeMax) {
+			log.info("greater than buffer max so write cache to iRODS");
 			// would overflow the buff, so write partial to iRODS and start a
 			// new buffer
-			int lenToHoldOver = projectedLen - byteBufferSizeMax;
+			lenToHoldOver = projectedLen - byteBufferSizeMax;
+			log.info("holdingOver:{}", lenToHoldOver);
 			int lenToAddToBuff = len - lenToHoldOver;
-			byteArrayOutputStream.write(b, off, lenToAddToBuff);
+			if (lenToAddToBuff > 0) {
+				log.info("adding to buffer:{}", lenToAddToBuff);
+				byteArrayOutputStream.write(b, off, lenToAddToBuff);
+			}
 			flushAndResetBufferStream();
 		}
 
-		super.write(b, off, len);
+		byteArrayOutputStream.write(b, off, lenToHoldOver);
+		ptr += lenToHoldOver;
+		log.info("ptr after write is:{}", ptr);
 	}
 
 	private void flushAndResetBufferStream() throws IOException {
@@ -85,8 +102,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(byte[] b) throws IOException {
-		// TODO Auto-generated method stub
-		super.write(b);
+		this.write(b, 0, b.length);
 	}
 
 	/*
@@ -96,23 +112,36 @@ public class PackingIrodsOutputStream extends OutputStream {
 	 */
 	@Override
 	public void write(int b) throws IOException {
-		// TODO Auto-generated method stub
-		super.write(b);
+		byte buffer[] = { (byte) b };
+
+		this.write(buffer, 0, buffer.length);
 	}
 
-	/**
-	 * @return the byteBufferSize
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.OutputStream#close()
 	 */
-	public int getByteBufferSize() {
-		return byteBufferSize;
+	@Override
+	public void close() throws IOException {
+		this.flush();
+		log.info("closing underlying stream");
+		irodsFileOutputStream.close();
 	}
 
-	/**
-	 * @param byteBufferSize
-	 *            the byteBufferSize to set
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.io.OutputStream#flush()
 	 */
-	public void setByteBufferSize(int byteBufferSize) {
-		this.byteBufferSize = byteBufferSize;
+	@Override
+	public void flush() throws IOException {
+		log.debug("flush()...see if any bytes are buffered");
+		if (ptr > 0) {
+			log.debug("flushing buffered bytes and resetting");
+			flushAndResetBufferStream();
+			log.debug("now flushing the underlying iRODS stream");
+			irodsFileOutputStream.flush();
+		}
 	}
-
 }

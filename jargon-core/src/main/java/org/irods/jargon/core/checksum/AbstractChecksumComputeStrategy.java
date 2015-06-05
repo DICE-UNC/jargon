@@ -24,7 +24,7 @@ public abstract class AbstractChecksumComputeStrategy {
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	public abstract ChecksumValue instanceChecksumForPackingInstruction(
+	public abstract ChecksumValue computeChecksumValueForLocalFile(
 			final String localFileAbsolutePath) throws FileNotFoundException,
 			JargonException;
 

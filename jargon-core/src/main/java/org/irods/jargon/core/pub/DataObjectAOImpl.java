@@ -3096,7 +3096,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			ChecksumValue localChecksum = getIRODSSession()
 					.getLocalChecksumComputerFactory()
 					.instance(irodsChecksum.getChecksumEncoding())
-					.instanceChecksumForPackingInstruction(
+					.computeChecksumValueForLocalFile(
 							localFile.getAbsolutePath());
 			log.info("localChecksum:{}", localChecksum);
 			return irodsChecksum.getChecksumStringValue().equals(
