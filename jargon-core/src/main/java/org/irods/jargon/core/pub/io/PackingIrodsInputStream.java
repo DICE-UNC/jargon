@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -7,6 +7,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * Wrap an iRODS input stream in an accumulating buffer that will emulate reads
  * from a continuous stream while fetching chunks from iRODS in a more optimal
  * size
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -23,17 +24,16 @@ public class PackingIrodsInputStream extends InputStream {
 	private final IRODSFileInputStream irodsFileInputStream;
 	private ByteArrayInputStream byteArrayInputStream = null;
 	private final int bufferSizeForIrods;
-	private int ptr = 0;
-
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public PackingIrodsInputStream(IRODSFileInputStream irodsFileInputStream) {
+	public PackingIrodsInputStream(
+			final IRODSFileInputStream irodsFileInputStream) {
 		super();
 		if (this.irodsFileInputStream == null) {
 			throw new IllegalArgumentException("null irodsFileInputStream");
 		}
 		this.irodsFileInputStream = irodsFileInputStream;
-		this.bufferSizeForIrods = irodsFileInputStream.getFileIOOperations()
+		bufferSizeForIrods = irodsFileInputStream.getFileIOOperations()
 				.getJargonProperties().getGetBufferSize();
 		log.info("buffer size for gets from iRODS:{}", bufferSizeForIrods);
 		if (bufferSizeForIrods <= 0) {
@@ -50,15 +50,37 @@ public class PackingIrodsInputStream extends InputStream {
 		}
 	}
 
+	/**
+	 * Fill up a new byte array input stream from iRODS using the requested
+	 * buffer size, tries to fill that buffer
+	 *
+	 * @throws IOException
+	 */
 	private void fillByteBufferFromIrods() throws IOException {
 		byte[] b = new byte[bufferSizeForIrods];
-		irodsFileInputStream.read(b);
-		byteArrayInputStream = new ByteArrayInputStream(b);
+		int lenRead = IOUtils.read(irodsFileInputStream, b);
+		if (lenRead == -1) {
+			// no bytes read from iRODS
+			log.debug("irods is done");
+			byteArrayInputStream = null;
+		} else {
+			byteArrayInputStream = new ByteArrayInputStream(b, 0, lenRead);
+			log.debug("filled input stream buffer array from iRODS for len:{}",
+					lenRead);
+		}
 	}
 
 	@Override
 	public int read() throws IOException {
-		return 0;
+		byte buffer[] = new byte[1];
+
+		int temp = this.read(buffer, 0, 1);
+
+		if (temp < 0) {
+			return -1;
+		}
+		return (buffer[0] & 0xFF);
+
 	}
 
 	/*
@@ -67,8 +89,8 @@ public class PackingIrodsInputStream extends InputStream {
 	 * @see java.io.InputStream#read(byte[])
 	 */
 	@Override
-	public int read(byte[] b) throws IOException {
-		return super.read(b);
+	public int read(final byte[] b) throws IOException {
+		return this.read(b, 0, b.length);
 	}
 
 	/*
@@ -77,22 +99,65 @@ public class PackingIrodsInputStream extends InputStream {
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
-	public int read(byte[] b, int off, int len) throws IOException {
+	public int read(final byte[] b, final int off, final int len)
+			throws IOException {
 		log.debug("read()");
 		checkAndInitializeNextByteInputStream();
-		// how much are they trying to read? Is it in my buffer?
-		int currentBuff = bufferSizeForIrods - ptr;
-		log.debug("currently have {} in the buffer", currentBuff);
-		if (currentBuff >= len) {
-			// what I want to read is available in the current buffer
-		} else {
-			// see what is in the buff, and copy over, and then see if I need to
-			// re-acquire the remainder
+		/*
+		 * I either have a byte buffer representing a chunk from iRODS, or it's
+		 * null as I hit end of file and no data was read at all.
+		 */
+		if (byteArrayInputStream == null) {
+			log.info("at end of stream");
+			return -1;
 		}
 
-		byteArrayInputStream.read(b, off, currentBuff);
+		int myOffset = off; // offset into current buffer
+		int myLen = len; // length requested
+		int readFromCurrent = 0;
+		int lenToRead = 0;
+		int totalRead = 0;
+		/*
+		 * loop while more to read for current request
+		 */
+		while (myLen > 0) { // fill successive buffers until all requested read
+			// or end of data
+			log.debug("looping to fill buffer while length remaining is:{}",
+					myLen);
 
-		return super.read(b, off, len);
+			if (byteArrayInputStream.available() > 0) { // get what's already
+														// buffered
+				log.debug("have available, copy into output array");
+				lenToRead = Math.min(myLen, byteArrayInputStream.available());
+				readFromCurrent = byteArrayInputStream.read(b, myOffset,
+						lenToRead);
+				myLen -= lenToRead;
+				totalRead += readFromCurrent;
+				myOffset += readFromCurrent;
+				log.debug("read a total of:{} from current buffer",
+						readFromCurrent);
+			} else {
+				log.debug("read all of current stream, get next buffer from iRODS...");
+				fillByteBufferFromIrods();
+				if (byteArrayInputStream == null) {
+					log.debug("end of iRODS data");
+					break;
+				}
+				/*
+				 * I refilled the buffer, consult the available again by
+				 * looping.
+				 */
+			}
+
+		}
+
+		log.debug("len for this read:{}", totalRead);
+		/*
+		 * If I've read some data, return that, otherwise, return a -1 to show
+		 * end of data.
+		 */
+		return totalRead > 0 ? totalRead : -1;
+
 	}
 
 	/*
@@ -101,9 +166,19 @@ public class PackingIrodsInputStream extends InputStream {
 	 * @see java.io.InputStream#skip(long)
 	 */
 	@Override
-	public long skip(long n) throws IOException {
-		// TODO Auto-generated method stub
-		return super.skip(n);
+	public long skip(final long n) throws IOException {
+
+		long mySkip = n;
+		checkAndInitializeNextByteInputStream(); // if not read anything yet
+		if (byteArrayInputStream.available() > 0) {
+			long toSkip = Math.min(n, byteArrayInputStream.available());
+			log.debug("skipping in byte buffer:{}", toSkip);
+			mySkip -= toSkip;
+		}
+
+		byteArrayInputStream = null;// clear the stream so it's cached at the
+									// next pos
+		return irodsFileInputStream.skip(mySkip);
 	}
 
 	/*
@@ -113,8 +188,7 @@ public class PackingIrodsInputStream extends InputStream {
 	 */
 	@Override
 	public int available() throws IOException {
-		// TODO Auto-generated method stub
-		return super.available();
+		return irodsFileInputStream.available();
 	}
 
 	/*
@@ -124,8 +198,7 @@ public class PackingIrodsInputStream extends InputStream {
 	 */
 	@Override
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
-		super.close();
+		irodsFileInputStream.close();
 	}
 
 	/*
@@ -135,8 +208,7 @@ public class PackingIrodsInputStream extends InputStream {
 	 */
 	@Override
 	public synchronized void reset() throws IOException {
-		// TODO Auto-generated method stub
-		super.reset();
+		irodsFileInputStream.reset();
 	}
 
 	/*
@@ -146,8 +218,7 @@ public class PackingIrodsInputStream extends InputStream {
 	 */
 	@Override
 	public boolean markSupported() {
-		// TODO Auto-generated method stub
-		return super.markSupported();
+		return irodsFileInputStream.markSupported();
 	}
 
 }
