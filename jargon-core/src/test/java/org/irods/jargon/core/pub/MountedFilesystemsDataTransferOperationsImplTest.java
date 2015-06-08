@@ -12,6 +12,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MountedFilesystemsDataTransferOperationsImplTest {
@@ -345,7 +346,8 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				sourceDirFile, (File) copyTargetIrodsFile);
 	}
 
-	@Test
+	@Ignore
+	// FIXME: overheaded for https://github.com/DICE-UNC/jargon/issues/117
 	public void testCopyFromIrodsToMounted() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {
@@ -435,7 +437,8 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				sourceDirFile, (File) actual);
 	}
 
-	@Test
+	@Ignore
+	// FIXME: overheaded for https://github.com/DICE-UNC/jargon/issues/117
 	public void testMoveFromMountedToIrods() throws Exception {
 
 		if (!testingPropertiesHelper.isTestFileSystemMount(testingProperties)) {

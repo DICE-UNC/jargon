@@ -298,7 +298,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * put a file with no force, there will be no callback listener
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -336,7 +336,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * put a file with no force configured and a callback listener
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -378,7 +378,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * put a file with ask listener configured and a callback listener that says
 	 * don't overwrite
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -438,7 +438,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * put a file with ask listener configured and a callback listener that says
 	 * don't overwrite for all files
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -497,7 +497,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * put a file with ask listener configured and a callback listener that says
 	 * overwrite for this one file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -556,7 +556,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * put a file with ask listener configured and a callback listener that says
 	 * overwrite for this one file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -697,7 +697,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
 	 * an exception
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -990,7 +990,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get when the local file aready exists (should throw an error for
 	 * overwrite)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -1043,7 +1043,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get when the local file aready exists (should throw an error for
 	 * overwrite)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1111,7 +1111,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get when the local file aready exists, ask the callback listener,
 	 * and get a no for this file. This should not be in error
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1199,7 +1199,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get with an overwrite situation, callback listener set to be asked,
 	 * but no callback listener provided (this is an error state)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -1279,7 +1279,7 @@ public class DataObjectAOImplTest {
 	 * Do a get when the local file aready exists, ask the callback listener,
 	 * and get a no all for this file. This should not be in error, and should
 	 * update the transfer options
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1367,7 +1367,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get when the local file aready exists (should throw an error for
 	 * overwrite)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1454,7 +1454,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Do a get when the local file aready exists (should throw an error for
 	 * overwrite)
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -1515,7 +1515,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Do a get when the local file aready exists, but the force option is set
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1576,7 +1576,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Get a data object where the source name and the target name are
 	 * different. It should be retrieved as the target name.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1687,7 +1687,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Seems to now really mean much especially on windows running as root
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -2363,7 +2363,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Add 2 avu's that are the same except the attrib value is upper case in
 	 * the second. A case insensiitive query should return both
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -2637,7 +2637,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Normal copy operation with tcb to noforce option, should just copy the
 	 * file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -2687,7 +2687,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Copy where the source file does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DataNotFoundException.class)
@@ -2724,7 +2724,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Copy where the source file is a collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -2758,7 +2758,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Copy where the source file is null
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -2790,7 +2790,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Copy where the target file is null
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -2821,7 +2821,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Normal copy operation with tcb to noforce option, should just copy the
 	 * file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = OverwriteException.class)
@@ -2869,7 +2869,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * Normal copy operation with tcb to force option, should just copy the file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -3707,9 +3707,9 @@ public class DataObjectAOImplTest {
 	/**
 	 * Added to test appending path in dataObjectAOImpl causes duplicate file
 	 * name #73
-	 * 
+	 *
 	 * https://github.com/DICE-UNC/jargon/issues/73
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -4000,7 +4000,7 @@ public class DataObjectAOImplTest {
 
 	/**
 	 * bug [#1575] [iROD-Chat:10314] jargon-core permissions issue
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -4334,7 +4334,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * [#1575] jargon-core permissions issue Add a user to a group, add that
 	 * group to file permissions, and list the group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -4408,7 +4408,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * [#1575] jargon-core permissions issue Add a user to a group, add that
 	 * group to file permissions, and list the group
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -5014,7 +5014,7 @@ public class DataObjectAOImplTest {
 	/**
 	 * Create a source file in one collection, put to a target iRODS file with a
 	 * different collection not specifying the target file name.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -5598,6 +5598,17 @@ public class DataObjectAOImplTest {
 	public final void testListReplicationsForFileInResGroupNonExistent()
 			throws Exception {
 
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			return;
+		}
+
 		String testFileName = "testListReplicationsForFileInResGroup.txt";
 		String testDir = "testListReplicationsForFileInResGroup";
 
@@ -5605,12 +5616,6 @@ public class DataObjectAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
 								+ testDir);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -5629,12 +5634,51 @@ public class DataObjectAOImplTest {
 
 	}
 
+	@Test(expected = UnsupportedOperationException.class)
+	public final void testListReplicationsForFileInResGroupNonExistentWhenIrods41Plus()
+			throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			throw new UnsupportedOperationException(
+					"throw for expected exception");
+		}
+
+		String testFileName = "testListReplicationsForFileInResGroup.txt";
+		String testDir = "testListReplicationsForFileInResGroup";
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testDir);
+
+		dataObjectAO.listReplicationsForFileInResGroup(targetIrodsCollection,
+				testFileName, "bogus name");
+
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public final void testListReplicationsForFileInResGroupNullCollection()
 			throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			throw new IllegalArgumentException("throw for expected exception");
+		}
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -5650,6 +5694,14 @@ public class DataObjectAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			throw new IllegalArgumentException("throw for expected exception");
+		}
+
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
@@ -5663,6 +5715,14 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			throw new IllegalArgumentException("throw for expected exception");
+		}
 
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
@@ -5893,8 +5953,17 @@ public class DataObjectAOImplTest {
 				targetIrodsCollection, testFileName);
 		Assert.assertEquals("did not count two replicas", 2, replicas);
 
-		dataObjectAO.trimDataObjectReplicas(targetIrodsCollection,
-				testFileName, "invalid resource name", -1, -1, false);
+		try {
+			dataObjectAO.trimDataObjectReplicas(targetIrodsCollection,
+					testFileName, "invalid resource name", -1, -1, false);
+		} catch (DataNotFoundException dnf) {
+			if (irodsFileSystem.getIRODSAccessObjectFactory()
+					.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
+				return;
+			} else {
+				Assert.fail("should not throw an exception here");
+			}
+		}
 
 		replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);

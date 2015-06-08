@@ -4,6 +4,7 @@
 package org.irods.jargon.core.pub;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -148,6 +149,115 @@ class CollectionListingUtils {
 		 */
 
 		log.info("really is a not found for file:{}", path);
+		throw new FileNotFoundException("unable to find file under path");
+
+	}
+
+	/**
+	 * Heuristic processing allows ObjStats to be returned (though fake) at
+	 * points in the hierarchy were strict ACLs would otherwise preclude
+	 * 
+	 * @param irodsAbsolutePath
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(
+			final String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
+
+		log.info("handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		ObjStat objStat = null;
+
+		/*
+		 * Do I have compensating actions configured? If not, it's just a file
+		 * not found
+		 */
+		if (!irodsAccessObjectFactory.getJargonProperties()
+				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
+			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+			throw new FileNotFoundException("the object cannot be found");
+		}
+
+		/*
+		 * Phase1 - under root
+		 * 
+		 * Generate an objStat for root
+		 */
+
+		if (irodsAbsolutePath.equals("/")) {
+			log.info("phase1 - under root");
+			objStat = new ObjStat();
+			objStat.setAbsolutePath(irodsAbsolutePath);
+			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setSpecColType(SpecColType.NORMAL);
+			objStat.setStandInGeneratedObjStat(true);
+			objStat.setModifiedAt(new Date());
+			objStat.setCreatedAt(new Date());
+			log.info("return a fake objStat for root:{}", objStat);
+			return objStat;
+		}
+
+		List<String> components = MiscIRODSUtils
+				.breakIRODSPathIntoComponents(irodsAbsolutePath);
+
+		/*
+		 * Phase2 - first path under root should be a zone
+		 */
+		if (components.size() == 2) {
+			ZoneAO zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
+			List<String> zones = zoneAO.listZoneNames();
+			boolean found = false;
+			for (String zone : zones) {
+				if (zone.equals(components.get(1))) {
+					log.info("zone matches:{}", zone);
+					found = true;
+					break;
+				}
+			}
+			if (!found) {
+				log.error("not a valid zone, cannot interpolate this path:{}",
+						irodsAbsolutePath);
+				throw new FileNotFoundException("path does not exist");
+			}
+			objStat = new ObjStat();
+			objStat.setAbsolutePath(irodsAbsolutePath);
+			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setSpecColType(SpecColType.NORMAL);
+			objStat.setStandInGeneratedObjStat(true);
+			objStat.setModifiedAt(new Date());
+			objStat.setCreatedAt(new Date());
+			log.info("return a fake objStat for zone:{}", objStat);
+			return objStat;
+		}
+
+		/*
+		 * Phase3 - create stand in for home under zone
+		 */
+		if (components.size() == 3) {
+			log.info("under zone, add a home obj stat");
+			if (components.get(2).equals("home")) {
+				objStat = new ObjStat();
+				objStat.setAbsolutePath(irodsAbsolutePath);
+				objStat.setObjectType(ObjectType.COLLECTION);
+				objStat.setSpecColType(SpecColType.NORMAL);
+				objStat.setStandInGeneratedObjStat(true);
+				objStat.setModifiedAt(new Date());
+				objStat.setCreatedAt(new Date());
+				log.info("return a fake objStat for zone/home:{}", objStat);
+				return objStat;
+			}
+		}
+		/*
+		 * Fall through is a legit file not found exception
+		 */
+
+		log.info("really is a not found for file:{}", irodsAbsolutePath);
 		throw new FileNotFoundException("unable to find file under path");
 
 	}
@@ -824,7 +934,7 @@ class CollectionListingUtils {
 		return queryDataObjectCountsUnderPath(effectiveAbsolutePath);
 
 	}
-	
+
 	long totalDataObjectSizesUnderPath(final ObjStat objStat)
 			throws FileNotFoundException, JargonException {
 
@@ -847,8 +957,7 @@ class CollectionListingUtils {
 		// I cannot get children if this is not a directory (a file has no
 		// children)
 		if (!objStat.isSomeTypeOfCollection()) {
-			log.error(
-					"this is a file, not a directory: {}",
+			log.error("this is a file, not a directory: {}",
 					objStat.getAbsolutePath());
 			throw new JargonException(
 					"attempting to total children under a file at path:"
@@ -868,10 +977,8 @@ class CollectionListingUtils {
 		IRODSQueryResultSet resultSet;
 
 		try {
-			builder
-					.addSelectAsAgregateGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_SIZE,
-							SelectFieldTypes.SUM)
+			builder.addSelectAsAgregateGenQueryValue(
+					RodsGenQueryEnum.COL_DATA_SIZE, SelectFieldTypes.SUM)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							QueryConditionOperators.LIKE,

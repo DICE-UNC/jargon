@@ -9,6 +9,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.ResourceHierarchyException;
 import org.irods.jargon.core.packinstr.StructFileExtAndRegInp.BundleType;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.AssertionHelper;
@@ -269,7 +270,8 @@ public class BulkFileOperationsAOImplTest {
 
 	}
 
-	@Test// FIXME: right now just using tar, need to see about unhandled algos
+	@Test
+	// FIXME: right now just using tar, need to see about unhandled algos
 	// see https://github.com/DICE-UNC/jargon/issues/114
 	public void testCreateBundleZip() throws Exception {
 
@@ -322,9 +324,10 @@ public class BulkFileOperationsAOImplTest {
 				.getIRODSAccessObjectFactory().getBulkFileOperationsAO(
 						irodsAccount);
 
-		bulkFileOperationsAO.createABundleFromIrodsFilesAndStoreInIrods(
-				targetBunFileAbsPath, targetIrodsCollection, "",
-				BundleType.TAR);
+		bulkFileOperationsAO
+				.createABundleFromIrodsFilesAndStoreInIrods(
+						targetBunFileAbsPath, targetIrodsCollection, "",
+						BundleType.TAR);
 
 	}
 
@@ -888,12 +891,17 @@ public class BulkFileOperationsAOImplTest {
 		extractSubdir.mkdirs();
 		extractSubdir.close();
 
-		bulkFileOperationsAO
-				.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
-						targetBunFileAbsPath,
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		try {
+			bulkFileOperationsAO
+					.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
+							targetBunFileAbsPath,
+							targetIrodsCollection,
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		} catch (ResourceHierarchyException e) {
+			// expected when 4.1+
+			throw new DataNotFoundException(e);
+		}
 
 		File targetColl = (File) irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);

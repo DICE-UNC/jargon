@@ -591,6 +591,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            {@link ObjStat} that describes the file
 	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
 	 * 
+	 * 
+	 * 
+	 * 
+	 * 
 	 * } that represents the
 	 *         collections and data objects beneath the parent
 	 * @throws FileNotFoundException
@@ -601,12 +605,38 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 
 	/**
 	 * Given a parent path, get a total of the data sizes underneath that path
-	 * @param absolutePathToParent <code>String</code> with the path to the parent collection, children data objects are totaled
+	 * 
+	 * @param absolutePathToParent
+	 *            <code>String</code> with the path to the parent collection,
+	 *            children data objects are totaled
 	 * @return <code>long</code> with a total size
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	long totalDataObjectSizesUnderPath(String absolutePathToParent)
 			throws FileNotFoundException, JargonException;
+
+	/**
+	 * Retrieve an <code>ObjStat</code> for a given path. This version of
+	 * ObjStat will avoid some file not found exceptions when strict acls
+	 * preclude obtaining an objStat. Path guessing will return fake
+	 * <code>ObjStat</code> for root, zone, and /zone/home directories if asked,
+	 * and if jargon properties allow this.
+	 * <p/>
+	 * Note that the returned <code>ObjStat</code> has an indicator if a
+	 * 'stand-in' objStat was returned.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            <code>String</code> with the absolute path.
+	 * 
+	 * @return {@link ObjStat} associated witha path
+	 * 
+	 * @throws FileNotFoundException
+	 * 
+	 * @throws JargonException
+	 */
+	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(
+			final String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException;
 
 }

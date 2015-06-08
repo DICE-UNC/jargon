@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
@@ -20,6 +20,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	public static final int RENAME_API_NBR = 601;
 	public static final int RENAME_FILE_API_NBR = 627;
 	public static final int COPY_API_NBR = 613;
+	public static final int COPY_API_NBR_410 = 696;
 
 	private final String fromFileAbsolutePath;
 	private final String toFileAbsolutePath;
@@ -31,7 +32,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction for a move of a data object
 	 * (not a collection, there is a different initializer for that).
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
@@ -51,7 +52,38 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance that will do a file copy between two iRODS directories
-	 * 
+	 * using 4.1+ iRODS protocol
+	 *
+	 * @param sourceFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the source file
+	 * @param targetFileAbsolutePath
+	 *            <code>String</code> with the absolute path to the target file
+	 * @param copyToResource
+	 *            <code>String</code> with an optional resource for the target
+	 *            file
+	 * @param sourceFileLength
+	 *            <code>long</code> with the length of the source file
+	 * @param force
+	 *            <code>boolean</code> that indicates whether force option
+	 *            should be set
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final DataObjCopyInp instanceForCopy410(
+			final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String copyToResource,
+			final long sourceFileLength, final boolean force)
+			throws JargonException {
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR_410,
+				sourceFileAbsolutePath, targetFileAbsolutePath,
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
+				sourceFileLength, force);
+		return dataObjCopyInp;
+	}
+
+	/**
+	 * Create an instance that will do a file copy between two iRODS directories
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
@@ -82,7 +114,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction for a move of a collection
 	 * (not a data object, there is a different initializer for that).
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file
 	 * @param targetFileAbsolutePath
@@ -102,7 +134,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the packing instruction for a copy of a collection.
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
@@ -152,13 +184,6 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 					+ operationType);
 		}
 
-		if (apiNumber == RENAME_API_NBR || apiNumber == RENAME_FILE_API_NBR
-				|| apiNumber == COPY_API_NBR) {
-			// ok
-		} else {
-			throw new IllegalArgumentException("invalid apiNumber");
-		}
-
 		if (resourceName == null) {
 			throw new IllegalArgumentException("null resourceName");
 		}
@@ -197,7 +222,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		if (getApiNumber() == COPY_API_NBR) {
+		if (getApiNumber() == COPY_API_NBR
+				|| getApiNumber() == COPY_API_NBR_410) {
 			return getTagValueForCopy();
 		} else {
 			return getTagValueForReplicate();

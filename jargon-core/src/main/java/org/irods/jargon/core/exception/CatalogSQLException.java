@@ -9,7 +9,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class CatalogSQLException extends JargonException {
+public class CatalogSQLException extends InternalIrodsOperationException {
 
 	/**
 	 *

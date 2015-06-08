@@ -10,7 +10,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class NoResourceDefinedException extends JargonException {
+public class NoResourceDefinedException extends ResourceHierarchyException {
 
 	private static final long serialVersionUID = 7273836835708379860L;
 

@@ -25,6 +25,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
 import org.irods.jargon.core.exception.OverwriteException;
+import org.irods.jargon.core.exception.ResourceDoesNotExistException;
 import org.irods.jargon.core.packinstr.DataObjCopyInp;
 import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
@@ -96,7 +97,7 @@ import org.slf4j.LoggerFactory;
  * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
  * specifically indicated in the method signatures or comments, the defaults
  * control such aspects as whether parallel file transfers are done.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
@@ -118,7 +119,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession} that
 	 *            will manage connecting to iRODS.
@@ -370,7 +371,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -430,7 +431,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -483,7 +484,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with a source file or directory in the local
 	 *            file system
@@ -685,7 +686,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * Attempt a put restart across multiple failures, up until a max number of
 	 * retries
-	 * 
+	 *
 	 * @param transferControlBlock
 	 * @param targetFile
 	 * @param fileRestartInfo
@@ -786,7 +787,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * If we are in the realm of a parallel transfer, this method will, if
 	 * configured, autonomously process restarts of long transfers in the case
 	 * of failure up to a threshold value.
-	 * 
+	 *
 	 * @param localFile
 	 *            <code>File</code> with source of the transfer in the local
 	 *            file system
@@ -933,7 +934,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfer. Any restart processing has already been done Do the transfer,
 	 * and catch and process any transfer errors, if configured, so that a
 	 * restart can be attempted.
-	 * 
+	 *
 	 * @param localFile
 	 * @param irodsAbosolutePath
 	 * @param responseToInitialCallForPut
@@ -1023,13 +1024,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * <code>TransferStatusCallbackListener</code> will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
-	 * 
+	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. Setting the resource name in the
 	 *            <code>irodsFileToGet</code> will specify that the file is
 	 *            retrieved from that particular resource.
-	 * 
+	 *
 	 * @param localFileToHoldData
 	 *            <code>File</code> which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
@@ -1174,7 +1175,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		FileRestartInfo myFileRestartInfo = retrieveRestartInfoIfAvailable(
 				fileRestartInfo.getRestartType(),
 				fileRestartInfo.getIrodsAbsolutePath()); // just use file
-															// restart info
+		// restart info
 
 		int offsetInMillis = 10000;
 		while (true) {
@@ -1240,7 +1241,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Incorporate user responses in the case of a potential overwrite of data
-	 * 
+	 *
 	 * @param sourceFile
 	 * @param transferControlBlock
 	 * @param transferStatusCallbackListener
@@ -1348,7 +1349,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * client-side rule actions, or other occasions where the get operation
 	 * needs to be directly processed and there can be no other intervening XML
 	 * protocol operations.
-	 * 
+	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. The resource of the
@@ -1422,8 +1423,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * in iRODS may 'turn off' such parallel transfers. In that case, the length
 	 * usually referred to returns as a zero, and the number of threads will be
 	 * zero. This must be handled.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsFileToGet
 	 * @param localFileToHoldData
 	 * @param dataObjInp
@@ -1629,7 +1630,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * An initial request to get the file has been sent. iRODS may come back and
 	 * decide (based on a rule) to not do a parallel transfer, in which case,
 	 * the file will be streamed normally.
-	 * 
+	 *
 	 * @param irodsSourceFile
 	 * @param localFileToHoldData
 	 * @param transferOptions
@@ -1713,7 +1714,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * See if jargon props say to do long file restarts, and a restart manager
 	 * is configured
-	 * 
+	 *
 	 * @return
 	 * @throws FileRestartManagementException
 	 */
@@ -1764,7 +1765,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Only retrieve a restart if it exists, <code>null</code> if it does not
-	 * 
+	 *
 	 * @param restartType
 	 * @param irodsAbsolutePath
 	 * @return
@@ -2526,8 +2527,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				irodsFileAbsolutePath);
 		log.info("to resource: {}", targetResource);
 
-		final DataObjInp dataObjInp = DataObjInp.instanceForReplicate(
-				irodsFileAbsolutePath, targetResource);
+		DataObjInp dataObjInp;
+		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			dataObjInp = DataObjInp.instanceForReplicate410(
+					irodsFileAbsolutePath, targetResource);
+		} else {
+			dataObjInp = DataObjInp.instanceForReplicate(irodsFileAbsolutePath,
+					targetResource);
+		}
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjInp);
@@ -2610,8 +2617,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
 	 * <p/>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer
@@ -2668,29 +2675,41 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		TransferControlBlock operativeTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
+		boolean force = operativeTransferControlBlock.getTransferOptions()
+				.getForceOption() == ForceOption.USE_FORCE;
 
 		/*
 		 * Handle potential overwrites, will consult the client if so configured
 		 */
-		OverwriteResponse overwriteResponse = evaluateOverwrite(
-				(File) irodsSourceFile, transferControlBlock,
-				transferStatusCallbackListener,
-				operativeTransferControlBlock.getTransferOptions(),
-				(File) myTargetFile);
+		if (!force) {
+			OverwriteResponse overwriteResponse = evaluateOverwrite(
+					(File) irodsSourceFile, transferControlBlock,
+					transferStatusCallbackListener,
+					operativeTransferControlBlock.getTransferOptions(),
+					(File) myTargetFile);
+			if (overwriteResponse == OverwriteResponse.SKIP) {
+				log.info("skipping due to overwrite status");
+				return;
+			} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
+				force = true;
+			}
 
-		boolean force = false;
-
-		if (overwriteResponse == OverwriteResponse.SKIP) {
-			log.info("skipping due to overwrite status");
-			return;
-		} else if (overwriteResponse == OverwriteResponse.PROCEED_WITH_FORCE) {
-			force = true;
 		}
 
-		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForCopy(
-				irodsSourceFile.getAbsolutePath(),
-				myTargetFile.getAbsolutePath(), irodsTargetFile.getResource(),
-				irodsSourceFile.length(), force);
+		DataObjCopyInp dataObjCopyInp;
+		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			dataObjCopyInp = DataObjCopyInp.instanceForCopy410(
+					irodsSourceFile.getAbsolutePath(),
+					myTargetFile.getAbsolutePath(),
+					irodsTargetFile.getResource(), irodsSourceFile.length(),
+					force);
+		} else {
+			dataObjCopyInp = DataObjCopyInp.instanceForCopy(
+					irodsSourceFile.getAbsolutePath(),
+					myTargetFile.getAbsolutePath(),
+					irodsTargetFile.getResource(), irodsSourceFile.length(),
+					force);
+		}
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjCopyInp);
@@ -3898,7 +3917,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Get permission value via specific query for qroup based permissions
-	 * 
+	 *
 	 * @param dataName
 	 * @param userName
 	 * @param objStat
@@ -4122,6 +4141,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("listReplicationsForFileInResGroup");
 
+		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+			throw new UnsupportedOperationException(
+					"resource groups are not a concept in iRODS 4.1+");
+		}
+
 		if (collectionAbsPath == null || collectionAbsPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty collection");
 		}
@@ -4291,7 +4315,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Check the provided <code>TransferControlBlock</code> to make sure the
 	 * <code>TransferOptions</code> are specified. If they are not specified,
 	 * then put in defaults.
-	 * 
+	 *
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} to check for
 	 *            <code>TransferOptions</code>, can be <code>null</code>
@@ -4415,7 +4439,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * General method to trim replicas for a resource or resource group. Check
 	 * the parameter notes carefully.
-	 * 
+	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS parent
 	 *            collection
@@ -4526,6 +4550,17 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.executeRuleFromResource("/rules/trimDataObject.r",
 							irodsRuleParameters, RuleProcessingType.EXTERNAL);
 			log.info("result of action:{}", result.getRuleExecOut().trim());
+		} catch (ResourceDoesNotExistException e) {
+			log.error(
+					"resource does not exist, rethrow as datanotfound for method contract post 4.1",
+					e);
+			if (this.getIRODSAccessObjectFactory()
+					.getIRODSServerProperties(this.getIRODSAccount())
+					.isAtLeastIrods410()) {
+				throw new DataNotFoundException(e);
+			} else {
+				log.warn("logged and ignored for backwards compatability");
+			}
 
 		} catch (InvalidInputParameterException e) {
 			log.warn(
@@ -4651,7 +4686,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Handy method to get a ref to a configured restart manager (may be null)
-	 * 
+	 *
 	 * @return
 	 */
 	private AbstractRestartManager getRestartManager() {

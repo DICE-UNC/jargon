@@ -9,13 +9,13 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 /**
  * Immutable information on an IRODS Server that a connection is connected to.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSServerProperties {
 
-	public static final String JARGON_VERSION = "4.0.2.1";
+	public static final String JARGON_VERSION = "4.0.2.3";
 
 	public enum IcatEnabled {
 		ICAT_ENABLED, NO_ICAT
@@ -31,7 +31,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * This is a supplemental flag that indicates whether a server is eIRODS.
-	 * 
+	 *
 	 * @return <code>true</code> if the given server is an eIRODS servers
 	 */
 	public synchronized boolean isEirods() {
@@ -90,7 +90,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * Does the server (based on version) support connection re-routing?
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if re-routing is
 	 *         supported.
 	 */
@@ -104,7 +104,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * Does the server (based on version) support specific (SQL) query
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if specific query is
 	 *         supported
 	 */
@@ -121,7 +121,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * Does the server (based on version) support tickets?
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if this version
 	 *         supports tickets
 	 */
@@ -138,7 +138,7 @@ public class IRODSServerProperties {
 
 	/**
 	 * Does the server (based on version) support workflow (WSOs)?
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if this version
 	 *         supports WSO workflow
 	 */
@@ -153,7 +153,7 @@ public class IRODSServerProperties {
 	/**
 	 * Does the server (based on version) support case-insensitive gen query
 	 * conditions
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if this version
 	 *         supports case-insensitive gen query conditions
 	 */
@@ -172,7 +172,7 @@ public class IRODSServerProperties {
 	 * Handy method compares the iRODS release version of the target server, and
 	 * will indicate that the iRODS version being connected to is at or above
 	 * the given version.
-	 * 
+	 *
 	 * @param releaseVersion
 	 *            <code>String</code> in standard iRODS version format that will
 	 *            be checked against the currently-connected server.
@@ -188,15 +188,16 @@ public class IRODSServerProperties {
 		return MiscIRODSUtils.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 				getRelVersion(), releaseVersion);
 
-		/*
-		 * 
-		 * 
-		 * // The result is a negative integer if this String object //
-		 * lexicographically precedes the argument string. int compValue =
-		 * getRelVersion().compareToIgnoreCase(releaseVersion); return compValue
-		 * >= 0;
-		 */
+	}
 
+	/**
+	 * Is the server at least iRODS 4.1.0
+	 * 
+	 * @return
+	 */
+	public boolean isAtLeastIrods410() {
+		return this
+				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
 	}
 
 	@Override

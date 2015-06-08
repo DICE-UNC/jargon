@@ -14,9 +14,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInp extends AbstractIRODSPackingInstruction {
 
@@ -42,6 +42,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int CREATE_FILE_API_NBR = 601;
 	public static final int DELETE_FILE_API_NBR = 615;
 	public static final int PHYMOVE_FILE_API_NBR = 631;
+	public static final int PHYMOVE_FILE_API_NBR_41 = 697;
 	public static final int OPEN_FILE_API_NBR = 602;
 	public static final int PUT_FILE_API_NBR = 606;
 	public static final int GET_FILE_API_NBR = 608;
@@ -73,6 +74,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final int ZERO_CREATE_MODE = 0;
 
 	public static final String BS_LEN = "bsLen";
+	private static final int REPLICATE_API_NBR_410 = 695;
 
 	/*
 	 * (Supported modes are:
@@ -145,7 +147,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * class are <code>instance()</code> methods that are specific to the
 	 * desired operation, and are recommended. Some of these values are not used
 	 * in certain protocol operations.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param createMode
@@ -162,7 +164,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@link TransferOptions} that configures details about the
 	 *            underlying technique used in the transfer. Can be set to null
 	 *            if not desired.
-	 * 
+	 *
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
@@ -177,7 +179,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Specify a delete with the force option enabled
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path to the file/data
 	 *            object to be deleted.
@@ -196,7 +198,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Specify a delete with the force option enabled
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path to the file/data
 	 *            object to be deleted.
@@ -215,7 +217,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Specify a physical move where the resource is not supplied.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute file path to the iRODS
 	 *            file/collection to be moved
@@ -234,7 +236,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance for replication of a file to a given resource.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path of the irodsFile to
 	 *            replicate
@@ -262,9 +264,31 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Replicate packing instruction for iRODS 4.1
+	 *
+	 * @param irodsFileAbsolutePath
+	 * @param targetResource
+	 * @return
+	 * @throws JargonException
+	 */
+	public static DataObjInp instanceForReplicate410(
+			String irodsFileAbsolutePath, String targetResource)
+			throws JargonException {
+		if (targetResource == null || targetResource.length() == 0) {
+			throw new JargonException("null or missing destination resource");
+		}
+
+		DataObjInp dataObjInp = DataObjInp.instance(irodsFileAbsolutePath, 0,
+				OpenFlags.READ, 0L, 0L, targetResource, null);
+		dataObjInp.operationType = REPLICATE_OPERATION_TYPE;
+		dataObjInp.setApiNumber(REPLICATE_API_NBR_410);
+		return dataObjInp;
+	}
+
+	/**
 	 * Create an instance for replication of a file to a given resource group.
 	 * This will replicate to all resources in the resource group.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path of the irodsFile to
 	 *            replicate
@@ -299,7 +323,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the protocol for a physical move operation.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path of the irodsFile to
 	 *            move
@@ -325,7 +349,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the protocol to compute a checksum
-	 * 
+	 *
 	 * @param dataObjectAbsolutePath
 	 *            <code>String</code> with the iRODS absolute file path for the
 	 *            data object upon which the checksum will be calculated.
@@ -350,7 +374,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the protocol for a file open operation.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the physical path of the file to
 	 *            open.
@@ -379,7 +403,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * transmission (include the data in the byte stream, use parallel transfer,
 	 * etc). Jargon will interpret the guidance given by iRODS to effect the
 	 * actual data transmission.
-	 * 
+	 *
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
 	 * @param length
@@ -399,7 +423,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            preserved
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public static final DataObjInp instanceForInitialCallToPut(
@@ -443,7 +467,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the packing instruction for a parallel put transfer
-	 * 
+	 *
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
 	 * @param length
@@ -510,7 +534,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * <code>instanceForInitialCallToPut()</code>, and is used when the data is
 	 * to be included in the binary response (e.g. no parallel file transfer or
 	 * other strategy required).
-	 * 
+	 *
 	 * @param destinationAbsolutePath
 	 *            <code>String</code> with the absolute path to the file
 	 * @param length
@@ -586,7 +610,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the proper packing instruction for a get operation
-	 * 
+	 *
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to get
 	 * @param dataObjectSize
@@ -617,7 +641,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the proper packing instruction for a get operation specifying a
 	 * resource
-	 * 
+	 *
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to get
 	 * @param resource
@@ -664,7 +688,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to inquire about the correct host to use for
 	 * a get. This supports re-routing a connection when data resides on a
 	 * different resource server.
-	 * 
+	 *
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to get
 	 * @param resource
@@ -697,7 +721,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to inquire about the correct host to use for
 	 * a put. This supports re-routing a connection when data resides on a
 	 * different resource server.
-	 * 
+	 *
 	 * @param sourceAbsolutePath
 	 *            <code>String</code> with the absolute path to the file to put
 	 * @param resource

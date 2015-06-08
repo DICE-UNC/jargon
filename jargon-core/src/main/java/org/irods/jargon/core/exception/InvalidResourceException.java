@@ -11,7 +11,7 @@ package org.irods.jargon.core.exception;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class InvalidResourceException extends JargonException {
+public class InvalidResourceException extends ResourceHierarchyException {
 
 	/**
 	 *

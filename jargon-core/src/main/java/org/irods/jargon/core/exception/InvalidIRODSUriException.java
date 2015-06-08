@@ -8,13 +8,19 @@ import java.net.URI;
  */
 public final class InvalidIRODSUriException extends JargonException {
 
-    /**
-     * the constructor
-     *
-     * @param invalidURI the invalid URI
-     */
-    public InvalidIRODSUriException(final URI invalidURI) {
-        super("The URI, " + invalidURI + ", is not an iRODS URI.");
-    }
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 273607268535218089L;
+
+	/**
+	 * the constructor
+	 *
+	 * @param invalidURI
+	 *            the invalid URI
+	 */
+	public InvalidIRODSUriException(final URI invalidURI) {
+		super("The URI, " + invalidURI + ", is not an iRODS URI.");
+	}
 
 }
