@@ -74,3 +74,8 @@ Fixed phymove api numbers, maintains backwards compatability
 #### Potential federation error 4.1 iRODS query across zones getting objStat #126
 
 Added heruistic creation of ObjStats in certain occasions where strict ACLs would otherwise cause an error.  This is meant to assist interfaces that need to 'navigate' down from the root, to give these interfaces a chance to get to viewable directories.  This can be turned off with jargon properties.
+
+#### Stream performance enhancements #87
+
+Added PackingInputStream and PackingOutputStream that do read-ahead and write-behind caching so that reads and writes using small buffer sizes from the perspective of a client (e.g. WebDav implemenation)
+so that more performant buffer sizes can be used in protocol operations with irods.
