@@ -22,9 +22,9 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 
 /**
  * Misc utils for dealing with iRODS
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class MiscIRODSUtils {
 
@@ -41,7 +41,7 @@ public class MiscIRODSUtils {
 	 * <p/>
 	 * This is used in places in Jargon so that a default storage resource in an
 	 * iRODS account is not propagated to the wrong zone.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 * @param irodsAccount
 	 * @return
@@ -76,7 +76,7 @@ public class MiscIRODSUtils {
 	 * <code>IRODSAccount</code>. This is done by inspecting the path for first
 	 * zone part, and doing a string comparison with the zone in the
 	 * <code>IRODSAccount</code>.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with an iRODS absolute path.
 	 * @param irodsAccount
@@ -107,7 +107,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Get the zone name from the provided iRODS absolute path
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS file or
 	 *            collection
@@ -152,7 +152,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Handy method to break an iRODS absolute path into the component
 	 * directories.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with an iRODS absolute path.
 	 * @return <code>List<String></code> with the component path elements (the /
@@ -176,7 +176,7 @@ public class MiscIRODSUtils {
 	 * <code>breakIRODSPathIntoComponents</code>, re-create an iRODS absolute
 	 * path by simply stringing together the path components with the iRODS '/'
 	 * delimiter.
-	 * 
+	 *
 	 * @param pathComponents
 	 *            <code>List<String></code> with the iRODS path components.
 	 * @param lastIndex
@@ -222,7 +222,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Handy method to take the given input stream and make it a String
-	 * 
+	 *
 	 * @param inputStream
 	 * @return
 	 * @throws Exception
@@ -246,7 +246,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Pare off a user name if the given user name is in user#zone format,
 	 * there's a complementary method to just get the zone part.
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with a user name that can be just a name,
 	 *            or a user name in user#zone format.
@@ -273,7 +273,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Pare off a zone name if the given user name is in user#zone format,
 	 * there's a complementary method to just get the user part.
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with a user name that can be just a name,
 	 *            or a user name in user#zone format.
@@ -299,7 +299,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Get a displayable byte value from a long value
-	 * 
+	 *
 	 * @param bytes
 	 * @return
 	 */
@@ -315,7 +315,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Create an MD5 Hash of a string value
-	 * 
+	 *
 	 * @param input
 	 *            <code>String</code> with the value to be converted to an MD5
 	 *            Hash
@@ -344,7 +344,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Compute a home directory path in /zone/home/username format given an
 	 * <code>IRODSAccount</code>
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @return <code>String</code> with a computed home directory path
@@ -366,7 +366,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Build the home directory path for the given logged in user in the
 	 * specified federated zone
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @param zone
@@ -396,7 +396,7 @@ public class MiscIRODSUtils {
 	 * <p/>
 	 * This variant is meant to allow the computation of a home directory for an
 	 * arbitrary user based on the zone I'm logged into.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @return <code>String</code> with a computed home directory path
@@ -424,7 +424,7 @@ public class MiscIRODSUtils {
 	 * Helper method for the convention of having a '/zone/home/public'
 	 * directory, especially for use by 'anonymous' accounts. Compute a path to
 	 * that directory
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the logged in user (probably
 	 *            anonymous)
@@ -444,7 +444,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Utility method to get the last part of the given absolute path
-	 * 
+	 *
 	 * @return <code>String</code> with the last component of the absolute path
 	 */
 	public static String getLastPathComponentForGiveAbsolutePath(
@@ -465,7 +465,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * See if jargon supports the given status
-	 * 
+	 *
 	 * @param objStat
 	 * @throws JargonException
 	 */
@@ -490,7 +490,7 @@ public class MiscIRODSUtils {
 	 * Build an absolute path combining the collection parent and the data name,
 	 * accounting for the presence or absence of a trailing slash in the
 	 * collection path.
-	 * 
+	 *
 	 * @param collectionPath
 	 *            <code>String</code> with path of the parent collection
 	 * @param dataName
@@ -528,7 +528,7 @@ public class MiscIRODSUtils {
 	 * Based on the collection type, determine the absolute path used to query
 	 * iRODS. This is meant to handle special collections, such as soft links,
 	 * where the iCAT data may be associated with the canonical path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} with information on the given iRODS object
 	 * @return <code>String</code> with the canonical iRODS path
@@ -554,7 +554,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given an absolue path, split it into a parent name and a child name
-	 * 
+	 *
 	 * @param filePath
 	 *            <code>String</code> with an absolute iRODS path to a
 	 *            collection or data object
@@ -596,7 +596,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Get a <code>List</code> based on the values of the provided enum. Handy
 	 * for creating lists in interfaces and for other purposes
-	 * 
+	 *
 	 * @param enumClass
 	 *            java <code>enum</code>
 	 * @return <code>List<String></code> of enum values
@@ -621,7 +621,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Count occurrances of a character in a string
-	 * 
+	 *
 	 * @param stringToCountOccurrancesIn
 	 *            <code>String</code> to count occurrances in
 	 * @param characterToCount
@@ -647,7 +647,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Pad a given string to the right with spaces to a given length
-	 * 
+	 *
 	 * @param s
 	 *            <code>String</code> to pad
 	 * @param n
@@ -660,7 +660,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Pad a given string to the left with spaces to a given length
-	 * 
+	 *
 	 * @param s
 	 *            <code>String</code> to pad
 	 * @param n
@@ -673,7 +673,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Checks the given path for a length violation
-	 * 
+	 *
 	 * @param path
 	 *            <code>String</code> with an iRODS path to check
 	 * @throws PathTooLongException
@@ -694,7 +694,7 @@ public class MiscIRODSUtils {
 	/**
 	 * build a user home directory path (with no trailing slash) based on the
 	 * common /zone/home/userName scheme given an iRODS account
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAcocunt} for the given user
 	 * @return <code>String</code> with the iRODS user home directory path
@@ -716,7 +716,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Checks the given parent and child path for a length violation
-	 * 
+	 *
 	 * @param parentPath
 	 *            <code>String</code> with a parent path
 	 * @param childPath
@@ -743,15 +743,15 @@ public class MiscIRODSUtils {
 	/*
 	 * Compare the reported version of the server to a test version number to
 	 * see if the actual server is at least at the rev of the test version
-	 * 
+	 *
 	 * @param actualVersionOfServer <code>String</code> that represents the
 	 * actual version of a server in question, such as is reported by the
 	 * startup pack
-	 * 
+	 *
 	 * @param thisReleaseVersion <code>String</code> that represents a test
 	 * version number, asking if the reported server version is at least this
 	 * version
-	 * 
+	 *
 	 * @return <code>boolean</code> that would be <code>true</code>
 	 */
 	public static boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
@@ -777,7 +777,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Create a truncated file name suitable for display in interfaces
-	 * 
+	 *
 	 * @param fileName
 	 * @return
 	 */
@@ -803,7 +803,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Wrap the given string in " characters and return it
-	 * 
+	 *
 	 * @param string
 	 * @return
 	 */
@@ -817,6 +817,45 @@ public class MiscIRODSUtils {
 		sBuilder.append(string);
 		sBuilder.append("\"");
 		return sBuilder.toString();
+	}
+
+	/**
+	 * Handy method to lop off the first part of a path based on a prefix.
+	 * <p/>
+	 * Does a verification if the first part of the path is not the prefix
+	 *
+	 * @param prefix
+	 *            <code>String</code> with the prefix to remove
+	 * @param path
+	 *            <code>String</code> with the path for which the prefix is
+	 *            trimmed
+	 * @return
+	 * @throws JargonException
+	 */
+	public static final String subtractPrefixFromGivenPath(final String prefix,
+			final String path) throws JargonException {
+		if (prefix == null) {
+			throw new IllegalArgumentException("null prefix");
+		}
+
+		if (path == null || path.isEmpty()) {
+			throw new IllegalArgumentException("null or empty path");
+		}
+
+		int prefixSize = prefix.length();
+		int pathSize = path.length();
+
+		if (prefixSize >= pathSize) {
+			throw new JargonException("given path does not contain the prefix");
+		}
+
+		String pathFirst = path.substring(0, prefixSize);
+		if (!pathFirst.equals(prefix)) {
+			throw new JargonException("given path does not contain the prefix");
+		}
+
+		return path.substring(prefixSize);
+
 	}
 
 }

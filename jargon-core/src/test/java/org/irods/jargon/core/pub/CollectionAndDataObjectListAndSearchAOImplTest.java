@@ -45,6 +45,10 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
 	}
 
 	@AfterClass
@@ -394,7 +398,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 							false);
 		}
 
-		CollectionAndDataObjectListAndSearchAOImpl actual = (CollectionAndDataObjectListAndSearchAOImpl) irodsFileSystem
+		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		List<CollectionAndDataObjectListingEntry> entries = actual

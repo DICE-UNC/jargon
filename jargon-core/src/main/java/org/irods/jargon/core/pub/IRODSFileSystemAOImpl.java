@@ -462,7 +462,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 			throws FileNotFoundException, JargonException {
 		log.info("getObjStat(final String irodsAbsolutePath)");
 		return collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+				.retrieveObjectStatForPathWithHeuristicPathGuessing(irodsAbsolutePath);
 	}
 
 	/*

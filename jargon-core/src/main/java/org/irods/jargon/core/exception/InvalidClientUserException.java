@@ -7,23 +7,29 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
  */
 public final class InvalidClientUserException extends JargonException {
 
-    private static String makeMessage(final String explanation) {
-        final String baseMessage = "invalid client user";
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1642876648704250220L;
 
-        if (explanation == null || explanation.isEmpty()) {
-            return baseMessage;
-        } else {
-            return baseMessage + ", " + explanation;
-        }
-    }
+	private static String makeMessage(final String explanation) {
+		final String baseMessage = "invalid client user";
 
-    /**
-     * the constructor
-     *
-     * @param explanation
-     *            <code>String</code> with any additional information
-     */
-    public InvalidClientUserException(final String explanation) {
-        super(makeMessage(explanation), ErrorEnum.CAT_INVALID_CLIENT_USER.getInt());
-    }
+		if (explanation == null || explanation.isEmpty()) {
+			return baseMessage;
+		} else {
+			return baseMessage + ", " + explanation;
+		}
+	}
+
+	/**
+	 * the constructor
+	 *
+	 * @param explanation
+	 *            <code>String</code> with any additional information
+	 */
+	public InvalidClientUserException(final String explanation) {
+		super(makeMessage(explanation), ErrorEnum.CAT_INVALID_CLIENT_USER
+				.getInt());
+	}
 }

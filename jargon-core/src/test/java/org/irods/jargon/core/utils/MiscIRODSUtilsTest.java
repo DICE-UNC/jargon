@@ -7,6 +7,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.PathTooLongException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -104,7 +105,7 @@ public class MiscIRODSUtilsTest {
 
 	/**
 	 * Break an iRODS abs path into components, then rebuild the whole path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -123,7 +124,7 @@ public class MiscIRODSUtilsTest {
 
 	/**
 	 * Break an iRODS abs path into components. Null path should be error
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -135,7 +136,7 @@ public class MiscIRODSUtilsTest {
 	/**
 	 * Break an iRODS abs path into components. If the path is empty, should
 	 * give '/' as the path back
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -154,7 +155,7 @@ public class MiscIRODSUtilsTest {
 	/**
 	 * Break an iRODS abs path into components, then rebuild the whole path when
 	 * the path is just root
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -175,7 +176,7 @@ public class MiscIRODSUtilsTest {
 	/**
 	 * Break an iRODS abs path into components, then rebuild the path using the
 	 * first 3 components
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -330,8 +331,8 @@ public class MiscIRODSUtilsTest {
 		IRODSAccount irodsAccount = null;
 		String userName = "blah";
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -341,8 +342,8 @@ public class MiscIRODSUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = null;
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -352,8 +353,8 @@ public class MiscIRODSUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = "";
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -423,7 +424,7 @@ public class MiscIRODSUtilsTest {
 
 	/**
 	 * Bug [#1575] jargon-core permissions issue
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -431,6 +432,24 @@ public class MiscIRODSUtilsTest {
 		String path = "/";
 		String zone = MiscIRODSUtils.getZoneInPath(path);
 		Assert.assertNotNull("zone was null", zone);
+	}
+
+	@Test(expected = JargonException.class)
+	public void testSubtractPrefixFromGivenPathShorterThanPrefix()
+			throws Exception {
+		String prefix = "/a/prefix/here";
+		String path = "/a/pre";
+		MiscIRODSUtils.subtractPrefixFromGivenPath(prefix, path);
+	}
+
+	@Test
+	public void testSubtractPrefixFromGivenPath() throws Exception {
+		String prefix = "/a/prefix/here";
+		String remainder = "/and/some/more";
+		String path = prefix + remainder;
+		String actual = MiscIRODSUtils
+				.subtractPrefixFromGivenPath(prefix, path);
+		Assert.assertEquals(remainder, actual);
 	}
 
 }

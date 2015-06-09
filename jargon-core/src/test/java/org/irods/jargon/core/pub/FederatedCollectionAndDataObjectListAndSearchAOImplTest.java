@@ -18,6 +18,7 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -352,7 +353,8 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
+	// TODO: check https://github.com/DICE-UNC/jargon/issues/127
 	public void testListCollectionsUnderPathWithPermissionsIncludingACrossZoneUserQueryFromZone2()
 			throws Exception {
 

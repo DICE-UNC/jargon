@@ -70,3 +70,7 @@ Added a ResourceNotFoundException in the hierarchy.  For prior to 4.1, will main
 ####  Read length set to 0 on phymove, likely protocol change #111 
 
 Fixed phymove api numbers, maintains backwards compatability
+
+#### Potential federation error 4.1 iRODS query across zones getting objStat #126
+
+Added heruistic creation of ObjStats in certain occasions where strict ACLs would otherwise cause an error.  This is meant to assist interfaces that need to 'navigate' down from the root, to give these interfaces a chance to get to viewable directories.  This can be turned off with jargon properties.
