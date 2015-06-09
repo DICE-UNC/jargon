@@ -17,6 +17,7 @@ import org.irods.jargon.core.pub.io.IRODSRandomAccessFileTest;
 import org.irods.jargon.core.pub.io.MountedFileSystemIRODSFileInputStreamTest;
 import org.irods.jargon.core.pub.io.MountedFilesystemIRODSFileImplTest;
 import org.irods.jargon.core.pub.io.MountedFilesystemIRODSFileOutputStreamTest;
+import org.irods.jargon.core.pub.io.PackingIrodsInputStreamTest;
 import org.irods.jargon.core.pub.io.PackingIrodsOutputStreamTest;
 import org.irods.jargon.core.pub.io.RemoteExecutionBinaryResultInputStreamTest;
 import org.irods.jargon.core.pub.io.SessionClosingIRODSFIleInputStreamTest;
@@ -40,7 +41,7 @@ import org.junit.runners.Suite;
 		MountedFilesystemIRODSFileImplTest.class,
 		MountedFileSystemIRODSFileInputStreamTest.class,
 		MountedFilesystemIRODSFileOutputStreamTest.class,
-		PackingIrodsOutputStreamTest.class })
+		PackingIrodsOutputStreamTest.class, PackingIrodsInputStreamTest.class })
 public class FileTests {
 
 }

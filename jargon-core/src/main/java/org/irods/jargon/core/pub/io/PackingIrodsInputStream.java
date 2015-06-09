@@ -7,7 +7,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.apache.commons.io.IOUtils;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,20 +15,21 @@ import org.slf4j.LoggerFactory;
  * Wrap an iRODS input stream in an accumulating buffer that will emulate reads
  * from a continuous stream while fetching chunks from iRODS in a more optimal
  * size
- *
+ * 
  * @author Mike Conway - DICE
- *
+ * 
  */
 public class PackingIrodsInputStream extends InputStream {
 	private final IRODSFileInputStream irodsFileInputStream;
 	private ByteArrayInputStream byteArrayInputStream = null;
 	private final int bufferSizeForIrods;
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
+	private boolean done = false;
 
 	public PackingIrodsInputStream(
 			final IRODSFileInputStream irodsFileInputStream) {
 		super();
-		if (this.irodsFileInputStream == null) {
+		if (irodsFileInputStream == null) {
 			throw new IllegalArgumentException("null irodsFileInputStream");
 		}
 		this.irodsFileInputStream = irodsFileInputStream;
@@ -44,6 +44,9 @@ public class PackingIrodsInputStream extends InputStream {
 
 	private void checkAndInitializeNextByteInputStream() throws IOException {
 		log.debug("checkAndInitializeNextByteInputStream()");
+		if (done) {
+			return;
+		}
 		if (byteArrayInputStream == null) {
 			log.debug("Getting next buffer from iRODS...");
 			fillByteBufferFromIrods();
@@ -53,20 +56,20 @@ public class PackingIrodsInputStream extends InputStream {
 	/**
 	 * Fill up a new byte array input stream from iRODS using the requested
 	 * buffer size, tries to fill that buffer
-	 *
+	 * 
 	 * @throws IOException
 	 */
 	private void fillByteBufferFromIrods() throws IOException {
+
 		byte[] b = new byte[bufferSizeForIrods];
-		int lenRead = IOUtils.read(irodsFileInputStream, b);
-		if (lenRead == -1) {
-			// no bytes read from iRODS
-			log.debug("irods is done");
+
+		int length = this.irodsFileInputStream.read(b);
+
+		if (length == -1) {
 			byteArrayInputStream = null;
+			done = true;
 		} else {
-			byteArrayInputStream = new ByteArrayInputStream(b, 0, lenRead);
-			log.debug("filled input stream buffer array from iRODS for len:{}",
-					lenRead);
+			byteArrayInputStream = new ByteArrayInputStream(b, 0, length);
 		}
 	}
 
