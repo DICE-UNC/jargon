@@ -161,4 +161,41 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 		Assert.assertNotNull("did not get checksum", actual);
 
 	}
+
+	@Test
+	public void testVerifyLocalFileAgainstIrodsFileChecksum() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testVerifyLocalFileAgainstIrodsFileChecksum.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameOrig, targetIrodsCollection, testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null,
+				null);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(irodsAccount);
+		ChecksumValue actual = dataObjectChecksumUtilitiesAO
+				.verifyLocalFileAgainstIrodsFileChecksum(fileNameOrig,
+						testFile.getAbsolutePath());
+		Assert.assertNotNull(actual);
+
+	}
 }

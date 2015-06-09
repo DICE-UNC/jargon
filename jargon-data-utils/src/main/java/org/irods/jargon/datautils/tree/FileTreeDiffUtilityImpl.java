@@ -708,7 +708,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 						.getIrodsSession()
 						.getLocalChecksumComputerFactory()
 						.instance(rhsChecksum.getChecksumEncoding())
-						.instanceChecksumForPackingInstruction(
+						.computeChecksumValueForLocalFile(
 								leftHandSide.getAbsolutePath());
 			} catch (FileNotFoundException e) {
 				log.error("file not found computing checksum", e);

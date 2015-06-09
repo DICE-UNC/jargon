@@ -46,7 +46,7 @@ public class SHA256LocalChecksumComputerStrategyTest {
 				.trim();
 		AbstractChecksumComputeStrategy checksumStrategy = new SHA256LocalChecksumComputerStrategy();
 		ChecksumValue actual = checksumStrategy
-				.instanceChecksumForPackingInstruction(localFileName);
+				.computeChecksumValueForLocalFile(localFileName);
 
 		Assert.assertEquals(
 				"did not compute sha256 checksum and string encode it",

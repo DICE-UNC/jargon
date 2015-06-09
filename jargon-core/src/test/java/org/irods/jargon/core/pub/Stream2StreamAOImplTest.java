@@ -93,7 +93,7 @@ public class Stream2StreamAOImplTest {
 		ChecksumValue localChecksum = irodsFileSystem.getIrodsSession()
 				.getLocalChecksumComputerFactory()
 				.instance(irodsChecksum.getChecksumEncoding())
-				.instanceChecksumForPackingInstruction(fileNameOrig);
+				.computeChecksumValueForLocalFile(fileNameOrig);
 
 		Assert.assertEquals(
 				"checksum from orig bytes and irods file do not match",

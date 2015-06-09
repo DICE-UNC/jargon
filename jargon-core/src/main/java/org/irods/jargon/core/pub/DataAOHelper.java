@@ -523,7 +523,7 @@ public final class DataAOHelper extends AOHelper {
 				.getIrodsSession().getLocalChecksumComputerFactory()
 				.instance(checksumEncoding);
 		try {
-			return strategy.instanceChecksumForPackingInstruction(localFile
+			return strategy.computeChecksumValueForLocalFile(localFile
 					.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			log.error("cannot find file for computing local checksum", e);
