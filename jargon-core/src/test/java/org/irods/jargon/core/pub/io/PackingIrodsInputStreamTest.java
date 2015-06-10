@@ -15,6 +15,7 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -359,6 +360,94 @@ public class PackingIrodsInputStreamTest {
 				.getDataObjectChecksumUtilitiesAO(irodsAccount);
 		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
 				newLocal.getAbsolutePath(), irodsFile.getAbsolutePath());
+
+	}
+
+	@Test
+	public final void testSkip1() throws Exception {
+
+		String testFileName = "testSkip1.txt";
+		int fileLength = 93 * 1024 + 7;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						fileLength);
+		File localFile = new File(localFilePath);
+
+		// put scratch file into irods in the right place
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localFile, irodsFile, null, null);
+
+		IRODSFileInputStream fis = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile.getAbsolutePath());
+		PackingIrodsInputStream pis = new PackingIrodsInputStream(fis);
+		long toSkip = 55 * 1024;
+		long skipped = pis.skip(toSkip);
+		pis.close();
+		Assert.assertEquals("didn't get expected skip", toSkip, skipped);
+
+	}
+
+	@Test
+	public final void testSkip2() throws Exception {
+
+		String testFileName = "testSkip2.txt";
+		int fileLength = 93 * 1024 + 7;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = org.irods.jargon.testutils.filemanip.FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						fileLength);
+		File localFile = new File(localFilePath);
+
+		// put scratch file into irods in the right place
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localFile, irodsFile, null, null);
+
+		IRODSFileInputStream fis = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile.getAbsolutePath());
+		PackingIrodsInputStream pis = new PackingIrodsInputStream(fis);
+		long toSkip = 80 * 1024 * 1024;
+		long skipped = pis.skip(toSkip);
+		pis.close();
+		Assert.assertTrue("didn't get expected skip", skipped > 0);
 
 	}
 }

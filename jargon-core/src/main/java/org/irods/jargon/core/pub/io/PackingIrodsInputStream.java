@@ -172,16 +172,32 @@ public class PackingIrodsInputStream extends InputStream {
 	public long skip(final long n) throws IOException {
 
 		long mySkip = n;
+		long skipped = 0;
 		checkAndInitializeNextByteInputStream(); // if not read anything yet
+
 		if (byteArrayInputStream.available() > 0) {
 			long toSkip = Math.min(n, byteArrayInputStream.available());
 			log.debug("skipping in byte buffer:{}", toSkip);
 			mySkip -= toSkip;
+			byteArrayInputStream.skip(toSkip);
+			skipped += toSkip;
 		}
 
-		byteArrayInputStream = null;// clear the stream so it's cached at the
-									// next pos
-		return irodsFileInputStream.skip(mySkip);
+		if (byteArrayInputStream.available() == 0) {
+			byteArrayInputStream = null;// clear the stream so it's cached at
+										// the
+										// next pos
+		}
+
+		/*
+		 * I got everything I could out of the stream, so skip further if need
+		 * be in the actual underlying stream
+		 */
+		if (mySkip > 0) {
+			skipped += irodsFileInputStream.skip(mySkip);
+		}
+
+		return skipped;
 	}
 
 	/*
