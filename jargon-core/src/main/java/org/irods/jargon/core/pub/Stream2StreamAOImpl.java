@@ -281,10 +281,6 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		OutputStream myOutput = null;
 		long timeStart = System.currentTimeMillis();
 
-		/*
-		 * TODO: add a jargon prop for these buffer sizes?
-		 */
-
 		if (inputStream instanceof BufferedInputStream) {
 			log.info("input already buffered");
 			myInput = inputStream;
