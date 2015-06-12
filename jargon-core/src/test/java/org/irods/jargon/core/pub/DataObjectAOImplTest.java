@@ -4000,7 +4000,8 @@ public class DataObjectAOImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test
+	@Ignore
+	// https://github.com/DICE-UNC/jargon/issues/130
 	public final void testSetPermissionsForUserInGroupToObject()
 			throws Exception {
 		// generate a local scratch file
@@ -4013,6 +4014,7 @@ public class DataObjectAOImplTest {
 
 		String testUser = "testUserInGroup123";
 		String testGroup = "testGroupForTestingUser123";
+		String newPassword = "blargh";
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -4037,8 +4039,7 @@ public class DataObjectAOImplTest {
 		user.setUserType(UserTypeEnum.RODS_USER);
 		user.setName(testUser);
 		userAO.addUser(user);
-		userAO.changeAUserPasswordByAnAdmin(testUser, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+		userAO.changeAUserPasswordByAnAdmin(testUser, newPassword);
 
 		UserGroup userGroup = new UserGroup();
 		userGroup.setUserGroupName(testGroup);
@@ -4059,10 +4060,7 @@ public class DataObjectAOImplTest {
 		// log in as the group user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties,
-						testUser,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+						testingProperties, testUser, newPassword);
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
