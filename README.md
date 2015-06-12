@@ -4,15 +4,15 @@ Jargon Core API
 
 # Project: Jargon-core API
 #### Date:
-#### Release Version: 4.0.2.3-RELEASE
-#### git tag: 4.0.2.3-RELEASE
+#### Release Version: 4.0.2.4-SNAPSHOT
+#### git tag: 4.0.2.4.SNAPSHOT
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Release with misc fixes and features for iRODS 4.1 certification
+Maintenance release of Jargon work in progress, focused on bug fixes, more 4.1 compatability, and stream performance for i/o and put/get
 
-Release  milestone https://github.com/DICE-UNC/jargon/milestones/4.0.2.3%20with%20iRODS%204.1
+Release  https://github.com/DICE-UNC/jargon/milestones/Performance%20enhancements%20for%20streams%20and%20put/get%20-%204.0.2.4
 
 =======
 
@@ -42,40 +42,3 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Changes
-
-####  apparent new resource oriented error messages #105 
-
-Added new exceptions in iRODS 4.1, especially for resource hierarchies, and did some organization of the exception tree by introducing new super-classes.
-
-####  resource avu queries failing #104 
-
-Moved resource queries away from old string building approach to the composition by builder approach, enhanced the unit testing.  This fixed some errors in resource AVU queries with 4.1.
-
-####  Read length set to zero on replication with iRODS 4.1 #106 
-
-Added backwards-compatible processing for new replicate API number.  
-
-####  Read length set to zero on copy with iRODS 4.1 #107 
-
-Added backwards-compatible processing for copy API number and improved overwrite logic
-
-####  Error listing replicas in a resource group (cat unknown table) #108 
-
-Resource groups are no longer a concept, so some operations using resource groups now throw an UnsupportedOperationException when ussued against a 4.1+ iRODS host.  These operations continue to be supported pre 4.1.  Unit test code was adjusted.
-
-#### testTrimReplicasForDataObjectByResourceNameInvalid fails with uncaught -78000 #109
-
-Added a ResourceNotFoundException in the hierarchy.  For prior to 4.1, will maintain current behavior of silently ignoring, which in retrospect might be a bit odd.  But no surprises!  From 4.1+ will throw a DataNotFoundException.  It's a little messy, may rethink that later.
-
-####  Read length set to 0 on phymove, likely protocol change #111 
-
-Fixed phymove api numbers, maintains backwards compatability
-
-#### Potential federation error 4.1 iRODS query across zones getting objStat #126
-
-Added heruistic creation of ObjStats in certain occasions where strict ACLs would otherwise cause an error.  This is meant to assist interfaces that need to 'navigate' down from the root, to give these interfaces a chance to get to viewable directories.  This can be turned off with jargon properties.
-
-#### Stream performance enhancements #87
-
-Added PackingInputStream and PackingOutputStream that do read-ahead and write-behind caching so that reads and writes using small buffer sizes from the perspective of a client (e.g. WebDav implemenation)
-so that more performant buffer sizes can be used in protocol operations with irods.
