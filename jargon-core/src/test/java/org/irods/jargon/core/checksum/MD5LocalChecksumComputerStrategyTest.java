@@ -46,7 +46,7 @@ public class MD5LocalChecksumComputerStrategyTest {
 
 		MD5LocalChecksumComputerStrategy checksumStrategy = new MD5LocalChecksumComputerStrategy();
 		ChecksumValue actual = checksumStrategy
-				.instanceChecksumForPackingInstruction(localFileName);
+				.computeChecksumValueForLocalFile(localFileName);
 
 		Assert.assertEquals(
 				"did not compute md5 checksum and string encode it",

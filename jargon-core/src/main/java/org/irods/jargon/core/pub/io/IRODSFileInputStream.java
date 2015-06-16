@@ -205,7 +205,6 @@ public class IRODSFileInputStream extends InputStream {
 	@Override
 	public int read() throws IOException {
 		try {
-			// openFile();
 			byte buffer[] = new byte[1];
 
 			int temp = fileIOOperations.fileRead(fd, buffer, 0, 1);
@@ -304,7 +303,6 @@ public class IRODSFileInputStream extends InputStream {
 
 		int temp;
 		try {
-			// openFile();
 			temp = fileIOOperations.fileRead(fd, b, off, len);
 		} catch (JargonException e) {
 			log.error(
@@ -368,7 +366,6 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	@Override
 	public int read(final byte b[]) throws IOException {
-		// openFile();
 		return read(b, 0, b.length);
 	}
 

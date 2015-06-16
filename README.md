@@ -15,7 +15,6 @@ Work for milestone https://github.com/DICE-UNC/jargon/milestones/4.0.3.1%20secon
 
 https://github.com/DICE-UNC/jargon/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22features+branch+4.0.3%22
 
-
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 Jargon-core consists of the following libraries
@@ -31,9 +30,9 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-*Jargon depends on Java 1.7+
-*Jargon is built using Apache Maven2, see POM for dependencies
-*Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
+* Jargon depends on Java 1.7+
+* Jargon is built using Apache Maven2, see POM for dependencies
+* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
 
 ## Libraries
 
