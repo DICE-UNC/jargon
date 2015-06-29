@@ -119,7 +119,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			return;
 		}
 
-		// build correct packing instruction for copy. The packing instructions
+		// build correct packing instruction for move. The packing instructions
 		// are different for files and collections.
 
 		DataObjCopyInp dataObjCopyInp = null;
