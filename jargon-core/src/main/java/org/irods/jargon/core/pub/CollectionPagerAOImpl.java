@@ -72,8 +72,12 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		this.collectionListingUtils = collectionListingUtils;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods
+	 * .jargon.core.query.PagingAwareCollectionListingDescriptor)
 	 */
 	@Override
 	public PagingAwareCollectionListing retrieveNextPage(
@@ -304,7 +308,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.breakIRODSPathIntoComponents(pagingAwareCollectionListingDescriptor
 								.getParentAbsolutePath()));
 		pagingAwareCollectionListingDescriptor.setObjStat(objStat);
-		pagingAwareCollectionListingDescriptor.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
+		pagingAwareCollectionListingDescriptor
+				.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES);
 
 		log.info("objStat:{}", objStat);
 
@@ -320,14 +325,6 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-
-		/*
-		 * if (objStat.getSpecColType() == SpecColType.NORMAL ||
-		 * objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-		 * descriptor.setPagingStyle(PagingStyle.NONE); } else {
-		 * descriptor.setPagingStyle(PagingStyle.SPLIT_COLLECTIONS_AND_FILES); }
-		 */
-
 		return pagingAwareCollectionListing;
 	}
 
