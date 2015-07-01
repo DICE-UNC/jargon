@@ -7,6 +7,7 @@ import org.irods.jargon.core.unittest.functionaltest.IRODSTenThousandCollections
 import org.irods.jargon.core.unittest.functionaltest.IRODSThousandCollectionsTest;
 import org.irods.jargon.core.unittest.functionaltest.IRODSThousandFilesTest;
 import org.irods.jargon.core.unittest.functionaltest.TestBug38GetFileFromSoftLinkedPublicCollection;
+import org.irods.jargon.core.unittest.functionaltest.TestParallelTransferToIcatRerouteRemoteBug132;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -17,7 +18,8 @@ import org.junit.runners.Suite;
 		ParallelTransferOperationsTest.class,
 		IRODSCommandsFunctionalTest.class,
 		IRODSTenThousandCollectionsTest.class,
-		TestBug38GetFileFromSoftLinkedPublicCollection.class })
+		TestBug38GetFileFromSoftLinkedPublicCollection.class,
+		TestParallelTransferToIcatRerouteRemoteBug132.class })
 public class AllTestIncludingLongRunningAndFunctionalTests {
 
 }
