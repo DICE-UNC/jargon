@@ -15,6 +15,7 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -33,7 +34,7 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static ScratchFileUtils scratchFileUtils = null;
-	public static final String IRODS_TEST_SUBDIR_PATH = "TestParallelTransferToIcatRerouteRemoteBug132";
+	public static final String IRODS_TEST_SUBDIR_PATH = "TestParallelTransferToIcatRerouteRemoteBug132x";
 	private static IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static IRODSFileSystem irodsFileSystem;
 
@@ -113,6 +114,72 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 
 		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
 				null);
+
+		Assert.assertTrue(destFile.exists());
+		Assert.assertEquals(testFileLength, destFile.length());
+
+	}
+
+	@Test
+	public void testBugCasePam() throws Exception {
+
+		if (!testingPropertiesHelper
+				.isTestDistributedResources(testingProperties)) {
+			return;
+		}
+
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
+		String testFileName = "testBugCasePam.txt";
+		long testFileLength = 49 * 1024 * 2014;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						testFileLength);
+
+		String targetIrodsColl = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromPamTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsFile = targetIrodsColl + '/' + testFileName;
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildPamIrodsAccountFromTestProperties(testingProperties);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		destFile.deleteWithForceOption();
+		irodsAccount
+				.setDefaultStorageResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setUseTransferThreadsPool(false);
+		jargonProperties.setLongTransferRestart(false);
+		jargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
+		IRODSFile coll = irodsFileFactory.instanceIRODSFile(targetIrodsColl);
+		coll.mkdirs();
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		File localSourceFile = new File(localFileName);
+
+		destFile.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+
+		dataTransferOperationsAO.putOperation(localSourceFile, destFile, null,
+				null);
+
+		Assert.assertTrue(destFile.exists());
+		Assert.assertEquals(testFileLength, destFile.length());
 
 	}
 
