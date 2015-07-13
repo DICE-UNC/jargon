@@ -34,6 +34,12 @@ public class IRODSAccount implements Serializable {
 	private String password;
 	private String defaultStorageResource;
 	private String homeDirectory;
+	
+	/**
+	 * Client-server negotiation policy. This is an override of the default negotiation policy settings derived from jargon properties.  This allows
+	 * a per-connection specification of an appropriate policy.  If this is left <code>null</code> (the default), then the policy in jargon.properties is respected.
+	 */
+	private ClientServerNegotiationPolicy clientServerNegotiationPolicy = null;
 
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
@@ -525,6 +531,15 @@ public class IRODSAccount implements Serializable {
 
 	private boolean proxied() {
 		return getUserName() != getProxyName() || getZone() != getProxyZone();
+	}
+
+	public synchronized ClientServerNegotiationPolicy getClientServerNegotiationPolicy() {
+		return clientServerNegotiationPolicy;
+	}
+
+	public synchronized void setClientServerNegotiationPolicy(
+			ClientServerNegotiationPolicy clientServerNegotiationPolicy) {
+		this.clientServerNegotiationPolicy = clientServerNegotiationPolicy;
 	}
 
 }
