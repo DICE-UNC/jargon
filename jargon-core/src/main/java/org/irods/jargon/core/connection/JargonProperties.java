@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -502,5 +503,11 @@ public interface JargonProperties {
 	 *         should be done
 	 */
 	boolean isLongTransferRestart();
+	
+	/**
+	 * Retreives the default negotiation policy 
+	 * @return {@link NegotiationPolicy}
+	 */
+	NegotiationPolicy getNegotiationPolicy();
 
 }

@@ -1,5 +1,6 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
@@ -82,6 +83,10 @@ public class SettableJargonProperties implements JargonProperties {
 	 * be notified, no matter how many calls have been made
 	 */
 	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
+	/**
+	 * Default SSL negotiation policy, may be overrideen per request in the IRODSAccount
+	 */
+	private NegotiationPolicy negotiationPolicy = NegotiationPolicy.NO_NEGOTIATION;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -188,6 +193,7 @@ public class SettableJargonProperties implements JargonProperties {
 				.getIntraFileStatusCallbacksNumberCallsInterval();
 		this.intraFileStatusCallbacksTotalBytesInterval = jargonProperties
 				.getIntraFileStatusCallbacksTotalBytesInterval();
+		this.negotiationPolicy = jargonProperties.getNegotiationPolicy();
 
 	}
 
@@ -985,13 +991,8 @@ public class SettableJargonProperties implements JargonProperties {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
-	public synchronized String toString() {
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SettableJargonProperties [useParallelTransfer=");
 		builder.append(useParallelTransfer);
@@ -1106,6 +1107,11 @@ public class SettableJargonProperties implements JargonProperties {
 		builder.append(intraFileStatusCallbacksNumberCallsInterval);
 		builder.append(", intraFileStatusCallbacksTotalBytesInterval=");
 		builder.append(intraFileStatusCallbacksTotalBytesInterval);
+		builder.append(", ");
+		if (negotiationPolicy != null) {
+			builder.append("negotiationPolicy=");
+			builder.append(negotiationPolicy);
+		}
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1181,6 +1187,25 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
 			final long intraFileStatusCallbacksTotalBytesInterval) {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
+	 */
+	@Override
+	public synchronized NegotiationPolicy getNegotiationPolicy() {
+		return this.negotiationPolicy;
+	}
+	
+	/**
+	 * Sets the default negotiation policy for SSL, cannot be <code>null</code>
+	 * @param negotiationPolicy {@link NegotiationPolicy}
+	 */
+	public void setNegotiationPolicy(final NegotiationPolicy negotiationPolicy) {
+		if (negotiationPolicy == null) {
+			throw new IllegalArgumentException("null negotiationPolicy");
+		}
+		this.negotiationPolicy = negotiationPolicy;
 	}
 
 }

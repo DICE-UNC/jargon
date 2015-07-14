@@ -258,7 +258,8 @@ public class IRODSSession {
 				restartManager = new MemoryBasedTransferRestartManager();
 			}
 		} catch (Exception e) {
-			log.warn("unable to load default jargon properties");
+			log.warn("unable to load default jargon properties", e);
+			throw new JargonRuntimeException("unable to load jargon props", e);
 		}
 	}
 
