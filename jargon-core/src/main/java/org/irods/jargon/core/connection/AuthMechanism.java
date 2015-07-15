@@ -57,11 +57,16 @@ abstract class AuthMechanism {
 	 * on configuration and the settings in the <code>IRODSAccount</code>
 	 * visible here.
 	 * 
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} from startup pack
+	 * 
 	 * @throws JargonException
 	 */
 	protected void clientServerNegotiationHook(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
-			final IRODSAccount irodsAccount) throws JargonException {
+			final IRODSAccount irodsAccount,
+			final StartupResponseData startupResponseData)
+			throws JargonException {
 		log.info("clientServerNegotiationHook()");
 		if (irodsMidLevelProtocol.getIrodsConnection()
 				.getOperativeClientServerNegotiationPolicy()
@@ -114,7 +119,8 @@ abstract class AuthMechanism {
 		preConnectionStartup();
 		StartupResponseData startupResponseData = sendStartupPacket(
 				irodsAccount, irodsMidLevelProtocol);
-		clientServerNegotiationHook(irodsMidLevelProtocol, irodsAccount);
+		clientServerNegotiationHook(irodsMidLevelProtocol, irodsAccount,
+				startupResponseData);
 		postConnectionStartupPreAuthentication();
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
 				irodsAccount, irodsMidLevelProtocol, startupResponseData);
