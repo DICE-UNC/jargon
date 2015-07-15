@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedChannelException;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -41,12 +42,48 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called after the startup pack is sent but
-	 * before the actual authentication attempt
+	 * before the actual authentication attempt, and before client/server
+	 * negotiation
 	 * 
 	 * @throws JargonException
 	 */
 	protected void postConnectionStartupPreAuthentication()
 			throws JargonException {
+
+	}
+
+	/**
+	 * After startup pack, the client/server negotiation commences here, based
+	 * on configuration and the settings in the <code>IRODSAccount</code>
+	 * visible here.
+	 * 
+	 * @throws JargonException
+	 */
+	protected void clientServerNegotiationHook(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			final IRODSAccount irodsAccount) throws JargonException {
+		log.info("clientServerNegotiationHook()");
+		if (irodsMidLevelProtocol.getIrodsConnection()
+				.getOperativeClientServerNegotiationPolicy()
+				.getNegotiationPolicy() != NegotiationPolicy.NO_NEGOTIATION) {
+			log.info("negotiation is required");
+			clientServerNegotiation(irodsMidLevelProtocol, irodsAccount);
+		}
+
+	}
+
+	/**
+	 * After startup pack, do a client server negotiation, analogous to
+	 * irods/lib/core/src/sockComm.cpp line 845
+	 * 
+	 * @param irodsMidLevelProtocol
+	 * @param irodsAccount
+	 */
+	private void clientServerNegotiation(
+			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			IRODSAccount irodsAccount) {
+		log.info("clientServerNegotiation()");
+		// FIXME stopped here
 
 	}
 
@@ -77,6 +114,7 @@ abstract class AuthMechanism {
 		preConnectionStartup();
 		StartupResponseData startupResponseData = sendStartupPacket(
 				irodsAccount, irodsMidLevelProtocol);
+		clientServerNegotiationHook(irodsMidLevelProtocol, irodsAccount);
 		postConnectionStartupPreAuthentication();
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
 				irodsAccount, irodsMidLevelProtocol, startupResponseData);

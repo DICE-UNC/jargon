@@ -21,7 +21,8 @@ import org.slf4j.LoggerFactory;
 
 public abstract class AbstractIRODSMidLevelProtocol {
 
-	private final AbstractConnection irodsConnection;
+	private AbstractConnection irodsConnection;
+
 	private IRODSProtocolManager irodsProtocolManager;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
@@ -1264,5 +1265,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 	public long getConnectTimeInMillis() {
 		return getIrodsConnection().getConnectTimeInMillis();
+	}
+
+	/**
+	 * @param irodsConnection
+	 *            the irodsConnection to set
+	 */
+	protected void setIrodsConnection(AbstractConnection irodsConnection) {
+		this.irodsConnection = irodsConnection;
 	}
 }

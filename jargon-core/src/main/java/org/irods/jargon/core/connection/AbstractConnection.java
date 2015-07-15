@@ -60,11 +60,21 @@ public abstract class AbstractConnection {
 	 * Holds the offset into the outputBuffer array for adding new data.
 	 */
 	private int outputOffset = 0;
-	
+
 	/**
-	 * Configured negotation policy, either from jargon default properties, or overridden in the IRODSAccount
+	 * Configured negotation policy, either from jargon default properties, or
+	 * overridden in the IRODSAccount
 	 */
 	private final ClientServerNegotiationPolicy operativeClientServerNegotiationPolicy;
+
+	/**
+	 * @return the operativeClientServerNegotiationPolicy, meaning it has
+	 *         consulted the default jargon properties as well as any override
+	 *         in the <code>IRODSAccount</code>
+	 */
+	ClientServerNegotiationPolicy getOperativeClientServerNegotiationPolicy() {
+		return operativeClientServerNegotiationPolicy;
+	}
 
 	/**
 	 * Constructor with account info to set up socket and information about
@@ -98,14 +108,19 @@ public abstract class AbstractConnection {
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.irodsProtocolManager = irodsProtocolManager;
-		
+
 		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
-			log.info("using override negotiation policy from IRODSAccount:{}", irodsAccount.getClientServerNegotiationPolicy());
-			this.operativeClientServerNegotiationPolicy = irodsAccount.getClientServerNegotiationPolicy();
+			log.info("using override negotiation policy from IRODSAccount:{}",
+					irodsAccount.getClientServerNegotiationPolicy());
+			this.operativeClientServerNegotiationPolicy = irodsAccount
+					.getClientServerNegotiationPolicy();
 		} else {
-			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(irodsSession);
-			this.operativeClientServerNegotiationPolicy = builder.buildClientServerNegotiationPolicyFromJargonProperties();
-			log.info("using default negotiation policy:{}", operativeClientServerNegotiationPolicy);
+			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(
+					irodsSession);
+			this.operativeClientServerNegotiationPolicy = builder
+					.buildClientServerNegotiationPolicyFromJargonProperties();
+			log.info("using default negotiation policy:{}",
+					operativeClientServerNegotiationPolicy);
 		}
 
 		/*

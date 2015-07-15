@@ -69,12 +69,12 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
+	Logger log = LoggerFactory.getLogger(IRODSMidLevelProtocol.class);
+
 	protected IRODSMidLevelProtocol(final AbstractConnection irodsConnection,
 			final IRODSProtocolManager irodsProtocolManager) {
 		super(irodsConnection, irodsProtocolManager);
 	}
-
-	Logger log = LoggerFactory.getLogger(IRODSMidLevelProtocol.class);
 
 	/*
 	 * (non-Javadoc)
@@ -112,7 +112,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * 
 	 * @return
 	 */
-	boolean isPamFlush() { // FIXME: pam flush issue for 3.3.1?
+	boolean isPamFlush() {
 
 		boolean postThreeDotThree = MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
@@ -125,13 +125,13 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
 				&& !postThreeDotThree) {
 			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
-			// can be
-			// set by a
-			// jargon.properties
-			// setting
+		} else if (getPipelineConfiguration().isForcePamFlush()) {
+			/* pam flush an be set by a jargon.properties setting */
 			return true;
+
+		} else if (postThreeDotThree && beforeFourPointOne && isForceSslFlush()) {
 			/*
+			 * 
 			 * Is the server 4.0.X and not yet 4.1? Then I need to worry about
 			 * pam flushes per https://github.com/DICE-UNC/jargon/issues/70 This
 			 * overhead will force the pam flush based on the forceSslFlush
@@ -139,7 +139,6 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			 * to the protocol, preventing a performance drop from unneeded
 			 * flushes later
 			 */
-		} else if (postThreeDotThree && beforeFourPointOne && isForceSslFlush()) {
 			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
 			return true;
 		} else {

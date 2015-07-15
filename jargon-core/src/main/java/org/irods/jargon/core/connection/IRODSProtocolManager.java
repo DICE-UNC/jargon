@@ -174,7 +174,7 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @throws JargonException
 	 */
-	protected void destroy() throws JargonException {
+	protected synchronized void destroy() throws JargonException {
 		log.debug("destroy called, this will terminate the session and clear it");
 
 	}
@@ -186,7 +186,7 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @throws JargonException
 	 */
-	public void initialize() throws JargonException {
+	public synchronized void initialize() throws JargonException {
 		log.debug("initialize called, does nothing by default");
 
 	}
@@ -195,7 +195,7 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @return
 	 */
-	IRODSConnectionFactoryProducingFactory getIrodsConnectionFactoryProducingFactory() {
+	synchronized IRODSConnectionFactoryProducingFactory getIrodsConnectionFactoryProducingFactory() {
 		return irodsConnectionFactoryProducingFactory;
 	}
 
@@ -203,7 +203,7 @@ public abstract class IRODSProtocolManager {
 	 * 
 	 * @param irodsConnectionFactoryProducingFactory
 	 */
-	void setIrodsConnectionFactoryProducingFactory(
+	synchronized void setIrodsConnectionFactoryProducingFactory(
 			final IRODSConnectionFactoryProducingFactory irodsConnectionFactoryProducingFactory) {
 		this.irodsConnectionFactoryProducingFactory = irodsConnectionFactoryProducingFactory;
 	}
