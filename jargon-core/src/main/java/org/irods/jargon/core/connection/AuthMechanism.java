@@ -71,7 +71,8 @@ abstract class AuthMechanism {
 				.getOperativeClientServerNegotiationPolicy()
 				.getSslNegotiationPolicy() != SslNegotiationPolicy.NO_NEGOTIATION) {
 			log.info("negotiation is required");
-			clientServerNegotiation(irodsMidLevelProtocol, irodsAccount);
+			startupResponseData = clientServerNegotiation(
+					irodsMidLevelProtocol, irodsAccount);
 		} else {
 			Tag versionPI = irodsMidLevelProtocol.readMessage();
 			startupResponseData = new StartupResponseData(versionPI.getTag(
@@ -96,12 +97,20 @@ abstract class AuthMechanism {
 	 * 
 	 * @param irodsMidLevelProtocol
 	 * @param irodsAccount
+	 * @return
 	 */
-	private void clientServerNegotiation(
+	private StartupResponseData clientServerNegotiation(
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			IRODSAccount irodsAccount) {
 		log.info("clientServerNegotiation()");
-		// FIXME stopped here
+
+		/*
+		 * I expect to read in a cd_neg_t structure
+		 * 
+		 * struct cs_neg_t { int status_; char result_[MAX_NAME_LEN]; };
+		 */
+
+		return null;
 
 	}
 
