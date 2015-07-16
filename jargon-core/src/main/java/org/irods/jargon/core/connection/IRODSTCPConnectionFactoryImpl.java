@@ -36,7 +36,7 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 				irodsAccount,
 				irodsSession
 						.buildPipelineConfigurationBasedOnJargonProperties(),
-				irodsProtocolManager);
+				irodsProtocolManager, irodsSession);
 		return connection;
 	}
 

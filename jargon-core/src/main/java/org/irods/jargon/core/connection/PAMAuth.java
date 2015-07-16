@@ -93,7 +93,8 @@ public class PAMAuth extends AuthMechanism {
 		log.info("creating secure protcol connection layer");
 		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(
 				irodsAccount, irodsCommands.getPipelineConfiguration(),
-				irodsCommands.getIrodsProtocolManager(), sslSocket);
+				irodsCommands.getIrodsProtocolManager(), sslSocket,
+				irodsCommands.getIrodsSession());
 
 		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
 				secureConnection, irodsCommands.getIrodsProtocolManager());

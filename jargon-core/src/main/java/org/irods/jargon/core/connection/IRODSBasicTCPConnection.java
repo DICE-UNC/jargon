@@ -48,9 +48,10 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
+			final IRODSProtocolManager irodsProtocolManager,
+			final IRODSSession irodsSession) throws JargonException {
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+				irodsSession);
 	}
 
 	static final Logger log = LoggerFactory
@@ -77,14 +78,18 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 *            {@link Socket} being wrapped in this connection, this allows
 	 *            an arbitrary connected socket to be wrapped in low level
 	 *            jargon communication semantics.
+	 * @param IRODSession
+	 *            {@link IRODSSession} associated with this connection
 	 * @throws JargonException
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager, final Socket socket)
+			final IRODSProtocolManager irodsProtocolManager,
+			final Socket socket, final IRODSSession irodsSession)
 			throws JargonException {
 
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+				irodsSession);
 
 		if (socket == null) {
 			throw new IllegalArgumentException("null socket");

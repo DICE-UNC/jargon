@@ -87,12 +87,15 @@ public abstract class AbstractConnection {
 	 *            connection and networking configuration
 	 * @param irodsProtocolManager
 	 *            {@link irodsProtocolManager} that requested this connection
+	 * 
+	 * @param irodsSession
+	 *            {@link IRODSSession} that is associated with this connection
 	 * @throws JargonException
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException {
+			final IRODSProtocolManager irodsProtocolManager,
+			final IRODSSession irodsSession) throws JargonException {
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -108,6 +111,7 @@ public abstract class AbstractConnection {
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.irodsProtocolManager = irodsProtocolManager;
+		this.irodsSession = irodsSession;
 
 		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
 			log.info("using override negotiation policy from IRODSAccount:{}",
