@@ -33,7 +33,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilder {
 		JargonProperties jargonProperties = irodsSession.getJargonProperties();
 		
 		ClientServerNegotiationPolicy clientServerNegotiationPolicy = new ClientServerNegotiationPolicy();
-		clientServerNegotiationPolicy.setNegotiationPolicy(jargonProperties.getNegotiationPolicy());
+		clientServerNegotiationPolicy.setSslNegotiationPolicy(jargonProperties.getNegotiationPolicy());
 		return clientServerNegotiationPolicy;
 	
 	}

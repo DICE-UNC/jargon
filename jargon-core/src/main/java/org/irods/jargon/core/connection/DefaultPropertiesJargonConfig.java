@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.utils.PropertyUtils;
@@ -540,20 +540,20 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	@Override
-	public NegotiationPolicy getNegotiationPolicy() {
+	public SslNegotiationPolicy getNegotiationPolicy() {
 		String policyString = verifyPropExistsAndGetAsString("ssl.negotiation.policy");
 		if (policyString.isEmpty()) {
-			return NegotiationPolicy.NO_NEGOTIATION;
+			return SslNegotiationPolicy.NO_NEGOTIATION;
 		}
 		
-		if (policyString.equals(NegotiationPolicy.CS_NEG_DONT_CARE.name())) {
-			return NegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(NegotiationPolicy.CS_NEG_REFUSE.name())) {
-			return NegotiationPolicy.CS_NEG_REFUSE;
-		} else if (policyString.equals(NegotiationPolicy.CS_NEG_REQ.name())) {
-			return NegotiationPolicy.CS_NEG_REQ;
-		} else if (policyString.equals(NegotiationPolicy.NO_NEGOTIATION.name())) {
-			return NegotiationPolicy.NO_NEGOTIATION;
+		if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE.name())) {
+			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE.name())) {
+			return SslNegotiationPolicy.CS_NEG_REFUSE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
+			return SslNegotiationPolicy.CS_NEG_REQ;
+		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION.name())) {
+			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
 			throw new UnsupportedOperationException("unknown negotiation policy");
 		}

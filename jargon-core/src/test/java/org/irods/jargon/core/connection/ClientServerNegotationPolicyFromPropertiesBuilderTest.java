@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.junit.Test;
 import org.mockito.Mockito;
 
@@ -12,7 +12,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilderTest {
 	public void testClientServerNegotationPolicyFromPropertiesBuilder()
 			throws Exception {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
-		jargonProperties.setNegotiationPolicy(NegotiationPolicy.CS_NEG_REQ);
+		jargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		IRODSSession irodsSession = Mockito.mock(IRODSSession.class);
 		Mockito.when(irodsSession.getJargonProperties()).thenReturn(
 				jargonProperties);
@@ -20,7 +20,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilderTest {
 				irodsSession);
 		ClientServerNegotiationPolicy actual = builder
 				.buildClientServerNegotiationPolicyFromJargonProperties();
-		Assert.assertEquals(NegotiationPolicy.CS_NEG_REQ,
-				actual.getNegotiationPolicy());
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQ,
+				actual.getSslNegotiationPolicy());
 	}
 }

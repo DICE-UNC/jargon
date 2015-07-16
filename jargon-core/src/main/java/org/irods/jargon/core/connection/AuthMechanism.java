@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedChannelException;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
@@ -62,18 +62,31 @@ abstract class AuthMechanism {
 	 * 
 	 * @throws JargonException
 	 */
-	protected void clientServerNegotiationHook(
+	protected StartupResponseData clientServerNegotiationHook(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
-			final IRODSAccount irodsAccount,
-			final StartupResponseData startupResponseData)
-			throws JargonException {
+			final IRODSAccount irodsAccount) throws JargonException {
 		log.info("clientServerNegotiationHook()");
+		StartupResponseData startupResponseData = null;
 		if (irodsMidLevelProtocol.getIrodsConnection()
 				.getOperativeClientServerNegotiationPolicy()
-				.getNegotiationPolicy() != NegotiationPolicy.NO_NEGOTIATION) {
+				.getSslNegotiationPolicy() != SslNegotiationPolicy.NO_NEGOTIATION) {
 			log.info("negotiation is required");
 			clientServerNegotiation(irodsMidLevelProtocol, irodsAccount);
+		} else {
+			Tag versionPI = irodsMidLevelProtocol.readMessage();
+			startupResponseData = new StartupResponseData(versionPI.getTag(
+					"status").getIntValue(), versionPI.getTag("relVersion")
+					.getStringValue(), versionPI.getTag("apiVersion")
+					.getStringValue(), versionPI.getTag("reconnPort")
+					.getIntValue(), versionPI.getTag("reconnAddr")
+					.getStringValue(), versionPI.getTag("cookie")
+					.getStringValue());
+
+			log.info("startup response:{}", startupResponseData);
+			irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 		}
+
+		return startupResponseData;
 
 	}
 
@@ -117,10 +130,9 @@ abstract class AuthMechanism {
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
 		preConnectionStartup();
-		StartupResponseData startupResponseData = sendStartupPacket(
-				irodsAccount, irodsMidLevelProtocol);
-		clientServerNegotiationHook(irodsMidLevelProtocol, irodsAccount,
-				startupResponseData);
+		sendStartupPacket(irodsAccount, irodsMidLevelProtocol);
+		StartupResponseData startupResponseData = clientServerNegotiationHook(
+				irodsMidLevelProtocol, irodsAccount);
 		postConnectionStartupPreAuthentication();
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
 				irodsAccount, irodsMidLevelProtocol, startupResponseData);
@@ -219,13 +231,24 @@ abstract class AuthMechanism {
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException;
 
-	protected StartupResponseData sendStartupPacket(
-			final IRODSAccount irodsAccount,
+	protected void sendStartupPacket(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 
+		log.info("sendStartupPacket()");
+
+		String myOption;
+		if (irodsCommands.getIrodsConnection()
+				.getOperativeClientServerNegotiationPolicy()
+				.getSslNegotiationPolicy() == SslNegotiationPolicy.NO_NEGOTIATION) {
+			myOption = "";
+		} else {
+			myOption = StartupPack.NEGOTIATE_OPTION;
+		}
+
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
-				.getPipelineConfiguration().isReconnect());
+				.getPipelineConfiguration().isReconnect(), myOption);
+
 		String startupPackData = startupPack.getParsedTags();
 		try {
 
@@ -248,18 +271,7 @@ abstract class AuthMechanism {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-		Tag versionPI = irodsCommands.readMessage();
-		StartupResponseData startupResponseData = new StartupResponseData(
-				versionPI.getTag("status").getIntValue(), versionPI.getTag(
-						"relVersion").getStringValue(), versionPI.getTag(
-						"apiVersion").getStringValue(), versionPI.getTag(
-						"reconnPort").getIntValue(), versionPI.getTag(
-						"reconnAddr").getStringValue(), versionPI.getTag(
-						"cookie").getStringValue());
 
-		log.info("startup response:{}", startupResponseData);
-		irodsCommands.setStartupResponseData(startupResponseData);
-		return startupResponseData;
 	}
 
 }

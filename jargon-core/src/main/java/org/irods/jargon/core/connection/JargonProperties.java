@@ -1,6 +1,6 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -506,8 +506,8 @@ public interface JargonProperties {
 	
 	/**
 	 * Retreives the default negotiation policy 
-	 * @return {@link NegotiationPolicy}
+	 * @return {@link SslNegotiationPolicy}
 	 */
-	NegotiationPolicy getNegotiationPolicy();
+	SslNegotiationPolicy getNegotiationPolicy();
 
 }

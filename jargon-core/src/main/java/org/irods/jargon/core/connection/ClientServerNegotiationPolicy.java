@@ -4,8 +4,9 @@
 package org.irods.jargon.core.connection;
 
 /**
- * Captures the client-server negotiation policy for iRODS.  This can be tuned through jargon.properties and interactively.  The {@link IRODSAccount} can provide settings
- * for negotiation to override default properties.
+ * Captures the client-server negotiation policy for iRODS. This can be tuned
+ * through jargon.properties and interactively. The {@link IRODSAccount} can
+ * provide settings for negotiation to override default properties.
  * 
  * See iRODS/lib/core/src/irods_client_negotiation.cpp
  * 
@@ -13,29 +14,42 @@ package org.irods.jargon.core.connection;
  *
  */
 public class ClientServerNegotiationPolicy {
-	public enum NegotiationPolicy {NO_NEGOTIATION, CS_NEG_REFUSE, CS_NEG_REQ, CS_NEG_DONT_CARE}
-
-	private NegotiationPolicy negotiationPolicy = NegotiationPolicy.NO_NEGOTIATION;
-
-	public synchronized NegotiationPolicy getNegotiationPolicy() {
-		return negotiationPolicy;
+	public enum SslNegotiationPolicy {
+		NO_NEGOTIATION, CS_NEG_REFUSE, CS_NEG_REQ, CS_NEG_DONT_CARE
 	}
 
-	public synchronized void setNegotiationPolicy(
-			NegotiationPolicy negotiationPolicy) {
-		this.negotiationPolicy = negotiationPolicy;
+	public static final String REQUEST_NEGOTIATION_STARTUP_OPTION = "request_server_negotiation";
+
+	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
+
+	public synchronized SslNegotiationPolicy getSslNegotiationPolicy() {
+		return sslNegotiationPolicy;
 	}
-	
+
+	public synchronized void setSslNegotiationPolicy(
+			SslNegotiationPolicy sslNegotiationPolicy) {
+		this.sslNegotiationPolicy = sslNegotiationPolicy;
+	}
+
+	public synchronized String buildStartupOptionsForNegotiation() {
+
+		if (sslNegotiationPolicy == SslNegotiationPolicy.NO_NEGOTIATION) {
+			return "";
+		} else {
+			return REQUEST_NEGOTIATION_STARTUP_OPTION;
+		}
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationPolicy [");
-		if (negotiationPolicy != null) {
-			builder.append("negotiationPolicy=");
-			builder.append(negotiationPolicy);
+		if (sslNegotiationPolicy != null) {
+			builder.append("sslNegotiationPolicy=");
+			builder.append(sslNegotiationPolicy);
 		}
 		builder.append("]");
 		return builder.toString();
 	}
-	
+
 }

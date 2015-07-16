@@ -1,6 +1,6 @@
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.NegotiationPolicy;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
@@ -86,7 +86,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Default SSL negotiation policy, may be overrideen per request in the IRODSAccount
 	 */
-	private NegotiationPolicy negotiationPolicy = NegotiationPolicy.NO_NEGOTIATION;
+	private SslNegotiationPolicy negotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -1193,15 +1193,15 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
 	 */
 	@Override
-	public synchronized NegotiationPolicy getNegotiationPolicy() {
+	public synchronized SslNegotiationPolicy getNegotiationPolicy() {
 		return this.negotiationPolicy;
 	}
 	
 	/**
 	 * Sets the default negotiation policy for SSL, cannot be <code>null</code>
-	 * @param negotiationPolicy {@link NegotiationPolicy}
+	 * @param negotiationPolicy {@link SslNegotiationPolicy}
 	 */
-	public void setNegotiationPolicy(final NegotiationPolicy negotiationPolicy) {
+	public void setNegotiationPolicy(final SslNegotiationPolicy negotiationPolicy) {
 		if (negotiationPolicy == null) {
 			throw new IllegalArgumentException("null negotiationPolicy");
 		}
