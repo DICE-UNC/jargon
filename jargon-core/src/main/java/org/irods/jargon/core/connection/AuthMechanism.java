@@ -26,6 +26,8 @@ abstract class AuthMechanism {
 
 	public static final int AUTH_REQUEST_AN = 703;
 	public static final int AUTH_RESPONSE_AN = 704;
+	public static final String VERSION_PI_TAG = "Version_PI";
+
 	public String cachedChallenge = "";
 
 	public static final Logger log = LoggerFactory
@@ -75,20 +77,25 @@ abstract class AuthMechanism {
 					irodsMidLevelProtocol, irodsAccount);
 		} else {
 			Tag versionPI = irodsMidLevelProtocol.readMessage();
-			startupResponseData = new StartupResponseData(versionPI.getTag(
-					"status").getIntValue(), versionPI.getTag("relVersion")
-					.getStringValue(), versionPI.getTag("apiVersion")
-					.getStringValue(), versionPI.getTag("reconnPort")
-					.getIntValue(), versionPI.getTag("reconnAddr")
-					.getStringValue(), versionPI.getTag("cookie")
-					.getStringValue());
-
+			startupResponseData = buldStartupResponseFromVersionPI(versionPI);
 			log.info("startup response:{}", startupResponseData);
 			irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 		}
 
 		return startupResponseData;
 
+	}
+
+	private StartupResponseData buldStartupResponseFromVersionPI(Tag versionPI) {
+		StartupResponseData startupResponseData;
+		startupResponseData = new StartupResponseData(versionPI
+				.getTag("status").getIntValue(), versionPI.getTag("relVersion")
+				.getStringValue(), versionPI.getTag("apiVersion")
+				.getStringValue(),
+				versionPI.getTag("reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
+		return startupResponseData;
 	}
 
 	/**
@@ -112,6 +119,14 @@ abstract class AuthMechanism {
 		 */
 
 		Tag negResultPI = irodsMidLevelProtocol.readMessage();
+
+		/*
+		 * Did I just get a version pi back? If, so, no negotiation happened
+		 */
+
+		if (negResultPI.getName().equals(VERSION_PI_TAG)) {
+			log.info("got version pi back instead of negotiation status, so treat as no SSL");
+		}
 
 		return null;
 

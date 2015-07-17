@@ -3,19 +3,105 @@
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
-import static org.junit.Assert.*;
+import java.util.Properties;
 
+import junit.framework.Assert;
+
+import org.irods.jargon.core.connection.AuthScheme;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
+import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.testutils.TestingPropertiesHelper;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
- * @author mikeconway
+ * Functional tests of various permutations of ssl negotiation and auth methods.
+ * These tests are contingent on the iRODS configuration and various testing
+ * properties settings
+ * 
+ * @author Mike Conway - DICE
  *
  */
 public class SslNegotiationFunctionalTests {
 
+	private static Properties testingProperties = new Properties();
+	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
+	private static IRODSFileSystem irodsFileSystem = null;
+
+	@BeforeClass
+	public static void setUpBeforeClass() throws Exception {
+		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
+		testingProperties = testingPropertiesLoader.getTestProperties();
+		irodsFileSystem = IRODSFileSystem.instance();
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+	}
+
+	@AfterClass
+	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Before
+	public void before() throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+	}
+
 	@Test
-	public void test() {
-		fail("Not yet implemented");
+	public void testStandardLoginNoNegotiationFromClient()
+			throws JargonException {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull(actual);
+	}
+
+	@Test
+	public void testStandardLoginNegDontCareFromClient() throws JargonException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull(actual);
 	}
 
 }
