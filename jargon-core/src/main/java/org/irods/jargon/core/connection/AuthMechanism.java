@@ -92,16 +92,17 @@ abstract class AuthMechanism {
 	}
 
 	/**
-	 * After startup pack, do a client server negotiation, analogous to
+	 * After startup pack send, do a client server negotiation, analogous to
 	 * irods/lib/core/src/sockComm.cpp line 845
 	 * 
 	 * @param irodsMidLevelProtocol
 	 * @param irodsAccount
 	 * @return
+	 * @throws JargonException
 	 */
 	private StartupResponseData clientServerNegotiation(
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
-			IRODSAccount irodsAccount) {
+			IRODSAccount irodsAccount) throws JargonException {
 		log.info("clientServerNegotiation()");
 
 		/*
@@ -109,6 +110,8 @@ abstract class AuthMechanism {
 		 * 
 		 * struct cs_neg_t { int status_; char result_[MAX_NAME_LEN]; };
 		 */
+
+		Tag negResultPI = irodsMidLevelProtocol.readMessage();
 
 		return null;
 

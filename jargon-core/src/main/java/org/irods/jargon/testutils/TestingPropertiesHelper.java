@@ -59,6 +59,7 @@ public class TestingPropertiesHelper {
 	public static String IRODS_FEDERATED_ADMIN_PASSWORD_KEY = "test.federated.irods.admin.password";
 	public static String IRODS_KERBEROS_USER_KEY = "jargon.test.kerberos.user";
 	public static String IRODS_TEST_OPTION_PAM_KEY = "test.option.pam";
+	public static String IRODS_TEST_OPTION_SSL_KEY = "test.option.ssl.configured";
 	public static String IRODS_TEST_OPTION_EXERCISE_WORKFLOW = "test.option.exercise.workflow";
 	public static String IRODS_PAM_USER_KEY = "jargon.test.pam.user";
 	public static String IRODS_PAM_PASSWORD_KEY = "jargon.test.pam.password";
@@ -1079,6 +1080,22 @@ public class TestingPropertiesHelper {
 	 */
 	public boolean isTestPAM(final Properties testingProperties) {
 		String val = (String) testingProperties.get("test.option.pam");
+		if (val == null) {
+			return false;
+		} else {
+			return Boolean.parseBoolean(val);
+		}
+	}
+
+	/**
+	 * Check if optional ssl is assumed to be configured
+	 * 
+	 * @param testingProperties
+	 * @return
+	 */
+	public boolean isTestSsl(final Properties testingProperties) {
+		String val = (String) testingProperties
+				.get("test.option.ssl.configured");
 		if (val == null) {
 			return false;
 		} else {
