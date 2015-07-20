@@ -7,7 +7,9 @@ import java.nio.channels.ClosedChannelException;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStruct;
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
@@ -126,9 +128,16 @@ abstract class AuthMechanism {
 
 		if (negResultPI.getName().equals(VERSION_PI_TAG)) {
 			log.info("got version pi back instead of negotiation status, so treat as no SSL");
+			return buldStartupResponseFromVersionPI(negResultPI);
+		} else if (negResultPI.getName().equals(
+				ClientServerNegotiationStruct.NEG_PI)) {
+			return null;
+		} else {
+			log.error("unknown response to startup pack:{}",
+					negResultPI.getName());
+			throw new ClientServerNegotiationException(
+					"unexpected result from send of startup pack, was neither versionPI nor NegotiationPI");
 		}
-
-		return null;
 
 	}
 

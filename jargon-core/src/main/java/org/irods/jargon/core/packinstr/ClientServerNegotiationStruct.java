@@ -14,6 +14,7 @@ public class ClientServerNegotiationStruct {
 
 	private int status = 0;
 	private String result = "";
+	public static final String NEG_PI = "CS_NEG_PI";
 
 	/**
 	 * @return the status
