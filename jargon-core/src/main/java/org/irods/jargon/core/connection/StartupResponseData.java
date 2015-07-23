@@ -26,6 +26,11 @@ public class StartupResponseData {
 	private final String reconnAddr;
 	private final String cookie;
 	private final boolean eirods;
+	/**
+	 * Holds the result of any client/server negotiation, will always be
+	 * present, even if no negotiation is done
+	 */
+	private final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 	/**
 	 * Default constructor initializes all of the required fields in response to
@@ -77,6 +82,12 @@ public class StartupResponseData {
 		} else {
 			eirods = false;
 		}
+
+		/*
+		 * Indicate no ssl in negotiated configuration
+		 */
+		this.negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
+				false);
 
 	}
 
@@ -143,6 +154,13 @@ public class StartupResponseData {
 
 	public boolean isEirods() {
 		return eirods;
+	}
+
+	/**
+	 * @return the negotiatedClientServerConfiguration
+	 */
+	public NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
+		return negotiatedClientServerConfiguration;
 	}
 
 }

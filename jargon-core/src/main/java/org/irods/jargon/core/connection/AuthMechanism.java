@@ -131,7 +131,17 @@ abstract class AuthMechanism {
 			return buldStartupResponseFromVersionPI(negResultPI);
 		} else if (negResultPI.getName().equals(
 				ClientServerNegotiationStruct.NEG_PI)) {
+			ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+					.instanceFromTag(negResultPI);
+
+			if (!struct.wasThisASuccess()) {
+				log.error("negotiation was unsuccesful:{}", struct);
+				throw new ClientServerNegotiationException(
+						"unsuccesful client-server negotiation");
+			}
+
 			return null;
+
 		} else {
 			log.error("unknown response to startup pack:{}",
 					negResultPI.getName());

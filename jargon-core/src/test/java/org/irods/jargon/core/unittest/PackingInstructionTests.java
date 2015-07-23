@@ -2,6 +2,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstructionTest;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInpTest;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructTest;
 import org.irods.jargon.core.packinstr.CollInpTest;
 import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpForMcollTest;
@@ -48,7 +49,8 @@ import org.junit.runners.Suite;
 		DataObjInpForMcollTest.class, DataObjInpForUnmountTest.class,
 		ReconnMsgTest.class, SpecificQueryInpTest.class,
 		PamAuthRequestInpTest.class, SSLStartInpTest.class,
-		SSLEndInpTest.class, AuthReqPluginRequestInpTest.class })
+		SSLEndInpTest.class, AuthReqPluginRequestInpTest.class,
+		ClientServerNegotiationStructTest.class })
 public class PackingInstructionTests {
 
 }
