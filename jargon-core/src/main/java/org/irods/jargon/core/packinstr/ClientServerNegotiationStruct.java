@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.core.packinstr;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
+
 /**
  * Structure that is the result of a client-server negotiation, analgous to the
  * cs_neg_t struct in iRODS
@@ -13,8 +16,44 @@ package org.irods.jargon.core.packinstr;
 public class ClientServerNegotiationStruct {
 
 	private int status = 0;
-	private String result = "";
+	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
 	public static final String NEG_PI = "CS_NEG_PI";
+
+	public static ClientServerNegotiationStruct instanceFromTag(final Tag tag)
+			throws ClientServerNegotiationException {
+
+		if (tag == null) {
+			throw new IllegalArgumentException("Null tag");
+		}
+
+		if (!tag.getName().equals(NEG_PI)) {
+			throw new IllegalArgumentException("tag is not a NEG_PI tag");
+		}
+
+		ClientServerNegotiationStruct struct = new ClientServerNegotiationStruct();
+		int status = tag.getTag("status").getIntValue();
+		struct.setStatus(status);
+		String sslNegResult = tag.getTag("result").getStringValue();
+
+		if (sslNegResult == null || sslNegResult.isEmpty()) {
+			throw new ClientServerNegotiationException(
+					"no ssl negotiation result found");
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
+				.name())) {
+			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
+				.name())) {
+			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
+			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		} else {
+			throw new ClientServerNegotiationException(
+					"Unrecognized ssl negotiation response:" + sslNegResult);
+		}
+
+		return struct;
+
+	}
 
 	/**
 	 * @return the status
@@ -32,18 +71,19 @@ public class ClientServerNegotiationStruct {
 	}
 
 	/**
-	 * @return the result
+	 * @return the sslNegotiationPolicy
 	 */
-	public String getResult() {
-		return result;
+	public SslNegotiationPolicy getSslNegotiationPolicy() {
+		return sslNegotiationPolicy;
 	}
 
 	/**
-	 * @param result
-	 *            the result to set
+	 * @param sslNegotiationPolicy
+	 *            the sslNegotiationPolicy to set
 	 */
-	public void setResult(String result) {
-		this.result = result;
+	public void setSslNegotiationPolicy(
+			SslNegotiationPolicy sslNegotiationPolicy) {
+		this.sslNegotiationPolicy = sslNegotiationPolicy;
 	}
 
 	/*
@@ -56,11 +96,21 @@ public class ClientServerNegotiationStruct {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationStruct [status=").append(status)
 				.append(", ");
-		if (result != null) {
-			builder.append("result=").append(result);
+		if (sslNegotiationPolicy != null) {
+			builder.append("sslNegotiationPolicy=")
+					.append(sslNegotiationPolicy);
 		}
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * Was this negotiation a success?
+	 * 
+	 * @return
+	 */
+	public boolean wasThisASuccess() {
+		return this.getStatus() == 1;
 	}
 
 }
