@@ -82,6 +82,8 @@ public class PAMAuthTest {
 				authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
+		irodsFileSystem.closeAndEatExceptions();
+
 	}
 
 }

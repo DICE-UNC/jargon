@@ -257,6 +257,9 @@ public class IRODSSession {
 				// a restart manager is available.
 				restartManager = new MemoryBasedTransferRestartManager();
 			}
+			log.info("setting system prop for TLS...");
+			java.lang.System.setProperty("jdk.tls.client.protocols",
+					"TLSv1,TLSv1.1,TLSv1.2");
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties", e);
 			throw new JargonRuntimeException("unable to load jargon props", e);
