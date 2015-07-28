@@ -80,9 +80,10 @@ abstract class AuthMechanism {
 		} else {
 			Tag versionPI = irodsMidLevelProtocol.readMessage();
 			startupResponseData = buldStartupResponseFromVersionPI(versionPI);
-			log.info("startup response:{}", startupResponseData);
-			irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 		}
+
+		log.info("startup response:{}", startupResponseData);
+		irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
 
 		return startupResponseData;
 
@@ -112,6 +113,7 @@ abstract class AuthMechanism {
 	private StartupResponseData clientServerNegotiation(
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			IRODSAccount irodsAccount) throws JargonException {
+
 		log.info("clientServerNegotiation()");
 
 		/*
@@ -140,7 +142,28 @@ abstract class AuthMechanism {
 						"unsuccesful client-server negotiation");
 			}
 
-			return null;
+			log.info("have a server negotiation response:{}", struct.toString());
+
+			/*
+			 * Do the actual negotiation...The struct should have the response
+			 * from the startup pack to launch the negotiation process.
+			 * 
+			 * here I am tracking lib/core/src/irods_client_negotiation.cpp ~
+			 * line 293
+			 */
+
+			ClientServerNegotiationService clientServerNegotiationService = new ClientServerNegotiationService(
+					irodsMidLevelProtocol);
+
+			NegotiatedClientServerConfiguration negotiatedConfiguration = clientServerNegotiationService
+					.negotiate(struct);
+			log.info("negotiated configuration:{}", negotiatedConfiguration);
+
+			// FIXME: add SSL wrapping here!
+
+			StartupResponseData startupResponseData = new StartupResponseData(
+					negotiatedConfiguration);
+			return startupResponseData;
 
 		} else {
 			log.error("unknown response to startup pack:{}",

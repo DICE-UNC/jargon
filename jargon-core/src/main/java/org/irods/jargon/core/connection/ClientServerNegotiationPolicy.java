@@ -13,9 +13,15 @@ package org.irods.jargon.core.connection;
  * @author Mike Conway - DICE
  *
  */
+
 public class ClientServerNegotiationPolicy {
+	/*
+	 * NB the order of this enumeration needs to be carefully maintained, as the
+	 * enum ordinals are used in the {@link ClientServerNegotiationService} to
+	 * interpolate with the negotiation table.
+	 */
 	public enum SslNegotiationPolicy {
-		NO_NEGOTIATION, CS_NEG_REFUSE, CS_NEG_REQ, CS_NEG_DONT_CARE
+		CS_NEG_REQ, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION
 	}
 
 	public static final String REQUEST_NEGOTIATION_STARTUP_OPTION = "request_server_negotiation";

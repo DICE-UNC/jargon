@@ -32,6 +32,22 @@ public class StartupResponseData {
 	 */
 	private final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
+	public StartupResponseData(
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+		if (negotiatedClientServerConfiguration == null) {
+			throw new IllegalArgumentException(
+					"null negotiatedClientServerConfiguration");
+		}
+		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
+		this.status = 0;
+		this.relVersion = "";
+		this.apiVersion = "";
+		this.reconnPort = 0;
+		this.reconnAddr = "";
+		this.cookie = "";
+		this.eirods = true;
+	}
+
 	/**
 	 * Default constructor initializes all of the required fields in response to
 	 * a startup packet operation.

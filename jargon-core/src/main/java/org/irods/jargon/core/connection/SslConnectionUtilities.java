@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 class SslConnectionUtilities {
 
+	@SuppressWarnings("unused")
 	private final IRODSSession irodsSession;
 
 	private Logger log = LoggerFactory.getLogger(SslConnectionUtilities.class);
