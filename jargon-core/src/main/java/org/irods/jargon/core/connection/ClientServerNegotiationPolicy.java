@@ -21,7 +21,7 @@ public class ClientServerNegotiationPolicy {
 	 * interpolate with the negotiation table.
 	 */
 	public enum SslNegotiationPolicy {
-		CS_NEG_REQ, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION
+		CS_NEG_REQ, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION, CS_NEG_FAILURE
 	}
 
 	public static final String REQUEST_NEGOTIATION_STARTUP_OPTION = "request_server_negotiation";

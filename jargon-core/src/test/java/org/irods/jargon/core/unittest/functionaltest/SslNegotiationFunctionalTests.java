@@ -70,6 +70,8 @@ public class SslNegotiationFunctionalTests {
 				.getJargonProperties();
 		settableJargonProperties
 				.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
@@ -96,6 +98,8 @@ public class SslNegotiationFunctionalTests {
 				.getJargonProperties();
 		settableJargonProperties
 				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

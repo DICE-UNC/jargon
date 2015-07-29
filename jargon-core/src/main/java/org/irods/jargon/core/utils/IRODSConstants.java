@@ -66,6 +66,7 @@ public final class IRODSConstants {
 	public static final String RODS_CONNECT = "RODS_CONNECT";
 	public static final String RODS_VERSION = "RODS_VERSION";
 	public static final String RODS_API_REQ = "RODS_API_REQ";
+	public static final String RODS_NEG_REQ = "RODS_CS_NEG_T";
 	public static final String RODS_DISCONNECT = "RODS_DISCONNECT";
 	public static final String RODS_REAUTH = "RODS_REAUTH";
 	public static final String RODS_API_REPLY = "RODS_API_REPLY";

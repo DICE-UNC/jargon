@@ -10,10 +10,10 @@ public class ClientServerNegotiationStructTest {
 
 	@Test
 	public void testInstanceFromTagDontCare() throws Exception {
-		Tag tag = new Tag(ClientServerNegotiationStruct.NEG_PI);
+		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", 1);
 		tag.addTag("result", SslNegotiationPolicy.CS_NEG_DONT_CARE.name());
-		ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+		ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
@@ -25,10 +25,10 @@ public class ClientServerNegotiationStructTest {
 
 	@Test
 	public void testInstanceFromTagDontCareNotSuccess() throws Exception {
-		Tag tag = new Tag(ClientServerNegotiationStruct.NEG_PI);
+		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", -1);
 		tag.addTag("result", SslNegotiationPolicy.CS_NEG_DONT_CARE.name());
-		ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+		ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 				.instanceFromTag(tag);
 		Assert.assertFalse(struct.wasThisASuccess());
 
@@ -36,10 +36,10 @@ public class ClientServerNegotiationStructTest {
 
 	@Test
 	public void testInstanceFromTagRefuse() throws Exception {
-		Tag tag = new Tag(ClientServerNegotiationStruct.NEG_PI);
+		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", 1);
 		tag.addTag("result", SslNegotiationPolicy.CS_NEG_REFUSE.name());
-		ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+		ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
@@ -50,10 +50,10 @@ public class ClientServerNegotiationStructTest {
 
 	@Test
 	public void testInstanceFromTagReq() throws Exception {
-		Tag tag = new Tag(ClientServerNegotiationStruct.NEG_PI);
+		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", 1);
 		tag.addTag("result", SslNegotiationPolicy.CS_NEG_REQ.name());
-		ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+		ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
@@ -64,10 +64,10 @@ public class ClientServerNegotiationStructTest {
 
 	@Test(expected = ClientServerNegotiationException.class)
 	public void testInstanceFromTagInvalidResult() throws Exception {
-		Tag tag = new Tag(ClientServerNegotiationStruct.NEG_PI);
+		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", 1);
 		tag.addTag("result", "nonsensical");
-		ClientServerNegotiationStruct.instanceFromTag(tag);
+		ClientServerNegotiationStructInitNegotiation.instanceFromTag(tag);
 
 	}
 

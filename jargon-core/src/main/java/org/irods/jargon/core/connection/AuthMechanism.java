@@ -9,7 +9,7 @@ import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.ClientServerNegotiationStruct;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
@@ -89,7 +89,16 @@ abstract class AuthMechanism {
 
 	}
 
-	private StartupResponseData buldStartupResponseFromVersionPI(Tag versionPI) {
+	/**
+	 * Handy method to build startup response data from a VersionPI tag response
+	 * from iRODS
+	 * 
+	 * @param versionPI
+	 *            {@link Tag} protocol representation of version info
+	 * @return {@link StartupResponseData
+
+	 */
+	static StartupResponseData buldStartupResponseFromVersionPI(Tag versionPI) {
 		StartupResponseData startupResponseData;
 		startupResponseData = new StartupResponseData(versionPI
 				.getTag("status").getIntValue(), versionPI.getTag("relVersion")
@@ -132,8 +141,8 @@ abstract class AuthMechanism {
 			log.info("got version pi back instead of negotiation status, so treat as no SSL");
 			return buldStartupResponseFromVersionPI(negResultPI);
 		} else if (negResultPI.getName().equals(
-				ClientServerNegotiationStruct.NEG_PI)) {
-			ClientServerNegotiationStruct struct = ClientServerNegotiationStruct
+				ClientServerNegotiationStructInitNegotiation.NEG_PI)) {
+			ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 					.instanceFromTag(negResultPI);
 
 			if (!struct.wasThisASuccess()) {

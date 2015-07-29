@@ -6,7 +6,9 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.ClientServerNegotiationStruct;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult.Outcome;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,10 +22,6 @@ import org.slf4j.LoggerFactory;
 class ClientServerNegotiationService {
 
 	private final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol;
-
-	private enum Outcome {
-		USE_TCP, USE_SSL, FAILURE
-	}
 
 	private Logger log = LoggerFactory
 			.getLogger(ClientServerNegotiationService.class);
@@ -49,15 +47,15 @@ class ClientServerNegotiationService {
 
 	private void initializeNegotiationTable() {
 
-		negotiationTable[0][0] = Outcome.USE_SSL; // REQ, REQ
-		negotiationTable[0][1] = Outcome.USE_SSL; // REQ, DC
-		negotiationTable[0][2] = Outcome.FAILURE; // REQ, REF (failure)
-		negotiationTable[1][0] = Outcome.USE_SSL; // DC, REQ
-		negotiationTable[1][1] = Outcome.USE_SSL; // DC, DC
-		negotiationTable[1][2] = Outcome.USE_TCP; // DC, REF
-		negotiationTable[2][0] = Outcome.FAILURE; // REF, REQ
-		negotiationTable[2][1] = Outcome.USE_TCP; // REF, DC
-		negotiationTable[2][2] = Outcome.USE_TCP; // REF, REF
+		negotiationTable[0][0] = Outcome.CS_NEG_USE_SSL; // REQ, REQ
+		negotiationTable[0][1] = Outcome.CS_NEG_USE_SSL; // REQ, DC
+		negotiationTable[0][2] = Outcome.CS_NEG_USE_TCP; // REQ, REF (failure)
+		negotiationTable[1][0] = Outcome.CS_NEG_USE_SSL; // DC, REQ
+		negotiationTable[1][1] = Outcome.CS_NEG_USE_SSL; // DC, DC
+		negotiationTable[1][2] = Outcome.CS_NEG_USE_TCP; // DC, REF
+		negotiationTable[2][0] = Outcome.CS_NEG_FAILURE; // REF, REQ
+		negotiationTable[2][1] = Outcome.CS_NEG_USE_TCP; // REF, DC
+		negotiationTable[2][2] = Outcome.CS_NEG_USE_TCP; // REF, REF
 
 	}
 
@@ -93,7 +91,7 @@ class ClientServerNegotiationService {
 	 * @throws JargonException
 	 */
 	NegotiatedClientServerConfiguration negotiate(
-			final ClientServerNegotiationStruct struct)
+			final ClientServerNegotiationStructInitNegotiation struct)
 			throws ClientServerNegotiationException, JargonException {
 		log.info("negotiate()");
 
@@ -119,8 +117,8 @@ class ClientServerNegotiationService {
 	}
 
 	private NegotiatedClientServerConfiguration negotiateUsingServerProtocol(
-			ClientServerNegotiationStruct struct)
-			throws ClientServerNegotiationException {
+			ClientServerNegotiationStructInitNegotiation struct)
+			throws ClientServerNegotiationException, JargonException {
 		log.info("negotiateUsingServerProtocol()");
 		log.info("negotiation over response from server:{}", struct);
 		log.info("client policy:{}", referToNegotiationPolicy());
@@ -136,16 +134,42 @@ class ClientServerNegotiationService {
 		Outcome negotiatedOutcome = negotiationTable[referToNegotiationPolicy()
 				.getSslNegotiationPolicy().ordinal()][struct
 				.getSslNegotiationPolicy().ordinal()];
-		log.info("negotiatedOutcome");
+		log.info("negotiatedOutcome:{}", negotiatedOutcome);
 
-		if (negotiatedOutcome == Outcome.FAILURE) {
-			log.error("failure in client server negotiation!");
+		if (negotiatedOutcome == Outcome.CS_NEG_FAILURE) {
+			log.error("failure in client server negotiation!...sending error message to the server before throwing the failure exception");
+			notifyServerOfNegotiationFailure();
 			throw new ClientServerNegotiationException(
 					"failure in client server negotiation");
 		}
 
-		return new NegotiatedClientServerConfiguration(
-				negotiatedOutcome == Outcome.USE_SSL);
+		log.info("was a success, return choice to server");
+		notifyServerOfNegotiationSuccess(negotiatedOutcome);
 
+		return new NegotiatedClientServerConfiguration(
+				negotiatedOutcome == Outcome.CS_NEG_USE_SSL);
+
+	}
+
+	private void notifyServerOfNegotiationSuccess(Outcome negotiatedOutcome)
+			throws JargonException {
+		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
+				.instance(
+						ClientServerNegotiationStructNotifyServerOfResult.STATUS_SUCCESS,
+						negotiatedOutcome.name());
+		this.irodsMidLevelProtocol.irodsFunctionForNegotiation(struct);
+
+	}
+
+	/**
+	 * After negotiation that results in a failure, send a failure message back
+	 * to the server
+	 * 
+	 * @throws JargonException
+	 */
+	private void notifyServerOfNegotiationFailure() throws JargonException {
+		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
+				.instanceForFailure();
+		this.irodsMidLevelProtocol.irodsFunction(struct);
 	}
 }

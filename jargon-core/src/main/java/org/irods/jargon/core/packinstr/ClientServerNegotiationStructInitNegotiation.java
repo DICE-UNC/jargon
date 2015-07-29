@@ -5,21 +5,28 @@ package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Structure that is the result of a client-server negotiation, analgous to the
- * cs_neg_t struct in iRODS
+ * Structure that is the result of a client-server negotiation, analogous to the
+ * cs_neg_t struct in iRODS, responding to the server as a result of a
+ * negotiation (failure or success)
  * 
  * @author Mike Conway - DICE
  *
  */
-public class ClientServerNegotiationStruct {
+public class ClientServerNegotiationStructInitNegotiation extends
+		AbstractIRODSPackingInstruction {
 
 	private int status = 0;
 	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
 	public static final String NEG_PI = "CS_NEG_PI";
+	public static final int STATUS_FAILURE = 0;
+	public static final int STATUS_SUCCESS = 1;
+	public static final int API_NBR = 0;
+	public static final String CS_NEG_RESULT_KW = "cs_neg_result_kw";
 
-	public static ClientServerNegotiationStruct instanceFromTag(final Tag tag)
+	private ClientServerNegotiationStructInitNegotiation(final Tag tag)
 			throws ClientServerNegotiationException {
 
 		if (tag == null) {
@@ -30,9 +37,8 @@ public class ClientServerNegotiationStruct {
 			throw new IllegalArgumentException("tag is not a NEG_PI tag");
 		}
 
-		ClientServerNegotiationStruct struct = new ClientServerNegotiationStruct();
 		int status = tag.getTag("status").getIntValue();
-		struct.setStatus(status);
+		this.setStatus(status);
 		String sslNegResult = tag.getTag("result").getStringValue();
 
 		if (sslNegResult == null || sslNegResult.isEmpty()) {
@@ -40,18 +46,30 @@ public class ClientServerNegotiationStruct {
 					"no ssl negotiation result found");
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
 				.name())) {
-			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.name())) {
-			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
+			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
-			struct.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		} else {
 			throw new ClientServerNegotiationException(
 					"Unrecognized ssl negotiation response:" + sslNegResult);
 		}
 
-		return struct;
+	}
+
+	/**
+	 * Create an instance of the struct based on deserializing the Tag structure
+	 * 
+	 * @param tag
+	 * @return
+	 * @throws ClientServerNegotiationException
+	 */
+	public static ClientServerNegotiationStructInitNegotiation instanceFromTag(
+			final Tag tag) throws ClientServerNegotiationException {
+
+		return new ClientServerNegotiationStructInitNegotiation(tag);
 
 	}
 
@@ -111,6 +129,18 @@ public class ClientServerNegotiationStruct {
 	 */
 	public boolean wasThisASuccess() {
 		return this.getStatus() == 1;
+	}
+
+	@Override
+	public Tag getTagValue() throws JargonException {
+		StringBuilder sb = new StringBuilder();
+		sb.append(CS_NEG_RESULT_KW);
+		sb.append('=');
+		sb.append(this.sslNegotiationPolicy.name());
+		sb.append(';');
+		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status),
+				new Tag("result", sb.toString()) });
+		return message;
 	}
 
 }

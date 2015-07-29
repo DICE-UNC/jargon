@@ -574,6 +574,25 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
+	 * Create an iRODS message Tag, including header, for negotiation requests.
+	 * This convenience method is suitable for operations that do not require
+	 * error or binary streams, and will set up empty streams for the method
+	 * call.
+	 */
+	public synchronized Tag irodsFunctionForNegotiation(final IRodsPI irodsPI)
+			throws JargonException {
+
+		if (irodsPI == null) {
+			String err = "null irodsPI";
+			log.error(err);
+			throw new IllegalArgumentException(err);
+		}
+
+		return irodsFunction(IRODSConstants.RODS_NEG_REQ,
+				irodsPI.getParsedTags(), irodsPI.getApiNumber());
+	}
+
+	/**
 	 * Create the iRODS header packet
 	 */
 	public byte[] createHeader(final String type, final int messageLength,

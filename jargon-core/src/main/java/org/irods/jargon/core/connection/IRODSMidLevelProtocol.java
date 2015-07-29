@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,6 +112,11 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @return
 	 */
 	boolean isPamFlush() {
+		// FIXME: overhead for npes in client server negotiation where response
+		// is not yet saved
+		if (getStartupResponseData() == null) {
+			return false;
+		}
 
 		boolean postThreeDotThree = MiscIRODSUtils
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
@@ -202,8 +206,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			}
 
 			getIrodsConnection().send(
-					createHeader(IRODSConstants.RODS_API_REQ, messageLength,
-							errorLength, byteStringLength, intInfo));
+					createHeader(type, messageLength, errorLength,
+							byteStringLength, intInfo));
 
 			if (isPamFlush()) {
 				log.debug("doing extra pam flush for iRODS 3.2");
