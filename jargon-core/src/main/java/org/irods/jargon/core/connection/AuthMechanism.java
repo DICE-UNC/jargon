@@ -202,6 +202,7 @@ abstract class AuthMechanism {
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
+		irodsMidLevelProtocol.setIrodsAccount(irodsAccount);
 		preConnectionStartup();
 		sendStartupPacket(irodsAccount, irodsMidLevelProtocol);
 		StartupResponseData startupResponseData = clientServerNegotiationHook(

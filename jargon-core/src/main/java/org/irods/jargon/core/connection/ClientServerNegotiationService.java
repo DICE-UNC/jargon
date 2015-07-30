@@ -98,10 +98,6 @@ class ClientServerNegotiationService {
 		if (struct == null) {
 			throw new IllegalArgumentException("null struct");
 		}
-
-		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-
-		// see if this is server negotiation
 		return negotiateUsingServerProtocol(struct);
 	}
 
@@ -137,6 +133,14 @@ class ClientServerNegotiationService {
 
 	}
 
+	/**
+	 * After negotiation, notify the server. If the connection uses SSL, this is
+	 * the point where the connection is manipulated to wrap the socket in ssl
+	 * 
+	 * @param negotiatedOutcome
+	 * @return
+	 * @throws JargonException
+	 */
 	private StartupResponseData notifyServerOfNegotiationSuccess(
 			Outcome negotiatedOutcome) throws JargonException {
 		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
@@ -152,7 +156,36 @@ class ClientServerNegotiationService {
 						negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
 
 		log.info("startupResponse captured:{}", startupResponse);
+
+		wrapConnectionInSslIfConfigured(startupResponse);
+
 		return startupResponse;
+
+	}
+
+	private void wrapConnectionInSslIfConfigured(
+			StartupResponseData startupResponse) throws JargonException,
+			AssertionError {
+		log.info("wrapConnectionInSsl()");
+		// some sanity checking
+		if (startupResponse.getNegotiatedClientServerConfiguration() == null) {
+			throw new IllegalArgumentException(
+					"null negotiatedClientServerConfiguration in startup response");
+		}
+
+		if (!startupResponse.getNegotiatedClientServerConfiguration()
+				.isSslConnection()) {
+			log.info("no ssl");
+			return;
+		}
+
+		log.info("wrapping in ssl connection");
+		SslConnectionUtilities sslConnectionUtilities = new SslConnectionUtilities(
+				this.getIrodsMidLevelProtocol().getIrodsSession());
+		// false indicates no ssl startup message needed
+		sslConnectionUtilities.createSslSocketForProtocol(this
+				.getIrodsMidLevelProtocol().getIrodsAccount(), this
+				.getIrodsMidLevelProtocol(), false);
 
 	}
 

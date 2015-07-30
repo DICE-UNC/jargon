@@ -34,9 +34,10 @@ public class PAMAuth extends AuthMechanism {
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
+		// true indicates to do the ssl startup sequence
 		SSLSocket sslSocket = irodsCommands.getIrodsSession()
 				.instanceSslConnectionUtilities()
-				.createSslSocketForProtocol(irodsAccount, irodsCommands);
+				.createSslSocketForProtocol(irodsAccount, irodsCommands, true);
 
 		log.info("creating secure protcol connection layer");
 		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(

@@ -43,18 +43,30 @@ class SslConnectionUtilities {
 
 	/**
 	 * @param irodsAccount
+	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
-	 * @return
+	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
+	 *            current connection
+	 * @param doSslStartupSequence
+	 *            <code>boolean</code> that indicates that
+	 * @return {@link SSLSocket} that can be inserted into the existing
+	 *         connection. Note that this method will not manipulate the mid
+	 *         level protocol object, it is up to the caller to handle the
+	 *         disposition of that socket object.
 	 * @throws JargonException
 	 * @throws AssertionError
 	 */
 	SSLSocket createSslSocketForProtocol(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException, AssertionError {
-		// start ssl
-		log.info("startSSL for PAM auth");
-		SSLStartInp sslStartInp = SSLStartInp.instance();
-		irodsCommands.irodsFunction(sslStartInp);
+			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final boolean doSslStartupSequence) throws JargonException,
+			AssertionError {
+
+		if (doSslStartupSequence) {
+			// start ssl
+			log.info("startSSL for PAM auth");
+			SSLStartInp sslStartInp = SSLStartInp.instance();
+			irodsCommands.irodsFunction(sslStartInp);
+		}
 
 		SSLContext ctx;
 		try {
