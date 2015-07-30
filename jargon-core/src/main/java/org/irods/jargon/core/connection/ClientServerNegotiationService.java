@@ -3,12 +3,12 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult.Outcome;
+import org.irods.jargon.core.packinstr.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -90,7 +90,7 @@ class ClientServerNegotiationService {
 	 *             if the negotiation fails
 	 * @throws JargonException
 	 */
-	NegotiatedClientServerConfiguration negotiate(
+	StartupResponseData negotiate(
 			final ClientServerNegotiationStructInitNegotiation struct)
 			throws ClientServerNegotiationException, JargonException {
 		log.info("negotiate()");
@@ -102,21 +102,10 @@ class ClientServerNegotiationService {
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 		// see if this is server negotiation
-
-		if (this.referToNegotiationPolicy().getSslNegotiationPolicy() == SslNegotiationPolicy.NO_NEGOTIATION) {
-			negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
-					false);
-		} else {
-			negotiatedClientServerConfiguration = negotiateUsingServerProtocol(struct);
-		}
-
-		log.info("negotiated configuration:{}",
-				negotiatedClientServerConfiguration);
-		return negotiatedClientServerConfiguration;
-
+		return negotiateUsingServerProtocol(struct);
 	}
 
-	private NegotiatedClientServerConfiguration negotiateUsingServerProtocol(
+	private StartupResponseData negotiateUsingServerProtocol(
 			ClientServerNegotiationStructInitNegotiation struct)
 			throws ClientServerNegotiationException, JargonException {
 		log.info("negotiateUsingServerProtocol()");
@@ -144,20 +133,26 @@ class ClientServerNegotiationService {
 		}
 
 		log.info("was a success, return choice to server");
-		notifyServerOfNegotiationSuccess(negotiatedOutcome);
-
-		return new NegotiatedClientServerConfiguration(
-				negotiatedOutcome == Outcome.CS_NEG_USE_SSL);
+		return notifyServerOfNegotiationSuccess(negotiatedOutcome);
 
 	}
 
-	private void notifyServerOfNegotiationSuccess(Outcome negotiatedOutcome)
-			throws JargonException {
+	private StartupResponseData notifyServerOfNegotiationSuccess(
+			Outcome negotiatedOutcome) throws JargonException {
 		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
 				.instance(
 						ClientServerNegotiationStructNotifyServerOfResult.STATUS_SUCCESS,
 						negotiatedOutcome.name());
-		this.irodsMidLevelProtocol.irodsFunctionForNegotiation(struct);
+		Tag versionPiTag = this.irodsMidLevelProtocol
+				.irodsFunctionForNegotiation(struct);
+		StartupResponseData startupResponse = AuthMechanism
+				.buldStartupResponseFromVersionPI(versionPiTag);
+		startupResponse
+				.setNegotiatedClientServerConfiguration(new NegotiatedClientServerConfiguration(
+						negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
+
+		log.info("startupResponse captured:{}", startupResponse);
+		return startupResponse;
 
 	}
 

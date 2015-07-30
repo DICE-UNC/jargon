@@ -30,7 +30,7 @@ public class StartupResponseData {
 	 * Holds the result of any client/server negotiation, will always be
 	 * present, even if no negotiation is done
 	 */
-	private final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 	public StartupResponseData(
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
@@ -177,6 +177,18 @@ public class StartupResponseData {
 	 */
 	public NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
 		return negotiatedClientServerConfiguration;
+	}
+
+	/**
+	 * This setter is exposed because the startup response data may be augmented
+	 * after a client/server negotiation
+	 * 
+	 * @param negotiatedClientServerConfiguration
+	 *            the negotiatedClientServerConfiguration to set
+	 */
+	public void setNegotiatedClientServerConfiguration(
+			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 	}
 
 }

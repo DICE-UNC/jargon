@@ -164,14 +164,9 @@ abstract class AuthMechanism {
 			ClientServerNegotiationService clientServerNegotiationService = new ClientServerNegotiationService(
 					irodsMidLevelProtocol);
 
-			NegotiatedClientServerConfiguration negotiatedConfiguration = clientServerNegotiationService
+			StartupResponseData startupResponseData = clientServerNegotiationService
 					.negotiate(struct);
-			log.info("negotiated configuration:{}", negotiatedConfiguration);
-
-			// FIXME: add SSL wrapping here!
-
-			StartupResponseData startupResponseData = new StartupResponseData(
-					negotiatedConfiguration);
+			log.info("negotiated configuration:{}", startupResponseData);
 			return startupResponseData;
 
 		} else {
