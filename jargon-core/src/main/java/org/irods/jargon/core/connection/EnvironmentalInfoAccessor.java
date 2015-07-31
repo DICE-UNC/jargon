@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.MiscSvrInfo;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,8 +62,8 @@ public class EnvironmentalInfoAccessor {
 			}
 		}
 
-		Tag response = irodsProtocol.irodsFunction(MiscSvrInfo.PI_TAG, "",
-				MiscSvrInfo.API_NBR);
+		Tag response = irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ,
+				"", MiscSvrInfo.API_NBR);
 		log.info("server response obtained");
 		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG)
 				.getIntValue();

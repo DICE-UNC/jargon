@@ -315,7 +315,7 @@ abstract class AuthMechanism {
 		if (irodsCommands.getIrodsConnection()
 				.getOperativeClientServerNegotiationPolicy()
 				.getSslNegotiationPolicy() == SslNegotiationPolicy.NO_NEGOTIATION) {
-			myOption = "";
+			myOption = "iinit";
 		} else {
 			myOption = StartupPack.NEGOTIATE_OPTION;
 		}
@@ -324,8 +324,8 @@ abstract class AuthMechanism {
 				.getPipelineConfiguration().isReconnect(), myOption);
 
 		String startupPackData = startupPack.getParsedTags();
+		log.debug("startupPackData:{}", startupPackData);
 		try {
-
 			irodsCommands.getIrodsConnection().send(
 					irodsCommands.createHeader(
 							RequestTypes.RODS_CONNECT.getRequestType(),

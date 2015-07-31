@@ -165,4 +165,40 @@ class SslConnectionUtilities {
 		return sslSocket;
 	}
 
+	/**
+	 * Create the SSL socket, and manipulate the provided irodsCommands to make
+	 * the secure socket the operative socket for the connection
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} for connection
+	 * @param irodsCommands
+	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
+	 *            current connection
+	 * @param doSslStartupSequence
+	 *            <code>boolean</code> that indicates that
+	 * @return {@link SSLSocket} that can be inserted into the existing
+	 *         connection. Note that this method will not manipulate the mid
+	 *         level protocol object, it is up to the caller to handle the
+	 *         disposition of that socket object.
+	 * @throws JargonException
+	 * @throws AssertionError
+	 */
+	void createSslSocketForProtocolAndIntegrateIntoProtocol(
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final boolean doSslStartupSequence) throws JargonException,
+			AssertionError {
+
+		log.info("createSslSocketForProtocolAndIntegrateIntoProtocol()");
+		SSLSocket sslSocket = this.createSslSocketForProtocol(irodsAccount,
+				irodsCommands, doSslStartupSequence);
+		log.info("have SSL socket, introduce as the iRODS connection in the provided protocol");
+		irodsCommands.setIrodsConnection(new IRODSBasicTCPConnection(
+				irodsCommands.getIrodsAccount(), irodsCommands
+						.getPipelineConfiguration(), irodsCommands
+						.getIrodsProtocolManager(), sslSocket, irodsCommands
+						.getIrodsSession()));
+
+	}
+
 }

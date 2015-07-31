@@ -182,10 +182,12 @@ class ClientServerNegotiationService {
 		log.info("wrapping in ssl connection");
 		SslConnectionUtilities sslConnectionUtilities = new SslConnectionUtilities(
 				this.getIrodsMidLevelProtocol().getIrodsSession());
-		// false indicates no ssl startup message needed
-		sslConnectionUtilities.createSslSocketForProtocol(this
-				.getIrodsMidLevelProtocol().getIrodsAccount(), this
-				.getIrodsMidLevelProtocol(), false);
+		sslConnectionUtilities
+				.createSslSocketForProtocolAndIntegrateIntoProtocol(this
+						.getIrodsMidLevelProtocol().getIrodsAccount(), this
+						.getIrodsMidLevelProtocol(), false);
+		getIrodsMidLevelProtocol().setStartupResponseData(startupResponse);
+		log.info("connection now wrapped in ssl socket!");
 
 	}
 

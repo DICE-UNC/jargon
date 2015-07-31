@@ -14,6 +14,7 @@ import org.irods.jargon.core.packinstr.DataObjInpForReg.ChecksumHandling;
 import org.irods.jargon.core.packinstr.DataObjInpForUnregister;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -375,8 +376,9 @@ public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
 				irodsAbsolutePath, false, recursive);
 
 		try {
-			Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
-					collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
+			Tag response = getIRODSProtocol().irodsFunction(
+					IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
+					CollInp.RMDIR_API_NBR);
 
 			if (response != null) {
 				log.warn("unexpected response from irods, expected null message - logged and ignored ");

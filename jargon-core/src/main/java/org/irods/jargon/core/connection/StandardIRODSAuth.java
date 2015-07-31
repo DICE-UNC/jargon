@@ -9,8 +9,8 @@ import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthResponseInp;
-import org.irods.jargon.core.protovalues.RequestTypes;
 import org.irods.jargon.core.utils.Base64;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +48,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 				irodsAccount.getProxyName(), response);
 
 		// should be a header with no body if successful
-		irodsCommands.irodsFunction(RequestTypes.RODS_API_REQ.getRequestType(),
+		irodsCommands.irodsFunction(IRODSConstants.RODS_API_REQ,
 				authResponse_PI.getParsedTags(), AUTH_RESPONSE_AN);
 
 		return cachedChallenge;

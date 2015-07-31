@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.GenQueryInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutorImpl.QueryCloseBehavior;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -137,7 +138,7 @@ public class GenQueryProcessor {
 	public Tag sendGenQueryAndReturnResponse(final GenQueryInp genQueryInp)
 			throws JargonException, DataNotFoundException {
 
-		Tag response = irodsCommands.irodsFunction(GenQueryInp.PI_TAG,
+		Tag response = irodsCommands.irodsFunction(IRODSConstants.RODS_API_REQ,
 				genQueryInp.getParsedTags(), GenQueryInp.API_NBR);
 
 		return response;
