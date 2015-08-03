@@ -3,6 +3,7 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 
 /**
  * Implementation of the <code>JargonProperties</code> interface that is
@@ -84,9 +85,28 @@ public class SettableJargonProperties implements JargonProperties {
 	 */
 	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 	/**
-	 * Default SSL negotiation policy, may be overrideen per request in the IRODSAccount
+	 * Default SSL negotiation policy, may be overrideen per request in the
+	 * IRODSAccount
 	 */
 	private SslNegotiationPolicy negotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
+	/**
+	 * Encryption algo for parallel transfers
+	 */
+	private EncryptionAlgorithmEnum encryptionAlgorithmEnum = EncryptionAlgorithmEnum.AES_256_CBC;
+	/**
+	 * Key size for encryption of parallel transfers when SSL negotiated
+	 */
+	private int encryptionKeySize = 32;
+	/**
+	 * Salt size for encryption of parallel transfers when SSL negotiated
+	 */
+	private int encryptionSaltSize = 8;
+
+	/**
+	 * Number of hash rounds for encryption of parallel transfers when SSL
+	 * negotiated
+	 */
+	private int encryptionNumberHashRounds = 16;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
@@ -194,6 +214,12 @@ public class SettableJargonProperties implements JargonProperties {
 		this.intraFileStatusCallbacksTotalBytesInterval = jargonProperties
 				.getIntraFileStatusCallbacksTotalBytesInterval();
 		this.negotiationPolicy = jargonProperties.getNegotiationPolicy();
+		this.encryptionAlgorithmEnum = jargonProperties
+				.getEncryptionAlgorithmEnum();
+		this.encryptionKeySize = jargonProperties.getEncryptionKeySize();
+		this.encryptionNumberHashRounds = jargonProperties
+				.getEncryptionNumberHashRounds();
+		this.encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
 
 	}
 
@@ -992,7 +1018,7 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SettableJargonProperties [useParallelTransfer=");
 		builder.append(useParallelTransfer);
@@ -1111,7 +1137,19 @@ public class SettableJargonProperties implements JargonProperties {
 		if (negotiationPolicy != null) {
 			builder.append("negotiationPolicy=");
 			builder.append(negotiationPolicy);
+			builder.append(", ");
 		}
+		if (encryptionAlgorithmEnum != null) {
+			builder.append("encryptionAlgorithmEnum=");
+			builder.append(encryptionAlgorithmEnum);
+			builder.append(", ");
+		}
+		builder.append("encryptionKeySize=");
+		builder.append(encryptionKeySize);
+		builder.append(", encryptionSaltSize=");
+		builder.append(encryptionSaltSize);
+		builder.append(", encryptionNumberHashRounds=");
+		builder.append(encryptionNumberHashRounds);
 		builder.append("]");
 		return builder.toString();
 	}
@@ -1189,23 +1227,92 @@ public class SettableJargonProperties implements JargonProperties {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
 	 */
 	@Override
 	public synchronized SslNegotiationPolicy getNegotiationPolicy() {
 		return this.negotiationPolicy;
 	}
-	
+
 	/**
 	 * Sets the default negotiation policy for SSL, cannot be <code>null</code>
-	 * @param negotiationPolicy {@link SslNegotiationPolicy}
+	 * 
+	 * @param negotiationPolicy
+	 *            {@link SslNegotiationPolicy}
 	 */
-	public void setNegotiationPolicy(final SslNegotiationPolicy negotiationPolicy) {
+	public synchronized void setNegotiationPolicy(
+			final SslNegotiationPolicy negotiationPolicy) {
 		if (negotiationPolicy == null) {
 			throw new IllegalArgumentException("null negotiationPolicy");
 		}
 		this.negotiationPolicy = negotiationPolicy;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
+	 * ()
+	 */
+	@Override
+	public synchronized EncryptionAlgorithmEnum getEncryptionAlgorithmEnum() {
+		return encryptionAlgorithmEnum;
+	}
+
+	public synchronized void setEncryptionAlgorithmEnum(
+			final EncryptionAlgorithmEnum encryptionAlgorithmEnum) {
+		this.encryptionAlgorithmEnum = encryptionAlgorithmEnum;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionKeySize()
+	 */
+	@Override
+	public synchronized int getEncryptionKeySize() {
+		return encryptionKeySize;
+	}
+
+	public synchronized void setEncryptionKeySize(final int encryptionKeySize) {
+		this.encryptionKeySize = encryptionKeySize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionSaltSize()
+	 */
+	@Override
+	public synchronized int getEncryptionSaltSize() {
+		return encryptionSaltSize;
+	}
+
+	public synchronized void setEncryptionSaltSize(final int encryptionSaltSize) {
+		this.encryptionSaltSize = encryptionSaltSize;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.JargonProperties#
+	 * getEncryptionNumberHashRounds()
+	 */
+	@Override
+	public synchronized int getEncryptionNumberHashRounds() {
+		return encryptionNumberHashRounds;
+	}
+
+	public synchronized void setEncryptionNumberHashRounds(
+			final int encryptionNumberHashRounds) {
+		this.encryptionNumberHashRounds = encryptionNumberHashRounds;
 	}
 
 }

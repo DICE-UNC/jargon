@@ -10,6 +10,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.utils.PropertyUtils;
 
 /**
@@ -19,10 +20,7 @@ import org.irods.jargon.core.utils.PropertyUtils;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-/**
- * @author Mike
- * 
- */
+
 public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	private final Properties jargonProperties;
@@ -545,19 +543,54 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		if (policyString.isEmpty()) {
 			return SslNegotiationPolicy.NO_NEGOTIATION;
 		}
-		
+
 		if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE.name())) {
 			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE.name())) {
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
+				.name())) {
 			return SslNegotiationPolicy.CS_NEG_REFUSE;
 		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
 			return SslNegotiationPolicy.CS_NEG_REQ;
-		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION.name())) {
+		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
+				.name())) {
 			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
-			throw new UnsupportedOperationException("unknown negotiation policy");
+			throw new UnsupportedOperationException(
+					"unknown negotiation policy");
 		}
-		
-		
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
+	 * ()
+	 */
+	@Override
+	public EncryptionAlgorithmEnum getEncryptionAlgorithmEnum() {
+		String enumString = verifyPropExistsAndGetAsString("ssl.parallel.encryption.algo");
+		if (enumString.isEmpty()) {
+			return EncryptionAlgorithmEnum.AES_256_CBC;
+		} else {
+			return EncryptionAlgorithmEnum.findTypeByString(enumString);
+		}
+	}
+
+	@Override
+	public int getEncryptionKeySize() {
+		return verifyPropExistsAndGetAsInt("ssl.parallel.encryption.key.size");
+	}
+
+	@Override
+	public int getEncryptionSaltSize() {
+		return verifyPropExistsAndGetAsInt("ssl.parallel.encryption.salt.size");
+
+	}
+
+	@Override
+	public int getEncryptionNumberHashRounds() {
+		return verifyPropExistsAndGetAsInt("ssl.parallel.encryption.number.hash.rounds");
 	}
 }
