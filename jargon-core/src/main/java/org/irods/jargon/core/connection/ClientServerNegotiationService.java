@@ -3,12 +3,15 @@
  */
 package org.irods.jargon.core.connection;
 
+import java.io.IOException;
+
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult.Outcome;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,6 +28,7 @@ class ClientServerNegotiationService {
 
 	private Logger log = LoggerFactory
 			.getLogger(ClientServerNegotiationService.class);
+	public static final String NEGOTIATION_SHARED_SECRET = "SHARED_SECRET";
 
 	/*
 	 * captures negotiation decision table per c code
@@ -164,7 +168,7 @@ class ClientServerNegotiationService {
 	}
 
 	private void wrapConnectionInSslIfConfigured(
-			StartupResponseData startupResponse) throws JargonException,
+			final StartupResponseData startupResponse) throws JargonException,
 			AssertionError {
 		log.info("wrapConnectionInSsl()");
 		// some sanity checking
@@ -186,8 +190,53 @@ class ClientServerNegotiationService {
 				.createSslSocketForProtocolAndIntegrateIntoProtocol(this
 						.getIrodsMidLevelProtocol().getIrodsAccount(), this
 						.getIrodsMidLevelProtocol(), false);
+
+		configureParametersForParallelTransfer(startupResponse);
+
 		getIrodsMidLevelProtocol().setStartupResponseData(startupResponse);
 		log.info("connection now wrapped in ssl socket!");
+
+	}
+
+	/**
+	 * Notify agent of preferences for encryption of parallel transfers based on
+	 * jargon properties
+	 * 
+	 * @throws JargonException
+	 */
+	private void configureParametersForParallelTransfer(
+			final StartupResponseData startupResponse) throws JargonException {
+		log.info("configureParametersForParallelTransfer()");
+		SslEncryptionHeader sslEncryptionHeader = new SslEncryptionHeader(this
+				.getIrodsMidLevelProtocol().getIrodsSession());
+		PipelineConfiguration myProps = PipelineConfiguration.instance(this
+				.getIrodsMidLevelProtocol().getIrodsSession()
+				.getJargonProperties());
+		byte[] key = RandomUtils.generateRandomBytesOfLength(myProps
+				.getEncryptionKeySize());
+		startupResponse.getNegotiatedClientServerConfiguration()
+				.setSslCryptKey(key);
+
+		this.getIrodsMidLevelProtocol().irodsFunction(
+				NEGOTIATION_SHARED_SECRET, null, null, 0, 0, key, 0,
+				key.length, 0);
+
+		byte[] headerToSend = sslEncryptionHeader
+				.instanceBytesForSslParameters(
+						myProps.getEncryptionAlgorithmEnum(),
+						myProps.getEncryptionKeySize(),
+						myProps.getEncryptionSaltSize(),
+						myProps.getEncryptionNumberHashRounds());
+		try {
+			log.info("sending header with encryption cues");
+			this.getIrodsMidLevelProtocol().getIrodsConnection()
+					.send(headerToSend);
+			log.info("now write the shared secret to iRODS");
+
+		} catch (IOException e) {
+			log.error("i/o exception sending encryption info", e);
+			throw new JargonException("error sending encryption info");
+		}
 
 	}
 

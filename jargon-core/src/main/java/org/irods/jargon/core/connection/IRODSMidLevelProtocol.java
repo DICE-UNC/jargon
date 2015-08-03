@@ -214,8 +214,10 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				getIrodsConnection().flush();
 			}
 
-			getIrodsConnection().send(message);
-			getIrodsConnection().flush();
+			if (messageLength > 0) {
+				getIrodsConnection().send(message);
+				getIrodsConnection().flush();
+			}
 
 			if (byteStringLength > 0) {
 				getIrodsConnection().send(bytes, byteOffset, byteStringLength);

@@ -224,7 +224,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * this occurs when a parallel operation is overridden in server side
 	 * policy, and is not used for typical put operations.
 	 * 
-	 * 
 	 * @param irodsPI
 	 *            <code>IRodsPI</code> subclass that is the definition of the
 	 *            packing instruction
@@ -599,7 +598,23 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final int errorLength, final long byteStringLength,
 			final int intInfo) throws JargonException {
 
-		log.debug("functionID: {}", intInfo);
+		return createHeaderBytesFromData(type, messageLength, errorLength,
+				byteStringLength, intInfo, this.getEncoding());
+	}
+
+	/**
+	 * @param type
+	 * @param messageLength
+	 * @param errorLength
+	 * @param byteStringLength
+	 * @param intInfo
+	 * @return
+	 * @throws JargonException
+	 */
+	public static byte[] createHeaderBytesFromData(final String type,
+			final int messageLength, final int errorLength,
+			final long byteStringLength, final int intInfo,
+			final String encoding) throws JargonException {
 
 		StringBuilder headerBuilder = new StringBuilder();
 		headerBuilder.append("<MsgHeader_PI>");
@@ -622,11 +637,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 		String header = headerBuilder.toString();
 
-		log.debug("header:{}", header);
-
 		byte[] temp;
 		try {
-			temp = header.getBytes(getEncoding());
+			temp = header.getBytes(encoding);
 		} catch (UnsupportedEncodingException e) {
 			throw new JargonException(e);
 		}
