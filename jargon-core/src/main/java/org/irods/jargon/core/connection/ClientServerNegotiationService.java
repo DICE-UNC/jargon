@@ -217,10 +217,6 @@ class ClientServerNegotiationService {
 		startupResponse.getNegotiatedClientServerConfiguration()
 				.setSslCryptKey(key);
 
-		this.getIrodsMidLevelProtocol().irodsFunction(
-				NEGOTIATION_SHARED_SECRET, null, null, 0, 0, key, 0,
-				key.length, 0);
-
 		byte[] headerToSend = sslEncryptionHeader
 				.instanceBytesForSslParameters(
 						myProps.getEncryptionAlgorithmEnum(),
@@ -232,6 +228,9 @@ class ClientServerNegotiationService {
 			this.getIrodsMidLevelProtocol().getIrodsConnection()
 					.send(headerToSend);
 			log.info("now write the shared secret to iRODS");
+			this.getIrodsMidLevelProtocol().irodsFunction(
+					NEGOTIATION_SHARED_SECRET, null, null, 0, 0, key, 0,
+					key.length, 0);
 
 		} catch (IOException e) {
 			log.error("i/o exception sending encryption info", e);

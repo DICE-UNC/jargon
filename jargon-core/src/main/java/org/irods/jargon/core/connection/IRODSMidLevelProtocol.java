@@ -172,7 +172,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *            <code>byte[]</code> with binary data to send to iRODS.
 	 * @param byteOffset
 	 *            <code>int</code> with an offset into the byte array to send
-	 * @param byteStringLength
+	 * @param byteBufferLength
 	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
@@ -183,7 +183,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
-			final int byteOffset, final int byteStringLength, final int intInfo)
+			final int byteOffset, final int byteBufferLength, final int intInfo)
 			throws JargonException {
 
 		log.debug("calling irods function with byte array");
@@ -207,7 +207,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 			getIrodsConnection().send(
 					createHeader(type, messageLength, errorLength,
-							byteStringLength, intInfo));
+							byteBufferLength, intInfo));
 
 			if (isPamFlush()) {
 				log.debug("doing extra pam flush for iRODS 3.2");
@@ -219,8 +219,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				getIrodsConnection().flush();
 			}
 
-			if (byteStringLength > 0) {
-				getIrodsConnection().send(bytes, byteOffset, byteStringLength);
+			if (byteBufferLength > 0) {
+				getIrodsConnection().send(bytes, byteOffset, byteBufferLength);
 			}
 
 			getIrodsConnection().flush();
