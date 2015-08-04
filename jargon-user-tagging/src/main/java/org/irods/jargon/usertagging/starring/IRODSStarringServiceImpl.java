@@ -403,6 +403,8 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
 		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData
 				.isLastResult());
+		log.debug("irodsStarredFileOrCollection:{}",
+				irodsStarredFileOrCollection);
 		return irodsStarredFileOrCollection;
 
 	}

@@ -25,8 +25,7 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	private final String userName;
 
 	/**
-<<<<<<< HEAD
-	 * optional (can be zero) data size
+	 * <<<<<<< HEAD optional (can be zero) data size
 	 */
 	private final long dataSize;
 	/**
@@ -40,9 +39,6 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 
 	/**
 	 * constructor that ignores created, modified dates and data size
-=======
-	 * Default constructor
->>>>>>> master
 	 * 
 	 * @param metadataDomain
 	 *            {@link MetadataDomain} enum value that describes the iCAT
