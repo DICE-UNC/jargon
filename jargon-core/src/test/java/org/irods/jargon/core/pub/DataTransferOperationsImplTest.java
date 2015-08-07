@@ -379,6 +379,16 @@ public class DataTransferOperationsImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + testOrigDirectory);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -395,6 +405,10 @@ public class DataTransferOperationsImplTest {
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
+
+		dataTransferOperations.putOperation(localCollectionAbsolutePath,
+				irodsFile.getAbsolutePath(), "", null, null);
+
 		dataTransferOperations.move(irodsFile.getAbsolutePath(),
 				irodsDestFile.getAbsolutePath());
 

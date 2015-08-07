@@ -183,6 +183,7 @@ abstract class AuthMechanism {
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
 				.getPipelineConfiguration().isReconnect());
 		String startupPackData = startupPack.getParsedTags();
+		log.debug("startupPackData:{}", startupPackData);
 		try {
 
 			irodsCommands.getIrodsConnection().send(

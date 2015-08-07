@@ -62,6 +62,8 @@ java test resources directory -->
  				<jargon.test.option.exercise.workflow>true</jargon.test.option.exercise.workflow>
  				<jargon.test.option.exercise.filesystem.mount>true</jargon.test.option.exercise.filesystem.mount>
  				<test.option.mount.basedir>/Users/mikeconway/temp/basedir</test.option.mount.basedir>
+ 			    <jargon.test.pam.user>pam</jargon.test.pam.user>
+                <jargon.test.pam.password>pam</jargon.test.pam.password>
  				<test.option.pam>false</test.option.pam>
 				<test.option.distributed.resources>false</test.option.distributed.resources>
 				<test.option.registration>true</test.option.registration>
