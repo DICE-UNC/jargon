@@ -119,7 +119,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			return;
 		}
 
-		// build correct packing instruction for copy. The packing instructions
+		// build correct packing instruction for move. The packing instructions
 		// are different for files and collections.
 
 		DataObjCopyInp dataObjCopyInp = null;
@@ -130,10 +130,23 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 					irodsSourceFile.getAbsolutePath(),
 					actualTargetFile.getAbsolutePath());
 		} else {
+
+			/*
+			 * Check if the last path component includes the last path component
+			 * of the collection
+			 */
+
+			StringBuilder sb = new StringBuilder(
+					actualTargetFile.getAbsolutePath());
+			if (!actualTargetFile.getAbsolutePath().endsWith("/")) {
+				sb.append("/");
+			}
+
+			sb.append(irodsSourceFile.getName());
+
 			log.info("move is for a collection");
 			dataObjCopyInp = DataObjCopyInp.instanceForRenameCollection(
-					irodsSourceFile.getAbsolutePath(),
-					actualTargetFile.getAbsolutePath());
+					irodsSourceFile.getAbsolutePath(), sb.toString());
 		}
 
 		try {
@@ -173,7 +186,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				sourceFileAbsolutePath);
 		IRODSFile targetFile = getIRODSFileFactory().instanceIRODSFile(
 				targetFileAbsolutePath);
-		// targetFile.mkdirs();
+		targetFile.mkdirs();
 		this.move(sourceFile, targetFile);
 	}
 

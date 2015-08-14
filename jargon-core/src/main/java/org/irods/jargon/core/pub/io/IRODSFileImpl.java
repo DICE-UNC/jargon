@@ -982,6 +982,9 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		} catch (DuplicateDataException e) {
 			log.info("duplicate data exception, return false from mkdir", e);
 			return false;
+		} catch (JargonFileOrCollAlreadyExistsException e) {
+			log.info("duplicate data exception, return false from mkdir", e);
+			return false;
 		} catch (JargonException e) {
 			log.error("jargon exception, rethrow as unchecked", e);
 			throw new JargonRuntimeException(e);

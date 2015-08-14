@@ -401,6 +401,7 @@ public class DataTransferOperationsImplTest {
 		IRODSFile irodsDestFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
 				targetIrodsCollection + '/' + testNewDirectory);
+		irodsDestFile.mkdirs();
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -3356,6 +3357,7 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(irodsCollectionRootAbsolutePath);
 		IRODSFile root2File = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionRoot2AbsolutePath);
+		root2File.mkdirs();
 
 		rootFile.mkdirs();
 
@@ -4296,6 +4298,7 @@ public class DataTransferOperationsImplTest {
 
 		IRODSFile targetParent = irodsFileFactory
 				.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
+		targetParent.mkdirs();
 
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/"
 				+ rootCollection, targetParent.getAbsolutePath());
