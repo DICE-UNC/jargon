@@ -168,8 +168,8 @@ public class CollectionPagerAOImplTest {
 		entries.add(entry);
 
 		Mockito.when(
-				collectionListingUtils.listCollectionsUnderPath(objStat,
-						5000)).thenReturn(entries);
+				collectionListingUtils.listCollectionsUnderPath(objStat, 5000))
+				.thenReturn(entries);
 
 		PagingAwareCollectionListing actual = collectionPagerAO
 				.retrieveNextPage(firstPage
@@ -182,19 +182,15 @@ public class CollectionPagerAOImplTest {
 		Assert.assertFalse("data objects should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isCollectionsComplete());
-		Assert.assertEquals("total colls",
-				20000, actual
-						.getPagingAwareCollectionListingDescriptor()
-						.getTotalRecords());
-		Assert.assertEquals("count",
-				10000, actual
-						.getPagingAwareCollectionListingDescriptor().getCount());
-		Assert.assertEquals("offset",
-				5001, actual
-						.getPagingAwareCollectionListingDescriptor().getOffset());
+		Assert.assertEquals("total colls", 20000, actual
+				.getPagingAwareCollectionListingDescriptor().getTotalRecords());
+		Assert.assertEquals("count", 10000, actual
+				.getPagingAwareCollectionListingDescriptor().getCount());
+		Assert.assertEquals("offset", 5001, actual
+				.getPagingAwareCollectionListingDescriptor().getOffset());
 
 	}
-	
+
 	@Test
 	public void testPageForwardColsThenDataObjs() throws Exception {
 		String parentPath = "/a/path";
@@ -268,39 +264,37 @@ public class CollectionPagerAOImplTest {
 		entries.add(entry);
 
 		Mockito.when(
-				collectionListingUtils.listCollectionsUnderPath(objStat,
-						4999)).thenReturn(entries);
+				collectionListingUtils.listCollectionsUnderPath(objStat, 4999))
+				.thenReturn(entries);
 
-		PagingAwareCollectionListing actual = collectionPagerAO
-				.retrieveNextPage(firstPage
-						.getPagingAwareCollectionListingDescriptor());
-
-		Assert.assertNotNull("null actual ", actual);
-		
-		entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		List<CollectionAndDataObjectListingEntry> entries2 = new ArrayList<CollectionAndDataObjectListingEntry>();
 
 		entry = new CollectionAndDataObjectListingEntry();
 
 		entry.setCount(1);
 		entry.setTotalRecords(5000);
 		entry.setLastResult(false);
-		entries.add(entry);
+		entries2.add(entry);
 
 		entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(5001);
 		entry.setTotalRecords(5000);
-		entry.setLastResult(true);
-		entries.add(entry);
+		entry.setLastResult(false);
+		entries2.add(entry);
 
 		Mockito.when(
-				collectionListingUtils.listDataObjectsUnderPath(objStat,
-						0)).thenReturn(entries);
+				collectionListingUtils.listDataObjectsUnderPath(objStat, 0))
+				.thenReturn(entries2);
 
-		 actual = collectionPagerAO
-				.retrieveNextPage(actual
+		PagingAwareCollectionListing actual = collectionPagerAO
+				.retrieveNextPage(firstPage
 						.getPagingAwareCollectionListingDescriptor());
-		 Assert.assertNotNull("data objects page was missing", actual);
 
+		Assert.assertNotNull("null actual ", actual);
+
+		actual = collectionPagerAO.retrieveNextPage(actual
+				.getPagingAwareCollectionListingDescriptor());
+		Assert.assertNotNull("data objects page was missing", actual);
 
 	}
 

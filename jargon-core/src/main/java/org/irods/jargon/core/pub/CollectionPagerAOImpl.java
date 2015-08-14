@@ -233,8 +233,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						.getCollectionAndDataObjectListingEntries());
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()
-				|| listAndCount.getCountThisPage() < this.getJargonProperties()
-						.getMaxFilesAndDirsQueryMax()) {
+				|| listAndCount.getCountThisPage() + 1 < this
+						.getJargonProperties().getMaxFilesAndDirsQueryMax()) {
 			log.info("collections are empty or less then max, so get data objects");
 
 			addDataObjectsToExistingListing(pagingAwareCollectionListing);
