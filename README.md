@@ -41,3 +41,7 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GitHub with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Changes
+
+### move semantics error in cloud browser moving a/path/a to a/path/b with collection already exists #140
+
+Updated semantics of move collection to avoid 'collection already exists errors' by adding the source collection as the child of the target collection name
