@@ -492,48 +492,6 @@ public class IRODSFileOutputStreamTest {
 
 	}
 
-	@Test
-	public final void testIRODSFileOutputStreamOverwriteNonexistent()
-			throws Exception {
-		String testFileName = "testIRODSFileOutputStreamOverwrite.txt";
-		String string = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
-
-		new File(localFilePath);
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
-
-		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
-				.instanceIRODSFileOutputStream(irodsFile,
-						OpenFlags.WRITE_TRUNCATE);
-
-		irodsFileOutputStream.write(string.getBytes());
-		irodsFileOutputStream.close();
-
-		IRODSFileInputStream irodsFileInputStream = irodsFileFactory
-				.instanceIRODSFileInputStream(irodsFile);
-		String actual = MiscIRODSUtils
-				.convertStreamToString(irodsFileInputStream);
-		irodsFileInputStream.close();
-
-		Assert.assertEquals("should be string", string, actual);
-
-	}
-
 	/**
 	 * Test for #52 Overwriting a file with IRODSFileOutputStream deletes file
 	 * metadata

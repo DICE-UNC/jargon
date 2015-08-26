@@ -6,15 +6,22 @@ package org.irods.jargon.testutils;
 import static org.irods.jargon.testutils.TestingPropertiesHelper.GENERATED_FILE_DIRECTORY_KEY;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
+import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.JargonQueryException;
+import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 
 /**
@@ -383,6 +390,58 @@ public class AssertionHelper {
 
 	}
 
+	/**
+	 * Assert that the given attribute is associated with the given data object
+	 * 
+	 * @param irodsAbsolutePath
+	 * @param avuAttribute
+	 * @param irodsAccessObjectFactory
+	 * @param irodsAccount
+	 */
+	public void assertDataObjectFlaggedWithAVU(final String irodsAbsolutePath,
+			String avuAttribute,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount)
+			throws IRODSTestAssertionException, JargonException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+
+		if (avuAttribute == null || avuAttribute.isEmpty()) {
+			throw new IllegalArgumentException("null or empty avuAttribute");
+		}
+
+		if (irodsAccessObjectFactory == null) {
+			throw new IllegalArgumentException("null irodsAccessObjectFactory");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		List<MetaDataAndDomainData> actual = null;
+
+		try {
+			List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
+			query.add(AVUQueryElement.instanceForValueQuery(
+					AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+					AVUQueryOperatorEnum.EQUAL, avuAttribute));
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory
+					.getDataObjectAO(irodsAccount);
+			actual = dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(
+					query, irodsAbsolutePath);
+
+		} catch (JargonException | JargonQueryException e) {
+			throw new JargonException(
+					"cannot execute assertion due to JargonException", e);
+		}
+
+		if (actual.isEmpty()) {
+			throw new IRODSTestAssertionException("no avu found");
+		}
+
+	}
 }
 
 class DirAlphaComparator implements Comparator<File> {
