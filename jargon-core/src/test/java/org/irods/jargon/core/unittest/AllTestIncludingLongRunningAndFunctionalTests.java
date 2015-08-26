@@ -9,6 +9,7 @@ import org.irods.jargon.core.unittest.functionaltest.IRODSThousandFilesTest;
 import org.irods.jargon.core.unittest.functionaltest.SslNegotiationFunctionalTests;
 import org.irods.jargon.core.unittest.functionaltest.TestBug38GetFileFromSoftLinkedPublicCollection;
 import org.irods.jargon.core.unittest.functionaltest.TestParallelTransferToIcatRerouteRemoteBug132;
+import org.irods.jargon.core.unittest.functionaltest.pep.IRODSFileOutputStreamPEPFunctionalTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -21,7 +22,8 @@ import org.junit.runners.Suite;
 		IRODSTenThousandCollectionsTest.class,
 		TestBug38GetFileFromSoftLinkedPublicCollection.class,
 		TestParallelTransferToIcatRerouteRemoteBug132.class,
-		SslNegotiationFunctionalTests.class })
+		SslNegotiationFunctionalTests.class,
+		IRODSFileOutputStreamPEPFunctionalTest.class })
 public class AllTestIncludingLongRunningAndFunctionalTests {
 
 }
