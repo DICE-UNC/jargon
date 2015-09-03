@@ -272,8 +272,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 				length = message.getBytes(irodsConnection
 						.getPipelineConfiguration().getDefaultEncoding()).length;
 			}
-			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
-					length, 0, byteStreamLength, irodsPI.getApiNumber()));
+			sendHeader(IRODSConstants.RODS_API_REQ, length, 0,
+					byteStreamLength, irodsPI.getApiNumber());
 			irodsConnection.send(message);
 
 			if (byteStreamLength > 0) {
@@ -371,8 +371,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 			log.debug("message:{}", message);
 
-			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
-					length, 0, byteStreamLength, irodsPI.getApiNumber()));
+			sendHeader(IRODSConstants.RODS_API_REQ, length, 0,
+					byteStreamLength, irodsPI.getApiNumber());
 			irodsConnection.send(message);
 
 			if (byteStreamLength > 0) {
@@ -426,9 +426,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 
 		try {
-			irodsConnection.send(createHeader(IRODSConstants.RODS_API_REQ,
+			sendHeader(IRODSConstants.RODS_API_REQ,
 					out.getBytes(getEncoding()).length, errorLength,
-					byteStreamLength, irodsPI.getApiNumber()));
+					byteStreamLength, irodsPI.getApiNumber());
 			irodsConnection.send(out);
 
 			if (byteStreamLength > 0) {
@@ -603,6 +603,30 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
+	 * Protocol impl specific method to create and send an iRODS header. This is
+	 * generally not used in normal protocol operations (instead, the
+	 * <code>irodsFunction</code> methods will handle headers). There are
+	 * certain situations, such as ssl negotiation, where raw headers are sent
+	 * without accompanying messages.
+	 * 
+	 * @param type
+	 *            <code>String</code> with the header type
+	 * @param messageLength
+	 *            <code>long</code> length of the message to send
+	 * @param errorLength
+	 *            <code>long</code> length of error data
+	 * @param byteStringLength
+	 *            <code>long</code> with the length of any binary bytes to send
+	 * @param intInfo
+	 *            <code>int</code>
+	 * @throws JargonException
+	 * @throws IOException
+	 */
+	public abstract void sendHeader(final String type, final int messageLength,
+			final int errorLength, final long byteStringLength,
+			final int intInfo) throws JargonException, IOException;
+
+	/**
 	 * @param type
 	 * @param messageLength
 	 * @param errorLength
@@ -643,12 +667,17 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		} catch (UnsupportedEncodingException e) {
 			throw new JargonException(e);
 		}
-		byte[] full = new byte[4 + temp.length];
-		// load first 4 byte with header length
-		org.irods.jargon.core.utils.Host.copyInt(temp.length, full);
-		// copy rest of header into full
-		System.arraycopy(temp, 0, full, 4, temp.length);
-		return full;
+		// FIXME: issue #4
+
+		/*
+		 * 
+		 * byte[] full = new byte[4 + temp.length]; // load first 4 byte with
+		 * header length org.irods.jargon.core.utils.Host.copyInt(temp.length,
+		 * full); // copy rest of header into full System.arraycopy(temp, 0,
+		 * full, 4, temp.length); return full;
+		 */
+
+		return temp;
 	}
 
 	/**

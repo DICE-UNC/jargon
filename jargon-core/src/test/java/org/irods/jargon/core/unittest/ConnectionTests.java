@@ -13,7 +13,6 @@ import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
 import org.irods.jargon.core.connection.PAMAuthTest;
 import org.irods.jargon.core.connection.PipelineConfigurationTest;
-import org.irods.jargon.core.connection.SslEncryptionHeaderTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -27,7 +26,7 @@ import org.junit.runners.Suite;
 		DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class,
 		ClientServerNegotationPolicyFromPropertiesBuilderTest.class,
 		ClientServerNegotiationPolicyTest.class,
-		PipelineConfigurationTest.class, SslEncryptionHeaderTest.class })
+		PipelineConfigurationTest.class })
 public class ConnectionTests {
 
 }

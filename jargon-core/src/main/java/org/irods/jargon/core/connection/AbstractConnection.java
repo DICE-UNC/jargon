@@ -225,6 +225,7 @@ public abstract class AbstractConnection {
 		try {
 			// packing instructions may be null, in which case nothing is sent
 			if (value == null) {
+				log.info("no value, so do not do the send, this may be ok depending on the operation");
 				return;
 			}
 
@@ -251,6 +252,7 @@ public abstract class AbstractConnection {
 			}
 		} catch (IOException ioe) {
 			getIrodsSession().discardSessionForErrors(getIrodsAccount());
+			log.error("ioException in send", ioe);
 			throw ioe;
 		}
 	}

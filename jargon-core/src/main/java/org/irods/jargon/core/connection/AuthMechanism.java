@@ -250,10 +250,9 @@ abstract class AuthMechanism {
 			final AbstractIRODSMidLevelProtocol irodsCommands)
 			throws JargonException {
 		try {
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, AUTH_REQUEST_AN));
+			irodsCommands.sendHeader(
+					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
+					AUTH_REQUEST_AN);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
@@ -326,10 +325,9 @@ abstract class AuthMechanism {
 		String startupPackData = startupPack.getParsedTags();
 		log.debug("startupPackData:{}", startupPackData);
 		try {
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_CONNECT.getRequestType(),
-							startupPackData.length(), 0, 0, 0));
+			irodsCommands.sendHeader(
+					RequestTypes.RODS_CONNECT.getRequestType(),
+					startupPackData.length(), 0, 0, 0);
 			irodsCommands.getIrodsConnection().send(startupPackData);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {

@@ -207,8 +207,6 @@ class ClientServerNegotiationService {
 	private void configureParametersForParallelTransfer(
 			final StartupResponseData startupResponse) throws JargonException {
 		log.info("configureParametersForParallelTransfer()");
-		SslEncryptionHeader sslEncryptionHeader = new SslEncryptionHeader(this
-				.getIrodsMidLevelProtocol().getIrodsSession());
 		PipelineConfiguration myProps = PipelineConfiguration.instance(this
 				.getIrodsMidLevelProtocol().getIrodsSession()
 				.getJargonProperties());
@@ -217,16 +215,18 @@ class ClientServerNegotiationService {
 		startupResponse.getNegotiatedClientServerConfiguration()
 				.setSslCryptKey(key);
 
-		byte[] headerToSend = sslEncryptionHeader
-				.instanceBytesForSslParameters(
-						myProps.getEncryptionAlgorithmEnum(),
-						myProps.getEncryptionKeySize(),
-						myProps.getEncryptionSaltSize(),
-						myProps.getEncryptionNumberHashRounds());
+		/*
+		 * See irods/plugins/network/ssl/libssl.cpp ~line 757 for analagous code
+		 */
+
 		try {
 			log.info("sending header with encryption cues");
-			this.getIrodsMidLevelProtocol().getIrodsConnection()
-					.send(headerToSend);
+			this.getIrodsMidLevelProtocol().sendHeader(
+					myProps.getEncryptionAlgorithmEnum().getTextValue(),
+					myProps.getEncryptionKeySize(),
+					myProps.getEncryptionSaltSize(),
+					myProps.getEncryptionNumberHashRounds(), 0);
+			// this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
 			log.info("now write the shared secret to iRODS");
 			this.getIrodsMidLevelProtocol().irodsFunction(
 					NEGOTIATION_SHARED_SECRET, null, null, 0, 0, key, 0,

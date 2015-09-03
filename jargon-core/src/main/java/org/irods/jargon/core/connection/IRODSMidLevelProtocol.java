@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.Host;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -205,9 +206,12 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.getBytes(getEncoding()).length;
 			}
 
-			getIrodsConnection().send(
-					createHeader(type, messageLength, errorLength,
-							byteBufferLength, intInfo));
+			/*
+			 * getIrodsConnection().send( createHeader(type, messageLength,
+			 * errorLength, byteBufferLength, intInfo));
+			 */
+			sendHeader(type, messageLength, errorLength, byteBufferLength,
+					intInfo);
 
 			if (isPamFlush()) {
 				log.debug("doing extra pam flush for iRODS 3.2");
@@ -234,6 +238,32 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		}
 
 		return readMessage();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#sendHeader
+	 * (java.lang.String, int, int, long, int)
+	 */
+	@Override
+	public void sendHeader(String type, int messageLength, int errorLength,
+			long byteStringLength, int intInfo) throws JargonException,
+			IOException {
+
+		byte[] header = createHeader(type, messageLength, errorLength,
+				byteStringLength, intInfo);
+
+		int len = header.length;
+		byte[] lenBytes = new byte[4];
+		Host.copyInt(len, lenBytes);
+		getIrodsConnection().send(lenBytes);
+		getIrodsConnection().flush();
+
+		getIrodsConnection().send(header);
+		getIrodsConnection().flush();
+
 	}
 
 }
