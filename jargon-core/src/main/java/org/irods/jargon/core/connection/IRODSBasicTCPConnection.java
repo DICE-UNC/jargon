@@ -89,20 +89,12 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			throws JargonException {
 
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
-				irodsSession);
+				socket, irodsSession);
 
-		if (socket == null) {
-			throw new IllegalArgumentException("null socket");
-		}
-
-		connection = socket;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
-		connected = true;
-
 		if (socket instanceof SSLSocket) {
 			setEncryptionType(EncryptionType.SSL_WRAPPED);
 		}
-
 		log.debug("socket opened successfully");
 	}
 

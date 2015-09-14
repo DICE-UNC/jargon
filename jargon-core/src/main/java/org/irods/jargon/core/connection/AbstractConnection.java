@@ -38,7 +38,7 @@ public abstract class AbstractConnection {
 	protected Socket connection;
 	protected InputStream irodsInputStream;
 	protected OutputStream irodsOutputStream;
-	private IRODSSession irodsSession = null;
+	protected IRODSSession irodsSession = null;
 	protected final IRODSAccount irodsAccount;
 	protected final PipelineConfiguration pipelineConfiguration;
 	private final long connectTimeInMillis = System.currentTimeMillis();
@@ -74,6 +74,74 @@ public abstract class AbstractConnection {
 	 */
 	ClientServerNegotiationPolicy getOperativeClientServerNegotiationPolicy() {
 		return operativeClientServerNegotiationPolicy;
+	}
+
+	/**
+	 * Default constructor that gives the account and pipeline setup
+	 * information. This constructor is a special case where you already have a
+	 * Socket opened to iRODS, and you want to wrap that socket with the low
+	 * level iRODS semantics. An example use case is when you need to to PAM
+	 * authentication and wrap an existing iRODS connection with an SSL socket.
+	 * <p/>
+	 * This may be updated a bit later when we implement SSL negotiation for
+	 * iRODS 4+.
+	 * <p/>
+	 * Note that this method does not set up the socket streams, this is the
+	 * responsibility of the subclass. This is all kind of a mess with the
+	 * introduction of negotiation and seems a bit too involved for its own
+	 * good. We need to simplify this (MCC)
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 * @param irodsProtocolManager
+	 *            {@link irodsProtocolManager} that requested this connection
+	 * @param socket
+	 *            {@link Socket} being wrapped in this connection, this allows
+	 *            an arbitrary connected socket to be wrapped in low level
+	 *            jargon communication semantics.
+	 * @param IRODSession
+	 *            {@link IRODSSession} associated with this connection
+	 * @throws JargonException
+	 */
+	AbstractConnection(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager,
+			final Socket socket, final IRODSSession irodsSession)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
+		}
+
+		if (socket == null) {
+			throw new IllegalArgumentException("null socket");
+		}
+
+		/*
+		 * super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+		 * irodsSession);
+		 */
+		this.irodsAccount = irodsAccount;
+		this.pipelineConfiguration = pipelineConfiguration;
+		this.irodsProtocolManager = irodsProtocolManager;
+		this.connection = socket;
+		this.irodsSession = irodsSession;
+		connected = true;
+		connection = socket;
+		this.operativeClientServerNegotiationPolicy = null; // I don't need this
+
+		initInternalBufferIfNeeded(pipelineConfiguration);
+
 	}
 
 	/**
@@ -127,6 +195,17 @@ public abstract class AbstractConnection {
 					operativeClientServerNegotiationPolicy);
 		}
 
+		initInternalBufferIfNeeded(pipelineConfiguration);
+		initializeConnection(irodsAccount);
+		initializeIdentifier(irodsAccount);
+
+	}
+
+	/**
+	 * @param pipelineConfiguration
+	 */
+	private void initInternalBufferIfNeeded(
+			final PipelineConfiguration pipelineConfiguration) {
 		/*
 		 * If using the custom internal buffer, initialize it
 		 */
@@ -137,8 +216,6 @@ public abstract class AbstractConnection {
 			outputBuffer = new byte[pipelineConfiguration
 					.getInternalCacheBufferSize()];
 		}
-		initializeConnection(irodsAccount);
-
 	}
 
 	protected void initializeConnection(final IRODSAccount irodsAccount)
@@ -165,6 +242,15 @@ public abstract class AbstractConnection {
 		connect(irodsAccount);
 		setConnected(true);
 
+		initializeIdentifier(irodsAccount);
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
+	private void initializeIdentifier(final IRODSAccount irodsAccount)
+			throws JargonException {
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
 		connectionInternalIdentifierBuilder.append(irodsAccount.toURI(false)

@@ -87,6 +87,9 @@ class ClientServerNegotiationService {
 	 * Using the configured connection and account information, go through the
 	 * iRODS client/server negotiation that occurs after the start-up pack has
 	 * been processed.
+	 * <p/>
+	 * This is triggered after the neg_pi has been sent from the server, see
+	 * irods_client_negotiation.cpp ~ line 412
 	 * 
 	 * @return {@link NegotiatedClientServerConfiguration} with the negotiated
 	 *         result
@@ -140,6 +143,9 @@ class ClientServerNegotiationService {
 	/**
 	 * After negotiation, notify the server. If the connection uses SSL, this is
 	 * the point where the connection is manipulated to wrap the socket in ssl
+	 * <p/>
+	 * This should be processed in irods_client_negotiation.cpp line 463 -
+	 * read_client_server_negotiation_message
 	 * 
 	 * @param negotiatedOutcome
 	 * @return
@@ -153,6 +159,13 @@ class ClientServerNegotiationService {
 						negotiatedOutcome.name());
 		Tag versionPiTag = this.irodsMidLevelProtocol
 				.irodsFunctionForNegotiation(struct);
+
+		/*
+		 * This section maps to rodsAgent.cpp ~ line 235, where the versionPI is
+		 * sent after negotation (after call to
+		 * client_server_negotiation_for_server)
+		 */
+
 		StartupResponseData startupResponse = AuthMechanism
 				.buldStartupResponseFromVersionPI(versionPiTag);
 		startupResponse
@@ -226,11 +239,10 @@ class ClientServerNegotiationService {
 					myProps.getEncryptionKeySize(),
 					myProps.getEncryptionSaltSize(),
 					myProps.getEncryptionNumberHashRounds(), 0);
-			// this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
+			this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
 			log.info("now write the shared secret to iRODS");
 			this.getIrodsMidLevelProtocol().irodsFunction(
-					NEGOTIATION_SHARED_SECRET, null, null, 0, 0, key, 0,
-					key.length, 0);
+					NEGOTIATION_SHARED_SECRET, key, null, 0, 0, null, 0, 0, 0);
 
 		} catch (IOException e) {
 			log.error("i/o exception sending encryption info", e);

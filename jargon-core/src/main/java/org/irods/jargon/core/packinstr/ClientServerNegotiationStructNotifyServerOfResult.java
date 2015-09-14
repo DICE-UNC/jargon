@@ -6,7 +6,7 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Structure that is the result of a client-server negotiation, analgous to the
+ * Structure that is the result of a client-server negotiation, analogous to the
  * cs_neg_t struct in iRODS, as read from the server
  * 
  * @author Mike Conway - DICE

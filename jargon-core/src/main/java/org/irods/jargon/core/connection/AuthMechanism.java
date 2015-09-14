@@ -142,6 +142,11 @@ abstract class AuthMechanism {
 			return buldStartupResponseFromVersionPI(negResultPI);
 		} else if (negResultPI.getName().equals(
 				ClientServerNegotiationStructInitNegotiation.NEG_PI)) {
+
+			/*
+			 * NEG_PI sent in irods_client_negotiation.cpp line ~429
+			 */
+
 			ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 					.instanceFromTag(negResultPI);
 

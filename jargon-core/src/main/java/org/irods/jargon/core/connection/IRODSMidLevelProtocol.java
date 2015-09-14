@@ -6,7 +6,6 @@ import java.io.UnsupportedEncodingException;
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.utils.Host;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -240,6 +239,95 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		return readMessage();
 	}
 
+	/**
+	 * Send the given iROD protocol request with any included binary data, and
+	 * return the iRODS response as a <code>Tag</code> object. This method has
+	 * detailed parameters, and there are other methods in the class with
+	 * simpler signatures that should be used.
+	 * 
+	 * @param type
+	 *            <code>String</code> with the type of request, typically an
+	 *            iRODS protocol request
+	 * @param message
+	 *            <code>String</code> with an XML formatted messag
+	 * @param errorBytes
+	 *            <code>byte[]</code> with any error data to send to iRODS, can
+	 *            be set to <code>null</code>
+	 * @param errorOffset
+	 *            <code>int</code> with offset into the error data to send
+	 * @param errorLength
+	 *            <code>int</code> with the length of error data
+	 * @param bytes
+	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 * @param byteOffset
+	 *            <code>int</code> with an offset into the byte array to send
+	 * @param byteBufferLength
+	 *            <code>int</code> with the length of the bytes to send
+	 * @param intInfo
+	 *            <code>int</code> with the iRODS API number
+	 * @return
+	 * @throws JargonException
+	 */
+	@Override
+	public synchronized Tag irodsFunction(final String type,
+			final byte[] message, final byte[] errorBytes,
+			final int errorOffset, final int errorLength, final byte[] bytes,
+			final int byteOffset, final int byteBufferLength, final int intInfo)
+			throws JargonException {
+
+		log.debug("calling irods function with byte array");
+		log.debug("calling irods function with:{}", message);
+		log.debug("api number is:{}", intInfo);
+
+		if (type == null || type.length() == 0) {
+			String err = "null or blank type";
+			log.error(err);
+			throw new JargonException(err);
+		}
+
+		// message may be null for some operations
+
+		try {
+			int messageLength = 0;
+
+			if (message != null) {
+				messageLength = message.length;
+			}
+
+			/*
+			 * getIrodsConnection().send( createHeader(type, messageLength,
+			 * errorLength, byteBufferLength, intInfo));
+			 */
+			sendHeader(type, messageLength, errorLength, byteBufferLength,
+					intInfo);
+
+			if (isPamFlush()) {
+				log.debug("doing extra pam flush for iRODS 3.2");
+				getIrodsConnection().flush();
+			}
+
+			if (messageLength > 0) {
+				getIrodsConnection().send(message);
+				getIrodsConnection().flush();
+			}
+
+			if (byteBufferLength > 0) {
+				getIrodsConnection().send(bytes, byteOffset, byteBufferLength);
+			}
+
+			getIrodsConnection().flush();
+
+		} catch (UnsupportedEncodingException e) {
+			log.error("unsupported encoding", e);
+			throw new JargonException(e);
+		} catch (IOException e) {
+			disconnectWithForce();
+			throw new JargonException(e);
+		}
+
+		return readMessage();
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -256,13 +344,14 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				byteStringLength, intInfo);
 
 		int len = header.length;
-		byte[] lenBytes = new byte[4];
-		Host.copyInt(len, lenBytes);
-		getIrodsConnection().send(lenBytes);
-		getIrodsConnection().flush();
+		// byte[] lenBytes = new byte[4];
+		// Host.copyInt(len, lenBytes);
+		// getIrodsConnection().send(lenBytes);
+		getIrodsConnection().sendInNetworkOrder(len);
+		// getIrodsConnection().flush();
 
 		getIrodsConnection().send(header);
-		getIrodsConnection().flush();
+		// getIrodsConnection().flush();
 
 	}
 

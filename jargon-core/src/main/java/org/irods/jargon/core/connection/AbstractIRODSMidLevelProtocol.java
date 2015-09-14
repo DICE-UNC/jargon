@@ -1335,4 +1335,10 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	protected void setIrodsConnection(AbstractConnection irodsConnection) {
 		this.irodsConnection = irodsConnection;
 	}
+
+	public abstract Tag irodsFunction(String type, byte[] message,
+			byte[] errorBytes, int errorOffset, int errorLength, byte[] bytes,
+			int byteOffset, int byteBufferLength, int intInfo)
+			throws JargonException;
+
 }
