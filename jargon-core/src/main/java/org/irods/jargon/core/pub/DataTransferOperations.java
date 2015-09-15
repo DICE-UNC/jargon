@@ -539,4 +539,18 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
 			throws OverwriteException, DataNotFoundException, JargonException;
+
+	/**
+	 * Rename a source to a target file in place, as opposed to a move or copy
+	 * operation.
+	 * <p/>
+	 * This means that renaming from source xxx/yyy/zzz to target xxx/yyy/rrr
+	 * will result in xxx/yyy/rrr as the new path of the source file
+	 * 
+	 * @param sourceFileAbsolutePath
+	 * @param targetFileAbsolutePath
+	 * @throws JargonException
+	 */
+	void rename(String sourceFileAbsolutePath, String targetFileAbsolutePath)
+			throws JargonException;
 }

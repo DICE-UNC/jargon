@@ -179,7 +179,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 
 		MiscIRODSUtils.checkPathSizeForMax(targetFileAbsolutePath);
 
-		log.info("moveAFileOrCollection() from {}", sourceFileAbsolutePath);
+		log.info("move() from {}", sourceFileAbsolutePath);
 		log.info("to {}", targetFileAbsolutePath);
 
 		IRODSFile sourceFile = getIRODSFileFactory().instanceIRODSFile(
@@ -188,6 +188,33 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				targetFileAbsolutePath);
 		targetFile.mkdirs();
 		this.move(sourceFile, targetFile);
+	}
+
+	@Override
+	public void rename(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath) throws JargonException {
+
+		log.info("rename()");
+
+		if (sourceFileAbsolutePath == null || sourceFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null sourceFileAbsolutePath");
+		}
+
+		if (targetFileAbsolutePath == null || targetFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"targetFileAbsolutePath is empty");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(targetFileAbsolutePath);
+
+		log.info("rename() from {}", sourceFileAbsolutePath);
+		log.info("to {}", targetFileAbsolutePath);
+
+		IRODSFile sourceFile = this.getIRODSFileFactory().instanceIRODSFile(
+				sourceFileAbsolutePath);
+		IRODSFile targetFile = this.getIRODSFileFactory().instanceIRODSFile(
+				targetFileAbsolutePath);
+		sourceFile.renameTo(targetFile);
 	}
 
 	/*
