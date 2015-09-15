@@ -464,6 +464,12 @@ class CollectionListingUtils {
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
+		if (objStat.isStandInGeneratedObjStat()) {
+			log.info("this objStat was heuristically generated, create stand-in subdirs if needed");
+			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(objStat
+					.getAbsolutePath());
+		}
+
 		/*
 		 * Special collections are processed in different ways.
 		 * 
@@ -1183,24 +1189,18 @@ class CollectionListingUtils {
 					"irodsAbsolutePath is null or empty");
 		}
 
-		/*
-		 * StopWatch stopWatch = null;
-		 * 
-		 * if (this.isInstrumented()) { stopWatch = new
-		 * Log4JStopWatch("retrieveObjectStatForPath"); }
-		 */
-
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
 				.instance(irodsAbsolutePath);
 		Tag response;
+		ObjStat objStat;
 		try {
 			response = irodsAccessObjectFactory.getIrodsSession()
 					.currentConnection(irodsAccount).irodsFunction(dataObjInp);
-		} catch (DataNotFoundException e) {
-			log.info("rethrow DataNotFound as FileNotFound per contract");
-			throw new FileNotFoundException(e);
+		} catch (FileNotFoundException e) {
+			log.info("got a file not found, try to heuristically produce an objstat");
+			return handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(irodsAbsolutePath);
 		}
 
 		log.debug("response from objStat: {}", response.parseTag());
@@ -1209,7 +1209,7 @@ class CollectionListingUtils {
 		 * For spec cols - soft link - phyPath = parent canonical dir -objPath =
 		 * canonical path
 		 */
-		ObjStat objStat = new ObjStat();
+		objStat = new ObjStat();
 		objStat.setAbsolutePath(irodsAbsolutePath);
 		objStat.setChecksum(response.getTag("chksum").getStringValue());
 		objStat.setDataId(response.getTag("dataId").getIntValue());

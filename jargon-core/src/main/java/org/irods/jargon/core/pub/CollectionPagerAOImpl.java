@@ -199,7 +199,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 			final String irodsAbsolutePath) throws FileNotFoundException,
 			NoMoreDataException, JargonException {
 
-		log.info("initialListingUnderParent()");
+		log.info("retrieveFirstPageUnderParent()");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

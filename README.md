@@ -49,3 +49,7 @@ Updated semantics of move collection to avoid 'collection already exists errors'
 ###  Rename operation in DTO #147 
 
 Added a rename() operation to DataTransferOperations to clarify difference between a rename and a move
+
+###  CollectionPager not navigating strict acl dirs with heuristics #148 
+
+Add heuristic path guessing to CollectionPagerAO, which is an upgrade of the old CollectionAndDataObjectListAndSearchAOImpl
