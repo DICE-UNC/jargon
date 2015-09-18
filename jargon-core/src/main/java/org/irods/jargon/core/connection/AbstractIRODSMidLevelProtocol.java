@@ -91,6 +91,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 		this.irodsConnection = irodsConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
+		this.irodsSession = irodsConnection.getIrodsSession();
 
 	}
 
@@ -1369,5 +1370,14 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			byte[] message, byte[] errorBytes, int errorOffset,
 			int errorLength, byte[] bytes, int byteOffset,
 			int byteBufferLength, int intInfo) throws JargonException;
+
+	/**
+	 * Cause the underlying connection to be closed and disconnected. This is
+	 * used internally to do out of band shutdowns of connections, for example,
+	 * when manipulating secure connections for auth.
+	 * 
+	 * @throws IOException
+	 */
+	abstract void closeOutSocketAndSetAsDisconnected() throws IOException;
 
 }

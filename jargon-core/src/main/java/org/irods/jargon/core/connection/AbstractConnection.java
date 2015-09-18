@@ -127,6 +127,10 @@ public abstract class AbstractConnection {
 			throw new IllegalArgumentException("null socket");
 		}
 
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
+
 		/*
 		 * super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
 		 * irodsSession);
