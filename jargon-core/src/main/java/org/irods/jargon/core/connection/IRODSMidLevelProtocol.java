@@ -269,7 +269,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @throws JargonException
 	 */
 	@Override
-	public synchronized Tag irodsFunction(final String type,
+	public synchronized void irodsFunctionUnidirectional(final String type,
 			final byte[] message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteBufferLength, final int intInfo)
@@ -294,10 +294,6 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.length;
 			}
 
-			/*
-			 * getIrodsConnection().send( createHeader(type, messageLength,
-			 * errorLength, byteBufferLength, intInfo));
-			 */
 			sendHeader(type, messageLength, errorLength, byteBufferLength,
 					intInfo);
 
@@ -325,7 +321,6 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			throw new JargonException(e);
 		}
 
-		return readMessage();
 	}
 
 	/*

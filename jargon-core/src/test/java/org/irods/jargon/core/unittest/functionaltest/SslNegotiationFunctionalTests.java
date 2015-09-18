@@ -13,6 +13,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -106,6 +107,11 @@ public class SslNegotiationFunctionalTests {
 		AuthResponse actual = accessObjectFactory
 				.authenticateIRODSAccount(irodsAccount);
 		Assert.assertNotNull(actual);
+		// Do some thing
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
+		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
 
 }

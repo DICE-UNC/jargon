@@ -1336,9 +1336,38 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		this.irodsConnection = irodsConnection;
 	}
 
-	public abstract Tag irodsFunction(String type, byte[] message,
-			byte[] errorBytes, int errorOffset, int errorLength, byte[] bytes,
-			int byteOffset, int byteBufferLength, int intInfo)
-			throws JargonException;
+	/**
+	 * Send an iRODS message as a byte buffer message payload, without blocking
+	 * and returning a response. This is an edge case in the iRODS protocol used
+	 * for certain phases of client-server negotiation and typically is not the
+	 * case.
+	 * 
+	 * @param type
+	 *            <code>String</code> with the type of request, typically an
+	 *            iRODS protocol request
+	 * @param message
+	 *            <code>byte[]</code> with an arbitrary binary payload
+	 * @param errorBytes
+	 *            <code>byte[]</code> with any error data to send to iRODS, can
+	 *            be set to <code>null</code>
+	 * @param errorOffset
+	 *            <code>int</code> with offset into the error data to send
+	 * @param errorLength
+	 *            <code>int</code> with the length of error data
+	 * @param bytes
+	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 * @param byteOffset
+	 *            <code>int</code> with an offset into the byte array to send
+	 * @param byteStringLength
+	 *            <code>int</code> with the length of the bytes to send
+	 * @param intInfo
+	 *            <code>int</code> with the iRODS API number
+	 * @return
+	 * @throws JargonException
+	 */
+	public abstract void irodsFunctionUnidirectional(String type,
+			byte[] message, byte[] errorBytes, int errorOffset,
+			int errorLength, byte[] bytes, int byteOffset,
+			int byteBufferLength, int intInfo) throws JargonException;
 
 }

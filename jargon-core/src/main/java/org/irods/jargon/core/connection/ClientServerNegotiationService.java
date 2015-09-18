@@ -241,7 +241,7 @@ class ClientServerNegotiationService {
 					myProps.getEncryptionNumberHashRounds(), 0);
 			this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
 			log.info("now write the shared secret to iRODS");
-			this.getIrodsMidLevelProtocol().irodsFunction(
+			this.getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
 					NEGOTIATION_SHARED_SECRET, key, null, 0, 0, null, 0, 0, 0);
 
 		} catch (IOException e) {
