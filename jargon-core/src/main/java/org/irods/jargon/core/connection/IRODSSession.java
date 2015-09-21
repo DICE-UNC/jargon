@@ -619,16 +619,18 @@ public class IRODSSession {
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
+	 * @return <code>boolean</code> of <code>true</code> if the connection
+	 *         itself was found and closed
 	 * @throws JargonException
 	 */
-	public void discardSessionForErrors(final IRODSAccount irodsAccount) {
+	public boolean discardSessionForErrors(final IRODSAccount irodsAccount) {
 
 		log.warn("discarding irods session for: {}", irodsAccount.toString());
 		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
 				.get();
 		if (irodsProtocols == null) {
 			log.warn("discarding session that is already closed, silently ignore");
-			return;
+			return false;
 		}
 		AbstractIRODSMidLevelProtocol badConnection;
 		try {
@@ -646,6 +648,8 @@ public class IRODSSession {
 			log.debug("no more connections, so clear cache from ThreadLocal");
 			sessionMap.set(null);
 		}
+
+		return true;
 
 	}
 
