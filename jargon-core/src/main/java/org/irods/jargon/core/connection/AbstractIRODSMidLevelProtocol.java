@@ -780,6 +780,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		log.debug("shutting down, need to send disconnect to irods");
 		if (isConnected()) {
 
+			preDisconnectAction();
+
 			log.debug("sending disconnect message");
 			try {
 				irodsConnection.send(createHeader(
@@ -809,6 +811,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 
 	}
+
+	/**
+	 * Hook for any action to take before disconnecting (e.g. SSL shutdown)
+	 * 
+	 * @throws JargonException
+	 */
+	abstract void preDisconnectAction() throws JargonException;
 
 	/**
 	 * Method that will cause the connection to be released, returning it to the

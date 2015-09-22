@@ -5,6 +5,7 @@ import java.io.UnsupportedEncodingException;
 
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.SSLEndInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
@@ -100,6 +101,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		super.finalize();
 	}
 
+	@Override
 	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
 		getIrodsConnection().getConnection().close();
 		getIrodsConnection().setConnected(false);
@@ -345,6 +347,25 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 		getIrodsConnection().send(header);
 		// getIrodsConnection().flush();
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#
+	 * preDisconnectAction()
+	 */
+	@Override
+	void preDisconnectAction() throws JargonException {
+		log.info("preDisconnectAction()");
+
+		if (this.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+			log.info("sending SSL shutdown if ssl conn");
+			SSLEndInp sslEndInp = SSLEndInp.instance();
+			irodsFunction(sslEndInp);
+
+		}
 
 	}
 

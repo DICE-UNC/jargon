@@ -143,6 +143,7 @@ public abstract class AbstractConnection {
 		connected = true;
 		connection = socket;
 		this.operativeClientServerNegotiationPolicy = null; // I don't need this
+		this.initializeIdentifier(irodsAccount);
 
 		initInternalBufferIfNeeded(pipelineConfiguration);
 

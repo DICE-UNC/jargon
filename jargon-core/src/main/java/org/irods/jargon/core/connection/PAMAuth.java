@@ -44,12 +44,12 @@ public class PAMAuth extends AuthMechanism {
 		AbstractIRODSMidLevelProtocol irodsCommandsToUse = null;
 		/*
 		 * Save the original commands if we will temporarily use an SSL
-		 * connection, otherwise will remain null
+		 * connection, otherwise will remain null If, through client/server
+		 * negotiation, we already have an SSL connection, then no need to wrap
+		 * the PAM auth in SSL.
 		 */
-		AbstractIRODSMidLevelProtocol savedOriginalCommands = null;
 		if (needToWrapWithSsl) {
 			log.info("will wrap commands with ssl");
-			savedOriginalCommands = irodsCommands;
 			irodsCommandsToUse = establishSecureConnectionForPamAuth(
 					irodsAccount, irodsCommands);
 		} else {
@@ -64,7 +64,7 @@ public class PAMAuth extends AuthMechanism {
 
 		Tag response = null;
 		if (startupResponseData.isEirods()) {
-			irodsCommandsToUse.setForceSslFlush(true);
+			// irodsCommandsToUse.setForceSslFlush(true); MCC took out..
 			log.info("using irods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
@@ -96,22 +96,10 @@ public class PAMAuth extends AuthMechanism {
 					"unable to retrieve the temp password resulting from the pam auth response");
 		}
 
-		/*
-		 * If, through client/server negotiation, we already have an SSL
-		 * connection, then no need to wrap the PAM auth in SSL.
-		 */
-		if (needToWrapWithSsl) {
-			log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
-			SSLEndInp sslEndInp = SSLEndInp.instance();
-			irodsCommandsToUse.irodsFunction(sslEndInp);
-			try {
-				irodsCommandsToUse.closeOutSocketAndSetAsDisconnected();
-				irodsCommandsToUse = savedOriginalCommands;
-			} catch (IOException e) {
-				log.error("error closing ssl socket", e);
-				throw new JargonException("error closing ssl socket", e);
-			}
-		}
+		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
+		shutdownSslAndCloseConnection(irodsCommandsToUse);
+		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
+		AuthResponse authResponse = new AuthResponse();
 
 		IRODSAccount irodsAccountUsingTemporaryIRODSPassword = new IRODSAccount(
 				irodsAccount.getHost(), irodsAccount.getPort(),
@@ -120,21 +108,37 @@ public class PAMAuth extends AuthMechanism {
 				irodsAccount.getDefaultStorageResource());
 		irodsAccountUsingTemporaryIRODSPassword
 				.setAuthenticationScheme(AuthScheme.STANDARD);
-
+		authResponse
+				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
 
-		AuthResponse authResponse = new AuthResponse();
-		authResponse
-				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
 		irodsCommandsToUse.setAuthResponse(authResponse);
 
-		return irodsCommands;
+		return irodsCommandsToUse;
 
+	}
+
+	/**
+	 * @param irodsCommandsToUse
+	 * @throws JargonException
+	 */
+	private void shutdownSslAndCloseConnection(
+			AbstractIRODSMidLevelProtocol irodsCommandsToUse)
+			throws JargonException {
+		SSLEndInp sslEndInp = SSLEndInp.instance();
+		irodsCommandsToUse.irodsFunction(sslEndInp);
+
+		try {
+			irodsCommandsToUse.closeOutSocketAndSetAsDisconnected();
+		} catch (IOException e) {
+			log.error("error closing ssl socket", e);
+			throw new JargonException("error closing ssl socket", e);
+		}
 	}
 
 	/**
@@ -195,8 +199,6 @@ public class PAMAuth extends AuthMechanism {
 				.getAuthResponse().getAuthenticatingIRODSAccount();
 
 		AbstractIRODSMidLevelProtocol actualProtocol = null;
-
-		irodsMidLevelProtocol.disconnectWithForce();
 
 		actualProtocol = irodsMidLevelProtocol
 				.getIrodsProtocolManager()

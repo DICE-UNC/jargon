@@ -114,4 +114,49 @@ public class SslNegotiationFunctionalTests {
 		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
 
+	@Test
+	public void testMultiplePamLoginNegDontCareFromClientShouldTestPamWhenSslAlreadyNegotiated()
+			throws JargonException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		/*
+		 * Only run if pam enabled
+		 */
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
+		int times = 50;
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildPamIrodsAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		for (int i = 0; i < times; i++) {
+			AuthResponse actual = accessObjectFactory
+					.authenticateIRODSAccount(irodsAccount);
+			Assert.assertNotNull(actual);
+			// Do some thing
+			EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+					.getEnvironmentalInfoAO(irodsAccount);
+			long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
+			Assert.assertTrue("time val was missing", timeVal > 0);
+			accessObjectFactory.closeSessionAndEatExceptions();
+		}
+	}
 }
