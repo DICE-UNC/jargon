@@ -37,7 +37,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	public static final String LOCAL_PATH = "localPath";
 	public static final String ALL = "all";
 
-	public static final int TRUNCATE = 512;
+	public static final int CREATE = 512;
+	public static final int TRUNCATE = 1024;
 
 	public static final int CREATE_FILE_API_NBR = 601;
 	public static final int DELETE_FILE_API_NBR = 615;
@@ -913,7 +914,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			tagOpenFlags = 0 | TRUNCATE;
 			break;
 		case WRITE_TRUNCATE:
-			tagOpenFlags = 1 | TRUNCATE;
+			tagOpenFlags = 1 | TRUNCATE | CREATE;
 			break;
 		case READ_WRITE:
 			tagOpenFlags = 2;

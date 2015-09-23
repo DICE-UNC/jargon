@@ -1528,7 +1528,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
 
-					getIRODSProtocol().operationComplete(l1descInx);
+					if (!this.getIRODSServerProperties()
+							.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+									"rods4.1.6")) {
+						getIRODSProtocol().operationComplete(l1descInx);
+
+					}
+
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
 							RestartType.GET, irodsFileToGet.getAbsolutePath());
 					if (fileRestartInfo != null) {
