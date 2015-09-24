@@ -59,6 +59,18 @@ Enhancements to testing setup to integrate Jargon into Consortium CI services
 
 Fixes and tests for firing postProcForPut after certain streaming i/o operations
 
+### PackingIrodsInputStream and PackingIrodsOutputStream 
+
+Major enhancements to the performance of streaming i/o though simple read-ahead and write-behind buffering streams, see:
+
+https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/PackingIrodsInputStream.java
+
+and
+
+https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/PackingIrodsOutputStream.java
+
+These enhancements are used in the ModeShape, WebDav, REST, and cloud browser code
+
 ### Misc
 
 Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
