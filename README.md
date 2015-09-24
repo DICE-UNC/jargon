@@ -46,3 +46,19 @@ Note that the following bug and feature requests are logged in GForge with relat
 ### move semantics error in cloud browser moving a/path/a to a/path/b with collection already exists #140
 
 Updated semantics of move collection to avoid 'collection already exists errors' by adding the source collection as the child of the target collection name
+
+###  across federation browsing under strict acls doesn't interpolate home/ and find subdirs viewable #39 
+
+Update cross-zone path heuristic guessing so one can reasonably browse 'down' to home dirs in federated zones
+
+###  CI integration with iRODS 4 #18 
+
+Enhancements to testing setup to integrate Jargon into Consortium CI services
+
+###  PEP on output stream #144 
+
+Fixes and tests for firing postProcForPut after certain streaming i/o operations
+
+### Misc
+
+Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
