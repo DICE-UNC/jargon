@@ -5,10 +5,10 @@ package org.irods.jargon.core.transfer;
 
 import java.security.NoSuchAlgorithmException;
 
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -22,7 +22,7 @@ import org.irods.jargon.core.exception.ClientServerNegotiationException;
  * 
  * @author Mike Conway - DICE
  * 
- *
+ * 
  */
 class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 
@@ -46,20 +46,29 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * Given the configuration, initialize the cipher
 	 */
 	private void initCipher() throws ClientServerNegotiationException {
-		KeyGenerator keyGen;
+
+		/*
+		 * see lib/core/src/irods_buffer_encryption.cpp ~ line 178 encrypt
+		 * routine
+		 */
+
 		try {
-			Cipher encryptionCypher = Cipher.getInstance(this
-					.getPipelineConfiguration().getEncryptionAlgorithmEnum()
-					.getCypherKey());
-			keyGen = KeyGenerator.getInstance(this.getPipelineConfiguration()
-					.getEncryptionAlgorithmEnum().getKeyGenType());
+
+			PBEKeySpec spec = new PBEKeySpec(this
+					.getNegotiatedClientServerConfiguration().getSslCryptKey(),
+					this.generateSalt(), this.getPipelineConfiguration()
+							.getEncryptionNumberHashRounds(), this
+							.getPipelineConfiguration().getEncryptionKeySize());
+
+			SecretKey secretKey = factory.generateSecret(spec);
+			SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(),
+					"AES");
+
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		keyGen.init(this.getPipelineConfiguration().getEncryptionKeySize());
 
-		SecretKey SecKey = keyGen.generateKey();
 	}
 
 	/*
