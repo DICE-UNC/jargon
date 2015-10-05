@@ -8,7 +8,7 @@ package org.irods.jargon.core.connection;
  * 
  * @author Mike Conway - DICE
  */
-class NegotiatedClientServerConfiguration {
+public class NegotiatedClientServerConfiguration {
 	private final boolean sslConnection;
 	private byte[] sslCryptKey;
 
@@ -18,7 +18,7 @@ class NegotiatedClientServerConfiguration {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public String toString() {
+	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("NegotiatedClientServerConfiguration [sslConnection=");
 		builder.append(sslConnection);
@@ -29,7 +29,7 @@ class NegotiatedClientServerConfiguration {
 	/**
 	 * @return the sslConnection
 	 */
-	boolean isSslConnection() {
+	public synchronized boolean isSslConnection() {
 		return sslConnection;
 	}
 
@@ -40,7 +40,7 @@ class NegotiatedClientServerConfiguration {
 	 *            <code>boolean</code> that will be <code>true</code> if ssl is
 	 *            used
 	 */
-	NegotiatedClientServerConfiguration(boolean sslConnection) {
+	public NegotiatedClientServerConfiguration(final boolean sslConnection) {
 		super();
 		this.sslConnection = sslConnection;
 	}
@@ -58,7 +58,7 @@ class NegotiatedClientServerConfiguration {
 	 *            <code>byte[]</code> with the sslCryptKey if client/server
 	 *            negotiation uses SSL and wants to encrypt parallel transfers
 	 */
-	public synchronized void setSslCryptKey(byte[] sslCryptKey) {
+	synchronized void setSslCryptKey(byte[] sslCryptKey) {
 		this.sslCryptKey = sslCryptKey;
 	}
 

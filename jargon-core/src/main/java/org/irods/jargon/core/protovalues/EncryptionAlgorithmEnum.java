@@ -7,12 +7,17 @@ package org.irods.jargon.core.protovalues;
  */
 public enum EncryptionAlgorithmEnum {
 
-	AES_256_CBC("AES-256-CBC");
+	AES_256_CBC("AES-256-CBC", "AES/CBC/NoPadding", "AES");
 
 	private String textValue;
+	private String cypherKey;
+	private String keyGenType;
 
-	EncryptionAlgorithmEnum(final String textValue) {
+	EncryptionAlgorithmEnum(final String textValue, final String cypherKey,
+			final String keyGenType) {
 		this.textValue = textValue;
+		this.cypherKey = cypherKey;
+		this.keyGenType = keyGenType;
 	}
 
 	public String getTextValue() {
@@ -39,5 +44,27 @@ public enum EncryptionAlgorithmEnum {
 		}
 		return checksumEncodingValue;
 
+	}
+
+	/**
+	 * @return the cypherKey
+	 */
+	public synchronized String getCypherKey() {
+		return cypherKey;
+	}
+
+	/**
+	 * @return the keyGenType
+	 */
+	public synchronized String getKeyGenType() {
+		return keyGenType;
+	}
+
+	/**
+	 * @param keyGenType
+	 *            the keyGenType to set
+	 */
+	public synchronized void setKeyGenType(String keyGenType) {
+		this.keyGenType = keyGenType;
 	}
 }

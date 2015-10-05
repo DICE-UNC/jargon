@@ -2,12 +2,18 @@ package org.irods.jargon.core.transfer;
 
 import java.io.File;
 
+import javax.crypto.Cipher;
+
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclass for a parallel transfer controller. This will process
@@ -17,6 +23,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  * 
  */
 public abstract class AbstractParallelFileTransferStrategy {
+
+	public static final Logger log = LoggerFactory
+			.getLogger(AbstractParallelFileTransferStrategy.class);
 
 	public enum TransferType {
 		GET_TRANSFER, PUT_TRANSFER
@@ -32,6 +41,16 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final long transferLength;
 	private final PipelineConfiguration pipelineConfiguration;
 	private final FileRestartInfo fileRestartInfo;
+	/**
+	 * Optional (null if not used) cipher for encryption when SSL has been
+	 * negotiated for the transfer
+	 */
+	private Cipher encryptionCypher = null;
+	/**
+	 * Negotiated encryption configuration for transport security, and any other
+	 * future determined aspects of
+	 */
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 	public PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;
@@ -78,6 +97,27 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * 
 	 * @throws JargonException
 	 */
+	protected AbstractParallelFileTransferStrategy(
+			final String host,
+			final int port,
+			final int numberOfThreads,
+			final int password,
+			final File localFile,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final long transferLength,
+			final TransferControlBlock transferControlBlock,
+			final TransferStatusCallbackListener transferStatusCallbackListener,
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws JargonException {
+
+		this(host, port, numberOfThreads, password, localFile,
+				irodsAccessObjectFactory, transferLength, transferControlBlock,
+				transferStatusCallbackListener, fileRestartInfo);
+		this.negotiatedClientServerConfiguration = null;
+
+	}
+
 	protected AbstractParallelFileTransferStrategy(
 			final String host,
 			final int port,
@@ -141,6 +181,8 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
+		this.negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
+				false);
 
 	}
 
@@ -251,6 +293,17 @@ public abstract class AbstractParallelFileTransferStrategy {
 	public AbstractRestartManager getRestartManager() {
 		return getIrodsAccessObjectFactory().getIrodsSession()
 				.getRestartManager();
+	}
+
+	Cipher initializeCypherForEncryption()
+			throws ClientServerNegotiationException {
+		log.debug("initializeCypherForEncryption()");
+		if (!this.negotiatedClientServerConfiguration.isSslConnection()) {
+			log.error("should not be trying to encrypt, is not ssl configured");
+			throw new ClientServerNegotiationException(
+					"attempt to encrypt a transfer when SSL not configured");
+		}
+
 	}
 
 }
