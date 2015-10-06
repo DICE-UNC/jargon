@@ -3,16 +3,19 @@
  */
 package org.irods.jargon.core.transfer;
 
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Wraps encryption/decryption of a byte buffer using AES
@@ -24,7 +27,10 @@ import org.irods.jargon.core.exception.ClientServerNegotiationException;
  * 
  * 
  */
-class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
+class AesCipherEncryptWrapper extends AbstractParallelEncryptWrapper {
+
+	public static final Logger log = LoggerFactory
+			.getLogger(AesCipherEncryptWrapper.class);
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -34,10 +40,12 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration}
+	 * @throws ClientServerNegotiationException
 	 */
-	AesCipherWrapper(
+	AesCipherEncryptWrapper(
 			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initCipher();
 	}
@@ -53,20 +61,20 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 		 */
 
 		try {
-
-			PBEKeySpec spec = new PBEKeySpec(this
+			final SecretKey key = new SecretKeySpec(this
 					.getNegotiatedClientServerConfiguration().getSslCryptKey(),
-					this.generateSalt(), this.getPipelineConfiguration()
-							.getEncryptionNumberHashRounds(), this
-							.getPipelineConfiguration().getEncryptionKeySize());
+					this.getPipelineConfiguration()
+							.getEncryptionAlgorithmEnum().getCypherKey());
 
-			SecretKey secretKey = factory.generateSecret(spec);
-			SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(),
-					"AES");
+			Cipher cipher = Cipher.getInstance(this.getPipelineConfiguration()
+					.getEncryptionAlgorithmEnum().getCypherKey());
+			cipher.init(Cipher.ENCRYPT_MODE, key);
 
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeyException e) {
+			log.error("error initCypher()", e);
+			throw new ClientServerNegotiationException(
+					"unable to initialze negotiated cypher");
 		}
 
 	}
@@ -80,18 +88,6 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 */
 	@Override
 	byte[] encrypt(byte[] input) {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.ParallellEncryptionCipherWrapper#decrypt
-	 * (byte[])
-	 */
-	@Override
-	byte[] decrypt(byte[] input) {
 		return null;
 	}
 

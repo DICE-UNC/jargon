@@ -2,14 +2,11 @@ package org.irods.jargon.core.transfer;
 
 import java.io.File;
 
-import javax.crypto.Cipher;
-
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.slf4j.Logger;
@@ -41,11 +38,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	protected final long transferLength;
 	private final PipelineConfiguration pipelineConfiguration;
 	private final FileRestartInfo fileRestartInfo;
-	/**
-	 * Optional (null if not used) cipher for encryption when SSL has been
-	 * negotiated for the transfer
-	 */
-	private Cipher encryptionCypher = null;
+
 	/**
 	 * Negotiated encryption configuration for transport security, and any other
 	 * future determined aspects of
@@ -293,17 +286,6 @@ public abstract class AbstractParallelFileTransferStrategy {
 	public AbstractRestartManager getRestartManager() {
 		return getIrodsAccessObjectFactory().getIrodsSession()
 				.getRestartManager();
-	}
-
-	Cipher initializeCypherForEncryption()
-			throws ClientServerNegotiationException {
-		log.debug("initializeCypherForEncryption()");
-		if (!this.negotiatedClientServerConfiguration.isSslConnection()) {
-			log.error("should not be trying to encrypt, is not ssl configured");
-			throw new ClientServerNegotiationException(
-					"attempt to encrypt a transfer when SSL not configured");
-		}
-
 	}
 
 }

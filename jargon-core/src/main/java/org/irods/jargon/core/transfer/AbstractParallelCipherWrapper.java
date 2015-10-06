@@ -16,23 +16,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Wrapper for an implementation that can encrypt bytes in a parallel file
- * transfer. Concrete subclasses implement the actual encryption, and the proper
- * encryption method is built using a factory
+ * Wrapper for an implementation that can encrypt/decrypt bytes in a parallel
+ * file transfer. Concrete subclasses implement the actual encryption, and the
+ * proper encryption method is built using a factory
  * 
  * @author Mike Conway - DICE
  * 
  */
-abstract class ParallelEncryptionCipherWrapper {
+abstract class AbstractParallelCipherWrapper {
 
 	public static final Logger log = LoggerFactory
-			.getLogger(ParallelEncryptionCipherWrapper.class);
+			.getLogger(AbstractParallelCipherWrapper.class);
 
 	/**
 	 * @param pipelineConfiguration
 	 * @param negotiatedClientServerConfiguration
 	 */
-	ParallelEncryptionCipherWrapper(
+	AbstractParallelCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
@@ -57,10 +57,6 @@ abstract class ParallelEncryptionCipherWrapper {
 	synchronized NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
 		return negotiatedClientServerConfiguration;
 	}
-
-	abstract byte[] encrypt(final byte[] input);
-
-	abstract byte[] decrypt(final byte[] input);
 
 	/**
 	 * @return the cipher
