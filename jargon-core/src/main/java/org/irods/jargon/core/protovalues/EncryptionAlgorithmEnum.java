@@ -49,22 +49,15 @@ public enum EncryptionAlgorithmEnum {
 	/**
 	 * @return the cypherKey
 	 */
-	public synchronized String getCypherKey() {
+	public String getCypherKey() {
 		return cypherKey;
 	}
 
 	/**
 	 * @return the keyGenType
 	 */
-	public synchronized String getKeyGenType() {
+	public String getKeyGenType() {
 		return keyGenType;
 	}
 
-	/**
-	 * @param keyGenType
-	 *            the keyGenType to set
-	 */
-	public synchronized void setKeyGenType(String keyGenType) {
-		this.keyGenType = keyGenType;
-	}
 }

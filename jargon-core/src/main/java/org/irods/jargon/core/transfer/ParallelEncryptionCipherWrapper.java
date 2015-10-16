@@ -7,6 +7,7 @@ import javax.crypto.Cipher;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
 
 /**
  * Wrapper for an implementation that can encrypt bytes in a parallel file
@@ -17,6 +18,10 @@ import org.irods.jargon.core.connection.PipelineConfiguration;
  *
  */
 abstract class ParallelEncryptionCipherWrapper {
+
+	private Cipher cipher;
+	private PipelineConfiguration pipelineConfiguration;
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 	/**
 	 * @param pipelineConfiguration
@@ -30,32 +35,30 @@ abstract class ParallelEncryptionCipherWrapper {
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 	}
 
-	private Cipher cipher;
-	private PipelineConfiguration pipelineConfiguration;
-	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-
 	/**
 	 * @return the pipelineConfiguration
 	 */
-	synchronized PipelineConfiguration getPipelineConfiguration() {
+	PipelineConfiguration getPipelineConfiguration() {
 		return pipelineConfiguration;
 	}
 
 	/**
 	 * @return the negotiatedClientServerConfiguration
 	 */
-	synchronized NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
+	NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
 		return negotiatedClientServerConfiguration;
 	}
 
-	abstract byte[] encrypt(final byte[] input);
+	abstract byte[] encrypt(final byte[] input)
+			throws ClientServerNegotiationException;
 
-	abstract byte[] decrypt(final byte[] input);
+	abstract byte[] decrypt(final byte[] input)
+			throws ClientServerNegotiationException;
 
 	/**
 	 * @return the cipher
 	 */
-	synchronized Cipher getCipher() {
+	Cipher getCipher() {
 		return cipher;
 	}
 
@@ -63,7 +66,7 @@ abstract class ParallelEncryptionCipherWrapper {
 	 * @param cipher
 	 *            the cipher to set
 	 */
-	synchronized void setCipher(Cipher cipher) {
+	void setCipher(Cipher cipher) {
 		this.cipher = cipher;
 	}
 
