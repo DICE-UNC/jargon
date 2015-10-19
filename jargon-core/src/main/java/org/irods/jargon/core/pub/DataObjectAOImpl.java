@@ -923,7 +923,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else {
 				throw je;
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
@@ -974,7 +974,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.instance(host, port, numberOfThreads, pass, localFile,
 						getIRODSAccessObjectFactory(), transferLength,
 						transferControlBlock, transferStatusCallbackListener,
-						fileRestartInfo);
+						fileRestartInfo, this.getIRODSProtocol()
+								.getStartupResponseData()
+								.getNegotiatedClientServerConfiguration());
 		log.info(
 				"getting ready to initiate parallel file transfer strategy:{}",
 				parallelPutFileStrategy);
@@ -1694,7 +1696,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData, getIRODSAccessObjectFactory(),
 							irodsFileLength, transferControlBlock,
-							transferStatusCallbackListener, fileRestartInfo);
+							transferStatusCallbackListener, fileRestartInfo,
+							this.getIRODSProtocol().getStartupResponseData()
+									.getNegotiatedClientServerConfiguration());
 
 			try {
 				parallelGetTransferStrategy.transfer();

@@ -15,6 +15,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -167,14 +168,6 @@ public class AssertionHelper {
 				.get(GENERATED_FILE_DIRECTORY_KEY));
 		fullPathToLocalFile.append(filePathRelativeToScratch);
 		return fullPathToLocalFile;
-	}
-
-	public void assertIrodsFileMatchesLocalFileChecksum(
-			final String absoluteIRODSPathUnderScratch,
-			final String absoluteLocalFileUnderScratch)
-			throws IRODSTestAssertionException {
-
-		// FIXME: need to update for jargon-core
 	}
 
 	/**
@@ -440,6 +433,19 @@ public class AssertionHelper {
 		if (actual.isEmpty()) {
 			throw new IRODSTestAssertionException("no avu found");
 		}
+
+	}
+
+	public void assertIrodsFileMatchesLocalFileChecksum(
+			String irodsAbsolutePath, String localAbsolutePath,
+			IRODSAccessObjectFactory irodsAccessObjectFactory,
+			IRODSAccount irodsAccount) throws JargonException {
+
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilities = irodsAccessObjectFactory
+				.getDataObjectChecksumUtilitiesAO(irodsAccount);
+
+		dataObjectChecksumUtilities.verifyLocalFileAgainstIrodsFileChecksum(
+				localAbsolutePath, irodsAbsolutePath);
 
 	}
 }

@@ -262,7 +262,8 @@ public class DataTransferOperationsImplTestNoInternalCache {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Ignore
@@ -308,7 +309,8 @@ public class DataTransferOperationsImplTestNoInternalCache {
 				testCallbackListener, null);
 
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
 		Assert.assertEquals("file callback, initial and completion", 3,

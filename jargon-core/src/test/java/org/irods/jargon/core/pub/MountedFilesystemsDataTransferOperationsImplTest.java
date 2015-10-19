@@ -125,7 +125,8 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test

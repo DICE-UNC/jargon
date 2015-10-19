@@ -31,6 +31,13 @@ public final class ParallelPutTransferThread extends
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
 
+	/**
+	 * This 'wrapper' will be initialized in the constructor for this thread if
+	 * ssl negotiated encryption was indicated, and if present (
+	 * <code>null</code> otherwise) will be used to encrypt the data en route.
+	 */
+	private ParallelEncryptionCipherWrapper parallelEncryptionCipherWrapper = null;
+
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
 
@@ -130,6 +137,15 @@ public final class ParallelPutTransferThread extends
 				setOut(new BufferedOutputStream(getS().getOutputStream(),
 						outputBuffSize));
 			}
+
+			log.info("setting up the encryption if so negotiated");
+			if (this.parallelPutFileTransferStrategy.doEncryption()) {
+				log.debug("am doing encryption, enable the cypher");
+				this.parallelEncryptionCipherWrapper = this.parallelPutFileTransferStrategy
+						.initializeCypherForEncryption();
+				log.debug("cypher initialized");
+			}
+
 		} catch (Exception e) {
 			log.error("unable to create transfer thread", e);
 			throw new JargonException(e);

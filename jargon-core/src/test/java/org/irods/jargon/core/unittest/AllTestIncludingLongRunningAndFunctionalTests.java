@@ -2,6 +2,7 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.pub.ParallelTransferOperationsTest;
 import org.irods.jargon.core.pub.io.FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest;
+import org.irods.jargon.core.unittest.functionaltest.EncryptedParallelTransferTests;
 import org.irods.jargon.core.unittest.functionaltest.IRODSCommandsFunctionalTest;
 import org.irods.jargon.core.unittest.functionaltest.IRODSTenThousandCollectionsTest;
 import org.irods.jargon.core.unittest.functionaltest.IRODSThousandCollectionsTest;
@@ -23,7 +24,8 @@ import org.junit.runners.Suite;
 		TestBug38GetFileFromSoftLinkedPublicCollection.class,
 		TestParallelTransferToIcatRerouteRemoteBug132.class,
 		SslNegotiationFunctionalTests.class,
-		IRODSFileOutputStreamPEPFunctionalTest.class })
+		IRODSFileOutputStreamPEPFunctionalTest.class,
+		EncryptedParallelTransferTests.class })
 public class AllTestIncludingLongRunningAndFunctionalTests {
 
 }

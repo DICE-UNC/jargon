@@ -88,9 +88,14 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * @param fileRestartInfo
 	 *            {@link FileRestartinfo} or <code>null</code> if not supporting
 	 *            a restart of this transfer
+	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration} represents the
+	 *            result of client server negotiation of any potential
+	 *            encryption.
 	 * 
 	 * @throws JargonException
 	 */
+
 	protected AbstractParallelFileTransferStrategy(
 			final String host,
 			final int port,
@@ -104,25 +109,6 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws JargonException {
-
-		this(host, port, numberOfThreads, password, localFile,
-				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener, fileRestartInfo);
-		this.negotiatedClientServerConfiguration = null;
-
-	}
-
-	protected AbstractParallelFileTransferStrategy(
-			final String host,
-			final int port,
-			final int numberOfThreads,
-			final int password,
-			final File localFile,
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final long transferLength,
-			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -154,6 +140,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
 
+		if (negotiatedClientServerConfiguration == null) {
+			throw new IllegalArgumentException(
+					"null negotiatedClientServerConfiguration");
+		}
+
 		this.host = host;
 		this.port = port;
 		this.numberOfThreads = numberOfThreads;
@@ -175,24 +166,83 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
-		this.negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
-				false);
+		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("parallel transfer operation:");
-		sb.append("\n   host:");
-		sb.append(host);
-		sb.append("\n   port:");
-		sb.append(port);
-		sb.append("\n   numberOfThreads:");
-		sb.append(numberOfThreads);
-		sb.append("\n   localFile:");
-		sb.append(localFile.getAbsolutePath());
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractParallelFileTransferStrategy [");
+		if (host != null) {
+			builder.append("host=");
+			builder.append(host);
+			builder.append(", ");
+		}
+		builder.append("port=");
+		builder.append(port);
+		builder.append(", numberOfThreads=");
+		builder.append(numberOfThreads);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", ");
+		if (localFile != null) {
+			builder.append("localFile=");
+			builder.append(localFile);
+			builder.append(", ");
+		}
+		builder.append("transferLength=");
+		builder.append(transferLength);
+		builder.append(", ");
+		if (pipelineConfiguration != null) {
+			builder.append("pipelineConfiguration=");
+			builder.append(pipelineConfiguration);
+			builder.append(", ");
+		}
+		if (fileRestartInfo != null) {
+			builder.append("fileRestartInfo=");
+			builder.append(fileRestartInfo);
+			builder.append(", ");
+		}
+		if (negotiatedClientServerConfiguration != null) {
+			builder.append("negotiatedClientServerConfiguration=");
+			builder.append(negotiatedClientServerConfiguration);
+			builder.append(", ");
+		}
+		if (irodsAccessObjectFactory != null) {
+			builder.append("irodsAccessObjectFactory=");
+			builder.append(irodsAccessObjectFactory);
+			builder.append(", ");
+		}
+		if (transferControlBlock != null) {
+			builder.append("transferControlBlock=");
+			builder.append(transferControlBlock);
+			builder.append(", ");
+		}
+		if (transferStatusCallbackListener != null) {
+			builder.append("transferStatusCallbackListener=");
+			builder.append(transferStatusCallbackListener);
+			builder.append(", ");
+		}
+		if (connectionProgressStatusListener != null) {
+			builder.append("connectionProgressStatusListener=");
+			builder.append(connectionProgressStatusListener);
+			builder.append(", ");
+		}
+		builder.append("parallelSocketTimeoutInSecs=");
+		builder.append(parallelSocketTimeoutInSecs);
+		builder.append(", ");
+		if (jargonProperties != null) {
+			builder.append("jargonProperties=");
+			builder.append(jargonProperties);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public String getHost() {
@@ -287,6 +337,15 @@ public abstract class AbstractParallelFileTransferStrategy {
 	public AbstractRestartManager getRestartManager() {
 		return getIrodsAccessObjectFactory().getIrodsSession()
 				.getRestartManager();
+	}
+
+	/**
+	 * Handy method for threads to determine whether encryption should be done
+	 * 
+	 * @return
+	 */
+	boolean doEncryption() {
+		return this.negotiatedClientServerConfiguration.isSslConnection();
 	}
 
 	/**

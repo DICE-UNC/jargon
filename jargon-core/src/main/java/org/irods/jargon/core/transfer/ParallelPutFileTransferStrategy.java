@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -57,6 +58,9 @@ public final class ParallelPutFileTransferStrategy extends
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
 	 * @param fileRestartInfo
+	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration} including
+	 *            encryption requirements
 	 * @return
 	 * @throws JargonException
 	 */
@@ -70,11 +74,13 @@ public final class ParallelPutFileTransferStrategy extends
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws JargonException {
 		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
 				transferControlBlock, transferStatusCallbackListener,
-				fileRestartInfo);
+				fileRestartInfo, negotiatedClientServerConfiguration);
 	}
 
 	@Override
@@ -105,10 +111,13 @@ public final class ParallelPutFileTransferStrategy extends
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws JargonException {
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener, fileRestartInfo);
+				transferStatusCallbackListener, fileRestartInfo,
+				negotiatedClientServerConfiguration);
 
 		if (transferControlBlock.getTransferOptions()
 				.isIntraFileStatusCallbacks()

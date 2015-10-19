@@ -449,7 +449,8 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -493,7 +494,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile,
 				testingCallbackListener, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		// last intra callback should have total length (100%)
 		Assert.assertEquals("intra file last call not 100%",
 				localFile.length(),
@@ -545,7 +547,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile,
 				testingCallbackListener, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		// last intra callback should have total length (100%)
 		Assert.assertEquals("intra file last call not 100%",
 				localFile.length(),
@@ -601,7 +604,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile,
 				testingCallbackListener, tcb);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		Assert.assertFalse(
 				"no bytes reported in callbacks",
@@ -664,7 +668,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, null,
 				transferControlBlock);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -824,7 +829,8 @@ public class DataTransferOperationsImplTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		irodsFileSystem.close();
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	@Test
@@ -876,7 +882,8 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener, null);
 
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
 		Assert.assertEquals("file callback, initial and completion", 3,
@@ -942,7 +949,8 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener, null);
 
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
 		Assert.assertEquals("file callback, initial and completion", 3,
@@ -1008,7 +1016,8 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener, null);
 
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
 		Assert.assertEquals("file callback, initial and completion", 3,
@@ -1066,7 +1075,8 @@ public class DataTransferOperationsImplTest {
 				testCallbackListener, null);
 
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		Assert.assertEquals("did not expect any errors", 0,
 				testCallbackListener.getErrorCallbackCount());
 		Assert.assertEquals("file callback, initial and completion", 3,
@@ -1280,7 +1290,8 @@ public class DataTransferOperationsImplTest {
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				destFile.getAbsolutePath(), localFile.getAbsolutePath());
+				destFile.getAbsolutePath(), localFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 	/*

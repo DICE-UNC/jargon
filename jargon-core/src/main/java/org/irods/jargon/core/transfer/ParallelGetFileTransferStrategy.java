@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
+import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DefaultIntraFileProgressCallbackListener;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
@@ -61,6 +62,9 @@ public final class ParallelGetFileTransferStrategy extends
 	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
+	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration} including
+	 *            encryption requirements
 	 * @return
 	 * @throws JargonException
 	 */
@@ -74,11 +78,13 @@ public final class ParallelGetFileTransferStrategy extends
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
 				transferControlBlock, transferStatusCallbackListener,
-				fileRestartInfo);
+				fileRestartInfo, negotiatedClientServerConfiguration);
 	}
 
 	private ParallelGetFileTransferStrategy(
@@ -91,11 +97,14 @@ public final class ParallelGetFileTransferStrategy extends
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws JargonException {
 
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
-				transferStatusCallbackListener, fileRestartInfo);
+				transferStatusCallbackListener, fileRestartInfo,
+				negotiatedClientServerConfiguration);
 
 		log.info("transfer options in transfer control block:{}",
 				transferControlBlock.getTransferOptions());
