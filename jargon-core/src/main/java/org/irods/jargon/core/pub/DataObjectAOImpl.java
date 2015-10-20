@@ -650,7 +650,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info("attempting a restart after exception", je);
 				fileRestartInfo = retrieveRestartInfoIfAvailable(
 						RestartType.PUT, irodsFileDestination.getAbsolutePath());
-				if (fileRestartInfo != null) {
+				if (fileRestartInfo == null) {
+					log.info("no restart info, rethrow exception", je);
+					throw je;
+				} else {
 					log.info("carrying out restart process..");
 					putRestartRetryTillMaxLoop(transferControlBlock,
 							targetFile, fileRestartInfo,
@@ -1547,17 +1550,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.info("attempting a restart after exception", e);
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
 							RestartType.GET, irodsFileToGet.getAbsolutePath());
-					if (fileRestartInfo != null) {
+					if (fileRestartInfo == null) {
+						log.info("no restart info available, rethrow the exception");
+						throw e;
+					} else {
 						log.info("carrying out restart process..");
 						getRestartRetryTillMaxLoop(transferControlBlock,
 								irodsFileToGet, fileRestartInfo,
 								transferStatusCallbackListener);
 					}
 
-					log.error(
-							" exception in get transfer, currently restart is not supported for get",
-							e);
-					throw e;
 				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,

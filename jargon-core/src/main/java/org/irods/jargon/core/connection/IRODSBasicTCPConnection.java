@@ -301,7 +301,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		 * If ssl, i cannot just close it, so just set this to null and go away
 		 */
 		if (!(this.getConnection() instanceof SSLSocket)) {
-			closeDownSocketAndEatAnyExceptions();
+			closeDownSocketAndEatAnyExceptions(); // FIXME: proper ssl shutdown?
 		}
 	}
 
