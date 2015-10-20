@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.utils.RandomUtils;
+
 /**
  * Captures characteristics resulting from a client-server negotiation
  * 
@@ -11,6 +13,7 @@ package org.irods.jargon.core.connection;
 public class NegotiatedClientServerConfiguration {
 	private final boolean sslConnection;
 	private byte[] sslCryptKey;
+	private char[] sslCryptChars;
 
 	/*
 	 * (non-Javadoc)
@@ -24,6 +27,19 @@ public class NegotiatedClientServerConfiguration {
 		builder.append(sslConnection);
 		builder.append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * Initialize the key as bytes and chars for use in encryption algorithms.
+	 * 
+	 * @param pipelineConfiguration
+	 */
+	public synchronized void initKey(PipelineConfiguration pipelineConfiguration) {
+		sslCryptChars = RandomUtils
+				.generateRandomCharsForNBytes(pipelineConfiguration
+						.getEncryptionAlgorithmEnum().getKeySize());
+		sslCryptKey = new String(sslCryptChars).getBytes();
+
 	}
 
 	/**
@@ -53,13 +69,8 @@ public class NegotiatedClientServerConfiguration {
 		return sslCryptKey;
 	}
 
-	/**
-	 * @param sslCryptKey
-	 *            <code>byte[]</code> with the sslCryptKey if client/server
-	 *            negotiation uses SSL and wants to encrypt parallel transfers
-	 */
-	public void setSslCryptKey(byte[] sslCryptKey) {
-		this.sslCryptKey = sslCryptKey;
+	public char[] getSslCryptChars() {
+		return sslCryptChars;
 	}
 
 }

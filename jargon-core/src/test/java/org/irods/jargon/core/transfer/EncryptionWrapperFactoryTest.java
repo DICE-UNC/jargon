@@ -20,7 +20,7 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				true);
-		negotiatedClientServerConfiguration.setSslCryptKey("blah".getBytes());
+		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
 		ParallelEncryptionCipherWrapper actual = EncryptionWrapperFactory
 				.instance(pipelineConfiguration,
 						negotiatedClientServerConfiguration);
@@ -37,7 +37,7 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				false);
-		negotiatedClientServerConfiguration.setSslCryptKey("blah".getBytes());
+		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
 		EncryptionWrapperFactory.instance(pipelineConfiguration,
 				negotiatedClientServerConfiguration);
 

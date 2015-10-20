@@ -11,7 +11,6 @@ import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiat
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult.Outcome;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,10 +222,8 @@ class ClientServerNegotiationService {
 		PipelineConfiguration myProps = PipelineConfiguration.instance(this
 				.getIrodsMidLevelProtocol().getIrodsSession()
 				.getJargonProperties());
-		byte[] key = RandomUtils.generateRandomBytesOfLength(myProps
-				.getEncryptionKeySize());
-		startupResponse.getNegotiatedClientServerConfiguration()
-				.setSslCryptKey(key);
+		startupResponse.getNegotiatedClientServerConfiguration().initKey(
+				myProps);
 
 		/*
 		 * See irods/plugins/network/ssl/libssl.cpp ~line 757 for analagous code
@@ -242,7 +239,9 @@ class ClientServerNegotiationService {
 			this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
 			log.info("now write the shared secret to iRODS");
 			this.getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
-					NEGOTIATION_SHARED_SECRET, key, null, 0, 0, null, 0, 0, 0);
+					NEGOTIATION_SHARED_SECRET,
+					startupResponse.getNegotiatedClientServerConfiguration()
+							.getSslCryptKey(), null, 0, 0, null, 0, 0, 0);
 
 		} catch (IOException e) {
 			log.error("i/o exception sending encryption info", e);

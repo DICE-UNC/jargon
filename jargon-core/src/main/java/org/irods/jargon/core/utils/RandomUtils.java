@@ -5,6 +5,8 @@ package org.irods.jargon.core.utils;
 
 import java.security.SecureRandom;
 
+import org.apache.commons.lang.RandomStringUtils;
+
 /**
  * Various utils for generating ramdomness (e.g. encryption keys used in
  * client/server negotiation)
@@ -31,5 +33,27 @@ public class RandomUtils {
 		SecureRandom random = new SecureRandom();
 		random.nextBytes(result);
 		return result;
+	}
+
+	/**
+	 * Returns a random char array that has a total length of
+	 * <code>length</code> bytes. Remember that char is a 2 byte value, byte is
+	 * and 1 byte value. This gives a char array of length total bytes
+	 * 
+	 * @param length
+	 * @return
+	 */
+	public static final char[] generateRandomCharsForNBytes(final int length) {
+
+		if (length <= 0) {
+			throw new IllegalArgumentException("length must be > 0");
+		}
+
+		if ((length % 2) != 0) {
+			throw new IllegalArgumentException("length must be even");
+		}
+
+		return RandomStringUtils.randomAlphanumeric(length / 2).toCharArray();
+
 	}
 }
