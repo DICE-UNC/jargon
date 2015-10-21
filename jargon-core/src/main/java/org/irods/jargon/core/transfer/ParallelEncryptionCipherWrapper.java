@@ -49,7 +49,7 @@ abstract class ParallelEncryptionCipherWrapper {
 		return negotiatedClientServerConfiguration;
 	}
 
-	abstract byte[] encrypt(final byte[] input)
+	abstract EncryptionResult encrypt(final byte[] input)
 			throws ClientServerNegotiationException;
 
 	abstract byte[] decrypt(final byte[] input)

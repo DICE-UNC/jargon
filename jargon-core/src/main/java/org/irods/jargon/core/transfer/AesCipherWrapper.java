@@ -8,6 +8,7 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.security.spec.KeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -17,6 +18,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -39,8 +41,6 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AesCipherWrapper.class);
-
-	byte[] mInitVec = null;
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -76,7 +76,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 			SecretKeyFactory factory = SecretKeyFactory
 					.getInstance(pipelineConfiguration
 							.getEncryptionAlgorithmEnum().getKeyGenType());
-			PBEKeySpec keySpec = new PBEKeySpec(this
+			KeySpec keySpec = new PBEKeySpec(this
 					.getNegotiatedClientServerConfiguration()
 					.getSslCryptChars(),
 					RandomUtils
@@ -86,16 +86,13 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 					pipelineConfiguration.getEncryptionAlgorithmEnum()
 							.getKeySize());
 
-			SecretKey secretKey = factory.generateSecret(keySpec);
-			encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey);
-			AlgorithmParameters params = encryptionCipher.getParameters();
+			SecretKey temp = factory.generateSecret(keySpec);
+			SecretKey secretKey = new SecretKeySpec(temp.getEncoded(), "AES");
 
-			// get the initialization vector and store as member var
-			mInitVec = params.getParameterSpec(IvParameterSpec.class).getIV();
+			encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidKeySpecException | InvalidKeyException
-				| InvalidParameterSpecException e) {
+				| InvalidKeySpecException | InvalidKeyException e) {
 			log.error("error generating key for cipher", e);
 			throw new ClientServerNegotiationException(
 					"cannot generate key for cipher", e);
@@ -111,12 +108,21 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * (byte[])
 	 */
 	@Override
-	byte[] encrypt(byte[] input) throws ClientServerNegotiationException {
-		AlgorithmParameters params = getCipher().getParameters();
+	EncryptionResult encrypt(byte[] input)
+			throws ClientServerNegotiationException {
 		try {
 
-			return getCipher().doFinal(input);
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			AlgorithmParameters params = this.getCipher().getParameters();
+
+			// get the initialization vector and store as member var
+			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class)
+					.getIV();
+
+			byte[] encrypted = getCipher().doFinal(input);
+			return new EncryptionResult(mInitVec, encrypted);
+
+		} catch (IllegalBlockSizeException | BadPaddingException
+				| InvalidParameterSpecException e) {
 			log.error("error during encryption", e);
 			throw new ClientServerNegotiationException(
 					"parameter spec error in encryption", e);

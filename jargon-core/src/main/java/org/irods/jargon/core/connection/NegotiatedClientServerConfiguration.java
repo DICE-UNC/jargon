@@ -65,11 +65,11 @@ public class NegotiatedClientServerConfiguration {
 	 * @return <code>byte[]</code> with the sslCryptKey if client/server
 	 *         negotiation uses SSL and wants to encrypt parallel transfers
 	 */
-	public byte[] getSslCryptKey() {
+	public synchronized byte[] getSslCryptKey() {
 		return sslCryptKey;
 	}
 
-	public char[] getSslCryptChars() {
+	public synchronized char[] getSslCryptChars() {
 		return sslCryptChars;
 	}
 

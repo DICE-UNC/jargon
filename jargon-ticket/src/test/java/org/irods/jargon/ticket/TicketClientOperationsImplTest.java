@@ -370,8 +370,12 @@ public class TicketClientOperationsImplTest {
 		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
 				getIRODSFile, getLocalFile, null, null);
 
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		assertionHelper
+				.assertIrodsFileMatchesLocalFileChecksum(
+						getIRODSFile.getAbsolutePath(),
+						getLocalFile.getAbsolutePath(),
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						secondaryAccount);
 
 	}
 
@@ -446,8 +450,12 @@ public class TicketClientOperationsImplTest {
 		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
 				getIRODSFile, getLocalFile, null, null);
 
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		assertionHelper
+				.assertIrodsFileMatchesLocalFileChecksum(
+						getIRODSFile.getAbsolutePath(),
+						getLocalFile.getAbsolutePath(),
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						secondaryAccount);
 
 	}
 
@@ -574,7 +582,6 @@ public class TicketClientOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		destFile.reset();
 
 		localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -663,7 +670,6 @@ public class TicketClientOperationsImplTest {
 		File localFile = new File(localCollectionAbsolutePath);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
-		destFile.reset();
 
 		localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
@@ -744,7 +750,6 @@ public class TicketClientOperationsImplTest {
 		IRODSFile destFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsFile);
 		destFile.delete();
-		destFile.reset();
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
