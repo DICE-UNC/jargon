@@ -4,15 +4,19 @@
 package org.irods.jargon.core.transfer;
 
 import java.security.AlgorithmParameters;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
-import javax.crypto.KeyGenerator;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -36,8 +40,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	public static final Logger log = LoggerFactory
 			.getLogger(AesCipherWrapper.class);
 
-	private KeyGenerator keyGen = null;
-	PBEKeySpec keySpec = null;
+	byte[] mInitVec = null;
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -61,25 +64,42 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * Given the configuration, initialize the cipher
 	 */
 	private void initCipher() throws ClientServerNegotiationException {
-		PipelineConfiguration pipelineConfiguration = this.getPipelineConfiguration();
+		PipelineConfiguration pipelineConfiguration = this
+				.getPipelineConfiguration();
 		try {
-			Cipher encryptionCypher = Cipher.getInstance(pipelineConfiguration.getEncryptionAlgorithmEnum()
-					.getCypherKey());
-			this.setCipher(encryptionCypher);
-			keySpec =  new PBEKeySpec(this.getNegotiatedClientServerConfiguration().getSslCryptChars(), RandomUtils.generateRandomBytesOfLength(pipelineConfiguration.getEncryptionSaltSize(),
-					pipelineConfiguration.getEncryptionNumberHashRounds(), pipelineConfiguration.getEncryptionAlgorithmEnum().getKeySize());
-			keyGen = KeyGenerator.getInstance(this.getPipelineConfiguration()
-					.getEncryptionAlgorithmEnum().getKeyGenType());
-			keyGen.init(this.getPipelineConfiguration()
-					.getEncryptionAlgorithmEnum().getKeySize());
-			keyGen.generateKey();
+			log.info("initCipher()");
+			Cipher encryptionCipher = Cipher.getInstance(pipelineConfiguration
+					.getEncryptionAlgorithmEnum().getCypherKey());
+			this.setCipher(encryptionCipher);
+			log.debug("have cipher:{}", encryptionCipher);
 
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			SecretKeyFactory factory = SecretKeyFactory
+					.getInstance(pipelineConfiguration
+							.getEncryptionAlgorithmEnum().getKeyGenType());
+			PBEKeySpec keySpec = new PBEKeySpec(this
+					.getNegotiatedClientServerConfiguration()
+					.getSslCryptChars(),
+					RandomUtils
+							.generateRandomBytesOfLength(pipelineConfiguration
+									.getEncryptionSaltSize()),
+					pipelineConfiguration.getEncryptionNumberHashRounds(),
+					pipelineConfiguration.getEncryptionAlgorithmEnum()
+							.getKeySize());
+
+			SecretKey secretKey = factory.generateSecret(keySpec);
+			encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			AlgorithmParameters params = encryptionCipher.getParameters();
+
+			// get the initialization vector and store as member var
+			mInitVec = params.getParameterSpec(IvParameterSpec.class).getIV();
+
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException
+				| InvalidKeySpecException | InvalidKeyException
+				| InvalidParameterSpecException e) {
 			log.error("error generating key for cipher", e);
 			throw new ClientServerNegotiationException(
 					"cannot generate key for cipher", e);
 		}
-		
 
 	}
 
@@ -94,9 +114,6 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	byte[] encrypt(byte[] input) throws ClientServerNegotiationException {
 		AlgorithmParameters params = getCipher().getParameters();
 		try {
-
-			byte[] ivBytes = generateIv(this.getPipelineConfiguration()
-					.getEncryptionKeySize());
 
 			return getCipher().doFinal(input);
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
