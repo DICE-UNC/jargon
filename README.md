@@ -53,3 +53,10 @@ Added a rename() operation to DataTransferOperations to clarify difference betwe
 ###  CollectionPager not navigating strict acl dirs with heuristics #148 
 
 Add heuristic path guessing to CollectionPagerAO, which is an upgrade of the old CollectionAndDataObjectListAndSearchAOImpl
+###  across federation browsing under strict acls doesn't interpolate home/ and find subdirs viewable #39 
+
+Update cross-zone path heuristic guessing so one can reasonably browse 'down' to home dirs in federated zones
+
+### Misc
+
+Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
