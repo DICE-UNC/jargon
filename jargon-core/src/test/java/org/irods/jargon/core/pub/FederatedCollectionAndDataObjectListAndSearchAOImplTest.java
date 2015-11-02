@@ -10,6 +10,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -124,6 +125,62 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		List<CollectionAndDataObjectListingEntry> entries = collectionListAndSearchAO
 				.listDataObjectsUnderPath(targetIrodsPath, 0);
 		Assert.assertNotNull("null entries returned", entries);
+
+	}
+
+	@Test
+	public void testRetrieveObjStatInFederatedZone() throws Exception {
+
+		if (!testingPropertiesHelper.isTestFederatedZone(testingProperties)) {
+			return;
+		}
+
+		String fileName = "testRetrieveObjStatInFederatedZone.txt";
+		String testSubdir = "testRetrieveObjStatInFederatedZone";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
+
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testSubdir);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, fileName, 3);
+		File localFile = new File(localFilePath);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsPath);
+
+		// delete to clean up
+		destFile.deleteWithForceOption();
+		destFile.mkdirs();
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		/*
+		 * setup done, now connect from the first zone and try to list the coll
+		 * with the data object
+		 */
+
+		IRODSAccount fedAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAndDataObjectListAndSearchAO collectionListAndSearchAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(fedAccount);
+		ObjStat objStat = collectionListAndSearchAO
+				.retrieveObjectStatForPath(targetIrodsPath + "/" + fileName);
+		Assert.assertNotNull("null objstat", objStat);
 
 	}
 

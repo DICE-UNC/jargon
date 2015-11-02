@@ -627,14 +627,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						targetFile, getIRODSProtocol(), transferControlBlock,
 						transferStatusCallbackListener);
 			} catch (FileNotFoundException e) {
-				log.error(
-						"File not found for local file I was trying to put:{}",
-						localFile.getAbsolutePath());
-				throw new DataNotFoundException(
-						"localFile not found to put to irods", e);
+				log.error("iRODS file missing in put operation:{}",
+						targetFile.getAbsolutePath());
+				throw new DataNotFoundException("irodsFile not found", e);
 			} catch (java.io.FileNotFoundException e) {
 				throw new DataNotFoundException(
-						"irods destination not found in put to irods", e);
+						"local file not found in put to irods", e);
 			}
 		} else {
 
@@ -1533,7 +1531,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
 
-					getIRODSProtocol().operationComplete(l1descInx);
+					if (!this.getIRODSServerProperties()
+							.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
+									"rods4.1.6")) {
+						getIRODSProtocol().operationComplete(l1descInx);
+
+					}
+
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
 							RestartType.GET, irodsFileToGet.getAbsolutePath());
 					if (fileRestartInfo != null) {

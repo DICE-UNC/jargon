@@ -802,6 +802,44 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
+	 * given user home collection in the federated zone. So if user1 in zone1
+	 * wants to see his home collection in federated zone zone2, the path
+	 * returned would be /zone2/home/user1#zone1 plus the extra path info
+	 * 
+	 * @param testingProperties
+	 *            <code>Properties</code> that define test behavior
+	 * @param collectionPathBelowScratch
+	 *            <code>String</code> with no leading '/' that defines the
+	 *            desired path underneath the IRODS scratch directory
+	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 *         path for an IRODS collection
+	 * @throws TestingUtilsException
+	 * @throws URISyntaxException
+	 */
+	public String buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
+			final Properties testingProperties,
+			final String collectionPathBelowScratch)
+			throws TestingUtilsException {
+
+		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
+			throw new TestingUtilsException(
+					"scratch path not provided in testing.properties");
+		}
+
+		StringBuilder pathBuilder = new StringBuilder();
+		pathBuilder.append('/');
+		pathBuilder.append(testingProperties.get(IRODS_FEDERATED_ZONE_KEY));
+		pathBuilder.append("/home/");
+		pathBuilder.append(testingProperties.get(IRODS_USER_KEY));
+		pathBuilder.append("#");
+		pathBuilder.append(testingProperties.get(IRODS_ZONE_KEY));
+		pathBuilder.append('/');
+		pathBuilder.append(collectionPathBelowScratch);
+		return pathBuilder.toString();
+	}
+
+	/**
+	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
 	 * 
 	 * @param testingProperties
