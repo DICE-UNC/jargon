@@ -17,6 +17,7 @@ import org.irods.jargon.core.pub.DataTransferOperationsImplTestNoInternalCache;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
+import org.irods.jargon.core.pub.FederatedDataObjectAOImplTest;
 import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.FederatedSpecificQueryAOTest;

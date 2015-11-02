@@ -62,3 +62,28 @@ Added checks to not copy a collection recursively under itself.  Revealed in clo
 ###  -832000 in cloud browser clicking on file in fed zone #152 
 
 Removed resource group name from DataObject selects when querying for domain object. That is no longer useful with new resource domain hierarchy and was causing GenQuery exceptions with later iRODS versions
+Update cross-zone path heuristic guessing so one can reasonably browse 'down' to home dirs in federated zones
+
+###  CI integration with iRODS 4 #18 
+
+Enhancements to testing setup to integrate Jargon into Consortium CI services
+
+###  PEP on output stream #144 
+
+Fixes and tests for firing postProcForPut after certain streaming i/o operations
+
+### PackingIrodsInputStream and PackingIrodsOutputStream 
+
+Major enhancements to the performance of streaming i/o though simple read-ahead and write-behind buffering streams, see:
+
+https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/PackingIrodsInputStream.java
+
+and
+
+https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/PackingIrodsOutputStream.java
+
+These enhancements are used in the ModeShape, WebDav, REST, and cloud browser code
+
+### Misc
+
+Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
