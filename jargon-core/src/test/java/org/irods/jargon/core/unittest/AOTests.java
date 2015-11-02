@@ -18,6 +18,7 @@ import org.irods.jargon.core.pub.DataTransferOperationsImplTestNoInternalCache;
 import org.irods.jargon.core.pub.EnvironmentalInfoAOTest;
 import org.irods.jargon.core.pub.FederatedCollectionAOImplTest;
 import org.irods.jargon.core.pub.FederatedCollectionAndDataObjectListAndSearchAOImplTest;
+import org.irods.jargon.core.pub.FederatedDataObjectAOImplTest;
 import org.irods.jargon.core.pub.FederatedDataTransferOperationsImplTest;
 import org.irods.jargon.core.pub.FederatedIRODSGenQueryExecutorImplTest;
 import org.irods.jargon.core.pub.FederatedSpecificQueryAOTest;
@@ -86,7 +87,7 @@ import org.junit.runners.Suite;
 		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
 		CollectionPagerAOImplTest.class,
 		DataObjectChecksumUtilitiesAOImplTest.class,
-		CollectionListingUtilsTest.class })
+		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>

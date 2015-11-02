@@ -3552,7 +3552,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Normal test of consilidated 'copy()' method, this time with a collection,
+	 * Normal test of consolidated 'copy()' method, this time with a collection,
 	 * using the string path sigs
 	 * 
 	 * @throws Exception
@@ -3563,6 +3563,66 @@ public class DataTransferOperationsImplTest {
 		// generate a local scratch file
 		String testOrigDirectory = "testCopyCollectionToTargetCollectionB";
 		String testTargetDirectory = "testCopyCollectionToTargetCollectionBTarget";
+
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
+						+ '/' + testOrigDirectory);
+
+		String irodsCollectionRootAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String irodsOriginalAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testOrigDirectory);
+
+		String irodsTargetAbsolutePath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testTargetDirectory);
+
+		FileGenerator
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath, "prefixForColl", 2, 3, 2,
+						"testFile", ".txt", 2, 2, 1, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperations.putOperation(localCollectionAbsolutePath,
+				irodsCollectionRootAbsolutePath, "", null, null);
+
+		dataTransferOperations.copy(irodsOriginalAbsolutePath, "",
+				irodsTargetAbsolutePath, null, null);
+
+		File localFile = new File(localCollectionAbsolutePath);
+		IRODSFile targetFile = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						irodsTargetAbsolutePath, testOrigDirectory);
+
+		// compare the local source to the copied-to target
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(
+				localFile, (File) targetFile);
+
+	}
+
+	/**
+	 * Bug https://github.com/DICE-UNC/jargon/issues/151
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = DuplicateDataException.class)
+	public void testCopyCollectionToTargetCollectionSelfBug151()
+			throws Exception {
+
+		// generate a local scratch file
+		String testOrigDirectory = "testCopyCollectionToTargetCollectionSelfBug151";
+		String testTargetDirectory = "testCopyCollectionToTargetCollectionSelfBug151";
 
 		String localCollectionAbsolutePath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH

@@ -13,6 +13,7 @@ Work for milestone https://github.com/DICE-UNC/jargon/milestones/4.0.3.1%20secon
 ## News
 
 
+
 https://github.com/DICE-UNC/jargon/issues?q=is%3Aopen+is%3Aissue+milestone%3A%22features+branch+4.0.3%22
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
@@ -48,7 +49,14 @@ Updated semantics of move collection to avoid 'collection already exists errors'
 
 ###  Rename operation in DTO #147 
 
-Added a rename() operation to DataTransferOperations to clarify difference between a rename and a move
+###  across federation browsing under strict acls doesn't interpolate home/ and find subdirs viewable #39 
+
+More gracefully handle path guessing heuristics cross-federation browsing when drilling down and stict ACLs is on.  
+
+###  CI integration with iRODS 4 #18 
+
+Changes in build automation and testing to integrate Jargon testing into iRODS Consortium Continuous integration
+
 
 ###  CollectionPager not navigating strict acl dirs with heuristics #148 
 
