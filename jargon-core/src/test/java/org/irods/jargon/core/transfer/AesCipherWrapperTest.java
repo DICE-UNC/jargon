@@ -50,7 +50,7 @@ public class AesCipherWrapperTest {
 		AesCipherWrapper wrapper = new AesCipherWrapper(pipelineConfiguration,
 				config);
 
-		EncryptionResult actual = wrapper.encrypt(source);
+		EncryptionBuffer actual = wrapper.encrypt(source);
 		Assert.assertNotNull(actual);
 
 	}

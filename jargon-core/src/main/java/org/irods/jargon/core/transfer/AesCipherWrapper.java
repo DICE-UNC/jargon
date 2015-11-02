@@ -33,6 +33,10 @@ import org.slf4j.LoggerFactory;
  * see http://karanbalkar.com/2014/02/tutorial-76-implement-aes-256-
  * encryptiondecryption-using-java/
  * 
+ * and
+ * 
+ * http://pastebin.com/YiwbCAW8
+ * 
  * @author Mike Conway - DICE
  * 
  *
@@ -73,21 +77,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 			this.setCipher(encryptionCipher);
 			log.debug("have cipher:{}", encryptionCipher);
 
-			SecretKeyFactory factory = SecretKeyFactory
-					.getInstance(pipelineConfiguration
-							.getEncryptionAlgorithmEnum().getKeyGenType());
-			KeySpec keySpec = new PBEKeySpec(this
-					.getNegotiatedClientServerConfiguration()
-					.getSslCryptChars(),
-					RandomUtils
-							.generateRandomBytesOfLength(pipelineConfiguration
-									.getEncryptionSaltSize()),
-					pipelineConfiguration.getEncryptionNumberHashRounds(),
-					pipelineConfiguration.getEncryptionAlgorithmEnum()
-							.getKeySize());
-
-			SecretKey temp = factory.generateSecret(keySpec);
-			SecretKey secretKey = new SecretKeySpec(temp.getEncoded(), "AES");
+			SecretKey secretKey = initSecretKey(pipelineConfiguration);
 
 			encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
@@ -100,6 +90,32 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 
 	}
 
+	/**
+	 * @param pipelineConfiguration
+	 * @return
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	private SecretKey initSecretKey(PipelineConfiguration pipelineConfiguration)
+			throws NoSuchAlgorithmException, InvalidKeySpecException {
+		SecretKeyFactory factory = SecretKeyFactory
+				.getInstance(pipelineConfiguration
+						.getEncryptionAlgorithmEnum().getKeyGenType());
+		KeySpec keySpec = new PBEKeySpec(this
+				.getNegotiatedClientServerConfiguration()
+				.getSslCryptChars(),
+				RandomUtils
+						.generateRandomBytesOfLength(pipelineConfiguration
+								.getEncryptionSaltSize()),
+				pipelineConfiguration.getEncryptionNumberHashRounds(),
+				pipelineConfiguration.getEncryptionAlgorithmEnum()
+						.getKeySize());
+
+		SecretKey temp = factory.generateSecret(keySpec);
+		SecretKey secretKey = new SecretKeySpec(temp.getEncoded(), "AES");
+		return secretKey;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -108,7 +124,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * (byte[])
 	 */
 	@Override
-	EncryptionResult encrypt(byte[] input)
+	EncryptionBuffer encrypt(byte[] input)
 			throws ClientServerNegotiationException {
 		try {
 
@@ -119,7 +135,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 					.getIV();
 
 			byte[] encrypted = getCipher().doFinal(input);
-			return new EncryptionResult(mInitVec, encrypted);
+			return new EncryptionBuffer(mInitVec, encrypted);
 
 		} catch (IllegalBlockSizeException | BadPaddingException
 				| InvalidParameterSpecException e) {
@@ -133,11 +149,11 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.transfer.ParallellEncryptionCipherWrapper#decrypt
-	 * (byte[])
+	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
+	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
 	 */
 	@Override
-	byte[] decrypt(byte[] input) {
+	byte[] decrypt(EncryptionBuffer input) {
 		return null;
 	}
 
@@ -147,6 +163,8 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * @param ivLength
 	 * @return
 	 */
+	@SuppressWarnings("unused")
+	// TODO: might not need this
 	private byte[] generateIv(final int ivLength) {
 		if (ivLength <= 0) {
 			throw new IllegalArgumentException("invalid iv length");

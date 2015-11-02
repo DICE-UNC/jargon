@@ -4,18 +4,17 @@
 package org.irods.jargon.core.transfer;
 
 /**
- * Represents the result of encrypting bytes in a transfer, carrying the
- * encrypted data as well as the computed initialization vector.
+ * Carries an initialization vector and a set of bytes to encrypt or decrypt
  * 
  * @author Mike Conway - DICE
  *
  */
-public class EncryptionResult {
+public class EncryptionBuffer {
 
 	private final byte[] initializationVector;
 	private final byte[] encryptedData;
 
-	EncryptionResult(byte[] initializationVector, byte[] encryptedData) {
+	EncryptionBuffer(byte[] initializationVector, byte[] encryptedData) {
 		super();
 		if (initializationVector == null) {
 			throw new IllegalArgumentException("null initializationVector");

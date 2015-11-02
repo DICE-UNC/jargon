@@ -8,6 +8,7 @@ import javax.crypto.Cipher;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 
 /**
  * Wrapper for an implementation that can encrypt bytes in a parallel file
@@ -22,6 +23,11 @@ abstract class ParallelEncryptionCipherWrapper {
 	private Cipher cipher;
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
+	private Mode mode;
+
+	public enum Mode {
+		ENCRYPT, DECRYPT
+	}
 
 	/**
 	 * @param pipelineConfiguration
@@ -29,10 +35,26 @@ abstract class ParallelEncryptionCipherWrapper {
 	 */
 	ParallelEncryptionCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
+			Mode mode) {
 		super();
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+		if (negotiatedClientServerConfiguration == null) {
+			throw new IllegalArgumentException("null IllegalArgumentException");
+		}
+		if (mode == null) {
+			throw new IllegalArgumentException("null mode");
+		}
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
+			throw new JargonRuntimeException(
+					"attempting to encrypt when not an SSL enabled connection");
+		}
+
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
+		this.mode = mode;
 	}
 
 	/**
@@ -49,14 +71,20 @@ abstract class ParallelEncryptionCipherWrapper {
 		return negotiatedClientServerConfiguration;
 	}
 
-	abstract EncryptionResult encrypt(final byte[] input)
-			throws ClientServerNegotiationException;
-
-	abstract byte[] decrypt(final byte[] input)
+	/**
+	 * Encrypt the buffer
+	 * 
+	 * @param input
+	 *            <code>byte[]</code> to encrypt
+	 * @return {@link EncryptionBuffer} with the data optional initialization
+	 *         vector
+	 * @throws ClientServerNegotiationException
+	 */
+	abstract EncryptionBuffer encrypt(final byte[] input)
 			throws ClientServerNegotiationException;
 
 	/**
-	 * @return the cipher
+	 * @return the cipher {@link Cipher}
 	 */
 	Cipher getCipher() {
 		return cipher;
@@ -64,10 +92,35 @@ abstract class ParallelEncryptionCipherWrapper {
 
 	/**
 	 * @param cipher
-	 *            the cipher to set
+	 *            {@link Cipher} the cipher to set
 	 */
 	void setCipher(Cipher cipher) {
 		this.cipher = cipher;
+	}
+
+	/**
+	 * Decrypt the data, given a byte buffer and optionally an initialization
+	 * vector
+	 * 
+	 * @param input
+	 *            {@link EncryptionBuffer}
+	 * @return <code>byte[]</code> with the decrypted data
+	 */
+	abstract byte[] decrypt(EncryptionBuffer input);
+
+	/**
+	 * @return the mode
+	 */
+	public Mode getMode() {
+		return mode;
+	}
+
+	/**
+	 * @param mode
+	 *            the mode to set
+	 */
+	public void setMode(Mode mode) {
+		this.mode = mode;
 	}
 
 }
