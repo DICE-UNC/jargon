@@ -10,7 +10,7 @@ Jargon Core API
 
 ## News
 
-Maintenance release of Jargon work in progress, focused on bug fixes, more 4.1 compatability, and stream performance for i/o and put/get
+Maintenance release of Jargon work in progress, focused on bug fixes, more 4.1.6 compatability, and stream performance for i/o and put/get
 
 Release  https://github.com/DICE-UNC/jargon/milestones/Performance%20enhancements%20for%20streams%20and%20put/get%20-%204.0.2.4
 
@@ -46,3 +46,19 @@ Note that the following bug and feature requests are logged in GForge with relat
 ### move semantics error in cloud browser moving a/path/a to a/path/b with collection already exists #140
 
 Updated semantics of move collection to avoid 'collection already exists errors' by adding the source collection as the child of the target collection name
+
+###  across federation browsing under strict acls doesn't interpolate home/ and find subdirs viewable #39 
+
+More gracefully handle path guessing heuristics cross-federation browsing when drilling down and stict ACLs is on.  
+
+###  CI integration with iRODS 4 #18 
+
+Changes in build automation and testing to integrate Jargon testing into iRODS Consortium Continuous integration
+
+###  copy of file to itself recursively endlessly copies until path gets too large #151 
+
+Added checks to not copy a collection recursively under itself.  Revealed in cloud browser testing.
+
+###  -832000 in cloud browser clicking on file in fed zone #152 
+
+Removed resource group name from DataObject selects when querying for domain object. That is no longer useful with new resource domain hierarchy and was causing GenQuery exceptions with later iRODS versions

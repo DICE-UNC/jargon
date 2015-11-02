@@ -119,8 +119,6 @@ public final class DataAOHelper extends AOHelper {
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
@@ -167,21 +165,20 @@ public final class DataAOHelper extends AOHelper {
 				.getIntOrZeroFromIRODSValue(row.getColumn(5)));
 		dataObject.setDataTypeName(row.getColumn(6));
 		dataObject.setDataSize(Long.parseLong(row.getColumn(7)));
-		dataObject.setResourceGroupName(row.getColumn(8));
-		dataObject.setResourceName(row.getColumn(9));
-		dataObject.setDataPath(row.getColumn(10));
-		dataObject.setDataOwnerName(row.getColumn(11));
-		dataObject.setDataOwnerZone(row.getColumn(12));
-		dataObject.setReplicationStatus(row.getColumn(13));
-		dataObject.setDataStatus(row.getColumn(14));
-		dataObject.setChecksum(row.getColumn(15));
-		dataObject.setExpiry(row.getColumn(16));
-		dataObject.setDataMapId(Integer.parseInt(row.getColumn(17)));
-		dataObject.setComments(row.getColumn(18));
+		dataObject.setResourceName(row.getColumn(8));
+		dataObject.setDataPath(row.getColumn(9));
+		dataObject.setDataOwnerName(row.getColumn(10));
+		dataObject.setDataOwnerZone(row.getColumn(11));
+		dataObject.setReplicationStatus(row.getColumn(12));
+		dataObject.setDataStatus(row.getColumn(13));
+		dataObject.setChecksum(row.getColumn(14));
+		dataObject.setExpiry(row.getColumn(15));
+		dataObject.setDataMapId(Integer.parseInt(row.getColumn(16)));
+		dataObject.setComments(row.getColumn(17));
 		dataObject.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(19)));
+				.getDateFromIRODSValue(row.getColumn(18)));
 		dataObject.setUpdatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(20)));
+				.getDateFromIRODSValue(row.getColumn(19)));
 
 		// add info to track position in records for possible requery
 		dataObject.setLastResult(row.isLastResult());

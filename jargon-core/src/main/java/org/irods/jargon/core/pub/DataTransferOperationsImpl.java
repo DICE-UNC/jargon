@@ -1746,13 +1746,20 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 				operativeTransferControlBlock);
 
 		/*
-		 * Don't copy to self
+		 * Don't copy to self or parent
 		 */
 		if (targetFile.getAbsolutePath().equals(sourceFile.getParent())) {
 			log.error("source file is being copied to own parent:{}",
 					sourceFile.getAbsolutePath());
 			throw new DuplicateDataException(
 					"attempt to copy source file to its parent");
+		}
+
+		if (targetFile.getAbsolutePath().equals(sourceFile.getAbsolutePath())) {
+			log.error("source file is being copied to self:{}",
+					sourceFile.getAbsolutePath());
+			throw new DuplicateDataException(
+					"attempt to copy source file to itself");
 		}
 
 		// if the target is a file throw an exception

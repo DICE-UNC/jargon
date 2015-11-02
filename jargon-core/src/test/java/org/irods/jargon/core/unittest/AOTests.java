@@ -84,7 +84,7 @@ import org.junit.runners.Suite;
 		MountedFilesystemCollectionAOImplTest.class,
 		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
 		DataObjectChecksumUtilitiesAOImplTest.class,
-		CollectionListingUtilsTest.class })
+		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
