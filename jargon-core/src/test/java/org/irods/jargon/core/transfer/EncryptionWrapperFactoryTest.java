@@ -7,6 +7,7 @@ import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper.Mode;
 import org.junit.Test;
 
 public class EncryptionWrapperFactoryTest {
@@ -23,7 +24,7 @@ public class EncryptionWrapperFactoryTest {
 		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
 		ParallelEncryptionCipherWrapper actual = EncryptionWrapperFactory
 				.instance(pipelineConfiguration,
-						negotiatedClientServerConfiguration);
+						negotiatedClientServerConfiguration, Mode.ENCRYPT);
 		Assert.assertNotNull(actual);
 		Assert.assertTrue(actual instanceof AesCipherWrapper);
 	}
@@ -39,7 +40,7 @@ public class EncryptionWrapperFactoryTest {
 				false);
 		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
 		EncryptionWrapperFactory.instance(pipelineConfiguration,
-				negotiatedClientServerConfiguration);
+				negotiatedClientServerConfiguration, Mode.ENCRYPT);
 
 	}
 }

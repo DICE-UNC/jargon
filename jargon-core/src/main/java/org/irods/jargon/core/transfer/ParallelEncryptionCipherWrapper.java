@@ -30,8 +30,17 @@ abstract class ParallelEncryptionCipherWrapper {
 	}
 
 	/**
+	 * Default constructor with configuration information needed to set up the
+	 * algorithm
+	 * 
 	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} with connection properties
 	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration} with result of
+	 *            negotiation
+	 * @param mode
+	 *            {@link Mode} that indicates encrypt/decrypt
+	 * @throws ClientServerNegotiationException
 	 */
 	ParallelEncryptionCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,

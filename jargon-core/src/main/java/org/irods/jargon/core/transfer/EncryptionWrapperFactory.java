@@ -8,6 +8,7 @@ import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper.Mode;
 
 /**
  * Factory to generate the encryption wrapper type based on configuration
@@ -30,12 +31,14 @@ public class EncryptionWrapperFactory {
 	 *            {@link NegotiatedClientServerConfiguration}
 	 * @return {@link ParallelEncryptionCipherWrapper} to be used by parallel
 	 *         transfer threads
+	 * @param mode
+	 *            {@link Mode} that indicates encrypt/decrypt
 	 * @throws ClientServerNegotiationException
 	 */
 	public static ParallelEncryptionCipherWrapper instance(
 			final PipelineConfiguration pipelineConfiguration,
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
+			Mode mode) throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -51,9 +54,13 @@ public class EncryptionWrapperFactory {
 					"no encryption was negotiated,should not call this factory");
 		}
 
+		if (mode == null) {
+			throw new JargonRuntimeException("no mode was selected");
+		}
+
 		if (pipelineConfiguration.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
 			return new AesCipherWrapper(pipelineConfiguration,
-					negotiatedClientServerConfiguration);
+					negotiatedClientServerConfiguration, mode);
 		} else {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"

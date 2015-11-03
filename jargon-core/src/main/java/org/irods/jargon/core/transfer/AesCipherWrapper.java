@@ -51,16 +51,19 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 * algorithm
 	 * 
 	 * @param pipelineConfiguration
-	 *            {@link PipelineConfiguration}
+	 *            {@link PipelineConfiguration} with connection properties
 	 * @param negotiatedClientServerConfiguration
-	 *            {@link NegotiatedClientServerConfiguration}
+	 *            {@link NegotiatedClientServerConfiguration} with result of
+	 *            negotiation
+	 * @param mode
+	 *            {@link Mode} that indicates encrypt/decrypt
 	 * @throws ClientServerNegotiationException
 	 */
 	AesCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
-		super(pipelineConfiguration, negotiatedClientServerConfiguration);
+			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
+			Mode mode) throws ClientServerNegotiationException {
+		super(pipelineConfiguration, negotiatedClientServerConfiguration, mode);
 		initCipher();
 	}
 
@@ -99,17 +102,14 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	private SecretKey initSecretKey(PipelineConfiguration pipelineConfiguration)
 			throws NoSuchAlgorithmException, InvalidKeySpecException {
 		SecretKeyFactory factory = SecretKeyFactory
-				.getInstance(pipelineConfiguration
-						.getEncryptionAlgorithmEnum().getKeyGenType());
+				.getInstance(pipelineConfiguration.getEncryptionAlgorithmEnum()
+						.getKeyGenType());
 		KeySpec keySpec = new PBEKeySpec(this
-				.getNegotiatedClientServerConfiguration()
-				.getSslCryptChars(),
-				RandomUtils
-						.generateRandomBytesOfLength(pipelineConfiguration
-								.getEncryptionSaltSize()),
+				.getNegotiatedClientServerConfiguration().getSslCryptChars(),
+				RandomUtils.generateRandomBytesOfLength(pipelineConfiguration
+						.getEncryptionSaltSize()),
 				pipelineConfiguration.getEncryptionNumberHashRounds(),
-				pipelineConfiguration.getEncryptionAlgorithmEnum()
-						.getKeySize());
+				pipelineConfiguration.getEncryptionAlgorithmEnum().getKeySize());
 
 		SecretKey temp = factory.generateSecret(keySpec);
 		SecretKey secretKey = new SecretKeySpec(temp.getEncoded(), "AES");
