@@ -84,6 +84,13 @@ public class SettableJargonProperties implements JargonProperties {
 	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 
 	/**
+	 * <code>boolean</code> that indicates whether ssl cert checks should be
+	 * bypassed. <code>false</code> is the default, meaning checks will be done,
+	 * and is the recommended production setting.
+	 */
+	private boolean bypassSslCertChecks;
+
+	/**
 	 * Construct a default properties set based on the provided initial set of
 	 * <code>JargonProperties</code>. This can be used to wire in properties via
 	 * configuration, as in Spring.
@@ -1181,6 +1188,27 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
 			final long intraFileStatusCallbacksTotalBytesInterval) {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#isBypassSslCertChecks()
+	 */
+	@Override
+	public synchronized boolean isBypassSslCertChecks() {
+		return this.bypassSslCertChecks;
+	}
+
+	/**
+	 * Set whether to bypass SslCertChecks.
+	 * 
+	 * @param bypassSslCertChecks
+	 */
+	public synchronized void setBypassSslCertChecks(
+			final boolean bypassSslCertChecks) {
+		this.bypassSslCertChecks = bypassSslCertChecks;
 	}
 
 }

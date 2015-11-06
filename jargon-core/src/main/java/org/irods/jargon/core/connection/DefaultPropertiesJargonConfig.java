@@ -537,4 +537,10 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	public long getIntraFileStatusCallbacksTotalBytesInterval() {
 		return verifyPropExistsAndGetAsLong("transfer.intra.file.callback.after.n.bytes");
 	}
+
+	@Override
+	public boolean isBypassSslCertChecks() {
+		return verifyPropExistsAndGetAsBoolean("bypass.ssl.cert.checks");
+
+	}
 }

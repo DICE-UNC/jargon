@@ -503,4 +503,20 @@ public interface JargonProperties {
 	 */
 	boolean isLongTransferRestart();
 
+	/**
+	 * Indicates whether SSL cert checks need to be bypassed. This is not
+	 * recommended for production deployments.
+	 * <p/>
+	 * /** <code>boolean</code> that indicates whether ssl cert checks should be
+	 * bypassed. <code>false</code> is the default, meaning checks will be done,
+	 * and is the recommended production setting. This is used on initial load
+	 * of the {@link IRODSSession}. Note that a custom trust manager can also be
+	 * injected by a setter method in <code>IRODSSession</code> after that
+	 * <code>IRODSSession</code> is constructed, replacing any trust manager
+	 * instantiated by looking at Jargon properties.
+	 * 
+	 * @return <code>true</code> if SSL checks should be bypassed
+	 */
+	boolean isBypassSslCertChecks();
+
 }

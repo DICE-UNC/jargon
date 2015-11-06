@@ -36,6 +36,26 @@ public class IRODSSessionTest {
 	}
 
 	@Test
+	public final void testInitTrustAllTrustManager() throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		settableJargonProperties.setBypassSslCertChecks(true);
+		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
+		Assert.assertTrue(
+				"did't set trust all",
+				irodsSession.getX509TrustManager() instanceof TrustAllX509TrustManager);
+
+	}
+
+	@Test
+	public final void testInitNoTrustAllTrustManager() throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		settableJargonProperties.setBypassSslCertChecks(false);
+		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
+		Assert.assertNull(irodsSession.getX509TrustManager());
+
+	}
+
+	@Test
 	public void testGetDefaultJargonProperties() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();

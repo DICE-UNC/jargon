@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.X509TrustManager;
+
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactory;
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactoryImpl;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -85,6 +87,41 @@ public class IRODSSession {
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
+
+	/**
+	 * Trust manager (which can have a custom manager injected) for SSL
+	 * certificates. <code>JargonProperties</code> can set a 'trust all' trust
+	 * manager by setting the <code>bypass.ssl.cert.checks</code> to
+	 * <code>true</code>, otherwise, the default will be used. In addition, a
+	 * custom trust manager may be injected here.
+	 */
+	private X509TrustManager x509TrustManager = null;
+
+	/**
+	 * @return the x509TrustManager that is currently set for SSL connections,
+	 *         it may be <code>null</code>, which will take a default for any
+	 *         SSL sockets created
+	 */
+	public synchronized X509TrustManager getX509TrustManager() {
+		return x509TrustManager;
+	}
+
+	/**
+	 * @param x509TrustManager
+	 *            the x509TrustManager to set, this may be left
+	 *            <code>null</code>, in which case a default trust manager is
+	 *            used. this allows users to inject their own certificate trust
+	 *            manager. Note as well that {@link JargonProperties} can also
+	 *            specifiy that a 'trust all' trust manager should be used, in
+	 *            which case the {@link TrustAllX509TrustManager} will be
+	 *            created and put here. This creation is only done when
+	 *            constructing iRODS session using the constructor that takes a
+	 *            <code>JargonProperties</code> parameter, with the bypassSslCet
+	 */
+	public synchronized void setX509TrustManager(
+			X509TrustManager x509TrustManager) {
+		this.x509TrustManager = x509TrustManager;
+	}
 
 	/**
 	 * Manager for long file restarts. Defaults to a simple in-memory manager,
@@ -244,6 +281,17 @@ public class IRODSSession {
 		sessionMap.set(null);
 	}
 
+	public IRODSSession(final JargonProperties jargonProperties) {
+		log.info("IRODSSession(jargonProperties) with properties of: {}",
+				jargonProperties);
+		if (jargonProperties == null) {
+			throw new IllegalArgumentException("null jargonProperties");
+		}
+
+		this.jargonProperties = jargonProperties;
+		checkInitTrustManager();
+	}
+
 	public IRODSSession() {
 		log.debug("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
@@ -259,6 +307,17 @@ public class IRODSSession {
 			}
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties");
+		}
+		checkInitTrustManager();
+	}
+
+	private void checkInitTrustManager() {
+		log.info("checkInitTrustManager()");
+		if (this.getJargonProperties().isBypassSslCertChecks()) {
+			log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			log.warn("setting trustAllX509TrustManager, not recommended for production!!!");
+			log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			this.setX509TrustManager(new TrustAllX509TrustManager());
 		}
 	}
 
