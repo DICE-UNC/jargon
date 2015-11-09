@@ -385,14 +385,14 @@ public class DataObjectAOImplForSoftLinkTest {
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via source path",
-				metadataFromSource.size() == 1);
+				metadataFromSource.size() >= 1);
 
 		List<MetaDataAndDomainData> metadataFromTarget = dataObjectAO
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via target path",
-				metadataFromTarget.size() == 1);
+				metadataFromTarget.size() >= 1);
 
 	}
 
@@ -482,14 +482,14 @@ public class DataObjectAOImplForSoftLinkTest {
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via source path",
-				metadataFromSource.size() == 1);
+				metadataFromSource.size() >= 1);
 
 		List<MetaDataAndDomainData> metadataFromTarget = dataObjectAO
 				.findMetadataValuesForDataObject(sourceIrodsCollection,
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via target path",
-				metadataFromTarget.size() == 1);
+				metadataFromTarget.size() >= 1);
 
 	}
 

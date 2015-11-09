@@ -4544,14 +4544,15 @@ public class DataObjectAOImplTest {
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
-		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
-
+		boolean attribFound = false;
 		for (MetaDataAndDomainData metadataEntry : metadata) {
-			Assert.assertEquals("did not find attrib name", expectedAttribName,
-					metadataEntry.getAvuAttribute());
-			Assert.assertEquals("did not find attrib val", expectedNewValue,
-					metadataEntry.getAvuValue());
+			if (expectedAttribName.equals(metadataEntry.getAvuAttribute())
+					&& expectedNewValue.equals(metadataEntry.getAvuValue())) {
+				attribFound = true;
+			}
 		}
+
+		Assert.assertTrue(attribFound);
 
 	}
 
@@ -4597,15 +4598,15 @@ public class DataObjectAOImplTest {
 						+ testFileName);
 		irodsFileSystem.close();
 
-		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
-
+		boolean attribFound = false;
 		for (MetaDataAndDomainData metadataEntry : metadata) {
-			Assert.assertEquals("did not find attrib name", expectedAttribName,
-					metadataEntry.getAvuAttribute());
-			Assert.assertEquals("did not find attrib val", expectedNewValue,
-					metadataEntry.getAvuValue());
+			if (expectedAttribName.equals(metadataEntry.getAvuAttribute())
+					&& expectedNewValue.equals(metadataEntry.getAvuValue())) {
+				attribFound = true;
+			}
 		}
 
+		Assert.assertTrue(attribFound);
 	}
 
 	@Test
@@ -4649,14 +4650,15 @@ public class DataObjectAOImplTest {
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
-		Assert.assertEquals("should only be one avu entry", 1, metadata.size());
-
+		boolean attribFound = false;
 		for (MetaDataAndDomainData metadataEntry : metadata) {
-			Assert.assertEquals("did not find attrib name", expectedAttribName,
-					metadataEntry.getAvuAttribute());
-			Assert.assertEquals("did not find attrib val", expectedNewValue,
-					metadataEntry.getAvuValue());
+			if (expectedAttribName.equals(metadataEntry.getAvuAttribute())
+					&& expectedNewValue.equals(metadataEntry.getAvuValue())) {
+				attribFound = true;
+			}
 		}
+
+		Assert.assertTrue(attribFound);
 	}
 
 	@Test

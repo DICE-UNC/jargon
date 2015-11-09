@@ -96,6 +96,10 @@ Added check of empty CA since the default value of the certificateAuthority in G
 
 Enhanced collection-related methods to tolerate trailing slashes on collections in various operations
 
+###  enhancements to transfer operations for add'l checking and path handling. #31 
+
+For put/get to a directory, do a permission check and create any necessary subdirs as specified
+
 ### Misc
 
 Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium

@@ -695,7 +695,11 @@ public class MiscIRODSUtils {
 		String retPath = null;
 
 		if (path.endsWith("/")) {
-			retPath = path.substring(0, path.length() - 1);
+			if (path.length() == 1) {
+				retPath = path;
+			} else {
+				retPath = path.substring(0, path.length() - 1);
+			}
 		} else {
 			retPath = path;
 		}

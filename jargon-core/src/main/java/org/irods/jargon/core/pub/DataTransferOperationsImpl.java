@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CatNoAccessException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -433,6 +434,21 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 		 */
 		if (objStat.isSomeTypeOfCollection()) {
 			log.debug("get operation, treating as a directory");
+
+			/*
+			 * iRODS is a directory, mkdirs locally if needed
+			 */
+
+			if (!targetLocalFileNameForCallbacks.getParentFile().exists()) {
+				throw new FileNotFoundException(
+						"target parent file does not exist");
+			} else if (!targetLocalFileNameForCallbacks.getParentFile()
+					.canWrite()) {
+				throw new CatNoAccessException("cannot write local file");
+			} else {
+				targetLocalFileNameForCallbacks.mkdirs();
+			}
+
 			if (operativeTransferControlBlock != null) {
 
 				CollectionAO collectionAO = getIRODSAccessObjectFactory()
@@ -1178,6 +1194,14 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			String msg = "attempt to put a collection (recursively) to a target iRODS file that is not a collection";
 			log.error(msg);
 			throw new JargonException(msg);
+		}
+
+		if (!targetIrodsFile.getParentFile().exists()) {
+			throw new FileNotFoundException("target parent file does not exist");
+		} else if (!targetIrodsFile.getParentFile().canWrite()) {
+			throw new CatNoAccessException("cannot write irodsFile file");
+		} else {
+			targetIrodsFile.mkdirs();
 		}
 
 		String thisDirName = sourceFile.getName();
