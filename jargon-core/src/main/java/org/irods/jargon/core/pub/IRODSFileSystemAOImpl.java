@@ -968,7 +968,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		if (openFlags == OpenFlags.WRITE
 				|| openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS
 				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-				|| openFlags == OpenFlags.READ_WRITE) {
+				|| openFlags == OpenFlags.READ_WRITE
+				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
 			dataObjInp.setOperationType(DataObjInp.PUT_OPERATION_TYPE);
 		}
 
