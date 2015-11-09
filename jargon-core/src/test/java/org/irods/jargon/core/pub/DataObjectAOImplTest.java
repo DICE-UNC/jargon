@@ -2,6 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
@@ -77,6 +78,68 @@ public class DataObjectAOImplTest {
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	/**
+	 * Bug https://github.com/DICE-UNC/jargon/issues/12 read length set to zero
+	 * dataObjectAOImpl.findDomainByMetadataQuery #12
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindDomainByMetadataQueryBug12() throws Exception {
+
+		String testFileName = "testFindDomainByMetadataQueryBug12.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dto.putOperation(localFileName, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName = "testfbmdattrib1";
+		String expectedAttribValue = "testfbmdvalue1";
+		String expectedAttribUnits = "test1fbmdunits";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		AVUQueryElement elem1 = AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName);
+
+		AVUQueryElement elem2 = AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribValue);
+
+		List<DataObject> result = dataObjectAO.findDomainByMetadataQuery(Arrays
+				.asList(elem1, elem2));
+		Assert.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertEquals(testFileName, result.get(0).getDataName());
 	}
 
 	@Test
