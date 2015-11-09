@@ -1,14 +1,14 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * An exception occurs where an operation does not specify a default storage
  * resource, and no rule exists on iRODS to assign a default resource
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class NoResourceDefinedException extends ResourceHierarchyException {
 

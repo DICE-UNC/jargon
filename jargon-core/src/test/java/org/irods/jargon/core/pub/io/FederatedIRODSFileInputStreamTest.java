@@ -17,9 +17,9 @@ import org.junit.Test;
 
 /**
  * Tests for IRODSFile methods across zones
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedIRODSFileInputStreamTest {
 
@@ -44,7 +44,7 @@ public class FederatedIRODSFileInputStreamTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -125,7 +125,7 @@ public class FederatedIRODSFileInputStreamTest {
 
 	/**
 	 * Bug [#1842] [iROD-Chat:11109] imcoll symlinks across zones
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

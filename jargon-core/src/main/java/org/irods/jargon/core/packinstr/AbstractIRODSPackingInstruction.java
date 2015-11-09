@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Generic representation of a packing instruction for the IRODS XML Protocol
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
@@ -40,7 +40,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	/**
 	 * Create a set of key value pair tags based on the input list. This is used
 	 * internally by many packing instructions.
-	 * 
+	 *
 	 * @param kvps
 	 *            <code>List<KeyValuePair></code> with the data to be formatted
 	 *            as key value pair tags.
@@ -94,7 +94,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/**
 	 * Create a SpecColl_PI tag from the given value object data
-	 * 
+	 *
 	 * @param specColInfo
 	 *            {@link SpecColInfo} parameter holding object
 	 * @return {@Tag} representation of the SpecColl_PI tag
@@ -137,7 +137,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	/**
 	 * Internally used method to format InxValue tags for various packing
 	 * instructions.
-	 * 
+	 *
 	 * @param ivps
 	 *            <code>List<InxVal></code> of data to be formatted as InxVal
 	 *            tags.
@@ -190,7 +190,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getParsedTags()
 	 */
 	@Override
@@ -209,7 +209,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	/**
 	 * Abstract method returns the <code>Tag</code> structure for the given
 	 * packing instruction. Implemented by the specific subclass.
-	 * 
+	 *
 	 * @return {@link Tag} with the packing instruction as a nested array of tag
 	 *         objects.
 	 * @throws JargonException
@@ -218,7 +218,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getApiNumber()
 	 */
 	@Override

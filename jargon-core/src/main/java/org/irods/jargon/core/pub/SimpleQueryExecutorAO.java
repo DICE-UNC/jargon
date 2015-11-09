@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -18,15 +18,15 @@ import org.irods.jargon.core.query.SimpleQuery;
  * SQL statements are pre-loaded in iRODS and validated before being allowed to
  * run. Other techniques, such as GenQuery, and the new SpecialQuery facility,
  * allow other methods of querying system and user metadata from the iCAT.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface SimpleQueryExecutorAO extends IRODSAccessObject {
 
 	/**
 	 * Execute a simpleQuery and return a result set.
-	 * 
+	 *
 	 * @param simpleQuery
 	 *            {@link SimpleQuery} with special, permitted SQL to run on
 	 *            iRODS.

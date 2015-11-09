@@ -71,7 +71,7 @@ public class FederatedSpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-								.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());

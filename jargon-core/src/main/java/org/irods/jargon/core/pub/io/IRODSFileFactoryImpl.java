@@ -28,12 +28,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory to create IRODS File objects, will handle initialization of iRODS
  * connections and other non-file aspects
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
-		IRODSFileFactory {
+IRODSFileFactory {
 
 	public static final String PATH_SEPARATOR = "/";
 	static Logger log = LoggerFactory.getLogger(IRODSFileFactoryImpl.class);
@@ -45,7 +45,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFile(java.
 	 * lang.String)
@@ -60,7 +60,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileUserHomeDir
 	 * (java.lang.String)
@@ -86,7 +86,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFile(java.
 	 * net.URI)
@@ -118,7 +118,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFile(java.
 	 * lang.String, java.lang.String)
@@ -162,7 +162,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFile(java.
 	 * io.File, java.lang.String)
@@ -191,7 +191,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStream
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -207,7 +207,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStream
 	 * (org.irods.jargon.core.pub.io.IRODSFile,
@@ -216,7 +216,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(
 			final IRODSFile file, final OpenFlags openFlags)
-			throws NoResourceDefinedException, JargonException {
+					throws NoResourceDefinedException, JargonException {
 
 		log.info("instanceIRODSFileOutputStream()");
 
@@ -243,7 +243,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
 	 * instanceIRODSFileOutputStreamWithRerouting
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -277,7 +277,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 				if (detectedHost == null
 						|| detectedHost
-								.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
+						.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
 					log.info("using given resource connection");
 				} else if (detectedHost.equals("localhost")) {
 					log.warn("localhost received as detected host, ignore and do not reroute");
@@ -313,7 +313,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
 	 * instanceSessionClosingIRODSFileOutputStream
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -355,7 +355,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileOutputStream
 	 * (java.lang.String)
@@ -372,7 +372,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSFileOutputStream instanceIRODSFileOutputStream(
 			final String name, final OpenFlags openFlags)
-			throws NoResourceDefinedException, JargonException {
+					throws NoResourceDefinedException, JargonException {
 
 		log.info("instanceIRODSFileOutputStream()");
 
@@ -408,7 +408,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileWriter
 	 * (java.lang.String)
@@ -435,7 +435,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileReader
 	 * (java.lang.String)
@@ -473,7 +473,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileInputStream
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -494,7 +494,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
 	 * instanceIRODSFileInputStreamGivingFD
 	 * (org.irods.jargon.core.pub.io.IRODSFile, int)
@@ -515,7 +515,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileInputStream
 	 * (java.lang.String)
@@ -543,7 +543,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
 	 * instanceSessionClosingIRODSFileInputStream
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -565,7 +565,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSFileInputStream
 	 * (java.lang.String)
@@ -591,7 +591,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileFactory#
 	 * instanceIRODSFileInputStreamWithRerouting(java.lang.String)
 	 */
@@ -611,7 +611,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 			if (detectedHost == null
 					|| detectedHost
-							.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
+					.equals(FileCatalogObjectAOImpl.USE_THIS_ADDRESS)) {
 				log.info("using given resource connection");
 			} else {
 				useThisAccount = IRODSAccount.instanceForReroutedHost(
@@ -647,7 +647,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSRandomAccessFile
 	 * (java.lang.String)
@@ -674,7 +674,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSRandomAccessFile
 	 * (java.lang.String, org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
@@ -682,7 +682,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSRandomAccessFile instanceIRODSRandomAccessFile(
 			final String name, final OpenFlags openFlags)
-			throws NoResourceDefinedException, JargonException {
+					throws NoResourceDefinedException, JargonException {
 
 		if (name == null || name.isEmpty()) {
 			throw new IllegalArgumentException("null or empty name");
@@ -705,7 +705,7 @@ public final class IRODSFileFactoryImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileFactory#instanceIRODSRandomAccessFile
 	 * (org.irods.jargon.core.pub.io.IRODSFile)

@@ -31,7 +31,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -43,7 +43,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Soft link a collection with one subdir and try to list it
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -60,12 +60,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -106,7 +106,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Soft link a collection with 10 data objects and list them
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -123,12 +123,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -180,7 +180,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Soft link a collection with 10 data objects and list them
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -196,12 +196,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -257,7 +257,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Soft link a collection with one subdir and try to list it
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -273,12 +273,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -318,7 +318,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 	/**
 	 * Put some data objects under a collection, soft link it, and then get the
 	 * listing from the perspective of the soft linked absolute path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -341,7 +341,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
@@ -362,11 +362,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		// do an initial unmount
@@ -410,7 +410,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Soft link a collection with one subdir and try to list it
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -427,12 +427,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -484,7 +484,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 
 	/**
 	 * Get the full collection object when it's a soft link target collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -499,12 +499,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -556,12 +556,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -609,7 +609,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 	 * Soft link a collection, add a subdir, and then add 10 data objects and
 	 * list them. This tests doing listings on subdirs beneath a soft linked
 	 * collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -627,12 +627,12 @@ public class CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem

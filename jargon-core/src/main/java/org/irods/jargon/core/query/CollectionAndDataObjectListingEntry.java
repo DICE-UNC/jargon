@@ -22,12 +22,12 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  * particular collection or object is the last result. In this way, a caller
  * gets a result that can say that all the collections have been returned, but
  * the data objects may have more results to page.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
-		implements Comparable<CollectionAndDataObjectListingEntry> {
+implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	/**
 	 * Analogous to objType_t defined in rodsType.h
@@ -51,7 +51,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * Return the absolute path the the parent of the file or collection.
-	 * 
+	 *
 	 * @return <code>String</code> with the absolute path to the parent of the
 	 *         file or collection.
 	 */
@@ -65,7 +65,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * Return the absolute path of the file or collection under the parent
-	 * 
+	 *
 	 * @return <code>String</code> with the absolute path to the file or
 	 *         collection under the parent.
 	 */
@@ -79,7 +79,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * Return an enum that differentiates between collection and data object
-	 * 
+	 *
 	 * @return <code>ObjectType</code> enum value
 	 */
 	public ObjectType getObjectType() {
@@ -117,7 +117,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
 	 * GB) appropriate to the file length
-	 * 
+	 *
 	 * @return <code>String</code> with displayable file size
 	 */
 	public String getDisplayDataSize() {
@@ -167,7 +167,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * linked directory should be in terms of the parent directory, but may not
 	 * give the intended result if used to query the iCAT for information about
 	 * the file or collection.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getFormattedAbsolutePath() {
@@ -189,7 +189,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * component with no /'s), or the data object name (with no /'s). This
 	 * method will eat any errors and make a best effort to return something
 	 * meaningful.
-	 * 
+	 *
 	 * @return <code>String</code> with a value suitable for a node name in a
 	 *         tree.
 	 */
@@ -226,7 +226,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * that this information is not retrieved in some of the query methods
 	 * within Jargon, so make sure that a method that adds user permissions is
 	 * called. In other cases, this collection will be empty.
-	 * 
+	 *
 	 * @return <code>List</code> of {@link UserFilePermission} with the per-user
 	 *         ACL information, included if explicity requested from Jargon,
 	 *         otherwise, empty

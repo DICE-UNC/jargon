@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -27,7 +27,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserAOTest {
 
@@ -329,7 +329,7 @@ public class UserAOTest {
 	/**
 	 * Bug [#1555] truncation of user DN when adding using GenAdminPI add user,
 	 * works with GenAdmin for aua
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -1218,7 +1218,7 @@ public class UserAOTest {
 
 	/**
 	 * Bug [#1070] [iROD-Chat:9099] iDropLiteApplet AuthenticationException
-	 * 
+	 *
 	 * @throws Exception
 	 *             This looks like an iRODS bug, reported, ignored for now....
 	 */
@@ -1261,7 +1261,7 @@ public class UserAOTest {
 
 	/**
 	 * As a rods admin, generate a password on behalf of a normal test user
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -1295,7 +1295,7 @@ public class UserAOTest {
 	/**
 	 * Generate a password on behalf of a normal test user. In this case, I am
 	 * not rodsadmin and not privileged. This should cause an error
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

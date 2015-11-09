@@ -41,7 +41,7 @@ public final class IRODSUriUserInfo {
 	/**
 	 * Creates an instance that can be used to for user authentication in a
 	 * local or remote zone.
-	 * 
+	 *
 	 * @param user
 	 *            the username
 	 * @param zone
@@ -58,7 +58,7 @@ public final class IRODSUriUserInfo {
 	/**
 	 * Creates an instance that can be used to for user authentication in the
 	 * local zone.
-	 * 
+	 *
 	 * @param user
 	 *            the username
 	 * @param password
@@ -73,7 +73,7 @@ public final class IRODSUriUserInfo {
 	/**
 	 * Creates an instance that doesn't contain authentication information for a
 	 * local or remote zone.
-	 * 
+	 *
 	 * @param user
 	 *            the username
 	 * @param zone
@@ -88,7 +88,7 @@ public final class IRODSUriUserInfo {
 	/**
 	 * Creates an instance that doesn't contain authentication information for
 	 * the local zone.
-	 * 
+	 *
 	 * @param user
 	 *            the username
 	 * @return It returns an instance.
@@ -100,7 +100,7 @@ public final class IRODSUriUserInfo {
 
 	/**
 	 * Creates an instance from the serialized portion of the URI.
-	 * 
+	 *
 	 * @param encodedStr
 	 *            The serialized user info portion of an irods URI
 	 * @return It returns an instance or <code>null</code> if infoStr is
@@ -195,7 +195,7 @@ public final class IRODSUriUserInfo {
 
 	/**
 	 * Serializes the object for inclusion in an <code>irods:</code> URI.
-	 * 
+	 *
 	 * @return the user info portion of an <code>irods:</code> URI
 	 */
 	@Override

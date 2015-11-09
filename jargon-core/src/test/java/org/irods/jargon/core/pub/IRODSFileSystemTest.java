@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -16,7 +16,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSFileSystemTest {
 
@@ -34,7 +34,7 @@ public class IRODSFileSystemTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -96,7 +96,7 @@ public class IRODSFileSystemTest {
 	public void testGetIRODSFileFactoryNullAccount() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsFileSystem.getIRODSFileFactory(null);
 	}
 

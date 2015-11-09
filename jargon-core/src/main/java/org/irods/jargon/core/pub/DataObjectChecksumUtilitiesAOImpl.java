@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -26,12 +26,12 @@ import org.slf4j.LoggerFactory;
  * <code>DataObjectAO</code>, this class provides a convenient set of methods to
  * obtain and compare various types of checksums, including utilities to verify
  * checksums between local files and iRODS files.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
-		DataObjectChecksumUtilitiesAO {
+DataObjectChecksumUtilitiesAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectChecksumUtilitiesAOImpl.class);
@@ -46,23 +46,22 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 	public DataObjectChecksumUtilitiesAOImpl(final IRODSSession irodsSession,
 			final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
-		this.checksumManager = new ChecksumManagerImpl(irodsAccount,
-				this.getIRODSAccessObjectFactory());
-		this.collectionAndDataObjectListAndSearchAO = this
-				.getIRODSAccessObjectFactory()
+		checksumManager = new ChecksumManagerImpl(irodsAccount,
+				getIRODSAccessObjectFactory());
+		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * retrieveExistingChecksumForDataObject(java.lang.String)
 	 */
 	@Override
 	public ChecksumValue retrieveExistingChecksumForDataObject(
 			final String irodsDataObjectAbsolutePath)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		log.info("retrieveChecksumForDataObject()");
 
@@ -72,14 +71,14 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 					"null or empty irodsDataObjectAbsolutePath");
 		}
 		log.info("irodsDataObjectAbsolutePath:{}", irodsDataObjectAbsolutePath);
-		ObjStat objStat = this.collectionAndDataObjectListAndSearchAO
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsDataObjectAbsolutePath);
 		return computeChecksumValueFromIrodsData(objStat.getChecksum());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * computeChecksumOnDataObject(org.irods.jargon.core.pub.io.IRODSFile)
 	 */
@@ -116,7 +115,7 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * computeChecksumValueFromIrodsData(java.lang.String)
 	 */
@@ -130,7 +129,7 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * verifyLocalFileAgainstIrodsFileChecksum(java.lang.String,
 	 * java.lang.String)
@@ -138,8 +137,8 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 	@Override
 	public ChecksumValue verifyLocalFileAgainstIrodsFileChecksum(
 			final String localAbsolutePath, final String irodsAbsolutePath)
-			throws FileNotFoundException, ChecksumInvalidException,
-			JargonException {
+					throws FileNotFoundException, ChecksumInvalidException,
+					JargonException {
 		log.info("verifyLocalFileAgainstIrodsFileChecksum()");
 		if (localAbsolutePath == null || localAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -165,7 +164,7 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 					"local file is not a file, it is a collection");
 		}
 
-		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
 				irodsAbsolutePath);
 
 		if (!irodsFile.exists()) {
@@ -177,12 +176,11 @@ public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
 					"irods file is not a file, it is a collection");
 		}
 
-		ChecksumValue checksumValue = this
-				.computeChecksumOnDataObject(irodsFile);
+		ChecksumValue checksumValue = computeChecksumOnDataObject(irodsFile);
 
-		AbstractChecksumComputeStrategy checksumComputeStrategy = this
-				.getIRODSSession().getLocalChecksumComputerFactory()
-				.instance(checksumValue.getChecksumEncoding());
+		AbstractChecksumComputeStrategy checksumComputeStrategy = getIRODSSession()
+				.getLocalChecksumComputerFactory().instance(
+						checksumValue.getChecksumEncoding());
 		ChecksumValue localValue;
 		try {
 			localValue = checksumComputeStrategy

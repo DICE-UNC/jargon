@@ -13,9 +13,9 @@ import org.irods.jargon.core.pub.io.IRODSFile;
  * <p/>
  * For insight into the audit information, you can refer to the iRODS wiki at
  * https://irods.sdsc.edu/index.php/Audit_Records
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface DataObjectAuditAO {
 
@@ -24,7 +24,7 @@ public interface DataObjectAuditAO {
 	 * index for paging through very large data sets. The
 	 * <code>AuditedAction</code> objects contain information about 'more
 	 * results' as well as sequence numbers to aid in paging.
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param partialStart
@@ -33,7 +33,7 @@ public interface DataObjectAuditAO {
 	 * @param numberOfResultsDesired
 	 *            <code>int</code> that indicates the number of results to
 	 *            return in one query
-	 * 
+	 *
 	 * @return <code>List</code> of {@link AuditedAction} with information about
 	 *         the audit history of the data object
 	 * @throws FileNotFoundException
@@ -42,14 +42,14 @@ public interface DataObjectAuditAO {
 	 */
 	List<AuditedAction> findAllAuditRecordsForDataObject(IRODSFile irodsFile,
 			int partialStart, int numberOfResultsDesired)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * Get an individual audit action for a data object, given that you know
 	 * enough fields to find the unique entry. This is sort of difficult (can
 	 * can be expensive) as there is not a unique index or generated id to an
 	 * audit event, so use sparingly.
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param auditActionCode
@@ -68,6 +68,6 @@ public interface DataObjectAuditAO {
 	 */
 	AuditedAction getAuditedActionForDataObject(IRODSFile irodsFile,
 			String auditActionCode, String timeStampInIRODSFormat)
-			throws DataNotFoundException, JargonException;
+					throws DataNotFoundException, JargonException;
 
 }

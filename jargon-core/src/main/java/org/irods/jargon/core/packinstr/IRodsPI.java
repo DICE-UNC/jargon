@@ -4,7 +4,7 @@ package org.irods.jargon.core.packinstr;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * 
+ *
  * @author toaster
  */
 public interface IRodsPI {

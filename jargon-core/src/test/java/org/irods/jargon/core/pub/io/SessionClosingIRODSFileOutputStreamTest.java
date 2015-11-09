@@ -32,7 +32,7 @@ public class SessionClosingIRODSFileOutputStreamTest {
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 

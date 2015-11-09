@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
  * data sent after the packing instruction message.
  * <p/>
  * This stream represents the supplementary binary data coming back from iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
@@ -44,13 +44,13 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * from the socket until read is requested. This is set to return an
 	 * <code>int</code> value of 1 so it does not block if used. This may need
 	 * some further thought!
-	 * 
+	 *
 	 * @return <code>int</code> with the available bytes
 	 */
 	@Override
 	public int available() throws IOException {
 		return 1; // TODO: consider the effect of returning this available value
-					// here...
+		// here...
 	}
 
 	/**
@@ -163,7 +163,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * repeatedly attempt to read past the skipped value, discard the bytes, and
 	 * continue reading until the full amount has been skipped, or the end of
 	 * the stream is encountered.
-	 * 
+	 *
 	 * @param n
 	 *            <code>long</code> with the amount to skip
 	 * @return <code>long</code>
@@ -216,14 +216,14 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * Note: Use of this method is inadvisable due to the long delays that can
 	 * occur with network communications. Reading even a few bytes in this
 	 * manner could cause noticeable slow-downs.
-	 * 
+	 *
 	 * Reads the next byte of data from the input stream. The value byte is
 	 * returned as an <code>int</code> in the range <code>0</code> to
 	 * <code>255</code>. If no byte is available because the end of the stream
 	 * has been reached, the value <code>-1</code> is returned. This method
 	 * blocks until input data is available, the end of the stream is detected,
 	 * or an exception is thrown.
-	 * 
+	 *
 	 * @return the next byte of data, or <code>-1</code> if the end of the
 	 *         stream is reached.
 	 * @exception IOException

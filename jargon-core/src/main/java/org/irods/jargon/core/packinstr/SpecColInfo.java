@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
 /**
  * Encapsulates values to use in a SpecColInfo packing instruction tag
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SpecColInfo {
 

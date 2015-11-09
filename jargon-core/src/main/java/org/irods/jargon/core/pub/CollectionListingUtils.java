@@ -37,9 +37,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Generic utils (for the package) to do collection listings
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class CollectionListingUtils {
 
@@ -51,29 +51,29 @@ class CollectionListingUtils {
 
 	/**
 	 * Convenience method to get the access object factory
-	 * 
+	 *
 	 * @return
 	 * @throws JargonException
 	 */
 	IRODSAccessObjectFactory getIrodsAccessObjectFactory()
 			throws JargonException {
-		return this.collectionAndDataObjectListAndSearchAO
+		return collectionAndDataObjectListAndSearchAO
 				.getIRODSAccessObjectFactory();
 	}
 
 	/**
 	 * Convenience method to get irodsAccount
-	 * 
+	 *
 	 * @return
 	 * @throws JargonException
 	 */
 	IRODSAccount getIrodsAccount() throws JargonException {
-		return this.collectionAndDataObjectListAndSearchAO.getIRODSAccount();
+		return collectionAndDataObjectListAndSearchAO.getIRODSAccount();
 	}
 
 	/**
-     *
-     */
+	 *
+	 */
 	CollectionListingUtils(
 			final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO) {
 		if (collectionAndDataObjectListAndSearchAO == null) {
@@ -97,9 +97,9 @@ class CollectionListingUtils {
 	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
 	 * user name, see if a public dir. For foreign zone, add a dir for
 	 * user#homeZone and see if a public dir
-	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the current parent
 	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
@@ -129,14 +129,14 @@ class CollectionListingUtils {
 
 		/*
 		 * Phase1 - under root
-		 * 
+		 *
 		 * Get a list of zones as subdirs
 		 */
 
 		if (path.equals("/")) {
 			log.info("phase1 - under root, add zones");
 			collectionAndDataObjectListingEntries
-					.addAll(createStandInForZoneDir());
+			.addAll(createStandInForZoneDir());
 			return collectionAndDataObjectListingEntries;
 		}
 
@@ -150,7 +150,7 @@ class CollectionListingUtils {
 			log.info("under zone, add a home");
 			log.info("assume this is a zone name, look for a home dir under the zone name");
 			collectionAndDataObjectListingEntries
-					.add(createStandInForHomeDir(path));
+			.add(createStandInForHomeDir(path));
 			return collectionAndDataObjectListingEntries;
 		}
 
@@ -164,12 +164,12 @@ class CollectionListingUtils {
 					.getZone().equals(components.get(1))) {
 				log.info("under logged in zone, add user and public dirs");
 				collectionAndDataObjectListingEntries
-						.addAll(createStandInsUnderHomeInLoggedInZone(path));
+				.addAll(createStandInsUnderHomeInLoggedInZone(path));
 			} else {
 				log.info("under federated zone, add federated user");
 				collectionAndDataObjectListingEntries
-						.addAll(createStandInsUnderHomeInFederatedZone(components
-								.get(1)));
+				.addAll(createStandInsUnderHomeInFederatedZone(components
+						.get(1)));
 			}
 			return collectionAndDataObjectListingEntries;
 		}
@@ -186,7 +186,7 @@ class CollectionListingUtils {
 	/**
 	 * Heuristic processing allows ObjStats to be returned (though fake) at
 	 * points in the hierarchy were strict ACLs would otherwise preclude
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 * @return
 	 * @throws FileNotFoundException
@@ -216,7 +216,7 @@ class CollectionListingUtils {
 
 		/*
 		 * Phase1 - under root
-		 * 
+		 *
 		 * Generate an objStat for root
 		 */
 
@@ -240,7 +240,7 @@ class CollectionListingUtils {
 		 * Phase2 - first path under root should be a zone
 		 */
 		if (components.size() == 2) {
-			ZoneAO zoneAO = this.getIrodsAccessObjectFactory().getZoneAO(
+			ZoneAO zoneAO = getIrodsAccessObjectFactory().getZoneAO(
 					getIrodsAccount());
 			List<String> zones = zoneAO.listZoneNames();
 			boolean found = false;
@@ -306,7 +306,7 @@ class CollectionListingUtils {
 			statForPublic = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(sb.toString());
 			collectionAndDataObjectListingEntries
-					.add(createStandInForPublicDir(statForPublic));
+			.add(createStandInForPublicDir(statForPublic));
 		} catch (FileNotFoundException fnf) {
 			log.info("no public dir");
 		}
@@ -320,7 +320,7 @@ class CollectionListingUtils {
 							.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO
 									.getIRODSAccount()));
 			collectionAndDataObjectListingEntries
-					.add(createStandInForUserDir(statForUserHome));
+			.add(createStandInForUserDir(statForUserHome));
 		} catch (FileNotFoundException fnf) {
 			log.info("no home dir");
 		}
@@ -343,7 +343,7 @@ class CollectionListingUtils {
 			ObjStat statForPublic = collectionAndDataObjectListAndSearchAO
 					.retrieveObjectStatForPath(sb.toString());
 			collectionAndDataObjectListingEntries
-					.add(createStandInForPublicDir(statForPublic));
+			.add(createStandInForPublicDir(statForPublic));
 		} catch (FileNotFoundException fnf) {
 			log.info("no public dir");
 		}
@@ -355,9 +355,9 @@ class CollectionListingUtils {
 					.retrieveObjectStatForPath(MiscIRODSUtils
 							.computeHomeDirectoryForIRODSAccountInFederatedZone(
 									collectionAndDataObjectListAndSearchAO
-											.getIRODSAccount(), zone));
+									.getIRODSAccount(), zone));
 			collectionAndDataObjectListingEntries
-					.add(createStandInForUserDir(homeStat));
+			.add(createStandInForUserDir(homeStat));
 		} catch (FileNotFoundException fnf) {
 			log.info("no user dir");
 		}
@@ -373,7 +373,7 @@ class CollectionListingUtils {
 		ZoneAO zoneAO = collectionAndDataObjectListAndSearchAO
 				.getIRODSAccessObjectFactory().getZoneAO(
 						collectionAndDataObjectListAndSearchAO
-								.getIRODSAccount());
+						.getIRODSAccount());
 		List<Zone> zones = zoneAO.listZones();
 
 		int count = 1;
@@ -419,7 +419,7 @@ class CollectionListingUtils {
 
 	/**
 	 * Create a collection and listing entry for the home dir
-	 * 
+	 *
 	 * @return
 	 */
 	private CollectionAndDataObjectListingEntry createStandInForPublicDir(
@@ -441,7 +441,7 @@ class CollectionListingUtils {
 
 	/**
 	 * Create a collection and listing entry for the home dir
-	 * 
+	 *
 	 * @return
 	 */
 	private CollectionAndDataObjectListingEntry createStandInForUserDir(
@@ -468,7 +468,7 @@ class CollectionListingUtils {
 	 * List the collections underneath the given path
 	 * <p/>
 	 * Works with soft links
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} from iRODS that details the nature of the
 	 *            collection
@@ -476,12 +476,12 @@ class CollectionListingUtils {
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws JargonException
-	 * 
-	 * 
+	 *
+	 *
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final ObjStat objStat, final int partialStartIndex)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		log.info("listCollectionsUnderPath()");
 
@@ -496,7 +496,7 @@ class CollectionListingUtils {
 
 		/*
 		 * Special collections are processed in different ways.
-		 * 
+		 *
 		 * Listing for soft links substitutes the source path for the target
 		 * path in the query
 		 */
@@ -713,13 +713,13 @@ class CollectionListingUtils {
 	IRODSQueryResultSet queryForPathAndReturnResultSet(
 			final String absolutePath, final IRODSGenQueryBuilder builder,
 			final int partialStartIndex, final ObjStat objStat)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("queryForPathAndReturnResultSet for: {}", absolutePath);
 		IRODSGenQueryExecutor irodsGenQueryExecutor = collectionAndDataObjectListAndSearchAO
 				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
 						collectionAndDataObjectListAndSearchAO
-								.getIRODSAccount());
+						.getIRODSAccount());
 
 		IRODSGenQueryFromBuilder irodsQuery;
 		IRODSQueryResultSet resultSet;
@@ -747,7 +747,7 @@ class CollectionListingUtils {
 	 * For a collection based on a row from a collection query, evaluate against
 	 * the provided objStat and decide whether to modify the resulting listing
 	 * entry to reflect special collection status
-	 * 
+	 *
 	 * @param objStat
 	 * @param effectiveAbsolutePath
 	 * @param collectionAndDataObjectListingEntry
@@ -779,14 +779,14 @@ class CollectionListingUtils {
 			collectionAndDataObjectListingEntry.setParentPath(objStat
 					.getAbsolutePath());
 			collectionAndDataObjectListingEntry
-					.setSpecColType(SpecColType.LINKED_COLL);
+			.setSpecColType(SpecColType.LINKED_COLL);
 		}
 	}
 
 	/**
 	 * List the data objects underneath the given path given an already obtained
 	 * <code>ObjStat</code>
-	 * 
+	 *
 	 * @param objStat
 	 * @param partialStartIndex
 	 * @return
@@ -794,7 +794,7 @@ class CollectionListingUtils {
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final ObjStat objStat, final int partialStartIndex)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("listDataObjectsUnderPath(objStat, partialStartIndex)");
 
@@ -833,8 +833,8 @@ class CollectionListingUtils {
 				true, null);
 
 		IRODSFileSystemAOHelper
-				.buildQueryListAllDataObjectsWithSizeAndDateInfo(
-						effectiveAbsolutePath, builder);
+		.buildQueryListAllDataObjectsWithSizeAndDateInfo(
+				effectiveAbsolutePath, builder);
 		IRODSQueryResultSet resultSet;
 
 		try {
@@ -886,7 +886,7 @@ class CollectionListingUtils {
 	/**
 	 * Use the data in the objStat, in the case of special collections, to
 	 * augment the entry for a collection
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath

@@ -5,11 +5,11 @@ package org.irods.jargon.core.exception;
 
 /**
  * A resource is not valid for this iRODS Zone, This is equivalent to:
- * 
+ *
  * CAT_INVALID_RESOURCE -831000
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class InvalidResourceException extends ResourceHierarchyException {
 

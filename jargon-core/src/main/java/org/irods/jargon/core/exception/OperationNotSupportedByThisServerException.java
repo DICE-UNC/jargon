@@ -1,19 +1,19 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Exception when operation cannot be supported on the given iRODS version
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class OperationNotSupportedByThisServerException extends
-		InternalIrodsOperationException {
+InternalIrodsOperationException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 3536008740969078628L;
 

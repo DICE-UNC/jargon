@@ -25,7 +25,7 @@ public class SHA256LocalChecksumComputerStrategyTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@AfterClass

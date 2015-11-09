@@ -9,9 +9,9 @@ import java.lang.annotation.RetentionPolicy;
  * <p/>
  * This is a new addition, and will be added over time as each relevant method
  * is tested and certified to be cross-zone compatible.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 @Retention(RetentionPolicy.SOURCE)
 public @interface FederationEnabled {

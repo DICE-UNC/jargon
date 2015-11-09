@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Packing instruction to delete a rule from the delayed execution queue
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 
@@ -22,7 +22,7 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance method for delete of a rule in the delayed rule execution queue
-	 * 
+	 *
 	 * @param ruleExecId
 	 *            <code>String</code> with the id of a rule in the delayed rule
 	 *            execution queue
@@ -46,7 +46,7 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

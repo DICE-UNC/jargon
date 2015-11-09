@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -30,9 +30,9 @@ import org.junit.Test;
  * <p/>
  * If the testing property for federated zone testing is not configured, these
  * tests will be bypassed
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedIRODSGenQueryExecutorImplTest {
 
@@ -55,11 +55,11 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 		}
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		String testFilePrefix = "FederatedIRODSGenQueryExecutorImplTest";
 		String testFileSuffix = ".txt";
@@ -129,7 +129,7 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 						irodsQuery,
 						0,
 						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
 
 		Assert.assertNotNull(resultSet);
 		Assert.assertTrue("no results in result set, query failed", resultSet
@@ -168,7 +168,7 @@ public class FederatedIRODSGenQueryExecutorImplTest {
 						irodsQuery,
 						0,
 						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY));
 		irodsGenQueryExecutor.closeResults(resultSet);
 
 		Assert.assertNotNull(resultSet);

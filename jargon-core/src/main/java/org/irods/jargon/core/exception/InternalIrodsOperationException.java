@@ -1,19 +1,19 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Exceptions that may involve misconfiguration of iRODS or a pluggable
  * operation within iRODS.
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class InternalIrodsOperationException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 5478419146067271934L;
 
@@ -21,8 +21,8 @@ public class InternalIrodsOperationException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InternalIrodsOperationException(String message,
-			int underlyingIRODSExceptionCode) {
+	public InternalIrodsOperationException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 
@@ -31,8 +31,8 @@ public class InternalIrodsOperationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InternalIrodsOperationException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InternalIrodsOperationException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -40,14 +40,15 @@ public class InternalIrodsOperationException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public InternalIrodsOperationException(String message, Throwable cause) {
+	public InternalIrodsOperationException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param message
 	 */
-	public InternalIrodsOperationException(String message) {
+	public InternalIrodsOperationException(final String message) {
 		super(message);
 	}
 
@@ -55,15 +56,15 @@ public class InternalIrodsOperationException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public InternalIrodsOperationException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public InternalIrodsOperationException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public InternalIrodsOperationException(Throwable cause) {
+	public InternalIrodsOperationException(final Throwable cause) {
 		super(cause);
 	}
 

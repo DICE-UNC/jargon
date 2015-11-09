@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Obtain information about the connected irods server.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class EnvironmentalInfoAccessor {
 
@@ -23,7 +23,7 @@ public class EnvironmentalInfoAccessor {
 
 	public EnvironmentalInfoAccessor(
 			final AbstractIRODSMidLevelProtocol irodsProtocol)
-			throws JargonException {
+					throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
 		}
@@ -37,7 +37,7 @@ public class EnvironmentalInfoAccessor {
 	/**
 	 * Class to access underlying <code>IRODSServerProperties</code>. Note that
 	 * this uses a caching optimization.
-	 * 
+	 *
 	 * @return
 	 * @throws JargonException
 	 */
@@ -91,11 +91,11 @@ public class EnvironmentalInfoAccessor {
 
 		if (irodsProtocol.getIrodsSession() != null) {
 			irodsProtocol
-					.getIrodsSession()
-					.getDiscoveredServerPropertiesCache()
-					.cacheIRODSServerProperties(
-							irodsProtocol.getIrodsAccount().getHost(),
-							irodsProtocol.getIrodsAccount().getZone(), props);
+			.getIrodsSession()
+			.getDiscoveredServerPropertiesCache()
+			.cacheIRODSServerProperties(
+					irodsProtocol.getIrodsAccount().getHost(),
+					irodsProtocol.getIrodsAccount().getZone(), props);
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;

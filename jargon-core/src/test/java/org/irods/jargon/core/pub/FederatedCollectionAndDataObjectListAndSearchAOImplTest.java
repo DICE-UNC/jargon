@@ -27,9 +27,9 @@ import org.junit.Test;
  * <p/>
  * Note that the test properties and server config must be set up per the
  * test-scripts/fedTestSetup.txt file. By default, the tests will be skipped.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
@@ -56,7 +56,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -251,7 +251,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	/**
 	 * Try and list stuff from the federated zone underneath the /zonename for
 	 * the fed zone, should get at least the home dir
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -315,7 +315,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	 * For a collection, add a federated user, and then query the collections
 	 * with permissions to make sure the cross zone user is found, with the
 	 * appropriate zone.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -344,21 +344,21 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						irodsFile.getAbsolutePath(),
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				irodsFile.getAbsolutePath(),
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						irodsFile.getAbsolutePath(),
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				irodsFile.getAbsolutePath(),
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -386,13 +386,13 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-					&& userFilePermission
+							&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -407,7 +407,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	 * with permissions to make sure the cross zone user is found, with the
 	 * appropriate zone. In this case the query is made from a user logged in to
 	 * zone 2. The query should look at the data on zone1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -437,21 +437,21 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						irodsFile.getAbsolutePath(),
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				irodsFile.getAbsolutePath(),
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						irodsFile.getAbsolutePath(),
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				irodsFile.getAbsolutePath(),
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		IRODSAccount zone2Account = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
@@ -481,7 +481,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-					&& userFilePermission
+							&& userFilePermission
 							.getUserName()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY))) {
@@ -677,7 +677,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 	 * put up a collection with some data in zone1, then list the collections
 	 * and data objects from the perspective of a user on zone2. The results
 	 * should be the data from zone1.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -722,12 +722,12 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -737,11 +737,11 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		IRODSAccount zone1Account = testingPropertiesHelper
@@ -764,7 +764,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			} else {
 				Assert.assertEquals(
 
-				"did not have the  permissions for data objects", 3, entry
+						"did not have the  permissions for data objects", 3, entry
 						.getUserFilePermission().size());
 			}
 		}
@@ -773,7 +773,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 
 	/**
 	 * Bug [#1842] [iROD-Chat:11109] imcoll symlinks across zones
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

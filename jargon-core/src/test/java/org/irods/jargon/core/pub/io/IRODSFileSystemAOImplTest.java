@@ -50,7 +50,7 @@ public class IRODSFileSystemAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -90,7 +90,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -241,7 +241,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -288,7 +288,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		irodsAccount = testingPropertiesHelper
@@ -338,7 +338,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		irodsAccount = testingPropertiesHelper
@@ -388,7 +388,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -434,7 +434,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -533,7 +533,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -619,7 +619,7 @@ public class IRODSFileSystemAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testCollectionName);
+						+ testCollectionName);
 
 		String targetIrodsFile = targetIrodsCollection + '/' + testFileName;
 		File localFile = new File(localFileName);
@@ -649,10 +649,10 @@ public class IRODSFileSystemAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-				.replicateIrodsDataObject(
-						targetIrodsFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		.replicateIrodsDataObject(
+				targetIrodsFile,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		// should get a list of one file
 		IRODSFile collectionFile = irodsFileFactory.instanceIRODSFile(destFile
@@ -791,7 +791,7 @@ public class IRODSFileSystemAOImplTest {
 		targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ topLevelTestDir);
+						+ topLevelTestDir);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
@@ -808,7 +808,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, tcb);
 
 		IRODSFile irodsFile = irodsFileFactory
@@ -850,7 +850,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -936,7 +936,7 @@ public class IRODSFileSystemAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -966,7 +966,7 @@ public class IRODSFileSystemAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -995,7 +995,7 @@ public class IRODSFileSystemAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -1066,15 +1066,15 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
 				.getIRODSFileSystemAO(irodsAccount);
 		fileSystemAO
-				.createFile(targetIrodsCollection + '/' + testFileName,
-						DataObjInp.OpenFlags.READ_WRITE,
-						DataObjInp.DEFAULT_CREATE_MODE);
+		.createFile(targetIrodsCollection + '/' + testFileName,
+				DataObjInp.OpenFlags.READ_WRITE,
+				DataObjInp.DEFAULT_CREATE_MODE);
 	}
 
 	@Test
@@ -1109,7 +1109,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
@@ -1158,7 +1158,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileSystemAO fileSystemAO = accessObjectFactory
@@ -1182,7 +1182,7 @@ public class IRODSFileSystemAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDirectoryName);
+						+ testDirectoryName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1242,7 +1242,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1333,7 +1333,7 @@ public class IRODSFileSystemAOImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1346,10 +1346,10 @@ public class IRODSFileSystemAOImplTest {
 				.getIRODSFileSystemAO(irodsAccount);
 
 		fileSystemAO
-				.physicalMove(
-						irodsFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		.physicalMove(
+				irodsFile,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1358,7 +1358,7 @@ public class IRODSFileSystemAOImplTest {
 		Assert.assertEquals(
 				"not moved to new resource",
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				dataObject.getResourceName());
 
 	}

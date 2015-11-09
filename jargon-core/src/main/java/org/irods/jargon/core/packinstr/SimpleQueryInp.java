@@ -28,9 +28,9 @@ import org.irods.jargon.core.query.SimpleQuery;
  * <p/>
  * This implementation will default to format 2, as this is used to formulate a
  * result set.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 
@@ -51,7 +51,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Static instance method to create the packing instruction.
-	 * 
+	 *
 	 * @param simpleQuery
 	 *            {@link SimpleQuery} that contains the query to send to iRODS.
 	 * @return <code>SimpleQueryInp</code> packing instruction.
@@ -87,7 +87,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

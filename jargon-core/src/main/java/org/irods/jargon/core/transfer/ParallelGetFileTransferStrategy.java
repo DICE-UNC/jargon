@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -21,22 +21,22 @@ import org.slf4j.LoggerFactory;
  * Handle parallel file transfer get operation within Jargon. See
  * {@link org.irods.jargon.core.pub.DataTransferOperations} for the public API
  * to transfer files.
- * 
+ *
  * This is an immutable object that encapsulates the parallel file transfer
  * algorithm, and is used internally.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ParallelGetFileTransferStrategy extends
-		AbstractParallelFileTransferStrategy {
+AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetFileTransferStrategy.class);
 
 	/**
 	 * Create an instance of a strategy to accomplish a parallel file transfer.
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the host name to transfer to.
 	 * @param port
@@ -51,7 +51,7 @@ public final class ParallelGetFileTransferStrategy extends
 	 *            <code>File</code> representing the local file
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
-	 * 
+	 *
 	 * @param transferLength
 	 *            <code>long</code> with the total length of the transfer
 	 * @param transferControlBlock
@@ -119,7 +119,7 @@ public final class ParallelGetFileTransferStrategy extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

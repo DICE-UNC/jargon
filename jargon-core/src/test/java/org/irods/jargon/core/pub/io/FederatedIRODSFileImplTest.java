@@ -17,9 +17,9 @@ import org.junit.Test;
 
 /**
  * Tests for IRODSFile methods across zones
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedIRODSFileImplTest {
 
@@ -45,7 +45,7 @@ public class FederatedIRODSFileImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -114,7 +114,7 @@ public class FederatedIRODSFileImplTest {
 
 	/**
 	 * Exists on a cross zone file that does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -429,7 +429,7 @@ public class FederatedIRODSFileImplTest {
 
 	/**
 	 * Make subdirectories in another zone for which I have write access
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -449,7 +449,7 @@ public class FederatedIRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);

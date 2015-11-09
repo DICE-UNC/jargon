@@ -14,9 +14,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  * allows easier mocking of the objects for testing. One may inject a mock
  * <code>IRODSAccessObjectFactory</code> and then test services without
  * requiring an actual iRODS server connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class AbstractJargonService {
 
@@ -26,7 +26,7 @@ public abstract class AbstractJargonService {
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
@@ -55,7 +55,7 @@ public abstract class AbstractJargonService {
 	/**
 	 * get the <code>IRODSAccessObjectFactory</code> that is the key object for
 	 * creating Jargon services.
-	 * 
+	 *
 	 * @return {@link IRODSAccessObjectFactory}
 	 */
 	public IRODSAccessObjectFactory getIrodsAccessObjectFactory() {
@@ -65,7 +65,7 @@ public abstract class AbstractJargonService {
 	/**
 	 * Set the <code>IRODSAccessObjectFactory</code> that is the key object for
 	 * creating Jargon services.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 */
@@ -77,7 +77,7 @@ public abstract class AbstractJargonService {
 	/**
 	 * Get the <code>IRODSAccount</code> that will be used to create objects
 	 * from the <code>IRODSAccessObjectFactory</code>
-	 * 
+	 *
 	 * @return {@link IRODSAccount}
 	 */
 	public IRODSAccount getIrodsAccount() {
@@ -87,7 +87,7 @@ public abstract class AbstractJargonService {
 	/**
 	 * Set the <code>IRODSAccount</code> that will be used to create objects
 	 * from the <code>IRODSAccessObjectFactory</code>
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 */

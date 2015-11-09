@@ -2,7 +2,7 @@ package org.irods.jargon.core.query;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class GenQueryField {
 

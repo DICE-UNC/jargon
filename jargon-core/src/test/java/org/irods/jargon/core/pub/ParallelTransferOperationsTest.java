@@ -43,13 +43,13 @@ public class ParallelTransferOperationsTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils.createDirectoryUnderScratch(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		assertionHelper = new AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
@@ -77,7 +77,7 @@ public class ParallelTransferOperationsTest {
 	/**
 	 * test runs 1 transfer by default, can be tweaked (nbrTimes) to do this
 	 * repeatedly
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -98,7 +98,7 @@ public class ParallelTransferOperationsTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -146,7 +146,7 @@ public class ParallelTransferOperationsTest {
 	 * manual manipulation of the iRODS grid. In normal operation it just serves
 	 * as a put test and no restart occurs For Large file transfer restart #77
 	 * https://github.com/DICE-UNC/jargon/issues/77
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -171,7 +171,7 @@ public class ParallelTransferOperationsTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -207,7 +207,7 @@ public class ParallelTransferOperationsTest {
 	 * manual manipulation of the iRODS grid. In normal operation it just serves
 	 * as a put test and no restart occurs For Large file transfer restart #77
 	 * https://github.com/DICE-UNC/jargon/issues/77
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -234,7 +234,7 @@ public class ParallelTransferOperationsTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -287,7 +287,7 @@ public class ParallelTransferOperationsTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -436,7 +436,7 @@ public class ParallelTransferOperationsTest {
 	/**
 	 * Manipulate the jargon properties to set connection restarting with an
 	 * unnaturally short reconnect time to make sure it reconnects
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -455,7 +455,7 @@ public class ParallelTransferOperationsTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -518,7 +518,7 @@ public class ParallelTransferOperationsTest {
 			String targetIrodsFile = testingPropertiesHelper
 					.buildIRODSCollectionAbsolutePathFromTestProperties(
 							testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-									+ testFileName);
+							+ testFileName);
 
 			IRODSFileFactory irodsFileFactory = irodsFileSystem
 					.getIRODSFileFactory(irodsAccount);

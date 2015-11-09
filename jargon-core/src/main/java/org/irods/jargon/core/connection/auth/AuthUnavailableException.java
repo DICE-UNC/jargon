@@ -4,9 +4,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Represents an exception where the given auth mechanism is not available
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AuthUnavailableException extends JargonException {
 

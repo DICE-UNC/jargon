@@ -14,14 +14,14 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AllTests.class, IRODSThousandFilesTest.class,
-		IRODSThousandCollectionsTest.class,
-		FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest.class,
-		ParallelTransferOperationsTest.class,
-		IRODSCommandsFunctionalTest.class,
-		IRODSTenThousandCollectionsTest.class,
-		TestBug38GetFileFromSoftLinkedPublicCollection.class,
-		TestParallelTransferToIcatRerouteRemoteBug132.class,
-		IRODSFileOutputStreamPEPFunctionalTest.class })
+	IRODSThousandCollectionsTest.class,
+	FileListingAndRecursiveGetReplicateTestingWithBigCollectionTest.class,
+	ParallelTransferOperationsTest.class,
+	IRODSCommandsFunctionalTest.class,
+	IRODSTenThousandCollectionsTest.class,
+	TestBug38GetFileFromSoftLinkedPublicCollection.class,
+	TestParallelTransferToIcatRerouteRemoteBug132.class,
+	IRODSFileOutputStreamPEPFunctionalTest.class })
 public class AllTestIncludingLongRunningAndFunctionalTests {
 
 }

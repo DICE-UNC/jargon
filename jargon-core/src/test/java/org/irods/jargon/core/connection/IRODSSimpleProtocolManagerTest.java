@@ -85,7 +85,7 @@ public class IRODSSimpleProtocolManagerTest {
 		Thread t1 = new Thread(conn1);
 		t1.start();
 		Thread.sleep(100); // FIXME: temp code, investigate conn closed by peer,
-							// I think it's virtualbox
+		// I think it's virtualbox
 		Thread t2 = new Thread(conn2);
 		t2.start();
 		// Thread.sleep(200);
@@ -175,7 +175,7 @@ public class IRODSSimpleProtocolManagerTest {
 
 	/**
 	 * Make sure the default authentication factory is created
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

@@ -8,9 +8,9 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectTyp
 /**
  * Represents an object stat value as returned from the iRODS rsObjStat. NOTE:
  * work in progress, subject to change
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ObjStat {
 
@@ -41,7 +41,7 @@ public class ObjStat {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -273,7 +273,7 @@ public class ObjStat {
 	/**
 	 * Convenience methods determines if this is any type of collection, versus
 	 * a file or data object
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if this is any type of
 	 *         collection or directory;
 	 */
@@ -368,7 +368,7 @@ public class ObjStat {
 	 * Based on the collection type, determine the absolute path used to query
 	 * iRODS. This is meant to handle special collections, such as soft links,
 	 * where the iCAT data may be associated with the canonical path
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} with information on the given iRODS object
 	 * @return <code>String</code> with the canonical iRODS path
@@ -395,7 +395,7 @@ public class ObjStat {
 	 * @param standInGeneratedObjStat
 	 *            the standInGeneratedObjStat to set
 	 */
-	public void setStandInGeneratedObjStat(boolean standInGeneratedObjStat) {
+	public void setStandInGeneratedObjStat(final boolean standInGeneratedObjStat) {
 		this.standInGeneratedObjStat = standInGeneratedObjStat;
 	}
 

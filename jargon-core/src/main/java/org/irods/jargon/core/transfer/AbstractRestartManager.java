@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
  * This manager serves as a repository of file restart info and a place to
  * update that information, maintaining a representation of
  * {@link FileRestartInfo} for a given path
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public abstract class AbstractRestartManager {
 
@@ -24,7 +24,7 @@ public abstract class AbstractRestartManager {
 
 	/**
 	 * Either return existing, or create a new restart identifier
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 * @param localFilePath
 	 *            <code>String</code> with the local file name
@@ -34,7 +34,7 @@ public abstract class AbstractRestartManager {
 	public synchronized FileRestartInfo retrieveRestartAndBuildIfNotStored(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
 			final String localFilePath, final int numberOfThreads)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("retrieveRestartAndBuildIfNotStored()");
 
@@ -72,7 +72,7 @@ public abstract class AbstractRestartManager {
 	/**
 	 * Method to properly update a segment, allowing the implementation to do
 	 * synchronization of that update
-	 * 
+	 *
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that contains the segments
 	 * @param fileRestartDataSegment
@@ -81,13 +81,13 @@ public abstract class AbstractRestartManager {
 	 */
 	public abstract void updateSegment(final FileRestartInfo fileRestartInfo,
 			final FileRestartDataSegment fileRestartDataSegment)
-			throws FileRestartManagementException;
+					throws FileRestartManagementException;
 
 	/**
 	 * Method to properly increment the restart count, allowing an
 	 * implementation to do synchronization. <code>null</code> is returned if no
 	 * restart info is found.
-	 * 
+	 *
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that contains the attempt count
 	 * @return FileRestartInfo
@@ -97,12 +97,12 @@ public abstract class AbstractRestartManager {
 	 */
 	public abstract FileRestartInfo incrementRestartAttempts(
 			final FileRestartInfo fileRestartInfo)
-			throws RestartFailedException, FileRestartManagementException;
+					throws RestartFailedException, FileRestartManagementException;
 
 	/**
 	 * Given an identifier and thread number, find the segment and update the
 	 * length on that segment
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
 	 * @param threadNumber
@@ -114,7 +114,7 @@ public abstract class AbstractRestartManager {
 	public void updateLengthForSegment(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
 			final int threadNumber, final long length)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 		log.info("updateLengthForSegment()");
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null identifier");
@@ -153,7 +153,7 @@ public abstract class AbstractRestartManager {
 	/**
 	 * Given an identifier and thread number, find the segment and update the
 	 * offset on that segment. Also sets the length to zero.
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
 	 * @param threadNumber
@@ -165,7 +165,7 @@ public abstract class AbstractRestartManager {
 	public void updateOffsetForSegment(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier,
 			final int threadNumber, final long offset)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 		log.info("updateLenghtForSegment()");
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null identifier");
@@ -194,7 +194,7 @@ public abstract class AbstractRestartManager {
 
 	/**
 	 * Store the restart information
-	 * 
+	 *
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} to be stored
 	 * @return {@link FileRestartInfoIdentifier} that is the derived key from
@@ -203,11 +203,11 @@ public abstract class AbstractRestartManager {
 	 */
 	public abstract FileRestartInfoIdentifier storeRestart(
 			final FileRestartInfo fileRestartInfo)
-			throws FileRestartManagementException;
+					throws FileRestartManagementException;
 
 	/**
 	 * Delete the file restart information
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 * @return {@link FileRestartInfoIdentifier} that is the key (oper type,
 	 *         account info, path)
@@ -215,21 +215,21 @@ public abstract class AbstractRestartManager {
 	 */
 	public abstract void deleteRestart(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException;
+					throws FileRestartManagementException;
 
 	/**
 	 * Retrieve the file restart information given the identifying information
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier} that is the key (oper type,
 	 *            account info, path)
 	 * @return {@link FileRestartInfo} that matches the key or <code>null</code>
 	 *         if no match
 	 * @throws FileRestartManagementException
-	 * 
+	 *
 	 */
 	public abstract FileRestartInfo retrieveRestart(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException;
+					throws FileRestartManagementException;
 
 }

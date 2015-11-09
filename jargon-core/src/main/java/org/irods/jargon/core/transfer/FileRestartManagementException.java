@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -7,14 +7,14 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * General exception in the management of restart file information
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileRestartManagementException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 4787837160966228541L;
 

@@ -5,16 +5,16 @@ import java.util.List;
 
 /**
  * Values for file permission
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum FilePermissionEnum {
 
 	NONE(-1), NULL(1000), EXECUTE(1010), READ_ANNOTATION(1020), READ_SYSTEM_METADATA(
 			1030), READ_METADATA(1040), READ(1050), WRITE_ANNOTATION(1060), CREATE_METADATA(
-			1070), MODIFY_METADATA(1080), DELETE_METADATA(1090), ADMINISTER_OBJECT(
-			1100), CREATE_OBJECT(1110), WRITE(1120), DELETE_OBJECT(1130), CREATE_TOKEN(
-			1140), DELETE_TOKEN(1150), CURATE(1160), OWN(1200), ;
+					1070), MODIFY_METADATA(1080), DELETE_METADATA(1090), ADMINISTER_OBJECT(
+							1100), CREATE_OBJECT(1110), WRITE(1120), DELETE_OBJECT(1130), CREATE_TOKEN(
+									1140), DELETE_TOKEN(1150), CURATE(1160), OWN(1200), ;
 
 	private int permissionNumericValue;
 
@@ -71,7 +71,7 @@ public enum FilePermissionEnum {
 	/**
 	 * Handy method to get all enum values as a list, good for building select
 	 * boxes and the like
-	 * 
+	 *
 	 * @return
 	 */
 	public static List<FilePermissionEnum> listAllValues() {

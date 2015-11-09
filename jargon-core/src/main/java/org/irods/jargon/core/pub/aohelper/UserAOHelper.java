@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.aohelper;
 
@@ -21,9 +21,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * General helper methods for users and user groups.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserAOHelper {
 
@@ -33,7 +33,7 @@ public class UserAOHelper {
 	/**
 	 * Handy method will build the select portion of a gen query that accesses
 	 * user data.
-	 * 
+	 *
 	 * @return <code>String</code> with genquery select statement that obtains
 	 *         user data.
 	 */
@@ -61,7 +61,7 @@ public class UserAOHelper {
 	/**
 	 * Build the selects appropriate for a user query by appending them to the
 	 * provided builder
-	 * 
+	 *
 	 * @param builder
 	 * @throws GenQueryBuilderException
 	 */
@@ -73,19 +73,19 @@ public class UserAOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
 	}
 
 	/**
 	 * Given a query build from the <code>buildUserSelects</code>, create a user
 	 * for a given result row
-	 * 
+	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow}
 	 * @param irodsGenQueryExecutor
@@ -132,7 +132,7 @@ public class UserAOHelper {
 
 	/**
 	 * Locate the user distinguished name, if it exists
-	 * 
+	 *
 	 * @param userId
 	 * @param irodsGenQueryExecutor
 	 * @return <code>String</code> with the distinguished name for the user, if
@@ -141,7 +141,7 @@ public class UserAOHelper {
 	 */
 	public static String findUserDnIfExists(final String userId,
 			final IRODSGenQueryExecutor irodsGenQueryExecutor)
-			throws JargonException {
+					throws JargonException {
 		String dn = null;
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -149,9 +149,9 @@ public class UserAOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
+					QueryConditionOperators.EQUAL, userId);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
@@ -187,7 +187,7 @@ public class UserAOHelper {
 	/**
 	 * Given a user name that might be in the format user#zone, get the user
 	 * part
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the user name, possibly in user#zone
 	 *            format
@@ -208,7 +208,7 @@ public class UserAOHelper {
 	/**
 	 * Given a user name that might be in the format user#zone, get the zone
 	 * part
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the user name, possibly in user#zone
 	 *            format

@@ -30,7 +30,7 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -41,7 +41,7 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 
 	/**
 	 * Write a data object using the soft linkd paths
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -52,17 +52,17 @@ public class IRODSFileOutputStreamForSoftLinksTest {
 		String testFileName = "testWriteByteArrayForSoftLinkedDataObject.txt";
 
 		scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

@@ -32,7 +32,7 @@ public final class IRODSAccountTest {
 	/**
 	 * Tests bug https://github.com/DICE-UNC/jargon/issues/48 irods account with
 	 * home path may cause URI formatting errors #48
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

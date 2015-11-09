@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.testutils;
 
@@ -9,9 +9,9 @@ import java.security.NoSuchAlgorithmException;
 
 /**
  * Utilities for dealing with hash values
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class HashHelper {
 

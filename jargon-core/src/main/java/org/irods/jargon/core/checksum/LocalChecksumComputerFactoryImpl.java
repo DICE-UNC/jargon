@@ -11,16 +11,16 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * be derived from the {@link ChecksumManager}. *
  * <p/>
  * This factory is available from the {@link IRODSSession}
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class LocalChecksumComputerFactoryImpl implements
-		LocalChecksumComputerFactory {
+LocalChecksumComputerFactory {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.checksum.LocalChecksumComputerFactory#instance(
 	 * org.irods.jargon.core.protovalues.ChecksumEncodingEnum)
@@ -28,7 +28,7 @@ public class LocalChecksumComputerFactoryImpl implements
 	@Override
 	public AbstractChecksumComputeStrategy instance(
 			final ChecksumEncodingEnum checksumEncodingEnum)
-			throws ChecksumMethodUnavailableException {
+					throws ChecksumMethodUnavailableException {
 
 		if (checksumEncodingEnum == null) {
 			throw new IllegalArgumentException("null checksumEncodingEnum");

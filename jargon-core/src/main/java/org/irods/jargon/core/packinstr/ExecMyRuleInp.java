@@ -13,9 +13,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Immutable object gives translation of an ExecMyRuleInp operation into XML
  * protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
@@ -54,7 +54,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of this packing instruction.
-	 * 
+	 *
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @param host
@@ -77,7 +77,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of this packing instruction.
-	 * 
+	 *
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @return
@@ -125,7 +125,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -135,11 +135,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		final Tag message = new Tag(PI_TAG,
 				new Tag[] {
-						new Tag(MY_RULE, irodsRule.getRuleBody()),
-						new Tag(RHOSTADDR_PI, new Tag[] {
-								new Tag(HOST_ADDR, host),
-								new Tag(RODS_ZONE, zone), new Tag(PORT, port),
-								new Tag(DUMMY_INT, 0), }),
+				new Tag(MY_RULE, irodsRule.getRuleBody()),
+				new Tag(RHOSTADDR_PI, new Tag[] {
+						new Tag(HOST_ADDR, host),
+						new Tag(RODS_ZONE, zone), new Tag(PORT, port),
+						new Tag(DUMMY_INT, 0), }),
 						Tag.createKeyValueTag(null), });
 
 		// process output parameters
@@ -160,7 +160,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		for (IRODSRuleParameter irodsRuleInputParameter : irodsRule
 				.getIrodsRuleInputParameters()) {
 			paramArray
-					.addTag(getMsParamArrayTagForInputParameter(irodsRuleInputParameter));
+			.addTag(getMsParamArrayTagForInputParameter(irodsRuleInputParameter));
 		}
 
 		message.addTag(paramArray);
@@ -181,22 +181,22 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		if (type.equals(INT_PI)) {
 			param.addTag(new Tag(INT_PI, new Tag[] {
-			// only one parameter, the int
-			new Tag(MY_INT, irodsRuleInputParameter.getIntValue()), }));
+					// only one parameter, the int
+					new Tag(MY_INT, irodsRuleInputParameter.getIntValue()), }));
 		} else if (type.equals(BUF_LEN_PI)) {
 			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
 					// send a byte buffer
 					new Tag(BUF_LEN,
 							irodsRuleInputParameter.getByteValue().length),
-					// maybe convert to Base64?
-					new Tag(BUF, new String(irodsRuleInputParameter
-							.getByteValue())), }));
+							// maybe convert to Base64?
+							new Tag(BUF, new String(irodsRuleInputParameter
+									.getByteValue())), }));
 		} else {// STR_PI or NULL_PI
 			param.addTag(new Tag(STR_PI, new Tag[] {
-			// only one parameter, the string
-			// if default, try sending the string value, might
-			// work...
-			new Tag(MY_STR, irodsRuleInputParameter.getStringValue()), }));
+					// only one parameter, the string
+					// if default, try sending the string value, might
+					// work...
+					new Tag(MY_STR, irodsRuleInputParameter.getStringValue()), }));
 		}
 		return param;
 	}

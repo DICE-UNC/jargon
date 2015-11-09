@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Encapsulates a key/value pair for various xml protocol packing instructions.
  * This object is immutable.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class KeyValuePair {
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.domain;
 
@@ -9,9 +9,9 @@ import org.irods.jargon.core.exception.JargonException;
  * Representation of an AVU metadata item. This class is mutable and should be
  * used carefully. Jargon libraries will not alter the values of mutable objects
  * used as input or output parameters to methods unless specifically documented.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 
 public final class AvuData extends IRODSDomainObject {
@@ -25,7 +25,7 @@ public final class AvuData extends IRODSDomainObject {
 	 * values should be set to 'blank' rather then <code>null</code>. An
 	 * <code>IllegalArgumentException</code> will be thrown if something is
 	 * null.
-	 * 
+	 *
 	 * @param attribute
 	 *            <code>String</code> with the AVU attribute.
 	 * @param value
@@ -45,7 +45,7 @@ public final class AvuData extends IRODSDomainObject {
 
 	/**
 	 * Constructor for AVU that takes the attribute, value, unit
-	 * 
+	 *
 	 * @param attribute
 	 *            <code>String</code> with the AVU attribute.
 	 * @param value

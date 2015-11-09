@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a DataObjInp operation to obtain a stat on an object into XML
  * protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 
@@ -25,7 +25,7 @@ public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the DataObjInp packing instruction to get an object stat.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @return <code>DataObjInp</code> containing the necessary packing

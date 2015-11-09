@@ -7,9 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Exception overrunning available paging actions
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class NoMorePagingException extends JargonException {
 

@@ -12,9 +12,9 @@ import org.irods.jargon.core.utils.IRODSDataConversionUtil;
 /**
  * Represents a row in a query response, with convenience methods to access
  * attributes
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSQueryResultRow {
 
@@ -28,7 +28,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Build a result row from a column of results produced by an IRODS GenQuery
-	 * 
+	 *
 	 * @param queryResultColumns
 	 *            <code>List</code> of query result columns
 	 * @param columnNames
@@ -47,7 +47,7 @@ public class IRODSQueryResultRow {
 	 * Build a result row from a column of results produced by an IRODS
 	 * GenQuery. This initializer will add information about the position of the
 	 * record to assist in re-query operations
-	 * 
+	 *
 	 * @param queryResultColumns
 	 *            <code>List<String</code> with the values for each column of
 	 *            the query
@@ -73,7 +73,7 @@ public class IRODSQueryResultRow {
 	 * Build a result row from a column of results produced by an IRODS
 	 * GenQuery. This initializer will add information about the position of the
 	 * record to assist in re-query operations
-	 * 
+	 *
 	 * @param queryResultColumns
 	 *            <code>List<String</code> with the values for each column of
 	 *            the query
@@ -91,14 +91,14 @@ public class IRODSQueryResultRow {
 			final List<String> queryResultColumns,
 			final List<String> columnNames, final int recordCount,
 			final boolean lastResult, final int totalRecords)
-			throws JargonException {
+					throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns, columnNames,
 				recordCount, lastResult);
 	}
 
 	/**
 	 * Private constructor
-	 * 
+	 *
 	 * @param queryResultColumns
 	 *            <code>List<String</code> with the values for each column of
 	 *            the query
@@ -132,7 +132,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Given a columnNumber, return the value of the column in the result set.
-	 * 
+	 *
 	 * @param columnName
 	 *            <code>int</code> with the location of the desired field.
 	 * @return <code>String</code> containing the value of the column. It is up
@@ -150,7 +150,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Given a columnName, return the value of the column in the result set.
-	 * 
+	 *
 	 * @param columnName
 	 *            <code>String</code> with the name of the desired field. The
 	 *            search is case-insensitive.
@@ -178,7 +178,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>Date</code>, or as <code>null</code>
-	 * 
+	 *
 	 * @param column
 	 *            <code>int</code> as column position
 	 * @return <code>Data</code> {@link Date} or <code>null</code>
@@ -190,7 +190,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>Date</code>, or as <code>null</code>
-	 * 
+	 *
 	 * @param columnName
 	 *            <code>String</code> as column name
 	 * @return <code>Data</code> {@link Date} or <code>null</code>
@@ -204,7 +204,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>int</code>, or as <code>0</code>
-	 * 
+	 *
 	 * @param column
 	 *            <code>int</code> as column position
 	 * @return <code>int</code> or 0 if null
@@ -217,7 +217,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>Date</code>, or as <code>null</code>
-	 * 
+	 *
 	 * @param columnName
 	 *            <code>String</code> as column name
 	 * @return <code>int</code> or 0 if null
@@ -231,7 +231,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>long</code>, or as <code>0</code>
-	 * 
+	 *
 	 * @param column
 	 *            <code>int</code> as column position
 	 * @return <code>long</code> or 0 if null
@@ -244,7 +244,7 @@ public class IRODSQueryResultRow {
 
 	/**
 	 * Get the given column as a <code>long</code>, or as <code>null</code>
-	 * 
+	 *
 	 * @param columnName
 	 *            <code>String</code> as column name
 	 * @return <code>long</code> or 0 if null
@@ -259,7 +259,7 @@ public class IRODSQueryResultRow {
 	/**
 	 * Returns the index of the column with the given name, or -1 if not found.
 	 * The match is case-insensitive;
-	 * 
+	 *
 	 * @param columnName
 	 * @return
 	 */
@@ -280,7 +280,7 @@ public class IRODSQueryResultRow {
 	/**
 	 * Handy method to just get the results as a <code>List</code> for use in
 	 * forEach and other constructs
-	 * 
+	 *
 	 * @return <code>List<String></code> containing the columns for this row.
 	 */
 	public List<String> getColumnsAsList() {

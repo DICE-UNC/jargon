@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Options to control checksum processing
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ChecksumOptions {
 
@@ -81,7 +81,7 @@ public class ChecksumOptions {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

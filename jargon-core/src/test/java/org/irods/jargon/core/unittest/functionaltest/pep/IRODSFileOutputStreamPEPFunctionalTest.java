@@ -18,10 +18,10 @@ import org.junit.Test;
 
 /**
  * NOTE
- * 
+ *
  * These tests require the jargon-functional.re rules to be configured in the
  * target iRODS server
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -44,7 +44,7 @@ public class IRODSFileOutputStreamPEPFunctionalTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -58,7 +58,6 @@ public class IRODSFileOutputStreamPEPFunctionalTest {
 	public final void testPepFiresOnClose() throws Exception {
 		String testFileName = "testPepFiresOnClose.txt";
 		String string1 = "jfaijfjasidjfaisehfuaehfahfhudhfuashfuasfdhaisdfhaisdhfiaf";
-		String string2 = "nvmzncvzmvnzx,mcv";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFilePath = FileGenerator
@@ -93,7 +92,7 @@ public class IRODSFileOutputStreamPEPFunctionalTest {
 	/**
 	 * Test of bug 146, requires jargon-functional.re rule for postProcForPut to
 	 * be enabled!
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

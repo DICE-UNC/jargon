@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * There was an invalid iRODS user group
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class InvalidGroupException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 284100966221964252L;
 

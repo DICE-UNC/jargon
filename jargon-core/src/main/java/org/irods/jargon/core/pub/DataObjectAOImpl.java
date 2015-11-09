@@ -101,7 +101,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
-		DataObjectAO {
+DataObjectAO {
 
 	private static final String NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH = "null or empty irodsCollectionAbsolutePath";
 	private static final String ERROR_IN_PARALLEL_TRANSFER = "error in parallel transfer";
@@ -139,7 +139,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findByCollectionNameAndDataName
 	 * (java.lang.String, java.lang.String)
@@ -147,7 +147,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public DataObject findByCollectionNameAndDataName(
 			final String collectionPath, final String dataName)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		if (collectionPath == null) {
 			throw new IllegalArgumentException("null collectionPath");
@@ -174,7 +174,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String
 	 * )
@@ -200,12 +200,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findById(int)
 	 */
 	@Override
 	public DataObject findById(final int id) throws FileNotFoundException,
-			JargonException {
+	JargonException {
 
 		log.info("findById() with id:{}", id);
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -244,7 +244,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findGivenObjStat(org.irods.jargon
 	 * .core.pub.domain.ObjStat)
@@ -348,7 +348,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#findWhere(java.lang.String,
 	 * int)
 	 */
@@ -451,7 +451,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	void putLocalDataObjectToIRODS(final File localFile,
 			final IRODSFile irodsFileDestination, final boolean overwrite)
-			throws DataNotFoundException, OverwriteException, JargonException {
+					throws DataNotFoundException, OverwriteException, JargonException {
 
 		// call with no control block will create defaults
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(null);
@@ -503,7 +503,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	void putLocalDataObjectToIRODSForClientSideRuleOperation(
 			final File localFile, final IRODSFile irodsFileDestination,
 			final TransferControlBlock transferControlBlock)
-			throws DataNotFoundException, OverwriteException, JargonException {
+					throws DataNotFoundException, OverwriteException, JargonException {
 
 		TransferControlBlock effectiveTransferControlBlock = checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(transferControlBlock);
 
@@ -528,8 +528,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws DataNotFoundException, JargonException,
-			JargonRuntimeException, OverwriteException {
+					throws DataNotFoundException, JargonException,
+					JargonRuntimeException, OverwriteException {
 
 		log.info("putCommonProcessing()");
 
@@ -667,7 +667,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		if (transferStatusCallbackListener != null
 				&& transferControlBlock.getTransferOptions()
-						.isIntraFileStatusCallbacks()
+				.isIntraFileStatusCallbacks()
 				&& !transferControlBlock.isCancelled()) {
 			ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 					.instanceSettingTransferOptions(TransferType.PUT,
@@ -677,7 +677,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			ConnectionProgressStatus status = ConnectionProgressStatus
 					.instanceForSend(localFileLength);
 			intraFileStatusListener
-					.finalConnectionProgressStatusCallback(status);
+			.finalConnectionProgressStatusCallback(status);
 		}
 	}
 
@@ -696,8 +696,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final IRODSFile targetFile, final FileRestartInfo fileRestartInfo,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException, RestartFailedException,
-			FileRestartManagementException {
+					throws JargonException, RestartFailedException,
+					FileRestartManagementException {
 
 		log.info("putRestartRetryTillMaxLoop()");
 
@@ -758,8 +758,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final IRODSFile targetFile, final FileRestartInfo fileRestartInfo,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws RestartFailedException, FileRestartManagementException,
-			JargonException {
+					throws RestartFailedException, FileRestartManagementException,
+					JargonException {
 
 		log.info("have file restart info:{}", fileRestartInfo);
 		PutTransferRestartProcessor putTransferRestartProcessor = new PutTransferRestartProcessor(
@@ -811,7 +811,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final boolean overwrite,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws DataNotFoundException, OverwriteException, JargonException {
+					throws DataNotFoundException, OverwriteException, JargonException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
@@ -947,7 +947,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws DataNotFoundException, OverwriteException, JargonException {
+					throws DataNotFoundException, OverwriteException, JargonException {
 
 		/*
 		 * Info may remain null if restart processing is not configured,
@@ -999,7 +999,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					"error in parallel transfers, the main connection will be abandoned",
 					e);
 			getIRODSAccessObjectFactory().getIrodsSession()
-					.discardSessionForErrors(getIRODSAccount());
+			.discardSessionForErrors(getIRODSAccount());
 
 			throw new JargonException(e);
 		}
@@ -1057,7 +1057,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final File localFileToHoldData,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws OverwriteException, DataNotFoundException, JargonException {
+					throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("getDataObjectFromIrods()");
 
@@ -1166,7 +1166,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsFileToGet,
 			final FileRestartInfo fileRestartInfo,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("getRestartRetryTillMaxLoop()");
 
@@ -1224,8 +1224,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsFileToGet,
 			final FileRestartInfo myFileRestartInfo,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws RestartFailedException, FileRestartManagementException,
-			JargonException {
+					throws RestartFailedException, FileRestartManagementException,
+					JargonException {
 
 		log.info("have file restart info:{}", myFileRestartInfo);
 		GetTransferRestartProcessor getTransferRestartProcessor = new GetTransferRestartProcessor(
@@ -1255,7 +1255,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferOptions thisFileTransferOptions, final File targetFile)
-			throws OverwriteException {
+					throws OverwriteException {
 		OverwriteResponse overwriteResponse = OverwriteResponse.PROCEED_WITH_NO_FORCE;
 		if (targetFile.exists()) {
 
@@ -1317,7 +1317,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							log.warn("attempting to process a 'yes for all' response, but no transfer control block to maintain this, it will be ignored for subsequent transfers");
 						} else {
 							transferControlBlock.getTransferOptions()
-									.setForceOption(ForceOption.USE_FORCE);
+							.setForceOption(ForceOption.USE_FORCE);
 						}
 						overwriteResponse = OverwriteResponse.PROCEED_WITH_FORCE;
 						break;
@@ -1327,7 +1327,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							overwriteResponse = OverwriteResponse.SKIP;
 						} else {
 							transferControlBlock.getTransferOptions()
-									.setForceOption(ForceOption.NO_FORCE);
+							.setForceOption(ForceOption.NO_FORCE);
 							overwriteResponse = OverwriteResponse.SKIP;
 						}
 						break;
@@ -1526,7 +1526,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							transferControlBlock,
 							transferStatusCallbackListener, clientSideAction);
 
-					if (!this.getIRODSServerProperties()
+					if (!getIRODSServerProperties()
 							.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
 									"rods4.1.6")) {
 						getIRODSProtocol().operationComplete(l1descInx);
@@ -1574,7 +1574,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			if (transferStatusCallbackListener != null
 					&& transferControlBlock.getTransferOptions()
-							.isIntraFileStatusCallbacks()
+					.isIntraFileStatusCallbacks()
 					&& !transferControlBlock.isCancelled()) {
 				ConnectionProgressStatusListener intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 						.instanceSettingTransferOptions(TransferType.GET,
@@ -1584,12 +1584,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				ConnectionProgressStatus status = ConnectionProgressStatus
 						.instanceForSend(irodsFileLength);
 				intraFileStatusListener
-						.finalConnectionProgressStatusCallback(status);
+				.finalConnectionProgressStatusCallback(status);
 			}
 
 			if (thisFileTransferOptions != null
 					&& thisFileTransferOptions
-							.isComputeAndVerifyChecksumAfterTransfer()) {
+					.isComputeAndVerifyChecksumAfterTransfer()) {
 
 				// compute iRODS first, use algorithm from iRODS to compute the
 				// local checksum that should match
@@ -1709,7 +1709,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 						"exception in parallel transfer, connection will be abandoned",
 						e);
 				getIRODSAccessObjectFactory().getIrodsSession()
-						.discardSessionForErrors(getIRODSAccount());
+				.discardSessionForErrors(getIRODSAccount());
 				throw new JargonException(e);
 			}
 		}
@@ -1739,7 +1739,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public FileRestartInfo retrieveRestartInfoIfAvailable(
 			final RestartType restartType, final String irodsAbsolutePath)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("retrieveRestartInfoIfAvailable()");
 
@@ -1813,7 +1813,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listMetadataValuesForDataObject
 	 * (java.util.List, java.lang.String, java.lang.String)
@@ -1831,7 +1831,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * findMetadataValuesForDataObjectUsingAVUQuery(java.util.List,
 	 * java.lang.String, java.lang.String, boolean)
@@ -1841,7 +1841,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final List<AVUQueryElement> avuQuery,
 			final String dataObjectCollectionAbsPath,
 			final String dataObjectFileName, final boolean caseInsensitive)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		if (avuQuery == null) {
 			throw new IllegalArgumentException("null query");
@@ -1917,7 +1917,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * findMetadataValuesForDataObjectUsingAVUQuery(java.util.List,
 	 * java.lang.String)
@@ -1946,7 +1946,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#instanceIRODSFileForPath(java.
 	 * lang.String)
@@ -1962,7 +1962,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#addBulkAVUMetadataToDataObject
 	 * (java.lang.String, java.util.List)
@@ -1970,7 +1970,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<BulkAVUOperationResponse> addBulkAVUMetadataToDataObject(
 			final String absolutePath, final List<AvuData> avuData)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("addBulkAVUMetadataToDataObject()");
 
@@ -2016,7 +2016,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
 	 * (java.lang.String, java.util.List)
@@ -2024,7 +2024,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(
 			final String absolutePath, final List<AvuData> avuData)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("deleteBulkAVUMetadataFromDataObject()");
 
@@ -2059,7 +2059,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -2132,7 +2132,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#addAVUMetadata(java.lang.String,
 	 * java.lang.String, org.irods.jargon.core.pub.domain.AvuData)
@@ -2140,7 +2140,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void addAVUMetadata(final String irodsCollectionAbsolutePath,
 			final String fileName, final AvuData avuData)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -2237,7 +2237,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#deleteAVUMetadata(java.lang.String
 	 * , org.irods.jargon.core.pub.domain.AvuData)
@@ -2300,7 +2300,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
@@ -2316,7 +2316,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int)
@@ -2324,7 +2324,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			final List<AVUQueryElement> avuQuery, final int partialStartIndex)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		return findMetadataValuesByMetadataQuery(avuQuery, partialStartIndex,
 				false);
@@ -2333,7 +2333,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List, int, boolean)
@@ -2392,24 +2392,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	private void addMetadataAndDomainDataSelectsToBuilder(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+		.addSelectAsGenQueryValue(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_ID)
 				.addSelectAsGenQueryValue(
 						RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
+						.addSelectAsGenQueryValue(
+								RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
+								.addSelectAsGenQueryValue(
+										RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List)
@@ -2417,7 +2417,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<DataObject> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		return findDomainByMetadataQuery(avuQueryElements, 0);
 
@@ -2425,7 +2425,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List, int)
@@ -2442,7 +2442,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findDomainByMetadataQuery(java
 	 * .util.List, int, boolean)
@@ -2451,7 +2451,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public List<DataObject> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements,
 			final int partialStartIndex, final boolean caseInsensitive)
-			throws JargonQueryException, JargonException {
+					throws JargonQueryException, JargonException {
 
 		if (avuQueryElements == null || avuQueryElements.isEmpty()) {
 			throw new IllegalArgumentException("null or empty avuQueryElements");
@@ -2479,8 +2479,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS);
 
 			for (AVUQueryElement queryElement : avuQueryElements) {
 				DataAOHelper.appendConditionPartToBuilderQuery(queryElement,
@@ -2507,7 +2507,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#replicateIrodsDataObject(java.
 	 * lang.String, java.lang.String)
@@ -2532,7 +2532,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("to resource: {}", targetResource);
 
 		DataObjInp dataObjInp;
-		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			dataObjInp = DataObjInp.instanceForReplicate410(
 					irodsFileAbsolutePath, targetResource);
 		} else {
@@ -2553,7 +2553,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	public void replicateIrodsDataObjectAsynchronously(
 			final String irodsCollectionAbsolutePath, final String fileName,
 			final String resourceName, final int delayInMinutes)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -2640,7 +2640,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final IRODSFile irodsTargetFile,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws OverwriteException, DataNotFoundException, JargonException {
+					throws OverwriteException, DataNotFoundException, JargonException {
 
 		log.info("copyIRODSDataObject()");
 		if (irodsSourceFile == null) {
@@ -2701,7 +2701,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		DataObjCopyInp dataObjCopyInp;
-		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			dataObjCopyInp = DataObjCopyInp.instanceForCopy410(
 					irodsSourceFile.getAbsolutePath(),
 					myTargetFile.getAbsolutePath(),
@@ -2727,7 +2727,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.pub.DataObjectAO#
 	 * replicateIrodsDataObjectToAllResourcesInResourceGroup(java.lang.String,
 	 * java.lang.String)
@@ -2767,7 +2767,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getResourcesForDataObject(java
 	 * .lang.String, java.lang.String)
@@ -2775,7 +2775,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<Resource> getResourcesForDataObject(
 			final String dataObjectPath, final String dataObjectName)
-			throws JargonException {
+					throws JargonException {
 
 		if (dataObjectPath == null || dataObjectPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty dataObjectPath");
@@ -2793,7 +2793,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (java.lang.String, java.lang.String)
@@ -2844,7 +2844,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
 	 * (java.lang.String, int)
@@ -2852,8 +2852,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public MetaDataAndDomainData findMetadataValueForDataObjectById(
 			final String dataObjectAbsolutePath, final int id)
-			throws FileNotFoundException, DataNotFoundException,
-			JargonException {
+					throws FileNotFoundException, DataNotFoundException,
+					JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -2873,7 +2873,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValueForDataObjectById
 	 * (org.irods.jargon.core.pub.domain.ObjStat, int)
@@ -2916,9 +2916,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL,
 							dataObjectFile.getName())
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_META_DATA_ATTR_ID,
-							QueryConditionOperators.EQUAL, id);
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_META_DATA_ATTR_ID,
+									QueryConditionOperators.EQUAL, id);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
@@ -2944,7 +2944,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (java.lang.String)
@@ -3004,7 +3004,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findMetadataValuesForDataObject
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -3029,7 +3029,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#computeMD5ChecksumOnFile(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -3064,7 +3064,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#verifyChecksumBetweenLocalAndIrods
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.File)
@@ -3072,7 +3072,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public boolean verifyChecksumBetweenLocalAndIrods(
 			final IRODSFile irodsFile, final File localFile)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		log.info("verifyChecksumBetweenLocalAndIrods()");
 		if (irodsFile == null) {
@@ -3154,7 +3154,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionRead(java.lang
 	 * .String, java.lang.String, java.lang.String)
@@ -3162,7 +3162,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionRead(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3201,7 +3201,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionReadInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -3209,7 +3209,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionReadInAdminMode(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3249,7 +3249,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWrite(java.
 	 * lang.String, java.lang.String, java.lang.String)
@@ -3257,7 +3257,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionWrite(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3293,7 +3293,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermission(java.lang.
 	 * String, java.lang.String, java.lang.String,
@@ -3341,7 +3341,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -3349,7 +3349,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionWriteInAdminMode(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3384,7 +3384,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwn(java.lang
 	 * .String, java.lang.String, java.lang.String)
@@ -3392,7 +3392,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionOwn(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3427,7 +3427,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionOwnInAdminMode
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -3435,7 +3435,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void setAccessPermissionOwnInAdminMode(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3474,7 +3474,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#removeAccessPermissionsForUser
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -3482,7 +3482,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void removeAccessPermissionsForUser(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3520,7 +3520,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * removeAccessPermissionsForUserInAdminMode(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -3528,7 +3528,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void removeAccessPermissionsForUserInAdminMode(final String zone,
 			final String absolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (zone == null) {
 			throw new IllegalArgumentException("null zone");
@@ -3564,7 +3564,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObject(java
 	 * .lang.String, java.lang.String, java.lang.String)
@@ -3572,7 +3572,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public FilePermissionEnum getPermissionForDataObject(
 			final String absolutePath, final String userName, final String zone)
-			throws JargonException {
+					throws JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
@@ -3599,7 +3599,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String, java.lang.String)
@@ -3609,7 +3609,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public List<UserFilePermission> listPermissionsForDataObject(
 			final String irodsCollectionAbsolutePath, final String dataName)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsCollectionAbsolutePath == null
 				|| irodsCollectionAbsolutePath.isEmpty()) {
@@ -3657,7 +3657,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 			for (IRODSQueryResultRow row : resultSet.getResults()) {
 				userFilePermissions
-						.add(buildUserFilePermissionFromResultRow(row));
+				.add(buildUserFilePermissionFromResultRow(row));
 			}
 
 		} catch (JargonQueryException e) {
@@ -3689,14 +3689,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				row.getColumn(1),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(2))),
-				UserTypeEnum.findTypeByString(row.getColumn(3)),
-				row.getColumn(4));
+						UserTypeEnum.findTypeByString(row.getColumn(3)),
+						row.getColumn(4));
 		return userFilePermission;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listPermissionsForDataObject(java
 	 * .lang.String)
@@ -3725,7 +3725,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * modifyAvuValueBasedOnGivenAttributeAndUnit(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -3733,7 +3733,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void modifyAvuValueBasedOnGivenAttributeAndUnit(
 			final String absolutePath, final AvuData avuData)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
@@ -3796,7 +3796,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String
 	 * , org.irods.jargon.core.pub.domain.AvuData,
@@ -3805,7 +3805,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public void modifyAVUMetadata(final String dataObjectAbsolutePath,
 			final AvuData currentAvuData, final AvuData newAvuData)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -3863,7 +3863,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#modifyAVUMetadata(java.lang.String
 	 * , java.lang.String, org.irods.jargon.core.pub.domain.AvuData,
@@ -3996,7 +3996,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	private UserFilePermission findPermissionForUserGrantedThroughUserGroup(
 			final String userName, final String zone, final String absPath)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("findPermissionForUserGrantedThroughUserGroup()");
 
@@ -4051,7 +4051,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listFileResources(java.lang.String
 	 * )
@@ -4133,7 +4133,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFileInResGroup
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -4145,7 +4145,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 		log.info("listReplicationsForFileInResGroup");
 
-		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			throw new UnsupportedOperationException(
 					"resource groups are not a concept in iRODS 4.1+");
 		}
@@ -4179,9 +4179,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL, fileName)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_D_RESC_GROUP_NAME,
-							QueryConditionOperators.EQUAL, resourceGroupName);
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_D_RESC_GROUP_NAME,
+									QueryConditionOperators.EQUAL, resourceGroupName);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(100);
@@ -4198,7 +4198,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
 	 * (java.lang.String, java.lang.String)
@@ -4206,7 +4206,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(
 			final String irodsAbsolutePath, final String userName)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -4263,7 +4263,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * listPermissionsForDataObjectForUserName(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -4327,7 +4327,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 */
 	private TransferControlBlock checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(
 			final TransferControlBlock transferControlBlock)
-			throws JargonException {
+					throws JargonException {
 		TransferControlBlock effectiveTransferControlBlock = transferControlBlock;
 		if (effectiveTransferControlBlock == null) {
 			log.info("no transferControlBlock provided, building a default version");
@@ -4346,7 +4346,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAOImpl#isUserHasAccess(java
 	 * .lang.String, java.lang.String)
@@ -4385,7 +4385,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#getTotalNumberOfReplsForDataObject
 	 * (java.lang.String, java.lang.String)
@@ -4393,7 +4393,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	@Override
 	public int getTotalNumberOfReplsForDataObject(
 			final String irodsAbsolutePath, final String fileName)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("getTotalNumberOfReplsForDataObject()");
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
@@ -4469,7 +4469,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			final String irodsCollectionAbsolutePath, final String fileName,
 			final String resourceName, final int numberOfCopiesToKeep,
 			final int replicaNumberToDelete, final boolean asIRODSAdmin)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 		log.info("trimDataObjectReplicasInResourceGroup");
 
 		if (irodsCollectionAbsolutePath == null
@@ -4558,9 +4558,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.error(
 					"resource does not exist, rethrow as datanotfound for method contract post 4.1",
 					e);
-			if (this.getIRODSAccessObjectFactory()
-					.getIRODSServerProperties(this.getIRODSAccount())
-					.isAtLeastIrods410()) {
+			if (getIRODSAccessObjectFactory().getIRODSServerProperties(
+					getIRODSAccount()).isAtLeastIrods410()) {
 				throw new DataNotFoundException(e);
 			} else {
 				log.warn("logged and ignored for backwards compatability");
@@ -4581,7 +4580,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#listReplicationsForFile(java.lang
 	 * .String, java.lang.String)
@@ -4634,7 +4633,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.DataObjectAO#
 	 * computeSHA1ChecksumOfIrodsFileByReadingDataFromStream(java.lang.String)
 	 */

@@ -1,19 +1,19 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
 /**
  * The restart process failed in a way that further attempts at restarting
  * should not be tried
- * 
+ *
  * @author Mike Conway -DICE
- * 
+ *
  */
 public class RestartFailedException extends FileRestartManagementException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 7185214710917119172L;
 

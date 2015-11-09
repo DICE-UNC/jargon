@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * Translate an IRODSQuery posed as a <code>String</code> query statement (as in
  * iquery) into a format that IRODS understands see
  * lib/core/include/rodsGenQueryNames.h
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class IRODSGenQueryTranslator {
@@ -25,9 +25,9 @@ public class IRODSGenQueryTranslator {
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
 	public static final String[] operatorStrings = { "<>", "<=", ">=",
-			"not in", "not between", "not like", "sounds like",
-			"sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=",
-			"<", ">", "in", "between", "like" };
+		"not in", "not between", "not like", "sounds like",
+		"sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=",
+		"<", ">", "in", "between", "like" };
 
 	public static final String ORDER_BY = "ORDER BY";
 	private static final String GROUP_BY = "GROUP BY";
@@ -35,7 +35,7 @@ public class IRODSGenQueryTranslator {
 	/**
 	 * Public constructor takes a <code>IRODSServerProperties</code> object that
 	 * describes the current iRODS server.
-	 * 
+	 *
 	 * @param irodsServerProperties
 	 *            <code>IRODSServerProperties</code> that describes the iRODS
 	 *            server.
@@ -43,7 +43,7 @@ public class IRODSGenQueryTranslator {
 	 */
 	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties)
-			throws JargonException {
+					throws JargonException {
 		if (irodsServerProperties == null) {
 			throw new JargonException("server properties is null");
 		}
@@ -54,7 +54,7 @@ public class IRODSGenQueryTranslator {
 	/**
 	 * Public constructor allows specification of a mapping of extensible
 	 * meta-data values.
-	 * 
+	 *
 	 * @param irodsServerProperties
 	 *            <code>IRODSServerProperties</code> that describes the iRODS
 	 *            server.
@@ -67,7 +67,7 @@ public class IRODSGenQueryTranslator {
 	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties,
 			final ExtensibleMetaDataMapping extensibleMetaDataMapping)
-			throws JargonException {
+					throws JargonException {
 		this(irodsServerProperties);
 		this.extensibleMetaDataMapping = extensibleMetaDataMapping;
 	}
@@ -76,7 +76,7 @@ public class IRODSGenQueryTranslator {
 	 * Given a query (as in iquest) that has been formatted into an
 	 * <code>IRODSQuery</code> object, translate the query such that selects and
 	 * conditions are formated such that iRODS can understand the fields.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} containing
 	 *            the desired GenQuery
@@ -113,7 +113,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Sanity check to make sure everything was translated properly
-	 * 
+	 *
 	 * @param translatedSelects
 	 * @param translatedConditions
 	 * @throws JargonQueryException
@@ -121,7 +121,7 @@ public class IRODSGenQueryTranslator {
 	private void reviewTranslationBeforeReturningQuery(
 			final List<GenQuerySelectField> translatedSelects,
 			final List<TranslatedGenQueryCondition> translatedConditions)
-			throws JargonQueryException {
+					throws JargonQueryException {
 		int i;
 		if (translatedSelects.isEmpty()) {
 			throw new JargonQueryException("no selects found in query");
@@ -147,7 +147,7 @@ public class IRODSGenQueryTranslator {
 			if (condition.getColumnNumericTranslation() == null) {
 				throw new JargonQueryException(
 						"untranslated condition field in position:" + i
-								+ " after the WHERE");
+						+ " after the WHERE");
 			}
 			i++;
 		}
@@ -229,7 +229,7 @@ public class IRODSGenQueryTranslator {
 
 			throw new JargonQueryException(
 					"untranslatable condition in position:" + i
-							+ " after the where");
+					+ " after the where");
 
 		}
 		return translatedConditions;
@@ -278,7 +278,7 @@ public class IRODSGenQueryTranslator {
 	 * Given a textual name, attempt to translate this field as an IRODS
 	 * GenQuery field. This method accepts fields that are aggregations, such as
 	 * sum(field). Warning: this method returns null if lookup is unsuccessful.
-	 * 
+	 *
 	 * @param originalSelectField
 	 *            <code>String</code> with query field
 	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
@@ -320,9 +320,9 @@ public class IRODSGenQueryTranslator {
 	 * GenQuery field that represents extensible metadata. This method accepts
 	 * fields that are aggregations, such as sum(field). Warning: this method
 	 * returns null if lookup is unsuccessful.
-	 * 
+	 *
 	 * TODO:verify that extensible metadata fields support aggregations
-	 * 
+	 *
 	 * @param originalSelectField
 	 *            <code>String</code> with query field
 	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
@@ -431,7 +431,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Make a list of strings that are each considered a select field
-	 * 
+	 *
 	 * @param query
 	 * @return
 	 * @throws JargonQueryException
@@ -502,7 +502,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Create a list where each entry is one condition from the raw query.
-	 * 
+	 *
 	 * @param query
 	 * @return
 	 * @throws JargonQueryException
@@ -569,7 +569,7 @@ public class IRODSGenQueryTranslator {
 	/**
 	 * Create a list where each entry is one order by field from the raw query.
 	 * Note this is experimental, and is not integrated in GenQuery as of yet
-	 * 
+	 *
 	 * @param query
 	 * @return
 	 * @throws JargonQueryException
@@ -611,7 +611,7 @@ public class IRODSGenQueryTranslator {
 	/**
 	 * Given a list of parsed-out query conditions, build a list of parsed query
 	 * conditions
-	 * 
+	 *
 	 * @param conditions
 	 * @param tokens
 	 * @param i
@@ -623,7 +623,7 @@ public class IRODSGenQueryTranslator {
 	 */
 	private List<GenQueryCondition> buildListOfQueryConditionsFromParsedTokens(
 			final List<GenQueryConditionToken> tokens)
-			throws JargonQueryException {
+					throws JargonQueryException {
 
 		GenQueryCondition queryCondition;
 		List<GenQueryCondition> queryConditions = new ArrayList<GenQueryCondition>();
@@ -714,7 +714,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Make sure the query operator is one of the allowed types
-	 * 
+	 *
 	 * @param parsedOperator
 	 */
 	private void validateOperatorAgainstPossibilities(
@@ -735,7 +735,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Take a single condition as a string and parse it out into components
-	 * 
+	 *
 	 * @param query
 	 * @param conditionOffset
 	 * @throws JargonQueryException

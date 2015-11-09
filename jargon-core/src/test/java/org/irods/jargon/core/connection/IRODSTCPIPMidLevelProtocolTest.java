@@ -56,7 +56,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	/**
 	 * test starting a connection and sending a startup pack when connection
 	 * restarting is off
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -95,7 +95,7 @@ public class IRODSTCPIPMidLevelProtocolTest {
 	/**
 	 * test starting a connection and sending a startup pack when connection
 	 * restarting is o
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

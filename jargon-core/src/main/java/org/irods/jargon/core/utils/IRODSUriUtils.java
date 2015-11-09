@@ -12,9 +12,9 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
  * Helpful methods for parsing and dealing with IRODS URIs, also supports the
  * creation of <code>IRODSAccount</code> based on a given iRODS uri format
  * (irods://).
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSUriUtils {
 
@@ -30,9 +30,10 @@ public class IRODSUriUtils {
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return The user information if any is present, otherwise
-	 * <code>null</code>.
-	 * @throws InvalidIRODSUriException This is thrown when
-	 * <code>irodsURI</code> is not an iRODS URI.
+	 *         <code>null</code>.
+	 * @throws InvalidIRODSUriException
+	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             URI.
 	 */
 	public static IRODSUriUserInfo getUserInfo(final URI irodsURI)
 			throws InvalidIRODSUriException {
@@ -51,8 +52,9 @@ public class IRODSUriUtils {
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the discovered iRODS user name, or
 	 *         <code>null</code> if the user name is not present.
-	 * @throws InvalidIRODSUriException This is thrown when
-	 * <code>irodsURI</code> is not an iRODS URI.
+	 * @throws InvalidIRODSUriException
+	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             URI.
 	 */
 	public static String getUserName(final URI irodsURI)
 			throws InvalidIRODSUriException {
@@ -66,13 +68,13 @@ public class IRODSUriUtils {
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the iRODS zone, or <code>null</code> if not
-	 * available.
-	 * @throws InvalidIRODSUriException This is thrown when
-	 * <code>irodsURI</code> is not an iRODS URI.
+	 *         available.
+	 * @throws InvalidIRODSUriException
+	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             URI.
 	 */
 	public static String getZone(final URI irodsURI)
-			throws InvalidIRODSUriException
-	{
+			throws InvalidIRODSUriException {
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
 		return info == null ? null : info.getZone();
 	}
@@ -83,9 +85,10 @@ public class IRODSUriUtils {
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the iRODS password, or <code>null</code> if
-	 * not available.
-	 * @throws InvalidIRODSUriException This is thrown when
-	 * <code>irodsURI</code> is not an iRODS URI.
+	 *         not available.
+	 * @throws InvalidIRODSUriException
+	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             URI.
 	 */
 	public static String getPassword(final URI irodsURI)
 			throws InvalidIRODSUriException {
@@ -96,7 +99,7 @@ public class IRODSUriUtils {
 	/**
 	 * Retrieve the iRODS user name from the {@code URI}, or <code>null</code>
 	 * if this componenet cannot be derived from the {@code URI}.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return {@link String} with the discovered iRODS user name, or
@@ -105,27 +108,25 @@ public class IRODSUriUtils {
 	 */
 	@Deprecated
 	public static String getUserNameFromURI(final URI irodsURI) {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(
-				irodsURI.getRawUserInfo());
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(irodsURI
+				.getRawUserInfo());
 		return info == null ? null : info.getUserName();
 	}
 
 	/**
 	 * Get the parsed user information from the URI
-	 * 
+	 *
 	 * @param irodsURI
 	 * @return
 	 * @deprecated Use {@link IRODSUriUtils#getUserInfo(URI)}
 	 */
 	@Deprecated
-	protected static URIUserParts getURIUserPartsFromUserInfo(
-			final URI irodsURI) {
+	protected static URIUserParts getURIUserPartsFromUserInfo(final URI irodsURI) {
 		String userInfo = irodsURI.getUserInfo();
 
 		if (userInfo == null || userInfo.isEmpty()) {
 			return null;
 		}
-
 
 		/*
 		 * parse out the userInfo part of the URI, which can have userName,
@@ -190,7 +191,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the password (if available) from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS password, or <code>null</code>
@@ -199,14 +200,14 @@ public class IRODSUriUtils {
 	 */
 	@Deprecated
 	public static String getPasswordFromURI(final URI irodsURI) {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(
-				irodsURI.getRawUserInfo());
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(irodsURI
+				.getRawUserInfo());
 		return info == null ? null : info.getPassword();
 	}
 
 	/**
 	 * Get the zone (if available) from the <code>URI</code> in iRODS form.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in the <code>irods://</code> format
 	 * @return <code>String</code> with the iRODS zone, or <code>null</code> if
@@ -215,17 +216,18 @@ public class IRODSUriUtils {
 	 */
 	@Deprecated
 	public static String getZoneFromURI(final URI irodsURI) {
-		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(
-				irodsURI.getRawUserInfo());
+		final IRODSUriUserInfo info = IRODSUriUserInfo.fromString(irodsURI
+				.getRawUserInfo());
 		return info == null ? null : info.getZone();
 	}
 
 	/**
 	 * Get the host (if available) from a URI.
-	 * 
-	 * @param uri the URI
+	 *
+	 * @param uri
+	 *            the URI
 	 * @return {@link String} with the host, or <code>null</code> if not
-	 * available.
+	 *         available.
 	 */
 	public static String getHostFromURI(final URI uri) {
 		return uri.getHost();
@@ -233,8 +235,9 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the port from the URI in iRODS form.
-	 * 
-	 * @param uri the URI
+	 *
+	 * @param uri
+	 *            the URI
 	 * @return <code>int</code> with the port.
 	 */
 	public static int getPortFromURI(final URI uri) {
@@ -243,8 +246,9 @@ public class IRODSUriUtils {
 
 	/**
 	 * Get the path from the URI in iRODS form.
-	 * 
-	 * @param uri the URI
+	 *
+	 * @param uri
+	 *            the URI
 	 * @return {@link String} with the path
 	 */
 	public static String getAbsolutePathFromURI(final URI uri) {
@@ -253,7 +257,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Build an {@link IRODSAccount} from the {@link URI} in iRODS format.
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} in <code>irods://</code> form
 	 * @return {@link IRODSAccount} based on the URI information
@@ -270,17 +274,14 @@ public class IRODSUriUtils {
 
 		final IRODSUriUserInfo info = getUserInfo(irodsURI);
 
-		if (info == null
-				|| info.getPassword() == null
+		if (info == null || info.getPassword() == null
 				|| info.getZone() == null) {
 			throw new JargonException(
 					"No user information in URI, cannot create iRODS account");
 		}
 
-		final String home
-				= PATH_SEPARATOR + info.getZone()
-				+ PATH_SEPARATOR + "home"
-				+ PATH_SEPARATOR + info.getUserName();
+		final String home = PATH_SEPARATOR + info.getZone() + PATH_SEPARATOR
+				+ "home" + PATH_SEPARATOR + info.getUserName();
 
 		return IRODSAccount.instance(irodsURI.getHost(), irodsURI.getPort(),
 				info.getUserName(), info.getPassword(), home, info.getZone(),
@@ -289,7 +290,7 @@ public class IRODSUriUtils {
 
 	/**
 	 * Test to see if the URI is of the iRODS scheme "irods://".
-	 * 
+	 *
 	 * @param irodsURI
 	 *            {@link URI} to check
 	 * @return <code>boolean</code> which is <code>true</code> if this is the
@@ -303,15 +304,16 @@ public class IRODSUriUtils {
 	 * Constructs a {@link URI} with the iRODS scheme with provided authority,
 	 * identifying the root path for indicated host.
 	 *
-	 * @param host the iRODS server hosting the ICAT
-	 * @param port the TCP port the server listens on
-	 * @param userInfo the user information used for authentication and
-	 *                    authorization
+	 * @param host
+	 *            the iRODS server hosting the ICAT
+	 * @param port
+	 *            the TCP port the server listens on
+	 * @param userInfo
+	 *            the user information used for authentication and authorization
 	 * @return the URI.
 	 */
-	public static URI buildBaseURI(
-			final String host, final int port, final IRODSUriUserInfo userInfo)
-	{
+	public static URI buildBaseURI(final String host, final int port,
+			final IRODSUriUserInfo userInfo) {
 		try {
 			final StringBuilder uriBuilder = new StringBuilder();
 			uriBuilder.append(SCHEME).append(SCHEME_TERMINUS);
@@ -330,13 +332,16 @@ public class IRODSUriUtils {
 	 * Constructs a {@link URI} with the iRODS scheme with provided authority,
 	 * identifying the root path for indicated host.
 	 *
-	 * @param host the iRODS server hosting the ICAT
-	 * @param port the TCP port the server listens on
-	 * @param username the iRODS user name used for authorization
+	 * @param host
+	 *            the iRODS server hosting the ICAT
+	 * @param port
+	 *            the TCP port the server listens on
+	 * @param username
+	 *            the iRODS user name used for authorization
 	 * @return the URI.
 	 */
-	public static URI buildBaseURI(
-			final String host, final int port, final String username) {
+	public static URI buildBaseURI(final String host, final int port,
+			final String username) {
 		final IRODSUriUserInfo info = IRODSUriUserInfo.instance(username, null,
 				null);
 		return buildBaseURI(host, port, info);
@@ -346,16 +351,18 @@ public class IRODSUriUtils {
 	 * Constructs a {@link URI} with the iRODS scheme with provided authority,
 	 * identifying the resource with the given path on the indicated host.
 	 *
-	 * @param host the iRODS server hosting the ICAT
-	 * @param port the TCP port the server listens on
-	 * @param userInfo the user information used for authentication and
-	 *                    authorization
-	 * @param absPath the absolute logical path to the resource
+	 * @param host
+	 *            the iRODS server hosting the ICAT
+	 * @param port
+	 *            the TCP port the server listens on
+	 * @param userInfo
+	 *            the user information used for authentication and authorization
+	 * @param absPath
+	 *            the absolute logical path to the resource
 	 * @return the URI.
 	 */
-	public static URI buildURI(
-			final String host, final int port, final IRODSUriUserInfo userInfo,
-			final String absPath) {
+	public static URI buildURI(final String host, final int port,
+			final IRODSUriUserInfo userInfo, final String absPath) {
 		try {
 			final URI base = buildBaseURI(host, port, userInfo);
 			return base.resolve(new URI(null, absPath, null));
@@ -368,15 +375,18 @@ public class IRODSUriUtils {
 	 * Constructs a {@link URI} with the iRODS scheme with provided authority,
 	 * identifying the resource with the given path on the indicated host.
 	 *
-	 * @param host the iRODS server hosting the ICAT
-	 * @param port the TCP port the server listens on
-	 * @param username the iRODS user name used for authorization
-	 * @param absPath the absolute logical path to the resource
+	 * @param host
+	 *            the iRODS server hosting the ICAT
+	 * @param port
+	 *            the TCP port the server listens on
+	 * @param username
+	 *            the iRODS user name used for authorization
+	 * @param absPath
+	 *            the absolute logical path to the resource
 	 * @return the URI.
 	 */
-	public static URI buildURI(
-			final String host, final int port, final String username,
-			final String absPath) {
+	public static URI buildURI(final String host, final int port,
+			final String username, final String absPath) {
 		try {
 			final URI base = buildBaseURI(host, port, username);
 			return base.resolve(new URI(null, absPath, null));
@@ -390,13 +400,16 @@ public class IRODSUriUtils {
 	 * authority identifying the resource with the given path on the indicated
 	 * host.
 	 *
-	 * @param host the iRODS server hosting the ICAT
-	 * @param port the TCP port the server listens on
-	 * @param absPath the absolute logical path to the resource
+	 * @param host
+	 *            the iRODS server hosting the ICAT
+	 * @param port
+	 *            the TCP port the server listens on
+	 * @param absPath
+	 *            the absolute logical path to the resource
 	 * @return the URI.
 	 */
-	public static URI buildAnonymousURI(
-			final String host, final int port, final String absPath) {
+	public static URI buildAnonymousURI(final String host, final int port,
+			final String absPath) {
 		if (absPath == null || absPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
 		}
@@ -411,10 +424,11 @@ public class IRODSUriUtils {
 	 * Build a URI appropriate for a given iRODS account and path. If the path
 	 * is relative, it is assumed to be relative to the account's home
 	 * collection.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param irodsPath the path
+	 * @param irodsPath
+	 *            the path
 	 * @return the URI
 	 */
 	public static URI buildURIForAnAccountAndPath(
@@ -429,9 +443,8 @@ public class IRODSUriUtils {
 					"null or empty irodsAbsolutePath");
 		}
 
-		final IRODSUriUserInfo info
-				= IRODSUriUserInfo.unauthenticatedLocalInstance(
-				irodsAccount.getUserName());
+		final IRODSUriUserInfo info = IRODSUriUserInfo
+				.unauthenticatedLocalInstance(irodsAccount.getUserName());
 		final String absPath = mkPathAbs(irodsAccount.getHomeDirectory(),
 				irodsPath);
 		return buildBaseURI(irodsAccount.getHost(), irodsAccount.getPort(),
@@ -440,10 +453,11 @@ public class IRODSUriUtils {
 
 	/**
 	 * Build a URI appropriate for a given iRODS account and absolute path.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} containing connection information
-	 * @param irodsPath the path
+	 * @param irodsPath
+	 *            the path
 	 * @return the URI
 	 */
 	public static URI buildURIForAnAccountWithNoUserInformationIncluded(
@@ -463,9 +477,8 @@ public class IRODSUriUtils {
 				absPath, null);
 	}
 
-	private static URI buildBaseURI(
-			final String host, final int port, final String absPath,
-			final IRODSUriUserInfo userInfo) {
+	private static URI buildBaseURI(final String host, final int port,
+			final String absPath, final IRODSUriUserInfo userInfo) {
 		try {
 			final StringBuilder uriBuilder = new StringBuilder();
 			uriBuilder.append(SCHEME).append(SCHEME_TERMINUS);
@@ -495,7 +508,7 @@ public class IRODSUriUtils {
 /**
  * Internal value class for parts of user info in the irods <code>URI</code>
  * scheme
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  * @deprecated Use <code>IRODSUriUserInfo</code>
  */

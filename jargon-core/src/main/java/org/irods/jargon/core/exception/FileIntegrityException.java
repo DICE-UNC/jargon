@@ -2,9 +2,9 @@ package org.irods.jargon.core.exception;
 
 /**
  * An exception in a file integrity check, such as a checksum validation error
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileIntegrityException extends JargonException {
 

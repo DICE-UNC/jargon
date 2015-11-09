@@ -1,20 +1,20 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Equivalent to UNIX_FILE_MKDIR_ERR -520000 and variants
- * 
+ *
  * The given collection cannot be created
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UnixFileMkdirException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 9091779739237845919L;
 

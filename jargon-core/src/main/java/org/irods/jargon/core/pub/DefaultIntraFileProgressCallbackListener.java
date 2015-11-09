@@ -22,12 +22,12 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * minimum. Note that this is an initial implementation, and further
  * configuration and optimization strategies may be employed later. In other
  * words, this object may change.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DefaultIntraFileProgressCallbackListener implements
-		ConnectionProgressStatusListener {
+ConnectionProgressStatusListener {
 
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private final TransferType transferType;
@@ -44,7 +44,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	/**
 	 * Static initializer method to create an immutable call-back listener for
 	 * intra-file status information.
-	 * 
+	 *
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
@@ -76,7 +76,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	/**
 	 * Static initializer method to create an immutable call-back listener for
 	 * intra-file status information.
-	 * 
+	 *
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
@@ -104,7 +104,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 * Static initializer method to create an immutable call-back listener,
 	 * specifiy a skip interval that can be used to control the frequency that
 	 * this object will use to report up the callback chain.
-	 * 
+	 *
 	 * @param transferType
 	 * @param totalBytesToTransfer
 	 * @param transferControlBlock
@@ -152,9 +152,9 @@ public class DefaultIntraFileProgressCallbackListener implements
 		if (transferOptions == null) {
 			this.transferOptions = new TransferOptions();
 			this.transferOptions
-					.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
+			.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
 			this.transferOptions
-					.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
+			.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
 		} else {
 			this.transferOptions = transferOptions;
 		}
@@ -162,7 +162,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * connectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
@@ -196,7 +196,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 		if (countOfMessagesSinceLastSend > transferOptions
 				.getIntraFileStatusCallbacksNumberCallsInterval()
 				|| countOfBytesSinceLastSend > transferOptions
-						.getIntraFileStatusCallbacksTotalBytesInterval()) {
+				.getIntraFileStatusCallbacksTotalBytesInterval()) {
 			try {
 				TransferStatus transferStatus = TransferStatus
 						.instanceForIntraFileStatus(transferType,
@@ -220,7 +220,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -257,19 +257,18 @@ public class DefaultIntraFileProgressCallbackListener implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * finalConnectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
 	 */
 	@Override
 	public void finalConnectionProgressStatusCallback(
-			ConnectionProgressStatus connectionProgressStatus) {
+			final ConnectionProgressStatus connectionProgressStatus) {
 		try {
 			TransferStatus transferStatus = TransferStatus
-					.instanceForIntraFileStatus(this.transferType,
-							this.totalBytesToTransfer,
-							this.totalBytesToTransfer);
+					.instanceForIntraFileStatus(transferType,
+							totalBytesToTransfer, totalBytesToTransfer);
 			transferStatusCallbackListener.statusCallback(transferStatus);
 		} catch (JargonException e) {
 			throw new JargonRuntimeException("error sending status callback", e);

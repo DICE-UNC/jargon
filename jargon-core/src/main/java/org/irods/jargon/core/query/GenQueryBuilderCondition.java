@@ -7,9 +7,9 @@ import org.irods.jargon.core.query.GenQueryField.SelectFieldSource;
 /**
  * Represents an immutable condition part of a gen query as produced by the gen
  * query builder tool.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class GenQueryBuilderCondition {
 
@@ -21,7 +21,7 @@ class GenQueryBuilderCondition {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -44,7 +44,7 @@ class GenQueryBuilderCondition {
 	/**
 	 * Create an immutable instance of an individual condition in a general
 	 * query
-	 * 
+	 *
 	 * @param selectFieldColumnName
 	 *            <code>String</code> with the column name
 	 * @param selectFieldSource
@@ -75,7 +75,7 @@ class GenQueryBuilderCondition {
 	 * Create a query condition for an 'BETWEEN' condition. Note that the
 	 * individual values for the BETWEEN are to be provided in an array without
 	 * quotes, which will be added during processing
-	 * 
+	 *
 	 * @param selectFieldColumnName
 	 *            <code>String</code> with the column name
 	 * @param selectFieldSource
@@ -117,7 +117,7 @@ class GenQueryBuilderCondition {
 	 * Create a query condition for an 'IN' condition. Note that the individual
 	 * values for the IN are to be provided in an array without quotes, which
 	 * will be added during processing
-	 * 
+	 *
 	 * @param selectFieldColumnName
 	 *            <code>String</code> with the column name
 	 * @param selectFieldSource
@@ -164,7 +164,7 @@ class GenQueryBuilderCondition {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param selectFieldColumnName
 	 * @param selectFieldSource
 	 * @param selectFieldNumericTranslation

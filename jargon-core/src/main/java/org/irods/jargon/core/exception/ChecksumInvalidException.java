@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
@@ -14,7 +14,7 @@ public class ChecksumInvalidException extends JargonException {
 	/**
 	 * @param message
 	 */
-	public ChecksumInvalidException(String message) {
+	public ChecksumInvalidException(final String message) {
 		super(message);
 	}
 
@@ -22,14 +22,14 @@ public class ChecksumInvalidException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public ChecksumInvalidException(String message, Throwable cause) {
+	public ChecksumInvalidException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ChecksumInvalidException(Throwable cause) {
+	public ChecksumInvalidException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -38,8 +38,8 @@ public class ChecksumInvalidException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumInvalidException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumInvalidException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 		// TODO Auto-generated constructor stub
 	}
@@ -48,8 +48,8 @@ public class ChecksumInvalidException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumInvalidException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumInvalidException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -57,8 +57,8 @@ public class ChecksumInvalidException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ChecksumInvalidException(String message,
-			int underlyingIRODSExceptionCode) {
+	public ChecksumInvalidException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

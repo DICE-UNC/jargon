@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -26,9 +26,9 @@ import org.junit.Test;
 
 /**
  * FIXME: implement tests, mirror in 2.3.1, and add to suite
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSRandomAccessFileTest {
 
@@ -48,7 +48,7 @@ public class IRODSRandomAccessFileTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -60,7 +60,7 @@ public class IRODSRandomAccessFileTest {
 	/**
 	 * Bug [#1557] Griffin log shows error -1220000 raised from Jargon for ftp
 	 * write
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -123,7 +123,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// read back the test file so I can compare
@@ -156,7 +156,7 @@ public class IRODSRandomAccessFileTest {
 	/**
 	 * Bug: Large file transfer restart #77
 	 * https://github.com/DICE-UNC/jargon/issues/77
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -172,7 +172,7 @@ public class IRODSRandomAccessFileTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -195,7 +195,7 @@ public class IRODSRandomAccessFileTest {
 				.computeChecksumOnDataObject(destFile);
 
 		byte[] buffer = new byte[irodsFileSystem.getIRODSAccessObjectFactory()
-				.getJargonProperties().getPutBufferSize()];
+		                         .getJargonProperties().getPutBufferSize()];
 
 		IRODSRandomAccessFile irodsRaFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount)
@@ -313,7 +313,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// here I'm saving the source file as a byte array as my 'expected'
@@ -345,7 +345,7 @@ public class IRODSRandomAccessFileTest {
 
 	/**
 	 * Bug 45 - SYS_UNMATCHED_API_NUM (-12000) when attempting to get a file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -378,7 +378,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory

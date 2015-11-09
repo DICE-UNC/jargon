@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -8,9 +8,9 @@ import java.util.List;
 
 /**
  * Result set for execution of a 'specific' or SQL query.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 
@@ -18,7 +18,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/**
 	 * Creates an instance of a result set for a specific query
-	 * 
+	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param results
@@ -46,7 +46,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/**
 	 * Constructor for an empty result set
-	 * 
+	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param results

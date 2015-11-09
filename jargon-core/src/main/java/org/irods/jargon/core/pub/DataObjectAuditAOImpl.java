@@ -14,12 +14,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Represents audit trail capabilities for data objects.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
-		DataObjectAuditAO {
+DataObjectAuditAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectAuditAOImpl.class);
@@ -27,7 +27,7 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}
-	 * 
+	 *
 	 * @param irodsSession
 	 * @param irodsAccount
 	 * @throws JargonException
@@ -39,7 +39,7 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#getAuditedActionForDataObject
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String,
@@ -60,7 +60,7 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#findAllAuditRecords(org.irods
 	 * .jargon.core.pub.io.IRODSFile, int)

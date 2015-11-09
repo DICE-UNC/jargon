@@ -43,12 +43,12 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * soft-linked, the object is returned from the perspective of the soft link,
  * and the descriptive object will contain information on the canonical parent
  * collection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface CollectionAndDataObjectListAndSearchAO extends
-		IRODSAccessObject {
+IRODSAccessObject {
 
 	/**
 	 * Specific query for coll listing with ACLs
@@ -73,7 +73,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -89,7 +89,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of files in a
@@ -106,7 +106,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -122,7 +122,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -149,7 +149,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -195,7 +195,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * resulting listing in a <code>PagingAwareCollectionListing</code> that
 	 * contains information about the paging status of the separate collection
 	 * and data object listings.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -221,7 +221,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the count by inspecting the canonical directory that is the
 	 * parent.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. The
 	 *            parent must be a collection or an error is thrown
@@ -241,11 +241,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * form to find all collections that have the given string.
 	 * <p/>
 	 * Note that this will do a genquery like:
-	 * 
+	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
 	 * </pre>
-	 * 
+	 *
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -265,11 +265,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * Note that this will do a genquery like:
 	 * <p/>
-	 * 
+	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
 	 * </pre>
-	 * 
+	 *
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -292,11 +292,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * Note that this will do a genquery like:
 	 * <p/>
-	 * 
+	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
-	 * 
+	 *
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -318,11 +318,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * Note that this will do a genquery like:
 	 * <p/>
-	 * 
+	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
-	 * 
+	 *
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -349,14 +349,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * Note that this will do a genquery like:
 	 * <p/>
-	 * 
+	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
-	 * 
+	 *
 	 * <p/>
 	 * Note that this method will compensate if strict ACL's are in place
-	 * 
+	 *
 	 * @param searchTerm
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
@@ -374,7 +374,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * {@link Collection}, based on the given absolute path. This can be handy
 	 * for display in interfaces or other applications that are concerned with
 	 * retrieving 'info' about a given path.
-	 * 
+	 *
 	 * @param objectAbsolutePath
 	 *            <code>String</code> with the absolute path to the given data
 	 *            object or collection.
@@ -398,7 +398,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>CollectionAndDataObjectListingEntry</code> objects will have a
 	 * collection of <code>UserFilePermission</code> objects that detail the
 	 * permissions.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -415,7 +415,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of data objects in a
@@ -427,7 +427,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * more records to display.
 	 * <p/>
 	 * This method is not a search method, it simply lists.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -444,7 +444,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -478,7 +478,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>listCollectionsUnderPath</code> methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
@@ -499,7 +499,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
 	 * Note that a <code>FileNotFoundException</code> results if the objStat
 	 * cannot be determined. This can occur based on issues with ACL's.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection or data object.
@@ -518,7 +518,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * associated with the given iRODS absolute path. This is equivalent to
 	 * doing an 'objStat' on the given path, and in fact, this is how the data
 	 * is retrieved from iRODS.
-	 * 
+	 *
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection or data object.
@@ -536,7 +536,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
 	 * Note that a <code>FileNotFoundException</code> results if the objStat
 	 * cannot be determined. This can occur based on issues with ACL's.
-	 * 
+	 *
 	 * @param parentPath
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection
@@ -556,7 +556,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	/**
 	 * Count the number of collections (directories) under the given path. This
 	 * does not account for data objects
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection
@@ -571,7 +571,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	/**
 	 * Count the number of data objects (files) under the given path. This does
 	 * not account for collections
-	 * 
+	 *
 	 * @param absolutePathToParent
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection
@@ -586,13 +586,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	/**
 	 * List data objects and collections found underneath the parent described
 	 * in the given objStat
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
 	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
 	 * 
-	 * 
-	 * 
+	 *
+	 *
+	 *
 	 * } that represents the
 	 *         collections and data objects beneath the parent
 	 * @throws FileNotFoundException
@@ -610,7 +611,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <p/>
 	 * Note that the returned <code>ObjStat</code> has an indicator if a
 	 * 'stand-in' objStat was returned.
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path.
 	 * @return {@link ObjStat} associated witha path
