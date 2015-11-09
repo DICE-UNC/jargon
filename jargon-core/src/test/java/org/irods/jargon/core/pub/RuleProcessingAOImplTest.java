@@ -452,9 +452,7 @@ public class RuleProcessingAOImplTest {
 
 	}
 
-	@Ignore
-	// FIXME: overheaded until resolved
-	// https://github.com/DICE-UNC/jargon/issues/110
+	@Test
 	public void testRuleContainsConditionWithEqualsInAttrib() throws Exception {
 
 		// put a collection out to do a checksum on
