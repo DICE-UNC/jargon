@@ -87,8 +87,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * at the beginning of the file.
 	 * 
 	 * WRITE 'w' Open for writing only; place the file pointer at the beginning
-	 * of the file and truncate the file to zero length. If the file does not
-	 * exist, attempt to create it.
+	 * of the file. If the file does not exist, attempt to create it.
 	 * 
 	 * WRITE_TRUNCATE 'w+' Open for reading and writing; place the file pointer
 	 * at the beginning of the file and truncate the file to zero length. If the
