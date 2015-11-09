@@ -3,14 +3,14 @@ Jargon Core API
 
 
 # Project: Jargon-core API
-#### Date:
-#### Release Version: 4.0.2.4-SNAPSHOT
-#### git tag: 4.0.2.4.SNAPSHOT
+#### Date: 11/09/2015
+#### Release Version: 4.0.2.4-RC1
+#### git tag: 4.0.2.4-RC1
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Maintenance release of Jargon work in progress, focused on bug fixes, more 4.1.6 compatability, and stream performance for i/o and put/get
+Maintenance release of Jargon work in progress, focused on bug fixes, more 4.1.7 compatability, and stream performance for i/o and put/get
 
 Release  https://github.com/DICE-UNC/jargon/milestones/Performance%20enhancements%20for%20streams%20and%20put/get%20-%204.0.2.4
 
@@ -31,9 +31,9 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.7+
+* Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.0.3 consortium
+* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.1.7 consortium
 
 ## Libraries
 
@@ -99,6 +99,15 @@ Enhanced collection-related methods to tolerate trailing slashes on collections 
 ###  enhancements to transfer operations for add'l checking and path handling. #31 
 
 For put/get to a directory, do a permission check and create any necessary subdirs as specified
+
+###  SSL cert check bypass option #155 
+
+Added a jargon.properties setting to turn off SSL cert chain checking by using a custom 'trust all' trust manager.  This is suitable for testing, not for production.  Also, IRODSSession now supports a setter method to inject a custom X509TrustManager class.
+
+###  TLS v1 being used in SSL pam auth #154
+
+Fixes for SSL protocol selection to address some SSL/PAM handshake issues.  In addition, JDK1.8 is favored on most platforms to support later versions of TLS.
+
 
 ### Misc
 
