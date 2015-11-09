@@ -84,6 +84,10 @@ https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/iro
 
 These enhancements are used in the ModeShape, WebDav, REST, and cloud browser code
 
+###  PEP on output stream #144 
+
+Fixed open flags on WRITE and WRITE_TRUNCATE in output stream code to fire postProcForPut policy enforcement point.  This also required an iRODS fix 4.1.6+
+
 ### Misc
 
 Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
