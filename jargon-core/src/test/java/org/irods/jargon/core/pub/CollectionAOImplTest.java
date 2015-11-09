@@ -2833,4 +2833,29 @@ public class CollectionAOImplTest {
 		// just lookign for clean submit of delay exec rule....
 	}
 
+	/**
+	 * Bug https://github.com/DICE-UNC/jargon/issues/37 Trailing slash on path
+	 * to CollectionAO.getPermissionForCollection() throws FileNotFoundException
+	 * #37
+	 */
+	@Test
+	public void testGetPermissionForCollectionDoesThrowExceptionOnTrailingSlashBug37()
+			throws Exception {
+
+		String pathWithTrailingSlash = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/");
+
+		// now put the file
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		collectionAO.getPermissionForCollection(pathWithTrailingSlash,
+				irodsAccount.getUserName(), irodsAccount.getZone());
+
+	}
+
 }

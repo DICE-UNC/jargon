@@ -672,14 +672,17 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Checks the given path for a length violation
+	 * Checks the given path for a length violation,this method will also strip
+	 * a trailing slash
 	 *
 	 * @param path
 	 *            <code>String</code> with an iRODS path to check
+	 * @return <code>String</code> with the path, possibly with the trailing
+	 *         slashes truncated
 	 * @throws PathTooLongException
 	 *             thrown if the path is too long
 	 */
-	public static void checkPathSizeForMax(final String path)
+	public static String checkPathSizeForMax(final String path)
 			throws PathTooLongException {
 		if (path == null) {
 			throw new IllegalArgumentException("null path");
@@ -689,6 +692,15 @@ public class MiscIRODSUtils {
 			throw new PathTooLongException("Path is too long");
 		}
 
+		String retPath = null;
+
+		if (path.endsWith("/")) {
+			retPath = path.substring(0, path.length() - 1);
+		} else {
+			retPath = path;
+		}
+
+		return retPath;
 	}
 
 	/**
@@ -743,15 +755,15 @@ public class MiscIRODSUtils {
 	/*
 	 * Compare the reported version of the server to a test version number to
 	 * see if the actual server is at least at the rev of the test version
-	 *
+	 * 
 	 * @param actualVersionOfServer <code>String</code> that represents the
 	 * actual version of a server in question, such as is reported by the
 	 * startup pack
-	 *
+	 * 
 	 * @param thisReleaseVersion <code>String</code> that represents a test
 	 * version number, asking if the reported server version is at least this
 	 * version
-	 *
+	 * 
 	 * @return <code>boolean</code> that would be <code>true</code>
 	 */
 	public static boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(

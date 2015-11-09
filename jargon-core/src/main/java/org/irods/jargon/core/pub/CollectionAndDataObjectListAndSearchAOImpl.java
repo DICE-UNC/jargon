@@ -381,8 +381,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("countDataObjectsAndCollectionsUnder: {}",
 				absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		String myPath = MiscIRODSUtils
+				.checkPathSizeForMax(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPath(myPath);
 
 		/*
 		 * See if jargon supports the given object type
@@ -427,8 +428,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("countDataObjectsAndCollectionsUnder: {}",
 				absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		String myPath = MiscIRODSUtils
+				.checkPathSizeForMax(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPath(myPath);
 
 		/*
 		 * See if jargon supports the given object type
@@ -566,8 +568,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("countDataObjectsAndCollectionsUnder: {}",
 				absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
-		ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
+		String myPath = MiscIRODSUtils
+				.checkPathSizeForMax(absolutePathToParent);
+		ObjStat objStat = retrieveObjectStatForPath(myPath);
 
 		/*
 		 * See if jargon supports the given object type
@@ -1609,9 +1612,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					"irodsAbsolutePath is null or empty");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance(myPath);
 		Tag response;
 		try {
 			response = getIRODSProtocol().irodsFunction(dataObjInp);
@@ -1627,7 +1629,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * canonical path
 		 */
 		ObjStat objStat = new ObjStat();
-		objStat.setAbsolutePath(irodsAbsolutePath);
+		objStat.setAbsolutePath(myPath);
 		objStat.setChecksum(response.getTag("chksum").getStringValue());
 		objStat.setDataId(response.getTag("dataId").getIntValue());
 		int objType = response.getTag("objType").getIntValue();

@@ -334,7 +334,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			}
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
+		String myPath = MiscIRODSUtils
+				.checkPathSizeForMax(collectionAbsolutePath);
 
 		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
 
@@ -347,10 +348,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			addSelectsForMetadataAndDomainDataToBuilder(builder);
 
-			if (!collectionAbsolutePath.isEmpty()) {
+			if (!myPath.isEmpty()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_COLL_NAME,
-						QueryConditionOperators.EQUAL, collectionAbsolutePath);
+						QueryConditionOperators.EQUAL, myPath);
 			}
 
 			for (AVUQueryElement queryElement : avuQuery) {
@@ -362,7 +363,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
 
-			if (collectionAbsolutePath.isEmpty()) {
+			if (myPath.isEmpty()) {
 
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResult(irodsQuery,
@@ -371,8 +372,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 				resultSet = irodsGenQueryExecutor
 						.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-								partialStartIndex, MiscIRODSUtils
-										.getZoneInPath(collectionAbsolutePath));
+								partialStartIndex,
+								MiscIRODSUtils.getZoneInPath(myPath));
 			}
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
@@ -507,10 +508,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("adding avu metadata to collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForAddCollectionMetadata(absolutePath, avuData);
+				.instanceForAddCollectionMetadata(myPath, avuData);
 
 		log.debug("sending avu request");
 
@@ -558,10 +559,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("deleting avu metadata from collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForDeleteCollectionMetadata(absolutePath, avuData);
+				.instanceForDeleteCollectionMetadata(myPath, avuData);
 
 		log.debug("sending avu request");
 
@@ -599,9 +600,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		}
 
 		log.info("absolute path: {}", absolutePath);
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
-		log.info("absolute path: {}", absolutePath);
 
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
@@ -626,7 +624,8 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
 
-		deleteBulkAVUMetadataFromCollection(absolutePath, avusToDelete);
+		deleteBulkAVUMetadataFromCollection(objStat.getAbsolutePath(),
+				avusToDelete);
 		log.debug("metadata removed");
 	}
 
@@ -654,7 +653,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("with  avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
@@ -669,7 +668,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					AVUQueryElement.AVUQueryPart.UNITS,
 					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(
-					queryElements, absolutePath);
+					queryElements, myPath);
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");
@@ -687,7 +686,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 
 		AvuData modAvuData = new AvuData(result.get(0).getAvuAttribute(),
 				avuData.getValue(), result.get(0).getAvuUnit());
-		modifyAVUMetadata(absolutePath, currentAvuData, modAvuData);
+		modifyAVUMetadata(myPath, currentAvuData, modAvuData);
 		log.info("metadata modified to:{}", modAvuData);
 	}
 
@@ -720,11 +719,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", absolutePath);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
-				.instanceForModifyCollectionMetadata(absolutePath,
-						currentAvuData, newAvuData);
+				.instanceForModifyCollectionMetadata(myPath, currentAvuData,
+						newAvuData);
 
 		log.debug("sending avu request");
 
@@ -772,8 +771,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 				collectionAbsolutePath);
 		log.info("with partial start of:{}", partialStartIndex);
 
-		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
-
 		ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 		return findMetadataValuesForCollection(objStat, partialStartIndex);
 
@@ -805,8 +802,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		log.info("find metadata values for collection:{}",
 				collectionAbsolutePath);
 		log.info("with id:{}", id);
-
-		MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(collectionAbsolutePath);
 		return findMetadataValueForCollectionById(objStat, id);
@@ -1125,7 +1120,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"irodsCollectionAbsolutePath is null");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 		ObjStat objStat = collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsCollectionAbsolutePath);
 
@@ -1215,8 +1209,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
 
@@ -1251,8 +1243,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionInherit on absPath:{}", absolutePath);
 
@@ -1286,8 +1276,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
 		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
@@ -1324,8 +1312,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionToNotInherit on absPath:{}", absolutePath);
 
@@ -1361,8 +1347,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
 		log.info("setAccessPermissionRead on absPath:{}", absolutePath);
@@ -1403,8 +1387,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
 		log.info("setAccessPermissionReadAsAdmin on absPath:{}", absolutePath);
@@ -1486,8 +1468,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionWrite on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
@@ -1530,8 +1510,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionWriteAsAdmin on absPath:{}", absolutePath);
 		String effectiveAbsPath = resolveAbsolutePathViaObjStat(absolutePath);
@@ -1572,8 +1550,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		// pi tests parameters
 		log.info("setAccessPermissionOwn on absPath:{}", absolutePath);
@@ -1617,8 +1593,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		// pi tests parameters
 		log.info("setAccessPermissionOwnAsAdmin on absPath:{}", absolutePath);
 		// overhead iRODS behavior, if you set perm with recursive when no
@@ -1660,7 +1634,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 		// pi tests parameters
 		log.info("removeAccessPermission on absPath:{}", absolutePath);
 		log.info("for user:{}", userName);
@@ -1703,7 +1676,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 		// pi tests parameters
 		log.info("removeAccessPermissionAsAdmin on absPath:{}", absolutePath);
 		log.info("for user:{}", userName);
@@ -1737,8 +1709,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException(
 					"null or empty absolutePathToCollection");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		ObjStat objStat = getObjectStatForAbsolutePath(absolutePath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
@@ -1801,13 +1771,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null zone");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission permission = getPermissionForUserName(
-				irodsAbsolutePath, userName);
+		UserFilePermission permission = getPermissionForUserName(myPath,
+				userName);
 		if (permission == null) {
 			log.info("no permission found, return 'none'");
 			return FilePermissionEnum.NONE;
@@ -1837,10 +1807,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
-		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(
-				absolutePath);
+		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(myPath);
 
 		if (!collFile.exists()) {
 			throw new JargonException(
@@ -1852,7 +1821,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		int countFilesUnderParent = collectionAndDataObjectListAndSearchAO
-				.countDataObjectsAndCollectionsUnderPath(absolutePath);
+				.countDataObjectsAndCollectionsUnderPath(myPath);
 
 		if (recursive) {
 			if (countFilesUnderParent == 0) {
@@ -1885,8 +1854,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
 		log.info(
 				"getPermissionForUserName with irodsCollectionAbsolutePath: {}",
@@ -2100,8 +2067,6 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 					"null or empty collectionAbsolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
-
 		log.info("listPermissionsForCollection: {}",
 				irodsCollectionAbsolutePath);
 
@@ -2187,13 +2152,13 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission derivedPermission = getPermissionForUserName(
-				irodsAbsolutePath, userName);
+		UserFilePermission derivedPermission = getPermissionForUserName(myPath,
+				userName);
 		boolean hasPermission = false;
 		if (derivedPermission != null) {
 			hasPermission = true;

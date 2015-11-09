@@ -296,7 +296,8 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("resoveAbsolutePathViaObjStat()");
 
-		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
+		ObjStat objStat = retrieveObjStat(MiscIRODSUtils
+				.checkPathSizeForMax(irodsAbsolutePath));
 		return resolveAbsolutePathGivenObjStat(objStat);
 
 	}

@@ -92,6 +92,10 @@ Fixed open flags on WRITE and WRITE_TRUNCATE in output stream code to fire postP
 
 Added check of empty CA since the default value of the certificateAuthority in GSIIRODSAccount is blank versus null.  User submitted patch.
 
+###  Trailing slash on path to CollectionAO.getPermissionForCollection() throws FileNotFoundException #37 
+
+Enhanced collection-related methods to tolerate trailing slashes on collections in various operations
+
 ### Misc
 
 Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium
