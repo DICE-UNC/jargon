@@ -88,6 +88,10 @@ These enhancements are used in the ModeShape, WebDav, REST, and cloud browser co
 
 Fixed open flags on WRITE and WRITE_TRUNCATE in output stream code to fire postProcForPut policy enforcement point.  This also required an iRODS fix 4.1.6+
 
+###  Jargon breaking GSI by zapping list of CAs #137 
+
+Added check of empty CA since the default value of the certificateAuthority in GSIIRODSAccount is blank versus null.  User submitted patch.
+
 ### Misc
 
 Lots of small fixes, pull requests, iRODS compatability tests and fixes through work with consortium

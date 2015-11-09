@@ -124,7 +124,7 @@ class GSIAuth extends AuthMechanism {
 
 		try {
 
-			if (caLocations != null) {
+			if (caLocations != null && caLocations.length() > 0) {
 				cog = CoGProperties.getDefault();
 				defaultCA = cog.getCaCertLocations();
 				cog.setCaCertLocations(caLocations);
