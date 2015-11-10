@@ -78,7 +78,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
@@ -181,10 +181,14 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteStringLength, final int intInfo)
-					throws JargonException {
+			throws JargonException {
 
 		log.debug("calling irods function with byte array");
-		log.debug("calling irods function with:{}", message);
+
+		if (intInfo != 1201) {
+			log.debug("calling irods function with:{}", message);
+		}
+
 		log.debug("api number is:{}", intInfo);
 
 		if (type == null || type.length() == 0) {
