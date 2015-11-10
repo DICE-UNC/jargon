@@ -42,7 +42,7 @@ public class PAMAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		// start ssl
 		log.info("startSSL for PAM auth");
@@ -73,8 +73,7 @@ public class PAMAuth extends AuthMechanism {
 		// if all went well (no exceptions) then the server is ready for the
 		// credential exchange, first grab an SSL enabled connection
 		log.debug("getting ssl socket factory");
-		SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory
-				.getDefault();
+		SSLSocketFactory sslSocketFactory = ctx.getSocketFactory();
 		log.debug("supported cyphers:{}",
 				sslSocketFactory.getSupportedCipherSuites());
 
@@ -97,18 +96,18 @@ public class PAMAuth extends AuthMechanism {
 		 */
 		if (log.isDebugEnabled()) {
 			sslSocket
-			.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-				@Override
-				public void handshakeCompleted(
-						final HandshakeCompletedEvent event) {
-					log.debug("Handshake finished!");
-					log.debug("\t CipherSuite:{}",
-							event.getCipherSuite());
-					log.debug("\t SessionId {}", event.getSession());
-					log.debug("\t PeerHost {}", event.getSession()
-							.getPeerHost());
-				}
-			});
+					.addHandshakeCompletedListener(new HandshakeCompletedListener() {
+						@Override
+						public void handshakeCompleted(
+								final HandshakeCompletedEvent event) {
+							log.debug("Handshake finished!");
+							log.debug("\t CipherSuite:{}",
+									event.getCipherSuite());
+							log.debug("\t SessionId {}", event.getSession());
+							log.debug("\t PeerHost {}", event.getSession()
+									.getPeerHost());
+						}
+					});
 		}
 
 		log.debug("starting SSL handshake");
@@ -191,7 +190,7 @@ public class PAMAuth extends AuthMechanism {
 				irodsAccount.getHomeDirectory(), irodsAccount.getZone(),
 				irodsAccount.getDefaultStorageResource());
 		irodsAccountUsingTemporaryIRODSPassword
-		.setAuthenticationScheme(AuthScheme.STANDARD);
+				.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
@@ -199,7 +198,7 @@ public class PAMAuth extends AuthMechanism {
 
 		AuthResponse authResponse = new AuthResponse();
 		authResponse
-		.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
@@ -211,7 +210,7 @@ public class PAMAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,
@@ -221,7 +220,7 @@ public class PAMAuth extends AuthMechanism {
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		IRODSAccount originalAuthenticatingAccount = irodsMidLevelProtocol
 				.getAuthResponse().getAuthenticatingIRODSAccount();
@@ -236,7 +235,7 @@ public class PAMAuth extends AuthMechanism {
 				.instance(
 						irodsMidLevelProtocol.getIrodsSession(),
 						irodsMidLevelProtocol.getAuthResponse()
-						.getAuthenticatedIRODSAccount(),
+								.getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());
 		actualProtocol.getAuthResponse().setAuthenticatingIRODSAccount(
 				originalAuthenticatingAccount);

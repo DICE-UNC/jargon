@@ -195,12 +195,13 @@ public class SettableJargonProperties implements JargonProperties {
 				.getIntraFileStatusCallbacksNumberCallsInterval();
 		intraFileStatusCallbacksTotalBytesInterval = jargonProperties
 				.getIntraFileStatusCallbacksTotalBytesInterval();
+		this.bypassSslCertChecks = jargonProperties.isBypassSslCertChecks();
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
@@ -236,7 +237,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
@@ -247,7 +248,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax
 	 * ()
@@ -296,7 +297,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isAllowPutGetResourceRedirects()
 	 */
@@ -320,7 +321,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeChecksumAfterTransfer()
 	 */
@@ -344,7 +345,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
@@ -380,7 +381,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
 	 * ()
@@ -392,7 +393,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
@@ -407,7 +408,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
@@ -423,7 +424,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getTransferThreadPoolMaxSimultaneousTransfers()
 	 */
@@ -434,7 +435,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalInputStreamBufferSize()
 	 */
@@ -445,7 +446,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalOutputStreamBufferSize()
 	 */
@@ -456,7 +457,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
 	 * ()
@@ -468,7 +469,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSendInputStreamBufferSize()
 	 */
@@ -479,7 +480,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInputToOutputCopyBufferByteSize()
 	 */
@@ -490,7 +491,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getLocalFileOutputStreamBufferSize()
 	 */
@@ -586,7 +587,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -596,7 +597,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -631,7 +632,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
@@ -704,7 +705,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
@@ -746,7 +747,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingDiscoveredServerPropertiesCache()
 	 */
@@ -767,7 +768,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
@@ -787,7 +788,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
 	 */
 	@Override
@@ -807,7 +808,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
 	 */
 	@Override
@@ -848,7 +849,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
@@ -994,7 +995,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -1119,7 +1120,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSocketRenewalIntervalInSeconds()
 	 */
@@ -1192,7 +1193,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isBypassSslCertChecks()
 	 */
