@@ -6,7 +6,6 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -16,9 +15,9 @@ import org.junit.Test;
  * Various multi-threaded access to iRODS files and streams. Right now this is
  * not incorporated into the functional test suite, and was more useful to
  * manually replicate this reported issue interactively.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class MultiThreadedFileOperationsFunctionalTest {
 
@@ -37,7 +36,7 @@ public class MultiThreadedFileOperationsFunctionalTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -70,12 +69,10 @@ public class MultiThreadedFileOperationsFunctionalTest {
 				@Override
 				public void run() {
 					try {
-						@SuppressWarnings("unused")
-						IRODSFile testFile = irodsFileSystem
-								.getIRODSFileFactory(irodsAccount)
-								.instanceIRODSFile(
-										targetIrodsCollection + "/"
-												+ testFileName + finalJ);
+						irodsFileSystem.getIRODSFileFactory(irodsAccount)
+						.instanceIRODSFile(
+								targetIrodsCollection + "/"
+										+ testFileName + finalJ);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Assert.fail("exception:" + e);

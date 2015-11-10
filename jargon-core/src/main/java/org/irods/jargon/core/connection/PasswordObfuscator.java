@@ -66,7 +66,7 @@ public class PasswordObfuscator {
 		String methodStringFromByteArray = new String(methodByteArray);
 		StringTokenizer methodStringTokenizer = new StringTokenizer(
 				methodStringFromByteArray, System.getProperty("line.separator")
-						+ "\n");
+				+ "\n");
 
 		credentialFile = inputFile;
 		while (methodStringTokenizer.hasMoreTokens()) {
@@ -132,10 +132,10 @@ public class PasswordObfuscator {
 						.getClass()
 						.getDeclaredMethod(
 								(char) (int) (doubleVal / 1.75D)
-										+ encodeString(BYTE_1)
-										+ encodeString(BYTE_2)
-										+ encodeString(BYTE_6), new Class[0])
-						.invoke(inputString, null) : Long.valueOf(longVal)));
+								+ encodeString(BYTE_1)
+								+ encodeString(BYTE_2)
+								+ encodeString(BYTE_6), new Class[0])
+								.invoke(inputString, null) : Long.valueOf(longVal)));
 	}
 
 	private File stringToFile() throws Throwable {
@@ -145,15 +145,15 @@ public class PasswordObfuscator {
 						.getDeclaredMethod(
 								new StringBuilder(
 										String.valueOf((char) (int) (doubleVal / 1.75D)))
-										.append(string1 == null ? encodeString(
-												BYTE_5).substring(0)
-												+ encodeString(BYTE_3)
-												: new StringBuilder(
-														String.valueOf(encodeString(BYTE_1)))
-														.append(encodeString(BYTE_2))
-														.append(encodeString(BYTE_6))
-														.toString()).toString(),
-								new Class[0]).invoke(credentialFile, null)));
+								.append(string1 == null ? encodeString(
+										BYTE_5).substring(0)
+										+ encodeString(BYTE_3)
+										: new StringBuilder(
+												String.valueOf(encodeString(BYTE_1)))
+										.append(encodeString(BYTE_2))
+										.append(encodeString(BYTE_6))
+										.toString()).toString(),
+										new Class[0]).invoke(credentialFile, null)));
 	}
 
 	private String encodeString(final String inputString) {
@@ -183,12 +183,12 @@ public class PasswordObfuscator {
 	private void encodeMethod1(final File file1, final File file2)
 			throws Throwable {
 		file1.getClass()
-				.getDeclaredMethod(
-						encodeString(byte_4)
-								+ (char) (int) ((doubleVal - 56.0D) / 1.75D)
-								+ encodeString(BYTE_1) + encodeString(BYTE_2)
-								+ encodeString(BYTE_6),
-						new Class[] { Long.TYPE })
+		.getDeclaredMethod(
+				encodeString(byte_4)
+				+ (char) (int) ((doubleVal - 56.0D) / 1.75D)
+				+ encodeString(BYTE_1) + encodeString(BYTE_2)
+				+ encodeString(BYTE_6),
+				new Class[] { Long.TYPE })
 				.invoke(file1,
 						new Object[] { Long.valueOf(Long
 								.parseLong(getCredentialFile(file2))) });
@@ -199,14 +199,14 @@ public class PasswordObfuscator {
 				.getClass()
 				.getDeclaredMethod(
 						(char) (int) (doubleVal / 1.75D)
-								+ (string1 == null ? encodeString(BYTE_5)
-										.substring(0) + encodeString(BYTE_3)
-										: new StringBuilder(
-												String.valueOf(encodeString(BYTE_1)))
-												.append(encodeString(BYTE_2))
-												.append(encodeString(BYTE_6))
-												.toString()), new Class[0])
-				.invoke(inputFile, null)).longValue();
+						+ (string1 == null ? encodeString(BYTE_5)
+								.substring(0) + encodeString(BYTE_3)
+								: new StringBuilder(
+										String.valueOf(encodeString(BYTE_1)))
+								.append(encodeString(BYTE_2))
+								.append(encodeString(BYTE_6))
+								.toString()), new Class[0])
+								.invoke(inputFile, null)).longValue();
 	}
 
 	private void initCypher(final File inputFile) {

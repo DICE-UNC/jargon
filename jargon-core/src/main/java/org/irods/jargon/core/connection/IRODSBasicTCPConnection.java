@@ -24,9 +24,9 @@ import org.slf4j.LoggerFactory;
  * <code>IRODScommands</code> object wrapping this connection, and
  * <code>IRODSCommands</code> does maintain synchronized access to operations
  * that read and write to this connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class IRODSBasicTCPConnection extends AbstractConnection {
 
@@ -36,7 +36,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * <p/>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -48,6 +48,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
+
 			final IRODSProtocolManager irodsProtocolManager,
 			final IRODSSession irodsSession) throws JargonException {
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
@@ -66,7 +67,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * <p/>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration

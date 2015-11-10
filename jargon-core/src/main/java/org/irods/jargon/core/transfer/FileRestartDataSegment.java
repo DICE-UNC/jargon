@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
 /**
  * Data segment in iRODS file, analagous to dataSeg_t in iRODS
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileRestartDataSegment {
 	/**

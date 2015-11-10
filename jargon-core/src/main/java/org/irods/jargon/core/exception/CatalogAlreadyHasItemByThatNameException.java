@@ -4,9 +4,9 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 
 /**
  * The given item is already in the catalog
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CatalogAlreadyHasItemByThatNameException extends JargonException {
 	/**

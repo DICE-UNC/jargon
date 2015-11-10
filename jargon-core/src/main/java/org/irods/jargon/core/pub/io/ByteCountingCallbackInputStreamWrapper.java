@@ -12,9 +12,9 @@ import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 /**
  * Wrapper for an input stream that counts the number of bytes read and
  * processes status callbacks as required
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
@@ -24,7 +24,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 	/**
 	 * Default constructor gives a required listener for status callbacks on
 	 * stream operations
-	 * 
+	 *
 	 * @param connectionProgressStatusListner
 	 *            {@link ConnectionProgressStatusListener} that can handle
 	 *            callbacks as the stream is read. This is required.
@@ -56,7 +56,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[])
 	 */
 	@Override
@@ -93,13 +93,13 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 			ConnectionProgressStatus status = ConnectionProgressStatus
 					.instanceForReceive(read);
 			connectionProgressStatusListener
-					.connectionProgressStatusCallback(status);
+			.connectionProgressStatusCallback(status);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#available()
 	 */
 	@Override
@@ -109,7 +109,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#close()
 	 */
 	@Override
@@ -119,7 +119,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#mark(int)
 	 */
 	@Override
@@ -129,7 +129,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#markSupported()
 	 */
 	@Override
@@ -140,7 +140,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#reset()
 	 */
 	@Override
@@ -150,7 +150,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#skip(long)
 	 */
 	@Override

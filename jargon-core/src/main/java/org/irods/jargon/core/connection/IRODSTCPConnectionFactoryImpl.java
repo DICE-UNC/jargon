@@ -10,10 +10,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation of a connection factory for producing the default TCP/IP
  * connection layer.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 
@@ -37,6 +37,7 @@ class IRODSTCPConnectionFactoryImpl extends IRODSConnectionFactory {
 				irodsSession
 						.buildPipelineConfigurationBasedOnJargonProperties(),
 				irodsProtocolManager, irodsSession);
+
 		return connection;
 	}
 

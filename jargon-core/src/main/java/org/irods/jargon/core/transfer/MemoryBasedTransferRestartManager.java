@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
 /**
  * Simple restart manager that exists in an in-memory map. This version is
  * fairly naive and doesn't really support concurrent restarts.
- * 
- * 
+ *
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
@@ -30,7 +30,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractRestartManager#storeRestart(org
 	 * .irods.jargon.core.transfer.FileRestartInfo)
@@ -38,7 +38,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	@Override
 	public FileRestartInfoIdentifier storeRestart(
 			final FileRestartInfo fileRestartInfo)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("storeRestart()");
 		if (fileRestartInfo == null) {
@@ -58,7 +58,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractRestartManager#deleteRestart(org
 	 * .irods.jargon.core.transfer.FileRestartInfoIdentifier)
@@ -66,7 +66,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	@Override
 	public void deleteRestart(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("deleteRestart()");
 		if (fileRestartInfoIdentifier == null) {
@@ -81,7 +81,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractRestartManager#retrieveRestart
 	 * (org.irods.jargon.core.transfer.FileRestartInfoIdentifier)
@@ -89,7 +89,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	@Override
 	public FileRestartInfo retrieveRestart(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("retrieveRestart()");
 		if (fileRestartInfoIdentifier == null) {
@@ -103,7 +103,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractRestartManager#updateSegment(org
 	 * .irods.jargon.core.transfer.FileRestartInfo,
@@ -112,7 +112,7 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 	@Override
 	public void updateSegment(final FileRestartInfo fileRestartInfo,
 			final FileRestartDataSegment fileRestartDataSegment)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		log.info("updateSegment()");
 
@@ -162,14 +162,14 @@ public class MemoryBasedTransferRestartManager extends AbstractRestartManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.transfer.AbstractRestartManager#
 	 * incrementRestartAttempts(org.irods.jargon.core.transfer.FileRestartInfo)
 	 */
 	@Override
 	public FileRestartInfo incrementRestartAttempts(
 			final FileRestartInfo fileRestartInfo)
-			throws RestartFailedException, FileRestartManagementException {
+					throws RestartFailedException, FileRestartManagementException {
 
 		log.info("incrementRestartAttempts()");
 		if (fileRestartInfo == null) {

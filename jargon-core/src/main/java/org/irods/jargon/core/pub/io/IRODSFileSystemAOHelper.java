@@ -16,9 +16,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Helper functions for the <code>IRODSFileSystemAO</code>, essentially to make
  * that class a bit more compact.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSFileSystemAOHelper extends AOHelper {
 
@@ -26,7 +26,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 
 	/**
 	 * List all directories under the path.
-	 * 
+	 *
 	 * @param path
 	 *            <code>String</code> with the absolute path to the iRODS parent
 	 *            collection. If a data object is described by the path, the
@@ -48,7 +48,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		CollectionAOHelper
-				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+		.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		builder.addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_COLL_PARENT_NAME,
 				QueryConditionOperators.EQUAL, path);
@@ -57,7 +57,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	/**
 	 * Build a query for all files under a path, adding extra information. Note
 	 * that this query will return a list of all replicas.
-	 * 
+	 *
 	 * @param path
 	 *            <code>String</code> with the absolute path to the iRODS parent
 	 *            collection.
@@ -68,7 +68,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 */
 	public static void buildQueryListAllDataObjectsWithSizeAndDateInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws JargonException {
+					throws JargonException {
 
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
@@ -93,7 +93,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * Build the gen query to list all data objects, including user access
 	 * information. The selects and conditions are appended to the provided
 	 * builder
-	 * 
+	 *
 	 * @param path
 	 *            <code>String</code> with the parent directory absolute path
 	 * @param builder
@@ -102,7 +102,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 */
 	public static void buildQueryListAllDataObjectsWithUserAccessInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws JargonException {
+					throws JargonException {
 
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
@@ -115,15 +115,15 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		try {
 			buildDataObjectQuerySelects(builder);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+			.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, path);
+							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_COLL_NAME,
+									QueryConditionOperators.EQUAL, path);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException("query exception", e);
 		}
@@ -133,11 +133,11 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * Build the necessary GenQuery selects to query data objects for
 	 * information. Used in many common queries for listing data objects, as in
 	 * an ils-like command.
-	 * 
+	 *
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be augmented with the
 	 *            necessary selects
-	 * 
+	 *
 	 */
 	public static void buildDataObjectQuerySelects(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
@@ -147,21 +147,21 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
 
 	}
 
 	/**
 	 * Build a query for all files under a path. Note that files that are
 	 * replicated are only returned once.
-	 * 
+	 *
 	 * @param path
 	 *            <code>String</code> with the absolute path to a parent
 	 *            directory
@@ -183,10 +183,10 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, path);
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+			.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, path);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -197,14 +197,14 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * Append to the provided <code>IRODSGenQueryBuilder</code> the selects and
 	 * conditions necessary to list all directories under a parent path
 	 * including permissions.
-	 * 
+	 *
 	 * @param path
 	 * @param builder
 	 * @throws GenQueryBuilderException
 	 */
 	public static void buildQueryListAllDirsWithUserAccessInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
 		}
@@ -214,17 +214,17 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		CollectionAOHelper
-				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+		.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		builder.addSelectAsGenQueryValue(
 				RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
 				.addSelectAsGenQueryValue(
 						RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
-				.addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_COLL_PARENT_NAME,
-						QueryConditionOperators.EQUAL, path);
+						.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
+						.addSelectAsGenQueryValue(
+								RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
+								.addConditionAsGenQueryField(
+										RodsGenQueryEnum.COL_COLL_PARENT_NAME,
+										QueryConditionOperators.EQUAL, path);
 	}
 
 }

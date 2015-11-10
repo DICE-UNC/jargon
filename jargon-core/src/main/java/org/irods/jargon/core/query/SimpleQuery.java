@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -12,15 +12,15 @@ import java.util.List;
  * configured within iRODS.
  * <p/>
  * This class is immutable and thread-safe.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SimpleQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Creates a new instance of a <code>SimpleQuery</code> object.
-	 * 
+	 *
 	 * @param queryString
 	 *            <code>String</code> with the sql query to execute.
 	 * @param arguments
@@ -38,7 +38,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Creates an instance that has no arguments.
-	 * 
+	 *
 	 * @param queryString
 	 *            <code>String</code> with the sql query to execute.
 	 * @param continuationValue
@@ -55,7 +55,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	/**
 	 * Creates an instance of a <code>SimpleQuery</code> object giving one
 	 * argument.
-	 * 
+	 *
 	 * @param queryString
 	 *            <code>String</code> with the sql query to execute.
 	 * @param arg
@@ -84,7 +84,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	/**
 	 * Creates an instance of a <code>SimpleQuery</code> object giving two
 	 * arguments.
-	 * 
+	 *
 	 * @param queryString
 	 *            <code>String</code> with the sql query to execute.
 	 * @param arg1
@@ -119,7 +119,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 
 	/**
 	 * Private constructor, use instance methods to create
-	 * 
+	 *
 	 * @param queryString
 	 * @param arguments
 	 * @param continuationValue

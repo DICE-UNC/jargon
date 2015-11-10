@@ -672,14 +672,17 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Checks the given path for a length violation
+	 * Checks the given path for a length violation,this method will also strip
+	 * a trailing slash
 	 *
 	 * @param path
 	 *            <code>String</code> with an iRODS path to check
+	 * @return <code>String</code> with the path, possibly with the trailing
+	 *         slashes truncated
 	 * @throws PathTooLongException
 	 *             thrown if the path is too long
 	 */
-	public static void checkPathSizeForMax(final String path)
+	public static String checkPathSizeForMax(final String path)
 			throws PathTooLongException {
 		if (path == null) {
 			throw new IllegalArgumentException("null path");
@@ -689,6 +692,19 @@ public class MiscIRODSUtils {
 			throw new PathTooLongException("Path is too long");
 		}
 
+		String retPath = null;
+
+		if (path.endsWith("/")) {
+			if (path.length() == 1) {
+				retPath = path;
+			} else {
+				retPath = path.substring(0, path.length() - 1);
+			}
+		} else {
+			retPath = path;
+		}
+
+		return retPath;
 	}
 
 	/**

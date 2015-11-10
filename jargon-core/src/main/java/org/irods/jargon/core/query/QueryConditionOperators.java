@@ -11,10 +11,10 @@ public enum QueryConditionOperators {
 
 	NOT_EQUAL("<>"), LESS_THAN_OR_EQUAL_TO("<="), GREATER_THAN_OR_EQUAL_TO(">="), NOT_LIKE(
 			"not like"), SOUNDS_LIKE("sounds like"), SOUNDS_NOT_LIKE(
-					"sounds not like"), TABLE("table"), NUMERIC_LESS_THAN("n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO(
-							"n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO("n>="), NUMERIC_GREATER_THAN(
-									"n>"), NUMERIC_EQUAL("n="), EQUAL("="), LESS_THAN("<"), GREATER_THAN(
-											">"), IN("in"), BETWEEN("between"), LIKE("like");
+			"sounds not like"), TABLE("table"), NUMERIC_LESS_THAN("n<"), NUMERIC_LESS_THAN_OR_EQUAL_TO(
+			"n<="), NUMERIC_GREATER_THAN_OR_EQUAL_TO("n>="), NUMERIC_GREATER_THAN(
+			"n>"), NUMERIC_EQUAL("n="), EQUAL("="), LESS_THAN("<"), GREATER_THAN(
+			">"), IN("in"), BETWEEN("between"), LIKE("like");
 
 	private String operatorAsString;
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -14,10 +14,10 @@ import org.irods.jargon.core.query.JargonQueryException;
  * This access object can accept a query in iquest form, and will process that
  * query and return a result set with the query response and other related
  * information.
- * 
- * 
+ *
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 
@@ -30,7 +30,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * <code>closeResults()</code> when done with the result set. Alternately,
 	 * the <code>executeIRODSQueryAndCloseResults()</code> method may be
 	 * employed.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given iquest-like query
@@ -44,7 +44,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQuery(
 			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
-			throws JargonException, JargonQueryException;
+					throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -56,7 +56,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * <code>closeResults()</code> when done with the result set. Alternately,
 	 * the <code>executeIRODSQueryAndCloseResults()</code> method may be
 	 * employed.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given iquest-like query
@@ -73,13 +73,13 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryInZone(
 			AbstractIRODSGenQuery irodsQuery, int continueIndex, String zoneName)
-			throws JargonException, JargonQueryException;
+					throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object. This method allows partial starts to do paging of large query
 	 * results
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given iquest-like query
@@ -93,7 +93,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryWithPaging(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-			throws JargonException, JargonQueryException;
+					throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -102,7 +102,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * <p/>
 	 * This version of the method allows the optional specification of a zone to
 	 * run the query in.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given iquest-like query
@@ -125,7 +125,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Execute a re-query meant to retrieve more results. The previous result
 	 * set contains information to re-query iRODS. This query is targeted at a
 	 * specific zone
-	 * 
+	 *
 	 * @param irodsQueryResultSet
 	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *            contains the results of the previous query.
@@ -138,11 +138,11 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet getMoreResultsInZone(
 			IRODSQueryResultSet irodsQueryResultSet, String zoneName)
-			throws JargonException, JargonQueryException;
+					throws JargonException, JargonQueryException;
 
 	/**
 	 * Close the result set that had been continued
-	 * 
+	 *
 	 * @param resultSet
 	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *            contains the results of the previous query.
@@ -161,7 +161,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * for 'session per request' situations, such as mid-tier web applications,
 	 * where connections are not held for stateful interaction. In these
 	 * situations, query can be accomplished with an offset.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given query
@@ -175,7 +175,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex)
-			throws JargonException, JargonQueryException;
+					throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -190,7 +190,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * for 'session per request' situations, such as mid-tier web applications,
 	 * where connections are not held for stateful interaction. In these
 	 * situations, query can be accomplished with an offset.
-	 * 
+	 *
 	 * @param irodsQuery
 	 *            {@link org.irods.jargon.core.query.AbstractIRODSGenQuery} that
 	 *            will wrap the given query

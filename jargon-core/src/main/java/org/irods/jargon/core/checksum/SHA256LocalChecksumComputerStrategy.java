@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.checksum;
 
@@ -14,18 +14,18 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Compute an SHA256 checksum on a local file
- * 
+ *
  * @author Mike Conway - DICE
  */
 public class SHA256LocalChecksumComputerStrategy extends
-		AbstractChecksumComputeStrategy {
+AbstractChecksumComputeStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(SHA256LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.AbstractChecksumComputer#
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */

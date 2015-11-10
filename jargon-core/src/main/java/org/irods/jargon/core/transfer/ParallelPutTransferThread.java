@@ -20,13 +20,13 @@ import org.slf4j.LoggerFactory;
  * and is not meant for public API use. See
  * {@link org.irods.jargon.core.pub.DataTransferOperations} for public API used
  * for file transfers.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ParallelPutTransferThread extends
-		AbstractParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+AbstractParallelTransferThread implements
+Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
@@ -47,7 +47,7 @@ public final class ParallelPutTransferThread extends
 	 * <code>ParalellPutFileTransferStrategy</code>. This is an immutable object
 	 * , as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
-	 * 
+	 *
 	 * @param parallelPutFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy}
 	 *            that controls the transfer threads.
@@ -96,9 +96,9 @@ public final class ParallelPutTransferThread extends
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsLatency(),
+					.getParallelTcpPerformancePrefsLatency(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsBandwidth());
+					.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
@@ -229,7 +229,7 @@ public final class ParallelPutTransferThread extends
 		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
 		// );
 		buffer = new byte[parallelPutFileTransferStrategy.getJargonProperties()
-				.getParallelCopyBufferSize()];
+		                  .getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -238,7 +238,7 @@ public final class ParallelPutTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -276,11 +276,11 @@ public final class ParallelPutTransferThread extends
 
 				if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 					parallelPutFileTransferStrategy.getRestartManager()
-							.updateOffsetForSegment(
-									parallelPutFileTransferStrategy
-											.getFileRestartInfo()
-											.identifierFromThisInfo(),
-									getThreadNumber(), offset);
+					.updateOffsetForSegment(
+							parallelPutFileTransferStrategy
+							.getFileRestartInfo()
+							.identifierFromThisInfo(),
+							getThreadNumber(), offset);
 				}
 
 				// How much to read/write
@@ -335,14 +335,14 @@ public final class ParallelPutTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("read/write loop at top");
 
 				read = localRandomAccessFile.read(buffer, 0, (int) Math.min(
 						parallelPutFileTransferStrategy.getJargonProperties()
-								.getParallelCopyBufferSize(), transferLength));
+						.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
 
@@ -363,10 +363,10 @@ public final class ParallelPutTransferThread extends
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-								.getConnectionProgressStatusListener()
-								.connectionProgressStatusCallback(
-										ConnectionProgressStatus
-												.instanceForSend(read));
+						.getConnectionProgressStatusListener()
+						.connectionProgressStatusCallback(
+								ConnectionProgressStatus
+								.instanceForSend(read));
 					}
 
 					log.debug("wrote data to the buffer");
@@ -383,12 +383,12 @@ public final class ParallelPutTransferThread extends
 						log.debug("checking total written for this thread");
 						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
 							parallelPutFileTransferStrategy.getRestartManager()
-									.updateLengthForSegment(
-											parallelPutFileTransferStrategy
-													.getFileRestartInfo()
-													.identifierFromThisInfo(),
-											getThreadNumber(),
-											totalWrittenSinceLastRestartUpdate);
+							.updateLengthForSegment(
+									parallelPutFileTransferStrategy
+									.getFileRestartInfo()
+									.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 						}
@@ -416,12 +416,12 @@ public final class ParallelPutTransferThread extends
 				log.debug("checking total written for this thread");
 				if (totalWrittenSinceLastRestartUpdate > 0) {
 					parallelPutFileTransferStrategy.getRestartManager()
-							.updateLengthForSegment(
-									parallelPutFileTransferStrategy
-											.getFileRestartInfo()
-											.identifierFromThisInfo(),
-									getThreadNumber(),
-									totalWrittenSinceLastRestartUpdate);
+					.updateLengthForSegment(
+							parallelPutFileTransferStrategy
+							.getFileRestartInfo()
+							.identifierFromThisInfo(),
+							getThreadNumber(),
+							totalWrittenSinceLastRestartUpdate);
 					log.debug("signal storage of new info");
 				}
 

@@ -5,9 +5,9 @@ package org.irods.jargon.core.exception;
 
 /**
  * -806000 error in iRODS caused by catalog sql exception.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CatalogSQLException extends InternalIrodsOperationException {
 

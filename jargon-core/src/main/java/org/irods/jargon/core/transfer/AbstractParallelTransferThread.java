@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclasss for a parallel file transfer operation
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AbstractParallelTransferThread {
 
@@ -135,7 +135,7 @@ public class AbstractParallelTransferThread {
 	/**
 	 * Any exception that occurs in this transfer thread is saved so that the
 	 * parallel transfer process can access it and handle any errors.
-	 * 
+	 *
 	 * @return <code>Exception</code> that occured in this thread, or
 	 *         <code>null</code> if no error occurred.
 	 */

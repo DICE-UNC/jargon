@@ -75,7 +75,7 @@ public class GeneralAdminInpTest {
 	@Test(expected = JargonException.class)
 	public void testModifyUserTypeNullUser() throws Exception {
 		GeneralAdminInp
-				.instanceForModifyUserType(null, UserTypeEnum.RODS_ADMIN);
+		.instanceForModifyUserType(null, UserTypeEnum.RODS_ADMIN);
 	}
 
 	@Test(expected = JargonException.class)

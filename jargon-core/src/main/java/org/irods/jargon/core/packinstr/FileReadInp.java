@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
  * <p/>
  * This packing instruction is used to read an input stream using the
  * rcStreamRead function in iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileReadInp extends AbstractIRODSPackingInstruction {
 
@@ -28,7 +28,7 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Static initializer creates a version of the packing instruction suitable
 	 * for reading the stream data
-	 * 
+	 *
 	 * @param fileDescriptor
 	 *            <code>int</code> with the file descriptor bound to the stream
 	 *            in iRODS.
@@ -44,7 +44,7 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Private constructor.
-	 * 
+	 *
 	 * @param apiNumber
 	 *            <code>int</code> with the appropriate API number for this
 	 *            invocation

@@ -14,9 +14,9 @@ import org.junit.Test;
 
 /**
  * Test for
- * 
+ *
  * @author mikeconway
- * 
+ *
  */
 public class TestMetadataBug1042 {
 
@@ -53,9 +53,9 @@ public class TestMetadataBug1042 {
 		/*
 		 * uncomment this if you want to add the avu data here or test this
 		 * function
-		 * 
+		 *
 		 * AvuData avuData = AvuData.instance(attribute, value, "");
-		 * 
+		 *
 		 * dataObjectAO.addAVUMetadata(fileName, avuData);
 		 */
 

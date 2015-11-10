@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 /**
  * A user in the IRODS system. This class is not immutable, and should not be
  * shared between threads.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class User extends IRODSDomainObject {
 
@@ -28,7 +28,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Name of user
-	 * 
+	 *
 	 * @return <code>String</code> with name of user.
 	 */
 	public String getName() {
@@ -38,7 +38,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get the user name in the standard user#zone format. This is the standard
 	 * for displays of user names in iRODS user interfaces.
-	 * 
+	 *
 	 * @return <code>String</code> with the extended zone
 	 */
 	public String getNameWithZone() {
@@ -54,7 +54,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set name of user
-	 * 
+	 *
 	 * @param name
 	 *            <code>String</code> with the name of the user.
 	 */
@@ -64,7 +64,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the type of user
-	 * 
+	 *
 	 * @return <code>UserTypeEnum</code> value with type of user
 	 */
 	public UserTypeEnum getUserType() {
@@ -73,7 +73,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the type of user
-	 * 
+	 *
 	 * @param userType
 	 *            <code>UserTypeEnum</code> value with type of user
 	 */
@@ -85,7 +85,7 @@ public final class User extends IRODSDomainObject {
 	 * Get the distinguished name, if applicable. Note that, by default, the
 	 * distinguished name is not retrieved unless asked for in the various query
 	 * methods.
-	 * 
+	 *
 	 * @return <code>String</code> with the distinguished name
 	 */
 	public String getUserDN() {
@@ -94,7 +94,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the distinguished name of the user, if applicable
-	 * 
+	 *
 	 * @param userDN
 	 *            <code>String<code> with the distinguished name of the user.
 	 */
@@ -130,7 +130,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the unique id of the user in the catalog
-	 * 
+	 *
 	 * @return <code>int</code> with the unique user id
 	 */
 	public String getId() {
@@ -139,7 +139,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the unique id of the user in the catalog
-	 * 
+	 *
 	 * @param id
 	 *            <code>int</code> with the unique userid
 	 */
@@ -149,7 +149,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the zone name for the user
-	 * 
+	 *
 	 * @return <code>String</code> with the zone name for the user
 	 */
 	public String getZone() {
@@ -158,7 +158,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the user zone
-	 * 
+	 *
 	 * @param zone
 	 *            <code>String</code> with the zone
 	 */
@@ -168,7 +168,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get misc info for the user
-	 * 
+	 *
 	 * @return <code>String</code> with the user misc info
 	 */
 	public String getInfo() {
@@ -177,7 +177,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the misc info for the user
-	 * 
+	 *
 	 * @param info
 	 *            <code>String</code> with the user misc info
 	 */
@@ -187,7 +187,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the comment for the user
-	 * 
+	 *
 	 * @return <code>String</code> with the user comment info
 	 */
 	public String getComment() {
@@ -196,7 +196,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the comment for the user
-	 * 
+	 *
 	 * @param comment
 	 *            <code>String</code> with the comment for the user
 	 */
@@ -206,7 +206,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the create time for the user
-	 * 
+	 *
 	 * @return {@link Date} user was created
 	 */
 	public Date getCreateTime() {
@@ -215,7 +215,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the create time for the user
-	 * 
+	 *
 	 * @param date
 	 *            {@link Date} user was created
 	 */
@@ -225,7 +225,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Get the last modified date for the user
-	 * 
+	 *
 	 * @return {@link Date} user was modified
 	 */
 	public Date getModifyTime() {
@@ -234,7 +234,7 @@ public final class User extends IRODSDomainObject {
 
 	/**
 	 * Set the last modified date for the user
-	 * 
+	 *
 	 * @param modifyTime
 	 *            {@link Date} user was modified
 	 */

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -19,11 +19,11 @@ import org.irods.jargon.core.packinstr.Tag;
 /**
  * Support for PAM (plug-able authentication module) contributed by Chris Smith
  * for iRODS 3.2+
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  *         see lib/core/src/cientLogin.c for main driver program
- * 
+ *
  *         see lib/core/src/ sslSockCom.c
  */
 public class PAMAuth extends AuthMechanism {
@@ -38,9 +38,6 @@ public class PAMAuth extends AuthMechanism {
 		boolean needToWrapWithSsl = irodsCommands.getIrodsConnection()
 				.getEncryptionType() == EncryptionType.NONE;
 
-		/*
-		 * Avoid messing with input params,which are final.
-		 */
 		AbstractIRODSMidLevelProtocol irodsCommandsToUse = null;
 		/*
 		 * Save the original commands if we will temporarily use an SSL
@@ -110,14 +107,13 @@ public class PAMAuth extends AuthMechanism {
 				.setAuthenticationScheme(AuthScheme.STANDARD);
 		authResponse
 				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
 
-		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
-		authResponse.setStartupResponse(startupResponseData);
-		authResponse.setSuccessful(true);
-		irodsCommandsToUse.setAuthResponse(authResponse);
+		authResponse
+				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 
 		return irodsCommandsToUse;
 

@@ -5,9 +5,9 @@ package org.irods.jargon.core.connection;
 
 /**
  * Handy place to put common constants for connection-related purposes
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ConnectionConstants {
 
@@ -33,12 +33,12 @@ public final class ConnectionConstants {
 	 * transfers
 	 */
 	public static final long MIN_FILE_RESTART_SIZE = 1 * 1024 * 1024; // FIXME:
-																		// artificially
-																		// low
-																		// 64 *
-																		// 1024
-																		// *
-																		// 1024;
+	// artificially
+	// low
+	// 64 *
+	// 1024
+	// *
+	// 1024;
 
 	/**
 	 * Maximum number of restart attempts before failing in large file restart

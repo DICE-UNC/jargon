@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -11,7 +11,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class MemoryBasedTransferRestartManagerTest {
 

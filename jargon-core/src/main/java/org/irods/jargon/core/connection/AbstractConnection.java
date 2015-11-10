@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * indicators to determine which techniques are available depending on the lower
  * level implementation. This will evolve over time but will not change the
  * public API.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public abstract class AbstractConnection {
 
@@ -152,7 +152,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Constructor with account info to set up socket and information about
 	 * buffering and other networking details
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -169,6 +169,7 @@ public abstract class AbstractConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager,
 			final IRODSSession irodsSession) throws JargonException {
+
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -276,7 +277,7 @@ public abstract class AbstractConnection {
 	 * <p/>
 	 * At the successful completion of this method, the networking is created,
 	 * though the handshake and authentication steps remain
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains information on host/port
 	 * @param startupResponseData
@@ -303,7 +304,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Writes value.length bytes to this output stream.
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws NullPointerException
@@ -352,7 +353,7 @@ public abstract class AbstractConnection {
 	 * Writes a certain length of bytes at some offset in the value array to the
 	 * output stream, by converting the value to a byte array and calling send(
 	 * byte[] value ).
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @param offset
@@ -398,7 +399,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Writes value.length bytes to this output stream.
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws IOException
@@ -416,7 +417,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Writes an int to the output stream as four bytes, network order (high
 	 * byte first).
-	 * 
+	 *
 	 * @param value
 	 *            value to be sent
 	 * @throws IOException
@@ -433,7 +434,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Writes the given input stream content, for the given length, to the iRODS
 	 * agent
-	 * 
+	 *
 	 * @param source
 	 *            <code>InputStream</code> to the data to be written. This
 	 *            stream will have been buffered by the caller, no buffering is
@@ -509,7 +510,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Flushes all data in the output stream and sends it to the server.
-	 * 
+	 *
 	 * @throws NullPointerException
 	 *             Send buffer empty
 	 * @throws IOException
@@ -535,7 +536,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Reads a byte from the server.
-	 * 
+	 *
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
@@ -546,7 +547,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Reads an int from the server
-	 * 
+	 *
 	 * @param value
 	 * @return
 	 * @throws JargonException
@@ -568,7 +569,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
 	 * from iRODS to the given <code>OutputStream</code>.
-	 * 
+	 *
 	 * @param destination
 	 *            <code>OutputStream</code> to which data will be streamed from
 	 *            iRODS. Note that this method will wrap the output stream with
@@ -646,7 +647,7 @@ public abstract class AbstractConnection {
 	/**
 	 * Reads a byte array from the server. Blocks until <code>length</code>
 	 * number of bytes are read.
-	 * 
+	 *
 	 * @param length
 	 *            length of byte array to be read
 	 * @return byte[] bytes read from the server
@@ -805,7 +806,7 @@ public abstract class AbstractConnection {
 	 * <code>IRODSConnection</code> is created outside of the normal factory.
 	 * <p/>
 	 * For general usage, this method should not called.
-	 * 
+	 *
 	 * @param connected
 	 *            the connected to set
 	 */
@@ -815,7 +816,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Close down the actual network connection
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract void shutdown() throws JargonException;

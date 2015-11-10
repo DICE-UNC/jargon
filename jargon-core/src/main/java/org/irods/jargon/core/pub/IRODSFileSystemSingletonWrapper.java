@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -12,9 +12,9 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
  * Handy wrapper for {@link IRODSFileSystem} that makes it a singleton. The base
  * <code>IRODSFileSystem</code> doesn't impose this singleton pattern, so this
  * separate bit of code does that for you if you think it fits your situation.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public final class IRODSFileSystemSingletonWrapper implements Serializable {
 
@@ -26,7 +26,7 @@ public final class IRODSFileSystemSingletonWrapper implements Serializable {
 
 	/**
 	 * Obtain a singleton instance
-	 * 
+	 *
 	 * @return {@link IRODSFileSystem}
 	 * @throws JargonException
 	 */

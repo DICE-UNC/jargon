@@ -83,7 +83,7 @@ public class ExecMyRuleInp_PITest {
 		String testFileName = "/this/is/only/a/test";
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
 		ruleBuilder.append(testFileName);
 		ruleBuilder.append("'%*Operation=ChksumAll\n");

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.domain;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.packinstr.DataObjInpForFileLock;
 
 /**
  * Information regarding file locks in iRODS
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileLock {
 
@@ -81,7 +81,7 @@ public class FileLock {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

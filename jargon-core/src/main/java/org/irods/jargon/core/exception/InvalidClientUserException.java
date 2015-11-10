@@ -8,7 +8,7 @@ import org.irods.jargon.core.protovalues.ErrorEnum;
 public final class InvalidClientUserException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1642876648704250220L;
 

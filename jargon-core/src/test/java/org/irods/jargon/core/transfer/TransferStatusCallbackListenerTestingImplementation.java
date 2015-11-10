@@ -10,12 +10,12 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferType;
 /***
  * Testing implementation of a status callback listener that can keep telemetry
  * on callbacks
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TransferStatusCallbackListenerTestingImplementation implements
-		TransferStatusCallbackListener {
+TransferStatusCallbackListener {
 
 	/**
 	 * Just counts the initial file callbacks no matter what

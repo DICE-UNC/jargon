@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a DataObjInp operation for management of special collections
  * (imcoll operations). This specifically unmounts a special collection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 
@@ -23,7 +23,7 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction to unmount a special collection
-	 * 
+	 *
 	 * @param destResourceName
 	 *            <code>String</code> with the absolute path for the mounted
 	 *            collection to be unmounted
@@ -43,7 +43,7 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 	/**
 	 * Private constructor, use the instance methods to create the proper
 	 * instance.
-	 * 
+	 *
 	 * @param collectionToUnmountAbsolutePath
 	 *            <code>String</code> with the absolute path to the collection
 	 *            to be unmounted
@@ -90,7 +90,7 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 * 
+	 *
 	 * <DataObjInp_PI> <objPath>/test1/home/test1/linked</objPath>
 	 * <createMode>0</createMode> <openFlags>0</openFlags> <offset>0</offset>
 	 * <dataSize>0</dataSize> <numThreads>0</numThreads> <oprType>0</oprType>

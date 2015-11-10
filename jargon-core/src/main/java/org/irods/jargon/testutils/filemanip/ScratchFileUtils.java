@@ -41,7 +41,7 @@ public class ScratchFileUtils {
 	public void createScratchDirIfNotExists(final String pathUnderScratch) {
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ pathUnderScratch);
+				+ pathUnderScratch);
 		scratchDir.mkdirs();
 	}
 
@@ -53,7 +53,7 @@ public class ScratchFileUtils {
 	 * Utility to check if a given directory exists, if so, delete it, then
 	 * reinitialize it as an empty directory. Handy for tests where you want an
 	 * empty scratch directory at test initialization or tear-down.
-	 * 
+	 *
 	 * @param pathUnderScratch
 	 *            <code>String</code> containing a relative path (no leading
 	 *            '/') under the configured scratch directory pointing to the
@@ -63,7 +63,7 @@ public class ScratchFileUtils {
 			final String pathUnderScratch) {
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ pathUnderScratch);
+				+ pathUnderScratch);
 
 		// if exists, delete it
 		if (scratchDir.exists()) {
@@ -95,7 +95,7 @@ public class ScratchFileUtils {
 
 	/**
 	 * Check if the given file exists in the scratch area
-	 * 
+	 *
 	 * @param pathUnderScratch
 	 *            <code>String</code> giving the relative path of the
 	 *            file/directory underneath the scratch area (no leading / delim
@@ -105,7 +105,7 @@ public class ScratchFileUtils {
 	public boolean checkIfFileExistsInScratch(final String pathUnderScratch) {
 		File targetFile = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ pathUnderScratch);
+				+ pathUnderScratch);
 
 		return targetFile.exists();
 	}
@@ -119,7 +119,7 @@ public class ScratchFileUtils {
 	/**
 	 * Convenience method to tack the relative path and file name to the known
 	 * scratch path, while creating any necessary intermediate directories
-	 * 
+	 *
 	 * @parampath <code>String</code> giving relative path (no leading '/') to
 	 *            the desired new subdirectory file name. No leading '/' used
 	 * @return <code>String</code> absolute path to the file name, up to the

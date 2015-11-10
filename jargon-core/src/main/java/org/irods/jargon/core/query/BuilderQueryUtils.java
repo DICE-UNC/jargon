@@ -5,7 +5,7 @@ package org.irods.jargon.core.query;
 
 /**
  * @author mikeconway
- * 
+ *
  */
 public class BuilderQueryUtils {
 
@@ -18,7 +18,7 @@ public class BuilderQueryUtils {
 	/**
 	 * Translate between operator values as defined in {@link AVUQueryElement}
 	 * and those understood in {@link GenQueryBuilderCondition}.
-	 * 
+	 *
 	 * @param avuQueryElement
 	 *            {@link AVUQueryElement}
 	 */

@@ -36,11 +36,11 @@ public class BulkFileOperationsAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -337,8 +337,8 @@ public class BulkFileOperationsAOImplTest {
 						irodsAccount);
 
 		bulkFileOperationsAO
-		.createABundleFromIrodsFilesAndStoreInIrodsWithForceOption(
-				targetBunFileAbsPath, targetIrodsCollection, "");
+				.createABundleFromIrodsFilesAndStoreInIrodsWithForceOption(
+						targetBunFileAbsPath, targetIrodsCollection, "");
 		assertionHelper.assertIrodsFileOrCollectionExists(targetBunFileAbsPath,
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
@@ -573,8 +573,8 @@ public class BulkFileOperationsAOImplTest {
 		// repeat the same operation, causing an overwrite situation, should get
 		// an error
 		bulkFileOperationsAO
-		.extractABundleIntoAnIrodsCollectionWithForceOption(
-				targetBunFileAbsPath, targetIrodsCollection, "");
+				.extractABundleIntoAnIrodsCollectionWithForceOption(
+						targetBunFileAbsPath, targetIrodsCollection, "");
 
 		File targetColl = (File) irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -659,8 +659,8 @@ public class BulkFileOperationsAOImplTest {
 								+ testExtractTargetSubdir);
 
 		bulkFileOperationsAO
-		.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
-				targetBunFileAbsPath, targetIrodsCollection, "");
+				.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
+						targetBunFileAbsPath, targetIrodsCollection, "");
 
 		File targetColl = (File) irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -744,9 +744,9 @@ public class BulkFileOperationsAOImplTest {
 		extractSubdir.close();
 
 		bulkFileOperationsAO
-		.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
-				targetBunFileAbsPath, targetIrodsCollection,
-				testResource);
+				.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
+						targetBunFileAbsPath, targetIrodsCollection,
+						testResource);
 
 		File targetColl = (File) irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -831,11 +831,11 @@ public class BulkFileOperationsAOImplTest {
 
 		try {
 			bulkFileOperationsAO
-			.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
-					targetBunFileAbsPath,
-					targetIrodsCollection,
-					testingProperties
-					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+					.extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization(
+							targetBunFileAbsPath,
+							targetIrodsCollection,
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 		} catch (ResourceHierarchyException e) {
 			// expected when 4.1+
 			throw new DataNotFoundException(e);

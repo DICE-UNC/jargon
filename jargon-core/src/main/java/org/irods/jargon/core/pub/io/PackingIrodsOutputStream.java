@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -23,10 +23,10 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * Flush and close are used and behave as expected, and will properly handle the
  * close of the underlying iRODS File and stream.
- * 
- * 
+ *
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class PackingIrodsOutputStream extends OutputStream {
 
@@ -47,7 +47,8 @@ public class PackingIrodsOutputStream extends OutputStream {
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	public PackingIrodsOutputStream(IRODSFileOutputStream irodsFileOutputStream)
+	public PackingIrodsOutputStream(
+			final IRODSFileOutputStream irodsFileOutputStream)
 			throws NoResourceDefinedException, FileNotFoundException,
 			JargonException {
 		if (irodsFileOutputStream == null) {
@@ -66,15 +67,16 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[],
 	 * int, int)
 	 */
 	@Override
-	public void write(byte[] b, int off, int len) throws IOException {
+	public void write(final byte[] b, final int off, final int len)
+			throws IOException {
 		log.debug("write()");
 		controlBytesIn += len;
-		int projectedLen = this.ptr + len;
+		int projectedLen = ptr + len;
 		log.info("projectedLen:{}", projectedLen);
 		int lenToHoldOver = len;
 		int myOff = off;
@@ -102,7 +104,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 	private void flushAndResetBufferStream() throws IOException {
 		if (byteArrayOutputStream.size() > 0) {
 			irodsFileOutputStream.write(byteArrayOutputStream.toByteArray());
-			this.controlByteCount += byteArrayOutputStream.size();
+			controlByteCount += byteArrayOutputStream.size();
 			byteArrayOutputStream.reset();
 		}
 		ptr = 0;
@@ -111,21 +113,21 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[])
 	 */
 	@Override
-	public void write(byte[] b) throws IOException {
+	public void write(final byte[] b) throws IOException {
 		this.write(b, 0, b.length);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(int)
 	 */
 	@Override
-	public void write(int b) throws IOException {
+	public void write(final int b) throws IOException {
 		byte buffer[] = { (byte) b };
 
 		this.write(buffer, 0, buffer.length);
@@ -133,14 +135,14 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.OutputStream#close()
 	 */
 	@Override
 	public void close() throws IOException {
-		this.flush();
+		flush();
 		log.info("closing underlying stream");
-		if (this.controlByteCount != controlBytesIn) {
+		if (controlByteCount != controlBytesIn) {
 			throw new IOException("control balance error in stream");
 		}
 		irodsFileOutputStream.close();
@@ -148,7 +150,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.OutputStream#flush()
 	 */
 	@Override

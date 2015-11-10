@@ -16,7 +16,7 @@ public class AuthenticationFactoryImplTest {
 
 	/**
 	 * Ask for a null mech, get an exception
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)

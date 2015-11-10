@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -22,7 +22,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class EnvironmentalInfoAOTest {
 
@@ -123,7 +123,7 @@ public class EnvironmentalInfoAOTest {
 	 * Note that this test depends on cmd-scripts/listCommands.sh to be
 	 * installed in the target server/bin/cmd directory. If this is not the
 	 * case, the test will just silently ignore the error.
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -151,7 +151,7 @@ public class EnvironmentalInfoAOTest {
 					.length() > 0);
 		} catch (DataNotFoundException ex) {
 			System.out
-					.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
+			.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
 
 	}

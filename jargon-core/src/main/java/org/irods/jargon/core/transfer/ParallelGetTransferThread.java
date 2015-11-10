@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -24,13 +24,13 @@ import org.slf4j.LoggerFactory;
  * Handle parallel file transfer get operation within Jargon. See
  * {@link org.irods.jargon.core.pub.DataTransferOperations} for the public API
  * to transfer files.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class ParallelGetTransferThread extends
-		AbstractParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+AbstractParallelTransferThread implements
+Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -43,7 +43,7 @@ public final class ParallelGetTransferThread extends
 	 * <code>ParalellFileTransferStrategy</code>. This is an immutable object ,
 	 * as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
-	 * 
+	 *
 	 * @param parallelFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy}
 	 *            that controls the transfer threads.
@@ -93,9 +93,9 @@ public final class ParallelGetTransferThread extends
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsLatency(),
+					.getParallelTcpPerformancePrefsLatency(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsBandwidth());
+					.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelGetFileTransferStrategy.getHost(),
@@ -246,7 +246,7 @@ public final class ParallelGetTransferThread extends
 				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
 				// unsigned char );
 				buffer = new byte[parallelGetFileTransferStrategy
-						.getJargonProperties().getParallelCopyBufferSize()];
+				                  .getJargonProperties().getParallelCopyBufferSize()];
 			}
 
 			seekToOffset(local, offset);
@@ -258,14 +258,14 @@ public final class ParallelGetTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("reading....");
 
 				read = myRead(getIn(), buffer, Math.min(
 						parallelGetFileTransferStrategy.getJargonProperties()
-								.getParallelCopyBufferSize(), (int) length));
+						.getParallelCopyBufferSize(), (int) length));
 
 				totalWrittenSinceLastRestartUpdate += read;
 
@@ -282,22 +282,22 @@ public final class ParallelGetTransferThread extends
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
-									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+							.getConnectionProgressStatusListener()
+							.connectionProgressStatusCallback(
+									ConnectionProgressStatus
+									.instanceForReceive(read));
 						}
 
 						if (parallelGetFileTransferStrategy
 								.getFileRestartInfo() != null) {
 
 							parallelGetFileTransferStrategy.getRestartManager()
-									.updateLengthForSegment(
-											parallelGetFileTransferStrategy
-													.getFileRestartInfo()
-													.identifierFromThisInfo(),
-											getThreadNumber(),
-											totalWrittenSinceLastRestartUpdate);
+							.updateLengthForSegment(
+									parallelGetFileTransferStrategy
+									.getFileRestartInfo()
+									.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 
@@ -336,10 +336,10 @@ public final class ParallelGetTransferThread extends
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
-									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+							.getConnectionProgressStatusListener()
+							.connectionProgressStatusCallback(
+									ConnectionProgressStatus
+									.instanceForReceive(read));
 						}
 
 					}
@@ -434,11 +434,11 @@ public final class ParallelGetTransferThread extends
 
 			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
 				parallelGetFileTransferStrategy.getRestartManager()
-						.updateOffsetForSegment(
-								parallelGetFileTransferStrategy
-										.getFileRestartInfo()
-										.identifierFromThisInfo(),
-								getThreadNumber(), offset);
+				.updateOffsetForSegment(
+						parallelGetFileTransferStrategy
+						.getFileRestartInfo()
+						.identifierFromThisInfo(),
+						getThreadNumber(), offset);
 			}
 
 			try {

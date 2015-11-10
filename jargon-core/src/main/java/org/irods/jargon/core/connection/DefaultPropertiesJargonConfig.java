@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -16,9 +16,9 @@ import org.irods.jargon.core.utils.PropertyUtils;
 /**
  * Reference class that parses the default Jargon properties (jargon.properties)
  * and provides easy methods to obtain configuration information
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 
 public class DefaultPropertiesJargonConfig implements JargonProperties {
@@ -33,7 +33,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/**
 	 * Default constructor will load the default properties from the
 	 * 'jargon.properties' file on the classpath.
-	 * 
+	 *
 	 * @throws JargonException
 	 *             if properties cannot be loaded.
 	 */
@@ -592,5 +592,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	@Override
 	public int getEncryptionNumberHashRounds() {
 		return verifyPropExistsAndGetAsInt("ssl.parallel.encryption.number.hash.rounds");
+	}
+
+	@Override
+	public boolean isBypassSslCertChecks() {
+		return verifyPropExistsAndGetAsBoolean("bypass.ssl.cert.checks");
+
 	}
 }

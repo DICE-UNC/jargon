@@ -5,9 +5,9 @@ import java.io.Serializable;
 /**
  * Simple value object for a file parent collection and child path or data
  * object
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CollectionAndPath implements Serializable {
 

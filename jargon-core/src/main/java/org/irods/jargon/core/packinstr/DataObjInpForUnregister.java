@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a DataObjInp operation into XML protocol format for file
  * unregistration
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 
@@ -37,7 +37,7 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Specify a delete with the force option enabled
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the absolute path to the file/data
 	 *            object to be deleted.
@@ -50,7 +50,7 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 	 */
 	public static final DataObjInpForUnregister instanceForDelete(
 			final String fileAbsolutePath, final boolean force)
-			throws JargonException {
+					throws JargonException {
 		return new DataObjInpForUnregister(fileAbsolutePath, force);
 
 	}

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
@@ -7,9 +7,9 @@ package org.irods.jargon.core.exception;
  * Represents a condition where a delete operation is attempted without force
  * when the collection is not empty. This can also occur when trying to create
  * soft links.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CollectionNotEmptyException extends JargonException {
 

@@ -34,7 +34,7 @@ public class PackingIrodsOutputStreamTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -90,7 +90,7 @@ public class PackingIrodsOutputStreamTest {
 				.getDataObjectChecksumUtilitiesAO(irodsAccount);
 		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
 				localFilePath, irodsFile.getAbsolutePath()); // throws exception
-																// if mismatch
+		// if mismatch
 
 	}
 
@@ -141,7 +141,7 @@ public class PackingIrodsOutputStreamTest {
 				.getDataObjectChecksumUtilitiesAO(irodsAccount);
 		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
 				localFilePath, irodsFile.getAbsolutePath()); // throws exception
-																// if mismatch
+		// if mismatch
 
 	}
 

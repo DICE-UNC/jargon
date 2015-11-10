@@ -11,7 +11,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Immutable result set returned from an IRODS general query.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
@@ -21,7 +21,7 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	/**
 	 * Creates an instance of a result set based on data coming back from iRODS
 	 * GenQuery response data.
-	 * 
+	 *
 	 * @param translatedIRODSQuery
 	 *            {@link TranslatedIRODSQuery} that had been sent to get these
 	 *            results.
@@ -42,7 +42,7 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results,
 			final int continuationIndex, final int totalRecords)
-			throws JargonException {
+					throws JargonException {
 
 		// get a list of the column names
 		List<String> columnNames = new ArrayList<String>();

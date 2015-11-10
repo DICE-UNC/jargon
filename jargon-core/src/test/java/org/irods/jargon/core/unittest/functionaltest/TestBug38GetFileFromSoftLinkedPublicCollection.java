@@ -29,9 +29,9 @@ import org.junit.Test;
 /**
  * Test Case for Bug #38 https://github.com/DICE-UNC/jargon/issues/38 Data Not
  * Found doing idrop desktop download from file in public via softlink
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class TestBug38GetFileFromSoftLinkedPublicCollection {
 
@@ -50,11 +50,11 @@ public class TestBug38GetFileFromSoftLinkedPublicCollection {
 		irodsFileSystem = IRODSFileSystem.instance();
 
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 	}
 

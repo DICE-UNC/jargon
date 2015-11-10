@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Immutable data structure represents the name/value in an InxVal pair. Useful
  * in passing data to a packing instruction
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class InxVal {
 	private final Integer name;
@@ -18,7 +18,7 @@ public class InxVal {
 
 	/**
 	 * return a new instance
-	 * 
+	 *
 	 * @param name
 	 *            <code>String</code> with the 'key' value for this protocol
 	 *            element

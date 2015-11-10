@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract superclass for a parallel transfer controller. This will process
  * parallel transfers from iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class AbstractParallelFileTransferStrategy {
 
@@ -61,7 +61,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	/**
 	 * Constructor for a parallel file transfer runner. This runner will create
 	 * the parallel transfer threads and process the transfer.
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the name of the host for the transfer
 	 * @param port
@@ -331,9 +331,9 @@ public abstract class AbstractParallelFileTransferStrategy {
 	/**
 	 * Retrieves a reference to the restart manager, if configured. It may be
 	 * <code>null</code>
-	 * 
+	 *
 	 * @return {@link AbstractRestartManager}
-	 * 
+	 *
 	 */
 	public AbstractRestartManager getRestartManager() {
 		return getIrodsAccessObjectFactory().getIrodsSession()

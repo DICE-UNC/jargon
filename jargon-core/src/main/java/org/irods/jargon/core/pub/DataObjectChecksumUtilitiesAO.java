@@ -13,7 +13,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 * Retrieve the checksum information if and only if it has been previously
 	 * computed in iRODS. This call will NOT create a new checksum in iRODS, and
 	 * is query only.
-	 * 
+	 *
 	 * @param irodsDataObjectAbsolutePath
 	 *            <code>String</code> with the absolute iRODS path to a data
 	 *            object
@@ -28,7 +28,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	/**
 	 * Given a value (iRODS representation of a checksum), as one might find in
 	 * {@link ObjStat}, and parse it out into algo and checksum value
-	 * 
+	 *
 	 * @param irodsValue
 	 *            <code>String</code>, typically in algo:string value format.
 	 * @return {@link ChecksumValue}, parsed out
@@ -40,7 +40,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	/**
 	 * Given a data object in iRODS, compute its checksum using the defaut algo
 	 * and return it. The algo is determined by iRODS policy
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} representing the data object
 	 * @return {@link ChecksumValue} with checksum and algo information
@@ -53,7 +53,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 * Compare a local file against iRODS using the configured checksum algo on
 	 * the iRODS side. Return the checksum information, or throw an exception if
 	 * the checksums do not match
-	 * 
+	 *
 	 * @param localAbsolutePath
 	 *            <code>String</code> with the local file absolute path
 	 * @param irodsAbsolutePath
@@ -67,7 +67,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 */
 	ChecksumValue verifyLocalFileAgainstIrodsFileChecksum(
 			final String localAbsolutePath, final String irodsAbsolutePath)
-			throws FileNotFoundException, ChecksumInvalidException,
-			JargonException;
+					throws FileNotFoundException, ChecksumInvalidException,
+					JargonException;
 
 }

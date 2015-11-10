@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.utils;
 
@@ -27,9 +27,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for working with the local file system.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class LocalFileUtils {
 
@@ -46,7 +46,7 @@ public class LocalFileUtils {
 	/**
 	 * Parse a file name to get the stuff after the last '.' character to treat
 	 * as the file extension
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with the file name to parse out.
 	 * @return <code>String</code> with the file extension
@@ -67,7 +67,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Normalize any Windows paths from \ separators to / separators
-	 * 
+	 *
 	 * @param inPath
 	 * @return
 	 */
@@ -88,7 +88,7 @@ public class LocalFileUtils {
 	/**
 	 * Parse a file name to get the stuff before last '.' character to treat as
 	 * the file name
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with the file name to parse out.
 	 * @return <code>String</code> with the file name before the extension,
@@ -110,7 +110,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Interpose a time stamp between the file name and extension
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with the file name to parse out
 	 * @return <code>String</code> with the updated file name containing a time
@@ -131,7 +131,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Count files in a directory (including files in all subdirectories)
-	 * 
+	 *
 	 * @param directory
 	 *            <code>File</code> with the directory to start in
 	 * @return the total number of files as <code>int</code>
@@ -191,7 +191,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Compute a CRC32 checksum for a local file given an absolute path
-	 * 
+	 *
 	 * @param absolutePathToLocalFile
 	 *            <code>String</code> with absolute local file path under
 	 *            scratch (no leading '/')
@@ -232,7 +232,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Compute an SHA-256 checksum for a local file given an absolute path
-	 * 
+	 *
 	 * @param absolutePathToLocalFile
 	 *            <code>String</code> with absolute local file path under
 	 *            scratch (no leading '/')
@@ -295,7 +295,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Compute an MD5 checksum for a local file given an absolute path
-	 * 
+	 *
 	 * @param absolutePathToLocalFile
 	 *            <code>String</code> with absolute local file path under
 	 *            scratch (no leading '/')
@@ -351,7 +351,7 @@ public class LocalFileUtils {
 	/**
 	 * Given a <code>String</code> representing hex characters (e.g. b1f0a2),
 	 * return the actual bytes represented by the hex value
-	 * 
+	 *
 	 * @param s
 	 *            <code>String</code> with the representation of the hex bytes
 	 * @return <code>byte[]</code> with the actual translation
@@ -369,7 +369,7 @@ public class LocalFileUtils {
 	/**
 	 * Given a checksum digest as a <code>byte[]</code>, return a
 	 * <code>String</value> as used in iRODS packing instructions
-	 * 
+	 *
 	 * @param digestAsByteArray
 	 *            <code>byte[]</code> which is a checksum value
 	 * @return <code>String</code> in hex that represents this checkSum
@@ -393,7 +393,7 @@ public class LocalFileUtils {
 	/**
 	 * Given a path to a classpath resoruce, return that resource as a
 	 * <code>File</code>
-	 * 
+	 *
 	 * @param resourcePath
 	 *            <code>String</code> with an absolute path to a resource in the
 	 *            classpath
@@ -428,7 +428,7 @@ public class LocalFileUtils {
 	/**
 	 * Given a path to a classpath resource, return that resource data as a
 	 * string
-	 * 
+	 *
 	 * @param resourcePath
 	 *            <code>String</code> for a classpath resource
 	 * @return <code>String</code> with the String value of that resource data
@@ -444,7 +444,7 @@ public class LocalFileUtils {
 		InputStreamReader resourceReader = new InputStreamReader(
 				new BufferedInputStream(
 						RuleProcessingAOImpl.class
-								.getResourceAsStream(resourcePath)));
+						.getResourceAsStream(resourcePath)));
 
 		StringWriter writer = null;
 		String ruleString = null;
@@ -479,7 +479,7 @@ public class LocalFileUtils {
 	/**
 	 * Read the contents of a file into a byte array (be carefule not to read
 	 * big files!)
-	 * 
+	 *
 	 * @param file
 	 * @return
 	 * @throws IOException

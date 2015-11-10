@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
  * This class also includes other cacheable data, such as the
  * <code>IRODSServerProperties</code> that is otherwise repeatedly obtained from
  * iRODS on connection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DiscoveredServerPropertiesCache {
 
@@ -59,10 +59,10 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * 
+	 *
 	 * If an <code>IRODSServerProperties</code> was already cached, then just
 	 * return it, if not cached, this method will return null
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
@@ -91,7 +91,7 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 * Gets the cached <code>IRODSServerProperties</code> or <code>null</code>
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @return
@@ -117,7 +117,7 @@ public class DiscoveredServerPropertiesCache {
 	 * Get the value cached for this host and zone. Note that if the zone does
 	 * not exist in the cache, or if the property does not exist in the zone
 	 * cache, a <code>null</code> will be returned.
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
@@ -159,7 +159,7 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Delete the <code>IRODSServerProperties</code> If the zone has no cache,
 	 * silently ignore
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @param propertyName
@@ -185,7 +185,7 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Delete the property from the cache if it exists. If the zone has no
 	 * cache, or the property itself is not cached, silently ignore
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @param propertyName
@@ -216,7 +216,7 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Delete all cached props for the host and zone. If there is no zone cache,
 	 * ignore the request
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 */
@@ -239,7 +239,7 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 * Add an <code>IRODSServerProperties</code> to the cache
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
@@ -273,7 +273,7 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 * Cache a property for the given host and zone.
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the name of the iRODS host this
 	 *            applies to
@@ -315,7 +315,7 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Look for a properties map for the given host and zone, add to the main
 	 * cache if it doesn't exist
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @return
@@ -341,7 +341,7 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 * Look for a properties map for the given host and zone
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @return
@@ -366,7 +366,7 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Standard way to concatenate the host and zone name, trimming white space
 	 * in the process. This allows consistent look up
-	 * 
+	 *
 	 * @param host
 	 * @param zoneName
 	 * @return

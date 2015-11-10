@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a DataObjInp operation for management of special collections
  * (imcoll operations)
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
@@ -29,7 +29,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction to mount a MSSO (microservice object)
-	 * 
+	 *
 	 * @param microServiceSourceFile
 	 *            <code>String</code> with the microservice source file
 	 * @param targetFileAbsolutePath
@@ -49,7 +49,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a dataObjInp for a mounted filesystem
-	 * 
+	 *
 	 * @param localFileSystemAbsolutePath
 	 *            <code>String</code> with a local filesystem absolute path
 	 * @param irodsMountedCollectionAbsolutePath
@@ -70,7 +70,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create a packing instruction to mount a soft link
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the source path for the mounted
 	 *            collection
@@ -92,7 +92,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	/**
 	 * Private constructor, use the instance methods to create the proper
 	 * instance.
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            <code>String</code> with the source path for the mounted
 	 *            collection
@@ -165,8 +165,8 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 * 
-	 * 
+	 *
+	 *
 	 * sending msg: <DataObjInp_PI>
 	 * <objPath>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest
 	 * /testMountMSSOWorkflow/mounted</objPath> <createMode>0</createMode>

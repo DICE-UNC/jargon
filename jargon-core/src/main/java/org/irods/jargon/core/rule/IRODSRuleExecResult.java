@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Encapsulates the result of the execution of a rule. This is an immutable
  * object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSRuleExecResult {
 
@@ -21,7 +21,7 @@ public class IRODSRuleExecResult {
 
 	/**
 	 * Return a new instance encapsulating the result of a rule execution
-	 * 
+	 *
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @param resultParameters
@@ -32,7 +32,7 @@ public class IRODSRuleExecResult {
 	public static IRODSRuleExecResult instance(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-			throws JargonException {
+					throws JargonException {
 		return new IRODSRuleExecResult(irodsRule, resultParameters);
 	}
 
@@ -50,7 +50,7 @@ public class IRODSRuleExecResult {
 	private IRODSRuleExecResult(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsRule == null) {
 			throw new JargonException("null irodsRule");
@@ -75,7 +75,7 @@ public class IRODSRuleExecResult {
 	/**
 	 * Return the standard output from the rule invocation, this is a short-cut
 	 * to getting the ruleExecOut from the output parameters.
-	 * 
+	 *
 	 * @return <code>String</code> with the rule exec out. This will be a blank
 	 *         value (not null) if no output was found.
 	 */
@@ -97,7 +97,7 @@ public class IRODSRuleExecResult {
 	/**
 	 * Return the standard error from the rule invocation, this is a short-cut
 	 * to getting the ruleExecOut from the output parameters.
-	 * 
+	 *
 	 * @return <code>String</code> with the rule exec err. This will be a blank
 	 *         value (not null) if no output was found.
 	 */

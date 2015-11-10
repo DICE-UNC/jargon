@@ -38,11 +38,11 @@ public class IRODSTenThousandCollectionsTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -65,12 +65,12 @@ public class IRODSTenThousandCollectionsTest {
 		/**
 		 * UserAO userAO = irodsFileSystem.getIRODSAccessObjectFactory()
 		 * .getUserAO(irodsAccount);
-		 * 
+		 *
 		 * String userName; User user = new User(); for (int i = 0; i <
 		 * usersCount; i++) { userName = funcTestUserPrefix + i;
 		 * user.setName(userName); user.setUserType(UserTypeEnum.RODS_USER); try
 		 * { userAO.addUser(user); } catch (Exception e) {
-		 * 
+		 *
 		 * } collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
 		 * targetIrodsCollection, userName, true); }
 		 */

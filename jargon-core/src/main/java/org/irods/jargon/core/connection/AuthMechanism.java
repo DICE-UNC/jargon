@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
  * Represents a type of authentication scheme, outlining a life cycle model of
  * connections with events called at appropriate points where authentication
  * processing can be implemented
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 abstract class AuthMechanism {
 
@@ -37,7 +37,7 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called before any startup pack is sent
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected void preConnectionStartup() throws JargonException {
@@ -46,8 +46,12 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called after the startup pack is sent but
-	 * before the actual authentication attempt, and before client/server
-	 * negotiation
+	 * <<<<<<< HEAD before the actual authentication attempt, and before
+	 * client/server negotiation
+	 * 
+	 * ======= before the actual authentication attempt
+	 *
+	 * >>>>>>> master
 	 * 
 	 * @throws JargonException
 	 */
@@ -189,7 +193,7 @@ abstract class AuthMechanism {
 	 * method will start the connection by sending the auth request, process the
 	 * startup packet, and then call the authentication method of the actual
 	 * auth mechanism implementation.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -199,7 +203,7 @@ abstract class AuthMechanism {
 	 *         connected, authenticated session with an iRODS agent. Note that
 	 *         the protocol returned may not be the one originally provided,
 	 *         based on the auth method.
-	 * 
+	 *
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
@@ -230,7 +234,7 @@ abstract class AuthMechanism {
 	 * Note that the protocol contains a reference to the {@link AuthResponse}
 	 * that details the authenticating and authenticated accounts and
 	 * identities.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -240,7 +244,7 @@ abstract class AuthMechanism {
 	 *         connected, authenticated session with an iRODS agent. Note that
 	 *         the protocol returned may not be the one originally provided,
 	 *         based on the auth method.
-	 * 
+	 *
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
@@ -290,7 +294,7 @@ abstract class AuthMechanism {
 	 * <p/>
 	 * This abstract method should be implemented in a subclass authentication
 	 * handler
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
@@ -348,6 +352,15 @@ abstract class AuthMechanism {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
+
+		Tag versionPI = irodsCommands.readMessage();
+		StartupResponseData startupResponseData = new StartupResponseData(
+				versionPI.getTag("status").getIntValue(), versionPI.getTag(
+						"relVersion").getStringValue(), versionPI.getTag(
+						"apiVersion").getStringValue(), versionPI.getTag(
+						"reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
 
 	}
 

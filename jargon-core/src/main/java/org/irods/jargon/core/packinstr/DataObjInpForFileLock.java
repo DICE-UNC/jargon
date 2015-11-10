@@ -10,19 +10,19 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Translation of a DataObjInp operation to obtain or release a file lock
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  *         getutil read lock replutil
- * 
+ *
  *         pututil write lock
- * 
- * 
- * 
+ *
+ *
+ *
  *         rsDataObjLock used by
- * 
+ *
  *         rsDataObjCreate rsDataObjOpen rsDataObjRepl
- * 
+ *
  */
 public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 
@@ -55,7 +55,7 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the DataObjInp packing instruction to get an object stat.
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param lockType

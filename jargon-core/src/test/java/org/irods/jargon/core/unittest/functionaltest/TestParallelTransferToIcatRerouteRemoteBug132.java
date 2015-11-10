@@ -22,12 +22,12 @@ import org.junit.Test;
 
 /**
  * Test case for https://github.com/DICE-UNC/jargon/issues/132
- * 
+ *
  * sys len read error parallel transfer 4.0.3 iRODS / PAM, remote storage
  * resource #132
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class TestParallelTransferToIcatRerouteRemoteBug132 {
 
@@ -46,11 +46,11 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 		irodsFileSystem = IRODSFileSystem.instance();
 
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 	}
 
@@ -86,13 +86,13 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount
-				.setDefaultStorageResource(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		.setDefaultStorageResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);
@@ -157,8 +157,8 @@ public class TestParallelTransferToIcatRerouteRemoteBug132 {
 				.instanceIRODSFile(targetIrodsFile);
 		destFile.deleteWithForceOption();
 		irodsAccount
-				.setDefaultStorageResource(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		.setDefaultStorageResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setUseTransferThreadsPool(false);

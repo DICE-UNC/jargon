@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.checksum;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Checksum computation method is not available.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ChecksumMethodUnavailableException extends JargonException {
 

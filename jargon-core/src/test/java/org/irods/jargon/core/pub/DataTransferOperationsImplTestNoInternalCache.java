@@ -24,10 +24,10 @@ import org.junit.Test;
 /**
  * Test manipulates the jargon properties so that the internal cache mechanism
  * used within jargon is defeated and standard i/o buffering is used
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class DataTransferOperationsImplTestNoInternalCache {
 
@@ -55,12 +55,12 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -99,7 +99,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		dto.physicalMove(
 				irodsFile.getAbsolutePath(),
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		DataObjectAO dataObjectAO = accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -109,7 +109,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		Assert.assertEquals(
 				"file is not in new resource",
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				actual.getResourceName());
 	}
 
@@ -141,7 +141,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 
 		IRODSFile irodsDestFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + newTestFileName);
+						targetIrodsCollection + '/' + newTestFileName);
 
 		dataTransferOperations.move(irodsFile.getAbsolutePath(),
 				irodsDestFile.getAbsolutePath());
@@ -179,7 +179,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		// make the target irods collection
 		IRODSFile targetCollectionFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + targetCollection);
+						targetIrodsCollection + '/' + targetCollection);
 		targetCollectionFile.mkdir();
 
 		dataTransferOperations.move(irodsFile.getAbsolutePath(),
@@ -188,7 +188,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		IRODSFile actualFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetCollectionFile.getAbsolutePath() + '/'
-								+ testFileName);
+						+ testFileName);
 
 		Assert.assertTrue("did not find the newly moved file",
 				actualFile.exists());
@@ -218,7 +218,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 
 		IRODSFile irodsDestFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + testNewDirectory);
+						targetIrodsCollection + '/' + testNewDirectory);
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -244,7 +244,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -282,7 +282,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -341,10 +341,10 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		// '/'
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
-						"testFile", ".txt", 2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+				"testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -409,10 +409,10 @@ public class DataTransferOperationsImplTestNoInternalCache {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFiles", 3, 5, 3, "testFile",
-						".txt", 10, 9, 20, 200);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFiles", 3, 5, 3, "testFile",
+				".txt", 10, 9, 20, 200);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -456,7 +456,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -512,10 +512,10 @@ public class DataTransferOperationsImplTestNoInternalCache {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutThenGetMultipleCollectionsMultipleFiles", 2, 3,
-						2, "testFile", ".txt", 3, 2, 20, 200);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testPutThenGetMultipleCollectionsMultipleFiles", 2, 3,
+				2, "testFile", ".txt", 3, 2, 20, 200);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -567,7 +567,7 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -624,9 +624,9 @@ public class DataTransferOperationsImplTestNoInternalCache {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath, "rootCollection", 1, 2, 2,
-						"testFile", ".txt", 4, 2, 20, 200);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath, "rootCollection", 1, 2, 2,
+				"testFile", ".txt", 4, 2, 20, 200);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -674,10 +674,10 @@ public class DataTransferOperationsImplTestNoInternalCache {
 		// '/'
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-						".txt", 2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+				".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

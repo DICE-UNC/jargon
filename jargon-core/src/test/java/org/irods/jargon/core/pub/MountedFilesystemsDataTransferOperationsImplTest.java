@@ -46,12 +46,12 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -110,7 +110,7 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -172,9 +172,9 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				irodsAccount.getDefaultStorageResource());
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						sourceDirAbsPath + "/" + rootCollection, "subdir", 1,
-						1, 1, "testFile", ".txt", 2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				sourceDirAbsPath + "/" + rootCollection, "subdir", 1,
+				1, 1, "testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
@@ -338,7 +338,7 @@ public class MountedFilesystemsDataTransferOperationsImplTest {
 				.instanceIRODSFile(copyTargetCollection);
 
 		dataTransferOperationsAO
-				.copy(destFile, copyTargetIrodsFile, null, null);
+		.copy(destFile, copyTargetIrodsFile, null, null);
 
 		copyTargetIrodsFile = irodsFileFactory.instanceIRODSFile(
 				copyTargetIrodsFile.getAbsolutePath(), rootCollection);

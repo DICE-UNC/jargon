@@ -8,12 +8,12 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 /**
  * Abstract superclass to a user annotation on an iRODS catalog domain item
  * (like a tag, or a starred folder).
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
-		implements Serializable {
+implements Serializable {
 
 	/**
 	 *
@@ -25,7 +25,7 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param metadataDomain
 	 *            {@link MetadataDomain} enum value that describes the iCAT
 	 *            domain the annotation is for

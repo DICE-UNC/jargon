@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclasss for a parallel file transfer operation via NIO
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AbstractNIOParallelTransferThread {
 
@@ -46,7 +46,7 @@ public class AbstractNIOParallelTransferThread {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 				tot += read;
 				if (tot == length) {
@@ -104,7 +104,7 @@ public class AbstractNIOParallelTransferThread {
 	/**
 	 * Any exception that occurs in this transfer thread is saved so that the
 	 * parallel transfer process can access it and handle any errors.
-	 * 
+	 *
 	 * @return <code>Exception</code> that occured in this thread, or
 	 *         <code>null</code> if no error occurred.
 	 */

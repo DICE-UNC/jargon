@@ -17,10 +17,10 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSGenQueryTranslatorTest.class,
-		GenQuerySelectFieldTest.class, TranslatedIRODSQueryTest.class,
-		AVUQueryElementTest.class, SimpleQueryTest.class,
-		IRODSSimpleQueryResultSetTest.class, UserFilePermissionTest.class,
-		IRODSGenQueryBuilderTest.class, IRODSGenQueryFromBuilderTest.class })
+	GenQuerySelectFieldTest.class, TranslatedIRODSQueryTest.class,
+	AVUQueryElementTest.class, SimpleQueryTest.class,
+	IRODSSimpleQueryResultSetTest.class, UserFilePermissionTest.class,
+	IRODSGenQueryBuilderTest.class, IRODSGenQueryFromBuilderTest.class })
 public class IRODSQueryTests {
 
 }

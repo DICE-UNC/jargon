@@ -34,7 +34,7 @@ public class IRODSAccessObjectFactoryImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -79,7 +79,7 @@ public class IRODSAccessObjectFactoryImplTest {
 				.getIntraFileStatusCallbacksNumberCallsInterval());
 		Assert.assertEquals("did not set intra file callback bytes interval",
 				2, tcb.getTransferOptions()
-						.getIntraFileStatusCallbacksTotalBytesInterval());
+				.getIntraFileStatusCallbacksTotalBytesInterval());
 
 	}
 

@@ -13,7 +13,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedUserAOTest {
 
@@ -36,7 +36,7 @@ public class FederatedUserAOTest {
 	/**
 	 * Get a user that is set up as a user on this zone from a federated zone
 	 * this checks a lookup in user#zone format
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -50,7 +50,7 @@ public class FederatedUserAOTest {
 				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 				+ "#"
 				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -61,25 +61,25 @@ public class FederatedUserAOTest {
 		User user = userAO.findByName(testUserName);
 		Assert.assertEquals(
 				testingProperties
-						.getProperty(
-								"did not get federated user",
-								testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
-				user.getName());
+				.getProperty(
+						"did not get federated user",
+						testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
+						user.getName());
 		Assert.assertEquals(
 				testingProperties
-						.getProperty(
-								"did not get federated zone",
-								testingProperties
-										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
-				user.getZone());
+				.getProperty(
+						"did not get federated zone",
+						testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
+						user.getZone());
 
 	}
 
 	/**
 	 * Look for a user on zone2 by a certain id by asking zone1, giving the fact
 	 * that they are on zone2
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

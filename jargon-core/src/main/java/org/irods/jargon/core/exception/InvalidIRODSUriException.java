@@ -9,7 +9,7 @@ import java.net.URI;
 public final class InvalidIRODSUriException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 273607268535218089L;
 

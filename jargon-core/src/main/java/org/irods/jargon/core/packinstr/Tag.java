@@ -231,7 +231,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Get the <code>index</code>-th sub-tag, from the first level down, with
 	 * the name of <code>tagName</code>. Index count starts at zero.
-	 * 
+	 *
 	 * So if tagname = taggy, and index = 2, get the 3rd subtag with the name of
 	 * 'taggy'.
 	 */
@@ -293,7 +293,7 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Convenience method to add a tag with an int value
-	 * 
+	 *
 	 * @param name
 	 *            <code>String</code> with the tag name
 	 * @param val
@@ -419,7 +419,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Read the data buffer to discover the first tag. Fill the values of that
 	 * tag according to the above defined static final values.
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 *             shouldn't throw, already tested for
 	 */
@@ -469,7 +469,7 @@ public class Tag implements Cloneable {
 	/**
 	 * Read the data buffer to discover a sub tag. Fill the values of that tag
 	 * according to the above defined static final values.
-	 * 
+	 *
 	 * @throws UnsupportedEncodingException
 	 *             shouldn't throw, already tested for
 	 */

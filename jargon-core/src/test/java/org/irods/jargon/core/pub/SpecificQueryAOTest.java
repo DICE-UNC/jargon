@@ -247,7 +247,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-								.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
@@ -410,7 +410,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-								.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
@@ -419,7 +419,7 @@ public class SpecificQueryAOTest {
 
 	/**
 	 * Bug [#1109] specific query no data found results in exception
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -449,7 +449,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-								.getMaxFilesAndDirsQueryMax());
+						.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertTrue("expected no results", specificQueryResultSet
 				.getResults().isEmpty());
@@ -667,7 +667,7 @@ public class SpecificQueryAOTest {
 	/**
 	 * Bug [#1373] alias lookup failing on specific query. This works because no
 	 * special chars in query
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -707,7 +707,7 @@ public class SpecificQueryAOTest {
 
 	/**
 	 * Bug [#1373] alias lookup failing on specific query
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -747,7 +747,7 @@ public class SpecificQueryAOTest {
 
 	/**
 	 * Bug [#1373] alias lookup failing on specific query
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

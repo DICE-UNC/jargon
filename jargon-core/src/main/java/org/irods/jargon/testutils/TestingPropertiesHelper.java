@@ -13,7 +13,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Utilities to load testing properties from a properties file
- * 
+ *
  * @author Mike Conway, DICE (www.irods.org)
  * @since 10/18/2009
  */
@@ -69,7 +69,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Return the given property (by key) as an int
-	 * 
+	 *
 	 * @param testingProperties
 	 * @param key
 	 * @return
@@ -98,7 +98,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Get the standard iRODS test server port from the testing properties
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 * @throws TestingUtilsException
@@ -112,7 +112,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Load the properties that control various tests from the
 	 * testing.properties file on the code path
-	 * 
+	 *
 	 * @return <code>Properties</code> class with the test values
 	 * @throws TestingUtilsException
 	 */
@@ -140,30 +140,30 @@ public class TestingPropertiesHelper {
 	 * Get a URI in IRODS format that points to a scratch file, given the file
 	 * name and any additional path to that file without a leading '/'. For
 	 * example:
-	 * 
+	 *
 	 * Given that I have a file under the irods collection
 	 * /test1/home/test/test-scratch/an_irods_subdir/file.txt
-	 * 
+	 *
 	 * I can construct a proper URI like this:
-	 * 
+	 *
 	 * <pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * StringBuilder uriPath = new StringBuilder();
 	 * uriPath.append(&quot;an_irods_subdir&quot;);
 	 * uriPath.append('/');
 	 * uriPath.append(file.txt);
-	 * 
+	 *
 	 * URI irodsUri = testingPropertiesHelper
 	 * 		.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
 	 * 				uriPath.toString());
-	 * 
-	 * 
+	 *
+	 *
 	 * </pre>
-	 * 
+	 *
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -176,7 +176,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -206,30 +206,30 @@ public class TestingPropertiesHelper {
 	 * Get a URI in IRODS format that points to a scratch file, given the file
 	 * name and any additional path to that file without a leading '/'. This
 	 * version does not place the password into the URI For example:
-	 * 
+	 *
 	 * Given that I have a file under the irods collection
 	 * /test1/home/test/test-scratch/an_irods_subdir/file.txt
-	 * 
+	 *
 	 * I can construct a proper URI like this:
-	 * 
+	 *
 	 * <pre>
-	 * 
-	 * 
+	 *
+	 *
 	 * StringBuilder uriPath = new StringBuilder();
 	 * uriPath.append(&quot;an_irods_subdir&quot;);
 	 * uriPath.append('/');
 	 * uriPath.append(file.txt);
-	 * 
+	 *
 	 * URI irodsUri = testingPropertiesHelper
 	 * 		.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
 	 * 				uriPath.toString());
-	 * 
-	 * 
+	 *
+	 *
 	 * </pre>
-	 * 
+	 *
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -242,7 +242,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -270,10 +270,10 @@ public class TestingPropertiesHelper {
 	 * <p/>
 	 * This version will not include user information.
 	 * <p/>
-	 * 
+	 *
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -286,7 +286,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileNoUserInfo(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -313,7 +313,7 @@ public class TestingPropertiesHelper {
 	 * a set of peroperties, as well as a relative path (no leading '/')
 	 * underneath the users local scratch directory as defined in
 	 * testing.properties.
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> defined in the testing.properties file
 	 * @param fileName
@@ -326,13 +326,13 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInLocalScratchDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("file://");
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ fileName);
+				+ fileName);
 		scratchDir.mkdirs();
 		irodsUri.append(scratchDir.getAbsolutePath());
 
@@ -343,10 +343,10 @@ public class TestingPropertiesHelper {
 	 * Get a URI in IRODS format that points to a scratch file, given the file
 	 * name and any additional path to that file without a leading '/', for the
 	 * secondary testing user. For example:
-	 * 
+	 *
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -359,7 +359,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInSecondaryUserDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -411,8 +411,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_ADMIN_USER_KEY),
 				testingProperties.getProperty(IRODS_ADMIN_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -441,9 +441,9 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -472,9 +472,9 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -495,8 +495,8 @@ public class TestingPropertiesHelper {
 						.getProperty(IRODS_HOST_KEY),
 						Integer.parseInt(testingProperties
 								.getProperty(IRODS_PORT_KEY)), "",
-						testingProperties.getProperty(IRODS_ZONE_KEY),
-						testingProperties.getProperty(IRODS_RESOURCE_KEY));
+								testingProperties.getProperty(IRODS_ZONE_KEY),
+								testingProperties.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -527,7 +527,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Build an <code>IRODSAccount</code> object for connecting to the federated
 	 * zone as defined in the testing.properties file.
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> file with the standard names defined
 	 *            in
@@ -552,18 +552,18 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_FEDERATED_HOST_KEY),
 				Integer.parseInt(testingProperties
 						.getProperty(IRODS_FEDERATED_PORT_KEY)),
-				testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
-				testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY),
-				homeBuilder.toString(),
-				testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY),
-				testingProperties.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
+						testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
+						testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY),
+						homeBuilder.toString(),
+						testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY),
+						testingProperties.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
 
 		return account;
 	}
 
 	/**
 	 * Build a test account where the default resource will be set to blank
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -583,8 +583,8 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), "");
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), "");
 
 		return account;
 	}
@@ -620,8 +620,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_HOST_KEY),
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				userName, password, homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -652,8 +652,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_SECONDARY_USER_KEY),
 				testingProperties.getProperty(IRODS_SECONDARY_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -684,8 +684,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_TERTIARY_USER_KEY),
 				testingProperties.getProperty(IRODS_TERTIARY_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -693,7 +693,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -707,7 +707,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -730,7 +730,7 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS for the rods
 	 * user
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -744,7 +744,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -767,7 +767,7 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS on the
 	 * configured federated zone.
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -781,7 +781,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -805,7 +805,7 @@ public class TestingPropertiesHelper {
 	 * given user home collection in the federated zone. So if user1 in zone1
 	 * wants to see his home collection in federated zone zone2, the path
 	 * returned would be /zone2/home/user1#zone1 plus the extra path info
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -819,7 +819,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -841,7 +841,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -855,7 +855,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -877,7 +877,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -891,7 +891,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromPamTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -913,7 +913,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Handy method to give, from the root IRODS collection, a relative path
 	 * under the home directory for the described user
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -935,7 +935,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional distributed resources are to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -951,7 +951,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Get the given property as a boolean
-	 * 
+	 *
 	 * @param testingProperties
 	 * @param key
 	 * @return
@@ -968,7 +968,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional kerberos testing to be done
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -983,7 +983,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional workflow testing to be done
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1000,7 +1000,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional registration functions that test imcoll operations on
 	 * physical file systems are supported
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1017,7 +1017,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional registration functions that test imcoll operations on
 	 * physical file systems are running on the same machine as the irods
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1034,7 +1034,7 @@ public class TestingPropertiesHelper {
 	/**
 	 * Check if optional registration functions are to be tested (tests must be
 	 * running on a resource server)
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1049,7 +1049,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional remote stream execution is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1065,7 +1065,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional audit system is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1081,7 +1081,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional ticket system is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1097,7 +1097,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional gsi auth system is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1112,7 +1112,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Check if optional pam auth system is to be tested
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1145,7 +1145,7 @@ public class TestingPropertiesHelper {
 	 * Check if tests depending on a federated zone should be run. The federated
 	 * zone must be configured as described in the test-scripts/fedTestSetup.txt
 	 * file.
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return <code>true</code> if the federated zone testing should occur
 	 */
@@ -1163,7 +1163,7 @@ public class TestingPropertiesHelper {
 	 * Check if tests depending on strictACL's should be run. This requires the
 	 * configuration of the iRODS core.re for strictACL, as well as the
 	 * provisioning of a /zone/home/public directory with anonymous rights
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return <code>true</code> if strict ACL testing should occur
 	 */
@@ -1178,7 +1178,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Are we testing eirods?
-	 * 
+	 *
 	 * @param testingProperties
 	 * @return
 	 */
@@ -1196,7 +1196,7 @@ public class TestingPropertiesHelper {
 	 * Handy method to give, from the root IRODS collection, a full path to a
 	 * given collection in the IRODS test scratch area on IRODS on the
 	 * configured federated zone enabled for writing cross-zone.
-	 * 
+	 *
 	 * @param testingProperties
 	 *            <code>Properties</code> that define test behavior
 	 * @param collectionPathBelowScratch
@@ -1210,7 +1210,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -1231,7 +1231,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * Just build any old IRODSAccount when it's not important what it contains
-	 * 
+	 *
 	 * @return {@link IRODSAccount} with basic fake data
 	 * @throws JargonException
 	 */

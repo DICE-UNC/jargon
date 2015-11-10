@@ -48,7 +48,7 @@ public class IRODSSimpleConnectionTest {
 		irodsFileSystem.getIrodsProtocolManager().getIRODSProtocol(
 				irodsAccount,
 				irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
+				.buildPipelineConfigurationBasedOnJargonProperties(),
 				null);
 
 	}

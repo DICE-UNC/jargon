@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
@@ -32,7 +32,7 @@ import org.junit.Test;
 
 /**
  * @author mikeconway
- * 
+ *
  */
 public class FileOperationSequences {
 
@@ -50,11 +50,11 @@ public class FileOperationSequences {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -67,7 +67,7 @@ public class FileOperationSequences {
 	 * Mutli-threaded test of multiple operations for a get with shared access
 	 * objects between threads [#1065] [iROD-Chat:9047] Java
 	 * ClosedChannelException in Jargon 3.2.1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -85,7 +85,7 @@ public class FileOperationSequences {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -113,7 +113,7 @@ public class FileOperationSequences {
 	 * Mutli-threaded test of multiple operations for a get with shared access
 	 * objects between threads [#1065] [iROD-Chat:9047] Java
 	 * ClosedChannelException in Jargon 3.2.1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -132,7 +132,7 @@ public class FileOperationSequences {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -186,7 +186,7 @@ public class FileOperationSequences {
 	 * Share an IRODSRandomAccess file between threads. Currently ignored, as
 	 * the originating use case may be suspect. Bug [#1066] Auth Exception on
 	 * seek
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -204,7 +204,7 @@ public class FileOperationSequences {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -246,7 +246,7 @@ public class FileOperationSequences {
 }
 
 class ShareIRODSRandomAccessFileBetweenThreadsBug1066 implements
-		Callable<Object> {
+Callable<Object> {
 
 	IRODSRandomAccessFile randomAccessFile;
 	IRODSFileSystem irodsFileSystem;
@@ -295,7 +295,7 @@ class MultiThreadSharingOfDataAOBug1065 implements Callable<DataObject> {
 		dataTransferOperations.getOperation(sourceAbsolutePath,
 				targetAbsolutePath, "", null, tcb);
 		dataTransferOperations.getIRODSAccessObjectFactory()
-				.closeSessionAndEatExceptions();
+		.closeSessionAndEatExceptions();
 		return obj;
 	}
 

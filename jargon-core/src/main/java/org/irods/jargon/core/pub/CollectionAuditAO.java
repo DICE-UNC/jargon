@@ -10,7 +10,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 
 /**
  * Represents audit trail capabilities for collections
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public interface CollectionAuditAO {
@@ -18,7 +18,7 @@ public interface CollectionAuditAO {
 	/**
 	 * Find all audit records for a given collection path, allowing for partial
 	 * starts
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that represents the collection
 	 * @param partialStart
@@ -34,14 +34,14 @@ public interface CollectionAuditAO {
 	 */
 	List<AuditedAction> findAllAuditRecordsForCollection(IRODSFile irodsFile,
 			int partialStart, int numberOfResultsDesired)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * Get an individual audit action for a collection, given that you know
 	 * enough fields to find the unique entry. This is sort of difficult (can
 	 * can be expensive) as there is not a unique index or generated id to an
 	 * audit event, so use sparingly.
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param auditActionCode
@@ -60,6 +60,6 @@ public interface CollectionAuditAO {
 	 */
 	AuditedAction getAuditedActionForCollection(IRODSFile irodsFile,
 			String auditActionCode, String timeStampInIRODSFormat)
-			throws DataNotFoundException, JargonException;
+					throws DataNotFoundException, JargonException;
 
 }

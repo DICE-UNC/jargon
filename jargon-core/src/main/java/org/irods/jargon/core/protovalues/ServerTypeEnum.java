@@ -7,9 +7,9 @@ package org.irods.jargon.core.protovalues;
 
 /**
  * Values for serverType in MiscSvrInfo_PI
- * 
+ *
  * #define RCAT_NOT_ENABLED 0 #define RCAT_ENABLED 1
- * 
+ *
  * @author toaster
  */
 public enum ServerTypeEnum {

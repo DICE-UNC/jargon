@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -11,9 +11,9 @@ import org.irods.jargon.core.query.SpecificQueryResultSet;
 
 /**
  * Packing instruction for exectution of a specific (SQL) query.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 
@@ -74,7 +74,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create an instance of the packing instruction to execute a specific query
 	 * statement
-	 * 
+	 *
 	 * @param args
 	 *            <code>List<String></code> of arguments that match query
 	 *            parameters. Note that there may be a max of 10 parameters
@@ -117,7 +117,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param args
 	 *            <code>List<String></code> of arguments that match query
 	 *            parameters. Note that there may be a max of 10 parameters
@@ -166,7 +166,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

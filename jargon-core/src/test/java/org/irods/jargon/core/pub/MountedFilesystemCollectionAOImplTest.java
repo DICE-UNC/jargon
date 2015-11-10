@@ -38,7 +38,7 @@ public class MountedFilesystemCollectionAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -65,7 +65,7 @@ public class MountedFilesystemCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -146,7 +146,7 @@ public class MountedFilesystemCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -209,7 +209,7 @@ public class MountedFilesystemCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -235,18 +235,18 @@ public class MountedFilesystemCollectionAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		irodsFile.mkdirs();
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		boolean hasPermission = collectionAO
 				.isUserHasAccess(
 						targetIrodsCollection,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		Assert.assertTrue("did not get expected permission", hasPermission);
 
 	}

@@ -8,9 +8,9 @@ import java.util.List;
  * Represents an immutable iRODS gen query built using the gen query builder
  * tool. This is an improvement over the original 'iquest'-like string allowing
  * more expressive queries.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class IRODSGenQueryBuilderQueryData {
 
@@ -27,7 +27,7 @@ class IRODSGenQueryBuilderQueryData {
 
 	/**
 	 * Instance to create an immutable representation of the query
-	 * 
+	 *
 	 * @param selectFields
 	 *            {@link GenQuerySelectField} that describes a select fields for
 	 *            the query, of which there must be at least one
@@ -57,7 +57,7 @@ class IRODSGenQueryBuilderQueryData {
 
 	/**
 	 * Instance to create an immutable representation of the query
-	 * 
+	 *
 	 * @param selectFields
 	 *            {@link GenQuerySelectField} that describes a select fields for
 	 *            the query, of which there must be at least one
@@ -86,7 +86,7 @@ class IRODSGenQueryBuilderQueryData {
 
 	/**
 	 * Private constructor (instance method is used to create)
-	 * 
+	 *
 	 * @param selectFields
 	 *            {@link GenQuerySelectField} that describes a select fields for
 	 *            the query, of which there must be at least one
@@ -167,7 +167,7 @@ class IRODSGenQueryBuilderQueryData {
 	 * Is the query sufficiently defined to process? Right now, this means
 	 * there's at least one field selected. Other edits may be added as this is
 	 * fully implemented
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if the query is
 	 *         correctly defined to process
 	 */

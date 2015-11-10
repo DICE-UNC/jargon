@@ -18,9 +18,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handles lower-level processing of GenQuery
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class GenQueryProcessor {
 	private final AbstractIRODSMidLevelProtocol irodsCommands;
@@ -42,7 +42,7 @@ public class GenQueryProcessor {
 	 * Take a result set from a previous query and do a paging operation. This
 	 * result set contains information on the original query, and the state of
 	 * the original query (more results, etc).
-	 * 
+	 *
 	 * @param translatedIRODSQuery
 	 * @param continueIndex
 	 * @param partialStartIndex
@@ -57,7 +57,7 @@ public class GenQueryProcessor {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex,
 			final QueryCloseBehavior queryCloseBehavior, final String zoneName)
-			throws JargonException {
+					throws JargonException {
 
 		if (continueIndex < 0) {
 			throw new JargonException("continue index must be >= 0");
@@ -146,7 +146,7 @@ public class GenQueryProcessor {
 
 	/**
 	 * send the notification to iRODS to close the query result set.
-	 * 
+	 *
 	 * @param irodsQueryResultSet
 	 * @throws JargonException
 	 */

@@ -2,7 +2,6 @@ package org.irods.jargon.core.unittest;
 
 import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstructionTest;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInpTest;
-import org.irods.jargon.core.packinstr.ClientServerNegotiationStructTest;
 import org.irods.jargon.core.packinstr.CollInpTest;
 import org.irods.jargon.core.packinstr.DataObjCopyInpTest;
 import org.irods.jargon.core.packinstr.DataObjInpForMcollTest;
@@ -36,7 +35,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AbstractIRODSPackingInstructionTest.class,
-		GenQueryInpTest.class, DataObjInpTest.class, CollInpTest.class,
+
+GenQueryInpTest.class, DataObjInpTest.class, CollInpTest.class,
 		DataObjCopyInpTest.class, GeneralAdminInpTest.class, ExecCmdTest.class,
 		OpenedDataObjInpTest.class, ModAvuMetadataInpTest.class,
 		ExecMyRuleInp_PITest.class, UserAdminInpTest.class,
@@ -49,8 +49,7 @@ import org.junit.runners.Suite;
 		DataObjInpForMcollTest.class, DataObjInpForUnmountTest.class,
 		ReconnMsgTest.class, SpecificQueryInpTest.class,
 		PamAuthRequestInpTest.class, SSLStartInpTest.class,
-		SSLEndInpTest.class, AuthReqPluginRequestInpTest.class,
-		ClientServerNegotiationStructTest.class })
+		SSLEndInpTest.class, AuthReqPluginRequestInpTest.class })
 public class PackingInstructionTests {
 
 }

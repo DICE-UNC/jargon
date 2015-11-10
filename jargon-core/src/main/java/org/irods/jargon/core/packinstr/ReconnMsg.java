@@ -13,7 +13,7 @@ public class ReconnMsg extends AbstractIRODSPackingInstruction {
 	/**
 	 * Constructor for a reconnect message, this is used to renew a socket after
 	 * prior arrangement with an iRODS agent in the startup process.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the original connection
 	 * @param startupResponseData

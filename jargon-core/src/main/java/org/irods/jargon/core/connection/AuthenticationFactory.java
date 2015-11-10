@@ -6,9 +6,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Interface for a factory that can return the appropriate authentication
  * implementation class based on the auth type.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface AuthenticationFactory {
 
@@ -24,7 +24,7 @@ public interface AuthenticationFactory {
 	 * <p/>
 	 * Note that this factory will defaut to a standard iRODS auth when the
 	 * public (anonymous) account is supplied.
-	 * 
+	 *
 	 * @param authScheme
 	 *            <code>String</code> with the desired auth mechanism. This
 	 *            value is dependent on the particular implementation of this

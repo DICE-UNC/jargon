@@ -1,25 +1,25 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Exceptions related to network protocols or packing instruction format errors
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class ProtocolException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6238216076420776338L;
 
 	/**
 	 * @param message
 	 */
-	public ProtocolException(String message) {
+	public ProtocolException(final String message) {
 		super(message);
 	}
 
@@ -27,14 +27,14 @@ public class ProtocolException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public ProtocolException(String message, Throwable cause) {
+	public ProtocolException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public ProtocolException(Throwable cause) {
+	public ProtocolException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,8 +43,8 @@ public class ProtocolException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ProtocolException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ProtocolException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -52,7 +52,8 @@ public class ProtocolException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ProtocolException(Throwable cause, int underlyingIRODSExceptionCode) {
+	public ProtocolException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,7 +61,8 @@ public class ProtocolException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ProtocolException(String message, int underlyingIRODSExceptionCode) {
+	public ProtocolException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

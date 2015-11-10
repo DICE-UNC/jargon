@@ -1,18 +1,18 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
 /**
  * Factory that will create authenticated and connected
  * <code>IRODSMidLevelProtocol</code> implementations.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class IRODSMidLevelProtocolFactory extends
-		AbstractIRODSMidLevelProtocolFactory {
+AbstractIRODSMidLevelProtocolFactory {
 
 	/**
 	 * Create the factory that will produced connected 'mid level protocol
@@ -26,7 +26,7 @@ public class IRODSMidLevelProtocolFactory extends
 	 * the mid level protocol handler, therefore an authentication factory is
 	 * also required, allowing a level of plug-ability to the authentication
 	 * layer.
-	 * 
+	 *
 	 * @param irodsConnectionFactory
 	 *            {@link IRODSConnectionFactory} implementation that can provide
 	 *            a low-level networking layer
@@ -42,7 +42,7 @@ public class IRODSMidLevelProtocolFactory extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocolFactory
 	 * #createInitialProtocol

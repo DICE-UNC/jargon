@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.query;
 
@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Convenience methods for handling packing instructions that result from the
  * invocation of genquery or specific query
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class QueryResultProcessingUtils {
 
@@ -27,7 +27,7 @@ public class QueryResultProcessingUtils {
 	/**
 	 * Given the raw response from iRODS, translate into a list of result rows
 	 * for easier processing.
-	 * 
+	 *
 	 * @param queryResponse
 	 *            <code>Tag</code> set with the raw GenQuery response from
 	 *            iRODS.
@@ -50,7 +50,7 @@ public class QueryResultProcessingUtils {
 	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse, final List<String> columnNames,
 			final int continuation, final int partialStartIndex)
-			throws JargonException {
+					throws JargonException {
 
 		if (queryResponse == null) {
 			// no response, create an empty result set, and never return null
@@ -97,7 +97,7 @@ public class QueryResultProcessingUtils {
 
 	/**
 	 * Get the continuation value from the query response
-	 * 
+	 *
 	 * @param response
 	 *            {@link Tag} from a gen or specific query
 	 * @return <code>int</code> with the continuation value
