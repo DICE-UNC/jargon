@@ -1,11 +1,8 @@
 
-Jargon Core API
-
-
 # Project: Jargon-core API
-#### Date: 11/09/2015
-#### Release Version: 4.0.2.4-RC1
-#### git tag: 4.0.2.4-RC1
+#### Date: 11/19/2015
+#### Release Version: 4.0.2.4-RELEASE
+#### git tag: 4.0.2.4-RELEASE
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -99,7 +96,6 @@ Added a jargon.properties setting to turn off SSL cert chain checking by using a
 ###  TLS v1 being used in SSL pam auth #154
 
 Fixes for SSL protocol selection to address some SSL/PAM handshake issues.  In addition, JDK1.8 is favored on most platforms to support later versions of TLS.
-
 
 ### Misc
 
