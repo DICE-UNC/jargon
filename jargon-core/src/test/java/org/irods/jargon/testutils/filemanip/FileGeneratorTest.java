@@ -20,11 +20,11 @@ public class FileGeneratorTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@Test
@@ -37,9 +37,9 @@ public class FileGeneratorTest {
 						+ "/" + collName);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						targetLocalFile, "coll", 2, 4, 2, "testFile", ".txt",
-						20000, 9000, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				targetLocalFile, "coll", 2, 4, 2, "testFile", ".txt",
+				20000, 9000, 1, 2);
 
 	}
 

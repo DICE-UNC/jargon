@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub;
 
@@ -8,9 +8,9 @@ import org.irods.jargon.core.pub.domain.AvuData;
 /**
  * Represents a response to a bulk AVU operation, includes success or failure
  * for an AVU operation
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class BulkAVUOperationResponse {
 
@@ -29,7 +29,7 @@ public class BulkAVUOperationResponse {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private BulkAVUOperationResponse(final ResultStatus resultStatus,
 			final AvuData avuData, final String message) {

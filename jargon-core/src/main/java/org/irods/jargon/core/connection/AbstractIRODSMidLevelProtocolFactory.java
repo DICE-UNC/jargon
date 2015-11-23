@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
  * <p/>
  * This whole arrangement is then used by the <code>IRODSProtocolManager</code>
  * to create new connections when requested.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 abstract class AbstractIRODSMidLevelProtocolFactory {
 
@@ -43,7 +43,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * the mid level protocol handler, therefore an authentication factory is
 	 * also required, allowing a level of plug-ability to the authentication
 	 * layer.
-	 * 
+	 *
 	 * @param irodsConnectionFactory
 	 *            {@link IRODSConnectionFactory} implementation that can provide
 	 *            a low-level networking layer
@@ -85,7 +85,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol instance(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		log.info("instance() method...calling connection life cycle");
 
@@ -115,10 +115,10 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	/**
 	 * Initial creation step gives individual factories a hook to insert their
 	 * own subclass of the iRODS protocol layer
-	 * 
+	 *
 	 * @param connection
 	 *            {@link AbstractConnection} to iRODS
-	 * 
+	 *
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} that may have connected this
 	 *            session, may be null
@@ -134,7 +134,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * provision of any additional information or processing. At the end of this
 	 * phase the protocol level connection is ready for use by higher-level API
 	 * functions
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            connected {@link AbstractIRODSMidLevelProtocol} that has been
 	 *            authenticated
@@ -151,7 +151,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol decorate(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("decorate()");
 
@@ -173,8 +173,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 					irodsMidLevelProtocol);
 			irodsMidLevelProtocol
-					.setIrodsServerProperties(environmentalInfoAccessor
-							.getIRODSServerProperties());
+			.setIrodsServerProperties(environmentalInfoAccessor
+					.getIRODSServerProperties());
 
 			// add startup response cookie info indicating if eirods
 			int cookie = Integer.parseInt(irodsMidLevelProtocol
@@ -184,11 +184,11 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
 				log.info("setting to eirods based on cookie value");
 				irodsMidLevelProtocol.getIrodsServerProperties()
-						.setEirods(true);
+				.setEirods(true);
 			} else if (irodsMidLevelProtocol.getIrodsServerProperties()
 					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
 				irodsMidLevelProtocol.getIrodsServerProperties()
-						.setEirods(true);
+				.setEirods(true);
 			}
 		}
 
@@ -202,7 +202,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * Life cycle method that will take an open connection to an iRODS agent and
 	 * produce an authenticated mid level protocol handler that wraps a live
 	 * connection
-	 * 
+	 *
 	 * @param connection
 	 *            {@link AbstractConnection} to iRODS
 	 * @param irodsAccount
@@ -227,7 +227,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			final AbstractIRODSMidLevelProtocol protocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		log.info("authenticate()");
 

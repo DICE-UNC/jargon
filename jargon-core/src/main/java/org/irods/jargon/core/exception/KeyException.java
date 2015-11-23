@@ -1,25 +1,25 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * equvalent to the -1800000 or 1801000 error
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class KeyException extends InternalIrodsOperationException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -1323427987927154954L;
 
 	/**
 	 * @param message
 	 */
-	public KeyException(String message) {
+	public KeyException(final String message) {
 		super(message);
 	}
 
@@ -27,14 +27,14 @@ public class KeyException extends InternalIrodsOperationException {
 	 * @param message
 	 * @param cause
 	 */
-	public KeyException(String message, Throwable cause) {
+	public KeyException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public KeyException(Throwable cause) {
+	public KeyException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -43,8 +43,8 @@ public class KeyException extends InternalIrodsOperationException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public KeyException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public KeyException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -52,7 +52,8 @@ public class KeyException extends InternalIrodsOperationException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public KeyException(Throwable cause, int underlyingIRODSExceptionCode) {
+	public KeyException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,7 +61,8 @@ public class KeyException extends InternalIrodsOperationException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public KeyException(String message, int underlyingIRODSExceptionCode) {
+	public KeyException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

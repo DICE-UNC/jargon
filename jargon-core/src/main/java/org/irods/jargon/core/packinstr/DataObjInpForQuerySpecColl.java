@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Translation of a DataObjInp operation to query a special collection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction {
 
@@ -28,19 +28,19 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query data objects in
 	 * special collections
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
-	 * 
+	 *
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
 			final String fileAbsolutePath, final SpecColInfo specColInfo)
-			throws JargonException {
+					throws JargonException {
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
 				specColInfo, 0, 0L);
 	}
@@ -48,19 +48,19 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query data objects in
 	 * special collections as a continuation
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
-	 * 
+	 *
 	 * @param continueInx
 	 *            <code>int</code> with the continueInx value from a previous
 	 *            request
-	 * 
+	 *
 	 * @return <code>DataObjInp</code> containing the necessary packing
 	 *         instruction
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
@@ -97,7 +97,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query collections in special
 	 * collections
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo
@@ -108,7 +108,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryCollections(
 			final String fileAbsolutePath, final SpecColInfo specColInfo)
-			throws JargonException {
+					throws JargonException {
 		if (specColInfo == null) {
 			throw new IllegalArgumentException("null specColInfo");
 		}
@@ -120,7 +120,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	/**
 	 * Create the DataObjInp packing instruction to query collections in special
 	 * collections
-	 * 
+	 *
 	 * @param fileAbsolutePath
 	 *            <code>String</code> with the file absolute path.
 	 * @param specColInfo

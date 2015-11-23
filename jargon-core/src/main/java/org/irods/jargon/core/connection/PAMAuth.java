@@ -1,18 +1,24 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
 import java.io.IOException;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 
 import javax.net.ssl.HandshakeCompletedEvent;
 import javax.net.ssl.HandshakeCompletedListener;
+import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.SSLEndInp;
@@ -22,11 +28,11 @@ import org.irods.jargon.core.packinstr.Tag;
 /**
  * Support for PAM (plug-able authentication module) contributed by Chris Smith
  * for iRODS 3.2+
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  *         see lib/core/src/cientLogin.c for main driver program
- * 
+ *
  *         see lib/core/src/ sslSockCom.c
  */
 public class PAMAuth extends AuthMechanism {
@@ -43,13 +49,37 @@ public class PAMAuth extends AuthMechanism {
 		SSLStartInp sslStartInp = SSLStartInp.instance();
 		irodsCommands.irodsFunction(sslStartInp);
 
+		SSLContext ctx;
+		try {
+			ctx = SSLContext.getInstance("TLS", "SunJSSE");
+		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
+			// The SunJSSE provider should always be available.
+			throw new AssertionError(e);
+		}
+
+		TrustManager[] trustManagers = null;
+
+		if (irodsCommands.getIrodsSession().getX509TrustManager() != null) {
+			trustManagers = new TrustManager[] { irodsCommands
+					.getIrodsSession().getX509TrustManager() };
+		}
+		try {
+			ctx.init(null, trustManagers, null);
+		} catch (KeyManagementException e1) {
+			log.error("error initializing ssl context:{}", e1);
+			throw new JargonRuntimeException("ssl context init exception", e1);
+		}
+
 		// if all went well (no exceptions) then the server is ready for the
 		// credential exchange, first grab an SSL enabled connection
 		log.debug("getting ssl socket factory");
-		SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory
-				.getDefault();
+		SSLSocketFactory sslSocketFactory = ctx.getSocketFactory();
+		log.debug("supported cyphers:{}",
+				sslSocketFactory.getSupportedCipherSuites());
+
 		SSLSocket sslSocket = null;
 		try {
+
 			sslSocket = (SSLSocket) sslSocketFactory.createSocket(irodsCommands
 					.getIrodsConnection().getConnection(), irodsAccount
 					.getHost(), irodsAccount.getPort(), false);

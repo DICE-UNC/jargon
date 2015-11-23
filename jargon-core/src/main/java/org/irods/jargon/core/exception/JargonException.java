@@ -5,10 +5,10 @@ package org.irods.jargon.core.exception;
 
 /**
  * A general exception that has occurrred in IRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
- * 
+ *
+ *
  */
 public class JargonException extends Exception {
 

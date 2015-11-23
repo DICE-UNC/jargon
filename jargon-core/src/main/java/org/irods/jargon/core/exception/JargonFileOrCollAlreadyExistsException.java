@@ -7,9 +7,9 @@ package org.irods.jargon.core.exception;
  * Represents a condition where a file or collection is being added, and it
  * already exists. Note that some operations allow an override flag that would
  * automatically overwrite such data.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class JargonFileOrCollAlreadyExistsException extends JargonException {
 

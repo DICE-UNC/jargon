@@ -8,9 +8,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Encapsulates an object that represents an output parameter of a rule
  * execution. This is an immutable object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSRuleExecResultOutputParameter {
 	public enum OutputParamType {
@@ -24,7 +24,7 @@ public class IRODSRuleExecResultOutputParameter {
 	/**
 	 * Return a new immutable value object that encapsulates the output of a
 	 * rule for a specific designated output parameter
-	 * 
+	 *
 	 * @param parameterName
 	 *            <code>String</code> with the parameter name as specified in
 	 *            the rule
@@ -60,7 +60,7 @@ public class IRODSRuleExecResultOutputParameter {
 
 	protected IRODSRuleExecResultOutputParameter(final String parameterName,
 			final OutputParamType outputParamType, final Object resultObject)
-			throws JargonException {
+					throws JargonException {
 
 		if (parameterName == null || parameterName.isEmpty()) {
 			throw new JargonException("parameterName is null or empty");

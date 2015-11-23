@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * General base class for objects that interact with IRODS through a connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class IRODSGenericAO implements IRODSAccessObject {
 
@@ -36,7 +36,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * Constructor that initializes the access object with a pointer to the
 	 * connection information, as well as the session manager that controls
 	 * connections.
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession} that
 	 *            will manage connecting to iRODS.
@@ -67,7 +67,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#isInstrumented()
 	 */
 	@Override
@@ -77,7 +77,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSSession()
 	 */
 	@Override
@@ -87,7 +87,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccount()
 	 */
 	@Override
@@ -97,7 +97,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSServerProperties()
 	 */
@@ -117,7 +117,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
@@ -128,7 +128,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getJargonProperties()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock
 	 * ()
@@ -152,7 +152,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
@@ -164,7 +164,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSFileFactory()
 	 */
 	@Override
@@ -175,7 +175,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
@@ -188,7 +188,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
 	 */
 	@Override

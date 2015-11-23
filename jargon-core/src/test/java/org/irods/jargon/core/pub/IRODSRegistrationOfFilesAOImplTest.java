@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -25,9 +26,9 @@ import org.junit.Test;
 /**
  * Note that these tests assume localhost right now and will just be ignored if
  * running against a remote host
- * 
+ *
  * @author mconway
- * 
+ *
  */
 public class IRODSRegistrationOfFilesAOImplTest {
 
@@ -156,7 +157,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Register a file as an overwrite situation
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DuplicateDataException.class)
@@ -200,7 +201,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Call a method to register a file when the local file is a collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -269,7 +270,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Register a non-existent file
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DataNotFoundException.class)
@@ -308,10 +309,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * The irods parent collection is a subdir that does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public final void testRegisterPhysicalDataFileToIRODSIRODSParentMissing()
 			throws Exception {
 
@@ -348,7 +349,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * register a file and ask a checksum to be registered as well
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -518,7 +519,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	/**
 	 * Unregister a non-existent file, expect a 'false' return from the
 	 * unregister
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -553,7 +554,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Put the file, then register again as a replica to a second resource
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -605,7 +606,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * register a file as a replica when that file doesn't yet exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = DataNotFoundException.class)
@@ -648,7 +649,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Create a nested collection and then unregister it recursively
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -708,7 +709,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 	/**
 	 * Create a nested collection and then unregister it without recursion
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = CollectionNotEmptyException.class)

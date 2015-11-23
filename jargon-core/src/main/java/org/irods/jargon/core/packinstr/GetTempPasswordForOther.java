@@ -6,7 +6,7 @@ import org.irods.jargon.core.exception.JargonException;
  * Packing instruction to request a temporary password as the designated user.
  * This capability is only available to rodsadmin, and is a post iRODS 3.0
  * enhancement.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
@@ -17,7 +17,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance method creates a request to generate a temporary password.
-	 * 
+	 *
 	 * @param targetUserName
 	 *            <code>String</code> (required) with the user name for which a
 	 *            temporary password will be generated.
@@ -29,7 +29,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Private constructor
-	 * 
+	 *
 	 * @param targetUserName
 	 *            <code>String</code> (required) with the user name for which a
 	 *            temporary password will be generated.
@@ -46,7 +46,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -55,13 +55,13 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 		final Tag message = new Tag(PI_TAG,
 				new Tag[] { new Tag("targetUser", targetUserName.trim()),
-						new Tag("unused") });
+				new Tag("unused") });
 		return message;
 	}
 
 	/**
 	 * Get the user name for whom the temporary password will be generated.
-	 * 
+	 *
 	 * @return <code>String</code> with the user name for which the temporary
 	 *         password will be issued.
 	 */

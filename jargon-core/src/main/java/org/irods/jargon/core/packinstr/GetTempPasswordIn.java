@@ -4,7 +4,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Packing instruction to request a temporary password.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class GetTempPasswordIn extends AbstractIRODSPackingInstruction {
@@ -13,7 +13,7 @@ public class GetTempPasswordIn extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Instance method creates a request to generate a temporary password.
-	 * 
+	 *
 	 * @return <code>GetTempPasswordIn</code> instance
 	 */
 	public static GetTempPasswordIn instance() {
@@ -27,7 +27,7 @@ public class GetTempPasswordIn extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

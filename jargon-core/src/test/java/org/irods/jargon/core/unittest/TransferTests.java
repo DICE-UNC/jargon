@@ -7,7 +7,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ TransferStatusTest.class,
-		DefaultTransferControlBlockTest.class })
+	DefaultTransferControlBlockTest.class })
 public class TransferTests {
 
 }

@@ -41,7 +41,7 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -144,7 +144,7 @@ public class MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest {
 
 	/**
 	 * Looking for any leaks in file handles
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

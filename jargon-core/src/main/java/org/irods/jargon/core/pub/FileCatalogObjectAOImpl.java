@@ -25,12 +25,12 @@ import org.slf4j.LoggerFactory;
  * Access object representing the file catalog in iRODS. This object is the
  * parent of access objects that deal with iRODS collections (directories) and
  * data objects (files), and contains common operations for both.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
-		FileCatalogObjectAO {
+FileCatalogObjectAO {
 
 	protected transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
@@ -59,7 +59,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
 	 * java.lang.String, java.lang.String)
@@ -131,7 +131,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
 	 * java.lang.String, java.lang.String)
@@ -162,7 +162,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 * Send a get host for get/put request to iRODS and evaluate the returned
 	 * host. It will either be a host name, or null, indicating no re-routing
 	 * needed.
-	 * 
+	 *
 	 * @param dataObjInp
 	 * @return
 	 * @throws JargonException
@@ -198,7 +198,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getObjectStatForAbsolutePath
 	 * (java.lang.String)
@@ -262,7 +262,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Given an iRODS absolute path, retrieve the <code>ObjStat</code>
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the iRODS absolute path
 	 * @return {@link ObjStat} with the file data from iRODS
@@ -292,7 +292,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 	/**
 	 * Given an iRODS parent and child path, retrieve the <code>ObjStat</code>
-	 * 
+	 *
 	 * @param parentPath
 	 *            <code>String</code> with the parent path to the file
 	 * @param fileName
@@ -320,7 +320,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	/**
 	 * Given an <code>ObjStat</code> return the absolute path to use considering
 	 * things like soft links.
-	 * 
+	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has been previously retrieved
 	 * @return <code>String</code> with the absolute path to use to get to the
@@ -346,7 +346,8 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 
 		log.info("resoveAbsolutePathViaObjStat()");
 
-		ObjStat objStat = retrieveObjStat(irodsAbsolutePath);
+		ObjStat objStat = retrieveObjStat(MiscIRODSUtils
+				.checkPathSizeForMax(irodsAbsolutePath));
 		return resolveAbsolutePathGivenObjStat(objStat);
 
 	}
@@ -358,7 +359,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	/**
 	 * Given two permissions (one by user, one by group) score and return the
 	 * highest permission, or null if no permissions found
-	 * 
+	 *
 	 * @param userFilePermission
 	 * @param groupFilePermission
 	 * @return {@link UserFilePermission} that is the highest level, or

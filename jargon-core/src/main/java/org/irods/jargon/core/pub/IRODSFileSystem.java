@@ -59,9 +59,9 @@ import org.slf4j.LoggerFactory;
  * creation of connections across the entire application. The shared objects are
  * designed to manage these connections across multiple threads.
  * <p/>
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class IRODSFileSystem {
 
@@ -74,7 +74,7 @@ public final class IRODSFileSystem {
 
 	/**
 	 * Create a default IRODSFileSystem
-	 * 
+	 *
 	 * @return <code>IRODSFileSystem</code> that is initialized and ready to
 	 *         connect
 	 * @throws JargonException
@@ -94,7 +94,7 @@ public final class IRODSFileSystem {
 	 * object is in charge of producing iRODS connections upon request, through
 	 * some arbitrary mechanism. This constructor allows pool, proxy, and other
 	 * connection sources.
-	 * 
+	 *
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} instance
 	 * @throws JargonException
@@ -112,7 +112,7 @@ public final class IRODSFileSystem {
 
 	/**
 	 * Lazily initialize and return an <code>IRODSAccessObjectFactoryImpl</code>
-	 * 
+	 *
 	 * @return {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}
 	 * @throws JargonException
 	 */
@@ -129,7 +129,7 @@ public final class IRODSFileSystem {
 	 * For a given <code>IRODSAccount</code> create an
 	 * <code>IRODSFileFactory</code> that can return iRODS file objects for the
 	 * particular connection.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link org.irods.jargon.core.connection.IRODSAccount}
 	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileFactory}
@@ -146,7 +146,7 @@ public final class IRODSFileSystem {
 	 * <code>IRODSFileSystem</code>, that Thread must close their own
 	 * connection. Connections are stored in a <code>ThreadLocal</code> which
 	 * means a Thread's connections to iRODS are only visible from that Thread.
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public void close() throws JargonException {
@@ -175,7 +175,7 @@ public final class IRODSFileSystem {
 	 * this <code>IRODSFileSystem</code>, that Thread must close their own
 	 * connection. Connections are stored in a <code>ThreadLocal</code> which
 	 * means a Thread's connections to iRODS are only visible from that Thread.
-	 * 
+	 *
 	 * @param irodsAccount
 	 */
 	public void close(final IRODSAccount irodsAccount) throws JargonException {
@@ -193,7 +193,7 @@ public final class IRODSFileSystem {
 	 * exception on close is logged and eaten. This is useful in code for neater
 	 * finally blocks. If you do want an error thrown, use the
 	 * <code>close(IRODSAccount)</code> method.
-	 * 
+	 *
 	 * @param irodsAccount
 	 */
 	public void closeAndEatExceptions(final IRODSAccount irodsAccount) {
@@ -213,7 +213,7 @@ public final class IRODSFileSystem {
 	 * provided to allow display of these connections in diagnostics or for
 	 * other uses, but it is highly recommended that these IRODSCommands are not
 	 * used for any other purpose.
-	 * 
+	 *
 	 * @return {@link AbstractIRODSMidLevelProtocol} that represent
 	 *         protocol-level connection to iRODS (above the socket level)
 	 */
@@ -225,7 +225,7 @@ public final class IRODSFileSystem {
 	/**
 	 * Obtain a reference to the <code>IRODSSession</code> object that obtains
 	 * connections on behalf of the caller
-	 * 
+	 *
 	 * @return
 	 */
 	public IRODSSession getIrodsSession() {
@@ -235,7 +235,7 @@ public final class IRODSFileSystem {
 	/**
 	 * Get the <code>IRODSProtocolManager</code> that is the source of
 	 * connections to iRODS
-	 * 
+	 *
 	 * @return {@link IRODSProtocolManager} that can produce connections to
 	 *         iRODS upon request, and handles the disposal of connections after
 	 *         they are finished
@@ -247,7 +247,7 @@ public final class IRODSFileSystem {
 	/**
 	 * Get the <code>JargonProperties</code> as configured in the
 	 * <code>IRODSSession</code>. This is here for convenience.
-	 * 
+	 *
 	 * @return {@link JargonProperties} that control various configurations.
 	 */
 	public JargonProperties getJargonProperties() {

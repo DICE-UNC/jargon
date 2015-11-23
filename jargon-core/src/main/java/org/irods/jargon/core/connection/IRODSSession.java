@@ -10,6 +10,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import javax.net.ssl.X509TrustManager;
+
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactory;
 import org.irods.jargon.core.checksum.LocalChecksumComputerFactoryImpl;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -60,9 +62,9 @@ import org.slf4j.LoggerFactory;
  * cache. The actual operative account is stored within the iRODS protocol. For
  * example, a PAM login may create a temp irods user under the covers, so a user
  * presents his pam iRODS account, but the system uses the derived account.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSSession {
 
@@ -85,6 +87,41 @@ public class IRODSSession {
 	private IRODSProtocolManager irodsProtocolManager;
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSSession.class);
+
+	/**
+	 * Trust manager (which can have a custom manager injected) for SSL
+	 * certificates. <code>JargonProperties</code> can set a 'trust all' trust
+	 * manager by setting the <code>bypass.ssl.cert.checks</code> to
+	 * <code>true</code>, otherwise, the default will be used. In addition, a
+	 * custom trust manager may be injected here.
+	 */
+	private X509TrustManager x509TrustManager = null;
+
+	/**
+	 * @return the x509TrustManager that is currently set for SSL connections,
+	 *         it may be <code>null</code>, which will take a default for any
+	 *         SSL sockets created
+	 */
+	public synchronized X509TrustManager getX509TrustManager() {
+		return x509TrustManager;
+	}
+
+	/**
+	 * @param x509TrustManager
+	 *            the x509TrustManager to set, this may be left
+	 *            <code>null</code>, in which case a default trust manager is
+	 *            used. this allows users to inject their own certificate trust
+	 *            manager. Note as well that {@link JargonProperties} can also
+	 *            specifiy that a 'trust all' trust manager should be used, in
+	 *            which case the {@link TrustAllX509TrustManager} will be
+	 *            created and put here. This creation is only done when
+	 *            constructing iRODS session using the constructor that takes a
+	 *            <code>JargonProperties</code> parameter, with the bypassSslCet
+	 */
+	public synchronized void setX509TrustManager(
+			final X509TrustManager x509TrustManager) {
+		this.x509TrustManager = x509TrustManager;
+	}
 
 	/**
 	 * Manager for long file restarts. Defaults to a simple in-memory manager,
@@ -125,7 +162,7 @@ public class IRODSSession {
 	 * behavior of Jargon. This will either be the default, loaded from the
 	 * <code>jargon.properties</code> file, or a custom source that can be
 	 * injected into the <code>IRODSSession</code> object.
-	 * 
+	 *
 	 * @return {@link JargonProperties} with configuration metadata.
 	 */
 	public JargonProperties getJargonProperties() {
@@ -138,7 +175,7 @@ public class IRODSSession {
 	 * Convenience method builds a default <code>TransferControlBlock</code>
 	 * that has default <code>TransferOptions</code> based on the
 	 * <code>JargonProperties</code> configured for the system.
-	 * 
+	 *
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
@@ -151,7 +188,7 @@ public class IRODSSession {
 		synchronized (this) {
 
 			transferControlBlock
-					.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
+			.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
 		}
 		return transferControlBlock;
 	}
@@ -159,7 +196,7 @@ public class IRODSSession {
 	/**
 	 * Build an immutable <code>PipelineConfiguration</code> object that
 	 * controls i/o behavior with iRODS
-	 * 
+	 *
 	 * @return {@link PipelineConfiguration} which is an immutable set of
 	 *         properties to control i/o behavior of Jargon
 	 */
@@ -174,7 +211,7 @@ public class IRODSSession {
 	/**
 	 * Get the default transfer options based on the properties that have been
 	 * set. This can then be tuned for an individual transfer
-	 * 
+	 *
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
@@ -190,18 +227,18 @@ public class IRODSSession {
 			transferOptions.setAllowPutGetResourceRedirects(jargonProperties
 					.isAllowPutGetResourceRedirects());
 			transferOptions
-					.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
-							.isComputeAndVerifyChecksumAfterTransfer());
+			.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
+					.isComputeAndVerifyChecksumAfterTransfer());
 			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
 					.isComputeChecksumAfterTransfer());
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
 			transferOptions
-					.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
-							.getIntraFileStatusCallbacksNumberCallsInterval());
+			.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
+					.getIntraFileStatusCallbacksNumberCallsInterval());
 			transferOptions
-					.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
-							.getIntraFileStatusCallbacksTotalBytesInterval());
+			.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
+					.getIntraFileStatusCallbacksTotalBytesInterval());
 			transferOptions.setChecksumEncoding(jargonProperties
 					.getChecksumEncoding());
 
@@ -216,7 +253,7 @@ public class IRODSSession {
 	 * Close all sessions to iRODS that exist for this Thread. This method can
 	 * be safely called by multiple threads, as the connections are in a
 	 * <code>ThreadLocal</code>
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public void closeSession() throws JargonException {
@@ -235,13 +272,24 @@ public class IRODSSession {
 					irodsMidLevelProtocol.getIrodsAccount().toString());
 			// irodsMidLevelProtocol.disconnect();
 			getIrodsProtocolManager()
-					.returnIRODSProtocol(irodsMidLevelProtocol);
+			.returnIRODSProtocol(irodsMidLevelProtocol);
 			// I don't remove from the map because the map is just going to be
 			// set to null in the ThreadLocal below
 		}
 
 		log.debug("all sessions closed for this Thread");
 		sessionMap.set(null);
+	}
+
+	public IRODSSession(final JargonProperties jargonProperties) {
+		log.info("IRODSSession(jargonProperties) with properties of: {}",
+				jargonProperties);
+		if (jargonProperties == null) {
+			throw new IllegalArgumentException("null jargonProperties");
+		}
+
+		this.jargonProperties = jargonProperties;
+		checkInitTrustManager();
 	}
 
 	public IRODSSession() {
@@ -260,11 +308,22 @@ public class IRODSSession {
 		} catch (Exception e) {
 			log.warn("unable to load default jargon properties");
 		}
+		checkInitTrustManager();
+	}
+
+	private void checkInitTrustManager() {
+		log.info("checkInitTrustManager()");
+		if (getJargonProperties().isBypassSslCertChecks()) {
+			log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			log.warn("setting trustAllX509TrustManager, not recommended for production!!!");
+			log.warn(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>");
+			setX509TrustManager(new TrustAllX509TrustManager());
+		}
 	}
 
 	/**
 	 * Create a session with an object that will hand out connections.
-	 * 
+	 *
 	 * @param irodsConnectionManager
 	 *            {@link IRODSProtocolManager} that is in charge of handing out
 	 *            connections
@@ -286,7 +345,7 @@ public class IRODSSession {
 	 * Instance method, still supported (for now) but switching to straight
 	 * setter methods and a default constructor to make it easer to wire with
 	 * dependency injection. Look to see this deprecated.
-	 * 
+	 *
 	 * @param irodsConnectionManager
 	 * @return
 	 * @throws JargonException
@@ -294,7 +353,7 @@ public class IRODSSession {
 
 	public static IRODSSession instance(
 			final IRODSProtocolManager irodsConnectionManager)
-			throws JargonException {
+					throws JargonException {
 		return new IRODSSession(irodsConnectionManager);
 	}
 
@@ -303,7 +362,7 @@ public class IRODSSession {
 	 * connection from the cache. This connection is per-Thread, so if another
 	 * thread has a cached connection, it is not visible from here, and must be
 	 * properly closed on that Thread.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes this connection to
 	 *            iRODS.
@@ -370,7 +429,7 @@ public class IRODSSession {
 	 * using the existing credentials. This is used to seamlessly renew a socket
 	 * during operations 'under the covers', for operations like long running
 	 * transfers that may
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
@@ -404,7 +463,7 @@ public class IRODSSession {
 	/**
 	 * Based on the configured properties, evaluate the age of the current
 	 * connection and potentially renew the connection if necessary.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 * @return <code>boolean</code> that will be <code>true</code> if the conn
 	 *         was shut down
@@ -413,7 +472,7 @@ public class IRODSSession {
 	 */
 	public boolean evaluateConnectionForRenewal(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration()
 				.getSocketRenewalIntervalInSeconds();
@@ -443,7 +502,7 @@ public class IRODSSession {
 	private AbstractIRODSMidLevelProtocol connectAndAddToProtocolsMap(
 			final IRODSAccount irodsAccount,
 			final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols)
-			throws JargonException {
+					throws JargonException {
 		AbstractIRODSMidLevelProtocol irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
 				buildPipelineConfigurationBasedOnJargonProperties(), this);
@@ -474,7 +533,7 @@ public class IRODSSession {
 
 	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException {
+					throws JargonException {
 		log.debug("addUserInfoForGSIAccount()");
 
 		if (irodsAccount == null) {
@@ -492,9 +551,9 @@ public class IRODSSession {
 		try {
 			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-							QueryConditionOperators.EQUAL, dn);
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
+					QueryConditionOperators.EQUAL, dn);
 			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
 					irodsCommands);
 
@@ -543,7 +602,7 @@ public class IRODSSession {
 
 	/**
 	 * Close an iRODS session for the given account
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that describes the connection that
 	 *            should be closed.
@@ -590,7 +649,7 @@ public class IRODSSession {
 	/**
 	 * Signal to the <code>IRODSSession</code> that a connection should be
 	 * terminated and cleared from the cache
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
@@ -612,7 +671,7 @@ public class IRODSSession {
 	 * Signal to the <code>IRODSSession</code> that a connection has been
 	 * forcefully terminated due to errors, and should be removed from the
 	 * cache.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
 	 * @throws JargonException
@@ -649,7 +708,7 @@ public class IRODSSession {
 	 * This method is not particularly useful, but does provide a route to get a
 	 * direct handle on the connections for this Thread in cases where such
 	 * status information needs to be kept. Returns null if no map is available.
-	 * 
+	 *
 	 * @return
 	 */
 	public Map<String, AbstractIRODSMidLevelProtocol> getIRODSCommandsMap() {
@@ -672,7 +731,7 @@ public class IRODSSession {
 	 * first request based on the <code>JargonProperties</code>, and once
 	 * created, changing the properties does not reconfigure the pool, it just
 	 * returns the lazily created instance.
-	 * 
+	 *
 	 * @return {@link ExecutorService} that is the pool of threads for the
 	 *         paralllel transfers, or <code>null</code> if the pool is not
 	 *         configured in the jargon properties.
@@ -709,7 +768,7 @@ public class IRODSSession {
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
 							poolSize),
-					new RejectedParallelThreadExecutionHandler());
+							new RejectedParallelThreadExecutionHandler());
 
 			log.debug("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
@@ -718,7 +777,7 @@ public class IRODSSession {
 
 	/**
 	 * Set the Jargon properties
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            the jargonProperties to set
 	 */
@@ -729,7 +788,7 @@ public class IRODSSession {
 	}
 
 	/**
-	 * 
+	 *
 	 * Simple cache (tolerating concurrent access) for name/value props. This
 	 * cache is meant to hold user-definable properties about a connected server
 	 * (by host and zone name). This is meant as an efficient way to record
@@ -741,7 +800,7 @@ public class IRODSSession {
 	 * A good example would be if required specific queries, rules,
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
-	 * 
+	 *
 	 * @return
 	 */
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
@@ -751,7 +810,7 @@ public class IRODSSession {
 	/**
 	 * Handy method to see if we're using the dynamic server properties cache.
 	 * This is set in the jargon properties.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isUsingDynamicServerPropertiesCache() {
@@ -762,7 +821,7 @@ public class IRODSSession {
 	/**
 	 * Get a reference to a factory that can return checksum computation
 	 * strategies on local file systems
-	 * 
+	 *
 	 * @return {@link LocalChecksumComputerFactory}
 	 */
 	public LocalChecksumComputerFactory getLocalChecksumComputerFactory() {

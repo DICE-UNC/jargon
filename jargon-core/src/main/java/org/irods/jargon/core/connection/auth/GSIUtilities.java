@@ -17,16 +17,16 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 /**
  * Utility classes for manipulating GSI grid certificates, covering operations
  * such as generating proxy certificates.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class GSIUtilities {
 
 	/**
 	 * Create the <code>GSIIRODSAccount</code> with the certificate that exists
 	 * in the given file
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
@@ -66,7 +66,7 @@ public class GSIUtilities {
 	/**
 	 * Create the <code>GSIIRODSAccount</code> with the certificate based on the
 	 * contents of the given <code>String</code>
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
@@ -103,7 +103,7 @@ public class GSIUtilities {
 	/**
 	 * Create the <code>GSIIRODSAccount</code> with the certificate based on the
 	 * contents of the given <code>byte[]</code>
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
@@ -147,7 +147,7 @@ public class GSIUtilities {
 
 	/**
 	 * Derive the user distinguished name from the provided cert.
-	 * 
+	 *
 	 * @param account
 	 * @return
 	 * @throws JargonException

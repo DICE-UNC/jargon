@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.io;
 
@@ -23,7 +23,7 @@ import org.junit.Test;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSFIleInputStreamForSoftLinksTest {
 
@@ -42,7 +42,7 @@ public class IRODSFIleInputStreamForSoftLinksTest {
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -56,7 +56,7 @@ public class IRODSFIleInputStreamForSoftLinksTest {
 
 	/**
 	 * read from an input stream on a soft-linked data object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -77,12 +77,12 @@ public class IRODSFIleInputStreamForSoftLinksTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

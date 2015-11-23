@@ -10,7 +10,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * Creates a bundle (tar) file to be stored in iRODS using the contents of
 	 * the specified collection. An optional (blank if not used) resource can be
 	 * specified to store the new bundle. This version is no-force.
-	 * 
+	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
 	 *            <code>String</code> with the absolute path to a file on iRODS
 	 *            that will store the created bundle.
@@ -27,14 +27,14 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Creates a bundle (tar) file to be stored in iRODS using the contents of
 	 * the specified collection. An optional (blank if not used) resource can be
 	 * specified to store the new bundle. This version uses a force option to
 	 * overwrite the tar file if it already exists.
-	 * 
+	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
 	 *            <code>String</code> with the absolute path to a file on iRODS
 	 *            that will store the created bundle.
@@ -55,7 +55,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
 	 * target directory. This is a no-force, no-bulk operation.
-	 * 
+	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
 	 *            <code>String</code> with the absolute path to the tar file in
 	 *            iRODS to be extracted.
@@ -73,13 +73,13 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
 	 * target directory. This is a no-bulk operation that will overwrite any
 	 * previously extracted files
-	 * 
+	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
 	 *            <code>String</code> with the absolute path to the tar file in
 	 *            iRODS to be extracted.
@@ -97,13 +97,13 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
 	 * target directory. This is a no-force operation that will use the bulk
 	 * registration optimization.
-	 * 
+	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
 	 *            <code>String</code> with the absolute path to the tar file in
 	 *            iRODS to be extracted.
@@ -121,7 +121,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given

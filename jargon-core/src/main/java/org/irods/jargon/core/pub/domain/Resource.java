@@ -12,9 +12,9 @@ import java.util.List;
  * is mutable for ease of use, so it is not thread-safe. Jargon will not retain
  * references once returned from a method, and will not alter a domain object
  * passed to it
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class Resource extends IRODSDomainObject {
 
@@ -150,7 +150,7 @@ public class Resource extends IRODSDomainObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

@@ -47,11 +47,11 @@ public class RuleProcessingAOImplTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -264,7 +264,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
@@ -452,9 +452,7 @@ public class RuleProcessingAOImplTest {
 
 	}
 
-	@Ignore
-	// FIXME: overheaded until resolved
-	// https://github.com/DICE-UNC/jargon/issues/110
+	@Test
 	public void testRuleContainsConditionWithEqualsInAttrib() throws Exception {
 
 		// put a collection out to do a checksum on
@@ -490,7 +488,7 @@ public class RuleProcessingAOImplTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
 
 		ruleBuilder.append(targetIrodsCollection);
@@ -533,7 +531,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testResultFileName;
+						+ "/" + testResultFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -583,7 +581,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testResultFileName;
+						+ "/" + testResultFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -642,7 +640,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testFileName;
+						+ "/" + testFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -708,7 +706,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testFileName;
+						+ "/" + testFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -769,7 +767,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testFileName;
+						+ "/" + testFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -810,7 +808,7 @@ public class RuleProcessingAOImplTest {
 		// put a collection out to do a checksum on
 		String testFileName = "testClientAction.txt";
 		scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String putFileName = "/a/bogus/dir/" + testFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -955,7 +953,7 @@ public class RuleProcessingAOImplTest {
 		File sourceFile = new File(scratchFileAbsolutePath);
 		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
-				testFileName);
+						testFileName);
 
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
@@ -964,7 +962,7 @@ public class RuleProcessingAOImplTest {
 		File sourceFile1 = new File(scratchFileAbsolutePath1);
 		IRODSFile targetFile1 = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
-				testFileName1);
+						testFileName1);
 
 		dto.putOperation(sourceFile1, targetFile1, null, tcb);
 
@@ -1059,7 +1057,7 @@ public class RuleProcessingAOImplTest {
 		String putTargetFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testPutFileName;
+						+ "/" + testPutFileName;
 
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -1069,7 +1067,7 @@ public class RuleProcessingAOImplTest {
 		File sourceFile = new File(scratchFileAbsolutePath);
 		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
-				testFileName);
+						testFileName);
 
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
@@ -1078,7 +1076,7 @@ public class RuleProcessingAOImplTest {
 		File sourceFile1 = new File(scratchFileAbsolutePath1);
 		IRODSFile targetFile1 = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
-				testFileName1);
+						testFileName1);
 
 		dto.putOperation(sourceFile1, targetFile1, null, tcb);
 
@@ -1407,7 +1405,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + irodsFileName;
+						+ "/" + irodsFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1468,7 +1466,7 @@ public class RuleProcessingAOImplTest {
 		String targetIrodsFileName = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ "/" + testFileName;
+						+ "/" + testFileName;
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

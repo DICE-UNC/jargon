@@ -29,13 +29,13 @@ public class FileCatalogObjectAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -86,7 +86,7 @@ public class FileCatalogObjectAOImplTest {
 				.getHostForGetOperation(
 						targetIrodsCollection + "/" + testFileName,
 						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
 
 		Assert.assertNull(
 				"null info from lookup of host for get operation expected, indicates no rerouting",
@@ -130,7 +130,7 @@ public class FileCatalogObjectAOImplTest {
 				absPath,
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
 				null, null);
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -182,7 +182,7 @@ public class FileCatalogObjectAOImplTest {
 				localAbsPath,
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
 				null, null);
 
 		DataObjectAO dataObjectAO = irodsFileSystem

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.utils;
 
@@ -20,9 +20,9 @@ import org.slf4j.LoggerFactory;
  * Utility methods for processing various query operations for Jargon Access
  * Objects. These methods are for internal use and have limited utility outside
  * of that.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AccessObjectQueryProcessingUtils {
 	private static Logger log = LoggerFactory
@@ -35,7 +35,7 @@ public class AccessObjectQueryProcessingUtils {
 	 */
 	public static List<AvuData> buildAvuDataListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
-			throws JargonException {
+					throws JargonException {
 		final List<AvuData> avuDatas = new ArrayList<AvuData>();
 		AvuData avuData = null;
 
@@ -66,7 +66,7 @@ public class AccessObjectQueryProcessingUtils {
 	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(
 			final MetadataDomain metaDataDomain,
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
-			throws JargonException {
+					throws JargonException {
 		if (metaDataDomain == null) {
 			throw new JargonException("null metaDataDomain");
 		}
@@ -78,9 +78,9 @@ public class AccessObjectQueryProcessingUtils {
 		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
 			metaDataResults
-					.add(buildMetaDataAndDomainDataFromResultSetRow(
-							metaDataDomain, row,
-							irodsQueryResultSet.getTotalRecords()));
+			.add(buildMetaDataAndDomainDataFromResultSetRow(
+					metaDataDomain, row,
+					irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -96,7 +96,7 @@ public class AccessObjectQueryProcessingUtils {
 	public static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
 			final MetaDataAndDomainData.MetadataDomain metadataDomain,
 			final IRODSQueryResultRow row, final int totalRecordCount)
-			throws JargonException {
+					throws JargonException {
 
 		String domainId = row.getColumn(0);
 		String domainUniqueName = row.getColumn(1);

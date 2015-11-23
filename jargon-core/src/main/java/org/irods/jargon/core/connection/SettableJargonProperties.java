@@ -13,9 +13,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
  * <code>TransferOptions</code>
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SettableJargonProperties implements JargonProperties {
 
@@ -84,10 +84,17 @@ public class SettableJargonProperties implements JargonProperties {
 	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 
 	/**
+	 * <code>boolean</code> that indicates whether ssl cert checks should be
+	 * bypassed. <code>false</code> is the default, meaning checks will be done,
+	 * and is the recommended production setting.
+	 */
+	private boolean bypassSslCertChecks;
+
+	/**
 	 * Construct a default properties set based on the provided initial set of
 	 * <code>JargonProperties</code>. This can be used to wire in properties via
 	 * configuration, as in Spring.
-	 * 
+	 *
 	 * @param jargonProperties
 	 *            {@link JargonProperties} that has the initial set of
 	 *            properties.
@@ -99,7 +106,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Construct a default properties set based on the
 	 * <code>jargon.properties</code> in jargon, these can then be overridden.
-	 * 
+	 *
 	 * @throws JargonException
 	 *             if properties cannot be loaded
 	 */
@@ -184,10 +191,11 @@ public class SettableJargonProperties implements JargonProperties {
 				.getSocketRenewalIntervalInSeconds();
 		longTransferRestart = jargonProperties.isLongTransferRestart();
 		parallelCopyBufferSize = jargonProperties.getParallelCopyBufferSize();
-		this.intraFileStatusCallbacksNumberCallsInterval = jargonProperties
+		intraFileStatusCallbacksNumberCallsInterval = jargonProperties
 				.getIntraFileStatusCallbacksNumberCallsInterval();
-		this.intraFileStatusCallbacksTotalBytesInterval = jargonProperties
+		intraFileStatusCallbacksTotalBytesInterval = jargonProperties
 				.getIntraFileStatusCallbacksTotalBytesInterval();
+		this.bypassSslCertChecks = jargonProperties.isBypassSslCertChecks();
 
 	}
 
@@ -204,7 +212,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Utilize parallel transfer algorithm for files above the transfer size
-	 * 
+	 *
 	 * @param useParallelTransfer
 	 *            <code>boolean</code> of <code>true</code> if parallel
 	 *            transfers are allowed
@@ -217,7 +225,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the maximum number of threads allowed for parallel transfers. 0 means
 	 * use iRODS limit.
-	 * 
+	 *
 	 * @param maxParallelThreads
 	 *            <code>int</code> with the maximum number of threads to use in
 	 *            a parallel transfer, with 0 meaning use the iRODS default set
@@ -300,7 +308,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Allow resource redirects to occur
-	 * 
+	 *
 	 * @param allowPutGetResourceRedirects
 	 *            <code>boolean</code> which allows resource redirects if
 	 *            <code>true</code>
@@ -324,7 +332,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute (but do not verify) a checksum after a transfer.
-	 * 
+	 *
 	 * @param computeChecksumAfterTransfer
 	 *            <code>boolean</code> that will cause a checksum to be computed
 	 *            by default if <code>true</code>
@@ -348,7 +356,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Compute and verify the file checksum after a put/get transfer
-	 * 
+	 *
 	 * @param computeAndVerifyChecksumAfterTransfer
 	 *            <code>boolean</code> that causes a checksum validation if set
 	 *            to <code>true</code>
@@ -362,7 +370,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Set whether intra-file status call-backs for file transfers are enabled.
 	 * This will give progress of bytes within transfers, with a slight
 	 * performance penalty.
-	 * 
+	 *
 	 * @param intraFileStatusCallbacks
 	 *            the intraFileStatusCallbacks to set
 	 */
@@ -657,7 +665,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * <p/>
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
-	 * 
+	 *
 	 * @return
 	 */
 	@Override
@@ -710,7 +718,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set a property that will automatically look for /zone/home/public and
 	 * /zone/home/username directories in the process of listing.
-	 * 
+	 *
 	 * @param defaultToPublicIfNothingUnderRootWhenListing
 	 */
 	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
@@ -790,7 +798,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the pam time to live (in seconds)
-	 * 
+	 *
 	 * @param pamTimeToLive
 	 *            <code>int</code> with the time to live for pam passwords
 	 */
@@ -852,7 +860,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Set the encoding used for computing checksums
-	 * 
+	 *
 	 * @param checksumEncoding
 	 */
 	public synchronized void setChecksumEncoding(
@@ -1124,7 +1132,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the interval in seconds to renew a socket during long transfers. Set
 	 * to 0 to turn this behavior off.
-	 * 
+	 *
 	 * @param socketRenewalIntervalInSeconds
 	 */
 	public synchronized void setSocketRenewalIntervalInSeconds(
@@ -1139,7 +1147,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Sets the ability to restart long file transfers if needed
-	 * 
+	 *
 	 * @param longFileTransferRestart
 	 */
 	public synchronized void setLongTransferRestart(
@@ -1155,7 +1163,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/**
 	 * Set the size (in bytes) of the copy buffer used between streams in
 	 * parallel transfer
-	 * 
+	 *
 	 * @param parallelCopyBufferSize
 	 */
 	public synchronized void setParallelCopyBufferSize(
@@ -1181,6 +1189,27 @@ public class SettableJargonProperties implements JargonProperties {
 	public synchronized void setIntraFileStatusCallbacksTotalBytesInterval(
 			final long intraFileStatusCallbacksTotalBytesInterval) {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.connection.JargonProperties#isBypassSslCertChecks()
+	 */
+	@Override
+	public synchronized boolean isBypassSslCertChecks() {
+		return bypassSslCertChecks;
+	}
+
+	/**
+	 * Set whether to bypass SslCertChecks.
+	 *
+	 * @param bypassSslCertChecks
+	 */
+	public synchronized void setBypassSslCertChecks(
+			final boolean bypassSslCertChecks) {
+		this.bypassSslCertChecks = bypassSslCertChecks;
 	}
 
 }

@@ -32,7 +32,7 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount.instance("srbbrick15.ucsd.edu", 9947, "rods", "RODS", "",
 				"raja8", "");
@@ -56,13 +56,13 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		String mountedCollectionPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ subMountCollection);
+						+ targetCollectionName + "/"
+						+ subMountCollection);
 
 		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -113,13 +113,13 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		String mountedCollectionPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ subMountCollection);
+						+ targetCollectionName + "/"
+						+ subMountCollection);
 
 		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -158,21 +158,21 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 	// FIXME: get rid of
 	/*
 	 * @Test public void testListCollectionsRaja() throws Exception {
-	 * 
+	 *
 	 * String targetIrodsCollection = "/raja8/home/rods/msso/mssot1";
-	 * 
-	 * 
+	 *
+	 *
 	 * CollectionAndDataObjectListAndSearchAO
 	 * collectionAndDataObjectListAndSearchAO =
 	 * irodsFileSystem.getIRODSAccessObjectFactory
 	 * ().getCollectionAndDataObjectListAndSearchAO(rajaAccount);
-	 * 
+	 *
 	 * List<CollectionAndDataObjectListingEntry> entries =
 	 * collectionAndDataObjectListAndSearchAO
 	 * .listCollectionsUnderPath(targetIrodsCollection, 0);
 	 * Assert.assertNotNull("null entries returned", entries);
-	 * 
-	 * 
+	 *
+	 *
 	 * }
 	 */
 
@@ -194,19 +194,19 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		String targetStagingCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ targetStageCollectionName);
+						+ targetCollectionName + "/"
+						+ targetStageCollectionName);
 
 		String mountedCollectionPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ subMountCollection);
+						+ targetCollectionName + "/"
+						+ subMountCollection);
 
 		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -219,11 +219,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		// two files in staging
 		IRODSFile stagingFile1 = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetStagingCollection,
-				stage1Name);
+						stage1Name);
 		stagingFile1.createNewFile();
 		IRODSFile stagingFile2 = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetStagingCollection,
-				stage2Name);
+						stage2Name);
 		stagingFile2.createNewFile();
 
 		// put the test msso out there
@@ -289,19 +289,19 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		String targetStagingCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ targetStageCollectionName);
+						+ targetCollectionName + "/"
+						+ targetStageCollectionName);
 
 		String mountedCollectionPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName + "/"
-								+ subMountCollection);
+						+ targetCollectionName + "/"
+						+ subMountCollection);
 
 		IRODSFile parentCollection = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
@@ -314,11 +314,11 @@ public class CollectionAndDataObjectListAndSearchAOImplForMSSOTest {
 		// two files in staging
 		IRODSFile stagingFile1 = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetStagingCollection,
-				stage1Name);
+						stage1Name);
 		stagingFile1.createNewFile();
 		IRODSFile stagingFile2 = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetStagingCollection,
-				stage2Name);
+						stage2Name);
 		stagingFile2.createNewFile();
 
 		// put the test msso out there

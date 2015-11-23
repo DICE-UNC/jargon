@@ -21,9 +21,9 @@ import org.junit.Test;
  * <p/>
  * Note that the test properties and server config must be set up per the
  * test-scripts/fedTestSetup.txt file. By default, the tests will be skipped.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedDataTransferOperationsImplTest {
 
@@ -48,12 +48,12 @@ public class FederatedDataTransferOperationsImplTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -65,7 +65,7 @@ public class FederatedDataTransferOperationsImplTest {
 	/**
 	 * Write to a collection on a federated zone2 from zone1 with approprate
 	 * write permissions
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -88,15 +88,15 @@ public class FederatedDataTransferOperationsImplTest {
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 		IRODSFile crossZoneColl = irodsFileSystem.getIRODSFileFactory(
 				crossZoneAccount).instanceIRODSFile(
-				irodsCollectionRootAbsolutePath);
+						irodsCollectionRootAbsolutePath);
 		crossZoneColl.deleteWithForceOption();
 		crossZoneColl.mkdirs();
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-						"testFile", ".txt", 2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
+				"testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -142,11 +142,11 @@ public class FederatedDataTransferOperationsImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-						"testGetCollectionWithTwoFilesInAnotherZone", ".txt",
-						2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
+				"testGetCollectionWithTwoFilesInAnotherZone", ".txt",
+				2, 2, 1, 2);
 
 		IRODSAccount crossZoneAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
@@ -202,7 +202,7 @@ public class FederatedDataTransferOperationsImplTest {
 
 	/**
 	 * Bug [#1842] [iROD-Chat:11109] imcoll symlinks across zones
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

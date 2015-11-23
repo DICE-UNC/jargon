@@ -24,9 +24,9 @@ import org.irods.jargon.core.exception.JargonException;
  * security reasons, file permissions are checked to make sure that the client
  * has the proper permission for the registration. The acNoChkFilePathPerm rule
  * in core.re can be used to bypass the path checking.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public interface IRODSRegistrationOfFilesAO {
 
@@ -36,7 +36,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * server, and is not in the iRODS vault. The file remains in place and is
 	 * added to the iRODS catalog. If this is a file (data object) instead of a
 	 * collection, an error will result.
-	 * 
+	 *
 	 * @param physicalPath
 	 *            <code>String</code> with the absolute path to the physical
 	 *            file located on the iRODS resource server.
@@ -78,7 +78,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * <p/>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
-	 * 
+	 *
 	 * @param physicalPath
 	 *            <code>String</code> with the absolute path to the physical
 	 *            file located on the iRODS resource server.
@@ -108,8 +108,8 @@ public interface IRODSRegistrationOfFilesAO {
 	void registerPhysicalDataFileToIRODS(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Register a single file (data object) to iRODS. This method will first
@@ -118,7 +118,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * <p/>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
-	 * 
+	 *
 	 * @param physicalPath
 	 *            <code>String</code> with the absolute path to the physical
 	 *            file located on the iRODS resource server.
@@ -147,8 +147,8 @@ public interface IRODSRegistrationOfFilesAO {
 	String registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Remove this registered file from the iRODS catalog. Note that this method
@@ -156,7 +156,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * <p/>
 	 * This method is analagous to calling the irm icommand with the -U flag.
 	 * Please see: https://www.irods.org/index.php/irm
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            to be unregistered.
@@ -179,7 +179,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * <p/>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
-	 * 
+	 *
 	 * @param physicalPath
 	 *            <code>String</code> with the absolute path to the physical
 	 *            file located on the iRODS resource server.
@@ -210,8 +210,8 @@ public interface IRODSRegistrationOfFilesAO {
 	void registerPhysicalDataFileToIRODSAsAReplica(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Remove this registered collection from the iRODS catalog. Note that this
@@ -220,7 +220,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * <p/>
 	 * This method is analagous to calling the irm icommand with the -U flag.
 	 * Please see: https://www.irods.org/index.php/irm
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection

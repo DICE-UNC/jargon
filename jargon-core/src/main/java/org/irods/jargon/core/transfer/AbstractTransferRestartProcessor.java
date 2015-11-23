@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -18,10 +18,10 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - (DICE) Restart processor abstract superclass. This
  *         defines a service that can restart a get or put transfer within a
  *         file.
- * 
+ *
  */
 public abstract class AbstractTransferRestartProcessor extends
-		AbstractJargonService {
+AbstractJargonService {
 
 	private final AbstractRestartManager restartManager;
 	private static Logger log = LoggerFactory
@@ -37,7 +37,7 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@IRODSAccessObjectFactory
 	 *            irodsAccessObjectFactory}
@@ -75,7 +75,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	/**
 	 * Check the need to restart the file, and do the restart processing if
 	 * needed, based on the data held by the restart manager.
-	 * 
+	 *
 	 * @return {@link RestartResult} with details of the restart processing
 	 * @throws RestartFailedException
 	 *             if the actual restart process failed
@@ -91,7 +91,7 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	/**
 	 * Given the restart info return the local file and make sure it exists
-	 * 
+	 *
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that describes the transfer
 	 * @return
@@ -100,7 +100,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected RandomAccessFile localFileAsFileAndCheckExists(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
 		RandomAccessFile localFile = localFileAsFile(fileRestartInfo, openType);
@@ -111,7 +111,7 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	/**
 	 * Get the local file that is being operated upon
-	 * 
+	 *
 	 * @param fileRestartInfo
 	 *            fileRestartInfo {@link FileRestartInfo} that describes the
 	 *            transfer
@@ -122,7 +122,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected RandomAccessFile localFileAsFile(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-			throws JargonException {
+					throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
@@ -159,7 +159,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	/**
 	 * Method to retrieve the restart info from the manager, this may end up
 	 * being <code>null</code>
-	 * 
+	 *
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
 	 * @return {@link FileRestartInfo}
@@ -167,7 +167,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected FileRestartInfo retrieveFileRestartInfoForIdentifier(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
@@ -183,8 +183,8 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * <p/>
 	 * This method will check the configuration as well as the actual restart
 	 * manager, and will return <code>null</code>
-	 * 
-	 * 
+	 *
+	 *
 	 * @param irodsAbsolutePath
 	 * @param restartType
 	 * @return
@@ -193,7 +193,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	protected FileRestartInfo retrieveRestartIfConfiguredOrNull(
 			final String irodsAbsolutePath,
 			final FileRestartInfo.RestartType restartType)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

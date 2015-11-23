@@ -5,9 +5,9 @@ package org.irods.jargon.core.exception;
 
 /**
  * Error in locating a remote execution script
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class RemoteScriptExecutionException extends JargonException {
 

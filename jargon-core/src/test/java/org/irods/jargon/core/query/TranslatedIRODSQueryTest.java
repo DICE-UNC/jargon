@@ -25,10 +25,10 @@ public class TranslatedIRODSQueryTest {
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
 		GenQuerySelectField field = GenQuerySelectField.instance(
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.name(), String
-						.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
-								.getNumericValue()),
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+				.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
+						.getNumericValue()),
+						GenQuerySelectField.SelectFieldTypes.FIELD,
+						GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
 		List<TranslatedGenQueryCondition> queryConditions = new ArrayList<TranslatedGenQueryCondition>();
 		AbstractIRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
@@ -49,10 +49,10 @@ public class TranslatedIRODSQueryTest {
 		List<GenQuerySelectField> selectFields = new ArrayList<GenQuerySelectField>();
 		GenQuerySelectField field = GenQuerySelectField.instance(
 				RodsGenQueryEnum.COL_AUDIT_ACTION_ID.name(), String
-						.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
-								.getNumericValue()),
-				GenQuerySelectField.SelectFieldTypes.FIELD,
-				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+				.valueOf(RodsGenQueryEnum.COL_AUDIT_ACTION_ID
+						.getNumericValue()),
+						GenQuerySelectField.SelectFieldTypes.FIELD,
+						GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 		selectFields.add(field);
 		AbstractIRODSGenQuery query = IRODSGenQuery.instance("hello", 100);
 		TranslatedIRODSGenQuery.instance(selectFields, null, query);

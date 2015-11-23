@@ -9,15 +9,15 @@ import org.junit.runners.Suite;
 
 /**
  * Tests for checksum computation code
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ MD5LocalChecksumComputerStrategyTest.class,
-		SHA256LocalChecksumComputerStrategyTest.class,
-		LocalChecksumComputerFactoryImplTest.class,
-		ChecksumManagerImplTest.class })
+	SHA256LocalChecksumComputerStrategyTest.class,
+	LocalChecksumComputerFactoryImplTest.class,
+	ChecksumManagerImplTest.class })
 public class ChecksumTests {
 
 }

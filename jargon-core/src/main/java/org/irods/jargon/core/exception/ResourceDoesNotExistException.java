@@ -5,7 +5,7 @@ package org.irods.jargon.core.exception;
 
 /**
  * Equivalent to -78000 exception for resource does not exist
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -19,7 +19,7 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	/**
 	 * @param message
 	 */
-	public ResourceDoesNotExistException(String message) {
+	public ResourceDoesNotExistException(final String message) {
 		super(message);
 
 	}
@@ -28,7 +28,8 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	 * @param message
 	 * @param cause
 	 */
-	public ResourceDoesNotExistException(String message, Throwable cause) {
+	public ResourceDoesNotExistException(final String message,
+			final Throwable cause) {
 		super(message, cause);
 
 	}
@@ -36,7 +37,7 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	/**
 	 * @param cause
 	 */
-	public ResourceDoesNotExistException(Throwable cause) {
+	public ResourceDoesNotExistException(final Throwable cause) {
 		super(cause);
 
 	}
@@ -46,8 +47,8 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ResourceDoesNotExistException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ResourceDoesNotExistException(final String message,
+			final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 
 	}
@@ -56,8 +57,8 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ResourceDoesNotExistException(Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public ResourceDoesNotExistException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 
 	}
@@ -66,8 +67,8 @@ public class ResourceDoesNotExistException extends ResourceHierarchyException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public ResourceDoesNotExistException(String message,
-			int underlyingIRODSExceptionCode) {
+	public ResourceDoesNotExistException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 
 	}

@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a CollInp_PI operation into XML protocol format. Object is
  * immutable an thread-safe.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CollInp extends AbstractIRODSPackingInstruction {
 
@@ -41,7 +41,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the packing instruction to delete this collection from irods,
 	 * moving the deleted files to the trash.
-	 * 
+	 *
 	 * @param collectionName
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection to be deleted.
@@ -55,7 +55,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance for unregistering a collection regestered via ireg
-	 * 
+	 *
 	 * @param collectionName
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection
@@ -76,7 +76,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Create the packing instruction to delete this collection from irods,
 	 * without moving the deleted files and collections to the trash
-	 * 
+	 *
 	 * @param collectionName
 	 *            <code>String</code> with the absolute path to the iRODS
 	 *            collection to be deleted.
@@ -95,7 +95,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	public static final CollInp instance(final String collectionName,
 			final boolean recursiveOperation, final boolean forceOperation)
-			throws JargonException {
+					throws JargonException {
 		return new CollInp(collectionName, recursiveOperation, forceOperation);
 	}
 
@@ -113,7 +113,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	private CollInp(final String collectionName,
 			final boolean recursiveOperation, final boolean forceOperation)
-			throws JargonException {
+					throws JargonException {
 		super();
 		if (collectionName == null || collectionName.length() == 0) {
 			throw new JargonException("collection name is null or blank");

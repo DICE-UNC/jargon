@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -8,12 +8,12 @@ import java.util.List;
 
 /**
  * iRODS file restart info, analagous to file_restart_info_t
- * 
+ *
  * This is a representation of the file restart info used for long file restart
  * as in rcPortalOpr.c
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileRestartInfo {
 
@@ -76,7 +76,7 @@ public class FileRestartInfo {
 
 	/**
 	 * Get the identifier associated with this info
-	 * 
+	 *
 	 * @return {@link FileRestartInfoIdentifier} that points to this info. The
 	 *         restart info is keyed by various attributes in hashes, or for
 	 *         generating file names
@@ -91,7 +91,7 @@ public class FileRestartInfo {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -171,7 +171,7 @@ public class FileRestartInfo {
 	/**
 	 * Get an estimate of the length returned so far, helpful for progress
 	 * indicators
-	 * 
+	 *
 	 * @return <code>long</code> with an estimate of the total transferred so
 	 *         far.
 	 */

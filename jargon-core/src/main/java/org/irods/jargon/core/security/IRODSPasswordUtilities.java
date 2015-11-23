@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utilities for dealing with iRODS password (obfuscation, etc).
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class IRODSPasswordUtilities {
@@ -61,7 +61,7 @@ public class IRODSPasswordUtilities {
 	/**
 	 * Obfuscate the irods password for a password change via an admin. This is
 	 * analogous to the obfEncodeByKeyV2 method in lib/core/src/obf.c
-	 * 
+	 *
 	 * @param newPassword
 	 *            <code>String</code> with the password value to set
 	 * @param adminPassword
@@ -119,7 +119,7 @@ public class IRODSPasswordUtilities {
 	 * iRODS (see clientLogin.c) uses a subset of the challenge value in hex
 	 * form for its obfuscation purposes. This method takes the raw challenge
 	 * value and creates the same representation.
-	 * 
+	 *
 	 * @param challengeValue
 	 *            <code>String</code> with the raw iRODS challenge value from
 	 *            the login process
@@ -147,7 +147,7 @@ public class IRODSPasswordUtilities {
 
 	/**
 	 * Obfuscate a given value using a key, suitable to change a user password.
-	 * 
+	 *
 	 * @param sourceData
 	 *            <code>String</code> with the desired value to encrypt
 	 * @param key
@@ -215,7 +215,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the first two hashes, and take the hash of that
 		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-				+ digestRound2.length];
+		                                        + digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -236,7 +236,7 @@ public class IRODSPasswordUtilities {
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
 		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-				+ digestRound2.length + digestRound3.length];
+		                                                 + digestRound2.length + digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -260,7 +260,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate all four hash buffers
 		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-				+ digestRound3.length + digestRound4.length];
+		                             + digestRound3.length + digestRound4.length];
 
 		concatI = 0;
 
@@ -337,7 +337,7 @@ public class IRODSPasswordUtilities {
 
 	public static String obfuscateIRODSPasswordWithCypherChaining(
 			final String newPassword, final String oldPassword)
-			throws JargonException {
+					throws JargonException {
 
 		if (newPassword == null || newPassword.isEmpty()) {
 			throw new JargonException("newPassword is null or empty");
@@ -380,7 +380,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the first two hashes, and take the hash of that
 		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-				+ digestRound2.length];
+		                                        + digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -401,7 +401,7 @@ public class IRODSPasswordUtilities {
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
 		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-				+ digestRound2.length + digestRound3.length];
+		                                                 + digestRound2.length + digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -425,7 +425,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate all four hash buffers
 		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-				+ digestRound3.length + digestRound4.length];
+		                             + digestRound3.length + digestRound4.length];
 
 		concatI = 0;
 
@@ -523,7 +523,7 @@ public class IRODSPasswordUtilities {
 	/**
 	 * Get a hex representation of a byte array suitable for printing logs and
 	 * debugging obfuscation routines.
-	 * 
+	 *
 	 * @param b
 	 *            <code>btye[]</code> to be converted into a hex representation
 	 *            for logging.
@@ -550,7 +550,7 @@ public class IRODSPasswordUtilities {
 
 	/**
 	 * Drop the sign bits in a byte for conversion to an int.
-	 * 
+	 *
 	 * @param b
 	 *            <code>byte</code> to be converted to an int.
 	 * @return <code>int</code> which is the equivilant of the unsigned version
@@ -586,7 +586,7 @@ public class IRODSPasswordUtilities {
 
 	/**
 	 * Pad a given string to a given length with the given pad character
-	 * 
+	 *
 	 * @param str
 	 *            <code>String</code> to be padded
 	 * @param size

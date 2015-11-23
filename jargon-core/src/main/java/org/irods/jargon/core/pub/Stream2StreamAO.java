@@ -13,14 +13,14 @@ import org.irods.jargon.core.pub.io.IRODSFile;
  * to and from iRODS files.
  * <p/>
  * This is a new service, so methods will fill in as they are identified.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public interface Stream2StreamAO extends IRODSAccessObject {
 
 	/**
 	 * Given the set of bytes, copy them to the given target file in iRODS.
-	 * 
+	 *
 	 * @param bytesToStream
 	 *            <code>byte[]</code> with the bytes to copy
 	 * @param irodsTargetFile
@@ -37,7 +37,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * <p/>
 	 * This particular method is used internally for object de-serialization
 	 * when stored as iRODS files.
-	 * 
+	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the source of the byte data
 	 * @return <code>byte[]</code> array representing the file contents
@@ -48,7 +48,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	/**
 	 * 
 	 * Stream the <code>InputStream</code> to the <code>OutputStream</code>
-	 * 
+	 *
 	 * @param inputStream
 	 *            <code>InputStream</code> to stream from
 	 * @param outputStream
@@ -76,7 +76,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * Note that the <code>inputStream</code> will be buffered if it is not
 	 * passed in as a buffered stream, using the characteristics described in
 	 * jargon.properties.
-	 * 
+	 *
 	 * @param inputStream
 	 *            {@link InputStream} for the transfer, note that this method
 	 *            does not wrap the stream with any buffering, so a properly
@@ -101,7 +101,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 
 	/**
 	 * Stream a class-path resource to a target iRODS file
-	 * 
+	 *
 	 * @param resourcePath
 	 *            <code>String</code> with a path to a resource that can be
 	 *            loaded by the class loader.
@@ -122,7 +122,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * <p/>
 	 * This method will close the streams and do a final flush of the output
 	 * stream, so no further processing is necessary.
-	 * 
+	 *
 	 * @param inputStream
 	 *            {@link InputStream}. If not buffered, it will be buffered
 	 * @param outputStream
@@ -133,6 +133,6 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 */
 	TransferStatistics streamToStreamCopyUsingStandardIO(
 			InputStream inputStream, OutputStream outputStream)
-			throws JargonException;
+					throws JargonException;
 
 }

@@ -20,9 +20,9 @@ import org.junit.Test;
 
 /**
  * Test CollectionAOImpl operations in a federated zone environment
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FederatedCollectionAOImplTest {
 
@@ -44,7 +44,7 @@ public class FederatedCollectionAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -60,7 +60,7 @@ public class FederatedCollectionAOImplTest {
 
 	/**
 	 * Set read on a collection for a user in a federated zone
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -86,13 +86,13 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		// log in as the federated user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -107,7 +107,7 @@ public class FederatedCollectionAOImplTest {
 	/**
 	 * Add a user from zone2 as a permission, then ask, via zone1 for that
 	 * user's info, giving the user name in user#zone format
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -134,27 +134,27 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		String concatenatedUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 				+ "#"
 				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(targetIrodsCollection,
@@ -168,14 +168,14 @@ public class FederatedCollectionAOImplTest {
 				"did not get user zone",
 				String.valueOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
-				userFilePermission.getUserZone());
+						userFilePermission.getUserZone());
 	}
 
 	/**
 	 * Create a collection in the primary zone, add a permission to another user
 	 * from that same zone, then the primary user in the federated zone, then
 	 * check that list permissions shows all three
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -202,21 +202,21 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
@@ -234,13 +234,13 @@ public class FederatedCollectionAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-					&& userFilePermission
+							&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -254,7 +254,7 @@ public class FederatedCollectionAOImplTest {
 	/**
 	 * Bug [#1440] federation testing error showing sharing tab, -10033 user not
 	 * found error
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -281,21 +281,21 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		collectionAO
-				.setAccessPermissionRead(
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+				true);
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
@@ -311,13 +311,13 @@ public class FederatedCollectionAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-					&& userFilePermission
+							&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -331,7 +331,7 @@ public class FederatedCollectionAOImplTest {
 	/**
 	 * Find the metadata values associated with a given collection where the
 	 * collection is in zone2, and I access it from federated zone 1
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -389,7 +389,7 @@ public class FederatedCollectionAOImplTest {
 	/**
 	 * Set up a collection in zone2, and then log in to zone1 and add metadata
 	 * to that collection
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

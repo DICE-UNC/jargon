@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -8,9 +8,9 @@ import org.irods.jargon.core.transfer.FileRestartInfo.RestartType;
 /**
  * Represents a hashable key for file restart information. This is the key that
  * will be used to store the restart file
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileRestartInfoIdentifier {
 
@@ -81,7 +81,7 @@ public class FileRestartInfoIdentifier {
 		return (absolutePath.equals(other.getAbsolutePath())
 				&& irodsAccountIdentifier.equals(other
 						.getIrodsAccountIdentifier()) && getRestartType() == other
-					.getRestartType());
+						.getRestartType());
 
 	}
 

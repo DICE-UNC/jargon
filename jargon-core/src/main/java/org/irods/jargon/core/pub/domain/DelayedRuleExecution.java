@@ -6,9 +6,9 @@ package org.irods.jargon.core.pub.domain;
 /**
  * TODO: work in progress, subject to change Represents an entry in the rule
  * engine delayed execution queue
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DelayedRuleExecution extends IRODSDomainObject {
 

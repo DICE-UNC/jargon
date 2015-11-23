@@ -37,11 +37,11 @@ public class MountedCollectionAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -52,7 +52,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * Unmount a soft link that does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -65,7 +65,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -80,7 +80,7 @@ public class MountedCollectionAOImplTest {
 	/**
 	 * Create a soft link to an iRODS collection in nominal mode, target does
 	 * not exist and will be created
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -96,12 +96,12 @@ public class MountedCollectionAOImplTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -155,7 +155,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * Create a soft link to an iRODS collection twice
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = CollectionNotEmptyException.class)
@@ -171,12 +171,12 @@ public class MountedCollectionAOImplTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -227,7 +227,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the source file does not exist
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = FileNotFoundException.class)
@@ -242,12 +242,12 @@ public class MountedCollectionAOImplTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// create the soft link
 
@@ -261,7 +261,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the source file is a data object
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = JargonException.class)
@@ -276,12 +276,12 @@ public class MountedCollectionAOImplTest {
 		String sourceIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSFile sourceAsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(sourceIrodsFile);
@@ -299,7 +299,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the source file is null
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -317,7 +317,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the source file is blank
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -335,7 +335,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the target file is null
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -353,7 +353,7 @@ public class MountedCollectionAOImplTest {
 
 	/**
 	 * create a soft link where the target file is blank
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -393,7 +393,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -433,7 +433,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -471,7 +471,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -526,7 +526,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -563,7 +563,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
@@ -590,7 +590,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
@@ -617,7 +617,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(
@@ -689,7 +689,7 @@ public class MountedCollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getMountedCollectionAO(

@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Support for Globus GSI authentication for iRODS
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 class GSIAuth extends AuthMechanism {
 
@@ -31,7 +31,7 @@ class GSIAuth extends AuthMechanism {
 	/**
 	 * Sends the GSI auth request to iRODS and obtains the server DN. The server
 	 * DN is augmented in the irodsAccount
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link GSIIRODSAccount} that will be used to log in to iRODS.
 	 *            Note that this account information will be augmented during
@@ -41,7 +41,7 @@ class GSIAuth extends AuthMechanism {
 	 */
 	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("sendGSIPassword()");
 
@@ -89,7 +89,7 @@ class GSIAuth extends AuthMechanism {
 	AbstractIRODSMidLevelProtocol sendGSIAuth(
 			final GSIIRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		log.info("sendGSIAuth()");
 
@@ -124,7 +124,7 @@ class GSIAuth extends AuthMechanism {
 
 		try {
 
-			if (caLocations != null) {
+			if (caLocations != null && caLocations.length() > 0) {
 				cog = CoGProperties.getDefault();
 				defaultCA = cog.getCaCertLocations();
 				cog.setCaCertLocations(caLocations);
@@ -194,7 +194,7 @@ class GSIAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AuthMechanism#
 	 * processAuthenticationAfterStartup
 	 * (org.irods.jargon.core.connection.IRODSAccount,
@@ -206,7 +206,7 @@ class GSIAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");

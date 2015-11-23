@@ -4,9 +4,9 @@ import java.util.Date;
 
 /**
  * Represents information on a user or user group quota in iRODS.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class Quota {
 

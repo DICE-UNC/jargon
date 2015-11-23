@@ -42,9 +42,9 @@ import org.slf4j.LoggerFactory;
  * There are methods in {@link org.irods.jargon.core.pub.io.IRODSFileFactory
  * IRODSFileFactory} that allow an <code>IRODSFileImpl</code> to be attached to
  * another Thread and connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 
 public class IRODSFileImpl extends File implements IRODSFile {
@@ -62,7 +62,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
 	 */
 	@Override
@@ -220,7 +220,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/**
 	 * Set the directory.
-	 * 
+	 *
 	 * @param dir
 	 *            The directory path, need not be absolute.
 	 */
@@ -264,7 +264,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/**
 	 * Set the file name.
-	 * 
+	 *
 	 * @param filePath
 	 *            The file name or fileName plus some or all of the directory
 	 *            path.
@@ -319,7 +319,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#canRead()
 	 */
 	@Override
@@ -340,7 +340,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#canWrite()
 	 */
 	@Override
@@ -361,7 +361,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#createNewFile()
 	 */
 	@Override
@@ -404,7 +404,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#delete()
 	 */
 	@Override
@@ -445,7 +445,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#deleteWithForceOption()
 	 */
 	@Override
@@ -473,7 +473,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#deleteOnExit()
 	 */
 	@Override
@@ -484,7 +484,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#equals(java.lang.Object)
 	 */
 	@Override
@@ -500,7 +500,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#exists()
 	 */
 	@Override
@@ -521,7 +521,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getAbsoluteFile()
 	 */
 	@Override
@@ -540,7 +540,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getAbsolutePath()
 	 */
 	@Override
@@ -577,7 +577,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getCanonicalFile()
 	 */
 	@Override
@@ -595,7 +595,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getCanonicalPath()
 	 */
 	@Override
@@ -622,7 +622,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getFreeSpace()
 	 */
 	@Override
@@ -634,7 +634,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getParentFile()
 	 */
 	@Override
@@ -657,7 +657,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getTotalSpace()
 	 */
 	@Override
@@ -668,7 +668,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getUsableSpace()
 	 */
 	@Override
@@ -679,7 +679,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#hashCode()
 	 */
 	@Override
@@ -689,7 +689,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isAbsolute()
 	 */
 	@Override
@@ -700,7 +700,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isDirectory()
 	 */
 	@Override
@@ -727,7 +727,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isFile()
 	 */
 	@Override
@@ -761,7 +761,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getPath()
 	 */
 	@Override
@@ -771,7 +771,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#isHidden()
 	 */
 	@Override
@@ -781,7 +781,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#lastModified()
 	 */
 	@Override
@@ -803,7 +803,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#length()
 	 */
 	@Override
@@ -829,7 +829,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#list()
 	 */
 	@Override
@@ -848,7 +848,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#list(java.io.FilenameFilter)
 	 */
 	@Override
@@ -858,7 +858,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#listFiles()
 	 */
 	@Override
@@ -889,7 +889,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FileFilter)
 	 */
 	@Override
@@ -911,7 +911,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FilenameFilter)
 	 */
@@ -939,7 +939,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#mkdir()
 	 */
 	@Override
@@ -969,7 +969,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#mkdirs()
 	 */
 	@Override
@@ -994,7 +994,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#renameTo(java.io.File)
 	 */
 	@Override
@@ -1066,7 +1066,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setExecutable(boolean,
 	 * boolean)
 	 */
@@ -1079,7 +1079,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setExecutable(boolean)
 	 */
 	@Override
@@ -1090,7 +1090,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setLastModified(long)
 	 */
 	@Override
@@ -1101,7 +1101,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setReadable(boolean, boolean)
 	 */
 	@Override
@@ -1112,7 +1112,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setReadable(boolean)
 	 */
 	@Override
@@ -1123,7 +1123,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setReadOnly()
 	 */
 	@Override
@@ -1134,7 +1134,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setWritable(boolean, boolean)
 	 */
 	@Override
@@ -1145,7 +1145,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setWritable(boolean)
 	 */
 	@Override
@@ -1156,7 +1156,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#toString()
 	 */
 	@Override
@@ -1174,7 +1174,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#toURI()
 	 */
 	@Override
@@ -1203,7 +1203,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#toFileBasedURL()
 	 */
 	@Override
@@ -1224,7 +1224,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getResource()
 	 */
 	@Override
@@ -1234,7 +1234,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#setResource(java.lang.String)
 	 */
 	@Override
@@ -1244,7 +1244,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#getFileDescriptor()
 	 */
 	@Override
@@ -1255,7 +1255,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/**
 	 * Set the iRODS file descriptor value. This will be set internally by
 	 * Jargon.
-	 * 
+	 *
 	 * @param fileDescriptor
 	 */
 	protected synchronized void setFileDescriptor(final int fileDescriptor) {
@@ -1287,7 +1287,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#openReadOnly()
 	 */
 	@Override
@@ -1299,7 +1299,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#open()
 	 */
 	@Override
@@ -1310,7 +1310,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFile#open(org.irods.jargon.core.packinstr
 	 * .DataObjInp.OpenFlags)
@@ -1331,7 +1331,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#close()
 	 */
 	@Override
@@ -1362,7 +1362,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#closeGivenDescriptor(int)
 	 */
 	@Override
@@ -1384,7 +1384,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#compareTo(java.io.File)
 	 */
 	@Override
@@ -1425,7 +1425,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.File#canExecute()
 	 */
 	@Override

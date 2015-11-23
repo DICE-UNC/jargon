@@ -1,20 +1,20 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
 /**
  * Exception when operation cannot be supported by the given special collection
  * type
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class OperationNotSupportedForCollectionTypeException extends
-		InternalIrodsOperationException {
+InternalIrodsOperationException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -4691758091501465065L;
 

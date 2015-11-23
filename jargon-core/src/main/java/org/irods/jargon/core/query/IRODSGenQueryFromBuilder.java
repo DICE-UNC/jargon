@@ -11,9 +11,9 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Represents an iRODS general query as specified using the
  * <code>IRODSGenQueryBuilder</code> tool.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 
@@ -21,7 +21,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 
 	/**
 	 * Creates a query that can be processed against iRODS.
-	 * 
+	 *
 	 * @param irodsGenQueryBuilderData
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
@@ -38,7 +38,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 
 	/**
 	 * Constructor creates a query that can be processed against iRODS.
-	 * 
+	 *
 	 * @param irodsGenQueryBuilderData
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
@@ -74,7 +74,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	/**
 	 * Format the query in a format understandable by the mechanism that
 	 * translates the query to iRODS protocol and sends to iRODS.
-	 * 
+	 *
 	 * @return {@link TranslatedIRODSGenQuery} in a format ready to send to
 	 *         iRODS
 	 * @throws GenQueryBuilderException
@@ -106,9 +106,9 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 						.instanceWithFieldNameAndNumericTranslation(
 								builderCondition.getSelectFieldColumnName(),
 								builderCondition.getOperator()
-										.getOperatorAsString(), value,
+								.getOperatorAsString(), value,
 								builderCondition
-										.getSelectFieldNumericTranslation()));
+								.getSelectFieldNumericTranslation()));
 			} catch (JargonQueryException e) {
 				throw new GenQueryBuilderException(
 						"error building translated query", e);

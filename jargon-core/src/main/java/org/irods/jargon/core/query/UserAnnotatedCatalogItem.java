@@ -9,9 +9,9 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
 /**
  * Abstract superclass to a user annotation on an iRODS catalog domain item
  * (like a tag, or a starred folder).
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 		implements Serializable {
@@ -25,7 +25,7 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	private final String userName;
 
 	/**
-	 * <<<<<<< HEAD optional (can be zero) data size
+	 * optional (can be zero) data size
 	 */
 	private final long dataSize;
 	/**

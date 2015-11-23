@@ -16,7 +16,7 @@ public class DataObjInpForUnregisterTest {
 
 	/**
 	 * Can i properly create w/o error
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -26,7 +26,7 @@ public class DataObjInpForUnregisterTest {
 
 	/**
 	 * null path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -36,7 +36,7 @@ public class DataObjInpForUnregisterTest {
 
 	/**
 	 * blank path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)

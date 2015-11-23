@@ -81,7 +81,7 @@ public class IRODSRuleTranslatorTest {
 				translatedRule.getIrodsRuleOutputParameters().size());
 		Assert.assertEquals("no ruleExecOut parm discovered", "ruleExecOut",
 				translatedRule.getIrodsRuleOutputParameters().get(0)
-						.getUniqueName());
+				.getUniqueName());
 	}
 
 	@Test
@@ -91,7 +91,7 @@ public class IRODSRuleTranslatorTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
 		ruleBuilder.append("/test/File/name.txt");
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
@@ -124,7 +124,7 @@ public class IRODSRuleTranslatorTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
 		ruleBuilder.append("/test/File/name.txt");
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
@@ -144,7 +144,7 @@ public class IRODSRuleTranslatorTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("null\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
@@ -204,7 +204,7 @@ public class IRODSRuleTranslatorTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("null%null\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
@@ -225,7 +225,7 @@ public class IRODSRuleTranslatorTest {
 
 		StringBuilder ruleBuilder = new StringBuilder();
 		ruleBuilder
-				.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
+		.append("myTestRule||acGetIcatResults(*Action,*Condition,*B)##forEachExec(*B,msiGetValByKey(*B,RESC_LOC,*R)##remoteExec(*R,null,msiDataObjChksum(*B,*Operation,*C),nop)##msiGetValByKey(*B,DATA_NAME,*D)##msiGetValByKey(*B,COLL_NAME,*E)##writeLine(stdout,CheckSum of *E/*D at *R is *C),nop)|nop##nop\n");
 		ruleBuilder.append("*Action=chksumRescLoc%*Condition=COLL_NAME = '");
 		ruleBuilder.append("/test/File/name.txt");
 		ruleBuilder.append("'%*Operation=ChksumAll\n");

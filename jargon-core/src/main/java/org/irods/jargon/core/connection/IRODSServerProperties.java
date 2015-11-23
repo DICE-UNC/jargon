@@ -192,12 +192,11 @@ public class IRODSServerProperties {
 
 	/**
 	 * Is the server at least iRODS 4.1.0
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isAtLeastIrods410() {
-		return this
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
+		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
 	}
 
 	@Override

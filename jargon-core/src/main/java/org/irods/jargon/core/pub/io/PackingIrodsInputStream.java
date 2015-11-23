@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
  * Wrap an iRODS input stream in an accumulating buffer that will emulate reads
  * from a continuous stream while fetching chunks from iRODS in a more optimal
  * size
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class PackingIrodsInputStream extends InputStream {
 	private final IRODSFileInputStream irodsFileInputStream;
@@ -56,14 +56,14 @@ public class PackingIrodsInputStream extends InputStream {
 	/**
 	 * Fill up a new byte array input stream from iRODS using the requested
 	 * buffer size, tries to fill that buffer
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	private void fillByteBufferFromIrods() throws IOException {
 
 		byte[] b = new byte[bufferSizeForIrods];
 
-		int length = this.irodsFileInputStream.read(b);
+		int length = irodsFileInputStream.read(b);
 
 		if (length == -1) {
 			byteArrayInputStream = null;
@@ -88,7 +88,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[])
 	 */
 	@Override
@@ -98,7 +98,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
@@ -129,7 +129,7 @@ public class PackingIrodsInputStream extends InputStream {
 					myLen);
 
 			if (byteArrayInputStream.available() > 0) { // get what's already
-														// buffered
+				// buffered
 				log.debug("have available, copy into output array");
 				lenToRead = Math.min(myLen, byteArrayInputStream.available());
 				readFromCurrent = byteArrayInputStream.read(b, myOffset,
@@ -165,7 +165,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#skip(long)
 	 */
 	@Override
@@ -185,8 +185,8 @@ public class PackingIrodsInputStream extends InputStream {
 
 		if (byteArrayInputStream.available() == 0) {
 			byteArrayInputStream = null;// clear the stream so it's cached at
-										// the
-										// next pos
+			// the
+			// next pos
 		}
 
 		/*
@@ -202,7 +202,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#available()
 	 */
 	@Override
@@ -212,7 +212,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#close()
 	 */
 	@Override
@@ -222,7 +222,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#reset()
 	 */
 	@Override
@@ -232,7 +232,7 @@ public class PackingIrodsInputStream extends InputStream {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.InputStream#markSupported()
 	 */
 	@Override

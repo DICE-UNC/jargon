@@ -45,11 +45,11 @@ public class DataObjectAOImplForSoftLinkTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -71,12 +71,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -135,12 +135,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -212,7 +212,7 @@ public class DataObjectAOImplForSoftLinkTest {
 	/**
 	 * Add an avu to a data object (by its canonical path) and delete it via the
 	 * soft linked path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -232,12 +232,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -303,7 +303,7 @@ public class DataObjectAOImplForSoftLinkTest {
 	/**
 	 * Add an avu to a data object (by its canonical path) and query the data
 	 * via the soft link path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -323,12 +323,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -386,21 +386,21 @@ public class DataObjectAOImplForSoftLinkTest {
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via source path",
-				metadataFromSource.size() == 1);
+				metadataFromSource.size() >= 1);
 
 		List<MetaDataAndDomainData> metadataFromTarget = dataObjectAO
 				.findMetadataValuesForDataObject(targetIrodsCollection,
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via target path",
-				metadataFromTarget.size() == 1);
+				metadataFromTarget.size() >= 1);
 
 	}
 
 	/**
 	 * Add an avu to a data object (by soft link path) and query the data via
 	 * the canonical path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -420,12 +420,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -483,20 +483,20 @@ public class DataObjectAOImplForSoftLinkTest {
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via source path",
-				metadataFromSource.size() == 1);
+				metadataFromSource.size() >= 1);
 
 		List<MetaDataAndDomainData> metadataFromTarget = dataObjectAO
 				.findMetadataValuesForDataObject(sourceIrodsCollection,
 						testFileName);
 
 		Assert.assertTrue("did not get metadata querying via target path",
-				metadataFromTarget.size() == 1);
+				metadataFromTarget.size() >= 1);
 
 	}
 
 	/**
 	 * Test the replication of a data object when it is a soft link
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -515,12 +515,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -561,10 +561,10 @@ public class DataObjectAOImplForSoftLinkTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
 		dataObjectAO
-				.replicateIrodsDataObject(
-						targetIrodsCollection + '/' + testFileName,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		.replicateIrodsDataObject(
+				targetIrodsCollection + '/' + testFileName,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		List<Resource> resources = dataObjectAO
 				.listFileResources(targetIrodsCollection + "/" + testFileName);
@@ -575,7 +575,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 	/**
 	 * Test the MD5 checksum computation of a data object when it is a soft link
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -594,12 +594,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -668,12 +668,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -739,7 +739,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 	/**
 	 * Rename a data object specifying the soft-linked path
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -758,12 +758,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -802,7 +802,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		IRODSFile newFileLocation = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(destFile.getParentFile(),
-				testNewFileName);
+						testNewFileName);
 
 		destFile.renameTo(newFileLocation);
 		Assert.assertTrue("new file should exist", newFileLocation.exists());

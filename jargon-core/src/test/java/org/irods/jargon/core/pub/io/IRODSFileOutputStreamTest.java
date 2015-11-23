@@ -54,7 +54,7 @@ public class IRODSFileOutputStreamTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -359,8 +359,8 @@ public class IRODSFileOutputStreamTest {
 	/**
 	 * Create an output stream where the parent directory does not really exist,
 	 * should create any intervening dirs
-	 * 
-	 * 
+	 *
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -495,7 +495,7 @@ public class IRODSFileOutputStreamTest {
 	/**
 	 * Test for #52 Overwriting a file with IRODSFileOutputStream deletes file
 	 * metadata
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -687,8 +687,8 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		irodsFile
-				.setResource(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+		.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStreamWithRerouting(irodsFile);
@@ -769,7 +769,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -785,7 +785,7 @@ public class IRODSFileOutputStreamTest {
 
 	/**
 	 * [#700] cdr errors multiple FITS processes writing to irods
-	 * 
+	 *
 	 * @throws Exception
 	 */
 
@@ -822,7 +822,7 @@ public class IRODSFileOutputStreamTest {
 		for (int i = 0; i < numberWrites; i++) {
 			outputStreamWriter = new OutputStreamWriteTestWriter(absPath,
 					targetIrodsCollection + "/" + testFileNamePrefix + i
-							+ testFileNameSuffix,
+					+ testFileNameSuffix,
 					irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 			writerThreads.add(outputStreamWriter);
 		}
@@ -863,7 +863,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -879,7 +879,7 @@ public class IRODSFileOutputStreamTest {
 
 	/**
 	 * Write to an output stream that is underneath the root
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test

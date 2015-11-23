@@ -30,19 +30,19 @@ import org.slf4j.LoggerFactory;
  * the imcoll icommand: https://www.irods.org/index.php/imcoll
  * <p/>
  * See also: https://www.irods.org/index.php/Mounted_iRODS_Collection
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class MountedCollectionAOImpl extends IRODSGenericAO implements
-		MountedCollectionAO {
+MountedCollectionAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(MountedCollectionAOImpl.class);
 
 	/**
 	 * Default constructor to be called by the {@link IRODSAccessObjectFactory}
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link IRODSSession} that manages connections to iRODS
 	 * @param irodsAccount
@@ -58,7 +58,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#unmountACollection(java
 	 * .lang.String, java.lang.String)
@@ -109,7 +109,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 		 * intently then this close is messing something up for you! Post
 		 * something to IRODS Chat if this trips you up, it's meant to be a
 		 * sensible default.
-		 * 
+		 *
 		 * The call to close below should not really be visible to the caller,
 		 * as subsequent operations will just open a new one!
 		 */
@@ -120,7 +120,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#createASoftLink(java.lang
 	 * .String, java.lang.String)
@@ -129,8 +129,8 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	public void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-			throws FileNotFoundException, CollectionNotEmptyException,
-			JargonException {
+					throws FileNotFoundException, CollectionNotEmptyException,
+					JargonException {
 
 		log.info("createASoftLink()");
 
@@ -214,14 +214,14 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 	public void removeMountedWorkflowAndWorkflowFile(
 			final String absolutePathToMssFile,
 			final String absolutePathToWorkflowCollectionToBeUnmounted)
-			throws JargonException {
+					throws JargonException {
 		log.info("removeMountedWorkflowAndWorkflowFile(final String absolutePathToMssFile, final String absolutePathToWorkflowCollectionToBeUnmounted)");
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.MountedCollectionAO#
 	 * createMountedFileSystemCollection(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -259,7 +259,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 				absoluteIRODSTargetPathToBeMounted);
 
 		getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 
 		log.info("making the directory for the mount if not exists...");
 		IRODSFile mountColl = getIRODSFileFactory().instanceIRODSFile(
@@ -300,7 +300,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.MountedCollectionAO#createAnMSSOMount(java.
 	 * lang.String, java.lang.String)
@@ -310,7 +310,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 			final String absoluteLocalPathToWorkflowFile,
 			final String absoluteIRODSTargetPathToTheWssToBeMounted,
 			final String absolutePathToMountedCollection)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		log.info("createAnMSSOMount()");
 
@@ -350,12 +350,12 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 
 		dto.putOperation(absoluteLocalPathToWorkflowFile,
 				absoluteIRODSTargetPathToTheWssToBeMounted, getIRODSAccount()
-						.getDefaultStorageResource(), null, tcb);
+				.getDefaultStorageResource(), null, tcb);
 
 		log.info("wss file is put as an msso file...now mount the collection");
 
 		getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
+		.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 
 		log.info("making the directory for the mount if not exists...");
 		IRODSFile mountColl = getIRODSFileFactory().instanceIRODSFile(
@@ -368,7 +368,7 @@ public class MountedCollectionAOImpl extends IRODSGenericAO implements
 				.instanceForMSSOMount(
 						absoluteIRODSTargetPathToTheWssToBeMounted,
 						absolutePathToMountedCollection, getIRODSAccount()
-								.getDefaultStorageResource());
+						.getDefaultStorageResource());
 
 		getIRODSProtocol().irodsFunction(dataObjInp);
 		log.debug("MSSO creation successful");

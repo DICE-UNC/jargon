@@ -8,14 +8,14 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * type that can be derived from the {@link ChecksumManager}.
  * <p/>
  * This factory is available from the {@link IRODSSession}
- * 
+ *
  * @author Mike Conway - DICE
  */
 public interface LocalChecksumComputerFactory {
 
 	/**
 	 * Based on the checksum encoding type, find an instance of an encoder
-	 * 
+	 *
 	 * @param checksumEncodingEnum
 	 *            {@link ChecksumEncodingEnum} value of a specific type
 	 * @return {@link AbstractChecksumComputeStrategy} that implements that
@@ -25,6 +25,6 @@ public interface LocalChecksumComputerFactory {
 	 */
 	public abstract AbstractChecksumComputeStrategy instance(
 			ChecksumEncodingEnum checksumEncodingEnum)
-			throws ChecksumMethodUnavailableException;
+					throws ChecksumMethodUnavailableException;
 
 }

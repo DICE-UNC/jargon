@@ -38,13 +38,13 @@ public class GSIAuthTest {
 
 		File credentialFile = new File(
 				(String) testingProperties
-						.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
+				.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
 
 		GSIIRODSAccount irodsAccount = GSIUtilities
 				.createGSIIRODSAccountFromCredential(
 						credentialFile,
 						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
 						testingPropertiesHelper.getPropertyValueAsInt(
 								testingProperties,
 								TestingPropertiesHelper.IRODS_GSI_PORT_KEY), "");
@@ -66,17 +66,17 @@ public class GSIAuthTest {
 
 		File credentialFile = new File(
 				(String) testingProperties
-						.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
+				.get(TestingPropertiesHelper.IRODS_GSI_CERT_PATH));
 
 		GSIIRODSAccount irodsAccount = GSIUtilities
 				.createGSIIRODSAccountFromCredential(
 						credentialFile,
 						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
 						testingPropertiesHelper.getPropertyValueAsInt(
 								testingProperties,
 								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
-						testResc);
+								testResc);
 
 		Assert.assertFalse("did not set user DN from cert", irodsAccount
 				.getDistinguishedName().isEmpty());
@@ -99,13 +99,13 @@ public class GSIAuthTest {
 		File credentialFile = new File("/blah/blah/blah/idontexist.pem");
 
 		GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+		.createGSIIRODSAccountFromCredential(
+				credentialFile,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
+				testingPropertiesHelper.getPropertyValueAsInt(
+						testingProperties,
+						TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
 						testResc);
 
 	}
@@ -122,13 +122,13 @@ public class GSIAuthTest {
 		File credentialFile = null;
 
 		GSIUtilities
-				.createGSIIRODSAccountFromCredential(
-						credentialFile,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
-						testingPropertiesHelper.getPropertyValueAsInt(
-								testingProperties,
-								TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
+		.createGSIIRODSAccountFromCredential(
+				credentialFile,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_GSI_HOST_KEY),
+				testingPropertiesHelper.getPropertyValueAsInt(
+						testingProperties,
+						TestingPropertiesHelper.IRODS_GSI_PORT_KEY),
 						testResc);
 
 	}

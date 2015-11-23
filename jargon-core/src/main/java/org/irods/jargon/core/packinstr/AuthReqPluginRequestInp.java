@@ -1,15 +1,15 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
- * 
+ *
  */
 public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
@@ -24,7 +24,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an auth request for PAM
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the userName
 	 * @param password
@@ -41,7 +41,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	private AuthReqPluginRequestInp(final String authScheme,
 			final String userName, final String password, final int timeToLive) {
@@ -67,7 +67,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -83,7 +83,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the context string, right now assumes pam, will need a switch based
 	 * on auth method later
-	 * 
+	 *
 	 * @return
 	 */
 	private String getContext() {

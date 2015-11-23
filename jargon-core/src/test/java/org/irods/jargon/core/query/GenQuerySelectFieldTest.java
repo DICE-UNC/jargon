@@ -37,10 +37,10 @@ public class GenQuerySelectFieldTest {
 	@Test(expected = JargonException.class)
 	public final void testInstanceNullSelectFieldType() throws Exception {
 		GenQuerySelectField
-				.instance(
-						RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-						null,
-						GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
+		.instance(
+				RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+				null,
+				GenQuerySelectField.SelectFieldSource.DEFINED_QUERY_FIELD);
 	}
 
 	@Test(expected = JargonException.class)

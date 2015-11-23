@@ -27,7 +27,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * Get the factory object that will create various authentication methods on
 	 * demand
-	 * 
+	 *
 	 * @return {@link AuthenticationFactory} that will create objects that can
 	 *         authenticate <code>iRODSAccount</code>s
 	 */
@@ -38,7 +38,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * Inject a factory that will be used to authentication
 	 * <code>IRODSAccount</code>s when a new connection needs to be made
-	 * 
+	 *
 	 * @param authenticationFactory
 	 *            {@link AuthenticationFactory} that will create objects that
 	 *            can authenticate <code>iRODSAccount</code>s
@@ -55,7 +55,7 @@ public abstract class IRODSProtocolManager {
 	 * For an account provided by the caller, return an open IRODS connection.
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
-	 * 
+	 *
 	 * <p/>
 	 * Note that this abstract class provides a protected method dedicated to
 	 * creating a fresh protocol layer when this protocol is not originating
@@ -66,7 +66,7 @@ public abstract class IRODSProtocolManager {
 	 * the methods in {@link IRODSSession} to manage the connection life cycle.
 	 * An exception would be a situation where one is implementing a custom pool
 	 * or cache of connections
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -94,18 +94,18 @@ public abstract class IRODSProtocolManager {
 	 * <code>IRODSProtocolManager</code> can then decide how to treat a normally
 	 * returned connection. This can either be shut down, returned to a cache or
 	 * pool, or any other sort of custom behavior.
-	 * 
+	 *
 	 * @param abstractIRODSMidLevelProtocol
 	 * @throws JargonException
 	 */
 	protected abstract void returnIRODSProtocol(
 			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Create a fresh protocol (mid level interface to protocol operations)
 	 * based on the underlying jargon.properties
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -155,7 +155,7 @@ public abstract class IRODSProtocolManager {
 	 * that it longer needs the connection, and wishes to signal that there was
 	 * an error or other condition that gives reason to suspect that the agent
 	 * or connection is corrupted and should not be returned to a cache or pool.
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} to be returned
 	 */
@@ -171,7 +171,7 @@ public abstract class IRODSProtocolManager {
 	 * Optional method for any cleanup when shutting down the operation of the
 	 * protocol manager. This is useful if the protocol manager is acting as a
 	 * pool or cache that must be cleared.
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected void destroy() throws JargonException {
@@ -183,7 +183,7 @@ public abstract class IRODSProtocolManager {
 	 * Optional method to do any startup when beginning operations of the
 	 * protocol manager. This can be useful if the protocol manager is a pool or
 	 * cache that must do startup tasks before being used.
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public void initialize() throws JargonException {
@@ -192,7 +192,7 @@ public abstract class IRODSProtocolManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return
 	 */
 	IRODSConnectionFactoryProducingFactory getIrodsConnectionFactoryProducingFactory() {
@@ -200,7 +200,7 @@ public abstract class IRODSProtocolManager {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param irodsConnectionFactoryProducingFactory
 	 */
 	void setIrodsConnectionFactoryProducingFactory(

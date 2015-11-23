@@ -26,10 +26,10 @@ import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 
 /**
  * Helpful assertions for unit testing IRODS
- * 
+ *
  * @author Mike Conway, DICE (www.irods.org)
  * @since
- * 
+ *
  */
 public class AssertionHelper {
 	private Properties testingProperties = new Properties();
@@ -45,7 +45,7 @@ public class AssertionHelper {
 
 	/**
 	 * Ensures that a scratch file does not exist given the path/file name
-	 * 
+	 *
 	 * @param filePathRelativeToScratch
 	 *            <code>String</code> that gives the relative file path under
 	 *            scratch, with no leading separator character
@@ -53,7 +53,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileNotExistsInScratch(
 			final String filePathRelativeToScratch)
-			throws IRODSTestAssertionException {
+					throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -68,7 +68,7 @@ public class AssertionHelper {
 
 	/**
 	 * Ensures that a file exists given the path/file name
-	 * 
+	 *
 	 * @param filePathRelativeToScratch
 	 *            <code>String</code> that gives the relative file path under
 	 *            scratch, with no leading separator character
@@ -76,7 +76,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileExistsInScratch(
 			final String filePathRelativeToScratch)
-			throws IRODSTestAssertionException {
+					throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -91,7 +91,7 @@ public class AssertionHelper {
 
 	/**
 	 * Ensures that the given file has the expected length
-	 * 
+	 *
 	 * @param filePathRelativeToScratch
 	 *            <code>String</code> that gives the relative file path under
 	 *            scratch, with no leading separator character
@@ -101,7 +101,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalScratchFileLengthEquals(
 			final String filePathRelativeToScratch, final long expectedLength)
-			throws IRODSTestAssertionException {
+					throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		File localFile = new File(fullPathToLocalFile.toString());
 		if (!localFile.exists()) {
@@ -123,7 +123,7 @@ public class AssertionHelper {
 	/**
 	 * Ensure that the given local file exists and has the expected checksum
 	 * value
-	 * 
+	 *
 	 * @param filePathRelativeToScratch
 	 *            <code>String</code> that gives the relative file path under
 	 *            scratch, with no leading separator character
@@ -172,14 +172,14 @@ public class AssertionHelper {
 	public void assertIrodsFileMatchesLocalFileChecksum(
 			final String absoluteIRODSPathUnderScratch,
 			final String absoluteLocalFileUnderScratch)
-			throws IRODSTestAssertionException {
+					throws IRODSTestAssertionException {
 
 		// FIXME: need to update for jargon-core
 	}
 
 	/**
 	 * Make sure that a file or collection is in IRODS
-	 * 
+	 *
 	 * @param absoluteIrodsPathUnderScratch
 	 *            <code>String</code> with absolute path (leading '/', or a path
 	 *            and filename to look for
@@ -207,12 +207,12 @@ public class AssertionHelper {
 
 	/**
 	 * Make sure that a file or collection is not in IRODS
-	 * 
+	 *
 	 * @param relativeIrodsPathUnderScratch
 	 *            <code>String</code> with absolute path
-	 * 
+	 *
 	 * @throws IRODSTestAssertionException
-	 * 
+	 *
 	 */
 	public void assertIrodsFileOrCollectionDoesNotExist(
 			final String absoluteIrodsPathUnderScratch,
@@ -238,7 +238,7 @@ public class AssertionHelper {
 	 * Are two directory trees equal? Take two absolute paths to the local file
 	 * system, recursively walk each tree and compare length, file name, and
 	 * number of subdirectories/files.
-	 * 
+	 *
 	 * @param dir1
 	 *            <code>String<code> with the absolute path to a directory
 	 * @param dir2
@@ -304,7 +304,7 @@ public class AssertionHelper {
 	/**
 	 * Recursively match two files/directories for length, number of members,
 	 * and name
-	 * 
+	 *
 	 * @param file1
 	 *            <code>File</code> with a file or directory
 	 * @param file2
@@ -313,7 +313,7 @@ public class AssertionHelper {
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(
 			final File file1, final File file2)
-			throws IRODSTestAssertionException {
+					throws IRODSTestAssertionException {
 
 		if (file1.getName().equals(".DS_Store")
 				|| file2.getName().equals(".DS_Store")) {
@@ -392,17 +392,17 @@ public class AssertionHelper {
 
 	/**
 	 * Assert that the given attribute is associated with the given data object
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 * @param avuAttribute
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
 	public void assertDataObjectFlaggedWithAVU(final String irodsAbsolutePath,
-			String avuAttribute,
+			final String avuAttribute,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount)
-			throws IRODSTestAssertionException, JargonException {
+					throws IRODSTestAssertionException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

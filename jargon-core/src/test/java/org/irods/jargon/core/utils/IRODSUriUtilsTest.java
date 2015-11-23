@@ -1,15 +1,30 @@
 package org.irods.jargon.core.utils;
 
+import static org.irods.jargon.core.utils.IRODSUriUtils.buildAnonymousURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.buildBaseURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.buildURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.buildURIForAnAccountAndPath;
+import static org.irods.jargon.core.utils.IRODSUriUtils.buildURIForAnAccountWithNoUserInformationIncluded;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getAbsolutePathFromURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getHostFromURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getIRODSAccountFromURI;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getPassword;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getUserInfo;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getUserName;
+import static org.irods.jargon.core.utils.IRODSUriUtils.getZone;
+import static org.irods.jargon.core.utils.IRODSUriUtils.isIRODSURIScheme;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.net.URI;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.InvalidIRODSUriException;
 import org.irods.jargon.core.exception.JargonException;
 import org.junit.Test;
-
-import static org.irods.jargon.core.utils.IRODSUriUtils.*;
-import static org.junit.Assert.*;
-
 
 public class IRODSUriUtilsTest {
 
@@ -30,8 +45,7 @@ public class IRODSUriUtilsTest {
 	@Test
 	public void testGetUserName() throws Exception {
 		final URI uri = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		final String actual = getUserName(uri);
 		assertEquals("did not derive user name from URI", "user", actual);
 	}
@@ -39,24 +53,21 @@ public class IRODSUriUtilsTest {
 	@Test
 	public void testGetZone() throws Exception {
 		final URI uri = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		assertEquals("did not derive zone from URI", "zone", getZone(uri));
 	}
 
 	@Test
 	public void testGetZoneNoZone() throws Exception {
 		final URI uri = new URI(
-				"irods://user:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user:password@host.domain:10000/zone/home/user/afile.txt");
 		assertNull(getZone(uri));
 	}
 
 	@Test
 	public void testGetPassword() throws Exception {
 		final URI uri = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		final String actual = getPassword(uri);
 		assertEquals("did not derive password from URI", "password", actual);
 	}
@@ -71,8 +82,7 @@ public class IRODSUriUtilsTest {
 	@Test
 	public void testGetHostFromURI() throws Exception {
 		final URI uri = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		final String actual = getHostFromURI(uri);
 		assertNotNull("null host", actual);
 		assertEquals("did not derive host from URI", "host.domain", actual);
@@ -81,8 +91,7 @@ public class IRODSUriUtilsTest {
 	@Test
 	public void testGetPortFromURI() throws Exception {
 		final URI uri = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		final int actual = IRODSUriUtils.getPortFromURI(uri);
 		assertEquals("did not derive port from URI", 10000, actual);
 	}
@@ -90,8 +99,7 @@ public class IRODSUriUtilsTest {
 	@Test
 	public void testGetAbsolutePathFromURI() throws Exception {
 		final URI testURI = new URI(
-				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt"
-		);
+				"irods://user.zone:password@host.domain:10000/zone/home/user/afile.txt");
 		final String actual = getAbsolutePathFromURI(testURI);
 		assertNotNull("no path returned", actual);
 	}
@@ -221,8 +229,7 @@ public class IRODSUriUtilsTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testBuildURIForAnAccountWithNoUserInformationIncludedNoAccount()
-	{
+	public void testBuildURIForAnAccountWithNoUserInformationIncludedNoAccount() {
 		buildURIForAnAccountWithNoUserInformationIncluded(null, "/");
 	}
 

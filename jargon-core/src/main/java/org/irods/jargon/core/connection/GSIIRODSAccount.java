@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -9,7 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class GSIIRODSAccount extends IRODSAccount {
 
@@ -38,7 +38,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/**
 	 * Static initializer method
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
@@ -62,7 +62,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	/**
 	 * Private constructor for GSI login to iRODS, automatically setting the
 	 * <code>AuthScheme</code> to GSI.
-	 * 
+	 *
 	 * @param host
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
@@ -118,7 +118,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	/**
 	 * Set the distinguished name of the iRODS server (this is done by the
 	 * GSIAuth handler)
-	 * 
+	 *
 	 * @param serverDistinguishedName
 	 */
 	void setServerDistinguishedName(final String serverDistinguishedName) {
@@ -142,7 +142,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
 	 */
@@ -174,7 +174,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.IRODSAccount#hashCode()
 	 */
 	@Override

@@ -15,9 +15,9 @@ import java.util.List;
  * This object returns such a mixed listing from the multiple queries, along
  * with properties that can assist in comprehending the paging status so that
  * subsequent queries can be made.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class PagingAwareCollectionListing {
 

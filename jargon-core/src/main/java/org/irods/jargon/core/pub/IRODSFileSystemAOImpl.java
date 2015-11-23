@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  */
 public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
-		IRODSFileSystemAO {
+IRODSFileSystemAO {
 
 	static Logger log = LoggerFactory.getLogger(IRODSFileSystemAOImpl.class);
 
@@ -82,7 +82,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileReadable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -118,7 +118,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -165,10 +165,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		IRODSQueryResultSet resultSet;
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_MODE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							irodsFile.getParent())
+			.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL,
+					irodsFile.getParent())
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							QueryConditionOperators.EQUAL, irodsFile.getName());
@@ -207,7 +207,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileWriteable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -242,7 +242,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFilePermissions(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
@@ -265,7 +265,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#getFilePermissionsForGivenUser
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -300,7 +300,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getDirectoryPermissions
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -315,7 +315,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
 	 * getDirectoryPermissionsForGivenUser
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -352,7 +352,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileExists(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -386,7 +386,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isDirectory(org.irods.
 	 * jargon.core.pub.io.IRODSFile)
@@ -420,7 +420,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFile(org.irods.jargon.core
 	 * .pub.io.IRODSFile)
@@ -453,7 +453,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSFileSystemAO#getObjStat(java.lang.String)
 	 */
@@ -467,7 +467,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDir(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -519,7 +519,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFilter
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FilenameFilter)
@@ -671,7 +671,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFileFilter
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FileFilter)
@@ -822,7 +822,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFileDataType(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -844,7 +844,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#createFile(java.lang.String
 	 * , org.irods.jargon.core.packinstr.DataObjInp.OpenFlags, int)
@@ -852,8 +852,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 	@Override
 	public int createFile(final String absolutePath,
 			final DataObjInp.OpenFlags openFlags, final int createMode)
-			throws NoResourceDefinedException,
-			JargonFileOrCollAlreadyExistsException, JargonException {
+					throws NoResourceDefinedException,
+					JargonFileOrCollAlreadyExistsException, JargonException {
 
 		log.info("createFile(final String absolutePath,final DataObjInp.OpenFlags openFlags, final int createMode)");
 
@@ -879,7 +879,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
 	 * .core.pub.io.IRODSFile,
@@ -924,7 +924,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#createFile(java.lang.String
 	 * , org.irods.jargon.core.packinstr.DataObjInp.OpenFlags, int)
@@ -968,7 +968,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 		if (openFlags == OpenFlags.WRITE
 				|| openFlags == OpenFlags.READ_WRITE_CREATE_IF_NOT_EXISTS
 				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
-				|| openFlags == OpenFlags.READ_WRITE) {
+				|| openFlags == OpenFlags.READ_WRITE
+				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
 			dataObjInp.setOperationType(DataObjInp.PUT_OPERATION_TYPE);
 		}
 
@@ -991,7 +992,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#mkdir(org.irods.jargon
 	 * .core.pub.io.IRODSFile, boolean)
@@ -1028,7 +1029,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileClose(int)
 	 */
 	@Override
@@ -1067,7 +1068,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteForce(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
@@ -1103,7 +1104,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteNoForce(org.
 	 * irods.jargon.core.pub.io.IRODSFile)
@@ -1142,7 +1143,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteForce(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
@@ -1179,7 +1180,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteNoForce
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -1242,7 +1243,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameDirectory(org.irods
 	 * .jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
@@ -1276,7 +1277,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameFile(org.irods.jargon
 	 * .core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
@@ -1311,7 +1312,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getResourceNameForFile
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
@@ -1353,7 +1354,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(org.irods
 	 * .jargon.core.pub.io.IRODSFile, java.lang.String)
@@ -1386,7 +1387,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(java.lang
 	 * .String, java.lang.String)
@@ -1412,7 +1413,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements
 
 		int apiNbr;
 
-		if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			apiNbr = DataObjInp.PHYMOVE_FILE_API_NBR_41;
 		} else {
 			apiNbr = DataObjInp.PHYMOVE_FILE_API_NBR;

@@ -6,9 +6,9 @@ import org.irods.jargon.core.protovalues.UserTypeEnum;
 /**
  * Represents a user's permission on a file or collection. This is a POJO domain
  * object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserFilePermission {
 
@@ -27,7 +27,7 @@ public class UserFilePermission {
 
 	/**
 	 * Public values constructor.
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the name of the user (no #zone)
 	 * @param userId
@@ -96,7 +96,7 @@ public class UserFilePermission {
 
 	/**
 	 * Get the name of the user in user#zone format
-	 * 
+	 *
 	 * @return <code>String</code> with the user name
 	 */
 	public String getUserName() {
@@ -105,7 +105,7 @@ public class UserFilePermission {
 
 	/**
 	 * Set the name of the user
-	 * 
+	 *
 	 * @param userName
 	 *            <code>String</code> with the name of the user
 	 */
@@ -116,7 +116,7 @@ public class UserFilePermission {
 	/**
 	 * Get the user name in the standard user#zone format. This is the standard
 	 * for displays of user names in iRODS user interfaces.
-	 * 
+	 *
 	 * @return <code>String</code> with the extended zone
 	 */
 	public String getNameWithZone() {
@@ -129,7 +129,7 @@ public class UserFilePermission {
 
 	/**
 	 * Get the unique user id database key
-	 * 
+	 *
 	 * @return <code>String</code> with the user id primary key value
 	 */
 	public String getUserId() {
@@ -138,7 +138,7 @@ public class UserFilePermission {
 
 	/**
 	 * Sets the unique user id primary key
-	 * 
+	 *
 	 * @param userId
 	 *            <code>String</code> user id to set
 	 */
@@ -148,7 +148,7 @@ public class UserFilePermission {
 
 	/**
 	 * Get the file permission for this user
-	 * 
+	 *
 	 * @return {@link FilePermissionEnum} value with the current permission for
 	 *         the user
 	 */
@@ -158,7 +158,7 @@ public class UserFilePermission {
 
 	/**
 	 * Set the file permission for the user
-	 * 
+	 *
 	 * @param filePermissionEnum
 	 *            {@link FilePermissionEnum} value
 	 */
@@ -169,7 +169,7 @@ public class UserFilePermission {
 
 	/**
 	 * Get the type of user for this user
-	 * 
+	 *
 	 * @return {@link UserTypeEnum}
 	 */
 	public synchronized UserTypeEnum getUserType() {
@@ -178,7 +178,7 @@ public class UserFilePermission {
 
 	/**
 	 * Set the type of user for this user
-	 * 
+	 *
 	 * @param userType
 	 *            {@link UserTypeEnum}
 	 */

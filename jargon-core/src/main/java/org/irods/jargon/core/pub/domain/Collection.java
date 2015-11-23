@@ -9,18 +9,18 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
  * object, and is distinct from considering a collection as a type of
  * <code>java.io.File</code>. For these types of operations, the
  * {@link org.irods.jargon.core.pub.io.IRODSFileImpl} object is available.
- * 
+ *
  * Note that the {@link org.irods.jargon.core.pub.CollectionAO} access object
  * can work with an IRODS collection as both an <code>IRODSFileImpl</code> for
  * typical <code>FIle</code> operations, as well as a <code>Collection</code>
  * domain object. <code>IRODSFileImpl</code> is useful when you want to treat
  * IRODS as a file system, while the <code>CollectionAO</code> is a view of the
  * collection as an IRODS entity, with IRODS specific functionality.
- * 
+ *
  * Note that this class is not immutable. It is meant to be a data value object
  * suitable for use with its access object. Jargon itself will not alter or
  * retain reference to any objects of this type when used as a parameter.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class Collection extends IRODSDomainObject {
@@ -73,7 +73,7 @@ public class Collection extends IRODSDomainObject {
 	/**
 	 * This will be the full absolute path to the collection. It may be a
 	 * special collection path, such as a soft link
-	 * 
+	 *
 	 * @param collectionName
 	 */
 	public void setCollectionName(final String collectionName) {
@@ -82,7 +82,7 @@ public class Collection extends IRODSDomainObject {
 
 	/**
 	 * Handy method to grab the last part of the path.
-	 * 
+	 *
 	 * @return <code>String</code>
 	 */
 	public String getCollectionLastPathComponent() {
@@ -96,7 +96,7 @@ public class Collection extends IRODSDomainObject {
 	/**
 	 * This will be the absolute path to the parent collection of this
 	 * collection
-	 * 
+	 *
 	 * @return
 	 */
 	public String getCollectionParentName() {
@@ -106,7 +106,7 @@ public class Collection extends IRODSDomainObject {
 	/**
 	 * Returns the absolute path for a collection, this is synonymous with the
 	 * <code>getCollectionName()</code>.
-	 * 
+	 *
 	 * @return
 	 */
 	public String getAbsolutePath() {
@@ -116,7 +116,7 @@ public class Collection extends IRODSDomainObject {
 	/**
 	 * This will be the absolute path to the parent collection of this
 	 * collection
-	 * 
+	 *
 	 * @param collectionParentName
 	 */
 	public void setCollectionParentName(final String collectionParentName) {

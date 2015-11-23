@@ -1,14 +1,14 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.pub.domain;
 
 /**
  * * A user group in the IRODS system. This class is not immutable, and should
  * not be shared between threads.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserGroup extends IRODSDomainObject {
 	private String userGroupId = "";

@@ -12,12 +12,12 @@ import org.slf4j.LoggerFactory;
  * Object to handle bundled file operations. This object contains functionality
  * similar to the iRODS <code>ibun</command> to transmit and register, or
  * bundle and receive files.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
-		BulkFileOperationsAO {
+BulkFileOperationsAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(BulkFileOperationsAOImpl.class);
@@ -50,7 +50,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 	/**
 	 * Constructor as called by the <code>IRODSAccessObjectFactory</code>, which
 	 * is properly used to construct this access object.
-	 * 
+	 *
 	 * @param irodsSession
 	 * @param irodsAccount
 	 * @throws JargonException
@@ -62,7 +62,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * createABundleFromIrodsFilesAndStoreInIrods(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -72,7 +72,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-			throws JargonException {
+					throws JargonException {
 
 		if (absolutePathToBundleFileToBeCreatedOnIrods == null
 				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
@@ -153,7 +153,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * createABundleFromIrodsFilesAndStoreInIrodsWithForceOption
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -163,7 +163,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-			throws JargonException {
+					throws JargonException {
 
 		if (absolutePathToBundleFileToBeCreatedOnIrods == null
 				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
@@ -199,7 +199,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * createABundleFromIrodsFilesAndStoreInIrodsWithForceOption
 	 * (java.lang.String, java.lang.String, java.lang.String,
@@ -263,7 +263,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException {
+					throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -273,7 +273,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -283,7 +283,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException {
+					throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -293,7 +293,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollectionWithForceOption(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -303,7 +303,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-			throws JargonException {
+					throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -314,7 +314,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 	/**
 	 * Internal method with params for various options to be delegated to by
 	 * specific extract methods in api
-	 * 
+	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
 	 * @param resourceNameWhereBundleWillBeExtracted
@@ -327,7 +327,7 @@ public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted,
 			final boolean force, final boolean bulkOperation)
-			throws JargonException {
+					throws JargonException {
 
 		if (absolutePathToBundleFileInIrodsToBeExtracted == null
 				|| absolutePathToBundleFileInIrodsToBeExtracted.isEmpty()) {

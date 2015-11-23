@@ -9,9 +9,9 @@ import org.irods.jargon.core.exception.JargonException;
  * a script on iRODS, and the streaming of the results as a binary stream to the
  * client. These remote scripts are defined in a special directory on the iRODS
  * server, and can do arbitrary tasks.
- * 
+ *
  * @author mikeconway
- * 
+ *
  */
 public interface RemoteExecutionService {
 
@@ -21,7 +21,7 @@ public interface RemoteExecutionService {
 	 * receive vary large results in stream form. There are other methods in
 	 * this class that indicate to iRODS that the behavior of streaming very
 	 * large results from remote execution of scripts is desired.
-	 * 
+	 *
 	 * @return <code>InputStream</code> containing the results of the remote
 	 *         script invocation
 	 * @throws JargonException
@@ -34,7 +34,7 @@ public interface RemoteExecutionService {
 	 * streaming behavior is desired. This method is separate since it requires
 	 * a different protocol, and will fail if invoked against a server that does
 	 * not support this method of streaming.
-	 * 
+	 *
 	 * @return <code>InputStream</code> containing the results of the remote
 	 *         script invocation
 	 * @throws JargonException

@@ -50,11 +50,11 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	/**
@@ -240,13 +240,13 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		 */
 
 		queryBuilder
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addConditionAsGenQueryField(
-				RodsGenQueryEnum.COL_COLL_NAME,
-				QueryConditionOperators.LIKE,
-				"/" + irodsAccount.getZone() + "/home/"
-						+ irodsAccount.getUserName() + "/%");
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.LIKE,
+						"/" + irodsAccount.getZone() + "/home/"
+								+ irodsAccount.getUserName() + "/%");
 
 		IRODSGenQueryFromBuilder query = queryBuilder
 				.exportIRODSQueryFromBuilder(1000);
@@ -380,8 +380,8 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 
 		builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_ID,
 				SelectFieldTypes.COUNT).addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_D_OWNER_ZONE,
-						QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
+				RodsGenQueryEnum.COL_D_OWNER_ZONE,
+				QueryConditionOperators.EQUAL, irodsAccount.getZone().trim());
 
 		IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
@@ -427,7 +427,7 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ subdir);
+								+ subdir);
 
 		IRODSFile targetSubdir = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsFile);
@@ -469,18 +469,18 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-				QueryConditionOperators.EQUAL,
-				targetSubdir.getAbsolutePath())
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
 				.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO,
 						smallSize)
-						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
-								QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO,
-								largeSize);
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
+						QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO,
+						largeSize);
 
 		IRODSGenQueryFromBuilder query = builder
 				.exportIRODSQueryFromBuilder(50);
@@ -494,16 +494,16 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		builder = new IRODSGenQueryBuilder(true, null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-				QueryConditionOperators.EQUAL,
-				targetSubdir.getAbsolutePath())
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN, smallSize)
-						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
-								QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO,
-								largeSize);
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
+						QueryConditionOperators.NUMERIC_LESS_THAN_OR_EQUAL_TO,
+						largeSize);
 
 		query = builder.exportIRODSQueryFromBuilder(50);
 
@@ -515,11 +515,11 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		builder = new IRODSGenQueryBuilder(true, null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-				QueryConditionOperators.EQUAL,
-				targetSubdir.getAbsolutePath())
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN, largeSize);
 
@@ -566,7 +566,7 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ subdir);
+								+ subdir);
 
 		IRODSFile targetSubdir = accessObjectFactory.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsFile);
@@ -610,11 +610,11 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 				null);
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-				QueryConditionOperators.EQUAL,
-				targetSubdir.getAbsolutePath())
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+						QueryConditionOperators.EQUAL,
+						targetSubdir.getAbsolutePath())
 				.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_DATA_SIZE,
 						QueryConditionOperators.NUMERIC_GREATER_THAN_OR_EQUAL_TO,

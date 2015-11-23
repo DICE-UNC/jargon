@@ -9,9 +9,9 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  * Represents the iRODS server response to the sending of the StartupPack_PI at
  * the initiation of a connection. This information is useful for connection
  * have specified reconnect, and hold reconnect port and host information.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  *         <Version_PI> <status>0</status> <relVersion>rods3.1</relVersion>
  *         <apiVersion>d</apiVersion> <reconnPort>63610</reconnPort>
  *         <reconnAddr>192.168.43.202</reconnAddr> <cookie>1575067662</cookie>
@@ -30,7 +30,7 @@ public class StartupResponseData {
 	/**
 	 * Default constructor initializes all of the required fields in response to
 	 * a startup packet operation.
-	 * 
+	 *
 	 * @param status
 	 * @param relVersion
 	 * @param apiVersion

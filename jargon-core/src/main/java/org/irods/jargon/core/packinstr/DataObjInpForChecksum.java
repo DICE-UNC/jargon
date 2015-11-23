@@ -10,9 +10,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Translation of a DataObjInp operation into XML protocol format.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 

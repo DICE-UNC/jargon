@@ -27,7 +27,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -36,11 +36,31 @@ public class IRODSSessionTest {
 	}
 
 	@Test
+	public final void testInitTrustAllTrustManager() throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		settableJargonProperties.setBypassSslCertChecks(true);
+		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
+		Assert.assertTrue(
+				"did't set trust all",
+				irodsSession.getX509TrustManager() instanceof TrustAllX509TrustManager);
+
+	}
+
+	@Test
+	public final void testInitNoTrustAllTrustManager() throws Exception {
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties();
+		settableJargonProperties.setBypassSslCertChecks(false);
+		IRODSSession irodsSession = new IRODSSession(settableJargonProperties);
+		Assert.assertNull(irodsSession.getX509TrustManager());
+
+	}
+
+	@Test
 	public void testGetDefaultJargonProperties() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -54,7 +74,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -73,7 +93,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -82,7 +102,7 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(true);
 		overrideJargonProperties
-				.setTransferThreadPoolMaxSimultaneousTransfers(4);
+		.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -95,7 +115,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -104,7 +124,7 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(true);
 		overrideJargonProperties
-				.setTransferThreadPoolMaxSimultaneousTransfers(4);
+		.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -118,7 +138,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -127,7 +147,7 @@ public class IRODSSessionTest {
 		overrideJargonProperties.setMaxParallelThreads(8000);
 		overrideJargonProperties.setUseTransferThreadsPool(false);
 		overrideJargonProperties
-				.setTransferThreadPoolMaxSimultaneousTransfers(4);
+		.setTransferThreadPoolMaxSimultaneousTransfers(4);
 		overrideJargonProperties.setTransferThreadPoolTimeoutMillis(60000);
 		irodsSession.setJargonProperties(overrideJargonProperties);
 		Executor executor = irodsSession.getParallelTransferThreadPool();
@@ -141,7 +161,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -164,7 +184,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -187,7 +207,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -210,7 +230,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -233,7 +253,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -255,7 +275,7 @@ public class IRODSSessionTest {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
 				.instance();
 		testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSSession irodsSession = IRODSSession
 				.instance(irodsConnectionManager);
 		irodsSession.closeSession();
@@ -286,7 +306,7 @@ public class IRODSSessionTest {
 				pipelineConfiguration.getInternalOutputStreamBufferSize());
 		Assert.assertEquals("did not set parallelSocketTimeout",
 				overrideJargonProperties
-						.getIRODSParallelTransferSocketTimeout(),
+				.getIRODSParallelTransferSocketTimeout(),
 				pipelineConfiguration.getIrodsParallelSocketTimeout());
 		Assert.assertEquals("did not set irodsSocketTimeout",
 				overrideJargonProperties.getIRODSSocketTimeout(),

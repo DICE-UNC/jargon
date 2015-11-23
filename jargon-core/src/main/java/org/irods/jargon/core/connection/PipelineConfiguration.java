@@ -11,9 +11,9 @@ package org.irods.jargon.core.connection;
  * Note that this object does not have synchronization. Through typical usage,
  * this configuration is initialized at connection startup, and a connection is
  * confined to one thread, so this should be just fine.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class PipelineConfiguration {
 
@@ -48,7 +48,7 @@ public class PipelineConfiguration {
 	 * Static initializer method will derive an immutable
 	 * <code>PipelineConfiguration</code> based on the prevailing
 	 * <code>JargonProperties</code> at the time the connection is created.
-	 * 
+	 *
 	 * @param jargonProperties
 	 * @return
 	 */
@@ -258,7 +258,7 @@ public class PipelineConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

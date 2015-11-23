@@ -7,9 +7,9 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 
 /**
  * Represents a checksum and the type of checksum
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class ChecksumValue {
 
@@ -83,7 +83,7 @@ public class ChecksumValue {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -110,7 +110,7 @@ public class ChecksumValue {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class ChecksumValue {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
