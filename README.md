@@ -40,3 +40,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
+###  move versus rename semantics, collection already exists on rename collection #161 
+
+Further refinement to the move operations in DataTransferOperationsImpl surfaced through testing for WebDav integration.  Also added several new unit tests.
