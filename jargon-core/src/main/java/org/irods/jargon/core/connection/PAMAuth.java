@@ -52,6 +52,7 @@ public class PAMAuth extends AuthMechanism {
 		} else {
 			log.info("no need to SSL tunnel for PAM");
 			irodsCommandsToUse = irodsCommands;
+
 		}
 
 		// send pam auth request
@@ -105,8 +106,6 @@ public class PAMAuth extends AuthMechanism {
 				irodsAccount.getDefaultStorageResource());
 		irodsAccountUsingTemporaryIRODSPassword
 				.setAuthenticationScheme(AuthScheme.STANDARD);
-		authResponse
-				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
@@ -176,7 +175,7 @@ public class PAMAuth extends AuthMechanism {
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 		return secureIRODSCommands;
 	}
-
+ 
 	/*
 	 * (non-Javadoc)
 	 * 

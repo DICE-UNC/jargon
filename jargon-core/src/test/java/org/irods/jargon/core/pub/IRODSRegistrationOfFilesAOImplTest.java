@@ -12,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.CollectionNotEmptyException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
@@ -47,12 +48,12 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -66,7 +67,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsFileSystem.getIRODSAccessObjectFactory()
-		.getIRODSRegistrationOfFilesAO(irodsAccount);
+				.getIRODSRegistrationOfFilesAO(irodsAccount);
 	}
 
 	@Test
@@ -75,7 +76,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -93,10 +94,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
@@ -107,13 +108,13 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				targetIrodsCollection,
 				false,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				"");
 
 		IRODSFile parentFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
-						+ "/testPutCollectionWithTwoFileslvl1nbr0");
+								+ "/testPutCollectionWithTwoFileslvl1nbr0");
 		Assert.assertTrue("irodsCollection does not exist", parentFile.exists());
 
 	}
@@ -123,7 +124,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -165,7 +166,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			throw new DuplicateDataException(
 					"throw to get expected while skipping");
@@ -208,7 +209,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			throw new JargonException("throw to honor expected error");
 
@@ -240,7 +241,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 
 			throw new IllegalArgumentException(
@@ -278,7 +279,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 
 			throw new DataNotFoundException(
@@ -302,7 +303,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				absPath + "/" + testFileName,
 				targetIrodsCollection + "/" + testFileName,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				"", false);
 	}
 
@@ -311,13 +312,13 @@ public class IRODSRegistrationOfFilesAOImplTest {
 	 *
 	 * @throws Exception
 	 */
-	@Test(expected = DataNotFoundException.class)
+	@Test(expected = FileNotFoundException.class)
 	public final void testRegisterPhysicalDataFileToIRODSIRODSParentMissing()
 			throws Exception {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			throw new DataNotFoundException("honor expected");
 		}
@@ -338,7 +339,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties,
 						IRODS_TEST_SUBDIR_PATH
-						+ "/testRegisterPhysicalDataFileToIRODSIRODSParentMissing");
+								+ "/testRegisterPhysicalDataFileToIRODSIRODSParentMissing");
 
 		ao.registerPhysicalDataFileToIRODS(fileNameOrig, targetIrodsCollection
 				+ "/" + testFileName, testingProperties
@@ -357,7 +358,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -414,7 +415,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -452,7 +453,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 						fileNameOrig,
 						targetIrodsCollection + "/" + testFileName,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 						"");
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
@@ -476,7 +477,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -562,7 +563,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -595,7 +596,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				fileNameOrig,
 				targetIrodsCollection + "/" + testFileName,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				"", false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
@@ -638,7 +639,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				fileNameOrig,
 				targetIrodsCollection + "/" + testFileName,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				"", false);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(targetIrodsCollection
@@ -657,7 +658,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			return;
 		}
@@ -678,10 +679,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		targetIrodsFile.deleteWithForceOption();
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 4, 7, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 4, 7, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
@@ -692,7 +693,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				targetIrodsCollection,
 				false,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				"");
 
 		ao.unregisterCollection(targetIrodsCollection, true);
@@ -700,7 +701,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		IRODSFile parentFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
-						+ "/testPutCollectionWithTwoFileslvl1nbr0");
+								+ "/testPutCollectionWithTwoFileslvl1nbr0");
 		Assert.assertFalse("irodsCollection should not exist",
 				parentFile.exists());
 
@@ -716,7 +717,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 			throws Exception {
 		if (testingPropertiesHelper.isTestRegistration(testingProperties)
 				&& testingPropertiesHelper
-				.isTestFileSystemMountLocal(testingProperties)) {
+						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
 			throw new CollectionNotEmptyException("throwing to match expected");
 		}
@@ -738,10 +739,10 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		targetIrodsFile.deleteWithForceOption();
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		IRODSRegistrationOfFilesAO ao = irodsFileSystem
 				.getIRODSAccessObjectFactory().getIRODSRegistrationOfFilesAO(
@@ -752,7 +753,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				targetIrodsCollection,
 				false,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				"");
 
 		ao.unregisterCollection(targetIrodsCollection, false);
@@ -760,7 +761,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 		IRODSFile parentFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection
-						+ "/testPutCollectionWithTwoFileslvl1nbr0");
+								+ "/testPutCollectionWithTwoFileslvl1nbr0");
 		Assert.assertFalse("irodsCollection should not exist",
 				parentFile.exists());
 

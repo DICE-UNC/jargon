@@ -183,13 +183,17 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 */
 	@Override
 	public synchronized Tag irodsFunction(final String type,
-			final String message, final byte[] errorBytes,
+		final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteBufferLength, final int intInfo)
 			throws JargonException {
 
 		log.debug("calling irods function with byte array");
-		log.debug("calling irods function with:{}", message);
+
+		if (intInfo != 1201) {
+			log.debug("calling irods function with:{}", message);
+		}
+
 		log.debug("api number is:{}", intInfo);
 
 		if (type == null || type.length() == 0) {

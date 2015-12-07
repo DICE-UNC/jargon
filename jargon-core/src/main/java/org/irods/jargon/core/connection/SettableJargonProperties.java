@@ -227,6 +227,7 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encryptionNumberHashRounds = jargonProperties
 				.getEncryptionNumberHashRounds();
 		this.encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
+		this.bypassSslCertChecks = jargonProperties.isBypassSslCertChecks();
 
 	}
 
@@ -1024,6 +1025,12 @@ public class SettableJargonProperties implements JargonProperties {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
 
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public synchronized String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -1262,6 +1269,7 @@ public class SettableJargonProperties implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
+<<<<<<< HEAD
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
 	 * ()
@@ -1294,6 +1302,8 @@ public class SettableJargonProperties implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
+=======
+>>>>>>> master
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionSaltSize()
 	 */
