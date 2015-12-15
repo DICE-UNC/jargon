@@ -320,7 +320,7 @@ public class IRODSRegistrationOfFilesAOImplTest {
 				&& testingPropertiesHelper
 						.isTestFileSystemMountLocal(testingProperties)) {
 		} else {
-			throw new DataNotFoundException("honor expected");
+			throw new FileNotFoundException("honor expected");
 		}
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
