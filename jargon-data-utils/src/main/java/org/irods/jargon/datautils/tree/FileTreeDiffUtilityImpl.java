@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
  * Note that this method will be passed an <code>IRODSAccessObjectFactory</code>
  * , and this class assumes that the underlying iRODS connection will be closed
  * outside of the scope of this object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
-		implements FileTreeDiffUtility {
+implements FileTreeDiffUtility {
 
 	private static Logger log = LoggerFactory
 			.getLogger(FileTreeDiffUtilityImpl.class);
@@ -50,7 +50,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that is used to connect to the
 	 *            compared iRODS file system
@@ -68,7 +68,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            <code>IRODSAccount</code> that is used to connect to the
 	 *            compared iRODS file system
@@ -100,7 +100,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.tree.FileTreeDiffUtility#
 	 * verifyLocalAndIRODSTreesMatch(java.io.File, java.lang.String, long, long)
 	 */
@@ -109,7 +109,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final String irodsAbsolutePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("verifyLocalAndIRODSTreesMatch");
 
@@ -148,7 +148,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.tree.FileTreeDiffUtility#generateDiffLocalToIRODS
 	 * (java.io.File, java.lang.String, long, long)
@@ -158,7 +158,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final String irodsAbsolutePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		if (localFileRoot == null) {
 			throw new IllegalArgumentException("null LocalFileRoot");
@@ -245,7 +245,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Given two relative paths, do the diff. This is the recursive call that
 	 * will descend into child directories and update a shared tree model.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -261,7 +261,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final File rightHandSide, final String rightHandSideRootPath,
 			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		if (isCancelled()) {
 			return 0;
@@ -334,7 +334,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Two relative paths are matched. Decide if they are files or directories,
 	 * and diff appropriately.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -351,7 +351,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final String leftHandSideAsRelativePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		if (isCancelled()) {
 			return;
@@ -382,7 +382,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * I've matched two directories by relative path, proceed to diff them
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -400,7 +400,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final String leftHandSideAsRelativePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		if (isCancelled()) {
 			return;
@@ -671,7 +671,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	 * I've matched two files by relative paths. Now inspect for changes and
 	 * generate any appropriate diff. If either the right or left timestamp is
 	 * set to no checks, then timestamps are not checked at all.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param rightHandSide
@@ -683,7 +683,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 			final File leftHandSide, final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException {
+					throws JargonException {
 
 		if (isCancelled()) {
 			return;

@@ -27,10 +27,10 @@ public interface FileTreeDiffUtility {
 	 * Note that setting either the left hand or right hand side timestamp to
 	 * <code>NO_TIMESTAMP_CHECKS</code> will turn of timestamp checking. This is
 	 * appropriate for an initial synch operation.
-	 * 
+	 *
 	 * @param localFileRoot
 	 *            <code>File</code> that is the left hand side of the comparison
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> that is the root directory that will be
 	 *            compared to the <code>localFileRoot</code> The file and
@@ -54,15 +54,15 @@ public interface FileTreeDiffUtility {
 			final File localFileRoot, final String irodsAbsolutePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Handy method that checks a local and iRODS file trees and verifies that
 	 * there are no differences
-	 * 
+	 *
 	 * @param localFileRoot
 	 *            <code>File</code> that is the left hand side of the comparison
-	 * 
+	 *
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> that is the root directory that will be
 	 *            compared to the <code>localFileRoot</code> The file and

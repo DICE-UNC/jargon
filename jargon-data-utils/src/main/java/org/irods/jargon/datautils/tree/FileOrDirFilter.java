@@ -10,9 +10,9 @@ import java.io.FileFilter;
  * <p/>
  * iRODS will return all the files, then all the directories. Local file systems
  * typically will have them mixed together.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileOrDirFilter implements FileFilter {
 
@@ -32,7 +32,7 @@ public class FileOrDirFilter implements FileFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
 	@Override

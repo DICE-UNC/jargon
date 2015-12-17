@@ -28,13 +28,13 @@ import org.slf4j.LoggerFactory;
  * project, and it is expected that this will change (and we'll write some nice
  * unit tests under here) as the actual requirements take shape. Use with
  * caution!
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  * @param <R>
- * 
+ *
  */
 public abstract class AbstractIRODSVisitorInvoker<E> extends
-		AbstractJargonService {
+AbstractJargonService {
 
 	public enum VisitorDesiredAction {
 		HALT, CONTINUE
@@ -73,7 +73,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * underlying data and make invocations to the <code>visit()</code> method.
 	 * <p/>
 	 * This method will honor any cancellation signal when iterating
-	 * 
+	 *
 	 * @throws NoMoreItemsException
 	 *             if no more items were found, but were expected
 	 * @throws JargonException
@@ -116,7 +116,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * collection of items to iterate over. Note that the <code>next()</code>
 	 * method will be called and this method will handle any 'requery' to obtain
 	 * pages of data from iRODS
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract void initializeInvoker() throws JargonException;
@@ -125,7 +125,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * Method to access the next item in the collection to be iterated and
 	 * 'visited'. This method will be responsible for any 'paging' that requires
 	 * a re-query to iRODS.
-	 * 
+	 *
 	 * @return <E> with the next item of iterated data to visit
 	 * @throws NoMoreItemsException
 	 * @throws JargonException
@@ -135,7 +135,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	/**
 	 * Return a <code>boolean</code> that indicates whether the underlying
 	 * collection of data has more results to process
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if there is more data
 	 *         to process
 	 * @throws JargonException
@@ -146,7 +146,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * Complete the operation, called even if cancel or error occurs.
 	 * <p/>
 	 * Any resource freeing or final evaluation should be implemented here
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public abstract void close() throws JargonException;
@@ -154,7 +154,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	/**
 	 * Checks if cancel has been called on this object, or a <code>HALT</code>
 	 * was returned from the visitor.
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean isCancel() {

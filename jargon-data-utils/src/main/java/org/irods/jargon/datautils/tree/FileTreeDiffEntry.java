@@ -6,9 +6,9 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * Entry that describes a collection or data object (local or in iRODS) that is
  * a difference between two trees. The object contains a description of the data
  * object or collection, and whether it is
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileTreeDiffEntry {
 
@@ -35,7 +35,7 @@ public class FileTreeDiffEntry {
 	/**
 	 * Classify this as a diff (an actual difference was noted), or as a
 	 * non-diff entry that simply describes the tree
-	 * 
+	 *
 	 * @return <code>true</code> if this is an actual diff
 	 */
 	public boolean isCountAsDiff() {
@@ -49,7 +49,7 @@ public class FileTreeDiffEntry {
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry
@@ -72,7 +72,7 @@ public class FileTreeDiffEntry {
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry
@@ -102,7 +102,7 @@ public class FileTreeDiffEntry {
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry

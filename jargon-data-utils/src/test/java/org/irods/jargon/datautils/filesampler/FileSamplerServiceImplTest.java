@@ -3,14 +3,17 @@
  */
 package org.irods.jargon.datautils.filesampler;
 
+import java.io.File;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -25,7 +28,6 @@ import org.junit.Test;
 public class FileSamplerServiceImplTest {
 
 	private static Properties testingProperties = new Properties();
-	private static JargonProperties jargonOriginalProperties = null;
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "FileSamplerServiceImplTest";
@@ -39,7 +41,6 @@ public class FileSamplerServiceImplTest {
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
-		jargonOriginalProperties = settableJargonProperties;
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -98,6 +99,145 @@ public class FileSamplerServiceImplTest {
 		Assert.assertFalse("empty result", actual.length == 0);
 		Assert.assertEquals("sampleSize not as requested", sampleSize,
 				actual.length);
+
+	}
+
+	@Test(expected = FileNotFoundException.class)
+	public void testStringFromFileMissing() throws Exception {
+		String testFileName = "testStringFromFileMissing.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		service.convertFileContentsToString(targetFile.getAbsolutePath(), 0);
+
+	}
+
+	@Test
+	public void testStringFromFile() throws Exception {
+		String testFileName = "testStringFromFile.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		File localText = LocalFileUtils
+				.getClasspathResourceAsFile("/text/test1.txt");
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localText, targetFile, null, null);
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		String actual = service.convertFileContentsToString(
+				targetFile.getAbsolutePath(), 0);
+		Assert.assertFalse("no data returned", actual.isEmpty());
+
+	}
+
+	@Test(expected = FileTooLargeException.class)
+	public void testStringFromFileTooLarge() throws Exception {
+		String testFileName = "testStringFromFileTooLarge.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		File localText = LocalFileUtils
+				.getClasspathResourceAsFile("/text/test1.txt");
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(localText, targetFile, null, null);
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		service.convertFileContentsToString(targetFile.getAbsolutePath(), 1);
+
+	}
+
+	@Test
+	public void testStringToFileTwice() throws Exception {
+		String testFileName = "testStringToFileTwice.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		String hello = "hello there from jargon";
+		service.saveStringToFile(hello, targetFile.getAbsolutePath());
+		service.saveStringToFile(hello, targetFile.getAbsolutePath());
+
+		String helloFromIrods = service.convertFileContentsToString(
+				targetFile.getAbsolutePath(), 0);
+		Assert.assertEquals(hello, helloFromIrods);
+
+	}
+
+	@Test
+	public void testStringToFile() throws Exception {
+		String testFileName = "testStringToFile.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		String hello = "hello there from jargon";
+		service.saveStringToFile(hello, targetFile.getAbsolutePath());
+		String helloFromIrods = service.convertFileContentsToString(
+				targetFile.getAbsolutePath(), 0);
+		Assert.assertEquals(hello, helloFromIrods);
 
 	}
 

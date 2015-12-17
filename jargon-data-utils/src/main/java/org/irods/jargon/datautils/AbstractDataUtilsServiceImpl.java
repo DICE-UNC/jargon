@@ -22,7 +22,7 @@ public class AbstractDataUtilsServiceImpl implements DataUtilsService {
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} that can create necessary
 	 *            objects

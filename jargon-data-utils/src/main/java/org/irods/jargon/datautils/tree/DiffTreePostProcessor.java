@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -11,9 +11,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Post-processor for a diff tree will roll up counts of diffs in children and
  * augment the diff tree
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DiffTreePostProcessor {
 
@@ -21,7 +21,7 @@ public class DiffTreePostProcessor {
 			.getLogger(DiffTreePostProcessor.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public DiffTreePostProcessor() {
 
@@ -30,7 +30,7 @@ public class DiffTreePostProcessor {
 	/**
 	 * Given a completed diff tree, post process it to roll up the counts of
 	 * diffs in children. This is useful for display to users
-	 * 
+	 *
 	 * @param fileTreeModel
 	 *            {@link FileTreeModel} that represents the outcome of a diff
 	 *            process. This model will have the nodes in the tree updated

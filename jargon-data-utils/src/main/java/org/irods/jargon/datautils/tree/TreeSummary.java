@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -12,9 +12,9 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 
 /**
  * POJO that describes a File tree and its characteristics
- * 
+ *
  * @author Mike Conway
- * 
+ *
  */
 public class TreeSummary {
 

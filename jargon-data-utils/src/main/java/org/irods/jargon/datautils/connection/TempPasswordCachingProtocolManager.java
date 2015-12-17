@@ -17,9 +17,9 @@ import org.slf4j.LoggerFactory;
  * Special variant of the {@link IRODSProtocolMangaer} that caches a temporary
  * password and only returns that one connection. This effectively shares that
  * single connection.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
@@ -38,7 +38,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	 * This allows client applications to (somewhat) transparently simulate the
 	 * ability to get a connection on-demand. This is used in idrop-lite, for
 	 * example.
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the underlying cached account
 	 * @param irodsSession
@@ -51,7 +51,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	public TempPasswordCachingProtocolManager(final IRODSAccount irodsAccount,
 			final IRODSSession irodsSession,
 			final IRODSProtocolManager baseProtocolManager)
-			throws JargonException {
+					throws JargonException {
 		super();
 
 		if (irodsAccount == null) {
@@ -76,7 +76,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractIRODSProtocolManager#
 	 * getIRODSProtocol(org.irods.jargon.core.connection.IRODSAccount,
 	 * org.irods.jargon.core.connection.PipelineConfiguration)
@@ -99,7 +99,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractIRODSProtocolManager#destroy()
 	 */
@@ -117,7 +117,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractIRODSProtocolManager#initialize
 	 * ()
@@ -154,7 +154,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
@@ -162,7 +162,7 @@ public class TempPasswordCachingProtocolManager extends IRODSProtocolManager {
 	@Override
 	public void returnIRODSProtocol(
 			final AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-			throws JargonException {
+					throws JargonException {
 		try {
 			objectPool.returnObject(abstractIRODSMidLevelProtocol);
 		} catch (Exception e) {

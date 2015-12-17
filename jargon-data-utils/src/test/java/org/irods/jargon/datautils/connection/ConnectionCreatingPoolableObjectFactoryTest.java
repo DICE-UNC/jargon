@@ -41,6 +41,7 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 		Assert.assertNotNull("null factory", factory);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public void testConnectionCreatingPoolableObjectFactoryNullAccount() {
 		IRODSAccount irodsAccount = null;

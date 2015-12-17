@@ -101,7 +101,7 @@ public class CacheEncryptor {
 	/**
 	 * Takes a single String as an argument and returns an Encrypted version of
 	 * that String.
-	 * 
+	 *
 	 * @param str
 	 *            String to be encrypted
 	 * @return <code>String</code> Encrypted version of the provided String
@@ -127,7 +127,7 @@ public class CacheEncryptor {
 	/**
 	 * Takes a encrypted String as an argument, decrypts and returns the
 	 * decrypted String.
-	 * 
+	 *
 	 * @param str
 	 *            Encrypted String to be decrypted
 	 * @return <code>String</code> Decrypted version of the provided String

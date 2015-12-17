@@ -12,9 +12,9 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Represents a shopping cart of iRODS files.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileShoppingCart implements Serializable {
 
@@ -23,7 +23,7 @@ public class FileShoppingCart implements Serializable {
 
 	/**
 	 * Static initializer takes creates a shopping cart
-	 * 
+	 *
 	 * @return <code>FileShoppingCart</code> instane.
 	 */
 	public static FileShoppingCart instance() {
@@ -35,7 +35,7 @@ public class FileShoppingCart implements Serializable {
 	 * where each file in the cart is one line, followed by a carriage return
 	 * (\n) character. This is a suitable format for saving the shopping cart as
 	 * a text file.
-	 * 
+	 *
 	 * @return <code>String</code> with one shopping cart file per line. The
 	 *         value will be blank if no files are in the cart
 	 */
@@ -53,7 +53,7 @@ public class FileShoppingCart implements Serializable {
 	 * Given a string representation (one file per line, separated by the \n
 	 * character, build a <code>FileShoppingCart</code>. The cart will be empty
 	 * if no files are in the serialized string form
-	 * 
+	 *
 	 * @param stringRepresentation
 	 *            <code>String</code> with a one line per file, separated by \n,
 	 *            as created by the
@@ -102,7 +102,7 @@ public class FileShoppingCart implements Serializable {
 
 	/**
 	 * Handy method to check if cart has any entries.
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if cart has entries
 	 */
 	public boolean hasItems() {
@@ -116,7 +116,7 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Place an item in the shopping cart. The cart will overwrite an existing
 	 * entry, thus preventing duplicates.
-	 * 
+	 *
 	 * @param shoppingCartEntry
 	 *            {@link ShoppingCartEntry} to add to the cart
 	 */
@@ -133,7 +133,7 @@ public class FileShoppingCart implements Serializable {
 	/**
 	 * Remove a file from the shopping cart. Silently ignore if the item is not
 	 * there
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with the absolute file path to the item to
 	 *            be removed from the cart
@@ -149,7 +149,7 @@ public class FileShoppingCart implements Serializable {
 
 	/**
 	 * Get a <code>List<String></code> of the file names in the shopping cart
-	 * 
+	 *
 	 * @return <code>List<String></code> with the files in the shopping cart
 	 */
 	public List<String> getShoppingCartFileList() {

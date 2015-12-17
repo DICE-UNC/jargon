@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -21,13 +21,13 @@ import org.slf4j.LoggerFactory;
  * extension.
  * <p/>
  * This service handles both local and iRODS directories
- * 
+ *
  * @author Mike Conway - DICE
- * 
- * 
+ *
+ *
  */
 public class TreeSummarizingServiceImpl extends AbstractJargonService implements
-		TreeSummarizingService {
+TreeSummarizingService {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(TreeSummarizingServiceImpl.class);
@@ -44,7 +44,7 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#
 	 * generateTreeSummaryForIrodsFileTree(java.lang.String)
 	 */
@@ -81,7 +81,7 @@ public class TreeSummarizingServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.tree.TreeSummarizingService#
 	 * generateTreeSummaryForLocalFileTree(java.lang.String)
 	 */

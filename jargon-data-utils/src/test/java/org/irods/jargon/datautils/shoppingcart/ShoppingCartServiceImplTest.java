@@ -71,6 +71,7 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public final void testSerializeCartNoDataCacheService() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

@@ -9,9 +9,9 @@ package org.irods.jargon.datautils.synchproperties;
  * iRODS stores information about this synch folder, including the last
  * synchronization time stamps from the perspective of both the device, and
  * iRODS, so that differences can be noted.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserSynchTarget {
 

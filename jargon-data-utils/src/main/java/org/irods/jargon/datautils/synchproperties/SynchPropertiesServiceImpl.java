@@ -25,18 +25,18 @@ import org.slf4j.LoggerFactory;
 /**
  * Service to maintain synchronization properties for client->iRODS data
  * synchronization
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
-		implements SynchPropertiesService {
+implements SynchPropertiesService {
 
 	/*
 	 * AVU conventions attrib | value | unit
-	 * 
+	 *
 	 * in synch root dir
-	 * 
+	 *
 	 * [user name]:[device] | [lastLocalSynch | lastIrodsSynch | localAbsPath] |
 	 * iRODSSynch:userSynchDir
 	 */
@@ -56,7 +56,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Constructor initializes dependencies. These can also be set after using
 	 * the default constructor.
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            <code>IRODSAccessObjectFactory</code> that can create various
 	 *            access objects to interact with iRODS
@@ -73,7 +73,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropetiesService#
 	 * getUserSynchTargetForUserAndAbsolutePath(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -155,7 +155,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getUserSynchTargets(java.lang.String)
 	 */
@@ -205,7 +205,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 		for (MetaDataAndDomainData metadata : queryResults) {
 			userSynchTargets
-					.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
+			.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
 		}
 
 		return userSynchTargets;
@@ -215,7 +215,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Parse the synch directory AVU value for component values to build a
 	 * <code>UserSynchTarget</code> description.
-	 * 
+	 *
 	 * @param metaDataAndDomainData
 	 *            {@link MetaDataAndDomainData} from an AVU query
 	 * @return {@link UserSynchTarget} describing a synch relationship for this
@@ -224,7 +224,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 */
 	private UserSynchTarget buildUserSynchTargetFromMetaDataAndDomainData(
 			final MetaDataAndDomainData metaDataAndDomainData)
-			throws JargonException {
+					throws JargonException {
 		String[] valueComponents = metaDataAndDomainData.getAvuValue().split(
 				"[~]");
 		if (valueComponents.length != 3) {
@@ -281,7 +281,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * updateTimestampsToCurrent(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -289,7 +289,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public void updateTimestampsToCurrent(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-			throws JargonException {
+					throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -346,7 +346,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * addSynchDeviceForUserAndIrodsAbsolutePath(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -355,7 +355,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	public void addSynchDeviceForUserAndIrodsAbsolutePath(
 			final String userName, final String deviceName,
 			final String irodsAbsolutePath, final String localAbsolutePath)
-			throws DuplicateDataException, JargonException {
+					throws DuplicateDataException, JargonException {
 
 		checkDependencies();
 
@@ -427,7 +427,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getSynchTimestamps()
 	 */
@@ -446,14 +446,14 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * synchDeviceExists(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean synchDeviceExists(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-			throws JargonException {
+					throws JargonException {
 		String attribute = buildAvuAttribForSynchUtilTarget(userName,
 				deviceName);
 
@@ -480,14 +480,14 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * removeSynchDevice(java.lang.String)
 	 */
 	@Override
 	public void removeSynchDevice(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-			throws JargonException {
+					throws JargonException {
 
 		String attribute = buildAvuAttribForSynchUtilTarget(userName,
 				deviceName);

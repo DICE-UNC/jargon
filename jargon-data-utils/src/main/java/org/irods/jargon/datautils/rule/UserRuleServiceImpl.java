@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
@@ -25,12 +25,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Utilities to manage user defined rules in iRODS via a convention for a user
  * rules dir
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserRuleServiceImpl extends AbstractJargonService implements
-		UserRuleService {
+UserRuleService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(UserRuleServiceImpl.class);
@@ -52,7 +52,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.rule.UserRulesService#listUserRules()
 	 */
 	@Override
@@ -75,7 +75,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding rule file:{}", metadataAndDomainData);
 				userRules
-						.add(transformMetadataValueToUserRule(metadataAndDomainData));
+				.add(transformMetadataValueToUserRule(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -89,8 +89,8 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 	public void addNewUserRuleInUserHomeDir(final String userFileName,
 			final String description, final String ruleName,
 			final RuleAproposTo aproposTo, final String ruleBody)
-			throws NoUserRuleSubdirException, DuplicateDataException,
-			JargonException {
+					throws NoUserRuleSubdirException, DuplicateDataException,
+					JargonException {
 		log.info("addNewUserRule()");
 
 		if (userFileName == null || userFileName.isEmpty()) {

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.sharing;
 
@@ -21,12 +21,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handy methods to
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class AnonymousAccessServiceImpl extends AbstractJargonService implements
-		AnonymousAccessService {
+AnonymousAccessService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AnonymousAccessServiceImpl.class);
@@ -65,7 +65,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.sharing.AnonymousAccessService#
 	 * isAnonymousAccessSetUp(java.lang.String)
 	 */
@@ -112,7 +112,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 			final String irodsAbsolutePath,
 			final FilePermissionEnum filePermissionForTargetPath,
 			final FilePermissionEnum optionalFilePermissionForParentCollection)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 
 		log.info("permitAnonymousToFileOrCollectionSettingCollectionAndDataObjectProperties()");
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
@@ -180,8 +180,8 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 						getAnonymousUserName());
 		if (userFilePermission == null
 				|| userFilePermission.getFilePermissionEnum()
-						.getPermissionNumericValue() < filePermissionForTargetPath
-						.getPermissionNumericValue()) {
+				.getPermissionNumericValue() < filePermissionForTargetPath
+				.getPermissionNumericValue()) {
 			log.info("replace permission value with higher given value");
 
 			if (filePermissionForTargetPath == FilePermissionEnum.NONE
@@ -255,8 +255,8 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 						getAnonymousUserName());
 		if (userFilePermission == null
 				|| userFilePermission.getFilePermissionEnum()
-						.getPermissionNumericValue() < filePermissionForTargetPath
-						.getPermissionNumericValue()) {
+				.getPermissionNumericValue() < filePermissionForTargetPath
+				.getPermissionNumericValue()) {
 			log.info("replace permission value with higher given value");
 
 			if (filePermissionForTargetPath == FilePermissionEnum.NONE
@@ -265,19 +265,19 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 						"cannot set permission to null or none here");
 			} else if (filePermissionForTargetPath == FilePermissionEnum.READ) {
 				collectionAO
-						.setAccessPermissionRead(irodsAccount.getZone(),
-								objStat.getAbsolutePath(),
-								getAnonymousUserName(), true);
+				.setAccessPermissionRead(irodsAccount.getZone(),
+						objStat.getAbsolutePath(),
+						getAnonymousUserName(), true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.WRITE) {
 				collectionAO
-						.setAccessPermissionWrite(irodsAccount.getZone(),
-								objStat.getAbsolutePath(),
-								getAnonymousUserName(), true);
+				.setAccessPermissionWrite(irodsAccount.getZone(),
+						objStat.getAbsolutePath(),
+						getAnonymousUserName(), true);
 			} else if (filePermissionForTargetPath == FilePermissionEnum.OWN) {
 				collectionAO
-						.setAccessPermissionOwn(irodsAccount.getZone(),
-								objStat.getAbsolutePath(),
-								getAnonymousUserName(), true);
+				.setAccessPermissionOwn(irodsAccount.getZone(),
+						objStat.getAbsolutePath(),
+						getAnonymousUserName(), true);
 			}
 			log.info("setting inheritance bit...");
 			collectionAO.setAccessPermissionInherit(irodsAccount.getZone(),
@@ -288,7 +288,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	/**
 	 * Get the anonymous user name for use in comparisons and setting. May be
 	 * modified by setting a variant.
-	 * 
+	 *
 	 * @return the anonymousUserName
 	 */
 	@Override
@@ -299,7 +299,7 @@ public class AnonymousAccessServiceImpl extends AbstractJargonService implements
 	/**
 	 * Set (by injection) the user name to use as 'anonymous'. Defaults to the
 	 * setting in {@link IRODSAccount}
-	 * 
+	 *
 	 * @param anonymousUserName
 	 *            the anonymousUserName to set
 	 */

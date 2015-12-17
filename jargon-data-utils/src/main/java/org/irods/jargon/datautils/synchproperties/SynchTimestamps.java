@@ -2,9 +2,9 @@ package org.irods.jargon.datautils.synchproperties;
 
 /**
  * Local and iRODS timestamps at a certain synch point
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public final class SynchTimestamps {
 

@@ -4,9 +4,9 @@ import java.io.Serializable;
 
 /**
  * An entry in the shopping cart of files
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ShoppingCartEntry implements Serializable {
 
@@ -15,7 +15,7 @@ public class ShoppingCartEntry implements Serializable {
 
 	/**
 	 * Static initializer creates a new shopping cart entry
-	 * 
+	 *
 	 * @param fileName
 	 *            <code>String</code> with the file name for the entry in the
 	 *            shopping cart

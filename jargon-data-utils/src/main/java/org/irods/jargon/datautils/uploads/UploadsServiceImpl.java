@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.uploads;
 
@@ -15,19 +15,19 @@ import org.slf4j.LoggerFactory;
 /**
  * Service implementation to help manage an 'uploads' directory, used by
  * convention in multiple interfaces as a generic location to upload data.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UploadsServiceImpl extends AbstractJargonService implements
-		UploadsService {
+UploadsService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(UploadsServiceImpl.class);
 
 	/**
 	 * Constructor with information needed to connect to iRODS
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
@@ -41,7 +41,7 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.uploads.UploadsService#getUploadsDirectory()
 	 */
@@ -57,13 +57,12 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 		if (!homeDirFile.exists()) {
 			homeDirFile.mkdirs();
 		}
-		homeDirFile.reset();
 		return homeDirFile;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.uploads.UploadsService#deleteUploadsDirectory
 	 * ()
@@ -82,14 +81,14 @@ public class UploadsServiceImpl extends AbstractJargonService implements
 
 	/**
 	 * Get the uploads dir name under the user home directory
-	 * 
+	 *
 	 * @return
 	 */
 	private String getUploadsDirName() {
 
 		StringBuilder homeDirectory = new StringBuilder(
 				MiscIRODSUtils
-						.computeHomeDirectoryForIRODSAccount(getIrodsAccount()));
+				.computeHomeDirectoryForIRODSAccount(getIrodsAccount()));
 		homeDirectory.append('/');
 		homeDirectory.append(UploadsService.UPLOADS_DIR_DEFAULT_NAME);
 		return homeDirectory.toString();

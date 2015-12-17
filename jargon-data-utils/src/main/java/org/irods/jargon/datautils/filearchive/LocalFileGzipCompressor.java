@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.filearchive;
 
@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Archiver that will tar a given local collection
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class LocalFileGzipCompressor {
 
@@ -35,7 +35,7 @@ public class LocalFileGzipCompressor {
 	/**
 	 * Take the given file and compress it to a gzip with a .gzip extension
 	 * added
-	 * 
+	 *
 	 * @param inputFileAbsolutePath
 	 *            <code>String</code> with an absolute path to a file that is
 	 *            gzip compressed
@@ -43,6 +43,7 @@ public class LocalFileGzipCompressor {
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
+	@SuppressWarnings("resource")
 	public File compress(final String inputFileAbsolutePath)
 			throws FileNotFoundException, JargonException {
 
@@ -86,6 +87,9 @@ public class LocalFileGzipCompressor {
 			gzOut.close();
 
 			log.info("done!");
+			/*
+			 * Stream will be closed by client of this API
+			 */
 			return outputFile;
 
 		} catch (IOException e) {
@@ -101,7 +105,7 @@ public class LocalFileGzipCompressor {
 	 * Note the result file will either be the same name with the .gzip removed,
 	 * leaving the original extension. If a .gzip extension is not found it will
 	 * make it a .tar file by default
-	 * 
+	 *
 	 * @param inputFileAbsolutePath
 	 *            <code>String</code> with the absolute path to a .gzip file
 	 * @return {@link File} that is unzipped and has the .gzip removed to give
@@ -110,6 +114,7 @@ public class LocalFileGzipCompressor {
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
+	@SuppressWarnings("resource")
 	public File uncompress(final String inputFileAbsolutePath)
 			throws FileNotFoundException, JargonException {
 
@@ -163,6 +168,9 @@ public class LocalFileGzipCompressor {
 			outputStream.close();
 
 			log.info("done!");
+			/*
+			 * Stream will be closed by the client of this API
+			 */
 			return outputFile;
 
 		} catch (IOException e) {

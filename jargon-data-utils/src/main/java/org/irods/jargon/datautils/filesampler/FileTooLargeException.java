@@ -1,22 +1,27 @@
 /**
  *
  */
-package org.irods.jargon.datautils.rule;
+package org.irods.jargon.datautils.filesampler;
 
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * @author Mike Conway - DICE (www.irods.org)
+ * File is too large for processing
+ *
+ * @author Mike Conway - DICE
  *
  */
-public class NoUserRuleSubdirException extends JargonException {
+public class FileTooLargeException extends JargonException {
 
-	private static final long serialVersionUID = 7848619543804101461L;
+	/**
+	 *
+	 */
+	private static final long serialVersionUID = 9085475135705527553L;
 
 	/**
 	 * @param message
 	 */
-	public NoUserRuleSubdirException(final String message) {
+	public FileTooLargeException(final String message) {
 		super(message);
 	}
 
@@ -24,14 +29,14 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public NoUserRuleSubdirException(final String message, final Throwable cause) {
+	public FileTooLargeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public NoUserRuleSubdirException(final Throwable cause) {
+	public FileTooLargeException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -40,16 +45,17 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public FileTooLargeException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
+		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(final Throwable cause,
+	public FileTooLargeException(final Throwable cause,
 			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
@@ -58,7 +64,7 @@ public class NoUserRuleSubdirException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoUserRuleSubdirException(final String message,
+	public FileTooLargeException(final String message,
 			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}

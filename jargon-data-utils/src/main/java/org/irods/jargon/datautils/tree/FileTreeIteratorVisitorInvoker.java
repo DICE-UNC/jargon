@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -21,12 +21,12 @@ import org.irods.jargon.datautils.visitor.NoMoreItemsException;
  * <p/>
  * This iterator is based on Apache FileUtils iterator methods and works for
  * both local and iRODS files
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class FileTreeIteratorVisitorInvoker extends
-		AbstractIRODSVisitorInvoker<File> {
+AbstractIRODSVisitorInvoker<File> {
 
 	private final File parentFile;
 	private Iterator<File> iter = null;
@@ -39,7 +39,7 @@ public class FileTreeIteratorVisitorInvoker extends
 	 * <p/>
 	 * Sorry...you can write your own version without the iRODS semantics...I'm
 	 * in a hurry
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} that can connect to iRODS
 	 * @param irodsAccount
@@ -66,7 +66,7 @@ public class FileTreeIteratorVisitorInvoker extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker#
 	 * initializeInvoker()
 	 */
