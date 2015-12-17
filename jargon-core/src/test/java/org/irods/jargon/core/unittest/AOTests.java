@@ -44,6 +44,7 @@ import org.irods.jargon.core.pub.RuleProcessingAOImplTest;
 import org.irods.jargon.core.pub.SimpleQueryExecutorAOImplTest;
 import org.irods.jargon.core.pub.SpecificQueryAOTest;
 import org.irods.jargon.core.pub.Stream2StreamAOImplTest;
+import org.irods.jargon.core.pub.TrashOperationsTest;
 import org.irods.jargon.core.pub.UserAOTest;
 import org.irods.jargon.core.pub.UserGroupAOImplTest;
 import org.irods.jargon.core.pub.ZoneAOTest;
@@ -88,6 +89,8 @@ import org.junit.runners.Suite;
 		CollectionPagerAOImplTest.class,
 		DataObjectChecksumUtilitiesAOImplTest.class,
 		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class })
+		DataObjectChecksumUtilitiesAOImplTest.class,
+		TrashOperationsTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
