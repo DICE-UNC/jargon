@@ -88,9 +88,8 @@ import org.junit.runners.Suite;
 		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
 		CollectionPagerAOImplTest.class,
 		DataObjectChecksumUtilitiesAOImplTest.class,
-		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class })
-		DataObjectChecksumUtilitiesAOImplTest.class,
-		TrashOperationsTest.class })
+		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class,
+		DataObjectChecksumUtilitiesAOImplTest.class, TrashOperationsTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p/>
