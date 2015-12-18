@@ -137,13 +137,15 @@ public class FileSamplerServiceImpl extends AbstractDataUtilsServiceImpl
 			throw new JargonException("file is a directory");
 		}
 
+		log.info(">>>>>>>>>>>>>>>>>>>>>>>>>checking to see if I am filtering files by a max length");
 		if (maxSizeInKb > 0) {
 			long lenInBytes = maxSizeInKb * 1024;
 			log.info("file max in bytes:{}", lenInBytes);
-			if (lenInBytes > irodsFile.length()) {
+			if (lenInBytes < irodsFile.length()) {
 				log.info("file is too large:{} bytes", irodsFile.length());
+				throw new FileTooLargeException("file is too large to convert");
+
 			}
-			throw new FileTooLargeException("file is too large to convert");
 		}
 
 		IRODSFileReader irodsFileReader = irodsFileFactory
