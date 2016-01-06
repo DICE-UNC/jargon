@@ -279,7 +279,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 

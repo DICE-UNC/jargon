@@ -165,7 +165,7 @@ public class RuleCompositionServiceImplTest {
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 
@@ -199,8 +199,8 @@ public class RuleCompositionServiceImplTest {
 					.getInputParameters().get(i).getUniqueName(), actual
 					.getInputParameters().get(i).getUniqueName());
 			Assert.assertEquals("unmatched input value", rule
-					.getInputParameters().get(i).getStringValue(), actual
-					.getInputParameters().get(i).getStringValue());
+					.getInputParameters().get(i).retrieveStringValue(), actual
+					.getInputParameters().get(i).retrieveStringValue());
 		}
 	}
 
@@ -240,7 +240,7 @@ public class RuleCompositionServiceImplTest {
 			sb = new StringBuilder();
 			sb.append(parm.getUniqueName());
 			sb.append("=");
-			sb.append(parm.getStringValue());
+			sb.append(parm.retrieveStringValue());
 			inputParameters.add(sb.toString());
 		}
 
@@ -317,8 +317,8 @@ public class RuleCompositionServiceImplTest {
 					.getInputParameters().get(i).getUniqueName(), actual
 					.getInputParameters().get(i).getUniqueName());
 			Assert.assertEquals("unmatched input value", rule
-					.getInputParameters().get(i).getStringValue(), actual
-					.getInputParameters().get(i).getStringValue());
+					.getInputParameters().get(i).retrieveStringValue(), actual
+					.getInputParameters().get(i).retrieveStringValue());
 		}
 	}
 
