@@ -188,4 +188,47 @@ public interface RuleCompositionService {
 			throws FileNotFoundException, DuplicateDataException,
 			JargonException;
 
+	/**
+	 * Return a <code>String</code> which is the raw contents of an iRODS rule
+	 * file on iRODS
+	 * 
+	 * @param absolutePathToRuleFile
+	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            file
+	 * @return <code>String</code> with the raw rule contents
+	 * @throws FileNotFoundException
+	 * @throws MissingOrInvalidRuleException
+	 * @throws JargonException
+	 */
+	String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
+			throws FileNotFoundException, MissingOrInvalidRuleException,
+			JargonException;
+
+	/**
+	 * Store a rule presented as a raw String. This method will parse the String
+	 * out as a level of validation.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with the iRODS absolute path where the
+	 *            rule will be stored
+	 * @param rule
+	 *            <code>String</code> with the raw rule text
+	 * @return {@Rule} that was the result of the parsing, as stored in
+	 *         iRODS
+	 * @throws JargonException
+	 */
+	Rule storeRule(String ruleAbsolutePath, String rule) throws JargonException;
+
+	/**
+	 * Run a rule based on an arbitrary raw string that holds the desired rule
+	 * 
+	 * @param rule
+	 *            <code>String</code> with the raw rule text
+	 * @return {@link IRODSRuleExecResult} with the output parameters and log
+	 *         from the rule
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleAsRawString(String rule)
+			throws JargonException;
+
 }

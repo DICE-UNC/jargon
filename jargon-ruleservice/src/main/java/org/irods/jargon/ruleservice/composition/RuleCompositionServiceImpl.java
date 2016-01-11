@@ -35,7 +35,16 @@ import org.slf4j.LoggerFactory;
  */
 public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		RuleCompositionService {
-
+	/**
+	 * Return a <code>String</code> representation of an iRODS rule stored in
+	 * iRODS
+	 * 
+	 * @param absolutePathToRuleFile
+	 * @return
+	 * @throws FileNotFoundException
+	 * @throws MissingOrInvalidRuleException
+	 * @throws JargonException
+	 */
 	public static final Logger log = LoggerFactory
 			.getLogger(RuleCompositionServiceImpl.class);
 
@@ -184,12 +193,13 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
-	 * loadRuleFromIrods(java.lang.String)
+	 * loadRuleFromIrodsAsString(java.lang.String)
 	 */
 	@Override
-	public Rule loadRuleFromIrods(final String absolutePathToRuleFile)
+	public String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
 			throws FileNotFoundException, MissingOrInvalidRuleException,
 			JargonException {
+		log.info("loadRuleFromIrodsAsString()");
 
 		log.info("loadRuleFromIrods()");
 
@@ -229,8 +239,6 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 				throw new MissingOrInvalidRuleException("no rule found");
 			}
 
-			return parseStringIntoRule(ruleString);
-
 		} catch (IOException ioe) {
 			log.error("io exception reading rule data from resource", ioe);
 			throw new JargonException("error reading rule from resource", ioe);
@@ -245,6 +253,30 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			}
 
 		}
+
+		return ruleString;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
+	 * loadRuleFromIrods(java.lang.String)
+	 */
+	@Override
+	public Rule loadRuleFromIrods(final String absolutePathToRuleFile)
+			throws FileNotFoundException, MissingOrInvalidRuleException,
+			JargonException {
+
+		log.info("loadRuleFromIrods()");
+
+		if (absolutePathToRuleFile == null || absolutePathToRuleFile.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty absolutepPathToRuleFile");
+		}
+
+		String ruleString = loadRuleFromIrodsAsString(absolutePathToRuleFile);
+		return parseStringIntoRule(ruleString);
 	}
 
 	/*
@@ -289,7 +321,35 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		return storeRuleFromParts(ruleAbsolutePath, rule.getRuleBody(),
 				inputParameters, outputParameters);
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.ruleservice.composition.RuleCompositionService#storeRule
+	 * (java.lang.String, java.lang.String)
+	 */
+	@Override
+	public Rule storeRule(final String ruleAbsolutePath, final String rule)
+			throws JargonException {
+
+		log.info("storeRule() from String");
+		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleAbsolutePath");
+		}
+
+		if (rule == null || rule.isEmpty()) {
+			throw new IllegalArgumentException("null or empty rule");
+		}
+
+		log.info("ruleAbsolutePath:{}", ruleAbsolutePath);
+		log.info("rule:{}", rule);
+
+		log.info("parsing into a Rule");
+		Rule parsedRule = parseStringIntoRule(rule);
+		log.info("now store it");
+		return storeRule(ruleAbsolutePath, parsedRule);
 	}
 
 	/*
@@ -425,6 +485,23 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		log.info("getting ready to submit rule:{}", ruleAsString);
 		return ruleProcessingAO.executeRule(ruleAsString);
+
+	}
+
+	@Override
+	public IRODSRuleExecResult executeRuleAsRawString(final String rule)
+			throws JargonException {
+
+		if (rule == null || rule.isEmpty()) {
+			throw new IllegalArgumentException("null or empty rule");
+		}
+
+		log.info("rule:{}", rule);
+
+		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory
+				.getRuleProcessingAO(getIrodsAccount());
+
+		return ruleProcessingAO.executeRule(rule);
 
 	}
 
