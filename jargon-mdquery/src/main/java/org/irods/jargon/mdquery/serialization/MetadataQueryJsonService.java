@@ -3,7 +3,10 @@
  */
 package org.irods.jargon.mdquery.serialization;
 
+import java.io.IOException;
+
 import org.irods.jargon.mdquery.MetadataQuery;
+import org.irods.jargon.mdquery.MetadataQueryException;
 import org.irods.jargon.mdquery.MetadataQueryRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,5 +52,29 @@ public class MetadataQueryJsonService {
 			log.error("error creating JSON from metadata query", e);
 			throw new MetadataQueryRuntimeException("error creating JSON", e);
 		}
+	}
+
+	/**
+	 * Turn JSON back to a metadata query
+	 * 
+	 * @param jsonString
+	 *            <code>String</code> that is a valid JSON representation of a
+	 *            metadata query
+	 * @return {@link MetadataQuery} based on the JSON serialization
+	 * @throws MetadataQueryException
+	 */
+	public MetadataQuery metadataQueryFromJson(final String jsonString)
+			throws MetadataQueryException {
+		if (jsonString == null || jsonString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty jsonString");
+		}
+
+		try {
+			return objectMapper.readValue(jsonString, MetadataQuery.class);
+		} catch (IOException e) {
+			log.error("exception reading JSON:{}", jsonString, e);
+			throw new MetadataQueryException("exception reading json", e);
+		}
+
 	}
 }

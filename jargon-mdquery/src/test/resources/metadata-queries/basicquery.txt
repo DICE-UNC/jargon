@@ -1,0 +1,1 @@
+{"queryType":"BOTH","pathHint":"/a/path","metadataQueryElements":[{"attributeName":"name1","operator":"EQUAL","value":["val1"],"connector":"AND"},{"attributeName":"name2","operator":"EQUAL","value":["val1"],"connector":"AND"}]}
