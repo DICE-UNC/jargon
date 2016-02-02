@@ -8,7 +8,7 @@ import org.irods.jargon.ticket.packinstr.TicketInp;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-class TicketClientSupport {
+public class TicketClientSupport {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(TicketClientSupport.class);
@@ -25,7 +25,7 @@ class TicketClientSupport {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for encapsulating connection information
 	 */
-	TicketClientSupport(
+	public TicketClientSupport(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 
@@ -50,7 +50,7 @@ class TicketClientSupport {
 	 *            interaction
 	 * @throws JargonException
 	 */
-	void initializeSessionWithTicket(final String ticketString)
+	public void initializeSessionWithTicket(final String ticketString)
 			throws JargonException {
 
 		log.info("initializeSessionWithTicket()");
