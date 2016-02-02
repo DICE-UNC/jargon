@@ -446,5 +446,6 @@
 		<module>jargon-user-profile</module>
 		<module>jargon-workflow</module>
 		<module>jargon-ruleservice</module>
+		<module>jargon-mdquery</module>
 	</modules>
 </project>
