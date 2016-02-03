@@ -8,7 +8,10 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.mdquery.MetadataQuery;
+import org.irods.jargon.mdquery.MetadataQueryElement;
+import org.irods.jargon.mdquery.MetadataQuery.QueryType;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -76,7 +79,12 @@ public class MetadataQueryServiceImplTest {
 				accessObjectFactory, irodsAccount);
 
 		MetadataQuery metadataQuery = new MetadataQuery();
-
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setAttributeValue(value);
+		metadataQuery.setQueryType(QueryType.COLLECTIONS);
+		metadataQuery.getMetadataQueryElements().add(new MetadataQueryElement())
+		
 	}
-
 }
