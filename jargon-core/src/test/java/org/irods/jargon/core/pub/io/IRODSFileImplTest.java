@@ -2195,10 +2195,6 @@ public class IRODSFileImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 
-		IRODSFile irodsDestFile = irodsFileSystem.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + testNewDirectory);
-
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

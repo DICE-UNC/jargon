@@ -442,6 +442,7 @@
 		<module>jargon-workflow</module>
 		<module>jargon-ruleservice</module>
 		<module>data-profile</module>
-    <module>jargon-zipservice</module>
-  </modules>
+                <module>jargon-zipservice</module>
+		<module>jargon-mdquery</module>
+	</modules>
 </project>
