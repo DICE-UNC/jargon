@@ -23,13 +23,13 @@ public class MetadataQueryJsonServiceTest {
 		MetadataQueryElement metadataElement = new MetadataQueryElement();
 		metadataElement.setAttributeName("name1");
 		metadataElement.setOperator(AVUQueryOperatorEnum.EQUAL);
-		metadataElement.setValue(values);
+		metadataElement.setAttributeValue(values);
 		metadataQuery.getMetadataQueryElements().add(metadataElement);
 
 		metadataElement = new MetadataQueryElement();
 		metadataElement.setAttributeName("name2");
 		metadataElement.setOperator(AVUQueryOperatorEnum.EQUAL);
-		metadataElement.setValue(values);
+		metadataElement.setAttributeValue(values);
 		metadataQuery.getMetadataQueryElements().add(metadataElement);
 
 		MetadataQueryJsonService metadataQueryJsonService = new MetadataQueryJsonService();

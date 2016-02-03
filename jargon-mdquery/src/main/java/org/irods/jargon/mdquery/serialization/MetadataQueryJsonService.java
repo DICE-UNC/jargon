@@ -6,8 +6,8 @@ package org.irods.jargon.mdquery.serialization;
 import java.io.IOException;
 
 import org.irods.jargon.mdquery.MetadataQuery;
-import org.irods.jargon.mdquery.MetadataQueryException;
-import org.irods.jargon.mdquery.MetadataQueryRuntimeException;
+import org.irods.jargon.mdquery.exception.MetadataQueryException;
+import org.irods.jargon.mdquery.exception.MetadataQueryRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

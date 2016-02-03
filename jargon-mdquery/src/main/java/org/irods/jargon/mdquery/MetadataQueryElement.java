@@ -31,7 +31,7 @@ public class MetadataQueryElement {
 	 * Value for the query, which may be an array of one for a normal query, or
 	 * two for between, or many for an 'in' query
 	 */
-	private List<String> value = new ArrayList<String>();
+	private List<String> attributeValue = new ArrayList<String>();
 	/**
 	 * Connector to tie this query with the following entry, typically an AND,
 	 * but will support one OR
@@ -49,9 +49,9 @@ public class MetadataQueryElement {
 		if (operator != null) {
 			builder.append("operator=").append(operator).append(", ");
 		}
-		if (value != null) {
+		if (attributeValue != null) {
 			builder.append("value=")
-					.append(value.subList(0, Math.min(value.size(), maxLen)))
+					.append(attributeValue.subList(0, Math.min(attributeValue.size(), maxLen)))
 					.append(", ");
 		}
 		if (connector != null) {
@@ -92,12 +92,12 @@ public class MetadataQueryElement {
 		this.operator = operator;
 	}
 
-	public List<String> getValue() {
-		return value;
+	public List<String> getAttributeValue() {
+		return attributeValue;
 	}
 
-	public void setValue(List<String> value) {
-		this.value = value;
+	public void setAttributeValue(List<String> value) {
+		this.attributeValue = value;
 	}
 
 	public Connector getConnector() {

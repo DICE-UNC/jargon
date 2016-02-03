@@ -24,7 +24,7 @@ public class MetadataQuery {
 	 *
 	 */
 	public enum QueryType {
-		DATA, COLLECIONS, BOTH
+		DATA, COLLECTIONS, BOTH
 	}
 
 	private QueryType queryType = QueryType.BOTH;

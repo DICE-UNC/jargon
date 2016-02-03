@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.mdquery;
+package org.irods.jargon.mdquery.exception;
 
 import org.irods.jargon.core.exception.JargonException;
 
