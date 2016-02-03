@@ -10,10 +10,19 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.ListAndCount;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.IRODSGenQueryBuilder;
+import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
+import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
+import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
+import org.irods.jargon.core.query.QueryConditionOperators;
+import org.irods.jargon.core.query.RodsGenQueryEnum;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.mdquery.MetadataQuery;
 import org.irods.jargon.mdquery.MetadataQuery.QueryType;
+import org.irods.jargon.mdquery.MetadataQueryElement;
 import org.irods.jargon.mdquery.exception.MetadataQueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class MetadataQueryServiceImpl extends AbstractJargonService {
+public class MetadataQueryServiceImpl extends AbstractJargonService implements MetadataQueryService {
 
 	static Logger log = LoggerFactory.getLogger(MetadataQueryServiceImpl.class);
 
@@ -53,6 +62,10 @@ public class MetadataQueryServiceImpl extends AbstractJargonService {
 	public MetadataQueryServiceImpl() {
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.mdquery.service.MetadataQueryService#executeQuery(org.irods.jargon.mdquery.MetadataQuery)
+	 */
+	@Override
 	public PagingAwareCollectionListing executeQuery(
 			final MetadataQuery metadataQuery) throws MetadataQueryException {
 
@@ -109,11 +122,99 @@ public class MetadataQueryServiceImpl extends AbstractJargonService {
 	}
 
 	private ListAndCount queryDataObjects(MetadataQuery metadataQuery) {
+		log.info("queryDataObjects()");
+
 		return null;
 	}
 
-	private ListAndCount queryCollections(MetadataQuery metadataQuery) {
+	private ListAndCount queryCollections(MetadataQuery metadataQuery)
+			throws MetadataQueryException {
+		log.info("queryCollections()");
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
+		IRODSQueryResultSetInterface resultSet = null;
+
+		try {
+			builder.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_COLL_OWNER_ZONE);
+		} catch (GenQueryBuilderException e) {
+			log.error("error building query for collections:{}", metadataQuery,
+					e);
+			throw new MetadataQueryException("gen query error", e);
+		}
+
+		if (!metadataQuery.getPathHint().isEmpty()) {
+			log.info("adding path hint for :{}", metadataQuery.getPathHint());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, metadataQuery.getPathHint());
+		}
+
+		/**
+		 * Add an AVU query for each element
+		 */
+		for (MetadataQueryElement element : metadataQuery
+				.getMetadataQueryElements()) {
+			log.info("element:{}", element);
+
+			builder.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
+					QueryConditionOperators.EQUAL, element.getAttributeName()
+							.trim());
+
+			if (element.getAttributeValue().size() > 1) {
+				throw new UnsupportedOperationException(
+						"in and between not coded yet");
+			}
+
+			if (element.getAttributeValue().size() == 1) {
+				log.info("single value operation");
+				builder.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
+						QueryConditionOperators.EQUAL, // FIXME: hard code for
+														// equal! figure out a
+														// translation
+						element.getAttributeValue().get(0).trim());
+			}
+
+		}
+
+		IRODSGenQueryFromBuilder irodsQuery;
+		try {
+			irodsQuery = builder.exportIRODSQueryFromBuilder(this
+					.getIrodsAccessObjectFactory().getJargonProperties()
+					.getMaxFilesAndDirsQueryMax());
+			String targetZone = deriveTargetZone(metadataQuery);
+
+			resultSet = this
+					.getIrodsAccessObjectFactory()
+					.getIRODSGenQueryExecutor(getIrodsAccount())
+					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+							targetZone);
+		} catch (GenQueryBuilderException | JargonException
+				| JargonQueryException e) {
+			log.error("error in query for collections:{}", metadataQuery, e);
+			throw new MetadataQueryException("gen query error", e);
+		}
+
 		return null;
+	}
+
+	private String deriveTargetZone(MetadataQuery metadataQuery) {
+		if (!metadataQuery.getTargetZone().isEmpty()) {
+			return metadataQuery.getTargetZone();
+		} else if (!metadataQuery.getPathHint().isEmpty()) {
+			return MiscIRODSUtils.getZoneInPath(metadataQuery.getPathHint());
+		} else {
+			return getIrodsAccount().getZone();
+		}
 	}
 
 	private ListAndCount characterizeListing(

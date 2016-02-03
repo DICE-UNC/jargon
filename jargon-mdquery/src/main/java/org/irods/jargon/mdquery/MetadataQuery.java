@@ -27,6 +27,18 @@ public class MetadataQuery {
 		DATA, COLLECTIONS, BOTH
 	}
 
+	/**
+	 * Zone hint, may be left blank. Queries will
+	 * <ul>
+	 * <li>Check and use zone hint in actual genquery</li>
+	 * <li>Check the zone from any path hint</li>
+	 * <li>Use the zone of the iRODS account</li>
+	 * </ul>
+	 * 
+	 * In that priority order
+	 */
+	private String targetZone = "";
+
 	private QueryType queryType = QueryType.BOTH;
 	/**
 	 * Path hint (proposed) to cue
@@ -65,6 +77,9 @@ public class MetadataQuery {
 		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("MetadataQuery [");
+		if (targetZone != null) {
+			builder.append("targetZone=").append(targetZone).append(", ");
+		}
 		if (queryType != null) {
 			builder.append("queryType=").append(queryType).append(", ");
 		}
@@ -78,6 +93,14 @@ public class MetadataQuery {
 		}
 		builder.append("]");
 		return builder.toString();
+	}
+
+	public String getTargetZone() {
+		return targetZone;
+	}
+
+	public void setTargetZone(String targetZone) {
+		this.targetZone = targetZone;
 	}
 
 }
