@@ -3,16 +3,18 @@
  */
 package org.irods.jargon.mdquery.service;
 
-import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.ListAndCount;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.mdquery.MetadataQuery;
 import org.irods.jargon.mdquery.MetadataQuery.QueryType;
+import org.irods.jargon.mdquery.exception.MetadataQueryException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,7 +54,7 @@ public class MetadataQueryServiceImpl extends AbstractJargonService {
 	}
 
 	public PagingAwareCollectionListing executeQuery(
-			final MetadataQuery metadataQuery) {
+			final MetadataQuery metadataQuery) throws MetadataQueryException {
 
 		log.info("executeQuery()");
 		if (metadataQuery == null) {
@@ -62,36 +64,85 @@ public class MetadataQueryServiceImpl extends AbstractJargonService {
 		log.info("metadataQuery:{}", metadataQuery);
 
 		PagingAwareCollectionListing listing = new PagingAwareCollectionListing();
-		ArrayList<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+
+		try {
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setPageSizeUtilized(
+							this.getIrodsAccessObjectFactory()
+									.getJargonProperties()
+									.getMaxFilesAndDirsQueryMax());
+		} catch (JargonException e) {
+			log.error("jargon exception in query", e);
+			throw new MetadataQueryException(e);
+		}
 
 		if (metadataQuery.getQueryType() == QueryType.BOTH
 				|| metadataQuery.getQueryType() == QueryType.COLLECTIONS) {
 
-			log.info("querying collections");
+			ListAndCount collections = queryCollections(metadataQuery);
+			listing.getCollectionAndDataObjectListingEntries().addAll(
+					collections.getCollectionAndDataObjectListingEntries());
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setCollectionsComplete(collections.isEndOfRecords());
 
-			entries.addAll(queryCollections(metadataQuery));
+			listing.getPagingAwareCollectionListingDescriptor().setCount(
+					collections.getCountThisPage());
 
 		} else if (metadataQuery.getQueryType() == QueryType.BOTH
 				|| metadataQuery.getQueryType() == QueryType.DATA) {
 
 			log.info("querying data objects");
-			entries.addAll(queryDataObjects(metadataQuery));
+			ListAndCount dataObjects = queryDataObjects(metadataQuery);
+			listing.getCollectionAndDataObjectListingEntries().addAll(
+					dataObjects.getCollectionAndDataObjectListingEntries());
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setDataObjectsComplete(dataObjects.isEndOfRecords());
+
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setDataObjectsCount(dataObjects.getCountThisPage());
 
 		}
 
-		return null;
+		log.info("listing generated:{}", listing);
+		return listing;
 
 	}
 
-	private Collection<? extends CollectionAndDataObjectListingEntry> queryDataObjects(
-			MetadataQuery metadataQuery) {
-		// TODO Auto-generated method stub
+	private ListAndCount queryDataObjects(MetadataQuery metadataQuery) {
 		return null;
 	}
 
-	private ArrayList<CollectionAndDataObjectListingEntry> queryCollections(
-			MetadataQuery metadataQuery) {
-		// TODO Auto-generated method stub
+	private ListAndCount queryCollections(MetadataQuery metadataQuery) {
 		return null;
+	}
+
+	private ListAndCount characterizeListing(
+			final List<CollectionAndDataObjectListingEntry> listing) {
+
+		ListAndCount listAndCount = new ListAndCount();
+		listAndCount.setCollectionAndDataObjectListingEntries(listing);
+
+		if (listing.isEmpty()) {
+			listAndCount.setCountTotal(0);
+			listAndCount.setEndOfRecords(true);
+			log.info("empty results returned");
+			return listAndCount;
+		}
+
+		int lastEntryIdx = listing.size() - 1;
+		CollectionAndDataObjectListingEntry lastEntry = listing
+				.get(lastEntryIdx);
+		listAndCount.setCountThisPage(lastEntry.getCount());
+		listAndCount.setEndOfRecords(lastEntry.isLastResult());
+		listAndCount.setOffsetStart(listing.get(0).getCount());
+
+		int count = listing.get(0).getTotalRecords();
+		if (count > 0) {
+			listAndCount.setCountTotal(count);
+			log.info("total records was in the result set already");
+		}
+
+		return listAndCount;
+
 	}
 }
