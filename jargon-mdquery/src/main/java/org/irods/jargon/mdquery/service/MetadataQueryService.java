@@ -23,4 +23,17 @@ public interface MetadataQueryService {
 	public abstract PagingAwareCollectionListing executeQuery(
 			MetadataQuery metadataQuery) throws MetadataQueryException;
 
+	/**
+	 * Convenience method that can take a metadata query as a serialized JSON
+	 * string and handle the deserialization, chaining to call the executeQuery
+	 * method that takes the <code>MetadataQuery</code> as a parameter
+	 * 
+	 * @param jsonString
+	 *            Stringified JSON that is a {@link MetadataQuery}
+	 * @return {@link PagingAwareCollectionListing} with results
+	 * @throws MetadataQueryException
+	 */
+	public abstract PagingAwareCollectionListing executeQuery(
+			final String jsonString) throws MetadataQueryException;
+
 }

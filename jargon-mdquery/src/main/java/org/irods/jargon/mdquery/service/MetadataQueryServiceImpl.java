@@ -37,7 +37,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class MetadataQueryServiceImpl extends AbstractJargonService implements MetadataQueryService {
+public class MetadataQueryServiceImpl extends AbstractJargonService implements
+		MetadataQueryService {
 
 	static Logger log = LoggerFactory.getLogger(MetadataQueryServiceImpl.class);
 
@@ -62,8 +63,18 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements M
 	public MetadataQueryServiceImpl() {
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.mdquery.service.MetadataQueryService#executeQuery(org.irods.jargon.mdquery.MetadataQuery)
+	@Override
+	public PagingAwareCollectionListing executeQuery(final String jsonString)
+			throws MetadataQueryException {
+		return null;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.mdquery.service.MetadataQueryService#executeQuery(org
+	 * .irods.jargon.mdquery.MetadataQuery)
 	 */
 	@Override
 	public PagingAwareCollectionListing executeQuery(
