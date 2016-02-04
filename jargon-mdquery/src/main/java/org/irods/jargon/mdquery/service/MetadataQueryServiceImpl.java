@@ -124,6 +124,7 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 		} else {
 			listing.getPagingAwareCollectionListingDescriptor()
 					.setCollectionsComplete(true);
+
 		}
 
 		if (metadataQuery.getQueryType() == QueryType.BOTH
@@ -131,6 +132,12 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 
 			log.info("querying data objects");
 			ListAndCount dataObjects = queryDataObjects(metadataQuery);
+			listing.getCollectionAndDataObjectListingEntries().addAll(
+					dataObjects.getCollectionAndDataObjectListingEntries());
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setDataObjectsComplete(dataObjects.isEndOfRecords());
+			listing.getPagingAwareCollectionListingDescriptor()
+					.setDataObjectsCount(dataObjects.getCountThisPage());
 
 		} else {
 			listing.getPagingAwareCollectionListingDescriptor()
@@ -147,7 +154,6 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 			throws MetadataQueryException {
 		log.info("queryDataObjects()");
 
-		log.info("queryCollections()");
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSetInterface resultSet = null;
 

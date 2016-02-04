@@ -127,6 +127,76 @@ public class MetadataQueryServiceImplTest {
 	}
 
 	@Test
+	public void testSimpleAvuQueryBothWithOneObjectEachNoPathHint()
+			throws Exception {
+		String testDirName = "testSimpleAvuQueryBothWithOneObjectEachNoPathHint";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		// initialize the AVU data
+		final String expectedAttribName = "testSimpleAvuQueryBothWithOneObjectEachNoPathHintattrib1";
+		final String expectedAttribValue = "testSimpleAvuQueryBothWithOneObjectEachNoPathHintvalue1";
+		final String expectedAttribUnits = "testSimpleAvuQueryBothWithOneObjectEachNoPathHintunits";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		MetadataQueryService metadataQueryService = new MetadataQueryServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		MetadataQuery metadataQuery = new MetadataQuery();
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals = new ArrayList<String>() {
+			{
+				add(expectedAttribValue);
+			}
+		};
+		element.setAttributeValue(vals);
+
+		metadataQuery.setQueryType(QueryType.COLLECTIONS);
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		PagingAwareCollectionListing actual = metadataQueryService
+				.executeQuery(metadataQuery);
+		Assert.assertNotNull("null listing returned", actual);
+		Assert.assertEquals("no result row", 1, actual
+				.getCollectionAndDataObjectListingEntries().size());
+		Assert.assertEquals("unexpected collection",
+				testFile.getAbsolutePath(), actual
+						.getCollectionAndDataObjectListingEntries().get(0)
+						.getFormattedAbsolutePath());
+		Assert.assertEquals("incorrect collection count", 1, actual
+				.getPagingAwareCollectionListingDescriptor().getCount());
+		Assert.assertTrue("should reflect end of colls", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertTrue("should show data objs complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isDataObjectsComplete());
+
+	}
+
+	@Test
 	public void testSimpleAvuQueryAsJsonNoPathHint() throws Exception {
 		String testDirName = "testSimpleAvuQueryAsJsonNoPathHint";
 		String targetIrodsCollection = testingPropertiesHelper
@@ -237,8 +307,8 @@ public class MetadataQueryServiceImplTest {
 					.instanceIRODSFile(testSubdir.getAbsolutePath(),
 							sb.toString());
 			dto.putOperation(sourceFile, dataFile, null, null);
-			avuData = AvuData.instance(expectedAttribName, expectedAttribValue
-					+ i, "");
+			avuData = AvuData.instance(expectedAttribName, expectedAttribValue,
+					"");
 			dAO.addAVUMetadata(dataFile.getAbsolutePath(), avuData);
 
 		}
