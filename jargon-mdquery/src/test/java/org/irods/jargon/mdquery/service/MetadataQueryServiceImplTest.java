@@ -213,6 +213,256 @@ public class MetadataQueryServiceImplTest {
 	}
 
 	@Test
+	public void testMultiAvuQueryCollectionWithPathHint() throws Exception {
+		String testDirName = "testSimpleAvuQueryCollectionWithPathHint";
+		String testDirName2 = "testSimpleAvuQueryCollectionWithPathHint2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		String targetIrodsCollection2 = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName2);
+
+		// initialize the AVU data
+		final String expectedAttribName = "testSimpleAvuQueryCollectionWithPathHintattrib1";
+		final String expectedAttribValue = "testSimpleAvuQueryCollectionWithPathHintvalue1";
+		final String expectedAttribUnits = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		final String expectedAttribName2 = "testSimpleAvuQueryCollectionWithPathHintattrib2";
+		final String expectedAttribValue2 = "testSimpleAvuQueryCollectionWithPathHintvalue2";
+		final String expectedAttribUnits2 = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		final String expectedAttribName3 = "testSimpleAvuQueryCollectionWithPathHintattrib3";
+		final String expectedAttribValue3 = "testSimpleAvuQueryCollectionWithPathHintvalue3";
+		final String expectedAttribUnits3 = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		avuData = AvuData.instance(expectedAttribName2, expectedAttribValue2,
+				expectedAttribUnits2);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		avuData = AvuData.instance(expectedAttribName3, expectedAttribValue3,
+				expectedAttribUnits3);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		IRODSFile testFile2 = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection2);
+		testFile2.deleteWithForceOption();
+		testFile2.mkdirs();
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection2, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection2, avuData);
+
+		MetadataQueryService metadataQueryService = new MetadataQueryServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		MetadataQuery metadataQuery = new MetadataQuery();
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals = new ArrayList<String>() {
+			{
+				add(expectedAttribValue);
+			}
+		};
+		element.setAttributeValue(vals);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName2);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals2 = new ArrayList<String>() {
+			{
+				add(expectedAttribValue2);
+			}
+		};
+		element.setAttributeValue(vals2);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName3);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals3 = new ArrayList<String>() {
+			{
+				add(expectedAttribValue3);
+			}
+		};
+		element.setAttributeValue(vals3);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		metadataQuery.setQueryType(QueryType.COLLECTIONS);
+		metadataQuery.setPathHint(targetIrodsCollection);
+
+		PagingAwareCollectionListing actual = metadataQueryService
+				.executeQuery(metadataQuery);
+		Assert.assertNotNull("null listing returned", actual);
+		Assert.assertEquals("no result row", 1, actual
+				.getCollectionAndDataObjectListingEntries().size());
+		Assert.assertEquals("unexpected collection",
+				testFile.getAbsolutePath(), actual
+						.getCollectionAndDataObjectListingEntries().get(0)
+						.getFormattedAbsolutePath());
+		Assert.assertEquals("incorrect collection count", 1, actual
+				.getPagingAwareCollectionListingDescriptor().getCount());
+		Assert.assertTrue("should reflect end of colls", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+		Assert.assertTrue("should show data objs complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isDataObjectsComplete());
+
+	}
+
+	/*
+	 * add 2 avus query 3, should discriminate and find no data
+	 */
+	@Test
+	public void testMultiAvuQueryCollectionWithPathHintShouldNotMatch()
+			throws Exception {
+		String testDirName = "testMultiAvuQueryCollectionWithPathHintShouldNotMatch";
+		String testDirName2 = "testMultiAvuQueryCollectionWithPathHintShouldNotMatch2";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+
+		String targetIrodsCollection2 = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName2);
+
+		// initialize the AVU data
+		final String expectedAttribName = "testMultiAvuQueryCollectionWithPathHintShouldNotMatchattrib1";
+		final String expectedAttribValue = "testMultiAvuQueryCollectionWithPathHintShouldNotMatchvalue1";
+		final String expectedAttribUnits = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		final String expectedAttribName2 = "testMultiAvuQueryCollectionWithPathHintShouldNotMatchattrib2";
+		final String expectedAttribValue2 = "testMultiAvuQueryCollectionWithPathHintShouldNotMatchvalue2";
+		final String expectedAttribUnits2 = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		final String expectedAttribName3 = "testSimpleAvuQueryCollectionWithPathHintattrib3";
+		final String expectedAttribValue3 = "testSimpleAvuQueryCollectionWithPathHintvalue3";
+		final String expectedAttribUnits3 = "testSimpleAvuQueryCollectionWithPathHintunits";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		avuData = AvuData.instance(expectedAttribName2, expectedAttribValue2,
+				expectedAttribUnits2);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		IRODSFile testFile2 = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection2);
+		testFile2.deleteWithForceOption();
+		testFile2.mkdirs();
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection2, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection2, avuData);
+
+		MetadataQueryService metadataQueryService = new MetadataQueryServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		MetadataQuery metadataQuery = new MetadataQuery();
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals = new ArrayList<String>() {
+			{
+				add(expectedAttribValue);
+			}
+		};
+		element.setAttributeValue(vals);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName2);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals2 = new ArrayList<String>() {
+			{
+				add(expectedAttribValue2);
+			}
+		};
+		element.setAttributeValue(vals2);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName3);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals3 = new ArrayList<String>() {
+			{
+				add(expectedAttribValue3);
+			}
+		};
+		element.setAttributeValue(vals3);
+
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		metadataQuery.setQueryType(QueryType.COLLECTIONS);
+		metadataQuery.setPathHint(targetIrodsCollection);
+
+		PagingAwareCollectionListing actual = metadataQueryService
+				.executeQuery(metadataQuery);
+		Assert.assertNotNull("null listing returned", actual);
+		Assert.assertEquals("no result expected", 0, actual
+				.getCollectionAndDataObjectListingEntries().size());
+
+	}
+
+	@Test
 	public void testSimpleAvuQueryBothWithNoPathHint() throws Exception {
 		String testDirName = "testSimpleAvuQueryBothWithNoPathHint";
 		String targetIrodsCollection = testingPropertiesHelper
@@ -359,6 +609,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
 		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
 				add(expectedAttribValue);

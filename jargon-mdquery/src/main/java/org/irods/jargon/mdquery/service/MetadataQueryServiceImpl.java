@@ -434,34 +434,4 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 			return getIrodsAccount().getZone();
 		}
 	}
-
-	private ListAndCount characterizeListing(
-			final List<CollectionAndDataObjectListingEntry> listing) {
-
-		ListAndCount listAndCount = new ListAndCount();
-		listAndCount.setCollectionAndDataObjectListingEntries(listing);
-
-		if (listing.isEmpty()) {
-			listAndCount.setCountTotal(0);
-			listAndCount.setEndOfRecords(true);
-			log.info("empty results returned");
-			return listAndCount;
-		}
-
-		int lastEntryIdx = listing.size() - 1;
-		CollectionAndDataObjectListingEntry lastEntry = listing
-				.get(lastEntryIdx);
-		listAndCount.setCountThisPage(lastEntry.getCount());
-		listAndCount.setEndOfRecords(lastEntry.isLastResult());
-		listAndCount.setOffsetStart(listing.get(0).getCount());
-
-		int count = listing.get(0).getTotalRecords();
-		if (count > 0) {
-			listAndCount.setCountTotal(count);
-			log.info("total records was in the result set already");
-		}
-
-		return listAndCount;
-
-	}
 }
