@@ -229,9 +229,21 @@ public class MiscIRODSUtils {
 	 */
 	public static String convertStreamToString(final InputStream inputStream)
 			throws Exception {
+		return convertStreamToString(inputStream, "UTF-8");
+	}
+
+	/**
+	 * Handy method to take the given input stream and make it a String
+	 *
+	 * @param inputStream
+	 * @return
+	 * @throws Exception
+	 */
+	public static String convertStreamToString(final InputStream inputStream,
+			final String encoding) throws Exception {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
-		Reader in = new InputStreamReader(inputStream, "UTF-8");
+		Reader in = new InputStreamReader(inputStream, encoding);
 		int read;
 		do {
 			read = in.read(buffer, 0, buffer.length);
@@ -759,15 +771,15 @@ public class MiscIRODSUtils {
 	/*
 	 * Compare the reported version of the server to a test version number to
 	 * see if the actual server is at least at the rev of the test version
-	 *
+	 * 
 	 * @param actualVersionOfServer <code>String</code> that represents the
 	 * actual version of a server in question, such as is reported by the
 	 * startup pack
-	 *
+	 * 
 	 * @param thisReleaseVersion <code>String</code> that represents a test
 	 * version number, asking if the reported server version is at least this
 	 * version
-	 *
+	 * 
 	 * @return <code>boolean</code> that would be <code>true</code>
 	 */
 	public static boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
