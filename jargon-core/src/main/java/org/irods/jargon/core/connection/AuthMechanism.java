@@ -46,12 +46,8 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called after the startup pack is sent but
-	 * <<<<<<< HEAD before the actual authentication attempt, and before
-	 * client/server negotiation
-	 * 
-	 * ======= before the actual authentication attempt
-	 *
-	 * >>>>>>> master
+	 * before the actual authentication attempt, and before client/server
+	 * negotiation
 	 * 
 	 * @throws JargonException
 	 */
@@ -333,6 +329,14 @@ abstract class AuthMechanism {
 
 		String startupPackData = startupPack.getParsedTags();
 		log.debug("startupPackData:{}", startupPackData);
+
+		// FIXME: NEG_PI here
+		/*
+		 * 
+		 * <CS_NEG_PI><status>1</status> <result>CS_NEG_DONT_CARE</result>
+		 * </CS_NEG_PI>
+		 */
+
 		try {
 			irodsCommands.sendHeader(
 					RequestTypes.RODS_CONNECT.getRequestType(),
@@ -352,15 +356,6 @@ abstract class AuthMechanism {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-
-		Tag versionPI = irodsCommands.readMessage();
-		StartupResponseData startupResponseData = new StartupResponseData(
-				versionPI.getTag("status").getIntValue(), versionPI.getTag(
-						"relVersion").getStringValue(), versionPI.getTag(
-						"apiVersion").getStringValue(), versionPI.getTag(
-						"reconnPort").getIntValue(), versionPI.getTag(
-						"reconnAddr").getStringValue(), versionPI.getTag(
-						"cookie").getStringValue());
 
 	}
 
