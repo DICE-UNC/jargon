@@ -115,6 +115,39 @@ public class SslNegotiationFunctionalTests {
 	}
 
 	@Test
+	public void testStandardLoginRequiredFromClient() throws JargonException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		AuthResponse actual = accessObjectFactory
+				.authenticateIRODSAccount(irodsAccount);
+		Assert.assertNotNull(actual);
+		// Do some thing
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
+				.getEnvironmentalInfoAO(irodsAccount);
+		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
+		Assert.assertTrue("time val was missing", timeVal > 0);
+	}
+
+	@Test
 	public void testMultiplePamLoginNegDontCareFromClientShouldTestPamWhenSslAlreadyNegotiated()
 			throws JargonException {
 
