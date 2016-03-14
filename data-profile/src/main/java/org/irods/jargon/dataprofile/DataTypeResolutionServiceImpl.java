@@ -16,6 +16,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.usertagging.tags.UserTaggingConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +31,19 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public class DataTypeResolutionServiceImpl extends AbstractJargonService implements DataTypeResolutionService {
+public class DataTypeResolutionServiceImpl extends AbstractJargonService
+		implements DataTypeResolutionService {
 
+	public static final String APPLICATION_IRODS_RULE = "application/irods-rule";
 	public static final Logger log = LoggerFactory
 			.getLogger(DataTypeResolutionServiceImpl.class);
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#resolveDataTypeWithProvidedAvuAndDataObject(org.irods.jargon.core.pub.domain.DataObject, java.util.List)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
+	 * resolveDataTypeWithProvidedAvuAndDataObject
+	 * (org.irods.jargon.core.pub.domain.DataObject, java.util.List)
 	 */
 	@Override
 	public String resolveDataTypeWithProvidedAvuAndDataObject(
@@ -62,9 +69,20 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 			return mimeType;
 		}
 
+		log.info("checking for known irods types - interim code...");
+		/*
+		 * This is provisional code to be refactor in
+		 * https://github.com/DICE-UNC/jargon-extensions/issues/11
+		 */
+
+		mimeType = determimeMimeTypeOfIrodsObjects(dataObject);
+
 		log.info("no mime type in AVU, use Tika to derive based on file extenstion");
 
-		mimeType = determineMimeTypeViaTika(dataObject);
+		if (mimeType == null) {
+			log.info("not a known irods type, try tika");
+			mimeType = determineMimeTypeViaTika(dataObject);
+		}
 
 		if (mimeType == null) {
 			log.info("no mime type found via tika");
@@ -76,8 +94,34 @@ public class DataTypeResolutionServiceImpl extends AbstractJargonService impleme
 
 	}
 
-	/* (non-Javadoc)
-	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#determineMimeTypeViaTika(org.irods.jargon.core.pub.domain.DataObject)
+	/**
+	 * Temporary shim for first cloud browser release
+	 * 
+	 * @param dataObject
+	 * @return
+	 */
+	private String determimeMimeTypeOfIrodsObjects(DataObject dataObject) {
+
+		String extension = LocalFileUtils.getFileExtension(dataObject
+				.getDataName());
+		if (extension == null || extension.isEmpty()) {
+			return null;
+		}
+
+		if (extension.equals(".r")) {
+			log.info("irods rule detected in:{}", dataObject.getDataName());
+			return APPLICATION_IRODS_RULE;
+		} else {
+			return null;
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.dataprofile.DataTypeResolutionService#
+	 * determineMimeTypeViaTika(org.irods.jargon.core.pub.domain.DataObject)
 	 */
 	@Override
 	public String determineMimeTypeViaTika(DataObject dataObject)

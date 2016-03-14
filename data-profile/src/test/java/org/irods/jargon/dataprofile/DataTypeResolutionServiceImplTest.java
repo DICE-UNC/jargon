@@ -87,4 +87,29 @@ public class DataTypeResolutionServiceImplTest {
 		Assert.assertFalse("no data type", actual.isEmpty());
 
 	}
+
+	@Test
+	public void testresolveDataTypeWithProvidedAvuAndDataObjectValueNoAVUAsIrodsRule()
+			throws Exception {
+
+		IRODSAccount irodsAccount = TestingPropertiesHelper
+				.buildBogusIrodsAccount();
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
+				.mock(IRODSAccessObjectFactory.class);
+
+		DataTypeResolutionService resolutionService = new DataTypeResolutionServiceImpl(
+				irodsAccessObjectFactory, irodsAccount);
+		DataObject dataObject = new DataObject();
+		String dataName = "file.r";
+		dataObject.setDataName(dataName);
+
+		List<MetaDataAndDomainData> avus = new ArrayList<MetaDataAndDomainData>();
+
+		String actual = resolutionService
+				.resolveDataTypeWithProvidedAvuAndDataObject(dataObject, avus);
+		Assert.assertEquals("didn't get mime type as rule",
+				DataTypeResolutionServiceImpl.APPLICATION_IRODS_RULE, actual);
+
+	}
+
 }
