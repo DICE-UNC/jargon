@@ -62,7 +62,7 @@ EnvironmentalInfoAO {
 	}
 
 	private boolean isEirods() throws JargonException {
-		if (getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isConsortiumVersion()) {
 			return true;
 		} else {
 			return false;

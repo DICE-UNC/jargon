@@ -271,7 +271,7 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 

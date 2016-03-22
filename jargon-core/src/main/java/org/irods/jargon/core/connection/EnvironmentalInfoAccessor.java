@@ -86,7 +86,7 @@ public class EnvironmentalInfoAccessor {
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
 
 		if (props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0.0")) {
-			props.setEirods(true);
+			props.setConsortiumVersion(true);
 		}
 
 		if (irodsProtocol.getIrodsSession() != null) {

@@ -84,7 +84,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -524,7 +524,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -547,7 +547,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -589,7 +589,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			throw new DuplicateDataException(
 					"skip but maintain expectations of test");
 		}
@@ -621,7 +621,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -656,7 +656,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -701,7 +701,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -785,7 +785,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -825,7 +825,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 

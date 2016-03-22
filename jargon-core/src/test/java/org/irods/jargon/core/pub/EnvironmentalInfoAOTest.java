@@ -172,7 +172,7 @@ public class EnvironmentalInfoAOTest {
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			return;
-		} else if (props.isEirods()) {
+		} else if (props.isConsortiumVersion()) {
 			return;
 		}
 

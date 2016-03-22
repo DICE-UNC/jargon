@@ -3164,7 +3164,7 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory();
 
 		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -3529,7 +3529,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -3613,7 +3613,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -3676,7 +3676,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -3870,7 +3870,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -3918,7 +3918,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -4012,7 +4012,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -4215,7 +4215,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -4262,7 +4262,7 @@ public class DataObjectAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -5558,7 +5558,7 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory();
 
 		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 
@@ -5822,7 +5822,7 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory();
 
 		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			return;
 		}
 

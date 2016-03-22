@@ -27,19 +27,19 @@ public class IRODSServerProperties {
 	private final String relVersion;
 	private final String apiVersion;
 	private final String rodsZone;
-	private boolean eirods = false;
+	private boolean consortiumVersion = false;
 
 	/**
 	 * This is a supplemental flag that indicates whether a server is eIRODS.
 	 *
 	 * @return <code>true</code> if the given server is an eIRODS servers
 	 */
-	public synchronized boolean isEirods() {
-		return eirods;
+	public synchronized boolean isConsortiumVersion() {
+		return consortiumVersion;
 	}
 
-	public synchronized void setEirods(final boolean eirods) {
-		this.eirods = eirods;
+	public synchronized void setConsortiumVersion(final boolean consortiumVersion) {
+		this.consortiumVersion = consortiumVersion;
 	}
 
 	public static IRODSServerProperties instance(final IcatEnabled icatEnabled,
@@ -111,7 +111,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
 
-		if (isEirods()) {
+		if (isConsortiumVersion()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -128,7 +128,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsTickets() {
 		boolean supports = false;
 
-		if (isEirods()) {
+		if (isConsortiumVersion()) {
 			supports = false;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
@@ -160,7 +160,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
 
-		if (isEirods()) {
+		if (isConsortiumVersion()) {
 			supports = true;
 		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;
@@ -232,7 +232,7 @@ public class IRODSServerProperties {
 		builder.append(ret);
 		builder.append(tabOver);
 		builder.append("eirods:");
-		builder.append(eirods);
+		builder.append(consortiumVersion);
 		builder.append(ret);
 
 		return builder.toString();

@@ -7,7 +7,7 @@
 
 ## News
 
-Maintenance release of Jargon to support REST and WebDav
+Maintenance release of Jargon to support REST and WebDav.  This release consists mostly of many small tweaks, fixes, and additional tests accumulated since the last Jargon release, and represents 'house cleaning' before rolling in SSL transport security.
 
 https://github.com/DICE-UNC/jargon/milestones/mx%20for%20rest/webdav%20-%204.0.2.5
 
@@ -43,3 +43,19 @@ Note that the following bug and feature requests are logged in GForge with relat
 ###  move versus rename semantics, collection already exists on rename collection #161 
 
 Further refinement to the move operations in DataTransferOperationsImpl surfaced through testing for WebDav integration.  Also added several new unit tests.
+
+### fix exception expectations in unit tests for RENCI CI
+
+
+###  pull ibiblio repo #163 
+
+Remove ibiblio repo from maven, causing corruption of local repositories
+
+
+### Misc
+
+Numerous small fixes and additional tests 
+
+
+
+
