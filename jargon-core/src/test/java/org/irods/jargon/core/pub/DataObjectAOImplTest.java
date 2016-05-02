@@ -66,11 +66,11 @@ public class DataObjectAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -201,7 +201,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -234,7 +234,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 		localFile.setExecutable(true);
 
@@ -266,7 +266,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 		localFile.createNewFile();
 
@@ -306,7 +306,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH
-						+ "/Imnothererightnow/" + testFileName);
+								+ "/Imnothererightnow/" + testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -335,7 +335,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH
-						+ "/Imnothererightnow/" + testFileName);
+								+ "/Imnothererightnow/" + testFileName);
 		File localFile = new File(absPath + '/' + testFileName);
 
 		// now put the file
@@ -372,7 +372,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -410,7 +410,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -455,7 +455,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -480,7 +480,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.NO_THIS_FILE);
+				.setForceOption(CallbackResponse.NO_THIS_FILE);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener, false);
 
@@ -489,7 +489,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transferControlBlock should not have been overwritten",
 				ForceOption.ASK_CALLBACK_LISTENER, tcb.getTransferOptions()
-				.getForceOption());
+						.getForceOption());
 
 	}
 
@@ -515,7 +515,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -540,7 +540,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.NO_FOR_ALL);
+				.setForceOption(CallbackResponse.NO_FOR_ALL);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener, false);
 
@@ -574,7 +574,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -598,7 +598,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.YES_THIS_FILE);
+				.setForceOption(CallbackResponse.YES_THIS_FILE);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener, false);
 
@@ -607,7 +607,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transferControlBlock should not have been overwritten",
 				ForceOption.ASK_CALLBACK_LISTENER, tcb.getTransferOptions()
-				.getForceOption());
+						.getForceOption());
 
 	}
 
@@ -633,7 +633,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -657,7 +657,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.YES_FOR_ALL);
+				.setForceOption(CallbackResponse.YES_FOR_ALL);
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, destFile, tcb,
 				transferStatusCallbackListener, false);
 
@@ -666,7 +666,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transferControlBlock should have been overwritten",
 				ForceOption.USE_FORCE, tcb.getTransferOptions()
-				.getForceOption());
+						.getForceOption());
 
 	}
 
@@ -682,7 +682,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -698,7 +698,7 @@ public class DataObjectAOImplTest {
 				localFileName,
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -729,7 +729,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -771,7 +771,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -810,7 +810,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		// now put the file
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -859,7 +859,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1023,12 +1023,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1078,12 +1078,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1132,12 +1132,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1152,7 +1152,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.YES_THIS_FILE);
+				.setForceOption(CallbackResponse.YES_THIS_FILE);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 		// now I know the local file exits, get again and it should overwrite
@@ -1163,7 +1163,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transfer control block should not have been altered",
 				ForceOption.ASK_CALLBACK_LISTENER, transferControlBlock
-				.getTransferOptions().getForceOption());
+						.getTransferOptions().getForceOption());
 	}
 
 	/**
@@ -1203,12 +1203,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1223,7 +1223,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.NO_THIS_FILE);
+				.setForceOption(CallbackResponse.NO_THIS_FILE);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1236,12 +1236,12 @@ public class DataObjectAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1249,7 +1249,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transfer control block should not have been alteredl",
 				ForceOption.ASK_CALLBACK_LISTENER, transferControlBlock
-				.getTransferOptions().getForceOption());
+						.getTransferOptions().getForceOption());
 		Assert.assertEquals("file should not be the new length", firstLength,
 				getResultLocalFile.length());
 	}
@@ -1291,12 +1291,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1321,12 +1321,12 @@ public class DataObjectAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, null);
@@ -1371,12 +1371,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1391,7 +1391,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.NO_FOR_ALL);
+				.setForceOption(CallbackResponse.NO_FOR_ALL);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1404,12 +1404,12 @@ public class DataObjectAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1417,7 +1417,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transfer control block should have been altered to no for all",
 				ForceOption.NO_FORCE, transferControlBlock.getTransferOptions()
-				.getForceOption());
+						.getForceOption());
 		Assert.assertEquals("file should not be the new length", firstLength,
 				getResultLocalFile.length());
 	}
@@ -1457,12 +1457,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1477,7 +1477,7 @@ public class DataObjectAOImplTest {
 				ForceOption.ASK_CALLBACK_LISTENER);
 		TransferStatusCallbackListenerTestingImplementation transferStatusCallbackListener = new TransferStatusCallbackListenerTestingImplementation();
 		transferStatusCallbackListener
-		.setForceOption(CallbackResponse.YES_FOR_ALL);
+				.setForceOption(CallbackResponse.YES_FOR_ALL);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1490,12 +1490,12 @@ public class DataObjectAOImplTest {
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
 		dataTransferOperations
-		.putOperation(
-				sourceLocalFileAbsolutePath,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						sourceLocalFileAbsolutePath,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, getResultLocalFile,
 				transferControlBlock, transferStatusCallbackListener);
@@ -1503,7 +1503,7 @@ public class DataObjectAOImplTest {
 		Assert.assertEquals(
 				"transfer control block should have been altered to yes for all",
 				ForceOption.USE_FORCE, transferControlBlock
-				.getTransferOptions().getForceOption());
+						.getTransferOptions().getForceOption());
 		Assert.assertEquals("file should now be the new length", secondLength,
 				getResultLocalFile.length());
 
@@ -1549,12 +1549,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1610,12 +1610,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1666,12 +1666,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1719,12 +1719,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1783,12 +1783,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1837,12 +1837,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1872,10 +1872,10 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > 0);
+						.getBytesReportedIntraFileCallbacks() > 0);
 		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > testFileLen);
+						.getBytesReportedIntraFileCallbacks() > testFileLen);
 
 	}
 
@@ -1910,12 +1910,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -1945,10 +1945,10 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > 0);
+						.getBytesReportedIntraFileCallbacks() > 0);
 		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > testFileLen);
+						.getBytesReportedIntraFileCallbacks() > testFileLen);
 
 	}
 
@@ -1974,7 +1974,7 @@ public class DataObjectAOImplTest {
 		String getResultLocalPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
 						+ "/return")
-						+ getFileName;
+				+ getFileName;
 		File localFile = new File(getResultLocalPath);
 
 		String targetIrodsCollection = testingPropertiesHelper
@@ -1990,12 +1990,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				transferStatusCallbackListener, transferControlBlock);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						transferStatusCallbackListener, transferControlBlock);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -2047,12 +2047,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -2115,12 +2115,12 @@ public class DataObjectAOImplTest {
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
 		dataTransferOperations
-		.putOperation(
-				localFileName,
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
 
 		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
 				.getDataObjectAO(irodsAccount);
@@ -2128,14 +2128,14 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFileForPath(targetIrodsCollection + '/'
 						+ testFileName);
 		irodsFile
-		.setResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.setResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
 
 		assertionHelper
-		.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/"
-				+ "GetResult" + testFileName);
+				.assertLocalFileNotExistsInScratch(IRODS_TEST_SUBDIR_PATH + "/"
+						+ "GetResult" + testFileName);
 
 	}
 
@@ -2185,7 +2185,7 @@ public class DataObjectAOImplTest {
 				localFileName,
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// initialize the AVU data
@@ -2241,7 +2241,7 @@ public class DataObjectAOImplTest {
 				localFileName,
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// initialize the AVU data
@@ -2288,7 +2288,7 @@ public class DataObjectAOImplTest {
 				localFileName,
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// initialize the AVU data
@@ -2336,7 +2336,7 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				targetIrodsCollection + "/" + testFileName);
 
 		DataTransferOperations transfer = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -2639,12 +2639,12 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObjectAsynchronously(
-				targetIrodsCollection,
-				testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				1);
+				.replicateIrodsDataObjectAsynchronously(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						1);
 
 		// I won't wait, just make sure it runs without error
 	}
@@ -2680,10 +2680,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		List<Resource> resources = dataObjectAO
 				.listFileResources(targetIrodsCollection + "/" + testFileName);
@@ -2723,10 +2723,10 @@ public class DataObjectAOImplTest {
 				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				targetIrodsCollection + "/" + testFileName);
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2738,7 +2738,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
 
 	}
@@ -2765,10 +2765,10 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				targetIrodsCollection + "/" + testFileName);
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2803,7 +2803,7 @@ public class DataObjectAOImplTest {
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2835,7 +2835,7 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsSourceFile = null;
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2907,10 +2907,10 @@ public class DataObjectAOImplTest {
 				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				targetIrodsCollection + "/" + testFileName);
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2955,10 +2955,10 @@ public class DataObjectAOImplTest {
 				irodsFile, null, null, false);
 		IRODSFile irodsSourceFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
+				targetIrodsCollection + "/" + testFileName);
 		IRODSFile irodsTargetFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		TransferControlBlock tcb = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.buildDefaultTransferControlBlockBasedOnJargonProperties();
@@ -2973,7 +2973,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile checkCopiedFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testCopyToFileName);
+				targetIrodsCollection + "/" + testCopyToFileName);
 		Assert.assertTrue("new file does not exist", checkCopiedFile.exists());
 	}
 
@@ -3013,10 +3013,10 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		// now query to get the two resources the data object was replicated to
 
@@ -3184,10 +3184,10 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-		.replicateIrodsDataObjectToAllResourcesInResourceGroup(
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+				.replicateIrodsDataObjectToAllResourcesInResourceGroup(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
 
 		List<Resource> resources = dataObjectAO
 				.listFileResources(targetIrodsCollection + "/" + testFileName);
@@ -3582,9 +3582,9 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -3600,11 +3600,11 @@ public class DataObjectAOImplTest {
 				.getDataObjectAO(irodsAccountRods);
 
 		rodsDataObjectAO
-		.setAccessPermissionReadInAdminMode(
-				"",
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+				.setAccessPermissionReadInAdminMode(
+						"",
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
@@ -3645,9 +3645,9 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -3663,11 +3663,11 @@ public class DataObjectAOImplTest {
 				.getDataObjectAO(irodsAccountRods);
 
 		rodsDataObjectAO
-		.setAccessPermissionWriteInAdminMode(
-				"",
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+				.setAccessPermissionWriteInAdminMode(
+						"",
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
@@ -3708,9 +3708,9 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -3729,19 +3729,19 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 		rodsCollectionAO
-		.setAccessPermissionReadAsAdmin(
-				irodsAccount.getZone(),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionReadAsAdmin(
+						irodsAccount.getZone(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		rodsDataObjectAO
-		.setAccessPermissionOwnInAdminMode(
-				"",
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+				.setAccessPermissionOwnInAdminMode(
+						"",
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3789,9 +3789,9 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -3811,19 +3811,19 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 		rodsCollectionAO
-		.setAccessPermissionReadAsAdmin(
-				irodsAccount.getZone(),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionReadAsAdmin(
+						irodsAccount.getZone(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		rodsDataObjectAO
-		.setAccessPermissionOwnInAdminMode(
-				"",
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+				.setAccessPermissionOwnInAdminMode(
+						"",
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -4277,65 +4277,6 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
-	public final void testSetReadThenRemove() throws Exception {
-		// generate a local scratch file
-
-		String testFileName = "testSetReadThenRemove.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
-				absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-		boolean isStrict = environmentalInfoAO.isStrictACLs();
-
-		if (isStrict) {
-			return;
-		}
-
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig),
-				irodsFile, true);
-
-		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/"
-				+ testFileName, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// log in as the secondary user and test read access
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
-				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
-
-		dataObjectAO.removeAccessPermissionsForUser("", targetIrodsCollection
-				+ "/" + testFileName, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
-						secondaryAccount);
-		int permissions = irodsFileSystemAO
-				.getFilePermissions(irodsFileForSecondaryUser);
-		Assert.assertTrue("should not have permissions anymore",
-				permissions < IRODSFile.WRITE_PERMISSIONS);
-
-	}
-
-	@Test
 	public final void testListPermissionsForDataObject() throws Exception {
 		// generate a local scratch file
 
@@ -4731,7 +4672,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -4804,12 +4745,12 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		transferOperationsAO
-		.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
-				null, null);
+				.putOperation(
+						fileNameAndPath.toString(),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY),
+						null, null);
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
@@ -4819,67 +4760,6 @@ public class DataObjectAOImplTest {
 		Assert.assertNotNull(
 				"null info from lookup of host for get operation was not expected, re-routing should occur",
 				hostInfo);
-	}
-
-	@Test
-	public void testGetHostForGetProvidingResourceNameWhenShouldBeSameHost()
-			throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-		boolean isStrict = environmentalInfoAO.isStrictACLs();
-
-		if (isStrict) {
-			return;
-		}
-
-		IRODSServerProperties irodsServerProperties = environmentalInfoAO
-				.getIRODSServerProperties();
-
-		if (!irodsServerProperties
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
-			irodsFileSystem.close();
-			return;
-		}
-
-		// generate a local scratch file
-		String testFileName = "testGetHostForGetProvidingResourceName.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				1);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		StringBuilder fileNameAndPath = new StringBuilder();
-		fileNameAndPath.append(absPath);
-
-		fileNameAndPath.append(testFileName);
-
-		DataTransferOperations transferOperationsAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataTransferOperations(
-						irodsAccount);
-		transferOperationsAO.putOperation(fileNameAndPath.toString(),
-				targetIrodsCollection, "", null, null);
-		DataObjectAO dataObjectAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
-		String hostInfo = dataObjectAO
-				.getHostForGetOperation(
-						targetIrodsCollection + "/" + testFileName,
-						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
-		irodsFileSystem.close();
-		Assert.assertNull(
-				"null info from lookup of host for get operation was expected, as no re-routing should occur",
-				hostInfo);
-
 	}
 
 	@Test
@@ -4914,14 +4794,14 @@ public class DataObjectAOImplTest {
 				.getPermissionForDataObjectForUserName(
 						targetIrodsCollection + "/" + testFileName,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
 		Assert.assertEquals(
 				"did not find the right user name",
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				userFilePermission.getUserName());
 
 	}
@@ -4959,14 +4839,14 @@ public class DataObjectAOImplTest {
 						targetIrodsCollection,
 						testFileName,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
 		Assert.assertEquals(
 				"did not find the right user name",
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				userFilePermission.getUserName());
 
 	}
@@ -4987,7 +4867,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -5021,10 +4901,10 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(
 				"did not get any byte count from intra-file callbacks",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > 0);
+						.getBytesReportedIntraFileCallbacks() > 0);
 		Assert.assertFalse("accumulated more bytes than file size",
 				transferStatusCallbackListener
-				.getBytesReportedIntraFileCallbacks() > testSize);
+						.getBytesReportedIntraFileCallbacks() > testSize);
 	}
 
 	@Test
@@ -5040,7 +4920,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testTargetFileName);
+								+ testTargetFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -5089,7 +4969,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testTargetCollectionSubdir);
+								+ testTargetCollectionSubdir);
 		IRODSFile targetIrodsCollectionFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection);
@@ -5117,7 +4997,7 @@ public class DataObjectAOImplTest {
 
 		targetIrodsCollectionFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection,
-						testFileName);
+				testFileName);
 
 		assertionHelper.assertIrodsFileOrCollectionExists(
 				targetIrodsCollectionFile.getAbsolutePath(),
@@ -5136,7 +5016,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -5178,7 +5058,7 @@ public class DataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -5578,17 +5458,17 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-		.replicateIrodsDataObjectToAllResourcesInResourceGroup(
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+				.replicateIrodsDataObjectToAllResourcesInResourceGroup(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
 
 		List<DataObject> resources = dataObjectAO
 				.listReplicationsForFileInResGroup(
 						targetIrodsCollection,
 						testFileName,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
 
 		Assert.assertEquals(1, resources.size());
 
@@ -5705,7 +5585,7 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-		.listReplicationsForFileInResGroup("coll", "", "bogus name");
+				.listReplicationsForFileInResGroup("coll", "", "bogus name");
 
 	}
 
@@ -5759,10 +5639,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);
@@ -5842,17 +5722,17 @@ public class DataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-		.replicateIrodsDataObjectToAllResourcesInResourceGroup(
-				targetIrodsCollection + "/" + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+				.replicateIrodsDataObjectToAllResourcesInResourceGroup(
+						targetIrodsCollection + "/" + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
 
 		int nbrRepls = dataObjectAO
 				.getTotalNumberOfReplsInResourceGroupForDataObject(
 						targetIrodsCollection,
 						testFileName,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY));
 
 		Assert.assertEquals(1, nbrRepls);
 
@@ -5889,22 +5769,22 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);
 		Assert.assertEquals("did not count two replicas", 2, replicas);
 
 		dataObjectAO
-		.trimDataObjectReplicas(
-				targetIrodsCollection,
-				testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				1, -1, false);
+				.trimDataObjectReplicas(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						1, -1, false);
 
 		replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);
@@ -5944,10 +5824,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		int replicas = dataObjectAO.getTotalNumberOfReplsForDataObject(
 				targetIrodsCollection, testFileName);
@@ -5988,12 +5868,12 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataObjectAO
-		.trimDataObjectReplicas(
-				targetIrodsCollection,
-				testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				-1, -1, false);
+				.trimDataObjectReplicas(
+						targetIrodsCollection,
+						testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						-1, -1, false);
 
 	}
 
@@ -6028,10 +5908,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		// List<Resource>
 		// resourcdataObjectAO.listFileResources(targetIrodsCollection + '/' +
@@ -6085,10 +5965,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		List<DataObject> replicatedObjs = dataObjectAO.listReplicationsForFile(
 				targetIrodsCollection, testFileName);

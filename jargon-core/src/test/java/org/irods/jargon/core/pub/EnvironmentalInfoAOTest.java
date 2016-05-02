@@ -74,51 +74,6 @@ public class EnvironmentalInfoAOTest {
 		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
 
-	@Test
-	public void testShowLoadedRules() throws Exception {
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
-		String ruleVal = environmentalInfoAO.showLoadedRules();
-		Assert.assertNotNull("rule data missing", ruleVal);
-	}
-
-	@Test
-	public void testShowLoadedRulesTriggerCache() throws Exception {
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
-		String ruleVal = environmentalInfoAO.showLoadedRules();
-		ruleVal = environmentalInfoAO.showLoadedRules();
-		Assert.assertNotNull("rule data missing", ruleVal);
-	}
-
-	@Test
-	public void testIsStrictACLs() throws Exception {
-		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
-		environmentalInfoAO.isStrictACLs();
-		// so as not to bias the test (difficult right now to set up as a test
-		// case) just see if the method works without error...
-		Assert.assertTrue(true);
-	}
-
 	/**
 	 * Note that this test depends on cmd-scripts/listCommands.sh to be
 	 * installed in the target server/bin/cmd directory. If this is not the
@@ -151,7 +106,7 @@ public class EnvironmentalInfoAOTest {
 					.length() > 0);
 		} catch (DataNotFoundException ex) {
 			System.out
-			.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
+					.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
 
 	}

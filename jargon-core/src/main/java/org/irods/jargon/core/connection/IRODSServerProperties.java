@@ -38,7 +38,8 @@ public class IRODSServerProperties {
 		return consortiumVersion;
 	}
 
-	public synchronized void setConsortiumVersion(final boolean consortiumVersion) {
+	public synchronized void setConsortiumVersion(
+			final boolean consortiumVersion) {
 		this.consortiumVersion = consortiumVersion;
 	}
 
@@ -197,6 +198,15 @@ public class IRODSServerProperties {
 	 */
 	public boolean isAtLeastIrods410() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
+	}
+
+	/**
+	 * Is the server at least iRODS 4.2.0
+	 *
+	 * @return
+	 */
+	public boolean isAtLeastIrods420() {
+		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.0");
 	}
 
 	@Override

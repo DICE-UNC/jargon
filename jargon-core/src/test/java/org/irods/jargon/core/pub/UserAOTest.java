@@ -567,7 +567,7 @@ public class UserAOTest {
 		addedUser.setUserType(UserTypeEnum.RODS_USER);
 		userAO.addUser(addedUser);
 
-		userAO.updateUserInfo(testUser, "");
+		userAO.updateUserInfo(testUser, "x");
 
 		User updatedUser = userAO.findByName(addedUser.getName());
 
