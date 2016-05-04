@@ -23,11 +23,7 @@ abstract class ParallelEncryptionCipherWrapper {
 	private Cipher cipher;
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-	private Mode mode;
-
-	public enum Mode {
-		ENCRYPT, DECRYPT
-	}
+	private int mode;
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -39,13 +35,14 @@ abstract class ParallelEncryptionCipherWrapper {
 	 *            {@link NegotiatedClientServerConfiguration} with result of
 	 *            negotiation
 	 * @param mode
-	 *            {@link Mode} that indicates encrypt/decrypt
+	 *            <code>int</code> that indicates encrypt/decrypt using
+	 *            {@link Cipher} mode definitions
 	 * @throws ClientServerNegotiationException
 	 */
 	ParallelEncryptionCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
-			Mode mode) {
+			int mode) {
 		super();
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -53,9 +50,7 @@ abstract class ParallelEncryptionCipherWrapper {
 		if (negotiatedClientServerConfiguration == null) {
 			throw new IllegalArgumentException("null IllegalArgumentException");
 		}
-		if (mode == null) {
-			throw new IllegalArgumentException("null mode");
-		}
+
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {
 			throw new JargonRuntimeException(
 					"attempting to encrypt when not an SSL enabled connection");
@@ -120,7 +115,7 @@ abstract class ParallelEncryptionCipherWrapper {
 	/**
 	 * @return the mode
 	 */
-	public Mode getMode() {
+	public int getMode() {
 		return mode;
 	}
 
@@ -128,7 +123,7 @@ abstract class ParallelEncryptionCipherWrapper {
 	 * @param mode
 	 *            the mode to set
 	 */
-	public void setMode(Mode mode) {
+	public void setMode(int mode) {
 		this.mode = mode;
 	}
 

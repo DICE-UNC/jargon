@@ -184,11 +184,11 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
 				log.info("setting to eirods based on cookie value");
 				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setEirods(true);
+				.setConsortiumVersion(true);
 			} else if (irodsMidLevelProtocol.getIrodsServerProperties()
 					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
 				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setEirods(true);
+				.setConsortiumVersion(true);
 			}
 		}
 

@@ -634,7 +634,7 @@ public class RemoteExecuteServiceImplTest {
 			return;
 		}
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			irodsFileSystem.closeAndEatExceptions();
 			return;
 		}
@@ -690,7 +690,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isEirods()) {
+		if (!props.isConsortiumVersion()) {
 			irodsFileSystem.closeAndEatExceptions();
 			throw new UnsupportedOperationException("match expects");
 		}

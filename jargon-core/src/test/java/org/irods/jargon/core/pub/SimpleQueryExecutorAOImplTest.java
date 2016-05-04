@@ -87,7 +87,7 @@ public class SimpleQueryExecutorAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 

@@ -37,6 +37,16 @@ import org.slf4j.LoggerFactory;
  * 
  * http://pastebin.com/YiwbCAW8
  * 
+ * and
+ * 
+ * http://stackoverflow.com/questions/1440030/how-to-implement-java-256-bit-aes-
+ * encryption-with-cbc
+ * 
+ * and
+ * 
+ * http://stackoverflow.com/questions/20796042/aes-encryption-and-decryption-
+ * with-java
+ * 
  * @author Mike Conway - DICE
  * 
  *
@@ -62,15 +72,17 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	AesCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
-			Mode mode) throws ClientServerNegotiationException {
+			final int mode) throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration, mode);
-		initCipher();
 	}
 
 	/**
 	 * Given the configuration, initialize the cipher
+	 * 
+	 * see rcPortalOper at about line 335 in rcPartialDataPut
 	 */
-	private void initCipher() throws ClientServerNegotiationException {
+	private void initCipher(final int mode)
+			throws ClientServerNegotiationException {
 		PipelineConfiguration pipelineConfiguration = this
 				.getPipelineConfiguration();
 		try {
@@ -82,7 +94,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 
 			SecretKey secretKey = initSecretKey(pipelineConfiguration);
 
-			encryptionCipher.init(Cipher.ENCRYPT_MODE, secretKey);
+			encryptionCipher.init(mode, secretKey);
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
 				| InvalidKeySpecException | InvalidKeyException e) {
@@ -126,14 +138,24 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	@Override
 	EncryptionBuffer encrypt(byte[] input)
 			throws ClientServerNegotiationException {
+
+		log.info("encrypt");
+		if (input == null) {
+			throw new IllegalArgumentException("null input");
+		}
+
 		try {
 
+			log.debug("init cipher");
+			initCipher(this.getMode());
+			log.debug("init done");
 			AlgorithmParameters params = this.getCipher().getParameters();
 
 			// get the initialization vector and store as member var
 			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class)
 					.getIV();
 
+			log.debug("encrypting");
 			byte[] encrypted = getCipher().doFinal(input);
 			return new EncryptionBuffer(mInitVec, encrypted);
 
@@ -154,7 +176,19 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 	 */
 	@Override
 	byte[] decrypt(EncryptionBuffer input) {
-		return null;
+		try {
+
+			IvParameterSpec iv = new IvParameterSpec(
+					input.getInitializationVector());
+
+			byte[] original = getCipher().doFinal(input.getEncryptedData());
+			return original;
+
+		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			log.error("error during encryption", e);
+			throw new ClientServerNegotiationException(
+					"Unable to decrypt given negotiated settings", e);
+		}
 	}
 
 	/**

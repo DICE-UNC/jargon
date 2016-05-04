@@ -1,13 +1,13 @@
 
 # Project: Jargon-core API
-#### Date: 
-#### Release Version: 4.0.2.5-SNAPSHOT
-#### git tag: 
+#### Date: 04/05/2016
+#### Release Version: 4.0.2.5-RELEASE
+#### git tag: 4.0.2.5-RELEASE
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Maintenance release of Jargon to support REST and WebDav
+Maintenance release of Jargon to support REST and WebDav.  This release consists mostly of many small tweaks, fixes, and additional tests accumulated since the last Jargon release, and represents 'house cleaning' before rolling in SSL transport security.
 
 https://github.com/DICE-UNC/jargon/milestones/mx%20for%20rest/webdav%20-%204.0.2.5
 
@@ -28,7 +28,7 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.8+
+* Jargon depends on Java 1.7+
 * Jargon is built using Apache Maven2, see POM for dependencies
 * Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.1.7 consortium
 
@@ -43,3 +43,19 @@ Note that the following bug and feature requests are logged in GForge with relat
 ###  move versus rename semantics, collection already exists on rename collection #161 
 
 Further refinement to the move operations in DataTransferOperationsImpl surfaced through testing for WebDav integration.  Also added several new unit tests.
+
+### fix exception expectations in unit tests for RENCI CI
+
+
+###  pull ibiblio repo #163 
+
+Remove ibiblio repo from maven, causing corruption of local repositories
+
+
+### Misc
+
+Numerous small fixes and additional tests 
+
+
+
+

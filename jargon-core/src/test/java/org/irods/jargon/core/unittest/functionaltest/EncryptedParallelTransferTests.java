@@ -95,8 +95,8 @@ public class EncryptedParallelTransferTests {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
 
-		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
-				.getJargonProperties();
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
 				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		irodsFileSystem.getIrodsSession().setJargonProperties(

@@ -16,6 +16,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
@@ -84,8 +85,14 @@ class SslConnectionUtilities {
 			// The SunJSSE provider should always be available.
 			throw new AssertionError(e);
 		}
+		TrustManager[] trustManagers = null;
+
+		if (irodsCommands.getIrodsSession().getX509TrustManager() != null) {
+			trustManagers = new TrustManager[] { irodsCommands
+					.getIrodsSession().getX509TrustManager() };
+		}
 		try {
-			ctx.init(null, null, null);
+			ctx.init(null, trustManagers, null);
 		} catch (KeyManagementException e1) {
 			log.error("error initializing ssl context:{}", e1);
 			throw new JargonRuntimeException("ssl context init exception", e1);

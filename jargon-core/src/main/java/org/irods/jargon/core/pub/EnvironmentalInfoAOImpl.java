@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.apache.commons.io.IOUtils;
-import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;
 import org.irods.jargon.core.connection.EnvironmentalInfoAccessor;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -32,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
-EnvironmentalInfoAO {
+		EnvironmentalInfoAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAOImpl.class);
@@ -48,7 +47,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @seeorg.irods.jargon.core.accessobject.EnvironmentalInfoAO#
 	 * getIRODSServerProperties()
 	 */
@@ -62,7 +61,7 @@ EnvironmentalInfoAO {
 	}
 
 	private boolean isEirods() throws JargonException {
-		if (getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isConsortiumVersion()) {
 			return true;
 		} else {
 			return false;
@@ -71,7 +70,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#getIRODSServerCurrentTime()
 	 */
@@ -112,86 +111,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#showLoadedRules()
-	 */
-	@Override
-	public String showLoadedRules() throws JargonException {
-		log.info("showLoadedRules");
-
-		String loadedRules = findValueInCache(DiscoveredServerPropertiesCache.RULE_BASE);
-
-		if (loadedRules != null) {
-			log.info("cache hit");
-			return loadedRules;
-		}
-
-		log.info("cache miss");
-
-		StringBuilder sb = new StringBuilder(
-				"showLoadedRules||msiAdmShowIRB(null)|nop\n");
-		sb.append("null\n");
-		sb.append("ruleExecOut");
-		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
-				.getRuleProcessingAO(getIRODSAccount());
-		IRODSRuleExecResult result = ruleProcessingAO
-				.executeRule(sb.toString());
-		loadedRules = result.getRuleExecOut();
-
-		storeValueInCache(DiscoveredServerPropertiesCache.RULE_BASE,
-				loadedRules);
-
-		log.info("cached loaded rules");
-		return loadedRules;
-
-	}
-
-	private void storeValueInCache(final String key, final String value) {
-		getIRODSSession().getDiscoveredServerPropertiesCache().cacheAProperty(
-				getIRODSAccount().getHost(), getIRODSAccount().getZone(), key,
-				value);
-	}
-
-	private String findValueInCache(final String key) {
-		log.info("checking cache for loaded rules");
-		return getIRODSSession().getDiscoveredServerPropertiesCache()
-				.retrieveValue(getIRODSAccount().getHost(),
-						getIRODSAccount().getZone(), key);
-
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isStrictACLs()
-	 */
-	@Override
-	public boolean isStrictACLs() throws JargonException {
-		log.info("isSrictACLs()");
-
-		String strictAcls = findValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS);
-
-		if (strictAcls != null) {
-			return Boolean.valueOf(strictAcls);
-		}
-
-		log.info("cache miss");
-
-		String coreRules = showLoadedRules();
-		boolean isStrict = false;
-		if (coreRules.indexOf("STRICT") > -1) {
-			isStrict = true;
-		}
-
-		log.info("is strict ACLs?: {}", isStrict);
-
-		storeValueInCache(DiscoveredServerPropertiesCache.STRICT_ACLS, "true");
-		return isStrict;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
@@ -211,7 +131,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands
 	 * ()
@@ -282,7 +202,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
 	 * ()

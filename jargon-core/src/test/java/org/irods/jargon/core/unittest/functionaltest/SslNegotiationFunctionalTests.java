@@ -11,6 +11,7 @@ import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.connection.TrustAllX509TrustManager;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -101,6 +102,8 @@ public class SslNegotiationFunctionalTests {
 				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
+		TrustAllX509TrustManager manager = new TrustAllX509TrustManager();
+		irodsFileSystem.getIrodsSession().setX509TrustManager(manager);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

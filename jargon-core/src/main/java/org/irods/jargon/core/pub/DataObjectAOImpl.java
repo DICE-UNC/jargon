@@ -4575,7 +4575,7 @@ DataObjectAO {
 			log.warn(
 					"invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",
 					e);
-			if (getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isConsortiumVersion()) {
 				log.warn("ignored....is eirods");
 			} else {
 				throw e;

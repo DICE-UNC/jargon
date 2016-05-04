@@ -1,5 +1,7 @@
 package org.irods.jargon.core.transfer;
 
+import javax.crypto.Cipher;
+
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
@@ -8,7 +10,6 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper.Mode;
 import org.irods.jargon.core.utils.RandomUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -49,7 +50,7 @@ public class AesCipherWrapperTest {
 		config.initKey(pipelineConfiguration);
 
 		AesCipherWrapper wrapper = new AesCipherWrapper(pipelineConfiguration,
-				config, Mode.ENCRYPT);
+				config, Cipher.ENCRYPT_MODE);
 
 		EncryptionBuffer actual = wrapper.encrypt(source);
 		Assert.assertNotNull(actual);

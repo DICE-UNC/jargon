@@ -3,7 +3,7 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon</artifactId>
-		<version>4.0.2.5-SNAPSHOT</version>
+		<version>4.0.2.5-RELEASE</version>
 	</parent>
 	<groupId>org.irods.jargon</groupId>
 	<artifactId>jargon-ticket</artifactId>
