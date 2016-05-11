@@ -23,6 +23,7 @@ import javax.crypto.spec.SecretKeySpec;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,7 +187,7 @@ class AesCipherWrapper extends ParallelEncryptionCipherWrapper {
 
 		} catch (IllegalBlockSizeException | BadPaddingException e) {
 			log.error("error during encryption", e);
-			throw new ClientServerNegotiationException(
+			throw new JargonRuntimeException(
 					"Unable to decrypt given negotiated settings", e);
 		}
 	}

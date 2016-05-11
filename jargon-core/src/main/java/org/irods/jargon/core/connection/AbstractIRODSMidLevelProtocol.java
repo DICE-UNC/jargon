@@ -870,15 +870,14 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 	public synchronized void disconnectWithForce() throws JargonException {
 		if (getIrodsAccount() != null) {
-			boolean wasClosed = getIrodsSession().discardSessionForErrors(
-					getIrodsAccount());
-			if (!wasClosed) {
-				getIrodsConnection().obliterateConnectionAndDiscardErrors();
-			}
-		} else {
+			getIrodsSession().discardSessionForErrors(getIrodsAccount());
+		}
+
+		if (this.getIrodsConnection().isConnected()) {
 			log.warn("partial connection, not authenticated, forcefully shut down the socket");
 			getIrodsConnection().obliterateConnectionAndDiscardErrors();
 		}
+
 	}
 
 	/**
