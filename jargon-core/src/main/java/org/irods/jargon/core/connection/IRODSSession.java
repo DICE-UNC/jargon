@@ -380,13 +380,13 @@ public class IRODSSession {
 
 		if (irodsProtocolManager == null) {
 			log.error("no irods connection manager provided");
-			throw new JargonException(
+			throw new JargonRuntimeException(
 					"IRODSSession improperly initialized, requires the IRODSConnectionManager to be initialized");
 		}
 
 		if (irodsAccount == null) {
 			log.error("irodsAccount is null in connection");
-			throw new JargonException("irodsAccount is null");
+			throw new IllegalArgumentException("irodsAccount is null");
 		}
 
 		AbstractIRODSMidLevelProtocol irodsProtocol = null;
@@ -432,7 +432,7 @@ public class IRODSSession {
 	 * Given an already established connection, renew the underlying connection
 	 * using the existing credentials. This is used to seamlessly renew a socket
 	 * during operations 'under the covers', for operations like long running
-	 * transfers that may
+	 * transfers that may time out.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
@@ -474,7 +474,7 @@ public class IRODSSession {
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
-	public boolean evaluateConnectionForRenewal(
+	private boolean evaluateConnectionForRenewal(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
 			throws AuthenticationException, JargonException {
 
@@ -512,7 +512,7 @@ public class IRODSSession {
 				buildPipelineConfigurationBasedOnJargonProperties(), this);
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
-			throw new JargonException(
+			throw new JargonRuntimeException(
 					"null connection returned from connection manager");
 		}
 
@@ -651,27 +651,6 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Signal to the <code>IRODSSession</code> that a connection should be
-	 * terminated and cleared from the cache
-	 *
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that maps the connection
-	 * @throws JargonException
-	 * @deprecated use closeSession(irodsAccount) instead. Duplicative method
-	 */
-	@Deprecated
-	public void discardSessionForReauthenticate(final IRODSAccount irodsAccount)
-			throws JargonException {
-
-		if (irodsAccount == null) {
-			throw new IllegalArgumentException("null irodsAccount");
-		}
-
-		this.closeSession(irodsAccount);
-
-	}
-
-	/**
 	 * Signal to the <code>IRODSSession</code> that a connection has been
 	 * forcefully terminated due to errors, and should be removed from the
 	 * cache.
@@ -688,6 +667,7 @@ public class IRODSSession {
 				.get();
 		if (irodsProtocols == null) {
 			log.warn("discarding session that is already closed, silently ignore");
+			return;
 		}
 		AbstractIRODSMidLevelProtocol badConnection;
 		badConnection = irodsProtocols.get(irodsAccount);

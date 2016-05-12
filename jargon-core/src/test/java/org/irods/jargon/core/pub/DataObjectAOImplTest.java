@@ -116,9 +116,9 @@ public class DataObjectAOImplTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		// initialize the AVU data
-		String expectedAttribName = "testfbmdattrib1";
-		String expectedAttribValue = "testfbmdvalue1";
-		String expectedAttribUnits = "test1fbmdunits";
+		String expectedAttribName = "testfbmdattrib1bug12";
+		String expectedAttribValue = "testfbmdvalue1bug12";
+		String expectedAttribUnits = "test1fbmdunitsbug12S";
 
 		AvuData avuData = AvuData.instance(expectedAttribName,
 				expectedAttribValue, expectedAttribUnits);

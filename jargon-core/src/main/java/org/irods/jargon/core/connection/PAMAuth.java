@@ -31,14 +31,14 @@ public class PAMAuth extends AuthMechanism {
 	@Override
 	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
 			final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		boolean needToWrapWithSsl = irodsCommands.getIrodsConnection()
+		boolean needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
 				.getEncryptionType() == EncryptionType.NONE;
 
-		AbstractIRODSMidLevelProtocol irodsCommandsToUse = null;
+		AbstractIRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
 		/*
 		 * Save the original commands if we will temporarily use an SSL
 		 * connection, otherwise will remain null If, through client/server
@@ -47,17 +47,17 @@ public class PAMAuth extends AuthMechanism {
 		 */
 		if (needToWrapWithSsl) {
 			log.info("will wrap commands with ssl");
-			irodsCommandsToUse = establishSecureConnectionForPamAuth(
-					irodsAccount, irodsCommands);
+			irodsMidLevelProtocolToUse = establishSecureConnectionForPamAuth(
+					irodsAccount, irodsMidLevelProtocol);
 		} else {
 			log.info("no need to SSL tunnel for PAM");
-			irodsCommandsToUse = irodsCommands;
+			irodsMidLevelProtocolToUse = irodsMidLevelProtocol;
 
 		}
 
 		// send pam auth request
 
-		int pamTimeToLive = irodsCommandsToUse.getIrodsSession()
+		int pamTimeToLive = irodsMidLevelProtocolToUse.getIrodsSession()
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
@@ -67,14 +67,15 @@ public class PAMAuth extends AuthMechanism {
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
-			response = irodsCommandsToUse.irodsFunction(pi);
+			response = irodsMidLevelProtocolToUse.irodsFunction(pi);
 
 		} else {
 			log.info("using normal irods pam auth request");
 			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
-			response = irodsCommandsToUse.irodsFunction(pamAuthRequestInp);
+			response = irodsMidLevelProtocolToUse
+					.irodsFunction(pamAuthRequestInp);
 		}
 
 		if (response == null) {
@@ -95,7 +96,7 @@ public class PAMAuth extends AuthMechanism {
 		}
 
 		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
-		shutdownSslAndCloseConnection(irodsCommandsToUse);
+		shutdownSslAndCloseConnection(irodsMidLevelProtocolToUse);
 		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
 		AuthResponse authResponse = new AuthResponse();
 
@@ -110,11 +111,14 @@ public class PAMAuth extends AuthMechanism {
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
-
+		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse
 				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+		authResponse.setStartupResponse(startupResponseData);
+		authResponse.setSuccessful(true);
+		irodsMidLevelProtocolToUse.setAuthResponse(authResponse);
 
-		return irodsCommandsToUse;
+		return irodsMidLevelProtocolToUse;
 
 	}
 
@@ -175,7 +179,7 @@ public class PAMAuth extends AuthMechanism {
 		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 		return secureIRODSCommands;
 	}
- 
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -190,8 +194,13 @@ public class PAMAuth extends AuthMechanism {
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		IRODSAccount originalAuthenticatingAccount = irodsMidLevelProtocol
-				.getAuthResponse().getAuthenticatingIRODSAccount();
+		/*
+		 * I'm creating a new protocol for PAM, using the newly renegotiated
+		 * account with the new password, So save the auth information from the
+		 * prior one used in the pam bootstrapping process
+		 */
+		AuthResponse originalAuthResponse = irodsMidLevelProtocol
+				.getAuthResponse();
 
 		AbstractIRODSMidLevelProtocol actualProtocol = null;
 
@@ -203,9 +212,7 @@ public class PAMAuth extends AuthMechanism {
 						irodsMidLevelProtocol.getAuthResponse()
 								.getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());
-		actualProtocol.getAuthResponse().setAuthenticatingIRODSAccount(
-				originalAuthenticatingAccount);
-		actualProtocol.setIrodsAccount(originalAuthenticatingAccount);
+		actualProtocol.setAuthResponse(originalAuthResponse);
 		return actualProtocol;
 
 	}
