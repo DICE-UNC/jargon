@@ -36,7 +36,7 @@ Callable<ParallelTransferResult> {
 	 * ssl negotiated encryption was indicated, and if present (
 	 * <code>null</code> otherwise) will be used to encrypt the data en route.
 	 */
-	private ParallelEncryptionCipherWrapper parallelEncryptionCipherWrapper = null;
+	private ParallelCipherWrapper parallelEncryptionCipherWrapper = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);

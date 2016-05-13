@@ -9,15 +9,15 @@ import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 
 /**
- * Wrapper for a cipher that will encrypt parallel transfer data
+ * Wrapper for a cipher that will decrypt parallel transfer data
  * 
  * @author Mike Conway - DICE
  *
  */
-public abstract class ParallelEncryptionCipherWrapper extends
+public abstract class ParallelDecryptionCipherWrapper extends
 		ParallelCipherWrapper {
 
-	ParallelEncryptionCipherWrapper(
+	ParallelDecryptionCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration,
@@ -25,12 +25,12 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	}
 
 	/**
-	 * Encrypt the given data
+	 * Decrypt the given data
 	 * 
 	 * @param input
-	 *            <code>byte[]</code> of plaintext data
-	 * @return {@link EncryptionBuffer}
+	 *            {@link EncryptionBuffer}
+	 * @return <code>byte[]</code> of plaintext data
 	 */
-	abstract EncryptionBuffer encrypt(byte[] input);
+	abstract byte[] decrypt(EncryptionBuffer input);
 
 }

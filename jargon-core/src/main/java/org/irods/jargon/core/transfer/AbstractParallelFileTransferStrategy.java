@@ -354,10 +354,10 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * Provides individual threads a hook to create the appropriate encryption
 	 * cipher if needed.
 	 * 
-	 * @return {@link ParallelEncryptionCipherWrapper}
+	 * @return {@link ParallelCipherWrapper}
 	 * @throws ClientServerNegotiationException
 	 */
-	ParallelEncryptionCipherWrapper initializeCypherForEncryption()
+	ParallelCipherWrapper initializeCypherForEncryption()
 			throws ClientServerNegotiationException {
 		log.debug("initializeCypherForEncryption()");
 		if (!this.negotiatedClientServerConfiguration.isSslConnection()) {

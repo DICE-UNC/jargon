@@ -30,14 +30,14 @@ public class EncryptionWrapperFactory {
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration}
-	 * @return {@link ParallelEncryptionCipherWrapper} to be used by parallel
-	 *         transfer threads
+	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
+	 *         threads
 	 * @param mode
 	 *            <code>int</code> that indicates encrypt/decrypt using the
 	 *            constants in {@link Cipher}
 	 * @throws ClientServerNegotiationException
 	 */
-	public static ParallelEncryptionCipherWrapper instance(
+	public static ParallelEncryptionCipherWrapper instanceEncrypt(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
 			int mode) throws ClientServerNegotiationException {
@@ -57,8 +57,57 @@ public class EncryptionWrapperFactory {
 		}
 
 		if (pipelineConfiguration.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
-			return new AesCipherWrapper(pipelineConfiguration,
-					negotiatedClientServerConfiguration, mode);
+
+			return new AesCipherEncryptWrapper(pipelineConfiguration,
+					negotiatedClientServerConfiguration);
+		} else {
+			throw new ClientServerNegotiationException(
+					"unsuppored encryption algo:"
+							+ pipelineConfiguration
+									.getEncryptionAlgorithmEnum());
+		}
+
+	}
+
+	/**
+	 * Given the properties from configuration and negotiation, return the
+	 * correct decryption wrapper for a parallel transfer thread. This method
+	 * should not be called if no negotiated encryption was established.
+	 * 
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration}
+	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration}
+	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
+	 *         threads
+	 * @param mode
+	 *            <code>int</code> that indicates encrypt/decrypt using the
+	 *            constants in {@link Cipher}
+	 * @throws ClientServerNegotiationException
+	 */
+	public static ParallelCipherWrapper instance(
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
+			int mode) throws ClientServerNegotiationException {
+
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (negotiatedClientServerConfiguration == null) {
+			throw new IllegalArgumentException(
+					"null negotiatedClientServerConfiguration");
+		}
+
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
+			throw new JargonRuntimeException(
+					"no encryption was negotiated,should not call this factory");
+		}
+
+		if (pipelineConfiguration.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
+
+			return new AesCipherEncryptWrapper(pipelineConfiguration,
+					negotiatedClientServerConfiguration);
 		} else {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"

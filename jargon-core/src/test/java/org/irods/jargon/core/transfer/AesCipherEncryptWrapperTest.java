@@ -1,7 +1,5 @@
 package org.irods.jargon.core.transfer;
 
-import javax.crypto.Cipher;
-
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
@@ -15,7 +13,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class AesCipherWrapperTest {
+public class AesCipherEncryptWrapperTest {
 
 	private static IRODSFileSystem irodsFileSystem = null;
 
@@ -49,12 +47,47 @@ public class AesCipherWrapperTest {
 				true);
 		config.initKey(pipelineConfiguration);
 
-		AesCipherWrapper wrapper = new AesCipherWrapper(pipelineConfiguration,
-				config, Cipher.ENCRYPT_MODE);
+		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
+				pipelineConfiguration, config);
 
 		EncryptionBuffer actual = wrapper.encrypt(source);
 		Assert.assertNotNull(actual);
+		Assert.assertFalse("no encrypted data",
+				actual.getEncryptedData().length == 0);
+		Assert.assertFalse("no iv",
+				actual.getInitializationVector().length == 0);
 
 	}
 
+	@Test
+	public void testEncryptRoundTrip() throws JargonException {
+		String begin = "aj;kj;ljlkjfjkdjfiaewjafasdf";
+		byte[] source = begin.getBytes();
+
+		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
+				.getJargonProperties();
+		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
+		props.setEncryptionKeySize(128);
+		props.setEncryptionNumberHashRounds(65536);
+		props.setEncryptionSaltSize(8);
+		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
+				.instance(props);
+		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
+				true);
+		config.initKey(pipelineConfiguration);
+
+		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
+				pipelineConfiguration, config);
+
+		EncryptionBuffer encrypted = wrapper.encrypt(source);
+
+		// now decrypt
+
+		AesCipherEncryptWrapper decryptWrapper = new AesCipherEncryptWrapper(
+				pipelineConfiguration, config);
+		// byte[] decrypted = decryptWrapper.decrypt(encrypted);
+		// String result = new String(decrypted, StandardCharsets.UTF_8);
+		// Assert.assertEquals("didnt match encrypted data", source, result);
+
+	}
 }

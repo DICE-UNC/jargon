@@ -23,12 +23,12 @@ public class EncryptionWrapperFactoryTest {
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				true);
 		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
-		ParallelEncryptionCipherWrapper actual = EncryptionWrapperFactory
+		ParallelCipherWrapper actual = EncryptionWrapperFactory
 				.instance(pipelineConfiguration,
 						negotiatedClientServerConfiguration,
 						Cipher.ENCRYPT_MODE);
 		Assert.assertNotNull(actual);
-		Assert.assertTrue(actual instanceof AesCipherWrapper);
+		Assert.assertTrue(actual instanceof AesCipherEncryptWrapper);
 	}
 
 	@Test(expected = JargonRuntimeException.class)
