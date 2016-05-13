@@ -124,7 +124,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	}
 
 	@Override
-	EncryptionBuffer encrypt(byte[] input) {  do I need an iv every time? why init every time?
+	EncryptionBuffer encrypt(byte[] input) {
 
 		log.info("encrypt");
 		if (input == null) {
