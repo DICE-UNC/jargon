@@ -11,6 +11,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
+import org.irods.jargon.core.exception.InvalidArgumentException;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AbstractIRODSQueryResultSet;
@@ -355,6 +356,81 @@ public class IRODSGenQueryExecutorImplBuilderQueriesTest {
 		resultSet = irodsGenQueryExecutor.executeIRODSQuery(query, 0);
 		Assert.assertFalse("no result expected",
 				resultSet.getResults().size() > 0);
+
+	}
+
+	/**
+	 * BUG: sounds like query causing errors in cloud browser #179
+	 * https://github.com/DICE-UNC/jargon/issues/179
+	 *
+	 * @throws Exception
+	 */
+	@Test(expected = InvalidArgumentException.class)
+	public final void testExecuteMetadataQuerySoundsLikeBug179()
+			throws Exception {
+		String testFileName = "testExecuteMetadataQuerySoundsLikeBug179.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 10);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		// put scratch file into irods in the right place on the first resource
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dto.putOperation(localFileName, targetIrodsCollection,
+				irodsAccount.getDefaultStorageResource(), null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName1 = "testExecuteMetadataQueryWithInattrib1";
+		String expectedAttribValue1 = "dog";
+		String expectedAttribUnits1 = "";
+
+		AvuData avuData = AvuData.instance(expectedAttribName1,
+				expectedAttribValue1, expectedAttribUnits1);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsFileSystem
+				.getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(
+						irodsAccount);
+
+		IRODSGenQueryBuilder queryBuilder = new IRODSGenQueryBuilder(true,
+				false, true, null);
+		queryBuilder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
+				testFileName);
+
+		queryBuilder.addConditionAsGenQueryField(
+				RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
+				QueryConditionOperators.SOUNDS_LIKE, "dawg");
+
+		IRODSGenQueryFromBuilder query = queryBuilder
+				.exportIRODSQueryFromBuilder(100);
+
+		irodsGenQueryExecutor.executeIRODSQuery(query, 0);
 
 	}
 
