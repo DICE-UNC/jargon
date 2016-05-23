@@ -149,7 +149,7 @@ RemoteExecutionOfCommandsAO {
 	 */
 	protected boolean isAbleToStreamLargeResults() throws JargonException {
 
-		if (getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isConsortiumVersion()) {
 			return false;
 		} else if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods2.4.1")) {

@@ -379,7 +379,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
 
-			if (getIrodsCommands().getIRODSServerProperties().isEirods()) {
+			if (getIrodsCommands().getIRODSServerProperties().isConsortiumVersion()) {
 
 				log.error("unable to stream large files in eirods");
 				throw new UnsupportedOperationException(

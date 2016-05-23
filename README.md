@@ -6,6 +6,10 @@
 ### Release Version: 4.0.3.1-SNAPSHOT
 ### git tag: 
 
+=======
+#### Date: 04/05/2016
+#### Release Version: 4.0.2.6-SNAPSHOT
+#### git tag: 
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -28,7 +32,7 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.8+
+* Jargon depends on Java 1.7+
 * Jargon is built using Apache Maven2, see POM for dependencies
 * Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.1.7 consortium
 
@@ -49,4 +53,11 @@ Remove old image thumbnail code that relied on specific 'lifetime library' confi
 Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
 
 ### Misc
+
+
+
+
+
+
+>>>>>>> origin/master
 

@@ -129,7 +129,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -202,7 +202,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -272,7 +272,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			throw new CatNoAccessException("expected");
 		}
 
@@ -332,7 +332,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -409,7 +409,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
@@ -485,7 +485,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -735,7 +735,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -835,7 +835,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1048,7 +1048,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1133,7 +1133,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1218,7 +1218,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1427,7 +1427,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			throw new OverwriteException("thrown for expectations");
 		}
 

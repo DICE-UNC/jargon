@@ -50,7 +50,7 @@ public class ChecksumManagerImplTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods3.3.1", "D",
 						"zone");
-		irodsServerProperties.setEirods(false);
+		irodsServerProperties.setConsortiumVersion(false);
 
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);
@@ -97,7 +97,7 @@ public class ChecksumManagerImplTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods4.0.2", "D",
 						"zone");
-		irodsServerProperties.setEirods(true);
+		irodsServerProperties.setConsortiumVersion(true);
 
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);
@@ -149,7 +149,7 @@ public class ChecksumManagerImplTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods4.0.2", "D",
 						"zone");
-		irodsServerProperties.setEirods(true);
+		irodsServerProperties.setConsortiumVersion(true);
 
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);

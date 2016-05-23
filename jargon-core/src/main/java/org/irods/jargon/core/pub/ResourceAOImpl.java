@@ -76,7 +76,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("resource:{}", resource);
 
-		if (!getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isConsortiumVersion()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException(
 					"add resource only works for 4.0+");
@@ -149,7 +149,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("addChildToResource");
 
-		if (!getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isConsortiumVersion()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException("only works for iRODS 4.0+");
 		}
@@ -197,7 +197,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("removeChildFromResource");
 
-		if (!getIRODSServerProperties().isEirods()) {
+		if (!getIRODSServerProperties().isConsortiumVersion()) {
 			log.error("does not work pre iRODS 4.0");
 			throw new UnsupportedOperationException("only works for iRODS 4.0+");
 		}
@@ -475,7 +475,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
 
-		if (getIRODSServerProperties().isEirods()) {
+		if (getIRODSServerProperties().isConsortiumVersion()) {
 			log.info("is consortium irods, don't look for resource groups");
 			return combined;
 		}
@@ -504,7 +504,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 					OrderByType.ASC);
 
-			if (getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isConsortiumVersion()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_R_RESC_PARENT,
 						QueryConditionOperators.EQUAL, "");

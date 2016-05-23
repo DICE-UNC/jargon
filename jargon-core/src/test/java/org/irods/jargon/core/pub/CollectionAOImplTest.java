@@ -52,7 +52,7 @@ public class CollectionAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -120,7 +120,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// initialize the AVU data
 		String expectedAttribName = "FindDomainByMetadataQuerytestattrib1";
@@ -215,7 +215,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -258,7 +258,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -306,7 +306,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// initialize the AVU data
 		String expectedAttribName = "testmdattrib1".toUpperCase();
@@ -349,7 +349,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// initialize the AVU data
 		String expectedAttribName = "testmdattrib1".toUpperCase();
@@ -403,7 +403,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -429,7 +429,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// initialize the AVU data
 		String expectedAttribName = "testFindMetadataValuesByMetadataQueryForCollectionCaseInsensitive"
@@ -479,7 +479,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -534,7 +534,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -612,7 +612,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -713,7 +713,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -786,7 +786,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -853,7 +853,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -902,11 +902,11 @@ public class CollectionAOImplTest {
 		Assert.assertEquals("should be 2 responses", 2, responses.size());
 		Assert.assertEquals("not success",
 				BulkAVUOperationResponse.ResultStatus.OK, responses.get(0)
-				.getResultStatus());
+						.getResultStatus());
 
 		Assert.assertEquals("did not get the duplicate message",
 				BulkAVUOperationResponse.ResultStatus.DUPLICATE_AVU, responses
-				.get(1).getResultStatus());
+						.get(1).getResultStatus());
 		Assert.assertFalse("did not set a message for the duplicate", responses
 				.get(1).getMessage().isEmpty());
 	}
@@ -920,7 +920,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -967,7 +967,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -991,7 +991,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1030,7 +1030,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1063,7 +1063,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1102,7 +1102,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1139,7 +1139,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1177,7 +1177,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1227,7 +1227,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1274,7 +1274,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1333,7 +1333,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1380,7 +1380,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1429,7 +1429,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1458,7 +1458,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1490,7 +1490,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1516,7 +1516,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1552,7 +1552,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1592,7 +1592,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1634,7 +1634,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1667,7 +1667,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1731,10 +1731,10 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1775,7 +1775,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		// initialize the AVU data
 		String expectedAttribName = "avujfiejf1221";
@@ -1861,12 +1861,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -1898,20 +1898,20 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		CollectionAO collectionAORods = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 
 		collectionAORods
-		.setAccessPermissionReadAsAdmin(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionReadAsAdmin(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -1943,20 +1943,20 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		CollectionAO collectionAORods = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 
 		collectionAORods
-		.setAccessPermissionWriteAsAdmin(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionWriteAsAdmin(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -1989,20 +1989,20 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		CollectionAO collectionAORods = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 
 		collectionAORods
-		.setAccessPermissionOwnAsAdmin(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionOwnAsAdmin(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2035,20 +2035,20 @@ public class CollectionAOImplTest {
 				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
 						testingProperties,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
 		CollectionAO collectionAORods = irodsFileSystem
 				.getIRODSAccessObjectFactory()
 				.getCollectionAO(irodsAccountRods);
 
 		collectionAORods
-		.setAccessPermissionOwnAsAdmin(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionOwnAsAdmin(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		// log in as the secondary user
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2063,12 +2063,12 @@ public class CollectionAOImplTest {
 				userAccessPermission == FilePermissionEnum.OWN);
 
 		collectionAORods
-		.removeAccessPermissionForUserAsAdmin(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.removeAccessPermissionForUserAsAdmin(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 		userAccessPermission = collectionAO.getPermissionForCollection(
 				targetIrodsCollection, secondaryAccount.getUserName(), "");
 		Assert.assertTrue("user should not be owner",
@@ -2090,12 +2090,12 @@ public class CollectionAOImplTest {
 		CollectionAO collectionAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 	}
 
@@ -2118,12 +2118,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionWrite(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				false);
+				.setAccessPermissionWrite(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						false);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2154,12 +2154,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.OWN);
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.OWN);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2196,12 +2196,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.READ);
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.READ);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2238,12 +2238,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.WRITE);
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.WRITE);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2258,65 +2258,6 @@ public class CollectionAOImplTest {
 				.getDirectoryPermissions(irodsFileForSecondaryUser);
 
 		Assert.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
-
-	}
-
-	@Test
-	public final void testSetWriteThenNoneGivingPermission() throws Exception {
-
-		String testFileName = "testSetWriteThenNoneGivingPermission";
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
-								+ testFileName);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-		boolean isStrict = environmentalInfoAO.isStrictACLs();
-
-		if (isStrict) {
-			return;
-		}
-
-		CollectionAO collectionAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.mkdirs();
-
-		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.WRITE);
-		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.NONE);
-
-		// log in as the secondary user and test write access
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
-				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
-						targetIrodsCollection);
-		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getIRODSFileSystemAO(
-						secondaryAccount);
-		int permissions = irodsFileSystemAO
-				.getDirectoryPermissions(irodsFileForSecondaryUser);
-
-		Assert.assertFalse(permissions >= IRODSFile.WRITE_PERMISSIONS);
 
 	}
 
@@ -2339,12 +2280,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermission(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true, FilePermissionEnum.CREATE_TOKEN);
+				.setAccessPermission(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true, FilePermissionEnum.CREATE_TOKEN);
 
 	}
 
@@ -2367,12 +2308,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionOwn(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				false);
+				.setAccessPermissionOwn(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						false);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2409,12 +2350,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionOwn(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				false);
+				.setAccessPermissionOwn(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						false);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2451,12 +2392,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				false);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						false);
 
 		// log in as the secondary user and test write access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -2579,12 +2520,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
@@ -2601,7 +2542,7 @@ public class CollectionAOImplTest {
 					.getUserName()
 					.equalsIgnoreCase(
 							testingProperties
-							.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY))) {
 				secondaryUserFound = true;
 				Assert.assertEquals("should have normal zone",
 						irodsAccount.getZone(), permission.getUserZone());
@@ -2634,24 +2575,24 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(
 						targetIrodsCollection,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		Assert.assertNotNull("got a null userFilePermission",
 				userFilePermission);
 		Assert.assertEquals(
 				"userName did not match expected",
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				userFilePermission.getUserName());
 		Assert.assertEquals("zone incorrect", irodsAccount.getZone(),
 				userFilePermission.getUserZone());
@@ -2677,12 +2618,12 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(targetIrodsCollection, "notausername");
@@ -2712,18 +2653,18 @@ public class CollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		boolean hasPermission = collectionAO
 				.isUserHasAccess(
 						targetIrodsCollection,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		Assert.assertTrue("did not get expected permission", hasPermission);
 
 	}
@@ -2751,7 +2692,7 @@ public class CollectionAOImplTest {
 				.isUserHasAccess(
 						targetIrodsCollection,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		Assert.assertFalse("should not have permission", hasPermission);
 
 	}
@@ -2815,7 +2756,7 @@ public class CollectionAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testDirName);
+								+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -2853,10 +2794,10 @@ public class CollectionAOImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -2876,11 +2817,11 @@ public class CollectionAOImplTest {
 				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 
 		collectionAO
-		.replicateCollectionAsynchronously(
-				irodsCollectionRootAbsolutePath,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-				1);
+				.replicateCollectionAsynchronously(
+						irodsCollectionRootAbsolutePath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						1);
 
 		// just lookign for clean submit of delay exec rule....
 	}

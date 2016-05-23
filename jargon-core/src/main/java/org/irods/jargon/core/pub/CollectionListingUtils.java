@@ -514,7 +514,7 @@ class CollectionListingUtils {
 		specColInfo.setType(2);
 
 		if (irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isEirods()) {
+				.isConsortiumVersion()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
 

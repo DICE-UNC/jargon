@@ -124,7 +124,7 @@ public class IRODSFileImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSFileFactory irodsFileFactory = irodsFileSystem

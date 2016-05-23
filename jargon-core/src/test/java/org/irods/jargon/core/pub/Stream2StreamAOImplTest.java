@@ -41,11 +41,11 @@ public class Stream2StreamAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -189,8 +189,8 @@ public class Stream2StreamAOImplTest {
 
 		BufferedOutputStream outputStream = new BufferedOutputStream(
 				irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFileOutputStream(targetIrodsFile));
+						.getIRODSFileFactory(irodsAccount)
+						.instanceIRODSFileOutputStream(targetIrodsFile));
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);
@@ -310,62 +310,6 @@ public class Stream2StreamAOImplTest {
 
 		Assert.assertEquals("byte length and file length do not match",
 				irodsFile.length(), actual.length);
-
-	}
-
-	/**
-	 * [#1004] irods output stream errors writing to a file not under /zone/home
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public void testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot()
-			throws Exception {
-		String dirUnderRoot = "testStreamToIRODSFileUsingStreamIOAsRodsUnderRoot";
-		String testFileName = "testStreamToIRODSFileUsingStreamIO.txt";
-		String targetIrodsCollection = "/" + dirUnderRoot;
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-		boolean isStrict = environmentalInfoAO.isStrictACLs();
-
-		if (isStrict) {
-			return;
-		}
-
-		IRODSAccessObjectFactory irodsAccessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-
-		IRODSFile collFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		collFile.deleteWithForceOption();
-		collFile.mkdirs();
-
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String localFilePath = FileGenerator
-				.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
-		File localFile = new File(localFilePath);
-		BufferedInputStream inputStream = new BufferedInputStream(
-				new FileInputStream(localFile));
-
-		IRODSFile targetIrodsFile = irodsAccessObjectFactory
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						targetIrodsCollection + "/" + testFileName);
-		targetIrodsFile.delete();
-
-		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
-				.getStream2StreamAO(irodsAccount);
-		stream2StreamAO.transferStreamToFileUsingIOStreams(inputStream,
-				(File) targetIrodsFile, localFile.length(), 0);
-
-		Assert.assertTrue("file does not exist", targetIrodsFile.exists());
-		Assert.assertTrue("no data in target file",
-				targetIrodsFile.length() > 0);
 
 	}
 

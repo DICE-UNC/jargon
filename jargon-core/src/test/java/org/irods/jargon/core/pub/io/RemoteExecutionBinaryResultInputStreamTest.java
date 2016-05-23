@@ -77,7 +77,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			return;
 		}
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -136,7 +136,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			return;
 		}
 
-		if (props.isEirods()) {
+		if (props.isConsortiumVersion()) {
 			return;
 		}
 

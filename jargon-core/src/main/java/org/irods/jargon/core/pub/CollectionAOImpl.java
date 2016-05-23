@@ -162,7 +162,7 @@ CollectionAO {
 			 * queries are supported
 			 */
 
-			if (getIRODSServerProperties().isEirods()) {
+			if (getIRODSServerProperties().isConsortiumVersion()) {
 				log.info("this is eirods, case insensitive is supported");
 			} else if (!getIRODSServerProperties()
 					.isSupportsCaseInsensitiveQueries()) {
