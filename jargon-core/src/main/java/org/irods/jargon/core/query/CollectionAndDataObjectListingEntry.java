@@ -249,7 +249,7 @@ implements Comparable<CollectionAndDataObjectListingEntry> {
 		String nodeVal;
 		if (objectType == ObjectType.COLLECTION) {
 			nodeVal = MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(getPathOrName());
+					.getLastPathComponentForGivenAbsolutePath(getPathOrName());
 		} else {
 			nodeVal = pathOrName;
 		}

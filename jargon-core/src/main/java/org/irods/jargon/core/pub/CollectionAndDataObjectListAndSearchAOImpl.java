@@ -1403,7 +1403,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		dataObject.setCollectionName(objStat.getCollectionPath());
 		dataObject.setCreatedAt(objStat.getCreatedAt());
 		dataObject.setDataName(MiscIRODSUtils
-				.getLastPathComponentForGiveAbsolutePath(objStat
+				.getLastPathComponentForGivenAbsolutePath(objStat
 						.getAbsolutePath()));
 		dataObject.setDataOwnerName(objStat.getOwnerName());
 		dataObject.setDataOwnerZone(objStat.getOwnerZone());

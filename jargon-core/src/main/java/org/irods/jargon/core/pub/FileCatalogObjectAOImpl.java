@@ -250,7 +250,7 @@ FileCatalogObjectAO {
 
 		} else {
 			entry.setPathOrName(MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(irodsAbsolutePath));
+					.getLastPathComponentForGivenAbsolutePath(irodsAbsolutePath));
 			entry.setParentPath(collectionAndPath.getCollectionParent());
 
 		}

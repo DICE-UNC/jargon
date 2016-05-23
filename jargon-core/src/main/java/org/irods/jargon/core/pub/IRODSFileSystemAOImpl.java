@@ -494,7 +494,7 @@ IRODSFileSystemAO {
 
 			for (CollectionAndDataObjectListingEntry entry : entries) {
 				subdirs.add(MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(entry
+						.getLastPathComponentForGivenAbsolutePath(entry
 								.getPathOrName()));
 				lastEntry = entry.isLastResult();
 				ctr = entry.getCount();

@@ -740,7 +740,7 @@ class CollectionListingUtils {
 			sb.append(objStat.getObjectPath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(collectionAndDataObjectListingEntry
+					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry
 							.getPathOrName()));
 			collectionAndDataObjectListingEntry.setSpecialObjectPath(sb
 					.toString());
@@ -749,7 +749,7 @@ class CollectionListingUtils {
 			sb.append(objStat.getAbsolutePath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForGiveAbsolutePath(collectionAndDataObjectListingEntry
+					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry
 							.getPathOrName()));
 
 			collectionAndDataObjectListingEntry.setPathOrName(sb.toString());

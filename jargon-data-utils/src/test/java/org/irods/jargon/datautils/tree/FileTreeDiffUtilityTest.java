@@ -527,7 +527,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildDirName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1352,7 +1352,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1441,7 +1441,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));

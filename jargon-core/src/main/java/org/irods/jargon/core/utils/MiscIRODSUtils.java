@@ -459,7 +459,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @return <code>String</code> with the last component of the absolute path
 	 */
-	public static String getLastPathComponentForGiveAbsolutePath(
+	public static String getLastPathComponentForGivenAbsolutePath(
 			final String collectionPath) {
 
 		if (collectionPath == null || collectionPath.isEmpty()) {

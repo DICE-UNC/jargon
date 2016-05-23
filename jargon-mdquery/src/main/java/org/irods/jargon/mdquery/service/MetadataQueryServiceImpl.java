@@ -310,7 +310,7 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
 						QueryConditionOperators
-								.getOperatorFromStringValue(element
+								.getOperatorFromEnumStringValue(element
 										.getOperator().getOperatorValue()),
 						element.getAttributeValue().get(0).trim());
 			}
