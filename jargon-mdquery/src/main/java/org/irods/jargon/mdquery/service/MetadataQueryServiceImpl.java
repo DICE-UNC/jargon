@@ -176,7 +176,8 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 		if (!metadataQuery.getPathHint().isEmpty()) {
 			log.info("adding path hint for :{}", metadataQuery.getPathHint());
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.EQUAL, metadataQuery.getPathHint());
+					QueryConditionOperators.LIKE, metadataQuery.getPathHint()
+							.trim() + "%");
 		}
 
 		/**
@@ -201,9 +202,9 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
 						QueryConditionOperators
-								.getOperatorFromStringValue(element
-										.getOperator().getOperatorValue()),
-						element.getAttributeValue().get(0).trim());
+								.getOperatorFromEnumStringValue(element
+										.getOperator().toString()), element
+								.getAttributeValue().get(0).trim());
 			}
 
 		}
@@ -285,7 +286,8 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 		if (!metadataQuery.getPathHint().isEmpty()) {
 			log.info("adding path hint for :{}", metadataQuery.getPathHint());
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
-					QueryConditionOperators.EQUAL, metadataQuery.getPathHint());
+					QueryConditionOperators.LIKE, metadataQuery.getPathHint()
+							.trim() + "%");
 		}
 
 		/**
@@ -311,8 +313,8 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 						RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
 						QueryConditionOperators
 								.getOperatorFromEnumStringValue(element
-										.getOperator().getOperatorValue()),
-						element.getAttributeValue().get(0).trim());
+										.getOperator().toString()), element
+								.getAttributeValue().get(0).trim());
 			}
 
 		}

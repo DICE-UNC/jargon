@@ -195,13 +195,13 @@ public class MetadataQueryServiceImplTest {
 		PagingAwareCollectionListing actual = metadataQueryService
 				.executeQuery(metadataQuery);
 		Assert.assertNotNull("null listing returned", actual);
-		Assert.assertEquals("no result row", 1, actual
+		Assert.assertEquals("two colls should be selected", 2, actual
 				.getCollectionAndDataObjectListingEntries().size());
 		Assert.assertEquals("unexpected collection",
 				testFile.getAbsolutePath(), actual
 						.getCollectionAndDataObjectListingEntries().get(0)
 						.getFormattedAbsolutePath());
-		Assert.assertEquals("incorrect collection count", 1, actual
+		Assert.assertEquals("incorrect collection count", 2, actual
 				.getPagingAwareCollectionListingDescriptor().getCount());
 		Assert.assertTrue("should reflect end of colls", actual
 				.getPagingAwareCollectionListingDescriptor()
@@ -860,6 +860,147 @@ public class MetadataQueryServiceImplTest {
 		Assert.assertEquals("no result row", count, actual
 				.getCollectionAndDataObjectListingEntries().size());
 		Assert.assertEquals("incorrect count count", count, actual
+				.getPagingAwareCollectionListingDescriptor()
+				.getDataObjectsCount());
+		Assert.assertTrue("should reflect end of colls", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isDataObjectsComplete());
+		Assert.assertTrue("should show colls complete", actual
+				.getPagingAwareCollectionListingDescriptor()
+				.isCollectionsComplete());
+
+	}
+
+	@Test
+	public void testSimpleAvuQueryOneDataObjectWithRecursivePathHint()
+			throws Exception {
+		String testCollName = "testSimpleAvuQueryOneDataObjectWithRecursivePathHint";
+		String testCollName2 = "testSimpleAvuQueryOneDataObjectWithRecursivePathHint2";
+
+		String testFilePrefix = "testSimpleAvuQueryOneDataObjectWithRecursivePathHint-";
+		String testFileSuffix = ".txt";
+		int count = 200;
+		String expectedAttribName = "testSimpleAvuQueryOneDataObjectWithRecursivePathHintattrib1";
+		final String expectedAttribValue = "testSimpleAvuQueryOneDataObjectWithRecursivePathHintvalue1";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		String targetIrodsParentCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/parent");
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/parent/"
+								+ testCollName);
+
+		String targetIrodsCollection2 = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/parent/"
+								+ testCollName2 + "/subdir1");
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		// generate some test files, first delete the test subdir
+
+		IRODSFile testSubdir = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+		testSubdir.deleteWithForceOption();
+		testSubdir.mkdirs();
+
+		IRODSFile testSubdir2 = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection2);
+		testSubdir2.deleteWithForceOption();
+		testSubdir2.mkdirs();
+
+		DataObjectAO dAO = accessObjectFactory.getDataObjectAO(irodsAccount);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		AvuData avuData = null;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String sourceFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath,
+						"testFileForAVU.txt", 1);
+		File sourceFile = new File(sourceFileAbsolutePath);
+
+		IRODSFile dataFile = null;
+		StringBuilder sb = null;
+		for (int i = 0; i < count; i++) {
+			sb = new StringBuilder();
+			sb.append(testFilePrefix);
+			sb.append(i);
+			sb.append(testFileSuffix);
+			dataFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(testSubdir.getAbsolutePath(),
+							sb.toString());
+			dto.putOperation(sourceFile, dataFile, null, null);
+			avuData = AvuData.instance(expectedAttribName, expectedAttribValue,
+					"");
+			dAO.addAVUMetadata(dataFile.getAbsolutePath(), avuData);
+
+		}
+
+		absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		IRODSFile dataFile2 = null;
+		sb = null;
+		for (int i = 0; i < count; i++) {
+			sb = new StringBuilder();
+			sb.append(testFilePrefix);
+			sb.append(i);
+			sb.append(testFileSuffix);
+			dataFile2 = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(testSubdir2.getAbsolutePath(),
+							sb.toString());
+			dto.putOperation(sourceFile, dataFile2, null, null);
+			avuData = AvuData.instance(expectedAttribName, expectedAttribValue,
+					"");
+			dAO.addAVUMetadata(dataFile2.getAbsolutePath(), avuData);
+
+		}
+
+		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
+		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribValue));
+
+		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
+		Assert.assertNotNull("null files returned", files);
+		Assert.assertTrue("did not get all of the files", files.size() >= count);
+
+		MetadataQueryService metadataQueryService = new MetadataQueryServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		MetadataQuery metadataQuery = new MetadataQuery();
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		@SuppressWarnings("serial")
+		List<String> vals = new ArrayList<String>() {
+			{
+				add(expectedAttribValue);
+			}
+		};
+		element.setAttributeValue(vals);
+
+		metadataQuery.setQueryType(QueryType.BOTH);
+		metadataQuery.setPathHint(targetIrodsParentCollection);
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		PagingAwareCollectionListing actual = metadataQueryService
+				.executeQuery(metadataQuery);
+		Assert.assertNotNull("null listing returned", actual);
+
+		Assert.assertEquals("incorrect count count", count * 2, actual
 				.getPagingAwareCollectionListingDescriptor()
 				.getDataObjectsCount());
 		Assert.assertTrue("should reflect end of colls", actual
