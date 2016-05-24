@@ -13,6 +13,7 @@ import org.irods.jargon.core.pub.ListAndCount;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -160,11 +161,17 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_CREATE_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_MODIFY_TIME)
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_SIZE,
+							SelectFieldTypes.MAX)
+
+					// .addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_D_CREATE_TIME,
+							SelectFieldTypes.MAX)
+					.addSelectAsAgregateGenQueryValue(
+							RodsGenQueryEnum.COL_D_MODIFY_TIME,
+							SelectFieldTypes.MAX)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
 		} catch (GenQueryBuilderException e) {
