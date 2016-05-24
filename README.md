@@ -1,16 +1,15 @@
 
 # Project: Jargon-core API
 #### Date: 04/05/2016
-#### Release Version: 4.0.2.5-RELEASE
-#### git tag: 4.0.2.5-RELEASE
+#### Release Version: 4.0.2.6-SNAPSHOT
+#### git tag: 
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Maintenance release of Jargon to support REST and WebDav.  This release consists mostly of many small tweaks, fixes, and additional tests accumulated since the last Jargon release, and represents 'house cleaning' before rolling in SSL transport security.
+Code fix and performance tweaks, certification with iRODS 4.1.9
 
-https://github.com/DICE-UNC/jargon/milestones/mx%20for%20rest/webdav%20-%204.0.2.5
-
+https://github.com/DICE-UNC/jargon/milestones/iRODS%204.1.9%20support
 =======
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
@@ -40,21 +39,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-###  move versus rename semantics, collection already exists on rename collection #161 
+###   metadata query on replicated data object repeats metadata #178 
 
-Further refinement to the move operations in DataTransferOperationsImpl surfaced through testing for WebDav integration.  Also added several new unit tests.
-
-### fix exception expectations in unit tests for RENCI CI
+Additional tests, remove non-distinct extra information from list AVU queries, causing duplicate data on replicated data objects
 
 
-###  pull ibiblio repo #163 
-
-Remove ibiblio repo from maven, causing corruption of local repositories
-
-
-### Misc
-
-Numerous small fixes and additional tests 
 
 
 

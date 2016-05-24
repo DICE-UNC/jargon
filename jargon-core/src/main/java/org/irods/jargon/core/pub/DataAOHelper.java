@@ -9,7 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.irods.jargon.core.checksum.AbstractChecksumComputeStrategy;
@@ -84,7 +83,7 @@ public final class DataAOHelper extends AOHelper {
 		this.irodsAccount = irodsAccount;
 
 		this.irodsAccessObjectFactory.getJargonProperties()
-		.getSendInputStreamBufferSize();
+				.getSendInputStreamBufferSize();
 		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
 				.getPutBufferSize();
 		checksumManager = new ChecksumManagerImpl(irodsAccount,
@@ -110,32 +109,32 @@ public final class DataAOHelper extends AOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_DATA_REPL_NUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_TYPE_NAME)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_D_REPL_STATUS)
-									.addSelectAsGenQueryValue(
-											RodsGenQueryEnum.COL_D_DATA_STATUS)
-											.addSelectAsGenQueryValue(
-													RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
-													.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
-													.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
-													.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
-													.addSelectAsGenQueryValue(
-															RodsGenQueryEnum.COL_D_CREATE_TIME)
-															.addSelectAsGenQueryValue(
-																	RodsGenQueryEnum.COL_D_MODIFY_TIME);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_REPL_STATUS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_DATA_STATUS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_CREATE_TIME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_MODIFY_TIME);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -194,7 +193,7 @@ public final class DataAOHelper extends AOHelper {
 
 	public static List<DataObject> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
-					throws JargonException {
+			throws JargonException {
 
 		final List<DataObject> data = new ArrayList<DataObject>();
 
@@ -213,7 +212,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsQueryResultSet == null) {
 			throw new JargonException("null irodsQueryResultSet");
@@ -223,8 +222,8 @@ public final class DataAOHelper extends AOHelper {
 
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
 			metaDataResults
-			.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(
-					row, irodsQueryResultSet.getTotalRecords()));
+					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(
+							row, irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -239,7 +238,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
 			final IRODSQueryResultRow row, final int totalRecordCount)
-					throws JargonException {
+			throws JargonException {
 
 		String domainId = row.getColumn(0);
 		StringBuilder sb = new StringBuilder();
@@ -247,19 +246,18 @@ public final class DataAOHelper extends AOHelper {
 		sb.append('/');
 		sb.append(row.getColumn(2));
 		String domainUniqueName = sb.toString();
-		long dataSize = row.getColumnAsLongOrZero(3);
-		Date createdAt = row.getColumnAsDateOrNull(4);
-		Date modifiedAt = row.getColumnAsDateOrNull(5);
+		// long dataSize = row.getColumnAsLongOrZero(3);
+		// Date createdAt = row.getColumnAsDateOrNull(4);
+		// Date modifiedAt = row.getColumnAsDateOrNull(5);
 
-		int attributeId = Integer.parseInt(row.getColumn(6));
-		String attributeName = row.getColumn(7);
-		String attributeValue = row.getColumn(8);
-		String attributeUnits = row.getColumn(9);
+		int attributeId = Integer.parseInt(row.getColumn(3));
+		String attributeName = row.getColumn(4);
+		String attributeValue = row.getColumn(5);
+		String attributeUnits = row.getColumn(6);
 
 		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, domainId, domainUniqueName, dataSize,
-				createdAt, modifiedAt, attributeId, attributeName,
-				attributeValue, attributeUnits);
+				MetadataDomain.DATA, domainId, domainUniqueName, 0, null, null,
+				attributeId, attributeName, attributeValue, attributeUnits);
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
@@ -285,7 +283,7 @@ public final class DataAOHelper extends AOHelper {
 			final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("normal file transfer started, get output stream for local destination file");
 
@@ -315,7 +313,7 @@ public final class DataAOHelper extends AOHelper {
 				localFileOutputStream = new BufferedOutputStream(
 						new FileOutputStream(localFileToHoldData),
 						irodsProtocol.getPipelineConfiguration()
-						.getLocalFileOutputStreamBufferSize());
+								.getLocalFileOutputStreamBufferSize());
 			}
 		} catch (FileNotFoundException e) {
 			log.error(
@@ -335,7 +333,7 @@ public final class DataAOHelper extends AOHelper {
 		 */
 		if (transferStatusCallbackListener != null
 				&& transferControlBlock.getTransferOptions()
-				.isIntraFileStatusCallbacks()) {
+						.isIntraFileStatusCallbacks()) {
 			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 					.instance(TransferType.GET, length, transferControlBlock,
 							transferStatusCallbackListener);
@@ -390,7 +388,7 @@ public final class DataAOHelper extends AOHelper {
 			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-					throws JargonException, FileNotFoundException {
+			throws JargonException, FileNotFoundException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
@@ -488,7 +486,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	ChecksumValue computeLocalFileChecksum(final File localFile,
 			final ChecksumEncodingEnum overrideChecksumEncoding)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("computeLocalFileChecksum()");
 
@@ -551,7 +549,7 @@ public final class DataAOHelper extends AOHelper {
 			final AbstractIRODSMidLevelProtocol irodsProtocol,
 			final TransferControlBlock transferControlBlock,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-					throws JargonException, FileNotFoundException {
+			throws JargonException, FileNotFoundException {
 
 		log.info("put read/write loop");
 
@@ -625,7 +623,7 @@ public final class DataAOHelper extends AOHelper {
 			if (lengthLeftToSend != 0) {
 				log.error("did not send all data");
 				irodsAccessObjectFactory.getIrodsSession()
-				.discardSessionForErrors(irodsAccount);
+						.discardSessionForErrors(irodsAccount);
 				throw new JargonException("did not send all data");
 			}
 
@@ -709,19 +707,19 @@ public final class DataAOHelper extends AOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-							.addConditionAsGenQueryField(
-									RodsGenQueryEnum.COL_COLL_NAME,
-									QueryConditionOperators.EQUAL,
-									irodsCollectionAbsolutePath)
-									.addConditionAsGenQueryField(
-											RodsGenQueryEnum.COL_DATA_NAME,
-											QueryConditionOperators.EQUAL, dataName);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							irodsCollectionAbsolutePath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.EQUAL, dataName);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -745,7 +743,7 @@ public final class DataAOHelper extends AOHelper {
 			final TransferOptions transferOptions, final int fd,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
-					throws JargonException {
+			throws JargonException {
 		log.info("processGetTransferViaRead()");
 
 		if (localFileToHoldData == null) {
@@ -785,7 +783,7 @@ public final class DataAOHelper extends AOHelper {
 				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper,
 						localFileToHoldData, irodsFileLength,
 						irodsAccessObjectFactory.getJargonProperties()
-						.getGetBufferSize());
+								.getGetBufferSize());
 
 			} else {
 
@@ -828,21 +826,21 @@ public final class DataAOHelper extends AOHelper {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
 					BuilderQueryUtils
-					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
 					BuilderQueryUtils
-					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue().trim());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
 					BuilderQueryUtils
-					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue().trim());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
@@ -873,15 +871,15 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addSelectAsGenQueryValue(
-				RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(
+						RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
@@ -916,10 +914,10 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME);
 
 	}
 
@@ -937,7 +935,7 @@ public final class DataAOHelper extends AOHelper {
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
 			final IRODSQueryResultRow row, final int totalRecords)
-					throws JargonException {
+			throws JargonException {
 
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));

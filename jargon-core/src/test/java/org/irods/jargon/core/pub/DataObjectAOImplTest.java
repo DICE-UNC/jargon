@@ -2262,6 +2262,128 @@ public class DataObjectAOImplTest {
 		Assert.assertFalse("no query result returned", result.isEmpty());
 	}
 
+	/**
+	 * Bug: metadata query on replicated data object repeats metadata #178
+	 * https://github.com/DICE-UNC/jargon/issues/178
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testFindMetadataValuesForDataObjectBug178()
+			throws Exception {
+		String testFileName = "testFindMetadataValuesForDataObjectBug178.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		// initialize the AVU data
+		String expectedAttribName = "testFindMetadataValuesForDataObjectBug178attrib1";
+		String expectedAttribValue = "testFindMetadataValuesForDataObjectBug178value1";
+		String expectedAttribUnits = "test1mdunits";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		// now replicate
+
+		dataObjectAO
+				.replicateIrodsDataObject(
+						dataObjectAbsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertEquals(1, result.size());
+	}
+
+	/**
+	 * Bug: metadata query on replicated data object repeats metadata #178
+	 * https://github.com/DICE-UNC/jargon/issues/178
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testFindMetadataValuesForDataObjectDemoRescBug178()
+			throws Exception {
+		String testFileName = "testFindMetadataValuesForDataObjectDemoRescBug178.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		// initialize the AVU data
+		String expectedAttribName = "testFindMetadataValuesForDataObjectDemoRescBug178attrib1";
+		String expectedAttribValue = "testFindMetadataValuesForDataObjectDemoRescBug178value1";
+		String expectedAttribUnits = "test1mdunits";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		// now replicate
+
+		dataObjectAO.replicateIrodsDataObject(dataObjectAbsPath, "demoResc");
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObject(targetIrodsCollection + "/"
+						+ testFileName);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertEquals(1, result.size());
+	}
+
 	@Test
 	public final void testListMetadataValuesForDataObject() throws Exception {
 		String testFileName = "testListMetadataValuesForDataObject.dat";
@@ -2313,6 +2435,138 @@ public class DataObjectAOImplTest {
 				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
 						targetIrodsCollection, testFileName);
 		Assert.assertFalse("no query result returned", result.isEmpty());
+	}
+
+	/**
+	 * Test for metadata query on replicated data object repeats metadata #178
+	 * https://github.com/DICE-UNC/jargon/issues/178
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testListMetadataValuesForReplicatedDataObjectBug178()
+			throws Exception {
+		String testFileName = "testListMetadataValuesForReplicatedDataObjectBug178.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		// initialize the AVU data
+		String expectedAttribName = "testListMetadataValuesForReplicatedDataObjectBug178";
+		String expectedAttribValue = "testListMetadataValuesForReplicatedDataObjectBug178";
+		String expectedAttribUnits = "";
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		// replicate
+		dataObjectAO
+				.replicateIrodsDataObject(
+						dataObjectAbsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
+						targetIrodsCollection, testFileName);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertEquals("should only be one avu result", 1, result.size());
+	}
+
+	@Test
+	public final void testListMetadataValuesForReplicatedDataObjectBug178ReplFirst()
+			throws Exception {
+		String testFileName = "testListMetadataValuesForReplicatedDataObjectBug178ReplFirst.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dto.putOperation(
+				localFileName,
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		DataObjectAO dataObjectAO = accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+
+		// initialize the AVU data
+		String expectedAttribName = "testListMetadataValuesForReplicatedDataObjectBug178ReplFirst";
+		String expectedAttribValue = "testListMetadataValuesForReplicatedDataObjectBug178ReplFirst";
+		String expectedAttribUnits = "";
+
+		// replicate
+		dataObjectAO
+				.replicateIrodsDataObject(
+						dataObjectAbsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
+		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
+
+		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+
+		queryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+
+		List<MetaDataAndDomainData> result = dataObjectAO
+				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
+						targetIrodsCollection, testFileName);
+		Assert.assertFalse("no query result returned", result.isEmpty());
+		Assert.assertEquals("should only be one avu result", 1, result.size());
 	}
 
 	@Test
