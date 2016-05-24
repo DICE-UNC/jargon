@@ -8,7 +8,8 @@ package org.irods.jargon.core.protovalues;
 public enum EncryptionAlgorithmEnum {
 
 	AES_256_CBC("AES-256-CBC", "AES/CBC/PKCS5Padding", "PBKDF2WithHmacSHA1",
-			256);
+			256), AES_256_CBCXXX("AES-256-CBC", "AES/CBC/NoPadding",
+			"PBKDF2WithHmacSHA1", 256);
 
 	private String textValue;
 	private String cypherKey;

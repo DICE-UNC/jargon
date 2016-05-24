@@ -1,4 +1,6 @@
-package org.irods.jargon.core.transfer;
+package org.irods.jargon.core.transfer.encrypt;
+
+import java.nio.charset.StandardCharsets;
 
 import junit.framework.Assert;
 
@@ -8,12 +10,11 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.IRODSFileSystem;
-import org.irods.jargon.core.utils.RandomUtils;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-public class AesCipherEncryptWrapperTest {
+public class AesCipherDecryptWrapperTest {
 
 	private static IRODSFileSystem irodsFileSystem = null;
 
@@ -33,33 +34,6 @@ public class AesCipherEncryptWrapperTest {
 	}
 
 	@Test
-	public void testEncryptAes() throws JargonException {
-		byte[] source = RandomUtils.generateRandomBytesOfLength(2048);
-		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
-				.getJargonProperties();
-		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
-		props.setEncryptionKeySize(128);
-		props.setEncryptionNumberHashRounds(65536);
-		props.setEncryptionSaltSize(8);
-		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
-				.instance(props);
-		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
-				true);
-		config.initKey(pipelineConfiguration);
-
-		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
-				pipelineConfiguration, config);
-
-		EncryptionBuffer actual = wrapper.encrypt(source);
-		Assert.assertNotNull(actual);
-		Assert.assertFalse("no encrypted data",
-				actual.getEncryptedData().length == 0);
-		Assert.assertFalse("no iv",
-				actual.getInitializationVector().length == 0);
-
-	}
-
-	@Test
 	public void testEncryptRoundTrip() throws JargonException {
 		String begin = "aj;kj;ljlkjfjkdjfiaewjafasdf";
 		byte[] source = begin.getBytes();
@@ -67,7 +41,8 @@ public class AesCipherEncryptWrapperTest {
 		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
-		props.setEncryptionKeySize(128);
+		props.setEncryptionKeySize(EncryptionAlgorithmEnum.AES_256_CBC
+				.getKeySize());
 		props.setEncryptionNumberHashRounds(65536);
 		props.setEncryptionSaltSize(8);
 		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
@@ -78,16 +53,17 @@ public class AesCipherEncryptWrapperTest {
 
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
-
+		wrapper.init();
 		EncryptionBuffer encrypted = wrapper.encrypt(source);
 
 		// now decrypt
 
-		AesCipherEncryptWrapper decryptWrapper = new AesCipherEncryptWrapper(
+		AesCipherDecryptWrapper decryptWrapper = new AesCipherDecryptWrapper(
 				pipelineConfiguration, config);
-		// byte[] decrypted = decryptWrapper.decrypt(encrypted);
-		// String result = new String(decrypted, StandardCharsets.UTF_8);
-		// Assert.assertEquals("didnt match encrypted data", source, result);
+
+		byte[] decrypted = decryptWrapper.decrypt(encrypted);
+		String result = new String(decrypted, StandardCharsets.UTF_8);
+		Assert.assertEquals("didnt match encrypted data", source, result);
 
 	}
 }

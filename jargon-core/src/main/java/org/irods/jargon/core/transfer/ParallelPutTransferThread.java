@@ -25,18 +25,11 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelPutTransferThread extends
-AbstractParallelTransferThread implements
-Callable<ParallelTransferResult> {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
-
-	/**
-	 * This 'wrapper' will be initialized in the constructor for this thread if
-	 * ssl negotiated encryption was indicated, and if present (
-	 * <code>null</code> otherwise) will be used to encrypt the data en route.
-	 */
-	private ParallelCipherWrapper parallelEncryptionCipherWrapper = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -96,9 +89,9 @@ Callable<ParallelTransferResult> {
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsLatency(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsBandwidth());
+							.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
@@ -141,7 +134,7 @@ Callable<ParallelTransferResult> {
 			log.info("setting up the encryption if so negotiated");
 			if (this.parallelPutFileTransferStrategy.doEncryption()) {
 				log.debug("am doing encryption, enable the cypher");
-				this.parallelEncryptionCipherWrapper = this.parallelPutFileTransferStrategy
+				this.parallelPutFileTransferStrategy
 						.initializeCypherForEncryption();
 				log.debug("cypher initialized");
 			}
@@ -229,7 +222,7 @@ Callable<ParallelTransferResult> {
 		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
 		// );
 		buffer = new byte[parallelPutFileTransferStrategy.getJargonProperties()
-		                  .getParallelCopyBufferSize()];
+				.getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -238,7 +231,7 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -276,11 +269,11 @@ Callable<ParallelTransferResult> {
 
 				if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 					parallelPutFileTransferStrategy.getRestartManager()
-					.updateOffsetForSegment(
-							parallelPutFileTransferStrategy
-							.getFileRestartInfo()
-							.identifierFromThisInfo(),
-							getThreadNumber(), offset);
+							.updateOffsetForSegment(
+									parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									getThreadNumber(), offset);
 				}
 
 				// How much to read/write
@@ -335,14 +328,14 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("read/write loop at top");
 
 				read = localRandomAccessFile.read(buffer, 0, (int) Math.min(
 						parallelPutFileTransferStrategy.getJargonProperties()
-						.getParallelCopyBufferSize(), transferLength));
+								.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
 
@@ -363,10 +356,10 @@ Callable<ParallelTransferResult> {
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-						.getConnectionProgressStatusListener()
-						.connectionProgressStatusCallback(
-								ConnectionProgressStatus
-								.instanceForSend(read));
+								.getConnectionProgressStatusListener()
+								.connectionProgressStatusCallback(
+										ConnectionProgressStatus
+												.instanceForSend(read));
 					}
 
 					log.debug("wrote data to the buffer");
@@ -383,12 +376,12 @@ Callable<ParallelTransferResult> {
 						log.debug("checking total written for this thread");
 						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
 							parallelPutFileTransferStrategy.getRestartManager()
-							.updateLengthForSegment(
-									parallelPutFileTransferStrategy
-									.getFileRestartInfo()
-									.identifierFromThisInfo(),
-									getThreadNumber(),
-									totalWrittenSinceLastRestartUpdate);
+									.updateLengthForSegment(
+											parallelPutFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 						}
@@ -416,12 +409,12 @@ Callable<ParallelTransferResult> {
 				log.debug("checking total written for this thread");
 				if (totalWrittenSinceLastRestartUpdate > 0) {
 					parallelPutFileTransferStrategy.getRestartManager()
-					.updateLengthForSegment(
-							parallelPutFileTransferStrategy
-							.getFileRestartInfo()
-							.identifierFromThisInfo(),
-							getThreadNumber(),
-							totalWrittenSinceLastRestartUpdate);
+							.updateLengthForSegment(
+									parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
 					log.debug("signal storage of new info");
 				}
 

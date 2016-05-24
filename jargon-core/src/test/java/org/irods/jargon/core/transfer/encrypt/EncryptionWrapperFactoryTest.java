@@ -1,4 +1,4 @@
-package org.irods.jargon.core.transfer;
+package org.irods.jargon.core.transfer.encrypt;
 
 import javax.crypto.Cipher;
 
@@ -9,6 +9,9 @@ import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.irods.jargon.core.transfer.encrypt.AesCipherEncryptWrapper;
+import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
+import org.irods.jargon.core.transfer.encrypt.ParallelCipherWrapper;
 import org.junit.Test;
 
 public class EncryptionWrapperFactoryTest {

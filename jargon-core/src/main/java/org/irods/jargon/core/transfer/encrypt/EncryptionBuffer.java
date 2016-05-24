@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.core.transfer;
+package org.irods.jargon.core.transfer.encrypt;
 
 /**
  * Carries an initialization vector and a set of bytes to encrypt or decrypt

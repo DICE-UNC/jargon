@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.core.transfer;
+package org.irods.jargon.core.transfer.encrypt;
 
 import javax.crypto.Cipher;
 
@@ -32,15 +32,13 @@ public class EncryptionWrapperFactory {
 	 *            {@link NegotiatedClientServerConfiguration}
 	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
 	 *         threads
-	 * @param mode
-	 *            <code>int</code> that indicates encrypt/decrypt using the
-	 *            constants in {@link Cipher}
+	 *
 	 * @throws ClientServerNegotiationException
 	 */
 	public static ParallelEncryptionCipherWrapper instanceEncrypt(
 			final PipelineConfiguration pipelineConfiguration,
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
-			int mode) throws ClientServerNegotiationException {
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+			throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");

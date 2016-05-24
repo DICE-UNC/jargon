@@ -2,8 +2,6 @@ package org.irods.jargon.core.transfer;
 
 import java.io.File;
 
-import javax.crypto.Cipher;
-
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
@@ -12,6 +10,8 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
+import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -357,7 +357,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * @return {@link ParallelCipherWrapper}
 	 * @throws ClientServerNegotiationException
 	 */
-	ParallelCipherWrapper initializeCypherForEncryption()
+	ParallelEncryptionCipherWrapper initializeCypherForEncryption()
 			throws ClientServerNegotiationException {
 		log.debug("initializeCypherForEncryption()");
 		if (!this.negotiatedClientServerConfiguration.isSslConnection()) {
@@ -366,8 +366,8 @@ public abstract class AbstractParallelFileTransferStrategy {
 					"attempt to encrypt a transfer when SSL not configured");
 		}
 
-		return EncryptionWrapperFactory.instance(pipelineConfiguration,
-				negotiatedClientServerConfiguration, Cipher.ENCRYPT_MODE);
+		return EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
 
 	}
 

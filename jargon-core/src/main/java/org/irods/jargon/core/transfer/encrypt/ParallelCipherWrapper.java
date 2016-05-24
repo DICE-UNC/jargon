@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.core.transfer;
+package org.irods.jargon.core.transfer.encrypt;
 
 import javax.crypto.Cipher;
 
@@ -24,6 +24,7 @@ abstract class ParallelCipherWrapper {
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 	private int mode;
+	private boolean initDone = false;
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -103,6 +104,14 @@ abstract class ParallelCipherWrapper {
 	 */
 	public void setMode(int mode) {
 		this.mode = mode;
+	}
+
+	protected boolean isInitDone() {
+		return initDone;
+	}
+
+	protected void setInitDone(boolean initDone) {
+		this.initDone = initDone;
 	}
 
 }
