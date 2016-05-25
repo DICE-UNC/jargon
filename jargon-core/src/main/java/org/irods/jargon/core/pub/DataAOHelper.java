@@ -827,21 +827,21 @@ public final class DataAOHelper extends AOHelper {
 					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue().trim());
+					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue().trim());
+					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
 					BuilderQueryUtils
 							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
-					queryElement.getValue().trim());
+					queryElement.getValue());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
