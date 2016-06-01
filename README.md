@@ -43,8 +43,9 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 Additional tests, remove non-distinct extra information from list AVU queries, causing duplicate data on replicated data objects
 
+###  Remove trim() from values in AVU queries #180 
 
-
+Merged pull request from CyVerse to not trim() AVU queries
 
 
 
