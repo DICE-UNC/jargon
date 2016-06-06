@@ -74,7 +74,7 @@ public class AVUQueryElement {
 
 		this.avuQueryPart = avuQueryPart;
 		this.operator = operator;
-		this.value = value.trim();
+		this.value = value;
 		this.valueEndOfRange = valueEndOfRange;
 		this.valuesTable = null;
 
