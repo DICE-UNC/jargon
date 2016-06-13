@@ -1,8 +1,8 @@
 
 # Project: Jargon-core API
-#### Date: 04/05/2016
-#### Release Version: 4.0.2.6-SNAPSHOT
-#### git tag: 
+#### Date: 06/07/2016
+#### Release Version: 4.0.2.6-RC1
+#### git tag: 4.0.2.6-RC1 
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -47,5 +47,7 @@ Additional tests, remove non-distinct extra information from list AVU queries, c
 
 Merged pull request from CyVerse to not trim() AVU queries
 
+### Misc
 
+Numerous small changes and additional test for 4.1.9
 
