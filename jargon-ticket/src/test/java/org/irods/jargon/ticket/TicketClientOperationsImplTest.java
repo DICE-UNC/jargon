@@ -130,7 +130,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -203,7 +203,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -247,12 +247,6 @@ public class TicketClientOperationsImplTest {
 
 	}
 
-	/**
-	 * Put a file to irods, then put to it as a secondary user with a ticket
-	 * using overwrite, giving that existing file name, and using a force option
-	 * 
-	 * @throws Exception
-	 */
 	@Test
 	public final void testUploadFileToIRODSUsingAnonymous() throws Exception {
 
@@ -285,7 +279,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
@@ -308,12 +302,16 @@ public class TicketClientOperationsImplTest {
 		TicketClientSupport ticketClientSupport = new TicketClientSupport(
 				accessObjectFactory, irodsAccount);
 		ticketClientSupport.initializeSessionWithTicket(ticketString);
+		IRODSFile dataFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetFile.getAbsolutePath(),
+				testFileName);
+		dataFile.createNewFile();
 
 		Stream2StreamAO stream2Stream = accessObjectFactory
 				.getStream2StreamAO(irodsAccount);
 		stream2Stream.transferStreamToFileUsingIOStreams(
 				new BufferedInputStream(new FileInputStream(localFile)),
-				(File) targetFile, length, 8096);
+				(File) dataFile, length, 8096);
 
 		IRODSFile actualFile = irodsFileSystem.getIRODSFileFactory(
 				referenceAccount).instanceIRODSFile(
@@ -349,7 +347,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			throw new CatNoAccessException("expected");
 		}
 
@@ -409,7 +407,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -486,7 +484,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
@@ -562,7 +560,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -629,6 +627,17 @@ public class TicketClientOperationsImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			return;
+		}
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
@@ -718,6 +727,17 @@ public class TicketClientOperationsImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			return;
+		}
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
@@ -812,7 +832,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -912,7 +932,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -992,6 +1012,17 @@ public class TicketClientOperationsImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			throw new JargonException("thrown for expectations");
+		}
+
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -1060,6 +1091,17 @@ public class TicketClientOperationsImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			throw new JargonException("thrown for expectations");
+		}
+
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -1125,7 +1167,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1210,7 +1252,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1295,7 +1337,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			return;
 		}
 
@@ -1371,6 +1413,17 @@ public class TicketClientOperationsImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			throw new JargonException("thrown for expectations");
+		}
+
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile destFile = irodsFileFactory
@@ -1428,6 +1481,17 @@ public class TicketClientOperationsImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO
+				.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isConsortiumVersion()) {
+			throw new JargonException("thrown for expectations");
+		}
 
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount);
@@ -1504,7 +1568,7 @@ public class TicketClientOperationsImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (!props.isConsortiumVersion()) {
 			throw new OverwriteException("thrown for expectations");
 		}
 
