@@ -45,7 +45,6 @@ import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -3769,10 +3768,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		try {
 			queryElements.add(AVUQueryElement.instanceForValueQuery(
 					AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+					QueryConditionOperators.EQUAL, avuData.getAttribute()));
 			queryElements.add(AVUQueryElement.instanceForValueQuery(
 					AVUQueryElement.AVUQueryPart.UNITS,
-					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+					QueryConditionOperators.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesForDataObjectUsingAVUQuery(
 					queryElements, absolutePath);
 		} catch (JargonQueryException e) {

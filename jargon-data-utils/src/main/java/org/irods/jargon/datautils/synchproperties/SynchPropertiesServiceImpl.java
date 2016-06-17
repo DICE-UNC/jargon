@@ -15,9 +15,9 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.datautils.AbstractDataUtilsServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
-implements SynchPropertiesService {
+		implements SynchPropertiesService {
 
 	/*
 	 * AVU conventions attrib | value | unit
-	 *
+	 * 
 	 * in synch root dir
-	 *
+	 * 
 	 * [user name]:[device] | [lastLocalSynch | lastIrodsSynch | localAbsPath] |
 	 * iRODSSynch:userSynchDir
 	 */
@@ -73,7 +73,7 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropetiesService#
 	 * getUserSynchTargetForUserAndAbsolutePath(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -117,10 +117,10 @@ implements SynchPropertiesService {
 		try {
 			AVUQueryElement avuQueryElement = AVUQueryElement
 					.instanceForValueQuery(AVUQueryPart.UNITS,
-							AVUQueryOperatorEnum.EQUAL, USER_SYNCH_DIR_TAG);
+							QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
 			avuQuery.add(avuQueryElement);
 			avuQueryElement = AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 					userDevAttrib);
 			avuQuery.add(avuQueryElement);
 			queryResults = collectionAO
@@ -155,7 +155,7 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getUserSynchTargets(java.lang.String)
 	 */
@@ -182,13 +182,13 @@ implements SynchPropertiesService {
 		try {
 			AVUQueryElement avuQueryElement = AVUQueryElement
 					.instanceForValueQuery(AVUQueryPart.UNITS,
-							AVUQueryOperatorEnum.EQUAL, USER_SYNCH_DIR_TAG);
+							QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
 			avuQuery.add(avuQueryElement);
 			StringBuilder sb = new StringBuilder();
 			sb.append(userName);
 			sb.append(":%");
 			avuQueryElement = AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.LIKE,
+					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.LIKE,
 					sb.toString());
 			avuQuery.add(avuQueryElement);
 			queryResults = collectionAO
@@ -205,7 +205,7 @@ implements SynchPropertiesService {
 
 		for (MetaDataAndDomainData metadata : queryResults) {
 			userSynchTargets
-			.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
+					.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
 		}
 
 		return userSynchTargets;
@@ -224,7 +224,7 @@ implements SynchPropertiesService {
 	 */
 	private UserSynchTarget buildUserSynchTargetFromMetaDataAndDomainData(
 			final MetaDataAndDomainData metaDataAndDomainData)
-					throws JargonException {
+			throws JargonException {
 		String[] valueComponents = metaDataAndDomainData.getAvuValue().split(
 				"[~]");
 		if (valueComponents.length != 3) {
@@ -281,7 +281,7 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * updateTimestampsToCurrent(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -289,7 +289,7 @@ implements SynchPropertiesService {
 	@Override
 	public void updateTimestampsToCurrent(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -346,7 +346,7 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * addSynchDeviceForUserAndIrodsAbsolutePath(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -355,7 +355,7 @@ implements SynchPropertiesService {
 	public void addSynchDeviceForUserAndIrodsAbsolutePath(
 			final String userName, final String deviceName,
 			final String irodsAbsolutePath, final String localAbsolutePath)
-					throws DuplicateDataException, JargonException {
+			throws DuplicateDataException, JargonException {
 
 		checkDependencies();
 
@@ -427,7 +427,7 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * getSynchTimestamps()
 	 */
@@ -446,14 +446,14 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * synchDeviceExists(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
 	public boolean synchDeviceExists(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-					throws JargonException {
+			throws JargonException {
 		String attribute = buildAvuAttribForSynchUtilTarget(userName,
 				deviceName);
 
@@ -463,7 +463,7 @@ implements SynchPropertiesService {
 		try {
 			List<AVUQueryElement> avuQueryElement = new ArrayList<AVUQueryElement>();
 			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 					attribute));
 
 			List<MetaDataAndDomainData> metaDataAndDomainDataList = collectionAO
@@ -480,14 +480,14 @@ implements SynchPropertiesService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.synchproperties.SynchPropertiesService#
 	 * removeSynchDevice(java.lang.String)
 	 */
 	@Override
 	public void removeSynchDevice(final String userName,
 			final String deviceName, final String irodsAbsolutePath)
-					throws JargonException {
+			throws JargonException {
 
 		String attribute = buildAvuAttribForSynchUtilTarget(userName,
 				deviceName);
@@ -498,7 +498,7 @@ implements SynchPropertiesService {
 		try {
 			List<AVUQueryElement> avuQueryElement = new ArrayList<AVUQueryElement>();
 			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 					attribute));
 
 			List<MetaDataAndDomainData> metaDataAndDomainDataList = collectionAO

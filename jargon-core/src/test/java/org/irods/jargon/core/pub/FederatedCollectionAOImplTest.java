@@ -11,8 +11,8 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -44,7 +44,7 @@ public class FederatedCollectionAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -86,13 +86,13 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		// log in as the federated user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -134,27 +134,27 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		String concatenatedUserName = testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 				+ "#"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
 
 		UserFilePermission userFilePermission = collectionAO
 				.getPermissionForUserName(targetIrodsCollection,
@@ -168,7 +168,7 @@ public class FederatedCollectionAOImplTest {
 				"did not get user zone",
 				String.valueOf(testingProperties
 						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
-						userFilePermission.getUserZone());
+				userFilePermission.getUserZone());
 	}
 
 	/**
@@ -202,21 +202,21 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
@@ -234,13 +234,13 @@ public class FederatedCollectionAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-							&& userFilePermission
+					&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -281,21 +281,21 @@ public class FederatedCollectionAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		List<UserFilePermission> userFilePermissions = collectionAO
 				.listPermissionsForCollection(targetIrodsCollection);
@@ -311,13 +311,13 @@ public class FederatedCollectionAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-							&& userFilePermission
+					&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -378,7 +378,7 @@ public class FederatedCollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,

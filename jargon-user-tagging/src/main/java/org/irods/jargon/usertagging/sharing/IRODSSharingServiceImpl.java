@@ -23,11 +23,11 @@ import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
@@ -515,7 +515,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					UserTaggingConstants.SHARE_AVU_UNIT));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);

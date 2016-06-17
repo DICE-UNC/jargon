@@ -26,7 +26,7 @@ public class AVUQueryElement {
 	}
 
 	private AVUQueryPart avuQueryPart;
-	private AVUQueryOperatorEnum operator;
+	private QueryConditionOperators operator;
 	private String value;
 	private String valueEndOfRange;
 	private List<Object> valuesTable;
@@ -50,13 +50,13 @@ public class AVUQueryElement {
 	 */
 	public static AVUQueryElement instanceForValueQuery(
 			final AVUQueryPart avuQueryPart,
-			final AVUQueryOperatorEnum operator, final String value)
+			final QueryConditionOperators operator, final String value)
 			throws JargonQueryException {
 		return new AVUQueryElement(avuQueryPart, operator, value, null, null);
 	}
 
 	public AVUQueryElement(final AVUQueryPart avuQueryPart,
-			final AVUQueryOperatorEnum operator, final String value,
+			final QueryConditionOperators operator, final String value,
 			final String valueEndOfRange, final List<Object> valuesTable)
 			throws JargonQueryException {
 
@@ -126,7 +126,7 @@ public class AVUQueryElement {
 		return avuQueryPart;
 	}
 
-	public AVUQueryOperatorEnum getOperator() {
+	public QueryConditionOperators getOperator() {
 		return operator;
 	}
 

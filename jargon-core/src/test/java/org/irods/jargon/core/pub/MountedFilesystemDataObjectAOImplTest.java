@@ -15,7 +15,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -44,11 +44,11 @@ public class MountedFilesystemDataObjectAOImplTest {
 
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -104,7 +104,7 @@ public class MountedFilesystemDataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -173,7 +173,7 @@ public class MountedFilesystemDataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -191,11 +191,11 @@ public class MountedFilesystemDataObjectAOImplTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		dataObjectAO
-		.setAccessPermissionWrite(
-				"",
-				targetIrodsFile,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+				.setAccessPermissionWrite(
+						"",
+						targetIrodsFile,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -248,7 +248,7 @@ public class MountedFilesystemDataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -272,7 +272,7 @@ public class MountedFilesystemDataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO

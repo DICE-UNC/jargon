@@ -33,9 +33,9 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.remoteexecute.RemoteExecuteServiceImpl;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.TransferControlBlock;
@@ -131,11 +131,11 @@ public class DataObjectAOImplTest {
 
 		AVUQueryElement elem1 = AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName);
+				QueryConditionOperators.EQUAL, expectedAttribName);
 
 		AVUQueryElement elem2 = AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue);
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue);
 
 		List<DataObject> result = dataObjectAO.findDomainByMetadataQuery(Arrays
 				.asList(elem1, elem2));
@@ -2432,7 +2432,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
@@ -2499,7 +2499,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
@@ -2563,7 +2563,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesForDataObjectUsingAVUQuery(queryElements,
@@ -2617,7 +2617,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesForDataObject(targetIrodsFile);
@@ -2668,7 +2668,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -2743,7 +2743,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = dataObjectAO
 				.findMetadataValuesByMetadataQuery(queryElements, 0, true);
@@ -2795,7 +2795,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<DataObject> result = dataObjectAO
 				.findDomainByMetadataQuery(queryElements);
@@ -2857,7 +2857,7 @@ public class DataObjectAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<DataObject> result = dataObjectAO.findDomainByMetadataQuery(
 				queryElements, 0, true);
@@ -3491,7 +3491,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -3544,7 +3544,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -3592,7 +3592,7 @@ public class DataObjectAOImplTest {
 		}
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -3644,7 +3644,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -3693,7 +3693,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
@@ -3743,7 +3743,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -5573,9 +5573,9 @@ public class DataObjectAOImplTest {
 
 		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
-				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
+				QueryConditionOperators.LIKE, expectedAttribValue + "%"));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
 		Assert.assertNotNull("null files returned", files);
@@ -6361,7 +6361,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -6418,7 +6418,7 @@ public class DataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO

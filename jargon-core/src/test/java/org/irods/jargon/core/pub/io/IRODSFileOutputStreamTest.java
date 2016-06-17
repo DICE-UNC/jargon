@@ -26,7 +26,7 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -54,7 +54,7 @@ public class IRODSFileOutputStreamTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -559,7 +559,7 @@ public class IRODSFileOutputStreamTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -687,8 +687,8 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		irodsFile
-		.setResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+				.setResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStreamWithRerouting(irodsFile);
@@ -769,7 +769,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -822,7 +822,7 @@ public class IRODSFileOutputStreamTest {
 		for (int i = 0; i < numberWrites; i++) {
 			outputStreamWriter = new OutputStreamWriteTestWriter(absPath,
 					targetIrodsCollection + "/" + testFileNamePrefix + i
-					+ testFileNameSuffix,
+							+ testFileNameSuffix,
 					irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 			writerThreads.add(outputStreamWriter);
 		}
@@ -863,7 +863,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory

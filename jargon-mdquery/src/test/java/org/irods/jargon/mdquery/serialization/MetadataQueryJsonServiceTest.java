@@ -5,7 +5,7 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.mdquery.MetadataQuery;
 import org.irods.jargon.mdquery.MetadataQueryElement;
@@ -22,13 +22,13 @@ public class MetadataQueryJsonServiceTest {
 
 		MetadataQueryElement metadataElement = new MetadataQueryElement();
 		metadataElement.setAttributeName("name1");
-		metadataElement.setOperator(AVUQueryOperatorEnum.EQUAL);
+		metadataElement.setOperator(QueryConditionOperators.EQUAL);
 		metadataElement.setAttributeValue(values);
 		metadataQuery.getMetadataQueryElements().add(metadataElement);
 
 		metadataElement = new MetadataQueryElement();
 		metadataElement.setAttributeName("name2");
-		metadataElement.setOperator(AVUQueryOperatorEnum.EQUAL);
+		metadataElement.setOperator(QueryConditionOperators.EQUAL);
 		metadataElement.setAttributeValue(values);
 		metadataQuery.getMetadataQueryElements().add(metadataElement);
 

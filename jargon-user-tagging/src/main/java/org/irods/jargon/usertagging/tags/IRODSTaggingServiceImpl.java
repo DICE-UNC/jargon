@@ -18,10 +18,10 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.slf4j.Logger;
@@ -460,10 +460,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					UserTaggingConstants.TAG_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.VALUE, QueryConditionOperators.EQUAL,
 					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
@@ -522,10 +522,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.VALUE, QueryConditionOperators.EQUAL,
 					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
@@ -584,10 +584,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.VALUE, QueryConditionOperators.EQUAL,
 					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
@@ -745,10 +745,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					UserTaggingConstants.TAG_AVU_UNIT));
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.VALUE, QueryConditionOperators.EQUAL,
 					getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);

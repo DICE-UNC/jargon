@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.QueryConditionOperators;
 
 /**
  * Simple POJO for an element of a query, suitable for serialization
@@ -26,7 +26,7 @@ public class MetadataQueryElement {
 	/**
 	 * Operator for the query
 	 */
-	private AVUQueryOperatorEnum operator = AVUQueryOperatorEnum.EQUAL;
+	private QueryConditionOperators operator = QueryConditionOperators.EQUAL;
 	/**
 	 * Value for the query, which may be an array of one for a normal query, or
 	 * two for between, or many for an 'in' query
@@ -51,7 +51,8 @@ public class MetadataQueryElement {
 		}
 		if (attributeValue != null) {
 			builder.append("value=")
-					.append(attributeValue.subList(0, Math.min(attributeValue.size(), maxLen)))
+					.append(attributeValue.subList(0,
+							Math.min(attributeValue.size(), maxLen)))
 					.append(", ");
 		}
 		if (connector != null) {
@@ -84,11 +85,11 @@ public class MetadataQueryElement {
 		this.attributeName = attributeName;
 	}
 
-	public AVUQueryOperatorEnum getOperator() {
+	public QueryConditionOperators getOperator() {
 		return operator;
 	}
 
-	public void setOperator(AVUQueryOperatorEnum operator) {
+	public void setOperator(QueryConditionOperators operator) {
 		this.operator = operator;
 	}
 

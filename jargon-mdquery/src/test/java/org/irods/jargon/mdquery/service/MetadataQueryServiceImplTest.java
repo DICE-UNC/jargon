@@ -18,9 +18,9 @@ import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.PagingAwareCollectionListing;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.mdquery.MetadataQuery;
 import org.irods.jargon.mdquery.MetadataQuery.QueryType;
 import org.irods.jargon.mdquery.MetadataQueryElement;
@@ -95,7 +95,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -179,7 +179,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -284,7 +284,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -297,7 +297,7 @@ public class MetadataQueryServiceImplTest {
 
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName2);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
 			{
@@ -310,7 +310,7 @@ public class MetadataQueryServiceImplTest {
 
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName3);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
 			{
@@ -414,7 +414,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -427,7 +427,7 @@ public class MetadataQueryServiceImplTest {
 
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName2);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals2 = new ArrayList<String>() {
 			{
@@ -440,7 +440,7 @@ public class MetadataQueryServiceImplTest {
 
 		element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName3);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals3 = new ArrayList<String>() {
 			{
@@ -535,7 +535,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -608,7 +608,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -691,9 +691,9 @@ public class MetadataQueryServiceImplTest {
 
 		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
-				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
+				QueryConditionOperators.LIKE, expectedAttribValue + "%"));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
 		Assert.assertNotNull("null files returned", files);
@@ -705,7 +705,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -827,9 +827,9 @@ public class MetadataQueryServiceImplTest {
 
 		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
-				AVUQueryOperatorEnum.LIKE, expectedAttribValue + "%"));
+				QueryConditionOperators.LIKE, expectedAttribValue + "%"));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
 		Assert.assertNotNull("null files returned", files);
@@ -841,7 +841,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{
@@ -969,9 +969,9 @@ public class MetadataQueryServiceImplTest {
 
 		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribValue));
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
 		Assert.assertNotNull("null files returned", files);
@@ -983,7 +983,7 @@ public class MetadataQueryServiceImplTest {
 		MetadataQuery metadataQuery = new MetadataQuery();
 		MetadataQueryElement element = new MetadataQueryElement();
 		element.setAttributeName(expectedAttribName);
-		element.setOperator(AVUQueryOperatorEnum.EQUAL);
+		element.setOperator(QueryConditionOperators.EQUAL);
 		@SuppressWarnings("serial")
 		List<String> vals = new ArrayList<String>() {
 			{

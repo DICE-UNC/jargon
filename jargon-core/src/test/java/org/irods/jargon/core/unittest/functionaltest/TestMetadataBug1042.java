@@ -8,8 +8,8 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.junit.Test;
 
 /**
@@ -53,9 +53,9 @@ public class TestMetadataBug1042 {
 		/*
 		 * uncomment this if you want to add the avu data here or test this
 		 * function
-		 *
+		 * 
 		 * AvuData avuData = AvuData.instance(attribute, value, "");
-		 *
+		 * 
 		 * dataObjectAO.addAVUMetadata(fileName, avuData);
 		 */
 
@@ -66,7 +66,8 @@ public class TestMetadataBug1042 {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL, attribute));
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+				attribute));
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO
 				.findMetadataValuesByMetadataQuery(avuQueryElements);

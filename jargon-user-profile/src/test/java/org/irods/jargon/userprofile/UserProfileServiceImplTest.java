@@ -20,8 +20,8 @@ import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
@@ -295,7 +295,7 @@ public class UserProfileServiceImplTest {
 		List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 
 		query.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
-				AVUQueryOperatorEnum.EQUAL,
+				QueryConditionOperators.EQUAL,
 				UserProfileService.AVU_UNIT_NAMESPACE));
 
 		List<MetaDataAndDomainData> metadata = dataObjectAO

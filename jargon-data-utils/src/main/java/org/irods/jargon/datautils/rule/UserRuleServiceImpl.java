@@ -13,9 +13,9 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.rule.UserRuleDefinition.RuleAproposTo;
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class UserRuleServiceImpl extends AbstractJargonService implements
-UserRuleService {
+		UserRuleService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(UserRuleServiceImpl.class);
@@ -52,7 +52,7 @@ UserRuleService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.rule.UserRulesService#listUserRules()
 	 */
 	@Override
@@ -75,7 +75,7 @@ UserRuleService {
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding rule file:{}", metadataAndDomainData);
 				userRules
-				.add(transformMetadataValueToUserRule(metadataAndDomainData));
+						.add(transformMetadataValueToUserRule(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -89,8 +89,8 @@ UserRuleService {
 	public void addNewUserRuleInUserHomeDir(final String userFileName,
 			final String description, final String ruleName,
 			final RuleAproposTo aproposTo, final String ruleBody)
-					throws NoUserRuleSubdirException, DuplicateDataException,
-					JargonException {
+			throws NoUserRuleSubdirException, DuplicateDataException,
+			JargonException {
 		log.info("addNewUserRule()");
 
 		if (userFileName == null || userFileName.isEmpty()) {
@@ -140,7 +140,7 @@ UserRuleService {
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					USER_RULE_UNIT));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
