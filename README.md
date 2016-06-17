@@ -1,6 +1,7 @@
 
 
 # Project: Jargon-core API
+<<<<<<< HEAD
 
 ### Date:
 ### Release Version: 4.0.3.1-SNAPSHOT
@@ -10,6 +11,11 @@
 #### Date: 04/05/2016
 #### Release Version: 4.0.2.6-SNAPSHOT
 #### git tag: 
+=======
+#### Date: 06/07/2016
+#### Release Version: 4.0.2.6-RC1
+#### git tag: 4.0.2.6-RC1 
+>>>>>>> origin/master
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -55,9 +61,16 @@ Add file to string and vice versa in FileSamplerService of data utils.  This all
 ### Misc
 
 
+###  Remove trim() from values in AVU queries #180 
 
+Merged pull request from CyVerse to not trim() AVU queries
 
+### Misc
 
+<<<<<<< HEAD
 
+>>>>>>> origin/master
+=======
+Numerous small changes and additional test for 4.1.9
 >>>>>>> origin/master
 

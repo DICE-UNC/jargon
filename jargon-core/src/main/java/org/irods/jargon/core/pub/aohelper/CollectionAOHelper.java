@@ -232,12 +232,10 @@ public class CollectionAOHelper extends AOHelper {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
 					queryElement.getOperator(), queryElement.getValue().trim());
-
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
 					queryElement.getOperator(), queryElement.getValue().trim());
-
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
