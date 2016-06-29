@@ -4,6 +4,7 @@
 **/.springBeans
 **/testing.properties
 .project
+.idea
 .metadata
 .DS_Store
 Servers
