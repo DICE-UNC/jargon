@@ -65,7 +65,7 @@ rather, they will be managed automatically by the IRODSAccessObjectFactory when 
 ### IRODSFileSystem
 
 The various objects that manage connections are encapsulated in a simple short-cut object, the IRODSFileSystem.  Creating 
-an instancer of IRODSFileSystem will automatically create all of these objects, and provides convenient methods to get 
+an instance of IRODSFileSystem will automatically create all of these objects, and provides convenient methods to get 
 the various factories that produce Access Objects and Java i/o implementation classes that access iRODS services and data.  
 The IRODSFileSystem also has methods to shut down connections, access information about the configuration of the client
  and iRODS server environment, and other helpful methods.  Clients can typically create an IRODSFileSystem as a single, 
