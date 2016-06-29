@@ -153,5 +153,39 @@ be mostly 'fire and forget'.
 
 Java provides an i/o library that defines standard input streams and random file operations.  Jargon provides an implementation
 of Java i/o that communicates with an iRODS grid under the covers.  These implementations are in the Jargon [core.pub.io](https://github.com/DICE-UNC/jargon/tree/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io)
-package.  In this package are several key classes and interfaces that allow reading of data from iRODS.
+package.  In this package are several key classes and interfaces that allow reading of data from iRODS.  The various i/o packages are created using the IRODSFileFactory which is described [here](irodsfilefactory.md).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
