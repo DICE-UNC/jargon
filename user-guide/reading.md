@@ -155,9 +155,53 @@ Java provides an i/o library that defines standard input streams and random file
 of Java i/o that communicates with an iRODS grid under the covers.  These implementations are in the Jargon [core.pub.io](https://github.com/DICE-UNC/jargon/tree/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io)
 package.  In this package are several key classes and interfaces that allow reading of data from iRODS.  The various i/o packages are created using the IRODSFileFactory which is described [here](irodsfilefactory.md).
 
+The basic facility to stream files from iRODS is in the Jargon version of the standard java.io.FileInputStream.  This is the [IRODSFileInputStream](https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/IRODSFileInputStream.java)
+Once created by the IRODSFileFactory, this can be used in the same fashion as the standard java.io.FileInputStream.  This example is from the FileInputStream [unit test](https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/test/java/org/irods/jargon/core/pub/io/IRODSFileInputStreamTest.java)
+
+```
+IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(
+				targetIrodsCollection, testFileName);
+		IRODSFileInputStream fis = irodsFileFactory
+				.instanceIRODSFileInputStream(irodsFile);
+
+		ByteArrayOutputStream actualFileContents = new ByteArrayOutputStream();
+
+		int bytesRead = 0;
+		int readLength = 0;
+		byte[] readBytesBuffer = new byte[1024];
+		while ((readLength = (fis.read(readBytesBuffer))) > -1) {
+			actualFileContents.write(readBytesBuffer);
+			bytesRead += readLength;
+		}
 
 
+```
 
+All of the standard i/o contracts are honored by the i/o libraries, and standard buffering techniques and stream wrapping operations 
+are supported (i.e. wrapping a stream with a buffer or reader).  Use them just like the i/o libraries.  There are also
+several variants on the basic stream in the [core.io](https://github.com/DICE-UNC/jargon/tree/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io).  
+
+Here are a few highlights of that i/o library worth noting:
+
+* [IRODSFileReader](https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/IRODSFileReader.java) reads and does character 
+encoding 
+* [IRODSRandomAccessFile](https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/IRODSRandomAccessFile.java) for random i/o 
+operations
+* [PackingIrodsInputStream](https://github.com/DICE-UNC/jargon/blob/master/jargon-core/src/main/java/org/irods/jargon/core/pub/io/PackingIrodsInputStream.java) is an enhanced 
+IRODSFileInputStream that does read-ahead and write-behind buffering, and is highly recommended.  It's used in REST and WebDav and the Cloud Browser!  See the comment below
+on stream i/o performance
+
+### Stream i/o performance
+
+Standard 'put/get' transfer operations typically outperform streaming operations.  This is for many reasons, but in a nutshell the protocol for a transfer is 
+one message that says "here comes the data", and then the raw bytes are shoved down the pipe.  For streaming i/o, each individual read of a buffer is 
+a complete protocol request, and this ends up being much slower.  This is especially true when the buffer being 
+used for the read operation is small.  If, for example, a program attempts to read from a stream in 8K increments,
+the protocol overhead is amortized over a smaller amount of data'.  The PackingIrodsInputStream and output stream allow a
+program to read and write in smaller buffer sizes, but under the covers accumulate a much larger byte buffer before
+making a call to iRODS, this amortizes the protocol overhead over a much bigger payload.
 
 
 
