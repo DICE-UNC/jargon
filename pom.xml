@@ -5,7 +5,7 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>4.0.2.6-RC1</version>
+	<version>4.0.2.6-RELEASE</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>
