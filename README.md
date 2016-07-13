@@ -2,14 +2,15 @@
 # Project: Jargon-core API
 #### Date: 06/13/2016
 #### Release Version: 4.0.2.6-RELEASE
-#### git tag: 4.0.2.6-RELEASE
+#### git tag: 4.2.0.0-SNAPSHOT	
 #### Developer: Mike Conway - DICE
 
 ## News
 
-Code fix and performance tweaks, certification with iRODS 4.1.9
+TLS support and 4.2 compatability 
 
-https://github.com/DICE-UNC/jargon/milestones/iRODS%204.1.9%20support
+for milestone: https://github.com/DICE-UNC/jargon/milestone/11
+
 =======
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
@@ -29,7 +30,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.7+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.1.7 consortium
+* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.2.0 consortium
 
 ## Libraries
 
@@ -39,15 +40,4 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-###   metadata query on replicated data object repeats metadata #178 
-
-Additional tests, remove non-distinct extra information from list AVU queries, causing duplicate data on replicated data objects
-
-###  Remove trim() from values in AVU queries #180 
-
-Merged pull request from CyVerse to not trim() AVU queries
-
-### Misc
-
-Numerous small changes and additional test for 4.1.9
 
