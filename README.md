@@ -1,7 +1,7 @@
 
 # Project: Jargon-core API
 #### Date: 06/13/2016
-#### Release Version: 4.0.2.6-RELEASE
+#### Release Version:
 #### git tag: 4.2.0.0-SNAPSHOT	
 #### Developer: Mike Conway - DICE
 
