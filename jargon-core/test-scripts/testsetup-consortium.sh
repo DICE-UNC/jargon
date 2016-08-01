@@ -17,7 +17,7 @@ iadmin mkresc test1-resc "unix file system"  icat.example.org:/var/lib/irods/iRO
 
 iadmin mkresc test1-resc2 "unix file system" icat.example.org:/var/lib/irods/iRODS/Vault2
 
-iadmin mkresc test1-resc3 "unix file system"  172.25.14.208:/var/lib/irods/iRODS/Vault3
+iadmin mkresc test1-resc3 "unix file system"  icat.example.org:/var/lib/irods/iRODS/Vault3
 
 iadmin mkuser anonymous rodsuser
 
