@@ -45,7 +45,7 @@ public class ResourceAOTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -133,7 +133,11 @@ public class ResourceAOTest {
 
 		fileNameAndPath.append(testFileName);
 
-		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection, "",
+		dto.putOperation(
+				fileNameAndPath.toString(),
+				targetIrodsCollection,
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -661,15 +665,15 @@ public class ResourceAOTest {
 		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+
 		try {
 			resourceAO.removeChildFromResource(rescName, childName);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 		try {
 			resourceAO.deleteResource(rescName);
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 
 		Resource resource = new Resource();
@@ -685,7 +689,8 @@ public class ResourceAOTest {
 
 	}
 
-	@Test
+	@Ignore
+	// see https://github.com/DICE-UNC/jargon/issues/191
 	public final void testAddTwoChildToParentAndThenListAll() throws Exception {
 
 		String rescName = "testAddTwoChildToParentAndThenListAll";

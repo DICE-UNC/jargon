@@ -60,7 +60,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#addResource(org.irods.jargon.core
 	 * .pub.domain.Resource)
@@ -84,23 +84,23 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		/*
 		 * arg0 mkresc
-		 *
+		 * 
 		 * generalAdminInp->arg1, "resource"
-		 *
+		 * 
 		 * std::string resc_name( _generalAdminInp->arg2 );
-		 *
+		 * 
 		 * std::string resc_type( _generalAdminInp->arg3 );
-		 *
+		 * 
 		 * std::string resc_host_path(_generalAdminInp->arg4 );
-		 *
+		 * 
 		 * for host path can be blank, otherwise in / separate the
 		 * location:/vault/path pair
-		 *
+		 * 
 		 * std::string resc_ctx(_generalAdminInp->arg5 );
-		 *
-		 *
+		 * 
+		 * 
 		 * examples
-		 *
+		 * 
 		 * "iadmin mkresc rrResc random",
 		 */
 
@@ -108,12 +108,14 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForAddResource(resource);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
+		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+
 		log.info("complete");
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
 	 */
@@ -132,13 +134,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		} catch (DataNotFoundException e) {
 			log.warn("data not found deleting resource, silently ignore", e);
 		}
+		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+
 		log.info("complete");
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#addChildToResource(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -180,13 +184,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				throw e;
 			}
 		}
+		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+
 		log.info("complete");
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#removeChildFromResource(java.lang
 	 * .String, java.lang.String)
@@ -214,13 +220,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForRemoveChildFromResource(child, parent);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
+		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+
 		log.info("complete");
 
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#findByName(java.lang.String)
 	 */
 	@Override
@@ -290,12 +298,12 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#findById(java.lang.String)
 	 */
 	@Override
 	public Resource findById(final String resourceId) throws JargonException,
-	DataNotFoundException {
+			DataNotFoundException {
 
 		log.info("findById()");
 		if (resourceId == null || resourceId.isEmpty()) {
@@ -358,7 +366,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#findAll()
 	 */
 	@Override
@@ -405,7 +413,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#getFirstResourceForIRODSFile(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
@@ -489,7 +497,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceAO#listResourceNames()
 	 */
 	@Override
@@ -501,8 +509,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-			.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
-					OrderByType.ASC);
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
+							OrderByType.ASC);
 
 			if (getIRODSServerProperties().isConsortiumVersion()) {
 				builder.addConditionAsGenQueryField(
@@ -538,7 +546,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.UserAO#listUserMetadata(java.lang.String)
 	 */
 	@Override
@@ -556,11 +564,11 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS)
-									.addConditionAsGenQueryField(
-											RodsGenQueryEnum.COL_R_RESC_NAME,
-											QueryConditionOperators.EQUAL, resourceName);
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_R_RESC_NAME,
+							QueryConditionOperators.EQUAL, resourceName);
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -593,13 +601,13 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 */
 	public List<Resource> findDomainByMetadataQuery(
 			final List<AVUQueryElement> avuQueryElements)
-					throws JargonQueryException, JargonException {
+			throws JargonQueryException, JargonException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#findMetadataValuesByMetadataQuery
 	 * (java.util.List)
@@ -620,15 +628,15 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_ID)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS)
-									.addSelectAsGenQueryValue(
-											RodsGenQueryEnum.COL_META_RESC_ATTR_ID);
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_META_RESC_ATTR_ID);
 
 			for (AVUQueryElement queryElement : avuQuery) {
 				buildConditionPart(queryElement, builder);
@@ -657,7 +665,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	private List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(
 			final MetadataDomain metaDataDomain,
 			final IRODSQueryResultSetInterface irodsQueryResultSet)
-					throws JargonException {
+			throws JargonException {
 		if (metaDataDomain == null) {
 			throw new JargonException("null metaDataDomain");
 		}
@@ -669,9 +677,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
 			metaDataResults
-			.add(buildMetaDataAndDomainDataFromResultSetRow(
-					metaDataDomain, row,
-					irodsQueryResultSet.getTotalRecords()));
+					.add(buildMetaDataAndDomainDataFromResultSetRow(
+							metaDataDomain, row,
+							irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -680,7 +688,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	private MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
 			final MetaDataAndDomainData.MetadataDomain metadataDomain,
 			final IRODSQueryResultRow row, final int totalRecordCount)
-					throws JargonException {
+			throws JargonException {
 
 		String domainId = row.getColumn(0);
 		String domainUniqueName = row.getColumn(1);
@@ -709,26 +717,26 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
 					QueryConditionOperators
-					.getOperatorFromStringValue(queryElement
-							.getOperator().getOperatorValue()),
-							queryElement.getValue());
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+					queryElement.getValue());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE,
 					QueryConditionOperators
-					.getOperatorFromStringValue(queryElement
-							.getOperator().getOperatorValue()),
-							queryElement.getValue());
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS,
 					QueryConditionOperators
-					.getOperatorFromStringValue(queryElement
-							.getOperator().getOperatorValue()),
-							queryElement.getValue());
+							.getOperatorFromStringValue(queryElement
+									.getOperator().getOperatorValue()),
+					queryElement.getValue());
 
 		}
 
@@ -736,7 +744,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#addAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
@@ -786,7 +794,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#deleteAVUMetadata(java.lang.String,
 	 * org.irods.jargon.core.pub.domain.AvuData)
