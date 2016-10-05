@@ -1012,4 +1012,104 @@ public class MetadataQueryServiceImplTest {
 
 	}
 
+	/**
+	 * Test for issue with query metadata tags size > 0 #187 (this passes)
+	 * https://github.com/DICE-UNC/irods-cloud-browser/issues/187
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testNoResultQueryGreaterZeroBug187() throws Exception {
+		String testDirName = "testSimpleAvuQueryBothWithNoPathHint";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testDirName);
+		String testFilePrefix = "testNoResultQueryGreaterZeroBug187-";
+		String testFileSuffix = ".txt";
+		int count = 3;
+
+		// initialize the AVU data
+		final String expectedAttribName = "Size";
+		final String expectedAttribValue = "10";
+		final String expectedAttribUnits = "";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		testFile.deleteWithForceOption();
+		testFile.mkdirs();
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedAttribValue, expectedAttribUnits);
+
+		collectionAO.deleteAVUMetadata(targetIrodsCollection, avuData);
+		collectionAO.addAVUMetadata(targetIrodsCollection, avuData);
+
+		IRODSFile testSubdir = irodsFileSystem
+				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
+						targetIrodsCollection);
+
+		DataObjectAO dAO = accessObjectFactory.getDataObjectAO(irodsAccount);
+		DataTransferOperations dto = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String sourceFileAbsolutePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath,
+						"testFileForAVU.txt", 1);
+		File sourceFile = new File(sourceFileAbsolutePath);
+
+		IRODSFile dataFile = null;
+		StringBuilder sb = null;
+		for (int i = 0; i < count; i++) {
+			sb = new StringBuilder();
+			sb.append(testFilePrefix);
+			sb.append(i);
+			sb.append(testFileSuffix);
+			dataFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(testSubdir.getAbsolutePath(),
+							sb.toString());
+			dto.putOperation(sourceFile, dataFile, null, null);
+			avuData = AvuData.instance(expectedAttribName, expectedAttribValue,
+					"");
+			dAO.addAVUMetadata(dataFile.getAbsolutePath(), avuData);
+
+		}
+
+		MetadataQueryService metadataQueryService = new MetadataQueryServiceImpl(
+				accessObjectFactory, irodsAccount);
+
+		MetadataQuery metadataQuery = new MetadataQuery();
+		MetadataQueryElement element = new MetadataQueryElement();
+		element.setAttributeName(expectedAttribName);
+		element.setOperator(QueryConditionOperators.GREATER_THAN);
+		@SuppressWarnings("serial")
+		List<String> vals = new ArrayList<String>() {
+			{
+				add("0");
+			}
+		};
+
+		element.setAttributeValue(vals);
+
+		metadataQuery.setQueryType(QueryType.BOTH);
+		metadataQuery.getMetadataQueryElements().add(element);
+
+		PagingAwareCollectionListing actual = metadataQueryService
+				.executeQuery(metadataQuery);
+		Assert.assertNotNull("null listing returned", actual);
+		Assert.assertTrue(actual.getCollectionAndDataObjectListingEntries()
+				.size() > 0);
+
+	}
+
 }
