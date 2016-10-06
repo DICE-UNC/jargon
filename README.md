@@ -58,19 +58,6 @@ Remove old image thumbnail code that relied on specific 'lifetime library' confi
 
 Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
 
-### Misc
+#### remove resource group from data obj query #197
 
-
-###  Remove trim() from values in AVU queries #180 
-
-Merged pull request from CyVerse to not trim() AVU queries
-
-### Misc
-
-<<<<<<< HEAD
-
->>>>>>> origin/master
-=======
-Numerous small changes and additional test for 4.1.9
->>>>>>> origin/master
-
+Remove resc group from data object domain query 

@@ -869,8 +869,8 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+				// .addSelectAsGenQueryValue(
+				// RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
