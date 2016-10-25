@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Wrapper for a cipher that will encrypt parallel transfer data
  * 
+ * see http://www.digizol.com/2009/10/java-encrypt-decrypt-jce-salt.html
+ * 
  * @author Mike Conway - DICE
  *
  */
