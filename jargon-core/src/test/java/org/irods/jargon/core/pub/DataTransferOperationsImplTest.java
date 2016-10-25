@@ -83,6 +83,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
+	// see https://github.com/DICE-UNC/jargon/issues/192
 	public void testPhysicalMove() throws Exception {
 		String testFileName = "testPhysicalMove.txt";
 		String absPath = scratchFileUtils
@@ -92,6 +93,7 @@ public class DataTransferOperationsImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setDefaultStorageResource("test1-resc");
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

@@ -847,6 +847,58 @@ public class DataObjectAOImplTest {
 
 	}
 
+	/**
+	 * Test for https://github.com/DICE-UNC/jargon/issues/190
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testFindByAbsolutePathPercentInNameBug190() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testFindByAbsolutePathPercentInNameBug190.dat";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsFileParentPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/%");
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile parentDir = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsFileParentPath);
+		parentDir.mkdirs();
+
+		IRODSFile targetIrodsFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(parentDir.getAbsolutePath(),
+				testFileName);
+
+		DataTransferOperations dto = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 1);
+
+		dto.putOperation(
+				localFileName,
+				targetIrodsFile.getAbsolutePath(),
+				testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				null, null);
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+
+		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFile
+				.getAbsolutePath());
+		Assert.assertNotNull("null data object, was not found", dataObject);
+
+	}
+
 	@Test
 	public void testFindByAbsolutePath() throws Exception {
 		// generate a local scratch file
@@ -2087,8 +2139,19 @@ public class DataObjectAOImplTest {
 				transferStatusCallbackListener.getNumberIntraFileCallbacks() > 0);
 	}
 
-	@Test(expected = DataNotFoundException.class)
+	@Test
 	public final void testGetSpecifyingDifferentResource() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		if (!accessObjectFactory.getEnvironmentalInfoAO(irodsAccount)
+				.getIRODSServerProperties().isAtLeastIrods420()) {
+			return;
+		}
+
 		// generate a local scratch file
 		String testFileName = "testGetSpecifyingDifferentResource.txt";
 		String absPath = scratchFileUtils
@@ -2105,12 +2168,6 @@ public class DataObjectAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		accessObjectFactory.getIRODSFileFactory(irodsAccount);
 
 		DataTransferOperations dataTransferOperations = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
