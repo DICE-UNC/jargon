@@ -6,17 +6,13 @@ package org.irods.jargon.core.transfer.encrypt;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.KeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
@@ -77,34 +73,6 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 		this.setInitDone(true); // will init on each decrypt call with an iv
 	}
 
-	/**
-	 * @param pipelineConfiguration
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeySpecException
-	 */
-	private SecretKey initSecretKey(
-			PipelineConfiguration pipelineConfiguration, byte[] iv)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-
-		if (secretKey == null) {
-			SecretKeyFactory factory = SecretKeyFactory
-					.getInstance(pipelineConfiguration
-							.getEncryptionAlgorithmEnum().getKeyGenType());
-			KeySpec keySpec = new PBEKeySpec(this
-					.getNegotiatedClientServerConfiguration()
-					.getSslCryptChars(), iv,
-					pipelineConfiguration.getEncryptionNumberHashRounds(),
-					pipelineConfiguration.getEncryptionAlgorithmEnum()
-							.getKeySize());
-
-			SecretKey temp = factory.generateSecret(keySpec);
-			secretKey = new SecretKeySpec(temp.getEncoded(), "AES");
-		}
-		return secretKey;
-
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -115,40 +83,22 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	@Override
 	protected byte[] doDecrypt(EncryptionBuffer input) {
 		try {
-			this.initImplementation(input.getInitializationVector());
+			SecretKeySpec secretSpec = new SecretKeySpec(this
+					.getNegotiatedClientServerConfiguration().getSslCryptKey(),
+					"AES");
+			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+			cipher.init(Cipher.DECRYPT_MODE, secretSpec, new IvParameterSpec(
+					input.getInitializationVector()));
+
 			byte[] original = getCipher().doFinal(input.getEncryptedData());
 			return original;
 
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
+		} catch (IllegalBlockSizeException | BadPaddingException
+				| InvalidKeyException | InvalidAlgorithmParameterException
+				| NoSuchAlgorithmException | NoSuchPaddingException e) {
 			log.error("error during encryption", e);
 			throw new JargonRuntimeException(
 					"Unable to decrypt given negotiated settings", e);
 		}
-	}
-
-	private void initImplementation(byte[] iv) {
-		log.info("initing with new iv");
-		PipelineConfiguration pipelineConfiguration = this
-				.getPipelineConfiguration();
-		try {
-			log.info("initCipher()");
-			Cipher encryptionCipher = Cipher.getInstance(pipelineConfiguration
-					.getEncryptionAlgorithmEnum().getCypherKey());
-			this.setCipher(encryptionCipher);
-			log.debug("have cipher:{}", encryptionCipher);
-
-			SecretKey myKey = initSecretKey(pipelineConfiguration, iv);
-
-			encryptionCipher.init(Cipher.DECRYPT_MODE, myKey,
-					new IvParameterSpec(iv));
-
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidKeySpecException | InvalidKeyException
-				| InvalidAlgorithmParameterException e) {
-			log.error("error generating key for cipher", e);
-			throw new JargonRuntimeException("cannot generate key for cipher",
-					e);
-		}
-
 	}
 }

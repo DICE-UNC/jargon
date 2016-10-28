@@ -37,13 +37,12 @@ public class RandomUtils {
 
 	/**
 	 * Returns a random char array that has a total length of
-	 * <code>length</code> bytes. Remember that char is a 2 byte value, byte is
-	 * and 1 byte value. This gives a char array of length total bytes
+	 * <code>length</code> chars. Remember that char is a 2 byte value.
 	 * 
 	 * @param length
 	 * @return
 	 */
-	public static final char[] generateRandomCharsForNBytes(final int length) {
+	public static final char[] generateRandomChars(final int length) {
 
 		if (length <= 0) {
 			throw new IllegalArgumentException("length must be > 0");
@@ -53,7 +52,7 @@ public class RandomUtils {
 			throw new IllegalArgumentException("length must be even");
 		}
 
-		return RandomStringUtils.randomAlphanumeric(length / 2).toCharArray();
+		return RandomStringUtils.randomAlphanumeric(length).toCharArray();
 
 	}
 }

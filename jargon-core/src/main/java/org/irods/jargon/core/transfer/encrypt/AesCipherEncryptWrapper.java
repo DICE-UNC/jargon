@@ -3,9 +3,11 @@
  */
 package org.irods.jargon.core.transfer.encrypt;
 
+import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.security.spec.KeySpec;
 
 import javax.crypto.BadPaddingException;
@@ -14,6 +16,7 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -29,24 +32,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Wraps encryption of a byte buffer using AES
  *
- * see http://karanbalkar.com/2014/02/tutorial-76-implement-aes-256-
- * encryptiondecryption-using-java/
- *
- * and
- *
- * http://pastebin.com/YiwbCAW8
- *
- * and
- *
- * http://stackoverflow.com/questions/1440030/how-to-implement-java-256-bit-aes-
- * encryption-with-cbc
- *
- * and
- *
- * http://stackoverflow.com/questions/20796042/aes-encryption-and-decryption-
- * with-java
- *
+ * see
+ * 
+ * http://stackoverflow.com/questions/28622438/aes-256-password-based-
+ * encryption-decryption-in-java
+ * 
  * @author Mike Conway - DICE
+ * 
  *
  *
  */
@@ -120,10 +112,10 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 				pipelineConfiguration.getEncryptionNumberHashRounds(),
 				pipelineConfiguration.getEncryptionAlgorithmEnum().getKeySize());
 
-		SecretKey temp = factory.generateSecret(keySpec);
-		SecretKeySpec secretKeySpec = new SecretKeySpec(temp.getEncoded(),
+		SecretKey secretKey = factory.generateSecret(keySpec);
+		SecretKeySpec secretSpec = new SecretKeySpec(secretKey.getEncoded(),
 				"AES");
-		return secretKeySpec;
+		return secretSpec;
 	}
 
 	@Override
@@ -135,18 +127,26 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			throw new IllegalArgumentException("null input");
 		}
 
-		// get the initialization vector and store as member var
-		byte[] mInitVec = getCipher().getIV();
-
-		log.debug("encrypting");
-		byte[] encrypted;
 		try {
+
+			AlgorithmParameters params = getCipher().getParameters();
+			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class)
+					.getIV();
+
+			// get the initialization vector and store as member var
+			// byte[] mInitVec = getCipher().getIV();
+
+			log.debug("encrypting");
+			byte[] encrypted;
+
 			encrypted = getCipher().doFinal(input);
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
+			return new EncryptionBuffer(mInitVec, encrypted);
+
+		} catch (IllegalBlockSizeException | BadPaddingException
+				| InvalidParameterSpecException e) {
 			log.error("encryption exception", e);
 			throw new EncryptionException("encryption exception", e);
 		}
-		return new EncryptionBuffer(mInitVec, encrypted);
 
 	}
 }

@@ -16,9 +16,9 @@ public class RandomUtilsTest {
 	@Test
 	public void testGenerateRandomCharsOfLength() {
 		int len = 256;
-		char[] actual = RandomUtils.generateRandomCharsForNBytes(len);
+		char[] actual = RandomUtils.generateRandomChars(len);
 		Assert.assertNotNull(actual);
-		Assert.assertEquals(len / 2, actual.length);
+		Assert.assertEquals(len, actual.length);
 
 	}
 
