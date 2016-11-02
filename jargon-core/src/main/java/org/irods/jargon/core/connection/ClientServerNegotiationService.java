@@ -6,11 +6,15 @@ package org.irods.jargon.core.connection;
 import java.io.IOException;
 
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
+import org.irods.jargon.core.exception.EncryptionException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult;
 import org.irods.jargon.core.packinstr.ClientServerNegotiationStructNotifyServerOfResult.Outcome;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+import org.irods.jargon.core.transfer.encrypt.AESKeyGenerator;
+import org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -222,8 +226,21 @@ class ClientServerNegotiationService {
 		PipelineConfiguration myProps = PipelineConfiguration.instance(this
 				.getIrodsMidLevelProtocol().getIrodsSession()
 				.getJargonProperties());
-		startupResponse.getNegotiatedClientServerConfiguration().initKey(
-				myProps);
+		log.info("setting up secret key");
+		log.info(
+				"creating secret key for parallel transfer encryption using:{}",
+				myProps.getEncryptionAlgorithmEnum());
+		if (myProps.getEncryptionAlgorithmEnum() == EncryptionAlgorithmEnum.AES_256_CBC) {
+			log.info("AES key selected");
+			AbstractKeyGenerator generator = new AESKeyGenerator(myProps,
+					startupResponse.getNegotiatedClientServerConfiguration());
+			startupResponse.getNegotiatedClientServerConfiguration()
+					.setSecretKey(generator.generateKey());
+		} else {
+			log.error("unable to generate a key for algo:{}",
+					myProps.getEncryptionAlgorithmEnum());
+			throw new EncryptionException("unable to generate a key");
+		}
 
 		/*
 		 * See irods/plugins/network/ssl/libssl.cpp ~line 757 for analagous code
@@ -241,7 +258,8 @@ class ClientServerNegotiationService {
 			this.getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
 					NEGOTIATION_SHARED_SECRET,
 					startupResponse.getNegotiatedClientServerConfiguration()
-							.getSslCryptKey(), null, 0, 0, null, 0, 0, 0);
+							.getSecretKey().getEncoded(), null, 0, 0, null, 0,
+					0, 0);
 
 		} catch (IOException e) {
 			log.error("i/o exception sending encryption info", e);

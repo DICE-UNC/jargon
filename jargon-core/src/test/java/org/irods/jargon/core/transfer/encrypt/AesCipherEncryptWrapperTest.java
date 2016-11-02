@@ -46,7 +46,6 @@ public class AesCipherEncryptWrapperTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
 				true);
-		config.initKey(pipelineConfiguration);
 
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
@@ -68,8 +67,9 @@ public class AesCipherEncryptWrapperTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
 				true);
-		config.initKey(pipelineConfiguration);
-
+		AESKeyGenerator generator = new AESKeyGenerator(pipelineConfiguration,
+				config);
+		config.setSecretKey(generator.generateKey());
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
 		wrapper.init();

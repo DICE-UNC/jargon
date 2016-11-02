@@ -9,9 +9,6 @@ import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
-import org.irods.jargon.core.transfer.encrypt.AesCipherEncryptWrapper;
-import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
-import org.irods.jargon.core.transfer.encrypt.ParallelCipherWrapper;
 import org.junit.Test;
 
 public class EncryptionWrapperFactoryTest {
@@ -25,11 +22,9 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				true);
-		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
-		ParallelCipherWrapper actual = EncryptionWrapperFactory
-				.instance(pipelineConfiguration,
-						negotiatedClientServerConfiguration,
-						Cipher.ENCRYPT_MODE);
+		ParallelCipherWrapper actual = EncryptionWrapperFactory.instance(
+				pipelineConfiguration, negotiatedClientServerConfiguration,
+				Cipher.ENCRYPT_MODE);
 		Assert.assertNotNull(actual);
 		Assert.assertTrue(actual instanceof AesCipherEncryptWrapper);
 	}
@@ -43,7 +38,6 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				false);
-		negotiatedClientServerConfiguration.initKey(pipelineConfiguration);
 		EncryptionWrapperFactory.instance(pipelineConfiguration,
 				negotiatedClientServerConfiguration, Cipher.ENCRYPT_MODE);
 

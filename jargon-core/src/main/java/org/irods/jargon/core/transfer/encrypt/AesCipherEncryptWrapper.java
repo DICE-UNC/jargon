@@ -6,26 +6,20 @@ package org.irods.jargon.core.transfer.encrypt;
 import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
-import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
-import java.security.spec.KeySpec;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
-import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.PBEKeySpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.EncryptionException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
-import org.irods.jargon.core.utils.RandomUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,42 +74,17 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			setCipher(Cipher.getInstance(pipelineConfiguration
 					.getEncryptionAlgorithmEnum().getCypherKey()));
 
-			SecretKeySpec secretKey = initSecretKey(pipelineConfiguration);
-
+			SecretKey secretKey = this.getNegotiatedClientServerConfiguration()
+					.getSecretKey();
 			getCipher().init(Cipher.ENCRYPT_MODE, secretKey);
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException
-				| InvalidKeySpecException | InvalidKeyException e) {
+				| InvalidKeyException e) {
 			log.error("error generating key for cipher", e);
 			throw new JargonRuntimeException("cannot generate key for cipher",
 					e);
 		}
 
-	}
-
-	/**
-	 * @param pipelineConfiguration
-	 * @return
-	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeySpecException
-	 */
-	private SecretKeySpec initSecretKey(
-			final PipelineConfiguration pipelineConfiguration)
-			throws NoSuchAlgorithmException, InvalidKeySpecException {
-		SecretKeyFactory factory = SecretKeyFactory
-				.getInstance(pipelineConfiguration.getEncryptionAlgorithmEnum()
-						.getKeyGenType());
-		KeySpec keySpec = new PBEKeySpec(
-				getNegotiatedClientServerConfiguration().getSslCryptChars(),
-				RandomUtils.generateRandomBytesOfLength(pipelineConfiguration
-						.getEncryptionSaltSize()),
-				pipelineConfiguration.getEncryptionNumberHashRounds(),
-				pipelineConfiguration.getEncryptionAlgorithmEnum().getKeySize());
-
-		SecretKey secretKey = factory.generateSecret(keySpec);
-		SecretKeySpec secretSpec = new SecretKeySpec(secretKey.getEncoded(),
-				"AES");
-		return secretSpec;
 	}
 
 	@Override

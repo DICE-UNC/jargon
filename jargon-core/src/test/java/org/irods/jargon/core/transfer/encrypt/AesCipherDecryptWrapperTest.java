@@ -36,20 +36,22 @@ public class AesCipherDecryptWrapperTest {
 	@Test
 	public void testEncryptRoundTrip() throws JargonException {
 		String begin = "aj;kj;ljlkjfjkdjfiaewjafasdf";
-		byte[] source = begin.getBytes();
+		byte[] source = begin.getBytes(StandardCharsets.UTF_8);
 
 		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		props.setEncryptionKeySize(EncryptionAlgorithmEnum.AES_256_CBC
 				.getKeySize());
-		props.setEncryptionNumberHashRounds(65536);
+		props.setEncryptionNumberHashRounds(8);
 		props.setEncryptionSaltSize(8);
 		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
 				.instance(props);
 		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
 				true);
-		config.initKey(pipelineConfiguration);
+		AESKeyGenerator generator = new AESKeyGenerator(pipelineConfiguration,
+				config);
+		config.setSecretKey(generator.generateKey());
 
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
@@ -63,7 +65,7 @@ public class AesCipherDecryptWrapperTest {
 
 		byte[] decrypted = decryptWrapper.decrypt(encrypted);
 		String result = new String(decrypted, StandardCharsets.UTF_8);
-		Assert.assertEquals("didnt match encrypted data", source, result);
+		Assert.assertEquals("didnt match encrypted data", begin, result);
 
 	}
 }

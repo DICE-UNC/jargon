@@ -11,9 +11,7 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
-import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
@@ -51,8 +49,6 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	public static final Logger log = LoggerFactory
 			.getLogger(AesCipherDecryptWrapper.class);
 
-	private SecretKey secretKey = null;
-
 	/**
 	 * Default constructor with configuration information needed to set up the
 	 * algorithm
@@ -83,12 +79,13 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	@Override
 	protected byte[] doDecrypt(EncryptionBuffer input) {
 		try {
-			SecretKeySpec secretSpec = new SecretKeySpec(this
-					.getNegotiatedClientServerConfiguration().getSslCryptKey(),
-					"AES");
-			Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-			cipher.init(Cipher.DECRYPT_MODE, secretSpec, new IvParameterSpec(
-					input.getInitializationVector()));
+
+			Cipher cipher = Cipher.getInstance(this.getPipelineConfiguration()
+					.getEncryptionAlgorithmEnum().getCypherKey());
+			cipher.init(Cipher.DECRYPT_MODE, this
+					.getNegotiatedClientServerConfiguration().getSecretKey(),
+					new IvParameterSpec(input.getInitializationVector()));
+			this.setCipher(cipher);
 
 			byte[] original = getCipher().doFinal(input.getEncryptedData());
 			return original;
