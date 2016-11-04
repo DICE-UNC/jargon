@@ -55,7 +55,6 @@ public class AesCipherDecryptWrapperTest {
 
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
-		wrapper.init();
 		EncryptionBuffer encrypted = wrapper.encrypt(source);
 
 		// now decrypt

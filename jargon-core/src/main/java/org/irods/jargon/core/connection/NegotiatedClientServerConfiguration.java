@@ -5,9 +5,6 @@ package org.irods.jargon.core.connection;
 
 import javax.crypto.SecretKey;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Captures characteristics resulting from a client-server negotiation
  * 
@@ -16,9 +13,6 @@ import org.slf4j.LoggerFactory;
 public class NegotiatedClientServerConfiguration {
 	private final boolean sslConnection;
 	private SecretKey secretKey;
-
-	private Logger log = LoggerFactory
-			.getLogger(NegotiatedClientServerConfiguration.class);
 
 	/*
 	 * (non-Javadoc)
@@ -61,7 +55,8 @@ public class NegotiatedClientServerConfiguration {
 	}
 
 	/**
-	 * @param secretKey the secretKey to set
+	 * @param secretKey
+	 *            the secretKey to set
 	 */
 	public void setSecretKey(SecretKey secretKey) {
 		this.secretKey = secretKey;

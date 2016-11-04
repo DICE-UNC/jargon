@@ -2,6 +2,7 @@ package org.irods.jargon.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
@@ -11,6 +12,8 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.transfer.encrypt.EncryptionBuffer;
+import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +33,7 @@ public final class ParallelPutTransferThread extends
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
+	private ParallelEncryptionCipherWrapper parallelEncryptionCipherWrapper = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -134,7 +138,7 @@ public final class ParallelPutTransferThread extends
 			log.info("setting up the encryption if so negotiated");
 			if (this.parallelPutFileTransferStrategy.doEncryption()) {
 				log.debug("am doing encryption, enable the cypher");
-				this.parallelPutFileTransferStrategy
+				this.parallelEncryptionCipherWrapper = this.parallelPutFileTransferStrategy
 						.initializeCypherForEncryption();
 				log.debug("cypher initialized");
 			}
@@ -347,7 +351,29 @@ public final class ParallelPutTransferThread extends
 							"getting ready to write to iRODS, new txfr length:{}",
 							transferLength);
 
-					getOut().write(buffer, 0, read);
+					/*
+					 * if encrypting, encrypt this buffer before sending
+					 */
+
+					if (this.parallelPutFileTransferStrategy.doEncryption()) {
+						log.debug("put with encryption, encrypt this buffer");
+						EncryptionBuffer encryptedBuff = parallelEncryptionCipherWrapper
+								.encrypt(buffer);
+						sendInNetworkOrder(encryptedBuff.getEncryptedData().length
+								+ encryptedBuff.getInitializationVector().length);
+						// this encryptedBuff has the data and the iv
+						ByteArrayOutputStream buffOut = new ByteArrayOutputStream(
+								encryptedBuff.getEncryptedData().length
+										+ encryptedBuff
+												.getInitializationVector().length);
+						buffOut.write(encryptedBuff.getInitializationVector());
+						buffOut.write(encryptedBuff.getEncryptedData());
+						getOut().write(buffOut.toByteArray());
+						// getOut().write(encryptedBuff.getInitializationVector());
+						// getOut().write(encryptedBuff.getEncryptedData());
+					} else {
+						getOut().write(buffer, 0, read);
+					}
 
 					/*
 					 * Make an intra-file status call-back if a listener is
@@ -436,5 +462,12 @@ public final class ParallelPutTransferThread extends
 			throw new JargonException(
 					"transferLength and totalWritten do not agree");
 		}
+	}
+
+	protected void sendInNetworkOrder(final int value) throws IOException {
+		byte bytes[] = new byte[ConnectionConstants.INT_LENGTH];
+		// Host.copyInt(value, bytes);
+		getOut().write(value);
+		// getOut().flush();
 	}
 }

@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
-import java.io.File;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.AuthScheme;
@@ -13,7 +12,6 @@ import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
-import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.IRODSTestAssertionException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -40,7 +38,6 @@ public class EncryptedParallelTransferTests {
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
 	public static final String IRODS_TEST_SUBDIR_PATH = "EncryptedParallelTransferTests";
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
-	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem = null;
 
 	@BeforeClass
@@ -64,7 +61,7 @@ public class EncryptedParallelTransferTests {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
+		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass
@@ -102,8 +99,6 @@ public class EncryptedParallelTransferTests {
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
 		String testFileName = "testPutOneFile.txt";
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
@@ -115,8 +110,6 @@ public class EncryptedParallelTransferTests {
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
-		File localFile = new File(localFileName);
-
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

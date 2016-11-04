@@ -5,7 +5,6 @@ import junit.framework.Assert;
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
-import org.irods.jargon.core.exception.EncryptionException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -33,27 +32,6 @@ public class AesCipherEncryptWrapperTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
-	@Test(expected = EncryptionException.class)
-	public void testEncryptAesNoInit() throws JargonException {
-		byte[] source = RandomUtils.generateRandomBytesOfLength(2048);
-		SettableJargonProperties props = (SettableJargonProperties) irodsFileSystem
-				.getJargonProperties();
-		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
-		props.setEncryptionKeySize(128);
-		props.setEncryptionNumberHashRounds(65536);
-		props.setEncryptionSaltSize(8);
-		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
-				.instance(props);
-		NegotiatedClientServerConfiguration config = new NegotiatedClientServerConfiguration(
-				true);
-
-		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
-				pipelineConfiguration, config);
-
-		wrapper.encrypt(source);
-
-	}
-
 	@Test
 	public void testEncryptAes() throws JargonException {
 		byte[] source = RandomUtils.generateRandomBytesOfLength(2048);
@@ -72,7 +50,6 @@ public class AesCipherEncryptWrapperTest {
 		config.setSecretKey(generator.generateKey());
 		AesCipherEncryptWrapper wrapper = new AesCipherEncryptWrapper(
 				pipelineConfiguration, config);
-		wrapper.init();
 
 		EncryptionBuffer actual = wrapper.encrypt(source);
 		Assert.assertNotNull(actual);

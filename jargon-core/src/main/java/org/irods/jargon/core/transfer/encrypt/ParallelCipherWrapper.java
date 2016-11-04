@@ -23,8 +23,6 @@ abstract class ParallelCipherWrapper {
 	private Cipher cipher;
 	private PipelineConfiguration pipelineConfiguration;
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-	private int mode;
-	private boolean initDone = false;
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -35,15 +33,11 @@ abstract class ParallelCipherWrapper {
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration} with result of
 	 *            negotiation
-	 * @param mode
-	 *            <code>int</code> that indicates encrypt/decrypt using
-	 *            {@link Cipher} mode definitions
 	 * @throws ClientServerNegotiationException
 	 */
 	ParallelCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
-			int mode) {
+			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -59,7 +53,6 @@ abstract class ParallelCipherWrapper {
 
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
-		this.mode = mode;
 	}
 
 	/**
@@ -89,29 +82,6 @@ abstract class ParallelCipherWrapper {
 	 */
 	void setCipher(Cipher cipher) {
 		this.cipher = cipher;
-	}
-
-	/**
-	 * @return the mode
-	 */
-	public int getMode() {
-		return mode;
-	}
-
-	/**
-	 * @param mode
-	 *            the mode to set
-	 */
-	public void setMode(int mode) {
-		this.mode = mode;
-	}
-
-	protected boolean isInitDone() {
-		return initDone;
-	}
-
-	protected void setInitDone(boolean initDone) {
-		this.initDone = initDone;
 	}
 
 }

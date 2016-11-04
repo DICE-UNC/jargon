@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.transfer.encrypt;
 
-import javax.crypto.Cipher;
-
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.EncryptionException;
@@ -28,8 +26,7 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	ParallelEncryptionCipherWrapper(
 			PipelineConfiguration pipelineConfiguration,
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
-		super(pipelineConfiguration, negotiatedClientServerConfiguration,
-				Cipher.ENCRYPT_MODE);
+		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/**
@@ -42,11 +39,6 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	 */
 	public EncryptionBuffer encrypt(byte[] input) throws EncryptionException {
 		log.info("encrypt()");
-		if (!isInitDone()) {
-			log.error("encrypt was called before init() was called, must init the wrapper");
-			throw new EncryptionException(
-					"cannot call encrypt when init was not done");
-		}
 		return doEncrypt(input);
 	}
 
@@ -60,23 +52,5 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	 */
 	protected abstract EncryptionBuffer doEncrypt(byte[] input)
 			throws EncryptionException;
-
-	/**
-	 * Initialize the cipher for use,call before calling encryption.
-	 */
-	public void init() {
-		log.info("init()");
-		log.info("calling initImplementation() for the specific wrapper...");
-		initImplementation();
-		setInitDone(true);
-
-	}
-
-	/**
-	 * Specific implementation code that is required to be called before doing
-	 * any encryption. This fully initializes the given cipher, and may be done
-	 * one time for multiple calls to encrypt
-	 */
-	protected abstract void initImplementation();
 
 }

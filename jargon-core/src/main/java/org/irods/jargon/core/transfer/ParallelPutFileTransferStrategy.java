@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelPutFileTransferStrategy extends
-AbstractParallelFileTransferStrategy {
+		AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutFileTransferStrategy.class);
@@ -133,7 +133,7 @@ AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

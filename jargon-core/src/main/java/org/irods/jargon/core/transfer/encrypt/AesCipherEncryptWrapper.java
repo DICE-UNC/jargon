@@ -59,6 +59,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
+		initImplementation();
 	}
 
 	/**
@@ -66,8 +67,8 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	 *
 	 * see rcPortalOper at about line 335 in rcPartialDataPut
 	 */
-	@Override
-	protected void initImplementation() {
+
+	private void initImplementation() {
 		PipelineConfiguration pipelineConfiguration = getPipelineConfiguration();
 		try {
 			log.info("initCipher()");

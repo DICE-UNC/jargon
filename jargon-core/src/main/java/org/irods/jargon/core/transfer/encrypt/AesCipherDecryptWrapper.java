@@ -66,7 +66,26 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
 			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
-		this.setInitDone(true); // will init on each decrypt call with an iv
+		initImplementation();
+	}
+
+	/**
+	 * Given the configuration, initialize the cipher
+	 *
+	 * see rcPortalOper at about line 335 in rcPartialDataPut
+	 */
+
+	private void initImplementation() {
+		try {
+			log.info("initCipher()");
+			setCipher(Cipher.getInstance(this.getPipelineConfiguration()
+					.getEncryptionAlgorithmEnum().getCypherKey()));
+
+		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+			log.error("error initing for cipher", e);
+			throw new JargonRuntimeException("cannot init for cipher", e);
+		}
+
 	}
 
 	/*
@@ -79,20 +98,17 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	@Override
 	protected byte[] doDecrypt(EncryptionBuffer input) {
 		try {
-
-			Cipher cipher = Cipher.getInstance(this.getPipelineConfiguration()
-					.getEncryptionAlgorithmEnum().getCypherKey());
-			cipher.init(Cipher.DECRYPT_MODE, this
-					.getNegotiatedClientServerConfiguration().getSecretKey(),
+			this.getCipher().init(
+					Cipher.DECRYPT_MODE,
+					this.getNegotiatedClientServerConfiguration()
+							.getSecretKey(),
 					new IvParameterSpec(input.getInitializationVector()));
-			this.setCipher(cipher);
 
 			byte[] original = getCipher().doFinal(input.getEncryptedData());
 			return original;
 
 		} catch (IllegalBlockSizeException | BadPaddingException
-				| InvalidKeyException | InvalidAlgorithmParameterException
-				| NoSuchAlgorithmException | NoSuchPaddingException e) {
+				| InvalidKeyException | InvalidAlgorithmParameterException e) {
 			log.error("error during encryption", e);
 			throw new JargonRuntimeException(
 					"Unable to decrypt given negotiated settings", e);

@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.transfer.encrypt;
 
-import javax.crypto.Cipher;
-
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.EncryptionException;
@@ -26,8 +24,7 @@ public abstract class ParallelDecryptionCipherWrapper extends
 	ParallelDecryptionCipherWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
-		super(pipelineConfiguration, negotiatedClientServerConfiguration,
-				Cipher.ENCRYPT_MODE);
+		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/**
@@ -42,11 +39,7 @@ public abstract class ParallelDecryptionCipherWrapper extends
 	public byte[] decrypt(final EncryptionBuffer input)
 			throws EncryptionException {
 		log.info("decrypt()");
-		if (!isInitDone()) {
-			log.error("decrypt was called before init() was called, must init the wrapper");
-			throw new EncryptionException(
-					"cannot call encrypt when init was not done");
-		}
+
 		return doDecrypt(input);
 	}
 

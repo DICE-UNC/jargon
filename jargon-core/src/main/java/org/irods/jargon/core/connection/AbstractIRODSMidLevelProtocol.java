@@ -665,20 +665,18 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		byte[] temp;
 		try {
 			temp = header.getBytes(encoding);
+			return temp;
 		} catch (UnsupportedEncodingException e) {
 			throw new JargonException(e);
 		}
 		// FIXME: issue #4
-
 		/*
-		 * 
 		 * byte[] full = new byte[4 + temp.length]; // load first 4 byte with
 		 * header length org.irods.jargon.core.utils.Host.copyInt(temp.length,
 		 * full); // copy rest of header into full System.arraycopy(temp, 0,
 		 * full, 4, temp.length); return full;
 		 */
 
-		return temp;
 	}
 
 	/**
@@ -784,9 +782,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 			log.debug("sending disconnect message");
 			try {
-				irodsConnection.send(createHeader(
-						RequestTypes.RODS_DISCONNECT.getRequestType(), 0, 0, 0,
-						0));
+				this.sendHeader(RequestTypes.RODS_DISCONNECT.getRequestType(),
+						0, 0, 0, 0);
 				irodsConnection.flush();
 				log.debug("finally, shutdown is being called on the given connection");
 				irodsConnection.shutdown();
