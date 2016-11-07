@@ -359,8 +359,15 @@ public final class ParallelPutTransferThread extends
 						log.debug("put with encryption, encrypt this buffer");
 						EncryptionBuffer encryptedBuff = parallelEncryptionCipherWrapper
 								.encrypt(buffer);
+						log.debug("iv length:{}",
+								encryptedBuff.getInitializationVector().length);
 						sendInNetworkOrder(encryptedBuff.getEncryptedData().length
 								+ encryptedBuff.getInitializationVector().length);
+						log.debug(
+								"computed length:{}",
+								encryptedBuff.getEncryptedData().length
+										+ encryptedBuff
+												.getInitializationVector().length);
 						// this encryptedBuff has the data and the iv
 						ByteArrayOutputStream buffOut = new ByteArrayOutputStream(
 								encryptedBuff.getEncryptedData().length
@@ -368,7 +375,8 @@ public final class ParallelPutTransferThread extends
 												.getInitializationVector().length);
 						buffOut.write(encryptedBuff.getInitializationVector());
 						buffOut.write(encryptedBuff.getEncryptedData());
-						getOut().write(buffOut.toByteArray());
+						// getOut().write(buffOut.toByteArray());
+						buffOut.writeTo(getOut());
 						// getOut().write(encryptedBuff.getInitializationVector());
 						// getOut().write(encryptedBuff.getEncryptedData());
 					} else {
@@ -466,8 +474,8 @@ public final class ParallelPutTransferThread extends
 
 	protected void sendInNetworkOrder(final int value) throws IOException {
 		byte bytes[] = new byte[ConnectionConstants.INT_LENGTH];
-		// Host.copyInt(value, bytes);
-		getOut().write(value);
-		// getOut().flush();
+		Host.copyInt(value, bytes);
+		getOut().write(bytes);
+		getOut().flush();
 	}
 }

@@ -110,6 +110,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			byte[] encrypted;
 
 			encrypted = getCipher().doFinal(input);
+			log.debug("encrypted length:{}", encrypted.length);
 			return new EncryptionBuffer(mInitVec, encrypted);
 
 		} catch (IllegalBlockSizeException | BadPaddingException
