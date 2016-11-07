@@ -1,14 +1,13 @@
 
 # Project: Jargon-core API
-#### Date: 06/13/2016
+#### Date: 
 #### Release Version:
-#### git tag: 4.2.0.0-SNAPSHOT	
+#### git tag: 4.1.10.0-SNAPSHOT
 #### Developer: Mike Conway - DICE
 
 ## News
 
-TLS support and 4.2 compatability 
-
+4.1.10 Release compatability relese
 for milestone: https://github.com/DICE-UNC/jargon/milestone/11
 
 =======
@@ -40,4 +39,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
+#### FileNotFoundException declared in PackingIrodsOutputStream signature #150
+
+Removed extraneous exceptions from method signature
 
