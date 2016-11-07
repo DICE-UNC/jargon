@@ -47,3 +47,7 @@ Removed extraneous exceptions from method signature
 
 Removed jargon-workflow code (WSO) as non-supported in iRODS
 
+#### add speccol pi to dataobjinppi to avoid xml parse messages in irods log #149
+
+
+
