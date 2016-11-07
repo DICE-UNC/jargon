@@ -43,3 +43,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 Removed extraneous exceptions from method signature
 
+#### deprecate WSO support in jargon altogether #51
+
+Removed jargon-workflow code (WSO) as non-supported in iRODS
+

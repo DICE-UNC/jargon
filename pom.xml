@@ -17,7 +17,7 @@
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
-		<sl4j.version>1.6.6</sl4j.version>
+		<sl4j.version>1.6.6</sl4j.version> 
 		<log4j.version>1.2.16</log4j.version>
 		<java.version>1.7</java.version>
 		<commons.io.version>2.4</commons.io.version>
@@ -131,7 +131,8 @@
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
+				<artifactId>findbugs-maven-pluPending Approval
+The CIA gave an equal amount of intel that cast doubt on WMD claims.  It so frustrated Dick Cheney that he set up his own intelligence agency at the Pentagon (the Office of Special Plans) to come up with more forceful intel.gin</artifactId>
 			</plugin>
 		</plugins>
 	</reporting>
@@ -444,7 +445,6 @@
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
-		<module>jargon-workflow</module>
 		<module>jargon-ruleservice</module>
 	</modules>
 </project>
