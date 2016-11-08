@@ -49,5 +49,5 @@ Removed jargon-workflow code (WSO) as non-supported in iRODS
 
 #### add speccol pi to dataobjinppi to avoid xml parse messages in irods log #149
 
-
+Avoid logged iRODS errors for missing section of DataObjInp_PI by providing SpecColl_PI and KeyValPair_PI structures
 
