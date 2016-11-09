@@ -166,7 +166,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 			builder.append("resource=").append(resource).append(", ");
 		}
 		if (rescHeir != null) {
-			builder.append("rescHier=").append(rescHeir).append(", ");
+			builder.append("rescHeir=").append(rescHeir).append(", ");
 		}
 		if (phyPath != null) {
 			builder.append("phyPath=").append(phyPath).append(", ");

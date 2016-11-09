@@ -51,3 +51,7 @@ Removed jargon-workflow code (WSO) as non-supported in iRODS
 
 Avoid logged iRODS errors for missing section of DataObjInp_PI by providing SpecColl_PI and KeyValPair_PI structures
 
+#### Fix lexographic comparison of iRODS version #203
+
+Changed from a string comparison of iRODS reported version to a more sophisticated comparator object 
+
