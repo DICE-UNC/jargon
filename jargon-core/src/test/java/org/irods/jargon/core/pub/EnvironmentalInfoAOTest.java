@@ -92,6 +92,10 @@ public class EnvironmentalInfoAOTest {
 		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
 				.getEnvironmentalInfoAO(irodsAccount);
 
+		if (environmentalInfoAO.getIRODSServerProperties().isAtLeastIrods410()) {
+			return;
+		}
+
 		try {
 			List<RemoteCommandInformation> remoteCommands = environmentalInfoAO
 					.listAvailableRemoteCommands();

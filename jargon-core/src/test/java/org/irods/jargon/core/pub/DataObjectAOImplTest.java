@@ -3479,6 +3479,12 @@ public class DataObjectAOImplTest {
 		// return;
 		// }
 
+		// resource groups not a thing anymore
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			return;
+		}
+
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
@@ -5703,10 +5709,11 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		/*
-		 * if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-		 * .isConsortiumVersion()) { return; }
-		 */
+		// resource groups not a thing anymore
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			return;
+		}
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -5967,10 +5974,11 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		/*
-		 * if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-		 * .isConsortiumVersion()) { return; }
-		 */
+		// resource groups not a thing anymore
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+				.isAtLeastIrods410()) {
+			return;
+		}
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
