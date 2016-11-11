@@ -83,8 +83,11 @@ public class ResourceAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
+		/*
+		 * no resource groups with resource heirarchy
+		 */
 		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -527,11 +530,6 @@ public class ResourceAOTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
-			return;
-		}
-
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
 		resourceAO.deleteResource(rescName);
@@ -549,11 +547,6 @@ public class ResourceAOTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
-			return;
-		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		try {
@@ -593,7 +586,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			throw new DuplicateDataException(
 					"skip but maintain expectations of test");
 		}
@@ -625,7 +618,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -660,7 +653,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -706,7 +699,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -788,9 +781,8 @@ public class ResourceAOTest {
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
-
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -830,7 +822,7 @@ public class ResourceAOTest {
 				.getIRODSAccessObjectFactory();
 
 		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			return;
 		}
 

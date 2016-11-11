@@ -5,8 +5,6 @@ package org.irods.jargon.core.connection;
 
 import java.util.Date;
 
-import org.irods.jargon.core.utils.MiscIRODSUtils;
-
 /**
  * Immutable information on an IRODS Server that a connection is connected to.
  *
@@ -15,8 +13,6 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  */
 public class IRODSServerProperties {
 
-	public static final String JARGON_VERSION = "4.0.2.3";
-
 	public enum IcatEnabled {
 		ICAT_ENABLED, NO_ICAT
 	}
@@ -24,24 +20,9 @@ public class IRODSServerProperties {
 	private final Date initializeDate = new Date();
 	private final IcatEnabled icatEnabled;
 	private final int serverBootTime;
-	private final String relVersion;
+	private IrodsVersion irodsVersion;
 	private final String apiVersion;
 	private final String rodsZone;
-	private boolean consortiumVersion = false;
-
-	/**
-	 * This is a supplemental flag that indicates whether a server is eIRODS.
-	 *
-	 * @return <code>true</code> if the given server is an eIRODS servers
-	 */
-	public synchronized boolean isConsortiumVersion() {
-		return consortiumVersion;
-	}
-
-	public synchronized void setConsortiumVersion(
-			final boolean consortiumVersion) {
-		this.consortiumVersion = consortiumVersion;
-	}
 
 	public static IRODSServerProperties instance(final IcatEnabled icatEnabled,
 			final int serverBootTime, final String relVersion,
@@ -56,17 +37,13 @@ public class IRODSServerProperties {
 		super();
 		this.icatEnabled = icatEnabled;
 		this.serverBootTime = serverBootTime;
-		this.relVersion = relVersion;
 		this.apiVersion = apiVersion;
+		this.irodsVersion = new IrodsVersion(relVersion);
 		this.rodsZone = rodsZone;
 	}
 
 	public Date getInitializeDate() {
 		return initializeDate;
-	}
-
-	public static String getJargonVersion() {
-		return JARGON_VERSION;
 	}
 
 	public IcatEnabled getIcatEnabled() {
@@ -75,10 +52,6 @@ public class IRODSServerProperties {
 
 	public int getServerBootTime() {
 		return serverBootTime;
-	}
-
-	public String getRelVersion() {
-		return relVersion;
 	}
 
 	public String getApiVersion() {
@@ -112,9 +85,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
 
-		if (isConsortiumVersion()) {
-			supports = true;
-		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
 		}
 		return supports;
@@ -129,9 +100,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsTickets() {
 		boolean supports = false;
 
-		if (isConsortiumVersion()) {
-			supports = false;
-		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			supports = true;
 		}
 		return supports;
@@ -161,9 +130,7 @@ public class IRODSServerProperties {
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
 
-		if (isConsortiumVersion()) {
-			supports = true;
-		} else if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.2")) {
 			supports = true;
 		}
 		return supports;
@@ -186,9 +153,24 @@ public class IRODSServerProperties {
 			throw new IllegalArgumentException("null or empty releaseVersion");
 		}
 
-		return MiscIRODSUtils.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-				getRelVersion(), releaseVersion);
+		int compare = this.getIrodsVersion().compareTo(
+				new IrodsVersion(releaseVersion));
+		return compare >= 0;
 
+	}
+
+	/**
+	 * Is the server 4.0.X and not yet 4.1? Then I need to worry about pam
+	 * flushes per https://github.com/DICE-UNC/jargon/issues/70 This overhead
+	 * will force the pam flush based on the forceSslFlush flag, which will only
+	 * be turned on to bracket the necessary calls to the protocol, preventing a
+	 * performance drop from unneeded flushes later
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if pam flush overhead
+	 *         is required
+	 */
+	public boolean isNeedsPamFlush() {
+		return (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0") && (!isAtLeastIrods410()));
 	}
 
 	/**
@@ -209,44 +191,8 @@ public class IRODSServerProperties {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.0");
 	}
 
-	@Override
-	public String toString() {
-		char ret = '\n';
-		String tabOver = "    ";
-		StringBuilder builder = new StringBuilder();
-		builder.append("IRODS server properties");
-		builder.append(ret);
-		builder.append(tabOver);
-		builder.append("icat enabled?:");
-		builder.append(icatEnabled.toString());
-		builder.append(ret);
-
-		builder.append(tabOver);
-		builder.append("Server boot time:");
-		builder.append(serverBootTime);
-		builder.append(ret);
-
-		builder.append(tabOver);
-		builder.append("Rel version:");
-		builder.append(relVersion);
-		builder.append(ret);
-
-		builder.append(tabOver);
-		builder.append("API version:");
-		builder.append(apiVersion);
-		builder.append(ret);
-
-		builder.append(tabOver);
-		builder.append("zone:");
-		builder.append(rodsZone);
-		builder.append(ret);
-		builder.append(tabOver);
-		builder.append("eirods:");
-		builder.append(consortiumVersion);
-		builder.append(ret);
-
-		return builder.toString();
-
+	public IrodsVersion getIrodsVersion() {
+		return irodsVersion;
 	}
 
 }

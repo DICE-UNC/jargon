@@ -3474,10 +3474,10 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
-			return;
-		}
+		// if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+		// .isConsortiumVersion()) {
+		// return;
+		// }
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -3833,16 +3833,10 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		// if (props.isConsortiumVersion()) {
+		// return;
+		// }
 
 		String testFileName = "testSetRead.txt";
 		String absPath = scratchFileUtils
@@ -3868,10 +3862,17 @@ public class DataObjectAOImplTest {
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		CollectionAO collectionAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(),
+				targetIrodsCollection, secondaryAccount.getUserName(), true);
+
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection + "/" + testFileName);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue("should be able to read",
+				irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -3917,16 +3918,9 @@ public class DataObjectAOImplTest {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		// if (props.isConsortiumVersion()) {
+		// return;
+		// }
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3980,16 +3974,9 @@ public class DataObjectAOImplTest {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		// if (props.isConsortiumVersion()) {
+		// return;
+		// }
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -4174,16 +4161,10 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (props.isConsortiumVersion()) { return; }
+		 */
 
 		String testFileName = "testSetWrite.txt";
 		String absPath = scratchFileUtils
@@ -4222,16 +4203,10 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (props.isConsortiumVersion()) { return; }
+		 */
 
 		String testFileName = "testSetOwn.txt";
 		String absPath = scratchFileUtils
@@ -4316,16 +4291,10 @@ public class DataObjectAOImplTest {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (props.isConsortiumVersion()) { return; }
+		 */
 
 		String testFileName = "testGetPermissionsOwn.txt";
 		String absPath = scratchFileUtils
@@ -4519,16 +4488,9 @@ public class DataObjectAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				FilePermissionEnum.READ);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (props.isConsortiumVersion()) { return; }
+		 */
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -4566,16 +4528,9 @@ public class DataObjectAOImplTest {
 				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				FilePermissionEnum.WRITE);
 
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
-
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
-
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (props.isConsortiumVersion()) { return; }
+		 */
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -5748,10 +5703,10 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+		 * .isConsortiumVersion()) { return; }
+		 */
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -6012,10 +5967,10 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
-			return;
-		}
+		/*
+		 * if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
+		 * .isConsortiumVersion()) { return; }
+		 */
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);

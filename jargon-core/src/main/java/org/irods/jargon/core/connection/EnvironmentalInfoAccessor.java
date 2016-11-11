@@ -23,7 +23,7 @@ public class EnvironmentalInfoAccessor {
 
 	public EnvironmentalInfoAccessor(
 			final AbstractIRODSMidLevelProtocol irodsProtocol)
-					throws JargonException {
+			throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
 		}
@@ -85,17 +85,13 @@ public class EnvironmentalInfoAccessor {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
 
-		if (props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0.0")) {
-			props.setConsortiumVersion(true);
-		}
-
 		if (irodsProtocol.getIrodsSession() != null) {
 			irodsProtocol
-			.getIrodsSession()
-			.getDiscoveredServerPropertiesCache()
-			.cacheIRODSServerProperties(
-					irodsProtocol.getIrodsAccount().getHost(),
-					irodsProtocol.getIrodsAccount().getZone(), props);
+					.getIrodsSession()
+					.getDiscoveredServerPropertiesCache()
+					.cacheIRODSServerProperties(
+							irodsProtocol.getIrodsAccount().getHost(),
+							irodsProtocol.getIrodsAccount().getZone(), props);
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;

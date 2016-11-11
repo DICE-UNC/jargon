@@ -140,7 +140,7 @@ public class PAMAuth extends AuthMechanism {
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
-		if (startupResponseData.isEirods()) {
+		if (startupResponseData.checkIs410OrLater()) {
 			secureIRODSCommands.setForceSslFlush(true);
 			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
@@ -161,7 +161,7 @@ public class PAMAuth extends AuthMechanism {
 		}
 
 		String tempPasswordForPam;
-		if (startupResponseData.isEirods()) {
+		if (startupResponseData.checkIs410OrLater()) {
 			tempPasswordForPam = response.getTag("result_").getStringValue();
 		} else {
 			tempPasswordForPam = response.getTag("irodsPamPassword")

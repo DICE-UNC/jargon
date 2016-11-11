@@ -60,14 +60,6 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		return props;
 	}
 
-	private boolean isEirods() throws JargonException {
-		if (getIRODSServerProperties().isConsortiumVersion()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -118,10 +110,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
 
-		if (isEirods()) {
-			return true;
-
-		} else if (getIRODSServerProperties()
+		if (getIRODSServerProperties()
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;
 		} else {

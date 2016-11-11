@@ -127,8 +127,6 @@ public class EnvironmentalInfoAOTest {
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			return;
-		} else if (props.isConsortiumVersion()) {
-			return;
 		}
 
 		List<String> microservices = environmentalInfoAO

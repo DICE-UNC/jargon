@@ -4571,7 +4571,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			log.warn(
 					"invalid input parameter, for iRODS 4.0 plus treat this like it should be an ignore to preserve previous behavior",
 					e);
-			if (getIRODSServerProperties().isConsortiumVersion()) {
+			if (getIRODSServerProperties().isAtLeastIrods410()) {
 				log.warn("ignored....is eirods");
 			} else {
 				throw e;

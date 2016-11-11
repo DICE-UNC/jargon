@@ -3,11 +3,9 @@ package org.irods.jargon.core.connection;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
-import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,20 +110,9 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *
 	 * @return
 	 */
-	boolean isPamFlush() { // FIXME: pam flush issue for 3.3.1?
+	boolean isPamFlush() {
 
-		boolean postThreeDotThree = MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-						getStartupResponseData().getRelVersion(), "rods3.3");
-
-		boolean beforeFourPointOne = !MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-						getStartupResponseData().getRelVersion(), "rods4.1.0");
-
-		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
-				&& !postThreeDotThree) {
-			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
+		if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
 			// can be
 			// set by a
 			// jargon.properties
@@ -139,12 +126,19 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			 * to the protocol, preventing a performance drop from unneeded
 			 * flushes later
 			 */
-		} else if (postThreeDotThree && beforeFourPointOne && isForceSslFlush()) {
-			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
-			return true;
 		} else {
-			return false;
+
+			IrodsVersion currentVersion = new IrodsVersion(this
+					.getStartupResponseData().getRelVersion());
+			if (currentVersion.getMajor() == 4
+					&& currentVersion.getMinor() == 0) {
+				log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+				return true;
+			} else {
+				return false;
+			}
 		}
+
 	}
 
 	/**
