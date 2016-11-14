@@ -55,3 +55,8 @@ Avoid logged iRODS errors for missing section of DataObjInp_PI by providing Spec
 
 Changed from a string comparison of iRODS reported version to a more sophisticated comparator object 
 
+#### Update FileCloseInp for in_pdmo for iRODS 4.1.9 #205
+
+Update FileCloseInp packing instruction for additional resource information
+
+

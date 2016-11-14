@@ -671,7 +671,7 @@ public class RemoteExecuteServiceImplTest {
 			throws Exception {
 
 		if (!testingPropertiesHelper.isTestRemoteExecStream(testingProperties)) {
-			return;
+			throw new UnsupportedOperationException();
 		}
 
 		// threshold is 1M, this is 2M
@@ -690,7 +690,7 @@ public class RemoteExecuteServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isAtLeastIrods410()) {
+		if (props.isAtLeastIrods410()) {
 			irodsFileSystem.closeAndEatExceptions();
 			throw new UnsupportedOperationException("match expects");
 		}

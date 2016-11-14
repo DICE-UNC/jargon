@@ -105,6 +105,18 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	}
 
 	/**
+	 * Convenience method to see if the current version in this instance is at
+	 * least the given version in the parameter
+	 * 
+	 * @param versionString
+	 *            <code>String</code> with the rodsx.x.x version number
+	 * @return <code>boolean</code>
+	 */
+	public boolean hasVersionOfAtLeast(final String versionString) {
+		return compareTo(new IrodsVersion(versionString)) >= 0;
+	}
+
+	/**
 	 * Returns a negative integer, zero, or a positive integer as this object is
 	 * less than, equal to, or greater than the specified object.
 	 */

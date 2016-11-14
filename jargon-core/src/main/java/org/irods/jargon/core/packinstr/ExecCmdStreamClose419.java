@@ -9,17 +9,21 @@ import org.irods.jargon.core.exception.JargonException;
  * Immutable object gives translation of an ExecCmd operation into XML in order
  * to close a stream opened by ExecCmd. For simplicity, this variant of the
  * packing instruction is factored into its own class.
+ * <p/>
+ * This version is for iRODS 4.1.9 or later
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
 
-public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
+public final class ExecCmdStreamClose419 extends
+		AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "fileCloseInp_PI";
 	public static final String FILE_INX = "fileInx";
+	public static final String IN_PDMO = "in_pdmo";
 	public static final int STREAM_CLOSE_API_NBR = 693;
-
+	private final String pdmo;
 	private final int fileDescriptor;
 
 	/**
@@ -28,21 +32,16 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	 * @param fileDescriptor
 	 *            <code>int</code> with the file descriptor representing the
 	 *            stream to close
+	 * @param pdmo
+	 *            <code>String</code> with the post disconnect mx operation to
+	 *            carry out. Blank if not used.
 	 * @return <code>ExecCmdStreamClose</code> instance.
 	 * @throws JargonException
 	 */
-	public static ExecCmdStreamClose instance(final int fileDescriptor)
-			throws JargonException {
-		return new ExecCmdStreamClose(STREAM_CLOSE_API_NBR, fileDescriptor);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("ExecCmd stream close");
-		sb.append("\n  fileDescriptor:");
-		sb.append(fileDescriptor);
-		return sb.toString();
+	public static ExecCmdStreamClose419 instance(final int fileDescriptor,
+			final String pdmo) throws JargonException {
+		return new ExecCmdStreamClose419(STREAM_CLOSE_API_NBR, fileDescriptor,
+				pdmo);
 	}
 
 	/**
@@ -54,10 +53,13 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	 * @param fileDescriptor
 	 *            <code>int</code> with the file descriptor representing the
 	 *            stream to close
+	 * @param pdmo
+	 *            <code>String</code> with the post disconnect mx operation to
+	 *            carry out. Blank if not used.
 	 * @throws JargonException
 	 */
-	private ExecCmdStreamClose(final int apiNumber, final int fileDescriptor)
-			throws JargonException {
+	private ExecCmdStreamClose419(final int apiNumber,
+			final int fileDescriptor, final String pdmo) throws JargonException {
 
 		super();
 
@@ -66,7 +68,12 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 					"file descriptor is 0 or negative");
 		}
 
+		if (pdmo == null) {
+			throw new IllegalArgumentException("pdmo is null");
+		}
+
 		this.fileDescriptor = fileDescriptor;
+		this.pdmo = pdmo;
 		setApiNumber(apiNumber);
 
 	}
@@ -81,10 +88,21 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX,
-				fileDescriptor) });
+		Tag message = new Tag(PI_TAG, new Tag[] {
+				new Tag(FILE_INX, fileDescriptor), new Tag(IN_PDMO, pdmo) });
 
 		return message;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ExecCmdStreamClose419 [");
+		if (pdmo != null) {
+			builder.append("pdmo=").append(pdmo).append(", ");
+		}
+		builder.append("fileDescriptor=").append(fileDescriptor).append("]");
+		return builder.toString();
 	}
 
 }
