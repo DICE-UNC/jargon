@@ -18,15 +18,15 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSSimpleConnectionTest.class,
-		EnvironmentalInfoAccessorTest.class,
-		IRODSSimpleProtocolManagerTest.class, IRODSSessionTest.class,
-		IRODSServerPropertiesTest.class,
-		DefaultPropertiesJargonConfigTest.class,
-		ConnectionProgressStatusTest.class, PAMAuthTest.class,
-		DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class,
-		ClientServerNegotationPolicyFromPropertiesBuilderTest.class,
-		ClientServerNegotiationPolicyTest.class,
-		PipelineConfigurationTest.class })
+	EnvironmentalInfoAccessorTest.class,
+	IRODSSimpleProtocolManagerTest.class, IRODSSessionTest.class,
+	IRODSServerPropertiesTest.class,
+	DefaultPropertiesJargonConfigTest.class,
+	ConnectionProgressStatusTest.class, PAMAuthTest.class,
+	DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class,
+	ClientServerNegotationPolicyFromPropertiesBuilderTest.class,
+	ClientServerNegotiationPolicyTest.class,
+	PipelineConfigurationTest.class })
 public class ConnectionTests {
 
 }

@@ -36,7 +36,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	private final String argumentsToPassWithCommand;
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
-	public static final String STREAMING_API_CUTOFF = "rods2.4.1";
+	public static final String STREAMING_API_CUTOFF = "rods4.1";
 	private PathHandlingMode pathHandlingMode = PathHandlingMode.NONE;
 
 	private static final Logger log = LoggerFactory
@@ -379,7 +379,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
 
-			if (getIrodsCommands().getIRODSServerProperties().isConsortiumVersion()) {
+			if (!getIrodsCommands().getIRODSServerProperties()
+					.isAtLeastIrods410()) {
 
 				log.error("unable to stream large files in eirods");
 				throw new UnsupportedOperationException(

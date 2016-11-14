@@ -94,7 +94,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            {@link NegotiatedClientServerConfiguration} represents the
 	 *            result of client server negotiation of any potential
 	 *            encryption.
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 
@@ -110,7 +110,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws JargonException {
+					throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -161,7 +161,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		 */
 		jargonProperties = new SettableJargonProperties(
 				irodsAccessObjectFactory.getIrodsSession()
-						.getJargonProperties());
+				.getJargonProperties());
 		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
@@ -174,7 +174,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -343,24 +343,24 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/**
 	 * Handy method for threads to determine whether encryption should be done
-	 * 
+	 *
 	 * @return
 	 */
 	boolean doEncryption() {
-		return this.negotiatedClientServerConfiguration.isSslConnection();
+		return negotiatedClientServerConfiguration.isSslConnection();
 	}
 
 	/**
 	 * Provides individual threads a hook to create the appropriate encryption
 	 * cipher if needed.
-	 * 
+	 *
 	 * @return {@link ParallelCipherWrapper}
 	 * @throws ClientServerNegotiationException
 	 */
 	ParallelEncryptionCipherWrapper initializeCypherForEncryption()
 			throws ClientServerNegotiationException {
 		log.debug("initializeCypherForEncryption()");
-		if (!this.negotiatedClientServerConfiguration.isSslConnection()) {
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
 			log.error("should not be trying to encrypt, is not ssl configured");
 			throw new ClientServerNegotiationException(
 					"attempt to encrypt a transfer when SSL not configured");

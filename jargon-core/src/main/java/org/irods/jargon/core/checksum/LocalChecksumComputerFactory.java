@@ -25,6 +25,6 @@ public interface LocalChecksumComputerFactory {
 	 */
 	public abstract AbstractChecksumComputeStrategy instance(
 			ChecksumEncodingEnum checksumEncodingEnum)
-					throws ChecksumMethodUnavailableException;
+			throws ChecksumMethodUnavailableException;
 
 }

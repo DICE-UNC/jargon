@@ -70,11 +70,11 @@ package org.irods.jargon.core.utils;
  * fileFormat.setIntSize(4);
  * fileFormat.setLongSize(4);
  * fileFormat.setLongLongSize(8);
- *
+ * 
  * // Read a 4-byte long from the file
  * byte b = new byte[4];
  * read(fd, b, 4);
- *
+ * 
  * // Convert it from the file's format to the host's format
  * long lng = fileFormat.longValue(b);
  * </PRE>
@@ -4467,7 +4467,7 @@ public final class BinaryDataFormat extends Object {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -4486,7 +4486,7 @@ public final class BinaryDataFormat extends Object {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override

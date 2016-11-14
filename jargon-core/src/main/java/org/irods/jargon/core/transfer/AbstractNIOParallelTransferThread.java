@@ -46,7 +46,7 @@ public class AbstractNIOParallelTransferThread {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 				tot += read;
 				if (tot == length) {

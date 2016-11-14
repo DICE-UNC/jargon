@@ -2,7 +2,7 @@ package org.irods.jargon.core.protovalues;
 
 /**
  * types of encryption algos (e.g. for parallel transfer encryption)
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum EncryptionAlgorithmEnum {
@@ -29,7 +29,7 @@ public enum EncryptionAlgorithmEnum {
 
 	/**
 	 * Given a text value resolve the encoding
-	 * 
+	 *
 	 * @param userType
 	 * @return
 	 */

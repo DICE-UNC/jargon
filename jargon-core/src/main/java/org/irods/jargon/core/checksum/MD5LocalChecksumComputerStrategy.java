@@ -17,14 +17,14 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  */
 public class MD5LocalChecksumComputerStrategy extends
-AbstractChecksumComputeStrategy {
+		AbstractChecksumComputeStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(MD5LocalChecksumComputerStrategy.class);
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.checksum.AbstractChecksumComputer#
 	 * instanceChecksumForPackingInstruction(java.lang.String)
 	 */

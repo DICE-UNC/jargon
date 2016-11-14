@@ -117,7 +117,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	public static final GeneralAdminInpForResources instanceForRemoveChildFromResource(
 			final String childResourceName, final String parentResourceName)
-					throws JargonException {
+			throws JargonException {
 
 		if (childResourceName == null || childResourceName.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -162,7 +162,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
 				apiNumber);
 	}

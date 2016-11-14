@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
-SimpleQueryExecutorAO {
+		SimpleQueryExecutorAO {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(SimpleQueryExecutorAOImpl.class);
@@ -58,7 +58,7 @@ SimpleQueryExecutorAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.SimpleQueryExecutorAO#executeSimpleQuery(org
 	 * .irods.jargon.core.query.SimpleQuery)
@@ -175,7 +175,7 @@ SimpleQueryExecutorAO {
 	 */
 	private IRODSQueryResultRow convertRowToResultRow(
 			final List<String> rowList, final List<String> columnNames)
-					throws JargonException {
+			throws JargonException {
 		char delimiter = ':';
 		List<String> columnValues = new ArrayList<String>();
 
@@ -199,7 +199,7 @@ SimpleQueryExecutorAO {
 	 */
 	private List<IRODSQueryResultRow> generateResultRows(
 			final List<String> rows, final List<String> columnNames)
-					throws JargonException {
+			throws JargonException {
 		List<IRODSQueryResultRow> results = new ArrayList<IRODSQueryResultRow>();
 
 		for (List<String> row : divideRows(rows)) {

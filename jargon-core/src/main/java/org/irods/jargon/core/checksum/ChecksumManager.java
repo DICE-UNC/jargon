@@ -37,6 +37,6 @@ public interface ChecksumManager {
 	 */
 	public ChecksumValue determineChecksumEncodingFromIrodsData(
 			String irodsChecksumValue)
-					throws ChecksumMethodUnavailableException;
+			throws ChecksumMethodUnavailableException;
 
 }

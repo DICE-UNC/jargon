@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utilities to generate SSL connections for PAM and for general TLS support
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -146,18 +146,18 @@ class SslConnectionUtilities {
 		 */
 		if (log.isDebugEnabled()) {
 			sslSocket
-					.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-						@Override
-						public void handshakeCompleted(
-								final HandshakeCompletedEvent event) {
-							log.debug("Handshake finished!");
-							log.debug("\t CipherSuite:{}",
-									event.getCipherSuite());
-							log.debug("\t SessionId {}", event.getSession());
-							log.debug("\t PeerHost {}", event.getSession()
-									.getPeerHost());
-						}
-					});
+			.addHandshakeCompletedListener(new HandshakeCompletedListener() {
+				@Override
+				public void handshakeCompleted(
+						final HandshakeCompletedEvent event) {
+					log.debug("Handshake finished!");
+					log.debug("\t CipherSuite:{}",
+							event.getCipherSuite());
+					log.debug("\t SessionId {}", event.getSession());
+					log.debug("\t PeerHost {}", event.getSession()
+							.getPeerHost());
+				}
+			});
 		}
 
 		log.debug("starting SSL handshake");
@@ -175,7 +175,7 @@ class SslConnectionUtilities {
 	/**
 	 * Create the SSL socket, and manipulate the provided irodsCommands to make
 	 * the secure socket the operative socket for the connection
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
@@ -197,14 +197,14 @@ class SslConnectionUtilities {
 			AssertionError {
 
 		log.info("createSslSocketForProtocolAndIntegrateIntoProtocol()");
-		SSLSocket sslSocket = this.createSslSocketForProtocol(irodsAccount,
+		SSLSocket sslSocket = createSslSocketForProtocol(irodsAccount,
 				irodsCommands, doSslStartupSequence);
 		log.info("have SSL socket, introduce as the iRODS connection in the provided protocol");
 		irodsCommands.setIrodsConnection(new IRODSBasicTCPConnection(
 				irodsCommands.getIrodsAccount(), irodsCommands
-						.getPipelineConfiguration(), irodsCommands
-						.getIrodsProtocolManager(), sslSocket, irodsCommands
-						.getIrodsSession()));
+				.getPipelineConfiguration(), irodsCommands
+				.getIrodsProtocolManager(), sslSocket, irodsCommands
+				.getIrodsSession()));
 
 	}
 

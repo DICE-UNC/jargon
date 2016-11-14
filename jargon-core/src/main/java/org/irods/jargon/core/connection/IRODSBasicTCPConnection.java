@@ -87,7 +87,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager,
 			final Socket socket, final IRODSSession irodsSession)
-			throws JargonException {
+					throws JargonException {
 
 		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
 				socket, irodsSession);
@@ -101,7 +101,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractConnection#connect(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -145,9 +145,9 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 				connection.setPerformancePreferences(getPipelineConfiguration()
 						.getPrimaryTcpPerformancePrefsConnectionTime(),
 						getPipelineConfiguration()
-								.getPrimaryTcpPerformancePrefsLatency(),
+						.getPrimaryTcpPerformancePrefsLatency(),
 						getPipelineConfiguration()
-								.getPrimaryTcpPerformancePrefsBandwidth());
+						.getPrimaryTcpPerformancePrefsBandwidth());
 				InetSocketAddress address = new InetSocketAddress(
 						irodsAccount.getHost(), irodsAccount.getPort());
 				connection.setKeepAlive(getPipelineConfiguration()
@@ -165,7 +165,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} catch (UnknownHostException e) {
 				log.error(
 						"exception opening socket to:" + irodsAccount.getHost()
-								+ " port:" + irodsAccount.getPort(), e);
+						+ " port:" + irodsAccount.getPort(), e);
 				throw new JargonException(e);
 			} catch (IOException ioe) {
 
@@ -223,11 +223,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} else {
 				log.debug("buffer of size:{} on input stream",
 						pipelineConfiguration
-								.getInternalInputStreamBufferSize());
+						.getInternalInputStreamBufferSize());
 				irodsInputStream = new BufferedInputStream(
 						connection.getInputStream(),
 						pipelineConfiguration
-								.getInternalInputStreamBufferSize());
+						.getInternalInputStreamBufferSize());
 			}
 
 			if (pipelineConfiguration.getInternalOutputStreamBufferSize() <= -1) {
@@ -242,11 +242,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 			} else {
 				log.debug("buffer of size:{} on output stream",
 						pipelineConfiguration
-								.getInternalOutputStreamBufferSize());
+						.getInternalOutputStreamBufferSize());
 				irodsOutputStream = new BufferedOutputStream(
 						connection.getOutputStream(),
 						pipelineConfiguration
-								.getInternalOutputStreamBufferSize());
+						.getInternalOutputStreamBufferSize());
 			}
 
 		} catch (UnknownHostException e) {
@@ -256,7 +256,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 		} catch (IOException ioe) {
 			log.error(
 					"io exception opening socket to:" + irodsAccount.getHost()
-							+ " port:" + irodsAccount.getPort(), ioe);
+					+ " port:" + irodsAccount.getPort(), ioe);
 			throw new JargonException(ioe);
 		}
 	}
@@ -281,7 +281,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractConnection#shutdown()
 	 */
 	@Override
@@ -292,7 +292,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.AbstractConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */
@@ -303,7 +303,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

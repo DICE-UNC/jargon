@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Captures the client/server negotiation process in the client given a
  * connection and other information.
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -41,12 +41,12 @@ class ClientServerNegotiationService {
 	/**
 	 * Default constructor takes the mid level protocol object that represents
 	 * the iRODS agent connection for which transport negotiation will be done
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} for negotiation
 	 */
 	ClientServerNegotiationService(
-			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
 		super();
 		this.irodsMidLevelProtocol = irodsMidLevelProtocol;
 		initializeNegotiationTable();
@@ -77,12 +77,12 @@ class ClientServerNegotiationService {
 	 * Handy method to obtain a reference to the operative negotiation policy.
 	 * This represents the expression of the client's desire,either from the
 	 * jargon props, or overridden in IRODSAccount.
-	 * 
+	 *
 	 * @return {@link ClientServerNegotiationPolicy} with the client position on
 	 *         negotiation
 	 */
 	private ClientServerNegotiationPolicy referToNegotiationPolicy() {
-		return this.getIrodsMidLevelProtocol().getIrodsConnection()
+		return getIrodsMidLevelProtocol().getIrodsConnection()
 				.getOperativeClientServerNegotiationPolicy();
 	}
 
@@ -93,7 +93,7 @@ class ClientServerNegotiationService {
 	 * <p/>
 	 * This is triggered after the neg_pi has been sent from the server, see
 	 * irods_client_negotiation.cpp ~ line 412
-	 * 
+	 *
 	 * @return {@link NegotiatedClientServerConfiguration} with the negotiated
 	 *         result
 	 * @throws ClientServerNegotiationException
@@ -102,7 +102,7 @@ class ClientServerNegotiationService {
 	 */
 	StartupResponseData negotiate(
 			final ClientServerNegotiationStructInitNegotiation struct)
-			throws ClientServerNegotiationException, JargonException {
+					throws ClientServerNegotiationException, JargonException {
 		log.info("negotiate()");
 
 		if (struct == null) {
@@ -112,8 +112,8 @@ class ClientServerNegotiationService {
 	}
 
 	private StartupResponseData negotiateUsingServerProtocol(
-			ClientServerNegotiationStructInitNegotiation struct)
-			throws ClientServerNegotiationException, JargonException {
+			final ClientServerNegotiationStructInitNegotiation struct)
+					throws ClientServerNegotiationException, JargonException {
 		log.info("negotiateUsingServerProtocol()");
 		log.info("negotiation over response from server:{}", struct);
 		log.info("client policy:{}", referToNegotiationPolicy());
@@ -121,14 +121,14 @@ class ClientServerNegotiationService {
 		/*
 		 * Analogous to irods_client_negotiation.cpp ~ line 250:
 		 * client_server_negotiation_for_client
-		 * 
+		 *
 		 * The startup pack was sent requesting negotiation, and I am here
 		 * expecting a response to that negotiation
 		 */
 
 		Outcome negotiatedOutcome = negotiationTable[referToNegotiationPolicy()
-				.getSslNegotiationPolicy().ordinal()][struct
-				.getSslNegotiationPolicy().ordinal()];
+		                                             .getSslNegotiationPolicy().ordinal()][struct
+		                                                                                   .getSslNegotiationPolicy().ordinal()];
 		log.info("negotiatedOutcome:{}", negotiatedOutcome);
 
 		if (negotiatedOutcome == Outcome.CS_NEG_FAILURE) {
@@ -149,18 +149,18 @@ class ClientServerNegotiationService {
 	 * <p/>
 	 * This should be processed in irods_client_negotiation.cpp line 463 -
 	 * read_client_server_negotiation_message
-	 * 
+	 *
 	 * @param negotiatedOutcome
 	 * @return
 	 * @throws JargonException
 	 */
 	private StartupResponseData notifyServerOfNegotiationSuccess(
-			Outcome negotiatedOutcome) throws JargonException {
+			final Outcome negotiatedOutcome) throws JargonException {
 		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
 				.instance(
 						ClientServerNegotiationStructNotifyServerOfResult.STATUS_SUCCESS,
 						negotiatedOutcome.name());
-		Tag versionPiTag = this.irodsMidLevelProtocol
+		Tag versionPiTag = irodsMidLevelProtocol
 				.irodsFunctionForNegotiation(struct);
 
 		/*
@@ -172,8 +172,8 @@ class ClientServerNegotiationService {
 		StartupResponseData startupResponse = AuthMechanism
 				.buldStartupResponseFromVersionPI(versionPiTag);
 		startupResponse
-				.setNegotiatedClientServerConfiguration(new NegotiatedClientServerConfiguration(
-						negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
+		.setNegotiatedClientServerConfiguration(new NegotiatedClientServerConfiguration(
+				negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
 
 		log.info("startupResponse captured:{}", startupResponse);
 
@@ -201,11 +201,11 @@ class ClientServerNegotiationService {
 
 		log.info("wrapping in ssl connection");
 		SslConnectionUtilities sslConnectionUtilities = new SslConnectionUtilities(
-				this.getIrodsMidLevelProtocol().getIrodsSession());
+				getIrodsMidLevelProtocol().getIrodsSession());
 		sslConnectionUtilities
-				.createSslSocketForProtocolAndIntegrateIntoProtocol(this
-						.getIrodsMidLevelProtocol().getIrodsAccount(), this
-						.getIrodsMidLevelProtocol(), false);
+		.createSslSocketForProtocolAndIntegrateIntoProtocol(
+						getIrodsMidLevelProtocol().getIrodsAccount(),
+						getIrodsMidLevelProtocol(), false);
 
 		configureParametersForParallelTransfer(startupResponse);
 
@@ -217,15 +217,15 @@ class ClientServerNegotiationService {
 	/**
 	 * Notify agent of preferences for encryption of parallel transfers based on
 	 * jargon properties
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	private void configureParametersForParallelTransfer(
 			final StartupResponseData startupResponse) throws JargonException {
 		log.info("configureParametersForParallelTransfer()");
-		PipelineConfiguration myProps = PipelineConfiguration.instance(this
-				.getIrodsMidLevelProtocol().getIrodsSession()
-				.getJargonProperties());
+		PipelineConfiguration myProps = PipelineConfiguration
+				.instance(getIrodsMidLevelProtocol().getIrodsSession()
+						.getJargonProperties());
 		log.info("setting up secret key");
 		log.info(
 				"creating secret key for parallel transfer encryption using:{}",
@@ -235,7 +235,7 @@ class ClientServerNegotiationService {
 			AbstractKeyGenerator generator = new AESKeyGenerator(myProps,
 					startupResponse.getNegotiatedClientServerConfiguration());
 			startupResponse.getNegotiatedClientServerConfiguration()
-					.setSecretKey(generator.generateKey());
+			.setSecretKey(generator.generateKey());
 		} else {
 			log.error("unable to generate a key for algo:{}",
 					myProps.getEncryptionAlgorithmEnum());
@@ -248,17 +248,17 @@ class ClientServerNegotiationService {
 
 		try {
 			log.info("sending header with encryption cues");
-			this.getIrodsMidLevelProtocol().sendHeader(
+			getIrodsMidLevelProtocol().sendHeader(
 					myProps.getEncryptionAlgorithmEnum().getTextValue(),
 					myProps.getEncryptionKeySize(),
 					myProps.getEncryptionSaltSize(),
 					myProps.getEncryptionNumberHashRounds(), 0);
-			this.getIrodsMidLevelProtocol().getIrodsConnection().flush();
+			getIrodsMidLevelProtocol().getIrodsConnection().flush();
 			log.info("now write the shared secret to iRODS");
-			this.getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
+			getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
 					NEGOTIATION_SHARED_SECRET,
 					startupResponse.getNegotiatedClientServerConfiguration()
-							.getSecretKey().getEncoded(), null, 0, 0, null, 0,
+					.getSecretKey().getEncoded(), null, 0, 0, null, 0,
 					0, 0);
 
 		} catch (IOException e) {
@@ -271,12 +271,12 @@ class ClientServerNegotiationService {
 	/**
 	 * After negotiation that results in a failure, send a failure message back
 	 * to the server
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	private void notifyServerOfNegotiationFailure() throws JargonException {
 		ClientServerNegotiationStructNotifyServerOfResult struct = ClientServerNegotiationStructNotifyServerOfResult
 				.instanceForFailure();
-		this.irodsMidLevelProtocol.irodsFunction(struct);
+		irodsMidLevelProtocol.irodsFunction(struct);
 	}
 }

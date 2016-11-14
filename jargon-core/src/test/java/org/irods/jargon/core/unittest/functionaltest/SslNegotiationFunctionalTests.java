@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
@@ -27,7 +27,7 @@ import org.junit.Test;
  * Functional tests of various permutations of ssl negotiation and auth methods.
  * These tests are contingent on the iRODS configuration and various testing
  * properties settings
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -71,7 +71,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
+		.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -99,7 +99,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 		TrustAllX509TrustManager manager = new TrustAllX509TrustManager();
@@ -134,7 +134,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -176,7 +176,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 

@@ -37,6 +37,6 @@ public abstract class IRODSConnectionFactory {
 	protected abstract AbstractConnection instance(
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws JargonException;
+			throws JargonException;
 
 }

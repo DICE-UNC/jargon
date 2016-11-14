@@ -25,7 +25,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Creates a bundle (tar) file to be stored in iRODS using the contents of
@@ -71,7 +71,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
@@ -95,7 +95,7 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Given a tar file that exists in iRODS, extract the contents to the given
@@ -119,6 +119,6 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 			String absolutePathToBundleFileInIrodsToBeExtracted,
 			String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException;
+			throws JargonException;
 
 }

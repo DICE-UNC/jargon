@@ -73,7 +73,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *             if the user does not exist
 	 */
 	User findById(final String userId) throws JargonException,
-	DataNotFoundException;
+			DataNotFoundException;
 
 	/**
 	 * Query users by the unique id assigned by iRODS (database unique key) in a
@@ -91,7 +91,7 @@ public interface UserAO extends IRODSAccessObject {
 	 *             if the user does not exist
 	 */
 	User findByIdInZone(String userId, String zone) throws JargonException,
-	DataNotFoundException;
+			DataNotFoundException;
 
 	/**
 	 * Query the AVU metadata associated with the given user by Id.
@@ -129,7 +129,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void deleteUser(String userName) throws InvalidUserException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Update the user data. Note that this method only updates certain

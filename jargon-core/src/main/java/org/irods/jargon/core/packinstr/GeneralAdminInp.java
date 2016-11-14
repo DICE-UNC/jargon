@@ -164,7 +164,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForSetUserQuotaTotal(
 			final String userName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -192,7 +192,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(
 			final String userGroupName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
@@ -380,7 +380,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(
 			final String userName, final String password)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -408,7 +408,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserPassword(
 			final String userName, final String password)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -552,7 +552,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static GeneralAdminInp instanceForModifyUserType(
 			final String userName, final UserTypeEnum userType)
-					throws JargonException {
+			throws JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
 		}
@@ -574,7 +574,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super();
 
 		if (apiNumber <= 0) {
@@ -687,7 +687,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

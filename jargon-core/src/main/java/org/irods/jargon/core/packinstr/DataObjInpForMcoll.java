@@ -165,8 +165,8 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 *
-	 *
+	 * 
+	 * 
 	 * sending msg: <DataObjInp_PI>
 	 * <objPath>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest
 	 * /testMountMSSOWorkflow/mounted</objPath> <createMode>0</createMode>

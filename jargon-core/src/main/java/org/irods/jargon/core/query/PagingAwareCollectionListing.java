@@ -80,7 +80,7 @@ public class PagingAwareCollectionListing {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

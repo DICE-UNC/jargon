@@ -97,7 +97,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	IRODSRuleExecResult executeRuleFromResource(String resourcePath,
 			List<IRODSRuleParameter> irodsRuleInputParameters,
 			RuleProcessingType ruleProcessingType)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a rule file that exists as an iRODS file. This will be a rule file

@@ -48,7 +48,7 @@ abstract class AuthMechanism {
 	 * Optional method that will be called after the startup pack is sent but
 	 * before the actual authentication attempt, and before client/server
 	 * negotiation
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected void postConnectionStartupPreAuthentication()
@@ -60,10 +60,10 @@ abstract class AuthMechanism {
 	 * After startup pack, the client/server negotiation commences here, based
 	 * on configuration and the settings in the <code>IRODSAccount</code>
 	 * visible here.
-	 * 
+	 *
 	 * @param startupResponseData
 	 *            {@link StartupResponseData} from startup pack
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected StartupResponseData clientServerNegotiationHook(
@@ -92,13 +92,14 @@ abstract class AuthMechanism {
 	/**
 	 * Handy method to build startup response data from a VersionPI tag response
 	 * from iRODS
-	 * 
+	 *
 	 * @param versionPI
 	 *            {@link Tag} protocol representation of version info
 	 * @return {@link StartupResponseData
 
 	 */
-	static StartupResponseData buldStartupResponseFromVersionPI(Tag versionPI) {
+	static StartupResponseData buldStartupResponseFromVersionPI(
+			final Tag versionPI) {
 		StartupResponseData startupResponseData;
 		startupResponseData = new StartupResponseData(versionPI
 				.getTag("status").getIntValue(), versionPI.getTag("relVersion")
@@ -106,28 +107,28 @@ abstract class AuthMechanism {
 				.getStringValue(),
 				versionPI.getTag("reconnPort").getIntValue(), versionPI.getTag(
 						"reconnAddr").getStringValue(), versionPI.getTag(
-						"cookie").getStringValue());
+								"cookie").getStringValue());
 		return startupResponseData;
 	}
 
 	/**
 	 * After startup pack send, do a client server negotiation, analogous to
 	 * irods/lib/core/src/sockComm.cpp line 845
-	 * 
+	 *
 	 * @param irodsMidLevelProtocol
 	 * @param irodsAccount
 	 * @return
 	 * @throws JargonException
 	 */
 	private StartupResponseData clientServerNegotiation(
-			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
-			IRODSAccount irodsAccount) throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			final IRODSAccount irodsAccount) throws JargonException {
 
 		log.info("clientServerNegotiation()");
 
 		/*
 		 * I expect to read in a cd_neg_t structure
-		 * 
+		 *
 		 * struct cs_neg_t { int status_; char result_[MAX_NAME_LEN]; };
 		 */
 
@@ -161,7 +162,7 @@ abstract class AuthMechanism {
 			/*
 			 * Do the actual negotiation...The struct should have the response
 			 * from the startup pack to launch the negotiation process.
-			 * 
+			 *
 			 * here I am tracking lib/core/src/irods_client_negotiation.cpp ~
 			 * line 293
 			 */
@@ -247,13 +248,13 @@ abstract class AuthMechanism {
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 		return irodsMidLevelProtocol;
 	}
 
 	protected String sendAuthRequestAndGetChallenge(
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException {
+					throws JargonException {
 		try {
 			irodsCommands.sendHeader(
 					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
@@ -307,11 +308,11 @@ abstract class AuthMechanism {
 			IRODSAccount irodsAccount,
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException;
+					throws AuthenticationException, JargonException;
 
 	protected void sendStartupPacket(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("sendStartupPacket()");
 
@@ -332,7 +333,7 @@ abstract class AuthMechanism {
 
 		// FIXME: NEG_PI here
 		/*
-		 * 
+		 *
 		 * <CS_NEG_PI><status>1</status> <result>CS_NEG_DONT_CARE</result>
 		 * </CS_NEG_PI>
 		 */

@@ -33,11 +33,11 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 		SettableJargonProperties jargonProps = new SettableJargonProperties();
 		// turn off native checksumming
@@ -166,7 +166,7 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 
 	/**
 	 * test for https://github.com/DICE-UNC/jargon/issues/173
-	 * 
+	 *
 	 * @throws Exception
 	 */
 
@@ -190,11 +190,11 @@ public class DataObjectChecksumUtilitiesAOImplTest {
 		jargonProps.setChecksumEncoding(ChecksumEncodingEnum.MD5);
 		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
 		irodsFileSystem
-				.getIrodsSession()
-				.getDiscoveredServerPropertiesCache()
-				.deleteCachedIRODSServerProperties(irodsAccount.getHost(),
-						irodsAccount.getZone(),
-						DiscoveredServerPropertiesCache.CHECKSUM_TYPE);
+		.getIrodsSession()
+		.getDiscoveredServerPropertiesCache()
+		.deleteCachedIRODSServerProperties(irodsAccount.getHost(),
+				irodsAccount.getZone(),
+				DiscoveredServerPropertiesCache.CHECKSUM_TYPE);
 
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();

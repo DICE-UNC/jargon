@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CollectionAuditAOImpl extends AbstractAuditAOImpl implements
-CollectionAuditAO {
+		CollectionAuditAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(CollectionAuditAOImpl.class);
@@ -39,7 +39,7 @@ CollectionAuditAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAuditAO#findAllAuditRecordsForCollection
 	 * (org.irods.jargon.core.pub.io.IRODSFile, int, int)
@@ -58,7 +58,7 @@ CollectionAuditAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.CollectionAuditAO#getAuditedActionForCollection
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String,

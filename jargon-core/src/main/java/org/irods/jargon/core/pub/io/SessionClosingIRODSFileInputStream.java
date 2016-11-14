@@ -33,13 +33,13 @@ public class SessionClosingIRODSFileInputStream extends IRODSFileInputStream {
 	 */
 	protected SessionClosingIRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-					throws FileNotFoundException {
+			throws FileNotFoundException {
 		super(irodsFile, fileIOOperations);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileInputStream#close()
 	 */
 	@Override

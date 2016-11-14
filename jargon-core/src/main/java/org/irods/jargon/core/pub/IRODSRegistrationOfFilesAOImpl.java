@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class IRODSRegistrationOfFilesAOImpl extends IRODSGenericAO implements
-IRODSRegistrationOfFilesAO {
+		IRODSRegistrationOfFilesAO {
 
 	static Logger log = LoggerFactory
 			.getLogger(IRODSRegistrationOfFilesAOImpl.class);
@@ -44,7 +44,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
 	 * registerPhysicalCollectionRecursivelyToIRODS(java.lang.String,
 	 * java.lang.String, boolean, java.lang.String, java.lang.String)
@@ -105,7 +105,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
 	 * registerPhysicalDataFileToIRODS(java.lang.String, java.lang.String,
 	 * java.lang.String, java.lang.String, boolean)
@@ -114,8 +114,8 @@ IRODSRegistrationOfFilesAO {
 	public void registerPhysicalDataFileToIRODS(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-					throws DataNotFoundException, DuplicateDataException,
-					JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		log.info("registerPhysicalDataToFileInIRODS()");
 
@@ -172,7 +172,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
 	 * registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String)
@@ -181,8 +181,8 @@ IRODSRegistrationOfFilesAO {
 	public String registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup)
-					throws DataNotFoundException, DuplicateDataException,
-					JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		log.info("registerPhysicalDataFileToIRODSWithVerifyLocalChecksum()");
 
@@ -242,8 +242,8 @@ IRODSRegistrationOfFilesAO {
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup,
 			final ChecksumEncodingEnum checksumEncoding)
-					throws DataNotFoundException, DuplicateDataException,
-					JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		log.info("registerPhysicalDataFileToIRODSWithVerifyLocalChecksum()");
 
@@ -317,7 +317,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
 	 * unregisterDataObject(java.lang.String)
 	 */
@@ -354,7 +354,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#unregisterCollection
 	 * (java.lang.String, boolean)
@@ -399,7 +399,7 @@ IRODSRegistrationOfFilesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSRegistrationOfFilesAO#
 	 * registerPhysicalDataFileToIRODSAsAReplica(java.lang.String,
 	 * java.lang.String, java.lang.String, java.lang.String, boolean)
@@ -409,8 +409,8 @@ IRODSRegistrationOfFilesAO {
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup,
 			final boolean generateChecksumInIRODS)
-					throws DataNotFoundException, DuplicateDataException,
-					JargonException {
+			throws DataNotFoundException, DuplicateDataException,
+			JargonException {
 
 		log.info("registerPhysicalDataFileToIRODSAsAReplica()");
 

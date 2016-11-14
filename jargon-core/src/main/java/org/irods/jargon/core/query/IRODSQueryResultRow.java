@@ -91,7 +91,7 @@ public class IRODSQueryResultRow {
 			final List<String> queryResultColumns,
 			final List<String> columnNames, final int recordCount,
 			final boolean lastResult, final int totalRecords)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns, columnNames,
 				recordCount, lastResult);
 	}

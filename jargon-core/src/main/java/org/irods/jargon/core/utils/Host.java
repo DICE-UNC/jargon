@@ -189,7 +189,7 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final String typeName[] = { "char", "short", "int", "long",
-		"long long", "float", "double", "long double" };
+			"long long", "float", "double", "long double" };
 
 	/**
 	 * Holds the size, in bytes, of each of the language primitive types.
@@ -198,13 +198,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final byte typeSize[] = { 1, // char
-		2, // short
-		4, // int
-		8, // long
-		8, // long long (doesn't exist in Java)
-		4, // float
-		8, // double
-		8, // long double (doesn't exist in Java)
+			2, // short
+			4, // int
+			8, // long
+			8, // long long (doesn't exist in Java)
+			4, // float
+			8, // double
+			8, // long double (doesn't exist in Java)
 	};
 
 	/**
@@ -215,13 +215,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final short typeBits[] = { 8, // char
-		16, // short
-		32, // int
-		64, // long
-		64, // long long (doesn't exist in Java)
-		32, // float
-		64, // double
-		64, // long double (doesn't exist in Java)
+			16, // short
+			32, // int
+			64, // long
+			64, // long long (doesn't exist in Java)
+			32, // float
+			64, // double
+			64, // long double (doesn't exist in Java)
 	};
 
 	/**
@@ -237,13 +237,13 @@ public final class Host extends Object {
 	 * <P>
 	 */
 	private static final byte typeCompilerAlignment[] = { 1, // char
-		2, // short
-		4, // int
-		8, // long
-		8, // long long (doesn't exist in Java)
-		4, // float
-		8, // double
-		8, // long double (doesn't exist in Java)
+			2, // short
+			4, // int
+			8, // long
+			8, // long long (doesn't exist in Java)
+			4, // float
+			8, // double
+			8, // long double (doesn't exist in Java)
 	};
 
 	// ----------------------------------------------------------------------

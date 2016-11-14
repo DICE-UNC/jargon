@@ -10,7 +10,7 @@ package org.irods.jargon.core.exception;
  *
  */
 public class OperationNotSupportedByThisServerException extends
-InternalIrodsOperationException {
+		InternalIrodsOperationException {
 
 	/**
 	 *

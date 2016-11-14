@@ -159,7 +159,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -203,7 +203,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -250,7 +250,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -312,7 +312,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -359,7 +359,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -401,7 +401,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -442,7 +442,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -485,7 +485,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -532,7 +532,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -581,7 +581,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new JargonException("thrown for expectations");
 		}
 
@@ -644,7 +644,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DuplicateDataException("thrown for expectations");
 		}
 
@@ -693,7 +693,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DuplicateDataException("thrown for expectations");
 		}
 
@@ -747,7 +747,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
@@ -801,7 +801,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
@@ -856,7 +856,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
@@ -887,7 +887,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -927,7 +927,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -977,7 +977,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1023,7 +1023,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1068,7 +1068,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1114,7 +1114,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1165,7 +1165,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -1212,7 +1212,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1257,7 +1257,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1303,7 +1303,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 		IRODSFile targetFile = createDataObjectByName(
@@ -1352,7 +1352,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 		IRODSFile targetFile = createDataObjectByName(
@@ -1431,7 +1431,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1477,7 +1477,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1572,7 +1572,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1617,7 +1617,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1665,7 +1665,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1748,7 +1748,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1792,7 +1792,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -1839,7 +1839,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new InvalidUserException("thrown for expectations");
 		}
 
@@ -1883,7 +1883,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1938,7 +1938,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -1990,7 +1990,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2041,7 +2041,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2094,7 +2094,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2144,7 +2144,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2196,7 +2196,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2281,7 +2281,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2326,7 +2326,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new InvalidGroupException("thrown for expectations");
 		}
 
@@ -2371,7 +2371,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2427,7 +2427,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2482,7 +2482,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2535,7 +2535,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2589,7 +2589,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new InvalidGroupException("thrown for expectations");
 		}
 
@@ -2642,7 +2642,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2692,7 +2692,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2739,7 +2739,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2783,7 +2783,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -2865,7 +2865,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2921,7 +2921,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -2973,7 +2973,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -3024,7 +3024,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -3125,7 +3125,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3174,7 +3174,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3211,7 +3211,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3277,7 +3277,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3324,7 +3324,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -3361,7 +3361,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -3391,7 +3391,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -3431,7 +3431,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3487,7 +3487,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new JargonException("thrown for expectations");
 		}
 		createDataObjectByName(
@@ -3528,7 +3528,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3583,7 +3583,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3645,7 +3645,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3713,7 +3713,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new FileNotFoundException("thrown for expectations");
 		}
 
@@ -3752,7 +3752,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 
@@ -3797,7 +3797,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3877,7 +3877,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 		IRODSFile targetFile = createDataObjectByName(
@@ -3937,7 +3937,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -3999,7 +3999,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -4061,7 +4061,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -4123,7 +4123,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -4185,7 +4185,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -4253,7 +4253,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new DataNotFoundException("thrown for expectations");
 		}
 
@@ -4292,7 +4292,7 @@ public class TicketAdminServiceImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (!props.isConsortiumVersion()) {
+		if (!props.isAtLeastIrods410()) {
 			throw new IllegalArgumentException("thrown for expectations");
 		}
 

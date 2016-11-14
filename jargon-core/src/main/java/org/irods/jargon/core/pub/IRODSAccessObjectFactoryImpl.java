@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class IRODSAccessObjectFactoryImpl implements
-IRODSAccessObjectFactory {
+		IRODSAccessObjectFactory {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSAccessObjectFactoryImpl.class);
@@ -54,7 +54,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#authenticateIRODSAccount
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -103,7 +103,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession()
 	 */
 	@Override
@@ -117,7 +117,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * closeSessionAndEatExceptions()
 	 */
@@ -138,7 +138,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#closeSession(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -160,7 +160,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * closeSessionAndEatExceptions
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -204,7 +204,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -218,7 +218,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserGroupAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
@@ -232,7 +232,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getEnvironmentalInfoAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -246,7 +246,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -260,7 +260,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSGenQueryExecutor
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -274,7 +274,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getZoneAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
@@ -288,7 +288,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
@@ -301,7 +301,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceGroupAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -315,7 +315,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -329,7 +329,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileFactory
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -343,7 +343,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
@@ -357,7 +357,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
@@ -371,7 +371,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -385,7 +385,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -399,7 +399,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -417,7 +417,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataTransferOperations
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -431,7 +431,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getBulkFileOperationsAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -445,7 +445,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getRemoteExecutionOfCommandsAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -459,7 +459,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getCollectionAndDataObjectListAndSearchAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -474,7 +474,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSimpleQueryExecutorAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -488,7 +488,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -502,7 +502,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getMountedCollectionAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -516,7 +516,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getProtocolExtensionPoint
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -530,7 +530,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getIRODSRegistrationOfFilesAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -544,7 +544,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIrodsSession()
 	 */
 	@Override
@@ -554,7 +554,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org
 	 * .irods.jargon.core.connection.IRODSSession)
@@ -573,7 +573,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
@@ -586,7 +586,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSServerProperties
 	 * (org.irods.jargon.core.connection.IRODSAccount)
@@ -616,7 +616,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * buildDefaultTransferControlBlockBasedOnJargonProperties()
 	 */
@@ -631,7 +631,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
@@ -644,7 +644,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
 	 * (org.irods .jargon.core.connection.IRODSAccount)
@@ -665,7 +665,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * getDiscoveredServerPropertiesCache()
 	 */
@@ -676,7 +676,7 @@ IRODSAccessObjectFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
 	 * isUsingDynamicServerPropertiesCache()
 	 */

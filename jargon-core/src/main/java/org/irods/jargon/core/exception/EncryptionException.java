@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.exception;
 
@@ -10,14 +10,14 @@ package org.irods.jargon.core.exception;
 public class EncryptionException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -6836562937507775737L;
 
 	/**
 	 * @param message
 	 */
-	public EncryptionException(String message) {
+	public EncryptionException(final String message) {
 		super(message);
 	}
 
@@ -25,14 +25,14 @@ public class EncryptionException extends JargonException {
 	 * @param message
 	 * @param cause
 	 */
-	public EncryptionException(String message, Throwable cause) {
+	public EncryptionException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
 	/**
 	 * @param cause
 	 */
-	public EncryptionException(Throwable cause) {
+	public EncryptionException(final Throwable cause) {
 		super(cause);
 	}
 
@@ -41,8 +41,8 @@ public class EncryptionException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public EncryptionException(String message, Throwable cause,
-			int underlyingIRODSExceptionCode) {
+	public EncryptionException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -50,7 +50,8 @@ public class EncryptionException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public EncryptionException(Throwable cause, int underlyingIRODSExceptionCode) {
+	public EncryptionException(final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -58,7 +59,8 @@ public class EncryptionException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public EncryptionException(String message, int underlyingIRODSExceptionCode) {
+	public EncryptionException(final String message,
+			final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

@@ -47,7 +47,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.QuotaAO#listAllQuota()
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.QuotaAO#listAllGlobalQuota()
 	 */
 	@Override
@@ -95,7 +95,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#setUserQuotaTotal(java.lang.String,
 	 * long)
@@ -127,7 +127,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaTotal(java.lang.String
 	 * , long)
@@ -159,7 +159,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#setUserQuotaForResource(java.lang.String
 	 * , java.lang.String, long)
@@ -167,7 +167,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 	@Override
 	public void setUserQuotaForResource(final String userName,
 			final String resourceName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("setUserQuotaForResource()");
 
@@ -198,7 +198,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#setUserGroupQuotaForResource(java.lang
 	 * .String, java.lang.String, long)
@@ -206,7 +206,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 	@Override
 	public void setUserGroupQuotaForResource(final String userGroupName,
 			final String resourceName, final long quotaValue)
-					throws JargonException {
+			throws JargonException {
 
 		// TODO: add tests when user group crud in place per [#471] add user
 		// group CRUD
@@ -240,7 +240,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#listQuotaForAUser(java.lang.String)
 	 */
@@ -273,7 +273,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.QuotaAO#getGlobalQuotaForAUser(java.lang.String
 	 * )
@@ -312,7 +312,7 @@ public class QuotaAOImpl extends IRODSGenericAO implements QuotaAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.QuotaAO#calculateQuotaUsage()
 	 */
 	@Override

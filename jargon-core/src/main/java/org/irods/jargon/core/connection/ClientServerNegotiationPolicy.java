@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -7,9 +7,9 @@ package org.irods.jargon.core.connection;
  * Captures the client-server negotiation policy for iRODS. This can be tuned
  * through jargon.properties and interactively. The {@link IRODSAccount} can
  * provide settings for negotiation to override default properties.
- * 
+ *
  * See iRODS/lib/core/src/irods_client_negotiation.cpp
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -33,7 +33,7 @@ public class ClientServerNegotiationPolicy {
 	}
 
 	public synchronized void setSslNegotiationPolicy(
-			SslNegotiationPolicy sslNegotiationPolicy) {
+			final SslNegotiationPolicy sslNegotiationPolicy) {
 		this.sslNegotiationPolicy = sslNegotiationPolicy;
 	}
 

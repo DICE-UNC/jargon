@@ -100,7 +100,7 @@ public abstract class IRODSProtocolManager {
 	 */
 	protected abstract void returnIRODSProtocol(
 			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Create a fresh protocol (mid level interface to protocol operations)

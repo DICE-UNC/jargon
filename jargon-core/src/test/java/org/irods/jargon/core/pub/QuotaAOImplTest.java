@@ -34,11 +34,11 @@ public class QuotaAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -73,7 +73,7 @@ public class QuotaAOImplTest {
 		quotaAO.setUserQuotaForResource(
 				irodsAccount.getUserName(),
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				quotaVal);
 
 		List<Quota> actual = quotaAO.listAllQuota();
@@ -84,8 +84,8 @@ public class QuotaAOImplTest {
 		for (Quota quota : actual) {
 			if (quota.getUserName().equals(irodsAccount.getUserName())
 					&& quota.getResourceName()
-					.equals(testingProperties
-							.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
+							.equals(testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
 				foundQuota = true;
 				Assert.assertEquals(
 						"did not properly set resource quota value", quotaVal,
@@ -121,7 +121,7 @@ public class QuotaAOImplTest {
 		quotaAO.setUserQuotaForResource(
 				irodsAccount.getUserName(),
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				quotaVal);
 
 		List<Quota> actual = quotaAO.listQuotaForAUser(irodsAccount
@@ -133,8 +133,8 @@ public class QuotaAOImplTest {
 		for (Quota quota : actual) {
 			if (quota.getUserName().equals(irodsAccount.getUserName())
 					&& quota.getResourceName()
-					.equals(testingProperties
-							.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
+							.equals(testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY))) {
 				foundQuota = true;
 				Assert.assertEquals(
 						"did not properly set resource quota value", quotaVal,

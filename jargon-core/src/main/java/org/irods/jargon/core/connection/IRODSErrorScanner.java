@@ -133,7 +133,7 @@ public class IRODSErrorScanner {
 	 */
 	private static void checkSpecificCodesAndThrowIfExceptionLocated(
 			final int infoValue, final String message, final ErrorEnum errorEnum)
-			throws JargonException {
+					throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
 			throw new JargonFileOrCollAlreadyExistsException(

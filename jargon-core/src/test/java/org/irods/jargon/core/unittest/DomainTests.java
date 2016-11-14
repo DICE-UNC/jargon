@@ -9,7 +9,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AvuDataTest.class, UserTypeEnumTest.class,
-	CollectionTest.class, AuditActionEnumTest.class })
+		CollectionTest.class, AuditActionEnumTest.class })
 public class DomainTests {
 
 }

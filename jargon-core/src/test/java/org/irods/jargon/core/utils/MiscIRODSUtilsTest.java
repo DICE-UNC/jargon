@@ -331,8 +331,8 @@ public class MiscIRODSUtilsTest {
 		IRODSAccount irodsAccount = null;
 		String userName = "blah";
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -342,8 +342,8 @@ public class MiscIRODSUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = null;
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -353,8 +353,8 @@ public class MiscIRODSUtilsTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = "";
 		MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
+				irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)

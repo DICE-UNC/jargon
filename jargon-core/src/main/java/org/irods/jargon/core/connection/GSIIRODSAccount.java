@@ -142,7 +142,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
 	 */
@@ -174,7 +174,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSAccount#hashCode()
 	 */
 	@Override

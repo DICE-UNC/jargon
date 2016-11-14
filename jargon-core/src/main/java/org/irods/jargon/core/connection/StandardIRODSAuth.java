@@ -36,7 +36,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	private String sendStandardPassword(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("sending standard irods password");
 
@@ -60,7 +60,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 */
 	private String challengeResponse(final String challenge, String password,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 		// Convert base64 string to a byte array
 		byte[] chal = null;
 		byte[] temp = Base64.fromString(challenge);
@@ -68,7 +68,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		if (IRODSAccount.isDefaultObfuscate()) {
 			try {
 				password = new PasswordObfuscator(new File(password))
-				.encodePassword();
+						.encodePassword();
 			} catch (Throwable e) {
 				log.error("error during account obfuscation", e);
 			}
@@ -77,7 +77,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 		if (password.length() < ConnectionConstants.MAX_PASSWORD_LENGTH) {
 			// pad the end with zeros to MAX_PASSWORD_LENGTH
 			chal = new byte[ConnectionConstants.CHALLENGE_LENGTH
-			                + ConnectionConstants.MAX_PASSWORD_LENGTH];
+					+ ConnectionConstants.MAX_PASSWORD_LENGTH];
 		} else {
 			log.error("password is too long");
 			throw new IllegalArgumentException("Password is too long");
@@ -93,7 +93,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 					.getPipelineConfiguration().getDefaultEncoding(), e1);
 			throw new JargonException("unsupported encoding:"
 					+ irodsCommands.getPipelineConfiguration()
-					.getDefaultEncoding());
+							.getDefaultEncoding());
 		}
 		System.arraycopy(temp, 0, chal, ConnectionConstants.CHALLENGE_LENGTH,
 				temp.length);
@@ -127,7 +127,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 		log.info("authenticate");
 		String challengeValue = sendStandardPassword(irodsAccount,
 				irodsCommands);

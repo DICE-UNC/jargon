@@ -47,7 +47,7 @@ public class IrodsChecksumValue {
 		}
 		if (checksumEncodingEnum != null) {
 			builder.append("checksumEncodingEnum=")
-			.append(checksumEncodingEnum);
+					.append(checksumEncodingEnum);
 		}
 		builder.append("]");
 		return builder.toString();

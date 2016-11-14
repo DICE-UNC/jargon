@@ -27,12 +27,12 @@ import org.slf4j.LoggerFactory;
  * Wraps encryption of a byte buffer using AES
  *
  * see
- * 
+ *
  * http://stackoverflow.com/questions/28622438/aes-256-password-based-
  * encryption-decryption-in-java
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  *
  *
  */
@@ -57,7 +57,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	AesCipherEncryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+					throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -75,7 +75,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			setCipher(Cipher.getInstance(pipelineConfiguration
 					.getEncryptionAlgorithmEnum().getCypherKey()));
 
-			SecretKey secretKey = this.getNegotiatedClientServerConfiguration()
+			SecretKey secretKey = getNegotiatedClientServerConfiguration()
 					.getSecretKey();
 			getCipher().init(Cipher.ENCRYPT_MODE, secretKey);
 

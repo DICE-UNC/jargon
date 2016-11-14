@@ -756,41 +756,6 @@ public class MiscIRODSUtils {
 
 	}
 
-	/*
-	 * Compare the reported version of the server to a test version number to
-	 * see if the actual server is at least at the rev of the test version
-	 *
-	 * @param actualVersionOfServer <code>String</code> that represents the
-	 * actual version of a server in question, such as is reported by the
-	 * startup pack
-	 *
-	 * @param thisReleaseVersion <code>String</code> that represents a test
-	 * version number, asking if the reported server version is at least this
-	 * version
-	 *
-	 * @return <code>boolean</code> that would be <code>true</code>
-	 */
-	public static boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-			final String actualVersionOfServer, final String thisReleaseVersion) {
-		if (thisReleaseVersion == null || thisReleaseVersion.length() == 0) {
-			throw new IllegalArgumentException(
-					"null or empty thisReleaseVersion");
-		}
-
-		if (actualVersionOfServer == null
-				|| actualVersionOfServer.length() == 0) {
-			throw new IllegalArgumentException(
-					"null or empty actualVersionOfServer");
-		}
-
-		// The result is a negative integer if this String object
-		// lexicographically precedes the argument string.
-		int compValue = actualVersionOfServer
-				.compareToIgnoreCase(thisReleaseVersion);
-		return compValue >= 0;
-
-	}
-
 	/**
 	 * Create a truncated file name suitable for display in interfaces
 	 *

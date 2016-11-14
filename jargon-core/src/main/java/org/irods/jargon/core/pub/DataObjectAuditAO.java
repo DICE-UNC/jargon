@@ -42,7 +42,7 @@ public interface DataObjectAuditAO {
 	 */
 	List<AuditedAction> findAllAuditRecordsForDataObject(IRODSFile irodsFile,
 			int partialStart, int numberOfResultsDesired)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Get an individual audit action for a data object, given that you know
@@ -68,6 +68,6 @@ public interface DataObjectAuditAO {
 	 */
 	AuditedAction getAuditedActionForDataObject(IRODSFile irodsFile,
 			String auditActionCode, String timeStampInIRODSFormat)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 }

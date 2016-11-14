@@ -77,7 +77,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<Collection> findDomainByMetadataQuery(
 			List<AVUQueryElement> avuQueryElements)
-					throws JargonQueryException, JargonException;
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * Given a set of metadata query parameters, return a list of IRODS
@@ -120,7 +120,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, int offset)
-					throws JargonQueryException, JargonException;
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * Get a summary list of collections and data objects and AVU metadata based
@@ -159,7 +159,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, boolean caseInsensitive)
-					throws JargonQueryException, JargonException;
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * Get a list of collections and associated metadata that match a given AVU
@@ -182,7 +182,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
 			List<AVUQueryElement> avuQuery, int offset, boolean caseInsensitive)
-					throws JargonQueryException, JargonException;
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * Add AVU metadata for this collection. *
@@ -289,7 +289,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			List<AVUQueryElement> avuQuery, String collectionAbsolutePath,
 			int partialStartIndex, boolean caseInsensitive)
-					throws FileNotFoundException, JargonQueryException, JargonException;
+			throws FileNotFoundException, JargonQueryException, JargonException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -320,7 +320,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesForCollection(
 			final String collectionAbsolutePath, final int partialStartIndex)
-					throws FileNotFoundException, JargonException, JargonQueryException;
+			throws FileNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Get a list of the metadata values for the given collection absolute path.
@@ -403,7 +403,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQueryForCollection(
 			final List<AVUQueryElement> avuQuery,
 			final String collectionAbsolutePath, final int partialStartIndex)
-					throws JargonQueryException, JargonException;
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * For a given iRODS collection, give a count of the total number of data
@@ -424,7 +424,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	int countAllFilesUnderneathTheGivenCollection(
 			final String irodsCollectionAbsolutePath)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * For a given iRODS collection, set the access permission to read. This can
@@ -702,7 +702,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	UserFilePermission getPermissionForUserName(
 			String irodsCollectionAbsolutePath, String userName)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * For a given iRODS collection, set the access permission to read as an
@@ -828,7 +828,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @throws JargonException
 	 */
 	Collection findGivenObjStat(ObjStat objStat) throws DataNotFoundException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Method to set access permission to the desired state, this variant makes
@@ -862,7 +862,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	void setAccessPermission(String zone, String absolutePath, String userName,
 			boolean recursive, FilePermissionEnum filePermission)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Find the iRODS <code>Collection</code> with the given primary key in the
@@ -914,7 +914,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	List<BulkAVUOperationResponse> addBulkAVUMetadataToCollection(
 			String absolutePath, List<AvuData> avuData)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Convenience method to delete a set of AVU metadata. This operation is
@@ -967,8 +967,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 */
 	MetaDataAndDomainData findMetadataValueForCollectionByMetadataId(
 			String collectionAbsolutePath, int id)
-					throws FileNotFoundException, DataNotFoundException,
-					JargonException;
+			throws FileNotFoundException, DataNotFoundException,
+			JargonException;
 
 	/**
 	 * Query for a specific AVU associated with the collection based on the

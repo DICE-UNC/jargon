@@ -73,7 +73,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource,
 			final long sourceFileLength, final boolean force)
-					throws JargonException {
+			throws JargonException {
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR_410,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
 				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
@@ -103,7 +103,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath, final String copyToResource,
 			final long sourceFileLength, final boolean force)
-					throws JargonException {
+			throws JargonException {
 		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
 				sourceFileAbsolutePath, targetFileAbsolutePath,
 				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
@@ -162,7 +162,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 			final String fromFileAbsolutePath, final String toFileAbsolutePath,
 			final int operationType, final String resourceName,
 			final long sourceFileLength, final boolean force)
-					throws JargonException {
+			throws JargonException {
 		super();
 
 		if (fromFileAbsolutePath == null || fromFileAbsolutePath.length() == 0) {
@@ -259,7 +259,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag buildDataObjInpTagForCopySource(
 			final String fromFileAbsolutePath, final long sourceFileLength)
-					throws JargonException {
+			throws JargonException {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
 		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
@@ -271,7 +271,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				new Tag(DataObjInp.NUM_THREADS, 0),
 				new Tag(DataObjInp.OPR_TYPE,
 						DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
-						createKeyValueTag(kvps) });
+				createKeyValueTag(kvps) });
 		return fileTag;
 	}
 

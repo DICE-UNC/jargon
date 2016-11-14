@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer;
 
@@ -19,9 +19,9 @@ import org.slf4j.LoggerFactory;
  * Wrapper for an implementation that can encrypt/decrypt bytes in a parallel
  * file transfer. Concrete subclasses implement the actual encryption, and the
  * proper encryption method is built using a factory
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 abstract class AbstractParallelCipherWrapper {
 
@@ -33,8 +33,8 @@ abstract class AbstractParallelCipherWrapper {
 	 * @param negotiatedClientServerConfiguration
 	 */
 	AbstractParallelCipherWrapper(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
@@ -69,7 +69,7 @@ abstract class AbstractParallelCipherWrapper {
 	 * @param cipher
 	 *            the cipher to set
 	 */
-	synchronized void setCipher(Cipher cipher) {
+	synchronized void setCipher(final Cipher cipher) {
 		this.cipher = cipher;
 	}
 
@@ -77,7 +77,7 @@ abstract class AbstractParallelCipherWrapper {
 	 * Generate a salt value configured by the
 	 * <code>PipelineConfiguration</code> that was the decided upon during
 	 * client/server negotiation
-	 * 
+	 *
 	 * @return <code>byte[]</code> of the desired salt size
 	 */
 	byte[] generateSalt() throws JargonException {

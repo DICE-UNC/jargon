@@ -41,7 +41,7 @@ class GSIAuth extends AuthMechanism {
 	 */
 	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("sendGSIPassword()");
 
@@ -58,7 +58,7 @@ class GSIAuth extends AuthMechanism {
 		try {
 			irodsCommands.sendHeader(
 
-			RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
+					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
 					GSI_AUTH_REQUEST_AN);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
@@ -89,7 +89,7 @@ class GSIAuth extends AuthMechanism {
 	AbstractIRODSMidLevelProtocol sendGSIAuth(
 			final GSIIRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		log.info("sendGSIAuth()");
 
@@ -194,7 +194,7 @@ class GSIAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.AuthMechanism#
 	 * processAuthenticationAfterStartup
 	 * (org.irods.jargon.core.connection.IRODSAccount,
@@ -206,7 +206,7 @@ class GSIAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");

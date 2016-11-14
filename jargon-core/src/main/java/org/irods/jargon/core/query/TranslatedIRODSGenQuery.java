@@ -96,7 +96,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
-					throws JargonException {
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, null, irodsQuery, distinct, false,
 				false);
@@ -183,7 +183,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
 			final boolean caseInsensitive, final boolean computeTotalRowCount)
-					throws JargonException {
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, orderByFields, irodsQuery, distinct,
 				caseInsensitive, computeTotalRowCount);
@@ -224,7 +224,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
 			final boolean upperCase, final boolean computeTotalRowCount)
-					throws JargonException {
+			throws JargonException {
 
 		if (translatedQueryConditions == null) {
 			throw new JargonException("conditions are null");

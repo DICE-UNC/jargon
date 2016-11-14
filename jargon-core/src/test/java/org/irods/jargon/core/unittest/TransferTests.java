@@ -9,8 +9,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ TransferStatusTest.class,
-		DefaultTransferControlBlockTest.class,
-		EncryptionWrapperFactoryTest.class, AesCipherEncryptWrapperTest.class })
+	DefaultTransferControlBlockTest.class,
+	EncryptionWrapperFactoryTest.class, AesCipherEncryptWrapperTest.class })
 public class TransferTests {
 
 }

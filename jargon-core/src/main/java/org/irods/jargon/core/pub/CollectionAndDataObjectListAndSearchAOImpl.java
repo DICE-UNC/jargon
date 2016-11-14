@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
-implements CollectionAndDataObjectListAndSearchAO {
+		implements CollectionAndDataObjectListAndSearchAO {
 
 	private SpecificQueryAO specificQueryAO;
 	public static final Logger log = LoggerFactory
@@ -75,7 +75,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 	 */
 	protected CollectionAndDataObjectListAndSearchAOImpl(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount)
-					throws JargonException {
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 		try {
 			specificQueryAO = getIRODSAccessObjectFactory().getSpecificQueryAO(
@@ -88,12 +88,12 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * getCollectionAndDataObjectListingEntryAtGivenAbsolutePath
 	 * (java.lang.String)
-	 *
-	 *
+	 * 
+	 * 
 	 * softlink
 	 */
 	@Override
@@ -143,7 +143,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing
 	 * (java.lang.String)
@@ -176,7 +176,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 			entries = collectionListingUtils
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 			pagingAwareCollectionListing
-			.setCollectionAndDataObjectListingEntries(entries);
+					.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
 			pagingAwareCollectionListing.setCollectionsCount(entries.size());
 			return pagingAwareCollectionListing;
@@ -208,11 +208,11 @@ implements CollectionAndDataObjectListAndSearchAO {
 			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
 					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-			.setCollectionsTotalRecords(queriedEntries.get(0)
-					.getTotalRecords());
+					.setCollectionsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
 			pagingAwareCollectionListing
-			.getCollectionAndDataObjectListingEntries().addAll(
-					queriedEntries);
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
 
 		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(
@@ -233,11 +233,11 @@ implements CollectionAndDataObjectListAndSearchAO {
 			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
 					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-			.setDataObjectsTotalRecords(queriedEntries.get(0)
-					.getTotalRecords());
+					.setDataObjectsTotalRecords(queriedEntries.get(0)
+							.getTotalRecords());
 			pagingAwareCollectionListing
-			.getCollectionAndDataObjectListingEntries().addAll(
-					queriedEntries);
+					.getCollectionAndDataObjectListingEntries().addAll(
+							queriedEntries);
 		}
 
 		log.info("pagingAwareCollectionListing:{}",
@@ -248,10 +248,10 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPath(java.lang.String)
-	 *
+	 * 
 	 * softlink
 	 */
 	@Override
@@ -318,10 +318,10 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsAndCollectionsUnderPathWithPermissions(java.lang.String)
-	 *
+	 * 
 	 * softlink
 	 */
 	@Override
@@ -364,7 +364,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsAndCollectionsUnderPath(java.lang.String)
 	 */
@@ -413,7 +413,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countDataObjectsUnderPath(java.lang.String)
 	 */
@@ -472,13 +472,13 @@ implements CollectionAndDataObjectListAndSearchAO {
 					.addSelectAsAgregateGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_NAME,
 							SelectFieldTypes.COUNT)
-							.addConditionAsGenQueryField(
-									RodsGenQueryEnum.COL_COLL_NAME,
-									QueryConditionOperators.EQUAL,
-									effectiveAbsolutePath)
-									.addConditionAsGenQueryField(
-											RodsGenQueryEnum.COL_DATA_REPL_NUM,
-											QueryConditionOperators.EQUAL, "0");
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME,
+							QueryConditionOperators.EQUAL,
+							effectiveAbsolutePath)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_REPL_NUM,
+							QueryConditionOperators.EQUAL, "0");
 
 			;
 			IRODSGenQueryFromBuilder irodsQuery = builder
@@ -523,10 +523,10 @@ implements CollectionAndDataObjectListAndSearchAO {
 					.addSelectAsAgregateGenQueryValue(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							SelectFieldTypes.COUNT)
-							.addConditionAsGenQueryField(
-									RodsGenQueryEnum.COL_COLL_PARENT_NAME,
-									QueryConditionOperators.EQUAL,
-									effectiveAbsolutePath);
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_PARENT_NAME,
+							QueryConditionOperators.EQUAL,
+							effectiveAbsolutePath);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
@@ -553,7 +553,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * countCollectionsUnderPath(java.lang.String)
 	 */
@@ -605,10 +605,10 @@ implements CollectionAndDataObjectListAndSearchAO {
 					.addSelectAsAgregateGenQueryValue(
 							RodsGenQueryEnum.COL_COLL_NAME,
 							SelectFieldTypes.COUNT)
-							.addConditionAsGenQueryField(
-									RodsGenQueryEnum.COL_COLL_PARENT_NAME,
-									QueryConditionOperators.EQUAL,
-									effectiveAbsolutePath);
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_PARENT_NAME,
+							QueryConditionOperators.EQUAL,
+							effectiveAbsolutePath);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);
@@ -636,7 +636,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String)
 	 */
@@ -651,14 +651,14 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsBasedOnName(java.lang.String, int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
 			final String searchTerm, final int partialStartIndex)
-					throws JargonException {
+			throws JargonException {
 
 		if (searchTerm == null || searchTerm.isEmpty()) {
 			throw new IllegalArgumentException("null or empty search term");
@@ -678,7 +678,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 		try {
 			CollectionAOHelper
-			.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+					.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME,
 					QueryConditionOperators.LIKE, "%" + searchTerm);
 			IRODSGenQueryFromBuilder irodsQuery = builder
@@ -707,10 +707,10 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPath(java.lang.String, int)
-	 *
+	 * 
 	 * softlink
 	 */
 	@Override
@@ -718,7 +718,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 	// Bug [#1606] inconsistent objstat semantics for mounted collections
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("listCollectionsUnderPath()");
 
@@ -757,14 +757,14 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listCollectionsUnderPathWithPermissions(java.lang.String, int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
@@ -925,7 +925,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	private List<CollectionAndDataObjectListingEntry> buildDataObjectListingWithAccessInfoFromResultSet(
 			final AbstractIRODSQueryResultSet resultSet, final ObjStat objStat)
-					throws JargonException {
+			throws JargonException {
 
 		String effectiveAbsolutePath = objStat
 				.determineAbsolutePathBasedOnCollTypeInObjectStat();
@@ -989,8 +989,8 @@ implements CollectionAndDataObjectListAndSearchAO {
 				// requery to not reread the same data
 				entry.setCount(lastCount - 1);
 				collectionListingUtils
-				.augmentCollectionEntryForSpecialCollections(objStat,
-						effectiveAbsolutePath, entry);
+						.augmentCollectionEntryForSpecialCollections(objStat,
+								effectiveAbsolutePath, entry);
 				files.add(entry);
 			}
 
@@ -1023,8 +1023,8 @@ implements CollectionAndDataObjectListAndSearchAO {
 				entry.setCount(lastCount);
 				entry.setLastResult(lastRecord);
 				collectionListingUtils
-				.augmentCollectionEntryForSpecialCollections(objStat,
-						effectiveAbsolutePath, entry);
+						.augmentCollectionEntryForSpecialCollections(objStat,
+								effectiveAbsolutePath, entry);
 				files.add(entry);
 			} else {
 				log.debug("skipping last entry as it may carry over to the next query page");
@@ -1037,7 +1037,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	private List<CollectionAndDataObjectListingEntry> buildCollectionListingWithAccessInfoFromResultSet(
 			final AbstractIRODSQueryResultSet resultSet, final ObjStat objStat)
-					throws JargonException {
+			throws JargonException {
 
 		CollectionListingUtils collectionListingUtils = new CollectionListingUtils(
 				this);
@@ -1071,11 +1071,11 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 				if (collectionAndDataObjectListingEntry != null) {
 					collectionAndDataObjectListingEntry
-					.setUserFilePermission(userFilePermissions);
+							.setUserFilePermission(userFilePermissions);
 					collectionListingUtils
-					.augmentCollectionEntryForSpecialCollections(
-							objStat, effectiveAbsolutePath,
-							collectionAndDataObjectListingEntry);
+							.augmentCollectionEntryForSpecialCollections(
+									objStat, effectiveAbsolutePath,
+									collectionAndDataObjectListingEntry);
 					collectionAndDataObjectListingEntry.setCount(row
 							.getRecordCount() - 1);
 					subdirs.add(collectionAndDataObjectListingEntry);
@@ -1104,12 +1104,12 @@ implements CollectionAndDataObjectListAndSearchAO {
 			if (isAtEndOfQueryResults) {
 				log.debug("adding last entry");
 				collectionAndDataObjectListingEntry
-				.setUserFilePermission(userFilePermissions);
+						.setUserFilePermission(userFilePermissions);
 				collectionAndDataObjectListingEntry.setLastResult(true);
 				collectionListingUtils
-				.augmentCollectionEntryForSpecialCollections(objStat,
-						effectiveAbsolutePath,
-						collectionAndDataObjectListingEntry);
+						.augmentCollectionEntryForSpecialCollections(objStat,
+								effectiveAbsolutePath,
+								collectionAndDataObjectListingEntry);
 				subdirs.add(collectionAndDataObjectListingEntry);
 			} else {
 				log.debug("ignoring last entry, as it might carry over to the next page of results");
@@ -1122,7 +1122,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPath(java.lang.String, int)
 	 */
@@ -1130,7 +1130,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 	@FederationEnabled
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws JargonException {
+			throws JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
@@ -1154,7 +1154,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * listDataObjectsUnderPathWithPermissions(java.lang.String, int)
 	 */
@@ -1162,7 +1162,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 	@FederationEnabled
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		if (absolutePathToParent == null) {
 			throw new JargonException("absolutePathToParent is null");
@@ -1288,7 +1288,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissionsViaSpecQuery(
 			final ObjStat objStat, final int offset)
-					throws JargonQueryException, JargonException {
+			throws JargonQueryException, JargonException {
 
 		log.info("listDataObjectsUnderPathWithPermissionsViaSpecQuery()");
 
@@ -1323,7 +1323,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1336,14 +1336,14 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchDataObjectsBasedOnName(java.lang.String, int)
 	 */
 	@Override
 	public List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(
 			final String searchTerm, final int partialStartIndex)
-					throws JargonException {
+			throws JargonException {
 
 		if (searchTerm == null || searchTerm.isEmpty()) {
 			throw new IllegalArgumentException("null or empty search term");
@@ -1363,17 +1363,17 @@ implements CollectionAndDataObjectListAndSearchAO {
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_D_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(
+							RodsGenQueryEnum.COL_D_CREATE_TIME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_D_MODIFY_TIME)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-							.addConditionAsGenQueryField(
-									RodsGenQueryEnum.COL_DATA_NAME,
-									QueryConditionOperators.LIKE,
-									"%" + searchTerm + "%");
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_DATA_NAME,
+							QueryConditionOperators.LIKE,
+							"%" + searchTerm + "%");
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties()
 							.getMaxFilesAndDirsQueryMax());
@@ -1413,7 +1413,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * searchCollectionsAndDataObjectsBasedOnName(java.lang.String)
 	 */
@@ -1438,7 +1438,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * getFullObjectForType(java.lang.String)
 	 */
@@ -1536,7 +1536,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathAndDataObjectName(java.lang.String,
 	 * java.lang.String)
@@ -1544,7 +1544,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 	@Override
 	public ObjStat retrieveObjectStatForPathAndDataObjectName(
 			final String parentPath, final String fileName)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("retrieveObjectStatForPathAndDataObjectName()");
 		if (parentPath == null || parentPath.isEmpty()) {
@@ -1563,7 +1563,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPathWithHeuristicPathGuessing(java.lang.String)
 	 */
@@ -1599,7 +1599,7 @@ implements CollectionAndDataObjectListAndSearchAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
 	 * retrieveObjectStatForPath(java.lang.String)
 	 */

@@ -27,7 +27,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  *
  */
 public class DefaultIntraFileProgressCallbackListener implements
-ConnectionProgressStatusListener {
+		ConnectionProgressStatusListener {
 
 	private final TransferStatusCallbackListener transferStatusCallbackListener;
 	private final TransferType transferType;
@@ -152,9 +152,9 @@ ConnectionProgressStatusListener {
 		if (transferOptions == null) {
 			this.transferOptions = new TransferOptions();
 			this.transferOptions
-			.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
+					.setIntraFileStatusCallbacksNumberCallsInterval(BYTE_COUNT_MESSAGE_THRESHOLD);
 			this.transferOptions
-			.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
+					.setIntraFileStatusCallbacksTotalBytesInterval(BYTE_COUNT_BYTE_THRESHOLD);
 		} else {
 			this.transferOptions = transferOptions;
 		}
@@ -162,7 +162,7 @@ ConnectionProgressStatusListener {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * connectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)
@@ -196,7 +196,7 @@ ConnectionProgressStatusListener {
 		if (countOfMessagesSinceLastSend > transferOptions
 				.getIntraFileStatusCallbacksNumberCallsInterval()
 				|| countOfBytesSinceLastSend > transferOptions
-				.getIntraFileStatusCallbacksTotalBytesInterval()) {
+						.getIntraFileStatusCallbacksTotalBytesInterval()) {
 			try {
 				TransferStatus transferStatus = TransferStatus
 						.instanceForIntraFileStatus(transferType,
@@ -220,7 +220,7 @@ ConnectionProgressStatusListener {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -257,7 +257,7 @@ ConnectionProgressStatusListener {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.ConnectionProgressStatusListener#
 	 * finalConnectionProgressStatusCallback
 	 * (org.irods.jargon.core.connection.ConnectionProgressStatus)

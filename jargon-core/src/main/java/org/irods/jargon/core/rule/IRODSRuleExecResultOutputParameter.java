@@ -60,7 +60,7 @@ public class IRODSRuleExecResultOutputParameter {
 
 	protected IRODSRuleExecResultOutputParameter(final String parameterName,
 			final OutputParamType outputParamType, final Object resultObject)
-					throws JargonException {
+			throws JargonException {
 
 		if (parameterName == null || parameterName.isEmpty()) {
 			throw new JargonException("parameterName is null or empty");

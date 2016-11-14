@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
@@ -7,7 +7,7 @@ import javax.crypto.SecretKey;
 
 /**
  * Captures characteristics resulting from a client-server negotiation
- * 
+ *
  * @author Mike Conway - DICE
  */
 public class NegotiatedClientServerConfiguration {
@@ -16,7 +16,7 @@ public class NegotiatedClientServerConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -37,7 +37,7 @@ public class NegotiatedClientServerConfiguration {
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param sslConnection
 	 *            <code>boolean</code> that will be <code>true</code> if ssl is
 	 *            used
@@ -58,7 +58,7 @@ public class NegotiatedClientServerConfiguration {
 	 * @param secretKey
 	 *            the secretKey to set
 	 */
-	public void setSecretKey(SecretKey secretKey) {
+	public void setSecretKey(final SecretKey secretKey) {
 		this.secretKey = secretKey;
 	}
 

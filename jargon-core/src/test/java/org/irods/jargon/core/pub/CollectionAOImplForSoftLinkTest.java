@@ -7,7 +7,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -16,6 +15,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -274,7 +274,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 	}
 
-	@Test
+	/**
+	 * see https://github.com/DICE-UNC/jargon/issues/204
+	 *
+	 * @throws Exception
+	 */
+	@Ignore
 	public final void testSetReadForASoftLinkedCollection() throws Exception {
 
 		String sourceCollectionName = "testSetReadForASoftLinkedCollectionSource";
@@ -296,12 +301,11 @@ public class CollectionAOImplForSoftLinkTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		// if (props.isAtLeastIrods410()) {
+		// return;
+		// }
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -342,7 +346,8 @@ public class CollectionAOImplForSoftLinkTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue("user cannot read",
+				irodsFileForSecondaryUser.canRead());
 
 		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
 				secondaryAccount).instanceIRODSFile(sourceIrodsCollection);
@@ -365,7 +370,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 	}
 
-	@Test
+	/**
+	 * see https://github.com/DICE-UNC/jargon/issues/204
+	 *
+	 * @throws Exception
+	 */
+	@Ignore
 	public final void testSetWriteForASoftLinkedCollection() throws Exception {
 
 		String sourceCollectionName = "testSetWriteForASoftLinkedCollectionSource";
@@ -387,12 +397,11 @@ public class CollectionAOImplForSoftLinkTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
-			return;
-		}
+		// if (props.isConsortiumVersion()) {
+		// return;
+		// }
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -433,7 +442,8 @@ public class CollectionAOImplForSoftLinkTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+		Assert.assertTrue("user cannot read soft linked collection",
+				irodsFileForSecondaryUser.canRead());
 
 		irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(
 				secondaryAccount).instanceIRODSFile(sourceIrodsCollection);

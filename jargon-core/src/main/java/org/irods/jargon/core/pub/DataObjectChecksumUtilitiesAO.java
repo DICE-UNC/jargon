@@ -67,7 +67,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 */
 	ChecksumValue verifyLocalFileAgainstIrodsFileChecksum(
 			final String localAbsolutePath, final String irodsAbsolutePath)
-					throws FileNotFoundException, ChecksumInvalidException,
-					JargonException;
+			throws FileNotFoundException, ChecksumInvalidException,
+			JargonException;
 
 }

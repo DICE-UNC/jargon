@@ -92,6 +92,10 @@ public class EnvironmentalInfoAOTest {
 		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
 				.getEnvironmentalInfoAO(irodsAccount);
 
+		if (environmentalInfoAO.getIRODSServerProperties().isAtLeastIrods410()) {
+			return;
+		}
+
 		try {
 			List<RemoteCommandInformation> remoteCommands = environmentalInfoAO
 					.listAvailableRemoteCommands();
@@ -106,7 +110,7 @@ public class EnvironmentalInfoAOTest {
 					.length() > 0);
 		} catch (DataNotFoundException ex) {
 			System.out
-					.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
+			.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
 
 	}
@@ -126,8 +130,6 @@ public class EnvironmentalInfoAOTest {
 				.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
-			return;
-		} else if (props.isConsortiumVersion()) {
 			return;
 		}
 

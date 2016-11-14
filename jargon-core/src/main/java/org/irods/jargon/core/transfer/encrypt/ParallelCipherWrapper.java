@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer.encrypt;
 
@@ -14,7 +14,7 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
  * Wrapper for an implementation that can encrypt or decrypt bytes in a parallel
  * file transfer. Concrete subclasses implement the actual encryption, and the
  * proper encryption method is built using a factory
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -27,7 +27,7 @@ abstract class ParallelCipherWrapper {
 	/**
 	 * Default constructor with configuration information needed to set up the
 	 * algorithm
-	 * 
+	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} with connection properties
 	 * @param negotiatedClientServerConfiguration
@@ -36,8 +36,8 @@ abstract class ParallelCipherWrapper {
 	 * @throws ClientServerNegotiationException
 	 */
 	ParallelCipherWrapper(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -80,7 +80,7 @@ abstract class ParallelCipherWrapper {
 	 * @param cipher
 	 *            {@link Cipher} the cipher to set
 	 */
-	void setCipher(Cipher cipher) {
+	void setCipher(final Cipher cipher) {
 		this.cipher = cipher;
 	}
 

@@ -215,7 +215,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the first two hashes, and take the hash of that
 		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-		                                        + digestRound2.length];
+				+ digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -236,7 +236,7 @@ public class IRODSPasswordUtilities {
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
 		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-		                                                 + digestRound2.length + digestRound3.length];
+				+ digestRound2.length + digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -260,7 +260,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate all four hash buffers
 		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-		                             + digestRound3.length + digestRound4.length];
+				+ digestRound3.length + digestRound4.length];
 
 		concatI = 0;
 
@@ -337,7 +337,7 @@ public class IRODSPasswordUtilities {
 
 	public static String obfuscateIRODSPasswordWithCypherChaining(
 			final String newPassword, final String oldPassword)
-					throws JargonException {
+			throws JargonException {
 
 		if (newPassword == null || newPassword.isEmpty()) {
 			throw new JargonException("newPassword is null or empty");
@@ -380,7 +380,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the first two hashes, and take the hash of that
 		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-		                                        + digestRound2.length];
+				+ digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -401,7 +401,7 @@ public class IRODSPasswordUtilities {
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
 		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-		                                                 + digestRound2.length + digestRound3.length];
+				+ digestRound2.length + digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -425,7 +425,7 @@ public class IRODSPasswordUtilities {
 
 		// concatenate all four hash buffers
 		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-		                             + digestRound3.length + digestRound4.length];
+				+ digestRound3.length + digestRound4.length];
 
 		concatI = 0;
 

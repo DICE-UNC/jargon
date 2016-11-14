@@ -89,7 +89,7 @@ public class IRODSFileImplForSoftLinksTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (props.isAtLeastIrods410()) {
 			return;
 		}
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer.encrypt;
 
@@ -15,7 +15,7 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
  * Factory to generate the encryption wrapper type based on configuration
  * information. This is used for encryption determined by the client-server
  * negotiation process.
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -25,7 +25,7 @@ public class EncryptionWrapperFactory {
 	 * Given the properties from configuration and negotiation, return the
 	 * correct encryption wrapper for a parallel transfer thread. This method
 	 * should not be called if no negotiated encryption was established.
-	 * 
+	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
@@ -38,7 +38,7 @@ public class EncryptionWrapperFactory {
 	public static ParallelEncryptionCipherWrapper instanceEncrypt(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+					throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -62,7 +62,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"
 							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+							.getEncryptionAlgorithmEnum());
 		}
 
 	}
@@ -71,7 +71,7 @@ public class EncryptionWrapperFactory {
 	 * Given the properties from configuration and negotiation, return the
 	 * correct decryption wrapper for a parallel transfer thread. This method
 	 * should not be called if no negotiated encryption was established.
-	 * 
+	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration}
 	 * @param negotiatedClientServerConfiguration
@@ -86,7 +86,7 @@ public class EncryptionWrapperFactory {
 	public static ParallelCipherWrapper instance(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration,
-			int mode) throws ClientServerNegotiationException {
+			final int mode) throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -110,7 +110,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"
 							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+							.getEncryptionAlgorithmEnum());
 		}
 
 	}

@@ -46,7 +46,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -55,7 +55,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 		final Tag message = new Tag(PI_TAG,
 				new Tag[] { new Tag("targetUser", targetUserName.trim()),
-				new Tag("unused") });
+						new Tag("unused") });
 		return message;
 	}
 

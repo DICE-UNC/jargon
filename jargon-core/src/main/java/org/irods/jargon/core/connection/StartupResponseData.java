@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import org.irods.jargon.core.utils.MiscIRODSUtils;
-
 /**
  * Represents the iRODS server response to the sending of the StartupPack_PI at
  * the initiation of a connection. This information is useful for connection
@@ -25,28 +23,12 @@ public class StartupResponseData {
 	private final int reconnPort;
 	private final String reconnAddr;
 	private final String cookie;
-	private final boolean eirods;
+
 	/**
 	 * Holds the result of any client/server negotiation, will always be
 	 * present, even if no negotiation is done
 	 */
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-
-	public StartupResponseData(
-			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
-		if (negotiatedClientServerConfiguration == null) {
-			throw new IllegalArgumentException(
-					"null negotiatedClientServerConfiguration");
-		}
-		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
-		this.status = 0;
-		this.relVersion = "";
-		this.apiVersion = "";
-		this.reconnPort = 0;
-		this.reconnAddr = "";
-		this.cookie = "";
-		this.eirods = true;
-	}
 
 	/**
 	 * Default constructor initializes all of the required fields in response to
@@ -85,25 +67,6 @@ public class StartupResponseData {
 		this.reconnPort = reconnPort;
 		this.reconnAddr = reconnAddr;
 		this.cookie = cookie;
-
-		int intCookie = Integer.parseInt(cookie);
-
-		if (intCookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
-				&& intCookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
-			eirods = true;
-		} else if (MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(relVersion,
-						"rods4")) {
-			eirods = true;
-		} else {
-			eirods = false;
-		}
-
-		/*
-		 * Indicate no ssl in negotiated configuration
-		 */
-		this.negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
-				false);
 
 	}
 
@@ -168,8 +131,13 @@ public class StartupResponseData {
 		return cookie;
 	}
 
-	public boolean isEirods() {
-		return eirods;
+	/**
+	 * Convenience method to see if this is iRODS 4.1.0 or later version
+	 */
+	public boolean checkIs410OrLater() {
+		IrodsVersion irodsVersion = new IrodsVersion(getRelVersion());
+		return (irodsVersion.compareTo(new IrodsVersion("rods4.1.0")) >= 0);
+
 	}
 
 	/**
@@ -182,12 +150,12 @@ public class StartupResponseData {
 	/**
 	 * This setter is exposed because the startup response data may be augmented
 	 * after a client/server negotiation
-	 * 
+	 *
 	 * @param negotiatedClientServerConfiguration
 	 *            the negotiatedClientServerConfiguration to set
 	 */
 	public void setNegotiatedClientServerConfiguration(
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 	}
 

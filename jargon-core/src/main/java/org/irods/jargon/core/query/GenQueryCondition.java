@@ -18,7 +18,7 @@ public class GenQueryCondition {
 
 	public static GenQueryCondition instance(final String fieldName,
 			final String operator, final String value)
-					throws JargonQueryException {
+			throws JargonQueryException {
 		return new GenQueryCondition(fieldName, operator, value);
 	}
 

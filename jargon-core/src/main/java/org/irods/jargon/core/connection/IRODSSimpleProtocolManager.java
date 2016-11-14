@@ -36,7 +36,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#getIRODSProtocol
 	 * (org.irods.jargon.core.connection.IRODSAccount,
@@ -88,7 +88,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.IRODSProtocolManager#returnIRODSProtocol
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol)
@@ -96,7 +96,7 @@ public final class IRODSSimpleProtocolManager extends IRODSProtocolManager {
 	@Override
 	public void returnIRODSProtocol(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
-					throws JargonException {
+			throws JargonException {
 		log.debug("irodsMidLevelProtocol returned:{}", irodsMidLevelProtocol);
 		irodsMidLevelProtocol.shutdown();
 

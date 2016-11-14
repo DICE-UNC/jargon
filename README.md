@@ -1,14 +1,13 @@
 
 # Project: Jargon-core API
-#### Date: 06/13/2016
+#### Date: 
 #### Release Version:
-#### git tag: 4.2.0.0-SNAPSHOT	
+#### git tag: 4.1.10.0-SNAPSHOT
 #### Developer: Mike Conway - DICE
 
 ## News
 
-TLS support and 4.2 compatability 
-
+4.1.10 Release compatability relese
 for milestone: https://github.com/DICE-UNC/jargon/milestone/11
 
 =======
@@ -39,5 +38,25 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Changes
+
+#### FileNotFoundException declared in PackingIrodsOutputStream signature #150
+
+Removed extraneous exceptions from method signature
+
+#### deprecate WSO support in jargon altogether #51
+
+Removed jargon-workflow code (WSO) as non-supported in iRODS
+
+#### add speccol pi to dataobjinppi to avoid xml parse messages in irods log #149
+
+Avoid logged iRODS errors for missing section of DataObjInp_PI by providing SpecColl_PI and KeyValPair_PI structures
+
+#### Fix lexographic comparison of iRODS version #203
+
+Changed from a string comparison of iRODS reported version to a more sophisticated comparator object 
+
+#### Update FileCloseInp for in_pdmo for iRODS 4.1.9 #205
+
+Update FileCloseInp packing instruction for additional resource information
 
 

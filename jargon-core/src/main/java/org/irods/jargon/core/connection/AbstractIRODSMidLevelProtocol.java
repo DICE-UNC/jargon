@@ -91,7 +91,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 		this.irodsConnection = irodsConnection;
 		this.irodsProtocolManager = irodsProtocolManager;
-		this.irodsSession = irodsConnection.getIrodsSession();
+		irodsSession = irodsConnection.getIrodsSession();
 
 	}
 
@@ -105,7 +105,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -209,7 +209,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final byte[] errorBytes, final int errorOffset,
 			final int errorLength, final byte[] bytes, final int byteOffset,
 			final int byteStringLength, final int intInfo)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * iRODS protocol request that sends data to iRODS using the
@@ -224,7 +224,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * This method is meant to handle the put operation when streaming to iRODS,
 	 * this occurs when a parallel operation is overridden in server side
 	 * policy, and is not used for typical put operations.
-	 * 
+	 *
 	 * @param irodsPI
 	 *            <code>IRodsPI</code> subclass that is the definition of the
 	 *            packing instruction
@@ -250,7 +250,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final int byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -349,7 +349,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final long byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -533,7 +533,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	public synchronized void read(final OutputStream destination,
 			final long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-			throws JargonException {
+					throws JargonException {
 
 		if (length <= 0) {
 			throw new JargonException("length out of range");
@@ -600,7 +600,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final int intInfo) throws JargonException {
 
 		return createHeaderBytesFromData(type, messageLength, errorLength,
-				byteStringLength, intInfo, this.getEncoding());
+				byteStringLength, intInfo, getEncoding());
 	}
 
 	/**
@@ -609,7 +609,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * <code>irodsFunction</code> methods will handle headers). There are
 	 * certain situations, such as ssl negotiation, where raw headers are sent
 	 * without accompanying messages.
-	 * 
+	 *
 	 * @param type
 	 *            <code>String</code> with the header type
 	 * @param messageLength
@@ -782,8 +782,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 			log.debug("sending disconnect message");
 			try {
-				this.sendHeader(RequestTypes.RODS_DISCONNECT.getRequestType(),
-						0, 0, 0, 0);
+				sendHeader(RequestTypes.RODS_DISCONNECT.getRequestType(), 0, 0,
+						0, 0);
 				irodsConnection.flush();
 				log.debug("finally, shutdown is being called on the given connection");
 				irodsConnection.shutdown();
@@ -811,7 +811,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Hook for any action to take before disconnecting (e.g. SSL shutdown)
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	abstract void preDisconnectAction() throws JargonException;
@@ -852,7 +852,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			getIrodsSession().discardSessionForErrors(getIrodsAccount());
 		}
 
-		if (this.getIrodsConnection().isConnected()) {
+		if (getIrodsConnection().isConnected()) {
 			log.warn("partial connection, not authenticated, forcefully shut down the socket");
 			getIrodsConnection().obliterateConnectionAndDiscardErrors();
 		}
@@ -1046,7 +1046,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			 * message length in front of the message. Causing unexpected
 			 * results when attempting to parse the message, ie. <REr are
 			 * interpreted as the message length.
-			 * 
+			 *
 			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000
 			 * </status> <msg>ERROR: msiDataObjPut: rsDataObjPut failed for
 			 * <MsgHeader_PI> <type>RODS_API_REPLY </type> <msgLen>0 </msgLen>
@@ -1183,7 +1183,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */
@@ -1324,7 +1324,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @param irodsConnection
 	 *            the irodsConnection to set
 	 */
-	protected void setIrodsConnection(AbstractConnection irodsConnection) {
+	protected void setIrodsConnection(final AbstractConnection irodsConnection) {
 		this.irodsConnection = irodsConnection;
 	}
 
@@ -1333,7 +1333,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * and returning a response. This is an edge case in the iRODS protocol used
 	 * for certain phases of client-server negotiation and typically is not the
 	 * case.
-	 * 
+	 *
 	 * @param type
 	 *            <code>String</code> with the type of request, typically an
 	 *            iRODS protocol request
@@ -1366,7 +1366,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * Cause the underlying connection to be closed and disconnected. This is
 	 * used internally to do out of band shutdowns of connections, for example,
 	 * when manipulating secure connections for auth.
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	abstract void closeOutSocketAndSetAsDisconnected() throws IOException;

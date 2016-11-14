@@ -444,7 +444,7 @@ public class LocalFileUtils {
 		InputStreamReader resourceReader = new InputStreamReader(
 				new BufferedInputStream(
 						RuleProcessingAOImpl.class
-						.getResourceAsStream(resourcePath)));
+								.getResourceAsStream(resourcePath)));
 
 		StringWriter writer = null;
 		String ruleString = null;

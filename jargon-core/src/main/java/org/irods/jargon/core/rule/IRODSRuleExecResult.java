@@ -32,7 +32,7 @@ public class IRODSRuleExecResult {
 	public static IRODSRuleExecResult instance(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSRuleExecResult(irodsRule, resultParameters);
 	}
 
@@ -50,7 +50,7 @@ public class IRODSRuleExecResult {
 	private IRODSRuleExecResult(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsRule == null) {
 			throw new JargonException("null irodsRule");

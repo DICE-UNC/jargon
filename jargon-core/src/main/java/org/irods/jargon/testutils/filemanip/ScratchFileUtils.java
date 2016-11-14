@@ -41,7 +41,7 @@ public class ScratchFileUtils {
 	public void createScratchDirIfNotExists(final String pathUnderScratch) {
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+						+ pathUnderScratch);
 		scratchDir.mkdirs();
 	}
 
@@ -63,7 +63,7 @@ public class ScratchFileUtils {
 			final String pathUnderScratch) {
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+						+ pathUnderScratch);
 
 		// if exists, delete it
 		if (scratchDir.exists()) {
@@ -105,7 +105,7 @@ public class ScratchFileUtils {
 	public boolean checkIfFileExistsInScratch(final String pathUnderScratch) {
 		File targetFile = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-				+ pathUnderScratch);
+						+ pathUnderScratch);
 
 		return targetFile.exists();
 	}

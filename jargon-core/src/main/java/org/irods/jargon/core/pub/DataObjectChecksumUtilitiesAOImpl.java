@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class DataObjectChecksumUtilitiesAOImpl extends IRODSGenericAO implements
-DataObjectChecksumUtilitiesAO {
+		DataObjectChecksumUtilitiesAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectChecksumUtilitiesAOImpl.class);
@@ -54,14 +54,14 @@ DataObjectChecksumUtilitiesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * retrieveExistingChecksumForDataObject(java.lang.String)
 	 */
 	@Override
 	public ChecksumValue retrieveExistingChecksumForDataObject(
 			final String irodsDataObjectAbsolutePath)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 
 		log.info("retrieveChecksumForDataObject()");
 
@@ -78,7 +78,7 @@ DataObjectChecksumUtilitiesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * computeChecksumOnDataObject(org.irods.jargon.core.pub.io.IRODSFile)
 	 */
@@ -115,7 +115,7 @@ DataObjectChecksumUtilitiesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * computeChecksumValueFromIrodsData(java.lang.String)
 	 */
@@ -129,7 +129,7 @@ DataObjectChecksumUtilitiesAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO#
 	 * verifyLocalFileAgainstIrodsFileChecksum(java.lang.String,
 	 * java.lang.String)
@@ -137,8 +137,8 @@ DataObjectChecksumUtilitiesAO {
 	@Override
 	public ChecksumValue verifyLocalFileAgainstIrodsFileChecksum(
 			final String localAbsolutePath, final String irodsAbsolutePath)
-					throws FileNotFoundException, ChecksumInvalidException,
-					JargonException {
+			throws FileNotFoundException, ChecksumInvalidException,
+			JargonException {
 		log.info("verifyLocalFileAgainstIrodsFileChecksum()");
 		if (localAbsolutePath == null || localAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

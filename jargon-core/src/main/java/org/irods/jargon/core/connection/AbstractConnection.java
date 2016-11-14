@@ -90,7 +90,7 @@ public abstract class AbstractConnection {
 	 * responsibility of the subclass. This is all kind of a mess with the
 	 * introduction of negotiation and seems a bit too involved for its own
 	 * good. We need to simplify this (MCC)
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the connection
 	 * @param pipelineConfiguration
@@ -110,7 +110,7 @@ public abstract class AbstractConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager,
 			final Socket socket, final IRODSSession irodsSession)
-			throws JargonException {
+					throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -138,12 +138,12 @@ public abstract class AbstractConnection {
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.irodsProtocolManager = irodsProtocolManager;
-		this.connection = socket;
+		connection = socket;
 		this.irodsSession = irodsSession;
 		connected = true;
 		connection = socket;
-		this.operativeClientServerNegotiationPolicy = null; // I don't need this
-		this.initializeIdentifier(irodsAccount);
+		operativeClientServerNegotiationPolicy = null; // I don't need this
+		initializeIdentifier(irodsAccount);
 
 		initInternalBufferIfNeeded(pipelineConfiguration);
 
@@ -160,7 +160,7 @@ public abstract class AbstractConnection {
 	 *            connection and networking configuration
 	 * @param irodsProtocolManager
 	 *            {@link irodsProtocolManager} that requested this connection
-	 * 
+	 *
 	 * @param irodsSession
 	 *            {@link IRODSSession} that is associated with this connection
 	 * @throws JargonException
@@ -190,12 +190,12 @@ public abstract class AbstractConnection {
 		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
 			log.info("using override negotiation policy from IRODSAccount:{}",
 					irodsAccount.getClientServerNegotiationPolicy());
-			this.operativeClientServerNegotiationPolicy = irodsAccount
+			operativeClientServerNegotiationPolicy = irodsAccount
 					.getClientServerNegotiationPolicy();
 		} else {
 			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(
 					irodsSession);
-			this.operativeClientServerNegotiationPolicy = builder
+			operativeClientServerNegotiationPolicy = builder
 					.buildClientServerNegotiationPolicyFromJargonProperties();
 			log.info("using default negotiation policy:{}",
 					operativeClientServerNegotiationPolicy);
@@ -220,7 +220,7 @@ public abstract class AbstractConnection {
 			log.info("using internal cache buffer of size:{}",
 					pipelineConfiguration.getInternalCacheBufferSize());
 			outputBuffer = new byte[pipelineConfiguration
-					.getInternalCacheBufferSize()];
+			                        .getInternalCacheBufferSize()];
 		}
 	}
 
@@ -453,7 +453,7 @@ public abstract class AbstractConnection {
 			final InputStream source,
 			long length,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-			throws IOException {
+					throws IOException {
 
 		if (source == null) {
 			String err = "value is null";
@@ -474,7 +474,7 @@ public abstract class AbstractConnection {
 			if (Thread.interrupted()) {
 				throw new IOException(
 
-				"interrupted, consider connection corrupted and return IOException to clear");
+						"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
 			if (temp.length > length) {
@@ -495,8 +495,8 @@ public abstract class AbstractConnection {
 			 */
 			if (connectionProgressStatusListener != null) {
 				connectionProgressStatusListener
-						.connectionProgressStatusCallback(ConnectionProgressStatus
-								.instanceForSend(lenThisRead));
+				.connectionProgressStatusCallback(ConnectionProgressStatus
+						.instanceForSend(lenThisRead));
 			}
 		}
 
@@ -584,7 +584,7 @@ public abstract class AbstractConnection {
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-			throws IOException {
+					throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";
@@ -611,7 +611,7 @@ public abstract class AbstractConnection {
 					bos.close();
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				n = read(temp, 0, Math.min(pipelineConfiguration
@@ -625,8 +625,8 @@ public abstract class AbstractConnection {
 					 */
 					if (intraFileStatusListener != null) {
 						intraFileStatusListener
-								.connectionProgressStatusCallback(ConnectionProgressStatus
-										.instanceForSend(n));
+						.connectionProgressStatusCallback(ConnectionProgressStatus
+								.instanceForSend(n));
 					}
 				} else {
 					length = n;

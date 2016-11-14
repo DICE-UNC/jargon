@@ -57,7 +57,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 */
 	public static UserAdminInp instanceForChangeUserPassword(
 			final String userName, final String obfuscatedPassword)
-					throws JargonException {
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("userName is null or missing");
@@ -76,7 +76,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super();
 
 		if (apiNumber <= 0) {

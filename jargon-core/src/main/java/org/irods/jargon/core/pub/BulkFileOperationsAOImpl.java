@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class BulkFileOperationsAOImpl extends IRODSGenericAO implements
-BulkFileOperationsAO {
+		BulkFileOperationsAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(BulkFileOperationsAOImpl.class);
@@ -36,7 +36,7 @@ BulkFileOperationsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * createABundleFromIrodsFilesAndStoreInIrods(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -46,7 +46,7 @@ BulkFileOperationsAO {
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-					throws JargonException {
+			throws JargonException {
 
 		if (absolutePathToBundleFileToBeCreatedOnIrods == null
 				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
@@ -82,7 +82,7 @@ BulkFileOperationsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * createABundleFromIrodsFilesAndStoreInIrodsWithForceOption
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -92,7 +92,7 @@ BulkFileOperationsAO {
 			final String absolutePathToBundleFileToBeCreatedOnIrods,
 			final String absolutePathToIrodsCollectionToBeBundled,
 			final String resourceNameWhereBundleWillBeStored)
-					throws JargonException {
+			throws JargonException {
 
 		if (absolutePathToBundleFileToBeCreatedOnIrods == null
 				|| absolutePathToBundleFileToBeCreatedOnIrods.isEmpty()) {
@@ -128,7 +128,7 @@ BulkFileOperationsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollection(java.lang.String, java.lang.String,
 	 * java.lang.String)
@@ -138,7 +138,7 @@ BulkFileOperationsAO {
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException {
+			throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -148,7 +148,7 @@ BulkFileOperationsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollectionWithBulkOperationOptimization
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -158,7 +158,7 @@ BulkFileOperationsAO {
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException {
+			throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -168,7 +168,7 @@ BulkFileOperationsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.BulkFileOperationsAO#
 	 * extractABundleIntoAnIrodsCollectionWithForceOption(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -178,7 +178,7 @@ BulkFileOperationsAO {
 			final String absolutePathToBundleFileInIrodsToBeExtracted,
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted)
-					throws JargonException {
+			throws JargonException {
 
 		extractABundleIntoAnIrodsCollection(
 				absolutePathToBundleFileInIrodsToBeExtracted,
@@ -202,7 +202,7 @@ BulkFileOperationsAO {
 			final String absolutePathToIrodsCollectionToHoldExtractedFiles,
 			final String resourceNameWhereBundleWillBeExtracted,
 			final boolean force, final boolean bulkOperation)
-					throws JargonException {
+			throws JargonException {
 
 		if (absolutePathToBundleFileInIrodsToBeExtracted == null
 				|| absolutePathToBundleFileInIrodsToBeExtracted.isEmpty()) {

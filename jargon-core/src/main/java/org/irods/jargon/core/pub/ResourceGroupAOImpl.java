@@ -52,7 +52,7 @@ ResourceGroupAO {
 
 		List<String> resourceNames = new ArrayList<String>();
 
-		if (getIRODSServerProperties().isConsortiumVersion()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			log.info("resource groups are not supported post iRODS4, simply list parent resources");
 			ResourceAO resourceAO = getIRODSAccessObjectFactory()
 					.getResourceAO(getIRODSAccount());

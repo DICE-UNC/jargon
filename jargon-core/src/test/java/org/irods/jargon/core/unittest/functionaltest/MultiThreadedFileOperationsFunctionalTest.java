@@ -36,7 +36,7 @@ public class MultiThreadedFileOperationsFunctionalTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -70,9 +70,9 @@ public class MultiThreadedFileOperationsFunctionalTest {
 				public void run() {
 					try {
 						irodsFileSystem.getIRODSFileFactory(irodsAccount)
-						.instanceIRODSFile(
-								targetIrodsCollection + "/"
-										+ testFileName + finalJ);
+								.instanceIRODSFile(
+										targetIrodsCollection + "/"
+												+ testFileName + finalJ);
 					} catch (Exception e) {
 						e.printStackTrace();
 						Assert.fail("exception:" + e);

@@ -48,9 +48,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 	 * @throws JargonException
 	 */
 	public PackingIrodsOutputStream(
-			final IRODSFileOutputStream irodsFileOutputStream)
-			throws NoResourceDefinedException, FileNotFoundException,
-			JargonException {
+			final IRODSFileOutputStream irodsFileOutputStream) {
 		if (irodsFileOutputStream == null) {
 			throw new IllegalArgumentException("null irodsFileOutputStream");
 		}

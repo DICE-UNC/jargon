@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer.encrypt;
 
@@ -22,26 +22,26 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wraps decryption of a byte buffer using AES
- * 
+ *
  * see http://karanbalkar.com/2014/02/tutorial-76-implement-aes-256-
  * encryptiondecryption-using-java/
- * 
+ *
  * and
- * 
+ *
  * http://pastebin.com/YiwbCAW8
- * 
+ *
  * and
- * 
+ *
  * http://stackoverflow.com/questions/1440030/how-to-implement-java-256-bit-aes-
  * encryption-with-cbc
- * 
+ *
  * and
- * 
+ *
  * http://stackoverflow.com/questions/20796042/aes-encryption-and-decryption-
  * with-java
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  *
  */
 class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
@@ -52,7 +52,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	/**
 	 * Default constructor with configuration information needed to set up the
 	 * algorithm
-	 * 
+	 *
 	 * @param pipelineConfiguration
 	 *            {@link PipelineConfiguration} with connection properties
 	 * @param negotiatedClientServerConfiguration
@@ -62,9 +62,9 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	 * @throws ClientServerNegotiationException
 	 */
 	AesCipherDecryptWrapper(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+					throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -78,7 +78,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	private void initImplementation() {
 		try {
 			log.info("initCipher()");
-			setCipher(Cipher.getInstance(this.getPipelineConfiguration()
+			setCipher(Cipher.getInstance(getPipelineConfiguration()
 					.getEncryptionAlgorithmEnum().getCypherKey()));
 
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
@@ -90,18 +90,16 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
 	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
 	 */
 	@Override
-	protected byte[] doDecrypt(EncryptionBuffer input) {
+	protected byte[] doDecrypt(final EncryptionBuffer input) {
 		try {
-			this.getCipher().init(
-					Cipher.DECRYPT_MODE,
-					this.getNegotiatedClientServerConfiguration()
-							.getSecretKey(),
+			getCipher().init(Cipher.DECRYPT_MODE,
+					getNegotiatedClientServerConfiguration().getSecretKey(),
 					new IvParameterSpec(input.getInitializationVector()));
 
 			byte[] original = getCipher().doFinal(input.getEncryptedData());

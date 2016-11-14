@@ -76,8 +76,8 @@ public class PAMAuthTest {
 				authResponse.getAuthenticatedIRODSAccount());
 		Assert.assertEquals("did not set authenticated account to std type",
 				AuthScheme.STANDARD, authResponse
-				.getAuthenticatedIRODSAccount()
-				.getAuthenticationScheme());
+						.getAuthenticatedIRODSAccount()
+						.getAuthenticationScheme());
 		Assert.assertNotNull("did not set auth startup response",
 				authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());

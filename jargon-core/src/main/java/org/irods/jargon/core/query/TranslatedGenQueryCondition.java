@@ -118,7 +118,7 @@ public class TranslatedGenQueryCondition {
 
 	private TranslatedGenQueryCondition(final RodsGenQueryEnum fieldName,
 			final String operator, final String value)
-					throws JargonQueryException {
+			throws JargonQueryException {
 		if (fieldName == null) {
 			throw new JargonQueryException("field name in condition is null");
 		}

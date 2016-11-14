@@ -507,7 +507,7 @@ public interface JargonProperties {
 
 	/**
 	 * <<<<<<< HEAD Retreives the default negotiation policy
-	 * 
+	 *
 	 * @return {@link SslNegotiationPolicy}
 	 */
 	SslNegotiationPolicy getNegotiationPolicy();
@@ -515,7 +515,7 @@ public interface JargonProperties {
 	/**
 	 * Retrieves the default encryption algo for parallel transfers when SSL is
 	 * enabled
-	 * 
+	 *
 	 * @return {@link EncryptionAlgorithmEnum}
 	 */
 	EncryptionAlgorithmEnum getEncryptionAlgorithmEnum();
@@ -523,7 +523,7 @@ public interface JargonProperties {
 	/**
 	 * Return the key size for encryption algo for parallel transfers when SSL
 	 * is enabled.
-	 * 
+	 *
 	 * @return <code>int</code> with an encryption key size
 	 */
 	int getEncryptionKeySize();
@@ -531,7 +531,7 @@ public interface JargonProperties {
 	/**
 	 * Return the salt size for encryption algo for parallel transfers when SSL
 	 * is enabled.
-	 * 
+	 *
 	 * @return <code>int</code> with an encryption salt size
 	 */
 	int getEncryptionSaltSize();
@@ -539,7 +539,7 @@ public interface JargonProperties {
 	/**
 	 * Return the number of hash rounds for encryption algo for parallel
 	 * transfers when SSL is enabled.
-	 * 
+	 *
 	 * @return <code>int</code> with number of hash rounds
 	 */
 	int getEncryptionNumberHashRounds();

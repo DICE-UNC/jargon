@@ -74,7 +74,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#
 	 * getNumberOfResultColumns()
 	 */
@@ -85,7 +85,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
 	 */

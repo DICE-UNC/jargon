@@ -537,7 +537,7 @@ class CollectionListingUtils {
 		specColInfo.setType(2);
 
 		if (collectionAndDataObjectListAndSearchAO.getIRODSServerProperties()
-				.isConsortiumVersion()) {
+				.isAtLeastIrods410()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
 

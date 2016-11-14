@@ -11,7 +11,7 @@ public class PipelineConfigurationTest {
 	public void testInstance() throws Exception {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties
-				.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
+		.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
 		jargonProperties.setEncryptionKeySize(123);
 		jargonProperties.setEncryptionNumberHashRounds(456);
 		jargonProperties.setEncryptionSaltSize(789);

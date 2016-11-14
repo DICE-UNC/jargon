@@ -176,20 +176,6 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			.setIrodsServerProperties(environmentalInfoAccessor
 					.getIRODSServerProperties());
 
-			// add startup response cookie info indicating if eirods
-			int cookie = Integer.parseInt(irodsMidLevelProtocol
-					.getAuthResponse().getStartupResponse().getCookie());
-
-			if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
-					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
-				log.info("setting to eirods based on cookie value");
-				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setConsortiumVersion(true);
-			} else if (irodsMidLevelProtocol.getIrodsServerProperties()
-					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
-				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setConsortiumVersion(true);
-			}
 		}
 
 		log.info(irodsMidLevelProtocol.getIrodsServerProperties().toString());

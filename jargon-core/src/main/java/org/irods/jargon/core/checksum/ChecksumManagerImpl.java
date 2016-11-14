@@ -49,7 +49,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.ChecksumManager#
 	 * determineChecksumEncodingForTargetServer()
 	 */
@@ -109,15 +109,15 @@ public class ChecksumManagerImpl implements ChecksumManager {
 		IRODSServerProperties serverProperties = environmentalInfoAO
 				.getIRODSServerProperties();
 
-		boolean isConsortium = serverProperties.isConsortiumVersion();
+		boolean isConsortium = serverProperties.isAtLeastIrods410();
 
 		log.info("is this consortium? (post 3.3.1):{}", isConsortium);
 
 		/*
 		 * Negotiation:
-		 * 
+		 *
 		 * DEFAULT - use MD5 pre consortium and SHA256 post
-		 * 
+		 *
 		 * STRONG - use MD5 pre 3.3.1 and SHA256 after
 		 */
 
@@ -160,21 +160,21 @@ public class ChecksumManagerImpl implements ChecksumManager {
 
 	private void cacheEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		irodsAccessObjectFactory.getDiscoveredServerPropertiesCache()
-				.cacheAProperty(irodsAccount.getHost(), irodsAccount.getZone(),
-						DiscoveredServerPropertiesCache.CHECKSUM_TYPE,
-						checksumEncoding.toString());
+		.cacheAProperty(irodsAccount.getHost(), irodsAccount.getZone(),
+				DiscoveredServerPropertiesCache.CHECKSUM_TYPE,
+				checksumEncoding.toString());
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.checksum.ChecksumManager#
 	 * determineChecksumEncodingFromIrodsData(java.lang.String)
 	 */
 	@Override
 	public ChecksumValue determineChecksumEncodingFromIrodsData(
 			final String irodsChecksumValue)
-			throws ChecksumMethodUnavailableException {
+					throws ChecksumMethodUnavailableException {
 
 		log.info("determineChecksumEncodingFromIrodsData()");
 

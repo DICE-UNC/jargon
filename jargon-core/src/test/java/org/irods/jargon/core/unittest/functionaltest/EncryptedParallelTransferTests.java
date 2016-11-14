@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
@@ -26,7 +26,7 @@ import org.junit.Test;
  * Functional tests of various permutations of ssl negotiation and auth methods.
  * These tests are contingent on the iRODS configuration and various testing
  * properties settings
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
@@ -55,12 +55,12 @@ public class EncryptedParallelTransferTests {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -95,7 +95,7 @@ public class EncryptedParallelTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -109,7 +109,7 @@ public class EncryptedParallelTransferTests {
 		String targetIrodsPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testFileName);
+						+ testFileName);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

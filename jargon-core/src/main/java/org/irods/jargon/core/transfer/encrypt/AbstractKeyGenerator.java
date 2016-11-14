@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer.encrypt;
 
@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract superclass for a shared encryption key generator implementation of a
  * particular algorithm and configuration
- * 
+ *
  * @author Mike Conway - DFC
  *
  */
@@ -39,8 +39,8 @@ public abstract class AbstractKeyGenerator {
 	}
 
 	public AbstractKeyGenerator(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super();
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
@@ -50,7 +50,7 @@ public abstract class AbstractKeyGenerator {
 	 * Generate an {@link SecretKey} based on the pipeline configuration. Note
 	 * that this method should NOT update the <code>SecretKey</code> in the
 	 * <code>NegotiatedClientServerConfiguration</code>
-	 * 
+	 *
 	 * @return {@link SecretKey} for the algo and settings in the pipeline and
 	 *         negotiated configuration
 	 * @throws EncryptionException

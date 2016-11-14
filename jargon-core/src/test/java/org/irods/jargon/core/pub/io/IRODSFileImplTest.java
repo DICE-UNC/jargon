@@ -57,7 +57,7 @@ public class IRODSFileImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -124,7 +124,7 @@ public class IRODSFileImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
+		if (props.isAtLeastIrods410()) {
 			return;
 		}
 		IRODSFileFactory irodsFileFactory = irodsFileSystem
@@ -607,7 +607,7 @@ public class IRODSFileImplTest {
 		File sourceFile = new File(absPath + testFileName);
 		IRODSFile targetIRODSFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + "/" + testFileName);
+						targetIrodsCollection + "/" + testFileName);
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -637,7 +637,7 @@ public class IRODSFileImplTest {
 		File sourceFile = new File(absPath + testFileName);
 		IRODSFile targetIRODSFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + "/" + testFileName);
+						targetIrodsCollection + "/" + testFileName);
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -674,7 +674,7 @@ public class IRODSFileImplTest {
 		File sourceFile = new File(absPath + testFileName);
 		IRODSFile targetIRODSFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + "/" + testFileName);
+						targetIrodsCollection + "/" + testFileName);
 
 		DataTransferOperations dataTransferOperations = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -886,7 +886,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -927,7 +927,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -976,7 +976,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1023,7 +1023,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1217,7 +1217,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1262,7 +1262,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1391,7 +1391,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDirName);
+						+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1421,7 +1421,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDirName);
+						+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -1474,7 +1474,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1516,7 +1516,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1549,7 +1549,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -1577,7 +1577,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -1608,7 +1608,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDir);
+						+ testDir);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
 				.getIRODSFileFactory(irodsAccount);
@@ -1729,7 +1729,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ '/' + testFileName;
+						+ '/' + testFileName;
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
@@ -1759,7 +1759,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH)
-				+ '/' + testFileName;
+						+ '/' + testFileName;
 
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
@@ -1805,7 +1805,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -1984,7 +1984,7 @@ public class IRODSFileImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile("/"
 				+ testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 		String actualParent = irodsFile.getParent();
 		Assert.assertNotNull("null parent, should have been root", actualParent);
 		Assert.assertEquals("should have gotten root as parent", "/",
@@ -2166,7 +2166,7 @@ public class IRODSFileImplTest {
 	/**
 	 * Test for bug move versus rename semantics, collection already exists on
 	 * rename collection #161 https://github.com/DICE-UNC/jargon/issues/161
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Test
@@ -2185,10 +2185,10 @@ public class IRODSFileImplTest {
 						+ '/' + testOrigDirectory);
 
 		FileGenerator
-				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-						localCollectionAbsolutePath,
-						"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
-						"testFile", ".txt", 2, 2, 1, 2);
+		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+				localCollectionAbsolutePath,
+				"testGetCollectionWithTwoFilesNoCallbacks", 1, 1, 1,
+				"testFile", ".txt", 2, 2, 1, 2);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
@@ -2204,11 +2204,11 @@ public class IRODSFileImplTest {
 
 		IRODSFile irodsOrigFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + testOrigDirectory);
+						targetIrodsCollection + '/' + testOrigDirectory);
 
 		IRODSFile irodsRenameToFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(
-				targetIrodsCollection + '/' + testNewDirectory);
+						targetIrodsCollection + '/' + testNewDirectory);
 
 		irodsOrigFile.renameTo(irodsRenameToFile);
 
@@ -2252,7 +2252,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -2308,7 +2308,7 @@ public class IRODSFileImplTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -2319,8 +2319,8 @@ public class IRODSFileImplTest {
 		IRODSFile irodsRenameFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		irodsRenameFile
-				.setResource(testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		.setResource(testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		irodsFile.renameTo(irodsRenameFile);
 
@@ -2333,7 +2333,7 @@ public class IRODSFileImplTest {
 		Assert.assertEquals(
 				"file is not in new resource",
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				dataObject.getResourceName());
 	}
 
@@ -2407,7 +2407,7 @@ public class IRODSFileImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ testDirName);
+						+ testDirName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

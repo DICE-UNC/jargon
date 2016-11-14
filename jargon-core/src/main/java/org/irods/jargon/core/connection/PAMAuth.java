@@ -33,7 +33,7 @@ public class PAMAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		boolean needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
 				.getEncryptionType() == EncryptionType.NONE;
@@ -61,9 +61,9 @@ public class PAMAuth extends AuthMechanism {
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
-		if (startupResponseData.isEirods()) {
-			// irodsCommandsToUse.setForceSslFlush(true); MCC took out..
-			log.info("using irods pluggable pam auth request");
+
+		if (startupResponseData.checkIs410OrLater()) {
+			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
@@ -83,7 +83,7 @@ public class PAMAuth extends AuthMechanism {
 		}
 
 		String tempPasswordForPam;
-		if (startupResponseData.isEirods()) {
+		if (startupResponseData.checkIs410OrLater()) {
 			tempPasswordForPam = response.getTag("result_").getStringValue();
 		} else {
 			tempPasswordForPam = response.getTag("irodsPamPassword")
@@ -106,14 +106,14 @@ public class PAMAuth extends AuthMechanism {
 				irodsAccount.getHomeDirectory(), irodsAccount.getZone(),
 				irodsAccount.getDefaultStorageResource());
 		irodsAccountUsingTemporaryIRODSPassword
-				.setAuthenticationScheme(AuthScheme.STANDARD);
+		.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse
-				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+		.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
 		irodsMidLevelProtocolToUse.setAuthResponse(authResponse);
@@ -127,8 +127,8 @@ public class PAMAuth extends AuthMechanism {
 	 * @throws JargonException
 	 */
 	private void shutdownSslAndCloseConnection(
-			AbstractIRODSMidLevelProtocol irodsCommandsToUse)
-			throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
+					throws JargonException {
 		SSLEndInp sslEndInp = SSLEndInp.instance();
 		irodsCommandsToUse.irodsFunction(sslEndInp);
 
@@ -150,7 +150,7 @@ public class PAMAuth extends AuthMechanism {
 	private AbstractIRODSMidLevelProtocol establishSecureConnectionForPamAuth(
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException, AssertionError {
+					throws JargonException, AssertionError {
 
 		if (irodsCommands.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
 			log.info("already ssl enabled");
@@ -182,7 +182,7 @@ public class PAMAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,
@@ -192,7 +192,7 @@ public class PAMAuth extends AuthMechanism {
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-			throws AuthenticationException, JargonException {
+					throws AuthenticationException, JargonException {
 
 		/*
 		 * I'm creating a new protocol for PAM, using the newly renegotiated
@@ -210,7 +210,7 @@ public class PAMAuth extends AuthMechanism {
 				.instance(
 						irodsMidLevelProtocol.getIrodsSession(),
 						irodsMidLevelProtocol.getAuthResponse()
-								.getAuthenticatedIRODSAccount(),
+						.getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());
 		actualProtocol.setAuthResponse(originalAuthResponse);
 		return actualProtocol;

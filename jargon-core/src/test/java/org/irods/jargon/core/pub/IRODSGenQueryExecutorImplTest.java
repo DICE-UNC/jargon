@@ -56,14 +56,14 @@ public class IRODSGenQueryExecutorImplTest {
 		String absPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator.generateManyFilesInGivenDirectory(IRODS_TEST_SUBDIR_PATH
 				+ '/' + collDir, testFilePrefix, testFileSuffix, 2000, 5, 10);
@@ -72,9 +72,9 @@ public class IRODSGenQueryExecutorImplTest {
 				.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(
 						testingPropertiesHelper
-						.buildIRODSCollectionAbsolutePathFromTestProperties(
-								testingProperties,
-								IRODS_TEST_SUBDIR_PATH));
+								.buildIRODSCollectionAbsolutePathFromTestProperties(
+										testingProperties,
+										IRODS_TEST_SUBDIR_PATH));
 		putDir.mkdirs();
 
 		// put the files by putting the collection
@@ -122,7 +122,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -171,7 +171,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -190,7 +190,7 @@ public class IRODSGenQueryExecutorImplTest {
 						irodsQuery,
 						0,
 						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+								.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 		Assert.assertNotNull(resultSet);
 	}
@@ -207,7 +207,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -241,7 +241,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -257,7 +257,7 @@ public class IRODSGenQueryExecutorImplTest {
 
 		irodsGenQueryExecutor.executeIRODSQueryInZone(irodsQuery, -1,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
 
@@ -274,7 +274,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -290,7 +290,7 @@ public class IRODSGenQueryExecutorImplTest {
 
 		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 				-1, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
 
@@ -310,7 +310,7 @@ public class IRODSGenQueryExecutorImplTest {
 
 		irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery,
 				0, testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY));
 
 	}
 
@@ -326,7 +326,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -358,7 +358,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_ZONE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -390,7 +390,7 @@ public class IRODSGenQueryExecutorImplTest {
 				+ " = "
 				+ "'"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY)
 				+ "'";
 
 		IRODSGenQuery irodsQuery = IRODSGenQuery.instance(queryString, 100);
@@ -671,12 +671,12 @@ public class IRODSGenQueryExecutorImplTest {
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-		.addConditionAsGenQueryField(
-				RodsGenQueryEnum.COL_R_ZONE_NAME,
-				QueryConditionOperators.EQUAL,
-				testingProperties.getProperty(
-						TestingPropertiesHelper.IRODS_ZONE_KEY).trim());
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(
+						RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL,
+						testingProperties.getProperty(
+								TestingPropertiesHelper.IRODS_ZONE_KEY).trim());
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -707,9 +707,9 @@ public class IRODSGenQueryExecutorImplTest {
 		final String zoneKey = testingProperties.getProperty(
 				TestingPropertiesHelper.IRODS_ZONE_KEY).trim();
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
-				QueryConditionOperators.EQUAL, zoneKey)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL, zoneKey)
 				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 						GenQueryOrderByField.OrderByType.DESC);
 
@@ -751,9 +751,9 @@ public class IRODSGenQueryExecutorImplTest {
 		final String zoneKey = testingProperties.getProperty(
 				TestingPropertiesHelper.IRODS_ZONE_KEY).trim();
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_RESC_NAME)
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
-				QueryConditionOperators.EQUAL, zoneKey)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_R_ZONE_NAME)
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_R_ZONE_NAME,
+						QueryConditionOperators.EQUAL, zoneKey)
 				.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 						GenQueryOrderByField.OrderByType.ASC);
 

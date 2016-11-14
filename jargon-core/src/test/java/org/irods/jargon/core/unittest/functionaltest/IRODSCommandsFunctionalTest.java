@@ -44,7 +44,7 @@ public class IRODSCommandsFunctionalTest {
 		for (int i = 0; i < ctr; i++) {
 			try {
 				irodsFileSystem.getIRODSAccessObjectFactory()
-				.authenticateIRODSAccount(irodsAccount);
+						.authenticateIRODSAccount(irodsAccount);
 			} catch (AuthenticationException ae) {
 				// ok
 			}

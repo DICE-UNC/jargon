@@ -11,6 +11,7 @@ import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.CollectionAOImpl;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
@@ -77,7 +78,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			return;
 		}
 
-		if (props.isConsortiumVersion()) {
+		if (props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -136,7 +137,7 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 			return;
 		}
 
-		if (props.isConsortiumVersion()) {
+		if (props.isAtLeastIrods410()) {
 			return;
 		}
 
@@ -191,6 +192,10 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 	public void testMarkSupported() throws Exception {
 		AbstractIRODSMidLevelProtocol irodsCommands = Mockito
 				.mock(IRODSMidLevelProtocol.class);
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 0, "rods4.1.9", "xx", "xx");
+		Mockito.when(irodsCommands.getIRODSServerProperties()).thenReturn(
+				irodsServerProperties);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
 		bis.close();
@@ -202,6 +207,10 @@ public class RemoteExecutionBinaryResultInputStreamTest {
 
 		AbstractIRODSMidLevelProtocol irodsCommands = Mockito
 				.mock(IRODSMidLevelProtocol.class);
+		IRODSServerProperties irodsServerProperties = IRODSServerProperties
+				.instance(IcatEnabled.ICAT_ENABLED, 0, "rods4.1.9", "xx", "xx");
+		Mockito.when(irodsCommands.getIRODSServerProperties()).thenReturn(
+				irodsServerProperties);
 		RemoteExecutionBinaryResultInputStream bis = new RemoteExecutionBinaryResultInputStream(
 				irodsCommands, 1);
 		bis.close();

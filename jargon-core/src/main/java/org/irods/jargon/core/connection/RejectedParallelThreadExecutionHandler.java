@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class RejectedParallelThreadExecutionHandler implements
-RejectedExecutionHandler {
+		RejectedExecutionHandler {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(RejectedParallelThreadExecutionHandler.class);
@@ -28,7 +28,7 @@ RejectedExecutionHandler {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * java.util.concurrent.RejectedExecutionHandler#rejectedExecution(java.
 	 * lang.Runnable, java.util.concurrent.ThreadPoolExecutor)

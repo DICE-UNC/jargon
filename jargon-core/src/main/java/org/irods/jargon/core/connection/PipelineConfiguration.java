@@ -135,13 +135,12 @@ public class PipelineConfiguration {
 				.getPrimaryTcpSendWindowSize();
 		socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
-		this.negotiationPolicy = jargonProperties.getNegotiationPolicy();
-		this.encryptionAlgorithmEnum = jargonProperties
-				.getEncryptionAlgorithmEnum();
-		this.encryptionKeySize = jargonProperties.getEncryptionKeySize();
-		this.encryptionNumberHashRounds = jargonProperties
+		negotiationPolicy = jargonProperties.getNegotiationPolicy();
+		encryptionAlgorithmEnum = jargonProperties.getEncryptionAlgorithmEnum();
+		encryptionKeySize = jargonProperties.getEncryptionKeySize();
+		encryptionNumberHashRounds = jargonProperties
 				.getEncryptionNumberHashRounds();
-		this.encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
+		encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
 
 	}
 
@@ -291,7 +290,7 @@ public class PipelineConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

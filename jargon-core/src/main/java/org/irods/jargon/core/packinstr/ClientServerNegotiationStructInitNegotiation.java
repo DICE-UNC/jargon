@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -11,12 +11,12 @@ import org.irods.jargon.core.exception.JargonException;
  * Structure that is the result of a client-server negotiation, analogous to the
  * cs_neg_t struct in iRODS, responding to the server as a result of a
  * negotiation (failure or success)
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class ClientServerNegotiationStructInitNegotiation extends
-		AbstractIRODSPackingInstruction {
+AbstractIRODSPackingInstruction {
 
 	private int status = 0;
 	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
@@ -38,7 +38,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		}
 
 		int status = tag.getTag("status").getIntValue();
-		this.setStatus(status);
+		setStatus(status);
 		String sslNegResult = tag.getTag("result").getStringValue();
 
 		if (sslNegResult == null || sslNegResult.isEmpty()) {
@@ -46,12 +46,12 @@ public class ClientServerNegotiationStructInitNegotiation extends
 					"no ssl negotiation result found");
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
 				.name())) {
-			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.name())) {
-			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
+			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
-			this.setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		} else {
 			throw new ClientServerNegotiationException(
 					"Unrecognized ssl negotiation response:" + sslNegResult);
@@ -61,7 +61,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 
 	/**
 	 * Create an instance of the struct based on deserializing the Tag structure
-	 * 
+	 *
 	 * @param tag
 	 * @return
 	 * @throws ClientServerNegotiationException
@@ -84,7 +84,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(int status) {
+	public void setStatus(final int status) {
 		this.status = status;
 	}
 
@@ -100,23 +100,23 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	 *            the sslNegotiationPolicy to set
 	 */
 	public void setSslNegotiationPolicy(
-			SslNegotiationPolicy sslNegotiationPolicy) {
+			final SslNegotiationPolicy sslNegotiationPolicy) {
 		this.sslNegotiationPolicy = sslNegotiationPolicy;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationStruct [status=").append(status)
-				.append(", ");
+		.append(", ");
 		if (sslNegotiationPolicy != null) {
 			builder.append("sslNegotiationPolicy=")
-					.append(sslNegotiationPolicy);
+			.append(sslNegotiationPolicy);
 		}
 		builder.append("]");
 		return builder.toString();
@@ -124,11 +124,11 @@ public class ClientServerNegotiationStructInitNegotiation extends
 
 	/**
 	 * Was this negotiation a success?
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean wasThisASuccess() {
-		return this.getStatus() == 1;
+		return getStatus() == 1;
 	}
 
 	@Override
@@ -136,7 +136,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		StringBuilder sb = new StringBuilder();
 		sb.append(CS_NEG_RESULT_KW);
 		sb.append('=');
-		sb.append(this.sslNegotiationPolicy.name());
+		sb.append(sslNegotiationPolicy.name());
 		sb.append(';');
 		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status),
 				new Tag("result", sb.toString()) });

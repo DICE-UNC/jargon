@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.transfer.encrypt;
 
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Generate an AES key based on pipeline config, assumes using salt and other
  * settings
- * 
+ *
  * @author Mike Conway -DFC
  *
  */
@@ -37,14 +37,14 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 	 * @param negotiatedClientServerConfiguration
 	 */
 	public AESKeyGenerator(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator#generateKey()
 	 */
@@ -57,24 +57,23 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 
 	private SecretKeySpec initSecretKey() throws EncryptionException {
 		try {
-			SecretKeyFactory factory = SecretKeyFactory.getInstance(this
-					.getPipelineConfiguration().getEncryptionAlgorithmEnum()
-					.getKeyGenType());
+			SecretKeyFactory factory = SecretKeyFactory
+					.getInstance(getPipelineConfiguration()
+							.getEncryptionAlgorithmEnum().getKeyGenType());
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
 			kgen.init(256); // 192 and 256 bits may not be available
 			char[] randPwd = new String(kgen.generateKey().getEncoded())
-					.toCharArray();
+			.toCharArray();
 
 			// Generate the secret key specs.
-			KeySpec keySpec = new PBEKeySpec(randPwd,
+			KeySpec keySpec = new PBEKeySpec(
+					randPwd,
 					RandomUtils
-							.generateRandomBytesOfLength(this
-									.getPipelineConfiguration()
-									.getEncryptionSaltSize()), this
-							.getPipelineConfiguration()
-							.getEncryptionNumberHashRounds(), this
-							.getPipelineConfiguration()
-							.getEncryptionAlgorithmEnum().getKeySize());
+					.generateRandomBytesOfLength(getPipelineConfiguration()
+							.getEncryptionSaltSize()),
+					getPipelineConfiguration().getEncryptionNumberHashRounds(),
+					getPipelineConfiguration().getEncryptionAlgorithmEnum()
+							.getKeySize());
 
 			SecretKey secretKey = factory.generateSecret(keySpec);
 			SecretKeySpec secretSpec = new SecretKeySpec(

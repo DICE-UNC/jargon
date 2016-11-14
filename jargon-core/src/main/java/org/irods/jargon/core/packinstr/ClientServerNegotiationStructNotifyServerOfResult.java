@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -8,12 +8,12 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Structure that is the result of a client-server negotiation, analogous to the
  * cs_neg_t struct in iRODS, as read from the server
- * 
+ *
  * @author Mike Conway - DICE
  *
  */
 public class ClientServerNegotiationStructNotifyServerOfResult extends
-		AbstractIRODSPackingInstruction {
+AbstractIRODSPackingInstruction {
 
 	public enum Outcome {
 		CS_NEG_USE_TCP, CS_NEG_USE_SSL, CS_NEG_FAILURE
@@ -26,7 +26,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 		return result;
 	}
 
-	public void setResult(String result) {
+	public void setResult(final String result) {
 		this.result = result;
 	}
 
@@ -38,7 +38,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 
 	/**
 	 * Create an instance to send to iRODS for failure of SSL negotiation
-	 * 
+	 *
 	 * @param status
 	 * @param sslNegotiationPolicy
 	 * @return
@@ -50,7 +50,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 
 	/**
 	 * Create an instance to send to iRODS
-	 * 
+	 *
 	 * @param status
 	 * @param sslNegotiationPolicy
 	 * @return
@@ -70,7 +70,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 
 		this.status = status;
 		this.result = result;
-		this.setApiNumber(API_NBR);
+		setApiNumber(API_NBR);
 
 	}
 
@@ -85,20 +85,20 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	 * @param status
 	 *            the status to set
 	 */
-	public void setStatus(int status) {
+	public void setStatus(final int status) {
 		this.status = status;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationStruct [status=").append(status)
-				.append(", ");
+		.append(", ");
 		if (result != null) {
 			builder.append("result=").append(result);
 		}
@@ -108,11 +108,11 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 
 	/**
 	 * Was this negotiation a success?
-	 * 
+	 *
 	 * @return
 	 */
 	public boolean wasThisASuccess() {
-		return this.getStatus() == 1;
+		return getStatus() == 1;
 	}
 
 	@Override
