@@ -22,6 +22,9 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				true);
+		AESKeyGenerator keyGen = new AESKeyGenerator(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
+		negotiatedClientServerConfiguration.setSecretKey(keyGen.generateKey());
 		ParallelCipherWrapper actual = EncryptionWrapperFactory.instance(
 				pipelineConfiguration, negotiatedClientServerConfiguration,
 				Cipher.ENCRYPT_MODE);

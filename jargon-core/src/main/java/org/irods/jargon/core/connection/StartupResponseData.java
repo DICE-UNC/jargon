@@ -26,9 +26,11 @@ public class StartupResponseData {
 
 	/**
 	 * Holds the result of any client/server negotiation, will always be
-	 * present, even if no negotiation is done
+	 * present, even if no negotiation is done. Defaults to no ssl unless
+	 * negotiated later...
 	 */
-	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
+			false);
 
 	/**
 	 * Default constructor initializes all of the required fields in response to

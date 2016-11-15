@@ -94,7 +94,7 @@ public class ConnectionCreatingPoolableObjectFactory implements
 		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = (AbstractIRODSMidLevelProtocol) objectToDestroy;
 		irodsMidLevelProtocol.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
-		irodsMidLevelProtocol.disconnect();
+		irodsMidLevelProtocol.shutdown();
 	}
 
 	/*
