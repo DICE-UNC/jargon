@@ -1,8 +1,10 @@
 package org.irods.jargon.core.connection;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,7 +173,7 @@ public class IRODSAccount implements Serializable {
 	 */
 	public static IRODSAccount instanceForReroutedHost(
 			final IRODSAccount initialAccount, final String reroutedHostName)
-					throws JargonException {
+			throws JargonException {
 
 		if (initialAccount == null) {
 			throw new IllegalArgumentException("null initialAccount");
@@ -391,6 +393,12 @@ public class IRODSAccount implements Serializable {
 	 *             irods URI that authenticates as a proxy user.
 	 */
 	public URI toURI(final boolean includePassword) throws JargonException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("irods://");
+		sb.append(getUserName());
+		sb.append('.');
+		sb.append(getZone());
+
 		try {
 			if (includePassword) {
 				if (proxied()) {
@@ -398,15 +406,19 @@ public class IRODSAccount implements Serializable {
 							"irods URI scheme doesn't support authentication through a proxy.");
 				}
 
-				return new URI("irods://" + getUserName() + "." + getZone()
-						+ ":" + getPassword() + "@" + getHost() + ":"
-						+ getPort() + getHomeDirectory());
-			} else {
-				return new URI("irods://" + getUserName() + "." + getZone()
-						+ "@" + getHost() + ":" + getPort()
-						+ getHomeDirectory());
+				sb.append(':');
+				sb.append(getPassword());
+
 			}
-		} catch (URISyntaxException e) {
+
+			sb.append('@');
+			sb.append(getHost());
+			sb.append(':');
+			sb.append(getPort());
+			sb.append(URLEncoder.encode(getHomeDirectory(), "UTF-8"));
+			return new URI(sb.toString());
+
+		} catch (URISyntaxException | UnsupportedEncodingException e) {
 			throw new JargonException("cannot convert this account into a URI:"
 					+ this, e);
 		}

@@ -42,4 +42,17 @@ public final class IRODSAccountTest {
 		account.toURI(true);
 	}
 
+	/**
+	 * Tests bug https://github.com/DICE-UNC/jargon/issues/189
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public final void testToUriWithWhiteSpaceInPathBug189() throws Exception {
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
+				"client", "password", "/zone/home/client whitespace", "zone",
+				"");
+		account.toURI(true);
+	}
+
 }
