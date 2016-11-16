@@ -714,6 +714,32 @@ public class IRODSFileImplTest {
 				targetIRODSCollection.exists());
 	}
 
+	/**
+	 * See https://github.com/DICE-UNC/jargon/issues/170 referred to iRODS
+	 *
+	 * @throws Exception
+	 */
+	@Ignore
+	public final void testDeleteACollectionWithAmpInTheNameBug170()
+			throws Exception {
+		String testCollectionSubdir = "testDeleteACollectionWithAmpInTheNameBug170 && hail hail rock & roll  &";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + "/"
+								+ testCollectionSubdir);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile targetIRODSCollection = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIRODSCollection.mkdirs();
+		targetIRODSCollection.delete();
+		Assert.assertFalse("file should not still exist",
+				targetIRODSCollection.exists());
+	}
+
 	@Test
 	public final void testExistsQuotesInFileName() throws Exception {
 		String testFileName = "testExistsQuote'infilename.txt";

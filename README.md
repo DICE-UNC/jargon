@@ -59,4 +59,14 @@ Changed from a string comparison of iRODS reported version to a more sophisticat
 
 Update FileCloseInp packing instruction for additional resource information
 
+#### Special character handling in delete operations seems to be off. #170
+
+Directories can be created with multiple special chars (notably &) but problems may occur in delete. Unit test shows
+an iRODS issue referenced at Create/delete file with & char allows create, causes -816000 error on delete #3398, will ignore unit test for now.
+
+#### IRODSAccount fails with whitespace in default path #189
+
+
+
+
 
