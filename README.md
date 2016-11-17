@@ -66,7 +66,7 @@ an iRODS issue referenced at Create/delete file with & char allows create, cause
 
 #### IRODSAccount fails with whitespace in default path #189
 
-toURI with white spaces gives URISyntaxException
+toURI with white spaces gives URISyntaxException, url encode that information
 
 
 
