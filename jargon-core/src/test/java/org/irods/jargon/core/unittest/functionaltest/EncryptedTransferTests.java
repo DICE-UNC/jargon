@@ -30,7 +30,7 @@ import org.junit.Test;
  * @author Mike Conway - DICE
  *
  */
-public class EncryptedParallelTransferTests {
+public class EncryptedTransferTests {
 
 	private static Properties testingProperties = new Properties();
 	private static JargonProperties jargonOriginalProperties = null;
@@ -55,12 +55,12 @@ public class EncryptedParallelTransferTests {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -95,7 +95,7 @@ public class EncryptedParallelTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -109,7 +109,55 @@ public class EncryptedParallelTransferTests {
 		String targetIrodsPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO
+				.putOperation(
+						localFileName,
+						targetIrodsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+	}
+
+	@Test
+	public void testNormalTransferWithAesEncryptionSet()
+			throws JargonException, TestingUtilsException,
+			IRODSTestAssertionException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		String testFileName = "testNormalTransferWithAesEncryptionSet.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						25 * 1024 * 1024);
+
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

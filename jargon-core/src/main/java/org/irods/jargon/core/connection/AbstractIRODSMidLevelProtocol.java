@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractIRODSMidLevelProtocol {
 
 	private AbstractConnection irodsConnection;
-
+	private AbstractConnection irodsConnectionNonEncryptedRef = null;
 	private IRODSProtocolManager irodsProtocolManager;
 	private IRODSServerProperties irodsServerProperties;
 	private IRODSSession irodsSession = null;
@@ -1373,5 +1373,20 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @throws IOException
 	 */
 	abstract void closeOutSocketAndSetAsDisconnected() throws IOException;
+
+	/**
+	 * @return the irodsConnectionNonEncryptedRef
+	 */
+	public AbstractConnection getIrodsConnectionNonEncryptedRef() {
+		return irodsConnectionNonEncryptedRef;
+	}
+
+	/**
+	 * @param irodsConnectionNonEncryptedRef the irodsConnectionNonEncryptedRef to set
+	 */
+	public void setIrodsConnectionNonEncryptedRef(
+			AbstractConnection irodsConnectionNonEncryptedRef) {
+		this.irodsConnectionNonEncryptedRef = irodsConnectionNonEncryptedRef;
+	}
 
 }

@@ -204,6 +204,8 @@ class ClientServerNegotiationService {
 		log.info("wrapping in ssl connection");
 		SslConnectionUtilities sslConnectionUtilities = new SslConnectionUtilities(
 				getIrodsMidLevelProtocol().getIrodsSession());
+		getIrodsMidLevelProtocol().setIrodsConnectionNonEncryptedRef(
+				getIrodsMidLevelProtocol().getIrodsConnection());
 		sslConnectionUtilities
 				.createSslSocketForProtocolAndIntegrateIntoProtocol(
 						getIrodsMidLevelProtocol().getIrodsAccount(),
