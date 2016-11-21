@@ -13,6 +13,7 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestAssertionException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.TestingUtilsException;
@@ -104,12 +105,58 @@ public class EncryptedTransferTests {
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, testFileName,
-						34 * 1024 * 1024);
+						93 * 1024 * 1024);
 
 		String targetIrodsPath = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
 								+ testFileName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setComputeAndVerifyChecksumAfterTransfer(true);
+
+		dataTransferOperationsAO
+				.putOperation(
+						localFileName,
+						targetIrodsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, tcb);
+
+	}
+
+	@Test
+	public void testParallelTransferWithAesEncryptionSetAllAs()
+			throws JargonException, TestingUtilsException,
+			IRODSTestAssertionException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		String localFileName = "/home/mconway/temp/ssltest/the_file.txt";
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ "afile.txt");
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);

@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.transfer.encrypt;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.security.AlgorithmParameters;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -40,6 +42,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(AesCipherEncryptWrapper.class);
+	public static byte[] ivPad = new byte[16];
 
 	/**
 	 * Default constructor with configuration information needed to set up the
@@ -57,7 +60,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	AesCipherEncryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -102,6 +105,10 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 			AlgorithmParameters params = getCipher().getParameters();
 			byte[] mInitVec = params.getParameterSpec(IvParameterSpec.class)
 					.getIV();
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			bos.write(mInitVec);
+			// TODO: add version checking
+			bos.write(ivPad);
 
 			// get the initialization vector and store as member var
 			// byte[] mInitVec = getCipher().getIV();
@@ -111,10 +118,10 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 
 			encrypted = getCipher().doFinal(input);
 			log.debug("encrypted length:{}", encrypted.length);
-			return new EncryptionBuffer(mInitVec, encrypted);
+			return new EncryptionBuffer(bos.toByteArray(), encrypted);
 
 		} catch (IllegalBlockSizeException | BadPaddingException
-				| InvalidParameterSpecException e) {
+				| InvalidParameterSpecException | IOException e) {
 			log.error("encryption exception", e);
 			throw new EncryptionException("encryption exception", e);
 		}

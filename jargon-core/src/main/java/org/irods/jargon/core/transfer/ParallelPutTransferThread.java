@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
@@ -28,8 +29,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelPutTransferThread extends
-AbstractParallelTransferThread implements
-Callable<ParallelTransferResult> {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
@@ -93,9 +94,9 @@ Callable<ParallelTransferResult> {
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsLatency(),
 					parallelPutFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsBandwidth());
+							.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelPutFileTransferStrategy.getHost(),
@@ -226,7 +227,7 @@ Callable<ParallelTransferResult> {
 		// c code - size_t buf_size = 2 * TRANS_BUF_SZ * sizeof( unsigned char
 		// );
 		buffer = new byte[parallelPutFileTransferStrategy.getJargonProperties()
-		                  .getParallelCopyBufferSize()];
+				.getParallelCopyBufferSize()];
 		long currentOffset = 0;
 
 		try {
@@ -235,7 +236,7 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("in main put() loop, reading header data");
@@ -273,11 +274,11 @@ Callable<ParallelTransferResult> {
 
 				if (parallelPutFileTransferStrategy.getFileRestartInfo() != null) {
 					parallelPutFileTransferStrategy.getRestartManager()
-					.updateOffsetForSegment(
-							parallelPutFileTransferStrategy
-							.getFileRestartInfo()
-							.identifierFromThisInfo(),
-							getThreadNumber(), offset);
+							.updateOffsetForSegment(
+									parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									getThreadNumber(), offset);
 				}
 
 				// How much to read/write
@@ -332,14 +333,14 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("read/write loop at top");
 
 				read = localRandomAccessFile.read(buffer, 0, (int) Math.min(
 						parallelPutFileTransferStrategy.getJargonProperties()
-						.getParallelCopyBufferSize(), transferLength));
+								.getParallelCopyBufferSize(), transferLength));
 
 				log.debug("bytes read: {}", read);
 
@@ -358,7 +359,7 @@ Callable<ParallelTransferResult> {
 					if (parallelPutFileTransferStrategy.doEncryption()) {
 						log.debug("put with encryption, encrypt this buffer");
 						EncryptionBuffer encryptedBuff = parallelEncryptionCipherWrapper
-								.encrypt(buffer);
+								.encrypt(Arrays.copyOf(buffer, read));
 						log.debug("iv length:{}",
 								encryptedBuff.getInitializationVector().length);
 						// sendInNetworkOrder(encryptedBuff.getEncryptedData().length
@@ -368,13 +369,13 @@ Callable<ParallelTransferResult> {
 						log.debug(
 								"computed length:{}",
 								encryptedBuff.getEncryptedData().length
-								+ encryptedBuff
-								.getInitializationVector().length);
+										+ encryptedBuff
+												.getInitializationVector().length);
 						// this encryptedBuff has the data and the iv
 						ByteArrayOutputStream buffOut = new ByteArrayOutputStream(
 								encryptedBuff.getEncryptedData().length
-								+ encryptedBuff
-								.getInitializationVector().length);
+										+ encryptedBuff
+												.getInitializationVector().length);
 						buffOut.write(encryptedBuff.getInitializationVector());
 						buffOut.write(encryptedBuff.getEncryptedData());
 						// getOut().write(buffOut.toByteArray());
@@ -392,10 +393,10 @@ Callable<ParallelTransferResult> {
 					if (parallelPutFileTransferStrategy
 							.getConnectionProgressStatusListener() != null) {
 						parallelPutFileTransferStrategy
-						.getConnectionProgressStatusListener()
-						.connectionProgressStatusCallback(
-								ConnectionProgressStatus
-								.instanceForSend(read));
+								.getConnectionProgressStatusListener()
+								.connectionProgressStatusCallback(
+										ConnectionProgressStatus
+												.instanceForSend(read));
 					}
 
 					log.debug("wrote data to the buffer");
@@ -412,12 +413,12 @@ Callable<ParallelTransferResult> {
 						log.debug("checking total written for this thread");
 						if (totalWrittenSinceLastRestartUpdate >= ConnectionConstants.MIN_FILE_RESTART_SIZE) {
 							parallelPutFileTransferStrategy.getRestartManager()
-							.updateLengthForSegment(
-									parallelPutFileTransferStrategy
-									.getFileRestartInfo()
-									.identifierFromThisInfo(),
-									getThreadNumber(),
-									totalWrittenSinceLastRestartUpdate);
+									.updateLengthForSegment(
+											parallelPutFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 						}
@@ -445,12 +446,12 @@ Callable<ParallelTransferResult> {
 				log.debug("checking total written for this thread");
 				if (totalWrittenSinceLastRestartUpdate > 0) {
 					parallelPutFileTransferStrategy.getRestartManager()
-					.updateLengthForSegment(
-							parallelPutFileTransferStrategy
-							.getFileRestartInfo()
-							.identifierFromThisInfo(),
-							getThreadNumber(),
-							totalWrittenSinceLastRestartUpdate);
+							.updateLengthForSegment(
+									parallelPutFileTransferStrategy
+											.getFileRestartInfo()
+											.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
 					log.debug("signal storage of new info");
 				}
 
