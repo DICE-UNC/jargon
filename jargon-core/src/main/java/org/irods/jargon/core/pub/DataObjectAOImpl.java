@@ -653,6 +653,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					putRestartRetryTillMaxLoop(transferControlBlock,
 							targetFile, fileRestartInfo,
 							transferStatusCallbackListener);
+				}else{
+				    throw je;
 				}
 			}
 
