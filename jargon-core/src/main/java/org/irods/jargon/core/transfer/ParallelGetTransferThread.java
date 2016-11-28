@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelGetTransferThread extends
-AbstractParallelTransferThread implements
-Callable<ParallelTransferResult> {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -106,9 +106,9 @@ Callable<ParallelTransferResult> {
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsLatency(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsBandwidth());
+							.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelGetFileTransferStrategy.getHost(),
@@ -261,7 +261,7 @@ Callable<ParallelTransferResult> {
 				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
 				// unsigned char );
 				buffer = new byte[parallelGetFileTransferStrategy
-				                  .getJargonProperties().getParallelCopyBufferSize()];
+						.getJargonProperties().getParallelCopyBufferSize()];
 			}
 
 			seekToOffset(local, offset);
@@ -275,7 +275,7 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("reading....");
@@ -304,8 +304,11 @@ Callable<ParallelTransferResult> {
 				 */
 
 				if (parallelGetFileTransferStrategy.doEncryption()) {
-					something
+					buffer = this.parallelDecryptionCipherWrapper
+							.decrypt(buffer);
 				}
+
+				read = buffer.length;
 
 				totalWrittenSinceLastRestartUpdate += read;
 
@@ -322,22 +325,22 @@ Callable<ParallelTransferResult> {
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-							.getConnectionProgressStatusListener()
-							.connectionProgressStatusCallback(
-									ConnectionProgressStatus
-									.instanceForReceive(read));
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
 						}
 
 						if (parallelGetFileTransferStrategy
 								.getFileRestartInfo() != null) {
 
 							parallelGetFileTransferStrategy.getRestartManager()
-							.updateLengthForSegment(
-									parallelGetFileTransferStrategy
-									.getFileRestartInfo()
-									.identifierFromThisInfo(),
-									getThreadNumber(),
-									totalWrittenSinceLastRestartUpdate);
+									.updateLengthForSegment(
+											parallelGetFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 
@@ -376,10 +379,10 @@ Callable<ParallelTransferResult> {
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-							.getConnectionProgressStatusListener()
-							.connectionProgressStatusCallback(
-									ConnectionProgressStatus
-									.instanceForReceive(read));
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
 						}
 
 					}
@@ -474,11 +477,11 @@ Callable<ParallelTransferResult> {
 
 			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
 				parallelGetFileTransferStrategy.getRestartManager()
-				.updateOffsetForSegment(
-						parallelGetFileTransferStrategy
-						.getFileRestartInfo()
-						.identifierFromThisInfo(),
-						getThreadNumber(), offset);
+						.updateOffsetForSegment(
+								parallelGetFileTransferStrategy
+										.getFileRestartInfo()
+										.identifierFromThisInfo(),
+								getThreadNumber(), offset);
 			}
 
 			try {

@@ -130,6 +130,60 @@ public class EncryptedTransferTests {
 
 	}
 
+	@Test
+	public void testParallelTransferRoundTripWithAesEncryptionSet()
+			throws JargonException, TestingUtilsException,
+			IRODSTestAssertionException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		String testFileName = "testParallelTransferRoundTripWithAesEncryptionSet.txt";
+		String testGetFileTargetName = "testParallelTransferRoundTripWithAesEncryptionSetGetTarget.txt";
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						37 * 1024 * 1024);
+
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		TransferControlBlock tcb = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+		tcb.getTransferOptions().setComputeAndVerifyChecksumAfterTransfer(true);
+
+		dataTransferOperationsAO
+				.putOperation(
+						localFileName,
+						targetIrodsPath,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, tcb);
+
+	}
+
 	@Ignore
 	// localized test will save for now
 	public void testParallelTransferWithAesEncryptionSetAllAs()
