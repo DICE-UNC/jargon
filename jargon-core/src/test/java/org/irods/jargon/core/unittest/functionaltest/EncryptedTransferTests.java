@@ -193,7 +193,7 @@ public class EncryptedTransferTests {
 		Assert.assertTrue("file does not exist after get", localFile.exists());
 
 		long checksum1 = scratchFileUtils
-				.computeFileCheckSumViaAbsolutePath(localFile.getAbsolutePath());
+				.computeFileCheckSumViaAbsolutePath(localGetFileAbsolutePath);
 		long checksum2 = scratchFileUtils
 				.computeFileCheckSumViaAbsolutePath(localFileName);
 		Assert.assertEquals(
