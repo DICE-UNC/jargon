@@ -6,6 +6,7 @@ package org.irods.jargon.core.transfer.encrypt;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -64,7 +65,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	AesCipherDecryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -90,7 +91,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
 	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
@@ -111,5 +112,28 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 			throw new JargonRuntimeException(
 					"Unable to decrypt given negotiated settings", e);
 		}
+	}
+
+	@Override
+	protected byte[] doDecrypt(byte[] fullBuffer) {
+		log.info("doDecrypt()");
+		// need to split out iv and buffer data, note that there is currently 16
+		// bytes of unused data in the IV from iRODS
+
+		if (fullBuffer.length < 32) {
+			log.error("unusable data in buffer, less than 32 bytes");
+			throw new JargonRuntimeException("unusable data in data buffer");
+		}
+
+		if (fullBuffer.length == 32) {
+			log.warn("no data in buffer to decrypt, return empty buffer");
+			return new byte[0];
+		}
+
+		EncryptionBuffer encryptionBuffer = new EncryptionBuffer(
+				Arrays.copyOfRange(fullBuffer, 0, 15), Arrays.copyOfRange(
+						fullBuffer, 31, fullBuffer.length - 1));
+		return doDecrypt(encryptionBuffer);
+
 	}
 }

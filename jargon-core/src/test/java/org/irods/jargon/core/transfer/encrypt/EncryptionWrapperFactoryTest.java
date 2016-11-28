@@ -1,7 +1,5 @@
 package org.irods.jargon.core.transfer.encrypt;
 
-import javax.crypto.Cipher;
-
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
@@ -14,7 +12,7 @@ import org.junit.Test;
 public class EncryptionWrapperFactoryTest {
 
 	@Test
-	public void testGetAesFromFactory() throws Exception {
+	public void testGetAesEncryptFromFactory() throws Exception {
 		SettableJargonProperties props = new SettableJargonProperties();
 		props.setEncryptionKeySize(256);
 		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
@@ -25,11 +23,31 @@ public class EncryptionWrapperFactoryTest {
 		AESKeyGenerator keyGen = new AESKeyGenerator(pipelineConfiguration,
 				negotiatedClientServerConfiguration);
 		negotiatedClientServerConfiguration.setSecretKey(keyGen.generateKey());
-		ParallelCipherWrapper actual = EncryptionWrapperFactory.instance(
-				pipelineConfiguration, negotiatedClientServerConfiguration,
-				Cipher.ENCRYPT_MODE);
+		ParallelCipherWrapper actual = EncryptionWrapperFactory
+				.instanceEncrypt(pipelineConfiguration,
+						negotiatedClientServerConfiguration);
 		Assert.assertNotNull(actual);
 		Assert.assertTrue(actual instanceof AesCipherEncryptWrapper);
+	}
+
+	@Test
+	public void testGetAesDecryptFromFactory() throws Exception {
+		SettableJargonProperties props = new SettableJargonProperties();
+		props.setEncryptionKeySize(256);
+		props.setEncryptionAlgorithmEnum(EncryptionAlgorithmEnum.AES_256_CBC);
+		PipelineConfiguration pipelineConfiguration = PipelineConfiguration
+				.instance(props);
+		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
+				true);
+		AESKeyGenerator keyGen = new AESKeyGenerator(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
+		negotiatedClientServerConfiguration.setSecretKey(keyGen.generateKey());
+		ParallelCipherWrapper actual = EncryptionWrapperFactory
+				.instanceDecrypt(pipelineConfiguration,
+						negotiatedClientServerConfiguration);
+
+		Assert.assertNotNull(actual);
+		Assert.assertTrue(actual instanceof AesCipherDecryptWrapper);
 	}
 
 	@Test(expected = JargonRuntimeException.class)
@@ -41,8 +59,8 @@ public class EncryptionWrapperFactoryTest {
 				.instance(props);
 		NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 				false);
-		EncryptionWrapperFactory.instance(pipelineConfiguration,
-				negotiatedClientServerConfiguration, Cipher.ENCRYPT_MODE);
+		EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
 
 	}
 }

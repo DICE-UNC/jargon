@@ -11,6 +11,7 @@ import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
+import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
 import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,10 +48,6 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * future determined aspects of
 	 */
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
-
-	public PipelineConfiguration getPipelineConfiguration() {
-		return pipelineConfiguration;
-	}
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final TransferControlBlock transferControlBlock;
@@ -110,7 +107,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -161,7 +158,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		 */
 		jargonProperties = new SettableJargonProperties(
 				irodsAccessObjectFactory.getIrodsSession()
-				.getJargonProperties());
+						.getJargonProperties());
 		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
@@ -174,7 +171,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -350,6 +347,10 @@ public abstract class AbstractParallelFileTransferStrategy {
 		return negotiatedClientServerConfiguration.isSslConnection();
 	}
 
+	public PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
+	}
+
 	/**
 	 * Provides individual threads a hook to create the appropriate encryption
 	 * cipher if needed.
@@ -367,6 +368,27 @@ public abstract class AbstractParallelFileTransferStrategy {
 		}
 
 		return EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
+
+	}
+
+	/**
+	 * Provides individual threads a hook to create the appropriate encryption
+	 * cipher if needed.
+	 *
+	 * @return {@link ParallelCipherWrapper}
+	 * @throws ClientServerNegotiationException
+	 */
+	ParallelDecryptionCipherWrapper initializeCypherForDecryption()
+			throws ClientServerNegotiationException {
+		log.debug("initializeCypherForDecryption()");
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
+			log.error("should not be trying to decrypt, is not ssl configured");
+			throw new ClientServerNegotiationException(
+					"attempt to decrypt a transfer when SSL not configured");
+		}
+
+		return EncryptionWrapperFactory.instanceDecrypt(pipelineConfiguration,
 				negotiatedClientServerConfiguration);
 
 	}

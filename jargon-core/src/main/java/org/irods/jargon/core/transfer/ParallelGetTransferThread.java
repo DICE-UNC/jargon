@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,6 +34,11 @@ public final class ParallelGetTransferThread extends
 		Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
+
+	/**
+	 * Will contain the symmetric decryption handler if ssl negotiation dictates
+	 */
+	private ParallelDecryptionCipherWrapper parallelDecryptionCipherWrapper;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetTransferThread.class);
@@ -69,6 +75,13 @@ public final class ParallelGetTransferThread extends
 		}
 
 		this.parallelGetFileTransferStrategy = parallelGetFileTransferStrategy;
+		log.info("setting up the encryption if so negotiated");
+		if (this.parallelGetFileTransferStrategy.doEncryption()) {
+			log.debug("am doing encryption, enable the cypher");
+			parallelDecryptionCipherWrapper = this.parallelGetFileTransferStrategy
+					.initializeCypherForDecryption();
+			log.debug("cypher initialized");
+		}
 	}
 
 	@Override
@@ -223,6 +236,8 @@ public final class ParallelGetTransferThread extends
 
 		// How much to read/write
 		long length = readLong();
+		long origLength = length; // save orig length in case encryption alters
+									// length
 		log.info(">>>new offset:{}", offset);
 		log.info(">>>new length:{}", length);
 
@@ -253,6 +268,8 @@ public final class ParallelGetTransferThread extends
 
 			long totalWrittenSinceLastRestartUpdate = 0;
 
+			long toRead = length;
+
 			while (length > 0) {
 
 				if (Thread.interrupted()) {
@@ -263,9 +280,32 @@ public final class ParallelGetTransferThread extends
 
 				log.debug("reading....");
 
-				read = myRead(getIn(), buffer, Math.min(
-						parallelGetFileTransferStrategy.getJargonProperties()
-								.getParallelCopyBufferSize(), (int) length));
+				toRead = Math.min(parallelGetFileTransferStrategy
+						.getJargonProperties().getParallelCopyBufferSize(),
+						(int) length);
+
+				int newSize = (int) toRead;
+
+				/*
+				 * if encrypted, first read an int that reflects the new length,
+				 * as encryption may change the length of the data
+				 */
+
+				if (this.parallelGetFileTransferStrategy.doEncryption()) {
+					newSize = this.readInt();
+					log.debug("new size of encrypted traffic:{}", newSize);
+
+				}
+
+				read = myRead(getIn(), buffer, newSize);
+				
+				/*
+				 * If encrypted, strip off the iv and decrypt before writing
+				 */
+				
+				if (this.parallelGetFileTransferStrategy.doEncryption()) {
+					something
+				}
 
 				totalWrittenSinceLastRestartUpdate += read;
 
