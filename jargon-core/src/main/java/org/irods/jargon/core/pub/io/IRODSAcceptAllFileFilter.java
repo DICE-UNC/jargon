@@ -17,7 +17,7 @@ public class IRODSAcceptAllFileFilter implements FileFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FileFilter#accept(java.io.File)
 	 */
 	@Override

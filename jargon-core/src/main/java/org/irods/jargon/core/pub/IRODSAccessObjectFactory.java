@@ -50,12 +50,12 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
  *
  * <pre>
  *  IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
- * 
+ *
  * UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
  * adminUserAO.doSomething();
  * ZoneAO zoneAO = irodsFileSystem.getIRODSAccessObjectFactory().getZoneAO(irodsAccount);
  * zoneAO.doSomething()
- * 
+ *
  * irodsFileSystem.close();
  * </pre>
  *

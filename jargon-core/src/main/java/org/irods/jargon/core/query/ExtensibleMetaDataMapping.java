@@ -38,7 +38,7 @@ public final class ExtensibleMetaDataMapping {
 	 */
 	public synchronized static ExtensibleMetaDataMapping instance(
 			final Map<String, String> extensibleMappings)
-			throws JargonException {
+					throws JargonException {
 
 		log.debug("cacheing and returning fresh extensibleMetaDataMapping");
 		Map<String, String> copiedExtensibleMappings = new HashMap<String, String>(
@@ -49,7 +49,7 @@ public final class ExtensibleMetaDataMapping {
 
 	private ExtensibleMetaDataMapping(
 			final Map<String, String> extensibleMappings)
-			throws JargonException {
+					throws JargonException {
 		if (extensibleMappings == null || extensibleMappings.size() == 0) {
 			throw new JargonException("null or empty extensible mappings");
 		}

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ResourceGroupAOImpl extends IRODSGenericAO implements
-ResourceGroupAO {
+		ResourceGroupAO {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ResourceGroupAOImpl.class);
@@ -44,7 +44,7 @@ ResourceGroupAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceGroupAO#listResourceGroupNames()
 	 */
 	@Override

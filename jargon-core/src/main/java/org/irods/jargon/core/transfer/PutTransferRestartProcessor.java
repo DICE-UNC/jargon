@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  */
 public class PutTransferRestartProcessor extends
-		AbstractTransferRestartProcessor {
+AbstractTransferRestartProcessor {
 
 	private static Logger log = LoggerFactory
 			.getLogger(PutTransferRestartProcessor.class);
@@ -47,7 +47,7 @@ public class PutTransferRestartProcessor extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.transfer.AbstractTransferRestartProcessor#
 	 * restartIfNecessary()
 	 */
@@ -81,8 +81,8 @@ public class PutTransferRestartProcessor extends
 	 */
 	private void processRestart(final String irodsAbsolutePath,
 			final FileRestartInfo fileRestartInfo)
-			throws RestartFailedException, FileRestartManagementException,
-			JargonException {
+					throws RestartFailedException, FileRestartManagementException,
+					JargonException {
 
 		/*
 		 * If specified by options, and with a call-back listener registered,
@@ -121,7 +121,7 @@ public class PutTransferRestartProcessor extends
 			ConnectionProgressStatusListener intraFileStatusListener = null;
 			if (getTransferStatusCallbackListener() != null
 					&& getTransferControlBlock().getTransferOptions()
-							.isIntraFileStatusCallbacks()) {
+					.isIntraFileStatusCallbacks()) {
 				intraFileStatusListener = DefaultIntraFileProgressCallbackListener
 						.instanceSettingTransferOptions(TransferType.PUT,
 								localFile.length(), getTransferControlBlock(),
@@ -131,7 +131,7 @@ public class PutTransferRestartProcessor extends
 
 			// now put each segment
 			buffer = new byte[getIrodsAccessObjectFactory()
-					.getJargonProperties().getPutBufferSize()];
+			                  .getJargonProperties().getPutBufferSize()];
 			long currentOffset = 0L;
 			long gap;
 			FileRestartDataSegment segment = null;
@@ -245,7 +245,7 @@ public class PutTransferRestartProcessor extends
 			final int indexOfSegmentToUpdateLength,
 			final IRODSRandomAccessFile irodsRandomAccessFile,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-			throws RestartFailedException, FileRestartManagementException {
+					throws RestartFailedException, FileRestartManagementException {
 
 		long myGap = gap;
 		long writtenSinceUpdated = 0;
@@ -336,7 +336,7 @@ public class PutTransferRestartProcessor extends
 			ConnectionProgressStatus connectionProgressStatus = ConnectionProgressStatus
 					.instanceForSend(fileRestartInfo.estimateLengthSoFar());
 			intraFileStatusListener
-					.connectionProgressStatusCallback(connectionProgressStatus);
+			.connectionProgressStatusCallback(connectionProgressStatus);
 		}
 
 		if (writtenSinceUpdated > 0) {

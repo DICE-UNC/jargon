@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
-		IRODSGenQueryExecutor {
+IRODSGenQueryExecutor {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(IRODSGenQueryExecutorImpl.class);
@@ -60,7 +60,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQuery(org
 	 * .irods.jargon.core.query.IRODSQuery, int)
@@ -68,7 +68,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSet executeIRODSQuery(
 			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 		log.info("executeIRODSQuery()");
 
 		return executeIRODSQueryInZone(irodsQuery, continueIndex, null);
@@ -76,7 +76,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryInZone
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
@@ -111,7 +111,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
 	 * executeIRODSQueryAndCloseResult
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int)
@@ -119,7 +119,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
 
 		return executeIRODSQueryAndCloseResultInZone(irodsQuery,
@@ -128,7 +128,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
 	 * executeIRODSQueryAndCloseResultInZone
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
@@ -137,7 +137,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
 			final AbstractIRODSGenQuery irodsQuery,
 			final int partialStartIndex, final String zoneName)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryAndCloseResultInZone()");
 
@@ -164,7 +164,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryWithPaging
 	 * (org.irods.jargon.core.query.IRODSQuery, int)
@@ -172,7 +172,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSet executeIRODSQueryWithPaging(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPaging()");
 		return executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex,
@@ -181,7 +181,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
 	 * executeIRODSQueryWithPagingInZone
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
@@ -190,7 +190,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	public IRODSQueryResultSet executeIRODSQueryWithPagingInZone(
 			final AbstractIRODSGenQuery irodsQuery,
 			final int partialStartIndex, final String zoneName)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPagingInZone()");
 
@@ -211,7 +211,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResults(org.irods
 	 * .jargon.core.query.IRODSQueryResultSet)
@@ -219,7 +219,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSet getMoreResults(
 			final IRODSQueryResultSet irodsQueryResultSet)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
@@ -241,7 +241,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResultsInZone(
 	 * org.irods.jargon.core.query.IRODSQueryResultSet, java.lang.String)
@@ -249,7 +249,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 	@Override
 	public IRODSQueryResultSet getMoreResultsInZone(
 			final IRODSQueryResultSet irodsQueryResultSet, final String zoneName)
-			throws JargonException, JargonQueryException {
+					throws JargonException, JargonQueryException {
 
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
@@ -271,7 +271,7 @@ public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods
 	 * .jargon.core.query.IRODSQueryResultSetInterface)

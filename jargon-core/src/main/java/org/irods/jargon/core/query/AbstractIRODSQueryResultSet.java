@@ -20,7 +20,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
  *
  */
 public abstract class AbstractIRODSQueryResultSet implements
-		IRODSQueryResultSetInterface {
+IRODSQueryResultSetInterface {
 
 	protected final List<IRODSQueryResultRow> results;
 	protected final boolean hasMoreRecords;
@@ -78,7 +78,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getResults()
 	 */
@@ -89,7 +89,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getFirstResult()
 	 */
@@ -103,7 +103,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#isHasMoreRecords
 	 * ()
@@ -115,7 +115,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.query.IRODSQueryResultSetInterface#
 	 * getNumberOfResultColumns()
 	 */
@@ -126,7 +126,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getColumnNames()
 	 */
@@ -141,7 +141,7 @@ public abstract class AbstractIRODSQueryResultSet implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.query.IRODSQueryResultSetInterface#getTotalRecords
 	 * ()

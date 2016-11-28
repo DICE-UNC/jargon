@@ -50,7 +50,7 @@ public class QueryResultProcessingUtils {
 	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse, final List<String> columnNames,
 			final int continuation, final int partialStartIndex)
-			throws JargonException {
+					throws JargonException {
 
 		if (queryResponse == null) {
 			// no response, create an empty result set, and never return null

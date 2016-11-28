@@ -48,7 +48,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		CollectionAOHelper
-				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+		.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		builder.addConditionAsGenQueryField(
 				RodsGenQueryEnum.COL_COLL_PARENT_NAME,
 				QueryConditionOperators.EQUAL, path);
@@ -68,7 +68,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 */
 	public static void buildQueryListAllDataObjectsWithSizeAndDateInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws JargonException {
+					throws JargonException {
 
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
@@ -102,7 +102,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 */
 	public static void buildQueryListAllDataObjectsWithUserAccessInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws JargonException {
+					throws JargonException {
 
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
@@ -115,15 +115,15 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		try {
 			buildDataObjectQuerySelects(builder);
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+			.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, path);
+							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+							.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_COLL_NAME,
+									QueryConditionOperators.EQUAL, path);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException("query exception", e);
 		}
@@ -147,14 +147,14 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE);
 
 	}
 
@@ -183,10 +183,10 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL, path);
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+			.addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME,
+					QueryConditionOperators.EQUAL, path);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
@@ -204,7 +204,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 */
 	public static void buildQueryListAllDirsWithUserAccessInfo(
 			final String path, final IRODSGenQueryBuilder builder)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 		if (path == null || path.isEmpty()) {
 			throw new IllegalArgumentException("null or empty path");
 		}
@@ -214,17 +214,17 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 		}
 
 		CollectionAOHelper
-				.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
+		.buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(builder);
 		builder.addSelectAsGenQueryValue(
 				RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
 				.addSelectAsGenQueryValue(
 						RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-				.addSelectAsGenQueryValue(
-						RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
-				.addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_COLL_PARENT_NAME,
-						QueryConditionOperators.EQUAL, path);
+						.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
+						.addSelectAsGenQueryValue(
+								RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
+								.addConditionAsGenQueryField(
+										RodsGenQueryEnum.COL_COLL_PARENT_NAME,
+										QueryConditionOperators.EQUAL, path);
 	}
 
 }

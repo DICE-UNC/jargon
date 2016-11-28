@@ -91,7 +91,7 @@ public class FileRestartInfo {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

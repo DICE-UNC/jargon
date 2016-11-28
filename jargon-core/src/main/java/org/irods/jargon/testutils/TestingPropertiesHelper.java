@@ -153,7 +153,7 @@ public class TestingPropertiesHelper {
 	 * uriPath.append(&quot;an_irods_subdir&quot;);
 	 * uriPath.append('/');
 	 * uriPath.append(file.txt);
-	 * 
+	 *
 	 * URI irodsUri = testingPropertiesHelper
 	 * 		.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
 	 * 				uriPath.toString());
@@ -176,7 +176,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -219,7 +219,7 @@ public class TestingPropertiesHelper {
 	 * uriPath.append(&quot;an_irods_subdir&quot;);
 	 * uriPath.append('/');
 	 * uriPath.append(file.txt);
-	 * 
+	 *
 	 * URI irodsUri = testingPropertiesHelper
 	 * 		.buildUriFromTestPropertiesForFileInUserDir(testingProperties,
 	 * 				uriPath.toString());
@@ -242,7 +242,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -286,7 +286,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileNoUserInfo(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -326,13 +326,13 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInLocalScratchDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("file://");
 		File scratchDir = new File(
 				testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY)
-						+ fileName);
+				+ fileName);
 		scratchDir.mkdirs();
 		irodsUri.append(scratchDir.getAbsolutePath());
 
@@ -359,7 +359,7 @@ public class TestingPropertiesHelper {
 	 */
 	public URI buildUriFromTestPropertiesForFileInSecondaryUserDir(
 			final Properties testingProperties, final String fileName)
-			throws URISyntaxException {
+					throws URISyntaxException {
 		StringBuilder irodsUri = new StringBuilder();
 
 		irodsUri.append("irods://");
@@ -411,8 +411,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_ADMIN_USER_KEY),
 				testingProperties.getProperty(IRODS_ADMIN_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -441,9 +441,9 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -472,9 +472,9 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -495,8 +495,8 @@ public class TestingPropertiesHelper {
 						.getProperty(IRODS_HOST_KEY),
 						Integer.parseInt(testingProperties
 								.getProperty(IRODS_PORT_KEY)), "",
-						testingProperties.getProperty(IRODS_ZONE_KEY),
-						testingProperties.getProperty(IRODS_RESOURCE_KEY));
+								testingProperties.getProperty(IRODS_ZONE_KEY),
+								testingProperties.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -552,11 +552,11 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_FEDERATED_HOST_KEY),
 				Integer.parseInt(testingProperties
 						.getProperty(IRODS_FEDERATED_PORT_KEY)),
-				testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
-				testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY),
-				homeBuilder.toString(),
-				testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY),
-				testingProperties.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
+						testingProperties.getProperty(IRODS_FEDERATED_USER_KEY),
+						testingProperties.getProperty(IRODS_FEDERATED_PASSWORD_KEY),
+						homeBuilder.toString(),
+						testingProperties.getProperty(IRODS_FEDERATED_ZONE_KEY),
+						testingProperties.getProperty(IRODS_FEDERATED_RESOURCE_KEY));
 
 		return account;
 	}
@@ -583,8 +583,8 @@ public class TestingPropertiesHelper {
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				testingProperties.getProperty(IRODS_USER_KEY),
 				testingProperties.getProperty(IRODS_PASSWORD_KEY), homeBuilder
-						.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), "");
+				.toString(), testingProperties
+				.getProperty(IRODS_ZONE_KEY), "");
 
 		return account;
 	}
@@ -620,8 +620,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_HOST_KEY),
 				Integer.parseInt(testingProperties.getProperty(IRODS_PORT_KEY)),
 				userName, password, homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_RESOURCE_KEY));
 
 		return account;
 	}
@@ -652,8 +652,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_SECONDARY_USER_KEY),
 				testingProperties.getProperty(IRODS_SECONDARY_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_SECONDARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -684,8 +684,8 @@ public class TestingPropertiesHelper {
 				testingProperties.getProperty(IRODS_TERTIARY_USER_KEY),
 				testingProperties.getProperty(IRODS_TERTIARY_PASSWORD_KEY),
 				homeBuilder.toString(), testingProperties
-						.getProperty(IRODS_ZONE_KEY), testingProperties
-						.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
+				.getProperty(IRODS_ZONE_KEY), testingProperties
+				.getProperty(IRODS_TERTIARY_RESOURCE_KEY));
 
 		return account;
 	}
@@ -707,7 +707,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -744,7 +744,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -781,7 +781,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -819,7 +819,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -855,7 +855,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -891,7 +891,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromPamTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(
@@ -1210,7 +1210,7 @@ public class TestingPropertiesHelper {
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
 			throw new TestingUtilsException(

@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelGetFileTransferStrategy extends
-		AbstractParallelFileTransferStrategy {
+AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetFileTransferStrategy.class);
@@ -80,7 +80,7 @@ public final class ParallelGetFileTransferStrategy extends
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 		return new ParallelGetFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
 				transferControlBlock, transferStatusCallbackListener,
@@ -99,7 +99,7 @@ public final class ParallelGetFileTransferStrategy extends
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
@@ -128,7 +128,7 @@ public final class ParallelGetFileTransferStrategy extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

@@ -110,7 +110,7 @@ public abstract class AbstractConnection {
 			final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager,
 			final Socket socket, final IRODSSession irodsSession)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -220,7 +220,7 @@ public abstract class AbstractConnection {
 			log.info("using internal cache buffer of size:{}",
 					pipelineConfiguration.getInternalCacheBufferSize());
 			outputBuffer = new byte[pipelineConfiguration
-			                        .getInternalCacheBufferSize()];
+					.getInternalCacheBufferSize()];
 		}
 	}
 
@@ -453,7 +453,7 @@ public abstract class AbstractConnection {
 			final InputStream source,
 			long length,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws IOException {
+			throws IOException {
 
 		if (source == null) {
 			String err = "value is null";
@@ -474,7 +474,7 @@ public abstract class AbstractConnection {
 			if (Thread.interrupted()) {
 				throw new IOException(
 
-						"interrupted, consider connection corrupted and return IOException to clear");
+				"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
 			if (temp.length > length) {
@@ -495,8 +495,8 @@ public abstract class AbstractConnection {
 			 */
 			if (connectionProgressStatusListener != null) {
 				connectionProgressStatusListener
-				.connectionProgressStatusCallback(ConnectionProgressStatus
-						.instanceForSend(lenThisRead));
+						.connectionProgressStatusCallback(ConnectionProgressStatus
+								.instanceForSend(lenThisRead));
 			}
 		}
 
@@ -584,7 +584,7 @@ public abstract class AbstractConnection {
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-					throws IOException {
+			throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";
@@ -611,7 +611,7 @@ public abstract class AbstractConnection {
 					bos.close();
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				n = read(temp, 0, Math.min(pipelineConfiguration
@@ -625,8 +625,8 @@ public abstract class AbstractConnection {
 					 */
 					if (intraFileStatusListener != null) {
 						intraFileStatusListener
-						.connectionProgressStatusCallback(ConnectionProgressStatus
-								.instanceForSend(n));
+								.connectionProgressStatusCallback(ConnectionProgressStatus
+										.instanceForSend(n));
 					}
 				} else {
 					length = n;

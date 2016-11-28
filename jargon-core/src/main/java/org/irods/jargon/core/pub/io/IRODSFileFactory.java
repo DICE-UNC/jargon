@@ -285,7 +285,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            that will be read and streamed.
-	 * @return{@link 
+	 * @return{@link
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -302,7 +302,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
 	 *            file that will be opened and streamed.
-	 * @return{@link 
+	 * @return{@link
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -322,7 +322,7 @@ public interface IRODSFileFactory {
 	 *            that will be read and streamed.
 	 * @param fd
 	 *            <code>int</code> with the file descriptor
-	 * @return{@link 
+	 * @return{@link
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws JargonException
@@ -339,7 +339,7 @@ public interface IRODSFileFactory {
 	 * @param name
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
 	 *            file that will be opened and streamed.
-	 * @return{@link 
+	 * @return{@link
 	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
 	 *               }
 	 * @throws NoResourceDefinedException

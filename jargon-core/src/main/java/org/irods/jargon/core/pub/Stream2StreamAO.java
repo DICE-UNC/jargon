@@ -132,6 +132,6 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 */
 	TransferStatistics streamToStreamCopyUsingStandardIO(
 			InputStream inputStream, OutputStream outputStream)
-			throws JargonException;
+					throws JargonException;
 
 }

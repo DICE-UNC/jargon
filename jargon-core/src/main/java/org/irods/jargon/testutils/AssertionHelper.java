@@ -54,7 +54,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileNotExistsInScratch(
 			final String filePathRelativeToScratch)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -77,7 +77,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileExistsInScratch(
 			final String filePathRelativeToScratch)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -102,7 +102,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalScratchFileLengthEquals(
 			final String filePathRelativeToScratch, final long expectedLength)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		File localFile = new File(fullPathToLocalFile.toString());
 		if (!localFile.exists()) {
@@ -306,7 +306,7 @@ public class AssertionHelper {
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(
 			final File file1, final File file2)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 
 		if (file1.getName().equals(".DS_Store")
 				|| file2.getName().equals(".DS_Store")) {
@@ -395,7 +395,7 @@ public class AssertionHelper {
 			final String avuAttribute,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount)
-					throws IRODSTestAssertionException, JargonException {
+			throws IRODSTestAssertionException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

@@ -85,7 +85,7 @@ public class Zone extends IRODSDomainObject {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

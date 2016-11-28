@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class StructFileExtAndRegInp extends
-		AbstractIRODSPackingInstruction {
+AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "StructFileExtAndRegInp_PI";
 	public static final String OBJ_PATH = "objPath";

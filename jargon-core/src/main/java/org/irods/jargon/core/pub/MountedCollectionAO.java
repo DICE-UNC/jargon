@@ -50,8 +50,8 @@ public interface MountedCollectionAO {
 	void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-			throws FileNotFoundException, CollectionNotEmptyException,
-			JargonException;
+					throws FileNotFoundException, CollectionNotEmptyException,
+					JargonException;
 
 	/**
 	 * Unmount the collection at the given absolute path
@@ -90,7 +90,7 @@ public interface MountedCollectionAO {
 	void createAnMSSOMountForWorkflow(String absoluteLocalPathToWssFile,
 			String absoluteIRODSTargetPathToTheWssToBeMounted,
 			String absolutePathToMountedCollection)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * Create a file system mount point in iRODS. Mounting the file system at
@@ -119,7 +119,7 @@ public interface MountedCollectionAO {
 	 */
 	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
 			String absoluteIRODSTargetPathToBeMounted, String storageResource)
-			throws CollectionNotMountedException, FileNotFoundException,
-			JargonException;
+					throws CollectionNotMountedException, FileNotFoundException,
+					JargonException;
 
 }

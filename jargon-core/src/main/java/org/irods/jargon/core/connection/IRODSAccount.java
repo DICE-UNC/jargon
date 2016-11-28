@@ -75,7 +75,7 @@ public class IRODSAccount implements Serializable {
 			final String homeDirectory, final String zone,
 			final String defaultStorageResource,
 			final ClientServerNegotiationPolicy clientServerNegotiationPolicy)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSAccount(host, port, userName, password, homeDirectory,
 				zone, defaultStorageResource, userName, zone, null,
 				clientServerNegotiationPolicy);
@@ -215,7 +215,7 @@ public class IRODSAccount implements Serializable {
 	 */
 	public static IRODSAccount instanceForReroutedHost(
 			final IRODSAccount initialAccount, final String reroutedHostName)
-					throws JargonException {
+			throws JargonException {
 
 		if (initialAccount == null) {
 			throw new IllegalArgumentException("null initialAccount");

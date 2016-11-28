@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
-RemoteExecutionOfCommandsAO {
+		RemoteExecutionOfCommandsAO {
 
 	private static final Logger log = LoggerFactory
 			.getLogger(RemoteExecutionOfCommandsAOImpl.class);
@@ -38,7 +38,7 @@ RemoteExecutionOfCommandsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgs
 	 * (java.lang.String, java.lang.String)
@@ -62,7 +62,7 @@ RemoteExecutionOfCommandsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -71,7 +71,7 @@ RemoteExecutionOfCommandsAO {
 	public InputStream executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost)
-					throws JargonException {
+			throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
@@ -87,7 +87,7 @@ RemoteExecutionOfCommandsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamAddingPhysicalPathAsFirstArgumentToRemoteScript
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -97,7 +97,7 @@ RemoteExecutionOfCommandsAO {
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl
@@ -115,7 +115,7 @@ RemoteExecutionOfCommandsAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO#
 	 * executeARemoteCommandAndGetStreamUsingAnIRODSFileAbsPathToDetermineHost
 	 * (java.lang.String, java.lang.String, java.lang.String)
@@ -125,7 +125,7 @@ RemoteExecutionOfCommandsAO {
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		log.info("executing remote command");
 		// input parms checked in instance method
 		RemoteExecutionService remoteExecuteService = RemoteExecuteServiceImpl

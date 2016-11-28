@@ -65,7 +65,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[],
 	 * int, int)
 	 */
@@ -111,7 +111,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(byte[])
 	 */
 	@Override
@@ -121,7 +121,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileOutputStream#write(int)
 	 */
 	@Override
@@ -133,7 +133,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.OutputStream#close()
 	 */
 	@Override
@@ -148,7 +148,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.OutputStream#flush()
 	 */
 	@Override

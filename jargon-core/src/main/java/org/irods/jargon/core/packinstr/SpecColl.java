@@ -51,7 +51,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -155,7 +155,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("SpecColl [collClass=").append(collClass)
-		.append(", type=").append(type).append(", ");
+				.append(", type=").append(type).append(", ");
 		if (collection != null) {
 			builder.append("collection=").append(collection).append(", ");
 		}
@@ -175,7 +175,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 			builder.append("cacheDir=").append(cacheDir).append(", ");
 		}
 		builder.append("cacheDirty=").append(cacheDirty).append(", replNum=")
-		.append(replNum).append("]");
+				.append(replNum).append("]");
 		return builder.toString();
 	}
 

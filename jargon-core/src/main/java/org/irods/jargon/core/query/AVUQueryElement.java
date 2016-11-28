@@ -51,14 +51,14 @@ public class AVUQueryElement {
 	public static AVUQueryElement instanceForValueQuery(
 			final AVUQueryPart avuQueryPart,
 			final AVUQueryOperatorEnum operator, final String value)
-					throws JargonQueryException {
+			throws JargonQueryException {
 		return new AVUQueryElement(avuQueryPart, operator, value, null, null);
 	}
 
 	public AVUQueryElement(final AVUQueryPart avuQueryPart,
 			final AVUQueryOperatorEnum operator, final String value,
 			final String valueEndOfRange, final List<Object> valuesTable)
-					throws JargonQueryException {
+			throws JargonQueryException {
 
 		if (avuQueryPart == null) {
 			throw new JargonQueryException("avuQueryPart is null");
@@ -111,12 +111,12 @@ public class AVUQueryElement {
 		}
 		if (valueEndOfRange != null) {
 			builder.append("valueEndOfRange=").append(valueEndOfRange)
-			.append(", ");
+					.append(", ");
 		}
 		if (valuesTable != null) {
 			builder.append("valuesTable=")
-			.append(valuesTable.subList(0,
-					Math.min(valuesTable.size(), maxLen)));
+					.append(valuesTable.subList(0,
+							Math.min(valuesTable.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
@@ -156,7 +156,7 @@ public class AVUQueryElement {
 
 		return (avuQueryPart.equals(otherObj.avuQueryPart)
 				&& operator.equals(otherObj.operator) && value
-				.equals(otherObj.value));
+					.equals(otherObj.value));
 
 	}
 

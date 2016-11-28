@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *         <code>Properties</code> file that will be on the classpath.
  */
 public class ExtensibleMetadataPropertiesSource implements
-		ExtensibleMetaDataSource {
+ExtensibleMetaDataSource {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ExtensibleMetadataPropertiesSource.class);
@@ -111,7 +111,7 @@ public class ExtensibleMetadataPropertiesSource implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @seeorg.irods.jargon.core.query.ExtensibleMetaDataSource#
 	 * generateExtensibleMetaDataMapping()
 	 */

@@ -74,7 +74,7 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			entries = collectionListingUtils
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 			pagingAwareCollectionListing
-					.setCollectionAndDataObjectListingEntries(entries);
+			.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
 			pagingAwareCollectionListing.setCollectionsCount(entries.size());
 			return pagingAwareCollectionListing;
@@ -106,11 +106,11 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
 					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-					.setCollectionsTotalRecords(queriedEntries.get(0)
-							.getTotalRecords());
+			.setCollectionsTotalRecords(queriedEntries.get(0)
+					.getTotalRecords());
 			pagingAwareCollectionListing
-					.getCollectionAndDataObjectListingEntries().addAll(
-							queriedEntries);
+			.getCollectionAndDataObjectListingEntries().addAll(
+					queriedEntries);
 		}
 
 		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(
@@ -131,11 +131,11 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
 					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-					.setDataObjectsTotalRecords(queriedEntries.get(0)
-							.getTotalRecords());
+			.setDataObjectsTotalRecords(queriedEntries.get(0)
+					.getTotalRecords());
 			pagingAwareCollectionListing
-					.getCollectionAndDataObjectListingEntries().addAll(
-							queriedEntries);
+			.getCollectionAndDataObjectListingEntries().addAll(
+					queriedEntries);
 		}
 
 		log.info("pagingAwareCollectionListing:{}",

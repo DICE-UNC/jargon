@@ -214,8 +214,8 @@ public class IRODSRuleParameter {
 
 		if (type.equals(INT_PI)) {
 			param.addTag(new Tag(INT_PI, new Tag[] {
-			// only one parameter, the int
-			new Tag(MY_INT, getIntValue()), }));
+					// only one parameter, the int
+					new Tag(MY_INT, getIntValue()), }));
 		} else if (type.equals(BUF_LEN_PI)) {
 			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
 					// send a byte buffer
@@ -224,9 +224,9 @@ public class IRODSRuleParameter {
 					new Tag(BUF, new String(getByteValue())), }));
 		} else {// STR_PI or NULL_PI
 			param.addTag(new Tag(STR_PI, new Tag[] {
-			// only one parameter, the string
-			// if default, try sending the string value, might work...
-			new Tag(MY_STR, getStringValue()), }));
+					// only one parameter, the string
+					// if default, try sending the string value, might work...
+					new Tag(MY_STR, getStringValue()), }));
 		}
 		return param;
 	}

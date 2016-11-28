@@ -25,7 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SpecificQueryAOImpl extends IRODSGenericAO implements
-		SpecificQueryAO {
+SpecificQueryAO {
 
 	private static final String EXECUTING_SQUERY_PI = "executing specific query PI";
 	public static final Logger log = LoggerFactory
@@ -39,7 +39,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#listSpecificQueryByAliasLike
 	 * (java.lang.String)
@@ -56,7 +56,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#listSpecificQueryByAliasLike
 	 * (java.lang.String, java.lang.String)
@@ -64,7 +64,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
 			final String specificQueryAlias, final String zoneHint)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		log.info("findSpecificQueryByAliasLike()");
 
@@ -91,7 +91,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
 					specificQuery, getJargonProperties()
-							.getMaxFilesAndDirsQueryMax(), false);
+					.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -108,11 +108,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 			specificQueryDefinition.setCount(row.getRecordCount());
 			specificQueryDefinition.setLastResult(row.isLastResult());
 			specificQueryDefinition
-					.setArgumentCount(countArgumentsInQuery(specificQueryDefinition
-							.getSql()));
+			.setArgumentCount(countArgumentsInQuery(specificQueryDefinition
+					.getSql()));
 			specificQueryDefinition
-					.setColumnNames(parseColumnNamesFromQuery(specificQueryDefinition
-							.getSql()));
+			.setColumnNames(parseColumnNamesFromQuery(specificQueryDefinition
+					.getSql()));
 			specificQueryDefinitions.add(specificQueryDefinition);
 
 		}
@@ -123,7 +123,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#findSpecificQueryByAlias(java
 	 * .lang.String)
@@ -138,7 +138,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#findSpecificQueryByAlias(java
 	 * .lang.String, java.lang.String)
@@ -146,7 +146,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public SpecificQueryDefinition findSpecificQueryByAlias(
 			final String specificQueryAlias, final String zoneHint)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		log.info("findSpecificQueryByAlias()");
 
@@ -173,7 +173,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 			resultSet = executeSpecificQueryUsingAliasWithoutAliasLookup(
 					specificQuery, getJargonProperties()
-							.getMaxFilesAndDirsQueryMax(), false);
+					.getMaxFilesAndDirsQueryMax(), false);
 		} catch (JargonQueryException e) {
 			log.error("query exception for specific query:{}", specificQuery, e);
 			throw new JargonException(
@@ -187,11 +187,11 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 		specificQueryDefinition.setCount(row.getRecordCount());
 		specificQueryDefinition.setLastResult(row.isLastResult());
 		specificQueryDefinition
-				.setArgumentCount(countArgumentsInQuery(specificQueryDefinition
-						.getSql()));
+		.setArgumentCount(countArgumentsInQuery(specificQueryDefinition
+				.getSql()));
 		specificQueryDefinition
-				.setColumnNames(parseColumnNamesFromQuery(specificQueryDefinition
-						.getSql()));
+		.setColumnNames(parseColumnNamesFromQuery(specificQueryDefinition
+				.getSql()));
 
 		log.info("query definition:{}", specificQueryDefinition);
 		return specificQueryDefinition;
@@ -274,7 +274,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.accessobject.SpecificQueryAO#addSpecificQuery(org
 	 * .irods.jargon.core .domain.SpecificQuery)
@@ -315,7 +315,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.accessobject.SpecificQueryAO#removeSpecificQuery
 	 * (org.irods.jargon.core .domain.SpecificQuery)
@@ -344,7 +344,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.accessobject.SpecificQueryAO#removeSpecificQueryByAlias
 	 * (String)
@@ -373,7 +373,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.accessobject.SpecificQueryAO#
 	 * removeAllSpecificQueryBySQL(String)
 	 */
@@ -421,7 +421,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	private SpecificQueryResultSet executeSpecificQueryUsingAliasWithoutAliasLookup(
 			final SpecificQuery specificQuery, final int maxRows,
 			final boolean justTryWithoutSupportCheck)
-			throws DataNotFoundException, JargonException, JargonQueryException {
+					throws DataNotFoundException, JargonException, JargonQueryException {
 		log.info("executeSpecificQueryUsingAlias()");
 
 		if (specificQuery == null) {
@@ -449,7 +449,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.SpecificQueryAO#closeSpecificQuery()
 	 */
 	/*
@@ -461,7 +461,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias
 	 * (org.irods.jargon.core.query.SpecificQuery, int)
@@ -469,14 +469,14 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			final SpecificQuery specificQuery, final int maxRows)
-			throws DataNotFoundException, JargonException, JargonQueryException {
+					throws DataNotFoundException, JargonException, JargonQueryException {
 
 		return executeSpecificQueryUsingAlias(specificQuery, maxRows, 0);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingAlias
 	 * (org.irods.jargon.core.query.SpecificQuery, int, int)
@@ -583,7 +583,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#executeSpecificQueryUsingSql
 	 * (org.irods.jargon.core.query.SpecificQuery, int)
@@ -591,7 +591,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	@Override
 	public SpecificQueryResultSet executeSpecificQueryUsingSql(
 			final SpecificQuery specificQuery, final int maxRows)
-			throws DataNotFoundException, JargonException, JargonQueryException {
+					throws DataNotFoundException, JargonException, JargonQueryException {
 
 		return executeSpecificQueryUsingSql(specificQuery, maxRows, 0);
 	}
@@ -672,7 +672,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 	 */
 	private void closeResultSet(
 			final SpecificQueryResultSet specificQueryResultSet)
-			throws JargonException {
+					throws JargonException {
 		log.info("closeResultSet()");
 		if (specificQueryResultSet == null) {
 			throw new IllegalArgumentException("null specificQueryResultSet");
@@ -693,7 +693,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.SpecificQueryAO#isSupportsSpecificQuery()
 	 */
 	@Override
@@ -703,7 +703,7 @@ public class SpecificQueryAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.SpecificQueryAO#isSpecificQueryToBeBypassed()
 	 */

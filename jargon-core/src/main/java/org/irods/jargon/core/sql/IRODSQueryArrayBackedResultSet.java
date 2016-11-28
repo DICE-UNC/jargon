@@ -37,11 +37,11 @@ import java.util.Map;
  *
  */
 public abstract class IRODSQueryArrayBackedResultSet extends
-		AbstractIRODSSqlResultSet {
+AbstractIRODSSqlResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#absolute(int)
 	 */
 	@Override
@@ -49,7 +49,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#afterLast()
 	 */
 	@Override
@@ -57,7 +57,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#beforeFirst()
 	 */
 	@Override
@@ -65,7 +65,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#findColumn(java
 	 * .lang.String)
@@ -77,7 +77,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#first()
 	 */
 	@Override
@@ -87,7 +87,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getArray(int)
 	 */
 	@Override
@@ -97,7 +97,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getArray(java.lang
 	 * .String)
@@ -109,7 +109,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getAsciiStream(int)
 	 */
@@ -120,7 +120,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getAsciiStream(
 	 * java.lang.String)
@@ -132,7 +132,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(int)
 	 */
@@ -143,7 +143,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(java
 	 * .lang.String)
@@ -155,7 +155,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(int,
 	 * int)
@@ -168,7 +168,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(java
 	 * .lang.String, int)
@@ -181,7 +181,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
 	 * (int)
@@ -193,7 +193,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
 	 * (java.lang.String)
@@ -205,7 +205,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBlob(int)
 	 */
 	@Override
@@ -215,7 +215,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBlob(java.lang
 	 * .String)
@@ -227,7 +227,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(int)
 	 */
@@ -238,7 +238,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(java
 	 * .lang.String)
@@ -250,7 +250,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getByte(int)
 	 */
 	@Override
@@ -260,7 +260,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getByte(java.lang
 	 * .String)
@@ -272,7 +272,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBytes(int)
 	 */
 	@Override
@@ -282,7 +282,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBytes(java.lang
 	 * .String)
@@ -294,7 +294,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
 	 * (int)
@@ -306,7 +306,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
 	 * (java.lang.String)
@@ -318,7 +318,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getClob(int)
 	 */
 	@Override
@@ -328,7 +328,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getClob(java.lang
 	 * .String)
@@ -340,7 +340,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(int)
 	 */
 	@Override
@@ -350,7 +350,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
 	 * .String)
@@ -362,7 +362,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(int,
 	 * java.util.Calendar)
 	 */
@@ -374,7 +374,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
 	 * .String, java.util.Calendar)
@@ -387,7 +387,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDouble(int)
 	 */
 	@Override
@@ -397,7 +397,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDouble(java.
 	 * lang.String)
@@ -409,7 +409,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getFloat(int)
 	 */
 	@Override
@@ -419,7 +419,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getFloat(java.lang
 	 * .String)
@@ -431,7 +431,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getInt(int)
 	 */
 	@Override
@@ -441,7 +441,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getInt(java.lang
 	 * .String)
@@ -453,7 +453,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getLong(int)
 	 */
 	@Override
@@ -463,7 +463,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getLong(java.lang
 	 * .String)
@@ -475,7 +475,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNCharacterStream
 	 * (int)
@@ -487,7 +487,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNCharacterStream
 	 * (java.lang.String)
@@ -499,7 +499,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNClob(int)
 	 */
 	@Override
@@ -509,7 +509,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNClob(java.lang
 	 * .String)
@@ -521,7 +521,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(int)
 	 */
@@ -532,7 +532,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(java
 	 * .lang.String)
@@ -544,7 +544,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(int)
 	 */
 	@Override
@@ -554,7 +554,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
 	 * lang.String)
@@ -566,7 +566,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(int,
 	 * java.util.Map)
 	 */
@@ -578,7 +578,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
 	 * lang.String, java.util.Map)
@@ -591,7 +591,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getRow()
 	 */
 	@Override
@@ -601,7 +601,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getSQLXML(int)
 	 */
 	@Override
@@ -611,7 +611,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getSQLXML(java.
 	 * lang.String)
@@ -623,7 +623,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getShort(int)
 	 */
 	@Override
@@ -633,7 +633,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getShort(java.lang
 	 * .String)
@@ -645,7 +645,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getStatement()
 	 */
 	@Override
@@ -655,7 +655,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getString(int)
 	 */
 	@Override
@@ -665,7 +665,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getString(java.
 	 * lang.String)
@@ -677,7 +677,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(int)
 	 */
 	@Override
@@ -687,7 +687,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
 	 * .String)
@@ -699,7 +699,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(int,
 	 * java.util.Calendar)
 	 */
@@ -711,7 +711,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
 	 * .String, java.util.Calendar)
@@ -724,7 +724,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int)
 	 */
@@ -735,7 +735,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
 	 * .lang.String)
@@ -747,7 +747,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int,
 	 * java.util.Calendar)
@@ -760,7 +760,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
 	 * .lang.String, java.util.Calendar)
@@ -773,7 +773,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getURL(int)
 	 */
 	@Override
@@ -783,7 +783,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getURL(java.lang
 	 * .String)
@@ -795,7 +795,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getUnicodeStream
 	 * (int)
@@ -807,7 +807,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getUnicodeStream
 	 * (java.lang.String)
@@ -819,7 +819,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isAfterLast()
 	 */
 	@Override
@@ -829,7 +829,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isBeforeFirst()
 	 */
@@ -840,7 +840,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isClosed()
 	 */
 	@Override
@@ -850,7 +850,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isFirst()
 	 */
 	@Override
@@ -860,7 +860,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isLast()
 	 */
 	@Override
@@ -870,7 +870,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#last()
 	 */
 	@Override
@@ -880,7 +880,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#next()
 	 */
 	@Override
@@ -890,7 +890,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#previous()
 	 */
 	@Override
@@ -900,7 +900,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#relative(int)
 	 */
 	@Override
@@ -910,7 +910,7 @@ public abstract class IRODSQueryArrayBackedResultSet extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#wasNull()
 	 */
 	@Override

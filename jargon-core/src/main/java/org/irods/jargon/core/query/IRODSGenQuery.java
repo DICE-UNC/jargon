@@ -58,7 +58,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	private IRODSGenQuery(final String queryString,
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption, final int skip)
-			throws JargonException {
+					throws JargonException {
 
 		super(numberOfResultsDesired);
 

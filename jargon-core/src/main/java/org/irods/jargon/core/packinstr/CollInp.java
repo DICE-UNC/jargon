@@ -95,7 +95,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	public static final CollInp instance(final String collectionName,
 			final boolean recursiveOperation, final boolean forceOperation)
-			throws JargonException {
+					throws JargonException {
 		return new CollInp(collectionName, recursiveOperation, forceOperation);
 	}
 
@@ -113,7 +113,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	private CollInp(final String collectionName,
 			final boolean recursiveOperation, final boolean forceOperation)
-			throws JargonException {
+					throws JargonException {
 		super();
 		if (collectionName == null || collectionName.length() == 0) {
 			throw new JargonException("collection name is null or blank");

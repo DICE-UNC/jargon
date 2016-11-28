@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class ParallelEncryptionCipherWrapper extends
-ParallelCipherWrapper {
+		ParallelCipherWrapper {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelEncryptionCipherWrapper.class);

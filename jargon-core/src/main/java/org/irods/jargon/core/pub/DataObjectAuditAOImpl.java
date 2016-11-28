@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
-		DataObjectAuditAO {
+DataObjectAuditAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(DataObjectAuditAOImpl.class);
@@ -39,7 +39,7 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#getAuditedActionForDataObject
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String,
@@ -60,7 +60,7 @@ public class DataObjectAuditAOImpl extends AbstractAuditAOImpl implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAuditAO#findAllAuditRecords(org.irods
 	 * .jargon.core.pub.io.IRODSFile, int)

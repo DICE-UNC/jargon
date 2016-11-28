@@ -102,7 +102,7 @@ class ClientServerNegotiationService {
 	 */
 	StartupResponseData negotiate(
 			final ClientServerNegotiationStructInitNegotiation struct)
-			throws ClientServerNegotiationException, JargonException {
+					throws ClientServerNegotiationException, JargonException {
 		log.info("negotiate()");
 
 		if (struct == null) {
@@ -113,7 +113,7 @@ class ClientServerNegotiationService {
 
 	private StartupResponseData negotiateUsingServerProtocol(
 			final ClientServerNegotiationStructInitNegotiation struct)
-			throws ClientServerNegotiationException, JargonException {
+					throws ClientServerNegotiationException, JargonException {
 		log.info("negotiateUsingServerProtocol()");
 		log.info("negotiation over response from server:{}", struct);
 		log.info("client policy:{}", referToNegotiationPolicy());
@@ -121,14 +121,14 @@ class ClientServerNegotiationService {
 		/*
 		 * Analogous to irods_client_negotiation.cpp ~ line 250:
 		 * client_server_negotiation_for_client
-		 * 
+		 *
 		 * The startup pack was sent requesting negotiation, and I am here
 		 * expecting a response to that negotiation
 		 */
 
 		Outcome negotiatedOutcome = negotiationTable[referToNegotiationPolicy()
-				.getSslNegotiationPolicy().ordinal()][struct
-				.getSslNegotiationPolicy().ordinal()];
+		                                             .getSslNegotiationPolicy().ordinal()][struct
+		                                                                                   .getSslNegotiationPolicy().ordinal()];
 		log.info("negotiatedOutcome:{}", negotiatedOutcome);
 
 		if (negotiatedOutcome == Outcome.CS_NEG_FAILURE) {
@@ -174,8 +174,8 @@ class ClientServerNegotiationService {
 		StartupResponseData startupResponse = AuthMechanism
 				.buldStartupResponseFromVersionPI(versionPiTag);
 		startupResponse
-				.setNegotiatedClientServerConfiguration(new NegotiatedClientServerConfiguration(
-						negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
+		.setNegotiatedClientServerConfiguration(new NegotiatedClientServerConfiguration(
+				negotiatedOutcome == Outcome.CS_NEG_USE_SSL));
 
 		log.info("startupResponse captured:{}", startupResponse);
 
@@ -207,9 +207,9 @@ class ClientServerNegotiationService {
 		getIrodsMidLevelProtocol().setIrodsConnectionNonEncryptedRef(
 				getIrodsMidLevelProtocol().getIrodsConnection());
 		sslConnectionUtilities
-				.createSslSocketForProtocolAndIntegrateIntoProtocol(
-						getIrodsMidLevelProtocol().getIrodsAccount(),
-						getIrodsMidLevelProtocol(), false);
+		.createSslSocketForProtocolAndIntegrateIntoProtocol(
+				getIrodsMidLevelProtocol().getIrodsAccount(),
+				getIrodsMidLevelProtocol(), false);
 
 		configureParametersForParallelTransfer(startupResponse);
 
@@ -239,7 +239,7 @@ class ClientServerNegotiationService {
 			AbstractKeyGenerator generator = new AESKeyGenerator(myProps,
 					startupResponse.getNegotiatedClientServerConfiguration());
 			startupResponse.getNegotiatedClientServerConfiguration()
-					.setSecretKey(generator.generateKey());
+			.setSecretKey(generator.generateKey());
 		} else {
 			log.error("unable to generate a key for algo:{}",
 					myProps.getEncryptionAlgorithmEnum());
@@ -262,7 +262,7 @@ class ClientServerNegotiationService {
 			getIrodsMidLevelProtocol().irodsFunctionUnidirectional(
 					NEGOTIATION_SHARED_SECRET,
 					startupResponse.getNegotiatedClientServerConfiguration()
-							.getSecretKey().getEncoded(), null, 0, 0, null, 0,
+					.getSecretKey().getEncoded(), null, 0, 0, null, 0,
 					0, 0);
 
 		} catch (IOException e) {

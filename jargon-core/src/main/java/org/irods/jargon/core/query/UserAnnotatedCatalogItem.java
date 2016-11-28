@@ -13,7 +13,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
  *
  */
 public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
-		implements Serializable {
+implements Serializable {
 
 	/**
 	 *

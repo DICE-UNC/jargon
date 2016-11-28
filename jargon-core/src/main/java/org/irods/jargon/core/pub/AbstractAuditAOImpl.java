@@ -82,7 +82,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 	 */
 	protected AuditedAction getAuditedActionForFile(final IRODSFile irodsFile,
 			final String auditActionCode, final String timeStampInIRODSFormat)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		log.info("getAuditedActionForDataObject()");
 
@@ -121,31 +121,31 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_USER_ID)
+			.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_AUDIT_USER_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_COMMENT)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
-							QueryConditionOperators.EQUAL, objStat.getDataId())
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-							QueryConditionOperators.EQUAL,
-							String.valueOf(auditActionCode))
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-							QueryConditionOperators.EQUAL,
-							String.valueOf(timeStampInIRODSFormat))
-					.addOrderByGenQueryField(
-							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-							OrderByType.ASC);
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_AUDIT_COMMENT)
+									.addSelectAsGenQueryValue(
+											RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+											.addSelectAsGenQueryValue(
+													RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
+													.addConditionAsGenQueryField(
+															RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
+															QueryConditionOperators.EQUAL, objStat.getDataId())
+															.addConditionAsGenQueryField(
+																	RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
+																	QueryConditionOperators.EQUAL,
+																	String.valueOf(auditActionCode))
+																	.addConditionAsGenQueryField(
+																			RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+																			QueryConditionOperators.EQUAL,
+																			String.valueOf(timeStampInIRODSFormat))
+																			.addOrderByGenQueryField(
+																					RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
+																					OrderByType.ASC);
 
 			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 			// GenQueryOrderByField.OrderByType.ASC);
@@ -231,20 +231,20 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_USER_ID)
+			.addSelectAsGenQueryValue(
+					RodsGenQueryEnum.COL_AUDIT_USER_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_COMMENT)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
-							QueryConditionOperators.EQUAL, objStat.getDataId());
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_AUDIT_COMMENT)
+									.addSelectAsGenQueryValue(
+											RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+											.addSelectAsGenQueryValue(
+													RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
+													.addConditionAsGenQueryField(
+															RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
+															QueryConditionOperators.EQUAL, objStat.getDataId());
 			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 			// GenQueryOrderByField.OrderByType.ASC);
 			IRODSGenQueryFromBuilder irodsQuery = builder
@@ -275,7 +275,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	protected AuditedAction buildAuditedActionForResultRow(
 			final IRODSFile irodsFile, final IRODSQueryResultRow row)
-			throws NumberFormatException, JargonException {
+					throws NumberFormatException, JargonException {
 		AuditedAction auditedAction;
 		auditedAction = new AuditedAction();
 		auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));

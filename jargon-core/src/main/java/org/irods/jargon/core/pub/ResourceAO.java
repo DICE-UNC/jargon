@@ -51,7 +51,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *             indicates that the resource with the given name is not found
 	 */
 	Resource findByName(final String resourceName) throws JargonException,
-			DataNotFoundException;
+	DataNotFoundException;
 
 	/**
 	 * Find a resource by its id
@@ -64,7 +64,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws DataNotFoundException
 	 */
 	Resource findById(final String resourceId) throws JargonException,
-			DataNotFoundException;
+	DataNotFoundException;
 
 	/**
 	 * List the AVU metadata, as well as information identifying the Resource
@@ -166,7 +166,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void addResource(final Resource resource) throws DuplicateDataException,
-			JargonException;
+	JargonException;
 
 	void deleteResource(final String resourceName) throws Exception;
 

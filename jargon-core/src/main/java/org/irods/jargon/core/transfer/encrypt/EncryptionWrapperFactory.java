@@ -38,7 +38,7 @@ public class EncryptionWrapperFactory {
 	public static ParallelEncryptionCipherWrapper instanceEncrypt(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+					throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -62,7 +62,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"
 							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+							.getEncryptionAlgorithmEnum());
 		}
 
 	}
@@ -84,9 +84,9 @@ public class EncryptionWrapperFactory {
 	 * @throws ClientServerNegotiationException
 	 */
 	public static ParallelDecryptionCipherWrapper instanceDecrypt(
-			PipelineConfiguration pipelineConfiguration,
-			NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+			final PipelineConfiguration pipelineConfiguration,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+					throws ClientServerNegotiationException {
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
@@ -109,7 +109,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored decryption algo:"
 							+ pipelineConfiguration
-									.getEncryptionAlgorithmEnum());
+							.getEncryptionAlgorithmEnum());
 		}
 
 	}

@@ -295,7 +295,7 @@ public final class EscapeTagChars {
 		return result.toString();
 	}
 
-/**
+	/**
 	   Return <tt>aText</tt> with all <tt>'<'</tt> and <tt>'>'</tt> characters
 	   replaced by their escaped equivalents.
 	 */

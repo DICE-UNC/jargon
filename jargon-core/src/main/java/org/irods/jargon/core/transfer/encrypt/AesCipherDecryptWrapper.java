@@ -65,7 +65,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	AesCipherDecryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+					throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -91,7 +91,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
 	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
@@ -115,7 +115,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	}
 
 	@Override
-	protected byte[] doDecrypt(byte[] fullBuffer) {
+	protected byte[] doDecrypt(final byte[] fullBuffer) {
 		log.info("doDecrypt()");
 		// need to split out iv and buffer data, note that there is currently 16
 		// bytes of unused data in the IV from iRODS

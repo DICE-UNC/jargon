@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class ParallelDecryptionCipherWrapper extends
-		ParallelCipherWrapper {
+ParallelCipherWrapper {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelDecryptionCipherWrapper.class);
@@ -47,7 +47,7 @@ public abstract class ParallelDecryptionCipherWrapper extends
 	 * Decrypt given a complete buffer from iRODS. This can involve parsing out
 	 * the buffer for encryption values such as initialization vectors,
 	 * dependent on the underlying algorithm.
-	 * 
+	 *
 	 * @param fullBuffer
 	 *            <code>byte[]</code> with the full buffer form iRODS, including
 	 *            any encryption related payload

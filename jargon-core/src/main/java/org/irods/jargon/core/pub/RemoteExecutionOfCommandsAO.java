@@ -50,7 +50,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	InputStream executeARemoteCommandAndGetStreamGivingCommandNameAndArgsAndHost(
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Execute a script remotely. Use the provided iRODS absolute path to
@@ -75,7 +75,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Execute a script remotely. Use the provided iRODS absolute path to
@@ -99,6 +99,6 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 			String commandToExecuteWithoutArguments,
 			String argumentsToPassWithCommand,
 			String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-			throws JargonException;
+					throws JargonException;
 
 }

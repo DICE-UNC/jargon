@@ -188,7 +188,7 @@ public class IRODSSession {
 		synchronized (this) {
 
 			transferControlBlock
-			.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
+					.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
 		}
 		return transferControlBlock;
 	}
@@ -227,18 +227,18 @@ public class IRODSSession {
 			transferOptions.setAllowPutGetResourceRedirects(jargonProperties
 					.isAllowPutGetResourceRedirects());
 			transferOptions
-			.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
-					.isComputeAndVerifyChecksumAfterTransfer());
+					.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
+							.isComputeAndVerifyChecksumAfterTransfer());
 			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
 					.isComputeChecksumAfterTransfer());
 			transferOptions.setIntraFileStatusCallbacks(jargonProperties
 					.isIntraFileStatusCallbacks());
 			transferOptions
-			.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
-					.getIntraFileStatusCallbacksNumberCallsInterval());
+					.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
+							.getIntraFileStatusCallbacksNumberCallsInterval());
 			transferOptions
-			.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
-					.getIntraFileStatusCallbacksTotalBytesInterval());
+					.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
+							.getIntraFileStatusCallbacksTotalBytesInterval());
 			transferOptions.setChecksumEncoding(jargonProperties
 					.getChecksumEncoding());
 
@@ -272,7 +272,7 @@ public class IRODSSession {
 					irodsMidLevelProtocol.getIrodsAccount().toString());
 			// irodsMidLevelProtocol.disconnect();
 			getIrodsProtocolManager()
-			.returnIRODSProtocol(irodsMidLevelProtocol);
+					.returnIRODSProtocol(irodsMidLevelProtocol);
 			// I don't remove from the map because the map is just going to be
 			// set to null in the ThreadLocal below
 		}
@@ -357,7 +357,7 @@ public class IRODSSession {
 
 	public static IRODSSession instance(
 			final IRODSProtocolManager irodsConnectionManager)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSSession(irodsConnectionManager);
 	}
 
@@ -476,7 +476,7 @@ public class IRODSSession {
 	 */
 	private boolean evaluateConnectionForRenewal(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration()
 				.getSocketRenewalIntervalInSeconds();
@@ -506,7 +506,7 @@ public class IRODSSession {
 	private AbstractIRODSMidLevelProtocol connectAndAddToProtocolsMap(
 			final IRODSAccount irodsAccount,
 			final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols)
-					throws JargonException {
+			throws JargonException {
 		AbstractIRODSMidLevelProtocol irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
 				buildPipelineConfigurationBasedOnJargonProperties(), this);
@@ -537,7 +537,7 @@ public class IRODSSession {
 
 	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 		log.debug("addUserInfoForGSIAccount()");
 
 		if (irodsAccount == null) {
@@ -555,9 +555,9 @@ public class IRODSSession {
 		try {
 			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-					QueryConditionOperators.EQUAL, dn);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
+							QueryConditionOperators.EQUAL, dn);
 			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
 					irodsCommands);
 
@@ -747,7 +747,7 @@ public class IRODSSession {
 					jargonProperties.getTransferThreadPoolTimeoutMillis(),
 					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
 							poolSize),
-							new RejectedParallelThreadExecutionHandler());
+					new RejectedParallelThreadExecutionHandler());
 
 			log.debug("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;

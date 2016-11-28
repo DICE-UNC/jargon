@@ -63,7 +63,7 @@ public class IRODSRuleTranslator {
 	public IRODSRule translatePlainTextRuleIntoIRODSRule(
 			final String ruleAsPlainText,
 			final List<IRODSRuleParameter> overrideInputParameters)
-			throws JargonRuleException, JargonException {
+					throws JargonRuleException, JargonException {
 
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty rule text");

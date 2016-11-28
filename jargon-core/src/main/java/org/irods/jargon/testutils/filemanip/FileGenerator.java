@@ -127,7 +127,7 @@ public class FileGenerator {
 	 */
 	public static String generateFileOfFixedLengthGivenName(
 			final String fileDirectory, final String fileName, final long length)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		// 1023 bytes of random stuff should be plenty, then just repeat it as
 		// needed, this is odd number to prevent lining up on even number buffer
@@ -184,7 +184,7 @@ public class FileGenerator {
 		} catch (IOException ioe) {
 			throw new TestingUtilsException(
 					"error generating random file with dir:" + fileDirectory
-							+ " and generated name:" + fileName, ioe);
+					+ " and generated name:" + fileName, ioe);
 		} finally {
 			if (outStream != null) {
 				try {
@@ -247,7 +247,7 @@ public class FileGenerator {
 			final String filePrefix, final String fileSuffix,
 			final int maxNumberOfFiles, final int minNumberOfFiles,
 			final int fileLengthMin, final int fileLengthMax)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 
 		int numberThisParent;
 		if (numberOfCollectionsMin == numberOfCollectionsMax) {
@@ -320,10 +320,10 @@ public class FileGenerator {
 		for (int i = 0; i < numberOfFiles; i++) {
 			genFileName = filePrefix + i + fileSuffix;
 			FileGenerator
-					.generateFileOfFixedLengthGivenName(
-							absolutePathToLocalCollection, genFileName,
-							FileGenerator.generateRandomNumber(fileLengthMin,
-									fileLengthMax));
+			.generateFileOfFixedLengthGivenName(
+					absolutePathToLocalCollection, genFileName,
+					FileGenerator.generateRandomNumber(fileLengthMin,
+							fileLengthMax));
 		}
 
 	}
@@ -332,7 +332,7 @@ public class FileGenerator {
 			final String relativePathUnderScratch, final String filePrefix,
 			final String fileSuffix, final int numberOfFiles,
 			final int fileLengthMin, final int fileLengthMax)
-			throws TestingUtilsException {
+					throws TestingUtilsException {
 		// n number of random files in the source directory, with a random
 		// length between the min and max
 

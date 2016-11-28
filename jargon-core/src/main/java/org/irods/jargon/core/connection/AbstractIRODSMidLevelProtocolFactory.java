@@ -85,7 +85,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol instance(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		log.info("instance() method...calling connection life cycle");
 
@@ -151,7 +151,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol decorate(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("decorate()");
 
@@ -173,8 +173,8 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 					irodsMidLevelProtocol);
 			irodsMidLevelProtocol
-			.setIrodsServerProperties(environmentalInfoAccessor
-					.getIRODSServerProperties());
+					.setIrodsServerProperties(environmentalInfoAccessor
+							.getIRODSServerProperties());
 
 		}
 
@@ -213,7 +213,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			final AbstractIRODSMidLevelProtocol protocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		log.info("authenticate()");
 

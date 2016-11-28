@@ -58,7 +58,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
@@ -70,7 +70,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
@@ -81,7 +81,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isUseTransferThreadsPool
 	 * ()
@@ -93,7 +93,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getTransferThreadPoolTimeoutMillis()
 	 */
@@ -130,7 +130,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isAllowPutGetResourceRedirects()
 	 */
@@ -142,7 +142,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeChecksumAfterTransfer()
 	 */
@@ -154,7 +154,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
@@ -166,7 +166,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
 	 * ()
@@ -179,7 +179,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
@@ -190,7 +190,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
@@ -202,7 +202,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getTransferThreadPoolMaxSimultaneousTransfers()
 	 */
@@ -213,7 +213,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalInputStreamBufferSize()
 	 */
@@ -224,7 +224,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalOutputStreamBufferSize()
 	 */
@@ -235,7 +235,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
 	 * ()
@@ -247,7 +247,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSendInputStreamBufferSize()
 	 */
@@ -258,7 +258,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInputToOutputCopyBufferByteSize()
 	 */
@@ -269,7 +269,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getLocalFileOutputStreamBufferSize()
 	 */
@@ -280,7 +280,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -290,7 +290,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -300,7 +300,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
@@ -310,7 +310,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getLocalFileInputStreamBufferSize()
 	 */
@@ -321,7 +321,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isReconnect()
 	 */
 	@Override
@@ -331,7 +331,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isInstrument()
 	 */
 	@Override
@@ -341,7 +341,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
@@ -352,7 +352,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getReconnectTimeInMillis
 	 * ()
@@ -364,7 +364,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingDiscoveredServerPropertiesCache()
 	 */
@@ -375,7 +375,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingSpecificQueryForCollectionListingsWithPermissions()
 	 */
@@ -386,7 +386,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
@@ -398,7 +398,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
 	 */
 	@Override
@@ -408,7 +408,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
 	 */
 	@Override
@@ -418,7 +418,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getConnectionFactory()
 	 */
@@ -434,7 +434,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
@@ -563,7 +563,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
 	 * ()

@@ -27,7 +27,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  *
  */
 public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
-		implements Comparable<CollectionAndDataObjectListingEntry> {
+implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	/**
 	 * Analogous to objType_t defined in rodsType.h

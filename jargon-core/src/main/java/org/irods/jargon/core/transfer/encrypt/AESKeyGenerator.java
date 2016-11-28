@@ -44,7 +44,7 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.encrypt.AbstractKeyGenerator#generateKey()
 	 */
@@ -63,16 +63,16 @@ public class AESKeyGenerator extends AbstractKeyGenerator {
 			KeyGenerator kgen = KeyGenerator.getInstance("AES");
 			kgen.init(256); // 192 and 256 bits may not be available
 			char[] randPwd = new String(kgen.generateKey().getEncoded())
-			.toCharArray();
+					.toCharArray();
 
 			// Generate the secret key specs.
 			KeySpec keySpec = new PBEKeySpec(
 					randPwd,
 					RandomUtils
-					.generateRandomBytesOfLength(getPipelineConfiguration()
-							.getEncryptionSaltSize()),
-					getPipelineConfiguration().getEncryptionNumberHashRounds(),
-					getPipelineConfiguration().getEncryptionAlgorithmEnum()
+							.generateRandomBytesOfLength(getPipelineConfiguration()
+									.getEncryptionSaltSize()),
+							getPipelineConfiguration().getEncryptionNumberHashRounds(),
+							getPipelineConfiguration().getEncryptionAlgorithmEnum()
 							.getKeySize());
 
 			SecretKey secretKey = factory.generateSecret(keySpec);

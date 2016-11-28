@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelGetTransferThread extends
-		AbstractParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+AbstractParallelTransferThread implements
+Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -106,9 +106,9 @@ public final class ParallelGetTransferThread extends
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsLatency(),
+					.getParallelTcpPerformancePrefsLatency(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsBandwidth());
+					.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelGetFileTransferStrategy.getHost(),
@@ -237,7 +237,7 @@ public final class ParallelGetTransferThread extends
 		// How much to read/write
 		long length = readLong();
 		long origLength = length; // save orig length in case encryption alters
-									// length
+		// length
 		log.info(">>>new offset:{}", offset);
 		log.info(">>>new length:{}", length);
 
@@ -261,7 +261,7 @@ public final class ParallelGetTransferThread extends
 				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
 				// unsigned char );
 				buffer = new byte[parallelGetFileTransferStrategy
-						.getJargonProperties().getParallelCopyBufferSize()];
+				                  .getJargonProperties().getParallelCopyBufferSize()];
 			}
 
 			seekToOffset(local, offset);
@@ -275,7 +275,7 @@ public final class ParallelGetTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("reading....");
@@ -291,19 +291,19 @@ public final class ParallelGetTransferThread extends
 				 * as encryption may change the length of the data
 				 */
 
-				if (this.parallelGetFileTransferStrategy.doEncryption()) {
-					newSize = this.readInt();
+				if (parallelGetFileTransferStrategy.doEncryption()) {
+					newSize = readInt();
 					log.debug("new size of encrypted traffic:{}", newSize);
 
 				}
 
 				read = myRead(getIn(), buffer, newSize);
-				
+
 				/*
 				 * If encrypted, strip off the iv and decrypt before writing
 				 */
-				
-				if (this.parallelGetFileTransferStrategy.doEncryption()) {
+
+				if (parallelGetFileTransferStrategy.doEncryption()) {
 					something
 				}
 
@@ -322,22 +322,22 @@ public final class ParallelGetTransferThread extends
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
-									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+							.getConnectionProgressStatusListener()
+							.connectionProgressStatusCallback(
+									ConnectionProgressStatus
+									.instanceForReceive(read));
 						}
 
 						if (parallelGetFileTransferStrategy
 								.getFileRestartInfo() != null) {
 
 							parallelGetFileTransferStrategy.getRestartManager()
-									.updateLengthForSegment(
-											parallelGetFileTransferStrategy
-													.getFileRestartInfo()
-													.identifierFromThisInfo(),
-											getThreadNumber(),
-											totalWrittenSinceLastRestartUpdate);
+							.updateLengthForSegment(
+									parallelGetFileTransferStrategy
+									.getFileRestartInfo()
+									.identifierFromThisInfo(),
+									getThreadNumber(),
+									totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 
@@ -376,10 +376,10 @@ public final class ParallelGetTransferThread extends
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
-									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+							.getConnectionProgressStatusListener()
+							.connectionProgressStatusCallback(
+									ConnectionProgressStatus
+									.instanceForReceive(read));
 						}
 
 					}
@@ -474,11 +474,11 @@ public final class ParallelGetTransferThread extends
 
 			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
 				parallelGetFileTransferStrategy.getRestartManager()
-						.updateOffsetForSegment(
-								parallelGetFileTransferStrategy
-										.getFileRestartInfo()
-										.identifierFromThisInfo(),
-								getThreadNumber(), offset);
+				.updateOffsetForSegment(
+						parallelGetFileTransferStrategy
+						.getFileRestartInfo()
+						.identifierFromThisInfo(),
+						getThreadNumber(), offset);
 			}
 
 			try {

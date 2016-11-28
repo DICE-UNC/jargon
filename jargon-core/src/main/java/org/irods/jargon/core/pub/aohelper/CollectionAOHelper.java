@@ -87,18 +87,18 @@ public class CollectionAOHelper extends AOHelper {
 	public static void buildSelectsByAppendingToBuilder(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MAP_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_COMMENTS)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO1)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO2)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MAP_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_COMMENTS)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO1)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INFO2)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
 	}
 
 	/**
@@ -179,7 +179,7 @@ public class CollectionAOHelper extends AOHelper {
 					.getName());
 			queryCondition.append(SPACE);
 			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -191,7 +191,7 @@ public class CollectionAOHelper extends AOHelper {
 					.getName());
 			queryCondition.append(SPACE);
 			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -203,7 +203,7 @@ public class CollectionAOHelper extends AOHelper {
 					.getName());
 			queryCondition.append(SPACE);
 			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -233,21 +233,21 @@ public class CollectionAOHelper extends AOHelper {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
 					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
 					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
 					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+					.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
@@ -264,7 +264,7 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static List<Collection> buildListFromResultSet(
 			final IRODSQueryResultSetInterface resultSet)
-			throws JargonException {
+					throws JargonException {
 
 		final List<Collection> collections = new ArrayList<Collection>();
 
@@ -290,7 +290,7 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQuery(
 			final IRODSQueryResultRow row, final int totalRecords)
-			throws JargonException {
+					throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.COLLECTION);
@@ -330,7 +330,7 @@ public class CollectionAOHelper extends AOHelper {
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQuery(
 			final IRODSQueryResultRow row, final int totalRecords)
-			throws JargonException {
+					throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.DATA_OBJECT);
@@ -367,13 +367,13 @@ public class CollectionAOHelper extends AOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_MODIFY_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_OWNER_ZONE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE);
 	}
 
 	/**
@@ -421,7 +421,7 @@ public class CollectionAOHelper extends AOHelper {
 	public static void buildUserFilePermissionForCollection(
 			final List<UserFilePermission> userFilePermissions,
 			final IRODSQueryResultRow row, final String irodsAbsolutePath)
-			throws JargonException {
+					throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
@@ -444,7 +444,7 @@ public class CollectionAOHelper extends AOHelper {
 					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
 							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
+							UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 
 		} catch (DataNotFoundException dnf) {
 			log.warn(
@@ -454,7 +454,7 @@ public class CollectionAOHelper extends AOHelper {
 					row.getColumn(11),
 					FilePermissionEnum.valueOf(IRODSDataConversionUtil
 							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
-					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
+							UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 		}
 		userFilePermissions.add(userFilePermission);
 	}
@@ -480,8 +480,8 @@ public class CollectionAOHelper extends AOHelper {
 				row.getColumn(10),
 				FilePermissionEnum.valueOf(IRODSDataConversionUtil
 						.getIntOrZeroFromIRODSValue(row.getColumn(11))),
-				UserTypeEnum.findTypeByString(row.getColumn(12)),
-				row.getColumn(13));
+						UserTypeEnum.findTypeByString(row.getColumn(12)),
+						row.getColumn(13));
 		userFilePermissions.add(userFilePermission);
 	}
 
@@ -508,14 +508,14 @@ public class CollectionAOHelper extends AOHelper {
 					RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							irodsCollectionAbsolutePath);
+							.addSelectAsGenQueryValue(
+									RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
+									.addSelectAsGenQueryValue(
+											RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
+											.addConditionAsGenQueryField(
+													RodsGenQueryEnum.COL_COLL_NAME,
+													QueryConditionOperators.EQUAL,
+													irodsCollectionAbsolutePath);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}

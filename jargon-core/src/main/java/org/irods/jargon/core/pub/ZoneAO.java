@@ -36,6 +36,6 @@ public interface ZoneAO extends IRODSAccessObject {
 	 * @throws DataNotFoundException
 	 */
 	Zone getZoneByName(String zoneName) throws JargonException,
-			DataNotFoundException;
+	DataNotFoundException;
 
 }

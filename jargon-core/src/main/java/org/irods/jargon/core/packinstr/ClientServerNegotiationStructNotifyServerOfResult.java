@@ -13,7 +13,7 @@ import org.irods.jargon.core.exception.JargonException;
  *
  */
 public class ClientServerNegotiationStructNotifyServerOfResult extends
-AbstractIRODSPackingInstruction {
+		AbstractIRODSPackingInstruction {
 
 	public enum Outcome {
 		CS_NEG_USE_TCP, CS_NEG_USE_SSL, CS_NEG_FAILURE
@@ -91,14 +91,14 @@ AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationStruct [status=").append(status)
-		.append(", ");
+				.append(", ");
 		if (result != null) {
 			builder.append("result=").append(result);
 		}

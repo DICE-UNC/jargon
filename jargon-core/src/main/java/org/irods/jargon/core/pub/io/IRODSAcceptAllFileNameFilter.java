@@ -20,7 +20,7 @@ public class IRODSAcceptAllFileNameFilter implements FilenameFilter {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.io.FilenameFilter#accept(java.io.File, java.lang.String)
 	 */
 	@Override

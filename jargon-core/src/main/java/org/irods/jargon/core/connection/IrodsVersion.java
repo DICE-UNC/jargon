@@ -76,7 +76,7 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 			builder.append("patchAsString=").append(patchAsString).append(", ");
 		}
 		builder.append("major=").append(major).append(", minor=").append(minor)
-		.append(", patch=").append(patch).append("]");
+				.append(", patch=").append(patch).append("]");
 		return builder.toString();
 	}
 

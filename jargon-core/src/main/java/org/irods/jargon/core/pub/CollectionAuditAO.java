@@ -34,7 +34,7 @@ public interface CollectionAuditAO {
 	 */
 	List<AuditedAction> findAllAuditRecordsForCollection(IRODSFile irodsFile,
 			int partialStart, int numberOfResultsDesired)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * Get an individual audit action for a collection, given that you know
@@ -60,6 +60,6 @@ public interface CollectionAuditAO {
 	 */
 	AuditedAction getAuditedActionForCollection(IRODSFile irodsFile,
 			String auditActionCode, String timeStampInIRODSFormat)
-			throws DataNotFoundException, JargonException;
+					throws DataNotFoundException, JargonException;
 
 }

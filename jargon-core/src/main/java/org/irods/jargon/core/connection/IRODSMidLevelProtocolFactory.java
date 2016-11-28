@@ -12,7 +12,7 @@ package org.irods.jargon.core.connection;
  *
  */
 public class IRODSMidLevelProtocolFactory extends
-		AbstractIRODSMidLevelProtocolFactory {
+AbstractIRODSMidLevelProtocolFactory {
 
 	/**
 	 * Create the factory that will produced connected 'mid level protocol
@@ -42,7 +42,7 @@ public class IRODSMidLevelProtocolFactory extends
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocolFactory
 	 * #createInitialProtocol

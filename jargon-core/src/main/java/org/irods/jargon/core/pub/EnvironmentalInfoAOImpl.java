@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
-EnvironmentalInfoAO {
+		EnvironmentalInfoAO {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(EnvironmentalInfoAOImpl.class);
@@ -47,7 +47,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @seeorg.irods.jargon.core.accessobject.EnvironmentalInfoAO#
 	 * getIRODSServerProperties()
 	 */
@@ -62,7 +62,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#getIRODSServerCurrentTime()
 	 */
@@ -103,7 +103,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
@@ -120,7 +120,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands
 	 * ()
@@ -191,7 +191,7 @@ EnvironmentalInfoAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
 	 * ()

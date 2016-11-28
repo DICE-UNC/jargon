@@ -81,7 +81,7 @@ public class FileRestartInfoIdentifier {
 		return (absolutePath.equals(other.getAbsolutePath())
 				&& irodsAccountIdentifier.equals(other
 						.getIrodsAccountIdentifier()) && getRestartType() == other
-					.getRestartType());
+						.getRestartType());
 
 	}
 

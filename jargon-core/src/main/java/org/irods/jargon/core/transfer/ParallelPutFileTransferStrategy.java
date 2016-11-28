@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelPutFileTransferStrategy extends
-AbstractParallelFileTransferStrategy {
+		AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutFileTransferStrategy.class);
@@ -76,7 +76,7 @@ AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 		return new ParallelPutFileTransferStrategy(host, port, numberOfThreads,
 				password, localFile, irodsAccessObjectFactory, transferLength,
 				transferControlBlock, transferStatusCallbackListener,
@@ -113,7 +113,7 @@ AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 		super(host, port, numberOfThreads, password, localFile,
 				irodsAccessObjectFactory, transferLength, transferControlBlock,
 				transferStatusCallbackListener, fileRestartInfo,
@@ -133,7 +133,7 @@ AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AbstractTransferRestartProcessor extends
-		AbstractJargonService {
+AbstractJargonService {
 
 	private final AbstractRestartManager restartManager;
 	private static Logger log = LoggerFactory
@@ -100,7 +100,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected RandomAccessFile localFileAsFileAndCheckExists(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-			throws FileNotFoundException, JargonException {
+					throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
 		RandomAccessFile localFile = localFileAsFile(fileRestartInfo, openType);
@@ -122,7 +122,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected RandomAccessFile localFileAsFile(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-			throws JargonException {
+					throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
@@ -167,7 +167,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 */
 	protected FileRestartInfo retrieveFileRestartInfoForIdentifier(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
@@ -193,7 +193,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	protected FileRestartInfo retrieveRestartIfConfiguredOrNull(
 			final String irodsAbsolutePath,
 			final FileRestartInfo.RestartType restartType)
-			throws FileRestartManagementException {
+					throws FileRestartManagementException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

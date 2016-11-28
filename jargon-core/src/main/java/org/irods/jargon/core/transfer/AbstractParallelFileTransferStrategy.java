@@ -107,7 +107,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws JargonException {
+					throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -158,7 +158,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		 */
 		jargonProperties = new SettableJargonProperties(
 				irodsAccessObjectFactory.getIrodsSession()
-						.getJargonProperties());
+				.getJargonProperties());
 		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
@@ -171,7 +171,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

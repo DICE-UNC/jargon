@@ -108,8 +108,8 @@ public interface IRODSRegistrationOfFilesAO {
 	void registerPhysicalDataFileToIRODS(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Register a single file (data object) to iRODS. This method will first
@@ -147,8 +147,8 @@ public interface IRODSRegistrationOfFilesAO {
 	String registerPhysicalDataFileToIRODSWithVerifyLocalChecksum(
 			final String physicalPath, final String irodsAbsolutePath,
 			final String destinationResource, final String resourceGroup)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Remove this registered file from the iRODS catalog. Note that this method
@@ -210,8 +210,8 @@ public interface IRODSRegistrationOfFilesAO {
 	void registerPhysicalDataFileToIRODSAsAReplica(final String physicalPath,
 			final String irodsAbsolutePath, final String destinationResource,
 			final String resourceGroup, final boolean generateChecksumInIRODS)
-			throws DataNotFoundException, DuplicateDataException,
-			JargonException;
+					throws DataNotFoundException, DuplicateDataException,
+					JargonException;
 
 	/**
 	 * Remove this registered collection from the iRODS catalog. Note that this

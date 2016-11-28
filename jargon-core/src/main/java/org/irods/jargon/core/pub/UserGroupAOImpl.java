@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class UserGroupAOImpl extends IRODSGenericAO implements
-		UserGroupAO {
+UserGroupAO {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private static final char COMMA = ',';
@@ -52,7 +52,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#addUserGroup(org.irods.jargon.core
 	 * .pub.domain.UserGroup)
@@ -94,7 +94,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(java.lang.String)
 	 */
@@ -121,7 +121,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(org.irods.jargon
 	 * .core.pub.domain.UserGroup)
@@ -163,7 +163,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#find(java.lang.String)
 	 */
 	@Override
@@ -235,7 +235,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.pub.UserGroupAO#findAll()
 	 */
 	@Override
@@ -274,7 +274,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findByName(java.lang.String)
 	 */
@@ -293,9 +293,9 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 					RodsGenQueryEnum.COL_USER_GROUP_NAME)
 					.addSelectAsGenQueryValue(
 							RodsGenQueryEnum.COL_USER_GROUP_ID)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_USER_GROUP_NAME,
-							QueryConditionOperators.EQUAL, userGroupName.trim());
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_USER_GROUP_NAME,
+									QueryConditionOperators.EQUAL, userGroupName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -331,7 +331,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findWhere(java.lang.String)
 	 */
@@ -378,7 +378,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#listUserGroupMembers(java.lang.
 	 * String)
@@ -440,7 +440,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findUserGroupsForUser(java
 	 * .lang.String)
@@ -492,7 +492,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#isUserInGroup(java.lang.String,
 	 * java.lang.String)
@@ -525,10 +525,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_GROUP_NAME,
 							QueryConditionOperators.EQUAL, groupName.trim())
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_USER_NAME,
+							.addConditionAsGenQueryField(
+									RodsGenQueryEnum.COL_USER_NAME,
 
-							QueryConditionOperators.EQUAL, userName.trim());
+									QueryConditionOperators.EQUAL, userName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
@@ -558,7 +558,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#addUserToGroup(java.lang.String,
 	 * java.lang.String, java.lang.String)
@@ -566,8 +566,8 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	@Override
 	public void addUserToGroup(final String userGroupName,
 			final String userName, final String zoneName)
-			throws DuplicateDataException, InvalidGroupException,
-			InvalidUserException, JargonException {
+					throws DuplicateDataException, InvalidGroupException,
+					InvalidUserException, JargonException {
 
 		log.info("addUserToGroup()");
 
@@ -598,7 +598,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#removeUserFromGroup(java.lang.String
 	 * , java.lang.String, java.lang.String)
@@ -606,7 +606,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	@Override
 	public void removeUserFromGroup(final String userGroupName,
 			final String userName, final String zoneName)
-			throws InvalidUserException, InvalidGroupException, JargonException {
+					throws InvalidUserException, InvalidGroupException, JargonException {
 
 		log.info("removeUserFromGroup()");
 

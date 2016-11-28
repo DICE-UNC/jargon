@@ -14,7 +14,7 @@ import org.irods.jargon.core.exception.JargonException;
  *
  */
 public abstract class AbstractParallelEncryptWrapper extends
-AbstractParallelCipherWrapper {
+		AbstractParallelCipherWrapper {
 
 	AbstractParallelEncryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,

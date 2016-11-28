@@ -37,7 +37,7 @@ public class IRODSGenQueryBuilder {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -145,7 +145,7 @@ public class IRODSGenQueryBuilder {
 	 */
 	public IRODSGenQueryBuilder addSelectAsGenQueryValue(
 			final RodsGenQueryEnum rodsGenQueryEnumValue)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
 		}
@@ -181,7 +181,7 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder addSelectAsAgregateGenQueryValue(
 			final RodsGenQueryEnum rodsGenQueryEnumValue,
 			final GenQueryField.SelectFieldTypes selectFieldType)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
 		}
@@ -283,19 +283,19 @@ public class IRODSGenQueryBuilder {
 		if (operator == QueryConditionOperators.IN) {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 
-			.instanceForIn(rodsGenQueryEnumValue.getName(),
-					SelectFieldSource.DEFINED_QUERY_FIELD,
-					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-					nonQuotedValues);
+					.instanceForIn(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD,
+							String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+							nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 
 		} else if (operator == QueryConditionOperators.BETWEEN) {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 
-			.instanceForBetween(rodsGenQueryEnumValue.getName(),
-					SelectFieldSource.DEFINED_QUERY_FIELD,
-					String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
-					nonQuotedValues);
+					.instanceForBetween(rodsGenQueryEnumValue.getName(),
+							SelectFieldSource.DEFINED_QUERY_FIELD,
+							String.valueOf(rodsGenQueryEnumValue.getNumericValue()),
+							nonQuotedValues);
 			conditions.add(genQueryBuilderCondition);
 		} else {
 			throw new UnsupportedOperationException(
@@ -344,9 +344,9 @@ public class IRODSGenQueryBuilder {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 					.instance(rodsGenQueryEnumValue.getName(),
 							SelectFieldSource.DEFINED_QUERY_FIELD, String
-									.valueOf(rodsGenQueryEnumValue
-											.getNumericValue()), operator,
-							value);
+							.valueOf(rodsGenQueryEnumValue
+									.getNumericValue()), operator,
+									value);
 
 			conditions.add(genQueryBuilderCondition);
 		} else {
@@ -358,8 +358,8 @@ public class IRODSGenQueryBuilder {
 			GenQueryBuilderCondition genQueryBuilderCondition = GenQueryBuilderCondition
 					.instance(rodsGenQueryEnumValue.getName(),
 							SelectFieldSource.DEFINED_QUERY_FIELD, String
-									.valueOf(rodsGenQueryEnumValue
-											.getNumericValue()), operator, sb
+							.valueOf(rodsGenQueryEnumValue
+									.getNumericValue()), operator, sb
 									.toString());
 
 			conditions.add(genQueryBuilderCondition);
@@ -383,7 +383,7 @@ public class IRODSGenQueryBuilder {
 	public IRODSGenQueryBuilder addOrderByGenQueryField(
 			final RodsGenQueryEnum rodsGenQueryEnumValue,
 			final GenQueryOrderByField.OrderByType orderByType)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 
 		if (rodsGenQueryEnumValue == null) {
 			throw new IllegalArgumentException("null rodsGenQueryEnumValue");
@@ -439,7 +439,7 @@ public class IRODSGenQueryBuilder {
 	 */
 	private IRODSGenQueryBuilder addSelect(
 			final GenQuerySelectField genQuerySelectField)
-			throws GenQueryBuilderException {
+					throws GenQueryBuilderException {
 		if (genQuerySelectField == null) {
 			throw new IllegalArgumentException("null genQuerySelectField");
 		}

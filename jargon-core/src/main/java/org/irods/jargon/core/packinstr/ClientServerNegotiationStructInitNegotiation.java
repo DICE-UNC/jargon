@@ -16,7 +16,7 @@ import org.irods.jargon.core.exception.JargonException;
  *
  */
 public class ClientServerNegotiationStructInitNegotiation extends
-AbstractIRODSPackingInstruction {
+		AbstractIRODSPackingInstruction {
 
 	private int status = 0;
 	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
@@ -106,17 +106,17 @@ AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ClientServerNegotiationStruct [status=").append(status)
-		.append(", ");
+				.append(", ");
 		if (sslNegotiationPolicy != null) {
 			builder.append("sslNegotiationPolicy=")
-			.append(sslNegotiationPolicy);
+					.append(sslNegotiationPolicy);
 		}
 		builder.append("]");
 		return builder.toString();

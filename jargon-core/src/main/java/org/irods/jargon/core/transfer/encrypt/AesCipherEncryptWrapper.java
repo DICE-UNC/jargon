@@ -60,7 +60,7 @@ class AesCipherEncryptWrapper extends ParallelEncryptionCipherWrapper {
 	AesCipherEncryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-			throws ClientServerNegotiationException {
+					throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}

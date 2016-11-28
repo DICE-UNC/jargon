@@ -57,7 +57,7 @@ public class GenQueryProcessor {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex,
 			final QueryCloseBehavior queryCloseBehavior, final String zoneName)
-			throws JargonException {
+					throws JargonException {
 
 		if (continueIndex < 0) {
 			throw new JargonException("continue index must be >= 0");

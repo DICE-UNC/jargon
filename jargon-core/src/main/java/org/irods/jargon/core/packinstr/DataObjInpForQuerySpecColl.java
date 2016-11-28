@@ -40,7 +40,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryDataObj(
 			final String fileAbsolutePath, final SpecColInfo specColInfo)
-			throws JargonException {
+					throws JargonException {
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
 				specColInfo, 0);
 	}
@@ -84,7 +84,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 */
 	public static final DataObjInpForQuerySpecColl instanceQueryCollections(
 			final String fileAbsolutePath, final SpecColInfo specColInfo)
-			throws JargonException {
+					throws JargonException {
 		if (specColInfo == null) {
 			throw new IllegalArgumentException("null specColInfo");
 		}

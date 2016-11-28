@@ -42,7 +42,7 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results,
 			final int continuationIndex, final int totalRecords)
-			throws JargonException {
+					throws JargonException {
 
 		// get a list of the column names
 		List<String> columnNames = new ArrayList<String>();

@@ -51,7 +51,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-			throws FileNotFoundException {
+					throws FileNotFoundException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -74,10 +74,10 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		/*
-		 * 
+		 *
 		 * TODO: replace(?) when bug is resolved: [#621] error reading file
 		 * w/group permissions
-		 * 
+		 *
 		 * if (!irodsFile.canRead()) { final String msg =
 		 * "cannot read the file:" + irodsFile.getAbsolutePath();
 		 * log.error(msg); throw new FileNotFoundException(msg); }
@@ -127,7 +127,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final int fd)
-			throws FileNotFoundException {
+					throws FileNotFoundException {
 
 		super();
 

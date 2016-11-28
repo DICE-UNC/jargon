@@ -106,9 +106,9 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 						.instanceWithFieldNameAndNumericTranslation(
 								builderCondition.getSelectFieldColumnName(),
 								builderCondition.getOperator()
-										.getOperatorAsString(), value,
+								.getOperatorAsString(), value,
 								builderCondition
-										.getSelectFieldNumericTranslation()));
+								.getSelectFieldNumericTranslation()));
 			} catch (JargonQueryException e) {
 				throw new GenQueryBuilderException(
 						"error building translated query", e);

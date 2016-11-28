@@ -33,7 +33,7 @@ public class PAMAuth extends AuthMechanism {
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		boolean needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
 				.getEncryptionType() == EncryptionType.NONE;
@@ -106,14 +106,14 @@ public class PAMAuth extends AuthMechanism {
 				irodsAccount.getHomeDirectory(), irodsAccount.getZone(),
 				irodsAccount.getDefaultStorageResource());
 		irodsAccountUsingTemporaryIRODSPassword
-		.setAuthenticationScheme(AuthScheme.STANDARD);
+				.setAuthenticationScheme(AuthScheme.STANDARD);
 
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse
-		.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
+				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
 		irodsMidLevelProtocolToUse.setAuthResponse(authResponse);
@@ -128,7 +128,7 @@ public class PAMAuth extends AuthMechanism {
 	 */
 	private void shutdownSslAndCloseConnection(
 			final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
-					throws JargonException {
+			throws JargonException {
 		SSLEndInp sslEndInp = SSLEndInp.instance();
 		irodsCommandsToUse.irodsFunction(sslEndInp);
 
@@ -150,7 +150,7 @@ public class PAMAuth extends AuthMechanism {
 	private AbstractIRODSMidLevelProtocol establishSecureConnectionForPamAuth(
 			final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException, AssertionError {
+			throws JargonException, AssertionError {
 
 		if (irodsCommands.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
 			log.info("already ssl enabled");
@@ -182,7 +182,7 @@ public class PAMAuth extends AuthMechanism {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.AuthMechanism#processAfterAuthentication
 	 * (org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol,
@@ -192,7 +192,7 @@ public class PAMAuth extends AuthMechanism {
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		/*
 		 * I'm creating a new protocol for PAM, using the newly renegotiated
@@ -210,7 +210,7 @@ public class PAMAuth extends AuthMechanism {
 				.instance(
 						irodsMidLevelProtocol.getIrodsSession(),
 						irodsMidLevelProtocol.getAuthResponse()
-						.getAuthenticatedIRODSAccount(),
+								.getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());
 		actualProtocol.setAuthResponse(originalAuthResponse);
 		return actualProtocol;

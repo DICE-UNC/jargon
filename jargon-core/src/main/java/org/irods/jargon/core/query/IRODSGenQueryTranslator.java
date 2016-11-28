@@ -25,9 +25,9 @@ public class IRODSGenQueryTranslator {
 	private ExtensibleMetaDataMapping extensibleMetaDataMapping = null;
 
 	public static final String[] operatorStrings = { "<>", "<=", ">=",
-			"not in", "not between", "not like", "sounds like",
-			"sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=",
-			"<", ">", "in", "between", "like" };
+		"not in", "not between", "not like", "sounds like",
+		"sounds not like", "TABLE", "num<", "num>", "num<=", "num>=", "=",
+		"<", ">", "in", "between", "like" };
 
 	public static final String ORDER_BY = "ORDER BY";
 	private static final String GROUP_BY = "GROUP BY";
@@ -43,7 +43,7 @@ public class IRODSGenQueryTranslator {
 	 */
 	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties)
-			throws JargonException {
+					throws JargonException {
 		if (irodsServerProperties == null) {
 			throw new JargonException("server properties is null");
 		}
@@ -67,7 +67,7 @@ public class IRODSGenQueryTranslator {
 	public IRODSGenQueryTranslator(
 			final IRODSServerProperties irodsServerProperties,
 			final ExtensibleMetaDataMapping extensibleMetaDataMapping)
-			throws JargonException {
+					throws JargonException {
 		this(irodsServerProperties);
 		this.extensibleMetaDataMapping = extensibleMetaDataMapping;
 	}
@@ -121,7 +121,7 @@ public class IRODSGenQueryTranslator {
 	private void reviewTranslationBeforeReturningQuery(
 			final List<GenQuerySelectField> translatedSelects,
 			final List<TranslatedGenQueryCondition> translatedConditions)
-			throws JargonQueryException {
+					throws JargonQueryException {
 		int i;
 		if (translatedSelects.isEmpty()) {
 			throw new JargonQueryException("no selects found in query");
@@ -147,7 +147,7 @@ public class IRODSGenQueryTranslator {
 			if (condition.getColumnNumericTranslation() == null) {
 				throw new JargonQueryException(
 						"untranslated condition field in position:" + i
-								+ " after the WHERE");
+						+ " after the WHERE");
 			}
 			i++;
 		}
@@ -229,7 +229,7 @@ public class IRODSGenQueryTranslator {
 
 			throw new JargonQueryException(
 					"untranslatable condition in position:" + i
-							+ " after the where");
+					+ " after the where");
 
 		}
 		return translatedConditions;
@@ -623,7 +623,7 @@ public class IRODSGenQueryTranslator {
 	 */
 	private List<GenQueryCondition> buildListOfQueryConditionsFromParsedTokens(
 			final List<GenQueryConditionToken> tokens)
-			throws JargonQueryException {
+					throws JargonQueryException {
 
 		GenQueryCondition queryCondition;
 		List<GenQueryCondition> queryConditions = new ArrayList<GenQueryCondition>();

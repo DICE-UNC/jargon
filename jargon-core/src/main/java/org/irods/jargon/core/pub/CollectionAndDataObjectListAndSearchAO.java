@@ -48,7 +48,7 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  *
  */
 public interface CollectionAndDataObjectListAndSearchAO extends
-		IRODSAccessObject {
+IRODSAccessObject {
 
 	/**
 	 * Specific query for coll listing with ACLs
@@ -89,7 +89,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of files in a
@@ -122,7 +122,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -415,7 +415,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of data objects in a
@@ -444,7 +444,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+					throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -591,6 +591,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            {@link ObjStat} that describes the file
 	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
 	 * 
+	 *
 	 *
 	 *
 	 *

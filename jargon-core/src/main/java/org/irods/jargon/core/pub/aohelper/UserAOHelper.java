@@ -73,13 +73,13 @@ public class UserAOHelper {
 		}
 
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_INFO)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_COMMENT)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_CREATE_TIME)
+		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_MODIFY_TIME);
 	}
 
 	/**
@@ -141,7 +141,7 @@ public class UserAOHelper {
 	 */
 	public static String findUserDnIfExists(final String userId,
 			final IRODSGenQueryExecutor irodsGenQueryExecutor)
-			throws JargonException {
+					throws JargonException {
 		String dn = null;
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
@@ -149,9 +149,9 @@ public class UserAOHelper {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
-							QueryConditionOperators.EQUAL, userId);
+			.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_DN)
+			.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_ID,
+					QueryConditionOperators.EQUAL, userId);
 
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(1);

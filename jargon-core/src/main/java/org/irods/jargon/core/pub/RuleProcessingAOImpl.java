@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
  */
 
 public final class RuleProcessingAOImpl extends IRODSGenericAO implements
-		RuleProcessingAO {
+RuleProcessingAO {
 
 	public static final String LOCAL_PATH = "localPath";
 
@@ -101,7 +101,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromResource(java
 	 * .lang.String, java.util.List,
@@ -112,7 +112,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			final String resourcePath,
 			final List<IRODSRuleParameter> irodsRuleInputParameters,
 			final RuleProcessingType ruleProcessingType)
-			throws DataNotFoundException, JargonException {
+					throws DataNotFoundException, JargonException {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourcePath");
@@ -130,7 +130,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromIRODSFile(java
 	 * .lang.String, java.util.List)
@@ -186,7 +186,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String)
 	 */
@@ -234,7 +234,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String,
 	 * java.util.List,
@@ -244,7 +244,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 	public IRODSRuleExecResult executeRule(String irodsRuleAsString,
 			final List<IRODSRuleParameter> inputParameterOverrides,
 			final RuleProcessingType ruleProcessingType)
-			throws JargonRuleException, JargonException {
+					throws JargonRuleException, JargonException {
 
 		if (irodsRuleAsString == null || irodsRuleAsString.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -356,15 +356,15 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 		 * puts. The gets and puts go through the same code paths as those in
 		 * DataTransferOperations, with special flags that allow smooth
 		 * operation in this special use case.
-		 * 
+		 *
 		 * Note that 'operation complete' messages are sent when certain steps
 		 * are encountered, such as client side actions. Below, Jargon accounts
 		 * for the potential multiple read/write sequences that occur to process
 		 * each step in the rule execution, looking for more output parameters
 		 * in the form of client side actions, logged messages, or other output
 		 * parameters.
-		 * 
-		 * 
+		 *
+		 *
 		 * The loop will keep processing until all client side actions are
 		 * complete.
 		 */
@@ -412,7 +412,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeRuleFromDelayedExecQueue
 	 * (int)
@@ -430,7 +430,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#purgeAllDelayedExecQueue()
 	 */
@@ -456,7 +456,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.RuleProcessingAO#listAllDelayedRuleExecutions
 	 * (int)
@@ -520,7 +520,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			delayedRuleExecutions
-					.add(buildDelayedRuleExecutionFromResultRow(row));
+			.add(buildDelayedRuleExecutionFromResultRow(row));
 		}
 
 		return delayedRuleExecutions;
@@ -570,7 +570,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 			final Tag rulesTag,
 			final int parametersLength,
 			final Map<String, IRODSRuleExecResultOutputParameter> irodsRuleOutputParameters)
-			throws JargonException {
+					throws JargonException {
 
 		String label;
 		String type;
@@ -599,7 +599,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements
 
 			} else if (label.equals(RULE_EXEC_OUT)) {
 				irodsRuleOutputParameters
-						.putAll(extractStringFromExecCmdOut(msParam));
+				.putAll(extractStringFromExecCmdOut(msParam));
 			} else {
 				irodsRuleOutputParameters.put(label,
 						(processRuleResponseTag(label, type, value, msParam)));
