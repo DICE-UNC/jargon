@@ -236,7 +236,6 @@ public final class ParallelGetTransferThread extends
 
 		// How much to read/write
 		long length = readLong();
-		long origLength = length; // save orig length in case encryption alters
 		// length
 		log.info(">>>new offset:{}", offset);
 		log.info(">>>new length:{}", length);
@@ -255,20 +254,10 @@ public final class ParallelGetTransferThread extends
 
 		log.info("seeking to offset: {}", offset);
 		try {
-			if (length <= 0) {
-				return;
-			} else {
-				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
-				// unsigned char );
-				buffer = new byte[parallelGetFileTransferStrategy
-						.getJargonProperties().getParallelCopyBufferSize()];
-			}
 
 			seekToOffset(local, offset);
 
 			long totalWrittenSinceLastRestartUpdate = 0;
-
-			long toRead = length;
 
 			while (length > 0) {
 
@@ -280,11 +269,7 @@ public final class ParallelGetTransferThread extends
 
 				log.debug("reading....");
 
-				toRead = Math.min(parallelGetFileTransferStrategy
-						.getJargonProperties().getParallelCopyBufferSize(),
-						(int) length);
-
-				int newSize = (int) toRead;
+				int newSize;
 
 				/*
 				 * if encrypted, first read an int that reflects the new length,
@@ -292,9 +277,24 @@ public final class ParallelGetTransferThread extends
 				 */
 
 				if (parallelGetFileTransferStrategy.doEncryption()) {
-					newSize = readInt();
+					// length is littleEndian
+					newSize = Integer.reverseBytes(readInt());
 					log.debug("new size of encrypted traffic:{}", newSize);
 
+				} else {
+					newSize = Math.min(parallelGetFileTransferStrategy
+							.getJargonProperties().getParallelCopyBufferSize(),
+							(int) length);
+					log.debug("newSize of non-encrypted traffic:{}", newSize);
+
+				}
+
+				if (newSize <= 0) {
+					return;
+				} else {
+					// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
+					// unsigned char );
+					buffer = new byte[newSize];
 				}
 
 				read = myRead(getIn(), buffer, newSize);
