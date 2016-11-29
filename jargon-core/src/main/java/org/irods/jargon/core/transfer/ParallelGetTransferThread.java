@@ -236,7 +236,6 @@ public final class ParallelGetTransferThread extends
 
 		// How much to read/write
 		long length = readLong();
-		long origLength = length; // save orig length in case encryption alters
 		// length
 		log.info(">>>new offset:{}", offset);
 		log.info(">>>new length:{}", length);
@@ -306,9 +305,9 @@ public final class ParallelGetTransferThread extends
 				if (parallelGetFileTransferStrategy.doEncryption()) {
 					buffer = this.parallelDecryptionCipherWrapper
 							.decrypt(buffer);
-				}
+					read = buffer.length;
 
-				read = buffer.length;
+				}
 
 				totalWrittenSinceLastRestartUpdate += read;
 

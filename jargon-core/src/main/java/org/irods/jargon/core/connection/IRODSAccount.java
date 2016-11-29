@@ -42,7 +42,7 @@ public class IRODSAccount implements Serializable {
 	 * <code>null</code> (the default), then the policy in jargon.properties is
 	 * respected.
 	 */
-	private ClientServerNegotiationPolicy clientServerNegotiationPolicy = null;
+	private ClientServerNegotiationPolicy clientServerNegotiationPolicy;
 
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
@@ -649,7 +649,13 @@ public class IRODSAccount implements Serializable {
 	}
 
 	private boolean proxied() {
-		return getUserName() != getProxyName() || getZone() != getProxyZone();
+		if (!(getUserName().equals(getProxyName()))) {
+			return true;
+		} else if (!(getZone().equals(getProxyZone()))) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	public synchronized ClientServerNegotiationPolicy getClientServerNegotiationPolicy() {

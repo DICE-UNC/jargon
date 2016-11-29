@@ -670,7 +670,7 @@ public class IRODSSession {
 			return;
 		}
 		AbstractIRODSMidLevelProtocol badConnection;
-		badConnection = irodsProtocols.get(irodsAccount);
+		badConnection = irodsProtocols.get(irodsAccount.toString());
 		if (badConnection != null) {
 			getIrodsProtocolManager().returnWithForce(badConnection);
 			irodsProtocols.remove(irodsAccount.toString());
