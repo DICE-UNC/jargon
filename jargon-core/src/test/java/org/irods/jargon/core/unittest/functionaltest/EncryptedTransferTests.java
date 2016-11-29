@@ -3,7 +3,10 @@
  */
 package org.irods.jargon.core.unittest.functionaltest;
 
+import java.io.File;
 import java.util.Properties;
+
+import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
@@ -181,6 +184,21 @@ public class EncryptedTransferTests {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 						null, tcb);
+
+		String localGetFileAbsolutePath = absPath + testGetFileTargetName;
+
+		dataTransferOperationsAO.getOperation(targetIrodsPath,
+				localGetFileAbsolutePath, "", null, tcb);
+		File localFile = new File(localGetFileAbsolutePath);
+		Assert.assertTrue("file does not exist after get", localFile.exists());
+
+		long checksum1 = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localGetFileAbsolutePath);
+		long checksum2 = scratchFileUtils
+				.computeFileCheckSumViaAbsolutePath(localFileName);
+		Assert.assertEquals(
+				"checksums don't match on two local files after roundtrip",
+				checksum1, checksum2);
 
 	}
 

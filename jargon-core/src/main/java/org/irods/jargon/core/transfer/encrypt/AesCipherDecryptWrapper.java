@@ -65,7 +65,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 	AesCipherDecryptWrapper(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 		initImplementation();
 	}
@@ -91,7 +91,7 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.ParallelEncryptionCipherWrapper#decrypt
 	 * (org.irods.jargon.core.transfer.EncryptionBuffer)
@@ -130,10 +130,21 @@ class AesCipherDecryptWrapper extends ParallelDecryptionCipherWrapper {
 			return new byte[0];
 		}
 
+		log.debug("fullbuffer length:{}", fullBuffer.length);
+		log.debug("buffer - iv length:{}", fullBuffer.length - 32);
+
 		EncryptionBuffer encryptionBuffer = new EncryptionBuffer(
-				Arrays.copyOfRange(fullBuffer, 0, 15), Arrays.copyOfRange(
-						fullBuffer, 31, fullBuffer.length - 1));
+				Arrays.copyOfRange(fullBuffer, 0, 16),
+				extractEncryptedData(fullBuffer));
+		log.debug("length of encrypted buffer:{}",
+				encryptionBuffer.getEncryptedData().length);
 		return doDecrypt(encryptionBuffer);
 
+	}
+
+	private byte[] extractEncryptedData(final byte[] fullBuffer) {
+		byte[] returned = new byte[fullBuffer.length - 32];
+		System.arraycopy(fullBuffer, 32, returned, 0, fullBuffer.length - 32);
+		return returned;
 	}
 }
