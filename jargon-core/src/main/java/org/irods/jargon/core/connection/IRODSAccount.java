@@ -516,25 +516,30 @@ public class IRODSAccount implements Serializable {
 	 *             irods URI that authenticates as a proxy user.
 	 */
 	public URI toURI(final boolean includePassword) throws JargonException {
-		try {
-			if (includePassword) {
-				if (proxied()) {
-					throw new UnsupportedOperationException(
-							"irods URI scheme doesn't support authentication through a proxy.");
-				}
 
-				return new URI("irods://" + getUserName() + "." + getZone()
-						+ ":" + getPassword() + "@" + getHost() + ":"
-						+ getPort() + getHomeDirectory());
-			} else {
-				return new URI("irods://" + getUserName() + "." + getZone()
-						+ "@" + getHost() + ":" + getPort()
-						+ getHomeDirectory());
+		StringBuilder sb = new StringBuilder();
+		sb.append(getUserName());
+		sb.append('.');
+		sb.append(getZone());
+
+		if (includePassword) {
+			if (proxied()) {
+				throw new UnsupportedOperationException(
+						"irods URI scheme doesn't support authentication through a proxy.");
 			}
-		} catch (URISyntaxException e) {
-			throw new JargonException("cannot convert this account into a URI:"
-					+ this, e);
+
+			sb.append(':');
+			sb.append(getPassword());
+
 		}
+
+		try {
+			return new URI("irods", sb.toString(), getHost(), getPort(),
+					getHomeDirectory(), null, null);
+		} catch (URISyntaxException e) {
+			throw new JargonException("unable to convert to URI", e);
+		}
+
 	}
 
 	public String getHost() {

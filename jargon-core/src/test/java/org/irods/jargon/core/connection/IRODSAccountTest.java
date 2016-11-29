@@ -1,5 +1,10 @@
 package org.irods.jargon.core.connection;
 
+import java.net.URI;
+
+import junit.framework.Assert;
+
+import org.irods.jargon.core.utils.IRODSUriUtils;
 import org.junit.Test;
 
 public final class IRODSAccountTest {
@@ -40,6 +45,44 @@ public final class IRODSAccountTest {
 		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
 				"client", "password", "/zone/home/client", "zone", "");
 		account.toURI(true);
+	}
+
+	@Test
+	public final void testToUriWithoutPassword() throws Exception {
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
+				"client", "password", "/zone/home/client whitespace", "zone",
+				"");
+		URI actual = account.toURI(false);
+		Assert.assertNotNull("no uri", actual);
+
+	}
+
+	@Test
+	public final void testToUriWithPassword() throws Exception {
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
+				"client", "password", "/zone/home/path with stuff", "zone", "");
+		URI actual = account.toURI(true);
+		Assert.assertNotNull("no uri", actual);
+
+		String returnPath = IRODSUriUtils.getAbsolutePathFromURI(actual);
+		Assert.assertEquals("path not encoded/decoded",
+				"/zone/home/path with stuff", returnPath);
+
+	}
+
+	/**
+	 * Tests bug https://github.com/DICE-UNC/jargon/issues/189
+	 *
+	 * @throws Exception
+	 */
+	@Test
+	public final void testToUriWithWhiteSpaceInPathBug189() throws Exception {
+		final IRODSAccount account = IRODSAccount.instance("localhost", 1247,
+				"client", "password", "/zone/home/client whitespace", "zone",
+				"");
+		URI actual = account.toURI(true);
+		Assert.assertNotNull("no uri", actual);
+
 	}
 
 }
