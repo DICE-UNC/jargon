@@ -68,5 +68,9 @@ an iRODS issue referenced at Create/delete file with & char allows create, cause
 
 toURI with white spaces gives URISyntaxException, url encode that information
 
+#### Add client/server negotiation support for SSL encryption #4
+
+Honor client server negotiation and SSL transport encryption, as well as shared-key encryption for parallel file transfers.  (docs coming soon).  This is early access and should be used with caution until release time.
+
 
 
