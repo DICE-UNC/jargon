@@ -247,7 +247,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
@@ -410,7 +410,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertFalse("no results returned, expected at least ls and lsl",
 				specificQueryResultSet.getResults().isEmpty());
@@ -449,7 +449,7 @@ public class SpecificQueryAOTest {
 		SpecificQueryResultSet specificQueryResultSet = queryAO
 				.executeSpecificQueryUsingAlias(specificQuery,
 						accessObjectFactory.getJargonProperties()
-						.getMaxFilesAndDirsQueryMax());
+								.getMaxFilesAndDirsQueryMax());
 		Assert.assertNotNull("null result set", specificQueryResultSet);
 		Assert.assertTrue("expected no results", specificQueryResultSet
 				.getResults().isEmpty());

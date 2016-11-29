@@ -45,7 +45,7 @@ public class ChecksumManagerImplTest {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.DEFAULT);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties())
-				.thenReturn(jargonProperties);
+		.thenReturn(jargonProperties);
 
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods3.3.1", "D",
@@ -54,10 +54,10 @@ public class ChecksumManagerImplTest {
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);
 		Mockito.when(environmentalInfoAO.getIRODSServerProperties())
-				.thenReturn(irodsServerProperties);
+		.thenReturn(irodsServerProperties);
 
 		Mockito.when(irodsAccessObjectFactory.getEnvironmentalInfoAO(account))
-				.thenReturn(environmentalInfoAO);
+		.thenReturn(environmentalInfoAO);
 
 		ChecksumManager checksumManager = new ChecksumManagerImpl(account,
 				irodsAccessObjectFactory);
@@ -91,7 +91,7 @@ public class ChecksumManagerImplTest {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.STRONG);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties())
-				.thenReturn(jargonProperties);
+		.thenReturn(jargonProperties);
 
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods4.0.2", "D",
@@ -100,10 +100,10 @@ public class ChecksumManagerImplTest {
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);
 		Mockito.when(environmentalInfoAO.getIRODSServerProperties())
-				.thenReturn(irodsServerProperties);
+		.thenReturn(irodsServerProperties);
 
 		Mockito.when(irodsAccessObjectFactory.getEnvironmentalInfoAO(account))
-				.thenReturn(environmentalInfoAO);
+		.thenReturn(environmentalInfoAO);
 
 		ChecksumManager checksumManager = new ChecksumManagerImpl(account,
 				irodsAccessObjectFactory);
@@ -142,7 +142,7 @@ public class ChecksumManagerImplTest {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
 		jargonProperties.setChecksumEncoding(ChecksumEncodingEnum.STRONG);
 		Mockito.when(irodsAccessObjectFactory.getJargonProperties())
-				.thenReturn(jargonProperties);
+		.thenReturn(jargonProperties);
 
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties
 				.instance(IcatEnabled.ICAT_ENABLED, 100, "rods4.0.2", "D",
@@ -151,10 +151,10 @@ public class ChecksumManagerImplTest {
 		EnvironmentalInfoAO environmentalInfoAO = Mockito
 				.mock(EnvironmentalInfoAO.class);
 		Mockito.when(environmentalInfoAO.getIRODSServerProperties())
-				.thenReturn(irodsServerProperties);
+		.thenReturn(irodsServerProperties);
 
 		Mockito.when(irodsAccessObjectFactory.getEnvironmentalInfoAO(account))
-				.thenReturn(environmentalInfoAO);
+		.thenReturn(environmentalInfoAO);
 
 		ChecksumManager checksumManager = new ChecksumManagerImpl(account,
 				irodsAccessObjectFactory);

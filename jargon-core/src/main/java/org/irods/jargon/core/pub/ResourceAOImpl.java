@@ -108,7 +108,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForAddResource(resource);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
-		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
 
 		log.info("complete");
 	}
@@ -134,7 +134,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		} catch (DataNotFoundException e) {
 			log.warn("data not found deleting resource, silently ignore", e);
 		}
-		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
 
 		log.info("complete");
 
@@ -184,7 +184,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				throw e;
 			}
 		}
-		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
 
 		log.info("complete");
 
@@ -220,7 +220,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForRemoveChildFromResource(child, parent);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
-		this.getIRODSAccessObjectFactory().closeSession(this.getIRODSAccount());
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
 
 		log.info("complete");
 

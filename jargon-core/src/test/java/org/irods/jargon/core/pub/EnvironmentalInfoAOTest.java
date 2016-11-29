@@ -110,7 +110,7 @@ public class EnvironmentalInfoAOTest {
 					.length() > 0);
 		} catch (DataNotFoundException ex) {
 			System.out
-					.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
+			.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
 
 	}

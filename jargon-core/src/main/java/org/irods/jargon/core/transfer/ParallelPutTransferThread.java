@@ -2,15 +2,19 @@ package org.irods.jargon.core.transfer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Arrays;
 import java.util.concurrent.Callable;
 
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.transfer.encrypt.EncryptionBuffer;
+import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +34,7 @@ Callable<ParallelTransferResult> {
 
 	private final ParallelPutFileTransferStrategy parallelPutFileTransferStrategy;
 	private RandomAccessFile localRandomAccessFile = null;
+	private ParallelEncryptionCipherWrapper parallelEncryptionCipherWrapper = null;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelPutTransferThread.class);
@@ -130,6 +135,15 @@ Callable<ParallelTransferResult> {
 				setOut(new BufferedOutputStream(getS().getOutputStream(),
 						outputBuffSize));
 			}
+
+			log.info("setting up the encryption if so negotiated");
+			if (this.parallelPutFileTransferStrategy.doEncryption()) {
+				log.debug("am doing encryption, enable the cypher");
+				parallelEncryptionCipherWrapper = this.parallelPutFileTransferStrategy
+						.initializeCypherForEncryption();
+				log.debug("cypher initialized");
+			}
+
 		} catch (Exception e) {
 			log.error("unable to create transfer thread", e);
 			throw new JargonException(e);
@@ -338,7 +352,39 @@ Callable<ParallelTransferResult> {
 							"getting ready to write to iRODS, new txfr length:{}",
 							transferLength);
 
-					getOut().write(buffer, 0, read);
+					/*
+					 * if encrypting, encrypt this buffer before sending
+					 */
+
+					if (parallelPutFileTransferStrategy.doEncryption()) {
+						log.debug("put with encryption, encrypt this buffer");
+						EncryptionBuffer encryptedBuff = parallelEncryptionCipherWrapper
+								.encrypt(Arrays.copyOf(buffer, read));
+						log.debug("iv length:{}",
+								encryptedBuff.getInitializationVector().length);
+						// sendInNetworkOrder(encryptedBuff.getEncryptedData().length
+						// + encryptedBuff.getInitializationVector().length);
+						sendInLittleEndian(encryptedBuff.getEncryptedData().length
+								+ encryptedBuff.getInitializationVector().length);
+						log.debug(
+								"computed length:{}",
+								encryptedBuff.getEncryptedData().length
+								+ encryptedBuff
+								.getInitializationVector().length);
+						// this encryptedBuff has the data and the iv
+						ByteArrayOutputStream buffOut = new ByteArrayOutputStream(
+								encryptedBuff.getEncryptedData().length
+								+ encryptedBuff
+								.getInitializationVector().length);
+						buffOut.write(encryptedBuff.getInitializationVector());
+						buffOut.write(encryptedBuff.getEncryptedData());
+						// getOut().write(buffOut.toByteArray());
+						buffOut.writeTo(getOut());
+						// getOut().write(encryptedBuff.getInitializationVector());
+						// getOut().write(encryptedBuff.getEncryptedData());
+					} else {
+						getOut().write(buffer, 0, read);
+					}
 
 					/*
 					 * Make an intra-file status call-back if a listener is
@@ -427,5 +473,20 @@ Callable<ParallelTransferResult> {
 			throw new JargonException(
 					"transferLength and totalWritten do not agree");
 		}
+	}
+
+	protected void sendInNetworkOrder(final int value) throws IOException {
+		byte bytes[] = new byte[ConnectionConstants.INT_LENGTH];
+		Host.copyInt(value, bytes);
+		getOut().write(bytes);
+		getOut().flush();
+	}
+
+	protected void sendInLittleEndian(final int value) throws IOException {
+		byte theBytes[] = new byte[ConnectionConstants.INT_LENGTH];
+		int reversed = Integer.reverseBytes(value);
+		Host.copyInt(reversed, theBytes);
+		getOut().write(theBytes);
+		getOut().flush();
 	}
 }

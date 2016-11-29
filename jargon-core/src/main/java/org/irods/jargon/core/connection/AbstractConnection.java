@@ -38,7 +38,7 @@ public abstract class AbstractConnection {
 	protected Socket connection;
 	protected InputStream irodsInputStream;
 	protected OutputStream irodsOutputStream;
-	private IRODSSession irodsSession = null;
+	protected IRODSSession irodsSession = null;
 	protected final IRODSAccount irodsAccount;
 	protected final PipelineConfiguration pipelineConfiguration;
 	private final long connectTimeInMillis = System.currentTimeMillis();
@@ -62,6 +62,94 @@ public abstract class AbstractConnection {
 	private int outputOffset = 0;
 
 	/**
+	 * Configured negotation policy, either from jargon default properties, or
+	 * overridden in the IRODSAccount
+	 */
+	private final ClientServerNegotiationPolicy operativeClientServerNegotiationPolicy;
+
+	/**
+	 * @return the operativeClientServerNegotiationPolicy, meaning it has
+	 *         consulted the default jargon properties as well as any override
+	 *         in the <code>IRODSAccount</code>
+	 */
+	ClientServerNegotiationPolicy getOperativeClientServerNegotiationPolicy() {
+		return operativeClientServerNegotiationPolicy;
+	}
+
+	/**
+	 * Default constructor that gives the account and pipeline setup
+	 * information. This constructor is a special case where you already have a
+	 * Socket opened to iRODS, and you want to wrap that socket with the low
+	 * level iRODS semantics. An example use case is when you need to to PAM
+	 * authentication and wrap an existing iRODS connection with an SSL socket.
+	 * <p/>
+	 * This may be updated a bit later when we implement SSL negotiation for
+	 * iRODS 4+.
+	 * <p/>
+	 * Note that this method does not set up the socket streams, this is the
+	 * responsibility of the subclass. This is all kind of a mess with the
+	 * introduction of negotiation and seems a bit too involved for its own
+	 * good. We need to simplify this (MCC)
+	 *
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} that defines the connection
+	 * @param pipelineConfiguration
+	 *            {@link PipelineConfiguration} that defines the low level
+	 *            connection and networking configuration
+	 * @param irodsProtocolManager
+	 *            {@link irodsProtocolManager} that requested this connection
+	 * @param socket
+	 *            {@link Socket} being wrapped in this connection, this allows
+	 *            an arbitrary connected socket to be wrapped in low level
+	 *            jargon communication semantics.
+	 * @param IRODSession
+	 *            {@link IRODSSession} associated with this connection
+	 * @throws JargonException
+	 */
+	AbstractConnection(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager,
+			final Socket socket, final IRODSSession irodsSession)
+			throws JargonException {
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+		if (pipelineConfiguration == null) {
+			throw new IllegalArgumentException("null pipelineConfiguration");
+		}
+
+		if (irodsProtocolManager == null) {
+			throw new IllegalArgumentException("null irodsProtocolManager");
+		}
+
+		if (socket == null) {
+			throw new IllegalArgumentException("null socket");
+		}
+
+		if (irodsSession == null) {
+			throw new IllegalArgumentException("null irodsSession");
+		}
+
+		/*
+		 * super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+		 * irodsSession);
+		 */
+		this.irodsAccount = irodsAccount;
+		this.pipelineConfiguration = pipelineConfiguration;
+		this.irodsProtocolManager = irodsProtocolManager;
+		connection = socket;
+		this.irodsSession = irodsSession;
+		connected = true;
+		connection = socket;
+		operativeClientServerNegotiationPolicy = null; // I don't need this
+		initializeIdentifier(irodsAccount);
+
+		initInternalBufferIfNeeded(pipelineConfiguration);
+
+	}
+
+	/**
 	 * Constructor with account info to set up socket and information about
 	 * buffering and other networking details
 	 *
@@ -72,12 +160,16 @@ public abstract class AbstractConnection {
 	 *            connection and networking configuration
 	 * @param irodsProtocolManager
 	 *            {@link irodsProtocolManager} that requested this connection
+	 *
+	 * @param irodsSession
+	 *            {@link IRODSSession} that is associated with this connection
 	 * @throws JargonException
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager)
-					throws JargonException {
+			final IRODSProtocolManager irodsProtocolManager,
+			final IRODSSession irodsSession) throws JargonException {
+
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -93,7 +185,33 @@ public abstract class AbstractConnection {
 		this.irodsAccount = irodsAccount;
 		this.pipelineConfiguration = pipelineConfiguration;
 		this.irodsProtocolManager = irodsProtocolManager;
+		this.irodsSession = irodsSession;
 
+		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
+			log.info("using override negotiation policy from IRODSAccount:{}",
+					irodsAccount.getClientServerNegotiationPolicy());
+			operativeClientServerNegotiationPolicy = irodsAccount
+					.getClientServerNegotiationPolicy();
+		} else {
+			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(
+					irodsSession);
+			operativeClientServerNegotiationPolicy = builder
+					.buildClientServerNegotiationPolicyFromJargonProperties();
+			log.info("using default negotiation policy:{}",
+					operativeClientServerNegotiationPolicy);
+		}
+
+		initInternalBufferIfNeeded(pipelineConfiguration);
+		initializeConnection(irodsAccount);
+		initializeIdentifier(irodsAccount);
+
+	}
+
+	/**
+	 * @param pipelineConfiguration
+	 */
+	private void initInternalBufferIfNeeded(
+			final PipelineConfiguration pipelineConfiguration) {
 		/*
 		 * If using the custom internal buffer, initialize it
 		 */
@@ -102,10 +220,8 @@ public abstract class AbstractConnection {
 			log.info("using internal cache buffer of size:{}",
 					pipelineConfiguration.getInternalCacheBufferSize());
 			outputBuffer = new byte[pipelineConfiguration
-			                        .getInternalCacheBufferSize()];
+					.getInternalCacheBufferSize()];
 		}
-		initializeConnection(irodsAccount);
-
 	}
 
 	protected void initializeConnection(final IRODSAccount irodsAccount)
@@ -132,6 +248,15 @@ public abstract class AbstractConnection {
 		connect(irodsAccount);
 		setConnected(true);
 
+		initializeIdentifier(irodsAccount);
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @throws JargonException
+	 */
+	private void initializeIdentifier(final IRODSAccount irodsAccount)
+			throws JargonException {
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
 		connectionInternalIdentifierBuilder.append(irodsAccount.toURI(false)
@@ -192,6 +317,7 @@ public abstract class AbstractConnection {
 		try {
 			// packing instructions may be null, in which case nothing is sent
 			if (value == null) {
+				log.info("no value, so do not do the send, this may be ok depending on the operation");
 				return;
 			}
 
@@ -218,6 +344,7 @@ public abstract class AbstractConnection {
 			}
 		} catch (IOException ioe) {
 			getIrodsSession().discardSessionForErrors(getIrodsAccount());
+			log.error("ioException in send", ioe);
 			throw ioe;
 		}
 	}
@@ -326,7 +453,7 @@ public abstract class AbstractConnection {
 			final InputStream source,
 			long length,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws IOException {
+			throws IOException {
 
 		if (source == null) {
 			String err = "value is null";
@@ -347,7 +474,7 @@ public abstract class AbstractConnection {
 			if (Thread.interrupted()) {
 				throw new IOException(
 
-						"interrupted, consider connection corrupted and return IOException to clear");
+				"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
 			if (temp.length > length) {
@@ -368,8 +495,8 @@ public abstract class AbstractConnection {
 			 */
 			if (connectionProgressStatusListener != null) {
 				connectionProgressStatusListener
-				.connectionProgressStatusCallback(ConnectionProgressStatus
-						.instanceForSend(lenThisRead));
+						.connectionProgressStatusCallback(ConnectionProgressStatus
+								.instanceForSend(lenThisRead));
 			}
 		}
 
@@ -457,7 +584,7 @@ public abstract class AbstractConnection {
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-					throws IOException {
+			throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";
@@ -484,7 +611,7 @@ public abstract class AbstractConnection {
 					bos.close();
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				n = read(temp, 0, Math.min(pipelineConfiguration
@@ -498,8 +625,8 @@ public abstract class AbstractConnection {
 					 */
 					if (intraFileStatusListener != null) {
 						intraFileStatusListener
-						.connectionProgressStatusCallback(ConnectionProgressStatus
-								.instanceForSend(n));
+								.connectionProgressStatusCallback(ConnectionProgressStatus
+										.instanceForSend(n));
 					}
 				} else {
 					length = n;

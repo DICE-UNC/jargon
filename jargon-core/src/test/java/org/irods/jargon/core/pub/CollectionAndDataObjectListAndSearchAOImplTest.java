@@ -43,7 +43,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
@@ -73,7 +73,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		irodsFileSystem.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		// no errors means test passes
 		Assert.assertTrue(true);
 
@@ -330,12 +330,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
 		}
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -650,11 +650,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -715,11 +715,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		// replicate that collection to make sure that we don't get 'double
@@ -729,11 +729,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
 						irodsAccount);
 		transferOperationsAO
-				.replicate(
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
-						null, null);
+		.replicate(
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				null, null);
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -859,12 +859,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -874,11 +874,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -944,12 +944,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -959,11 +959,11 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -1135,7 +1135,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		dto.replicate(
 				targetIrodsCollection,
 				testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY),
 				null, null);
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -1357,10 +1357,10 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 
 		dataObjectAO.putLocalDataObjectToIRODS(localFile, irodsFile, true);
 		dataObjectAO
-				.replicateIrodsDataObject(
-						irodsFile.getAbsolutePath() + "/" + localFile.getName(),
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+		.replicateIrodsDataObject(
+				irodsFile.getAbsolutePath() + "/" + localFile.getName(),
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		// second file, slightly different prefix on name
 		localFileName = FileGenerator.generateFileOfFixedLengthGivenName(
@@ -1427,7 +1427,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(
 						irodsFile.getAbsolutePath() + "/" + searchTerm
-								+ "somethingElseToo");
+						+ "somethingElseToo");
 		irodsFile.mkdir();
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
@@ -1639,12 +1639,12 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-							false);
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+					false);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -1654,15 +1654,15 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-					.setAccessPermissionWrite(
-							irodsAccount.getZone(),
-							irodsFile.getAbsolutePath(),
-							testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+			.setAccessPermissionWrite(
+					irodsAccount.getZone(),
+					irodsFile.getAbsolutePath(),
+					testingProperties
+					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		irodsFileSystem.getIRODSAccessObjectFactory()
-				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		/*
 		 * List<CollectionAndDataObjectListingEntry> entries = actual
@@ -1688,7 +1688,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		listAndSearchAO
-				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
 
 	}
 
@@ -1709,7 +1709,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		listAndSearchAO
-				.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
+		.getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(targetIrodsCollection);
 
 	}
 
@@ -1920,7 +1920,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH
-								+ "/idontexistreallyidont");
+						+ "/idontexistreallyidont");
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

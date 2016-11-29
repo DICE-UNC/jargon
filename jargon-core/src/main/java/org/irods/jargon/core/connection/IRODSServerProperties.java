@@ -38,7 +38,7 @@ public class IRODSServerProperties {
 		this.icatEnabled = icatEnabled;
 		this.serverBootTime = serverBootTime;
 		this.apiVersion = apiVersion;
-		this.irodsVersion = new IrodsVersion(relVersion);
+		irodsVersion = new IrodsVersion(relVersion);
 		this.rodsZone = rodsZone;
 	}
 
@@ -153,7 +153,7 @@ public class IRODSServerProperties {
 			throw new IllegalArgumentException("null or empty releaseVersion");
 		}
 
-		int compare = this.getIrodsVersion().compareTo(
+		int compare = getIrodsVersion().compareTo(
 				new IrodsVersion(releaseVersion));
 		return compare >= 0;
 
@@ -165,7 +165,7 @@ public class IRODSServerProperties {
 	 * will force the pam flush based on the forceSslFlush flag, which will only
 	 * be turned on to bracket the necessary calls to the protocol, preventing a
 	 * performance drop from unneeded flushes later
-	 * 
+	 *
 	 * @return <code>boolean</code> of <code>true</code> if pam flush overhead
 	 *         is required
 	 */

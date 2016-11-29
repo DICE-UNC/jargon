@@ -904,8 +904,9 @@ IRODSFileSystemAO {
 			log.info("opening file:" + absPath);
 		}
 
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjInp.getParsedTags(), DataObjInp.OPEN_FILE_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
+				DataObjInp.OPEN_FILE_API_NBR);
 
 		if (response == null) {
 			String msg = "null response from IRODS call";
@@ -973,8 +974,9 @@ IRODSFileSystemAO {
 			dataObjInp.setOperationType(DataObjInp.PUT_OPERATION_TYPE);
 		}
 
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjInp.getParsedTags(), DataObjInp.CREATE_FILE_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
+				DataObjInp.CREATE_FILE_API_NBR);
 		if (response == null) {
 			String msg = "null response from IRODS call";
 			log.error(msg);
@@ -1012,8 +1014,9 @@ IRODSFileSystemAO {
 				recursiveOpr);
 
 		try {
-			Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
-					collInp.getParsedTags(), CollInp.MKDIR_API_NBR);
+			Tag response = getIRODSProtocol().irodsFunction(
+					IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
+					CollInp.MKDIR_API_NBR);
 
 			if (response != null) {
 				log.warn(
@@ -1054,7 +1057,7 @@ IRODSFileSystemAO {
 		}
 
 		Tag response = getIRODSProtocol().irodsFunction(
-				OpenedDataObjInp.PI_TAG, openedDataObjInp.getParsedTags(),
+				IRODSConstants.RODS_API_REQ, openedDataObjInp.getParsedTags(),
 				openedDataObjInp.getApiNumber());
 
 		if (response != null) {
@@ -1092,8 +1095,9 @@ IRODSFileSystemAO {
 
 		DataObjInp dataObjInp = DataObjInp.instanceForDeleteWithForce(irodsFile
 				.getAbsolutePath());
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjInp.getParsedTags(), DataObjInp.DELETE_FILE_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
+				DataObjInp.DELETE_FILE_API_NBR);
 
 		if (response != null) {
 			String msg = "unexpected response from irods, expected null message - logged and ignored ";
@@ -1169,8 +1173,9 @@ IRODSFileSystemAO {
 		CollInp collInp = CollInp.instance(irodsFile.getAbsolutePath(),
 				CollInp.RECURSIVE_OPERATION, CollInp.FORCE_OPERATION);
 
-		Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
-				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
+				CollInp.RMDIR_API_NBR);
 
 		processClientStatusMessages(response);
 
@@ -1205,8 +1210,9 @@ IRODSFileSystemAO {
 		CollInp collInp = CollInp.instance(irodsFile.getAbsolutePath(),
 				CollInp.RECURSIVE_OPERATION);
 
-		Tag response = getIRODSProtocol().irodsFunction(CollInp.PI_TAG,
-				collInp.getParsedTags(), CollInp.RMDIR_API_NBR);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
+				CollInp.RMDIR_API_NBR);
 
 		processClientStatusMessages(response);
 
@@ -1264,8 +1270,8 @@ IRODSFileSystemAO {
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp
 				.instanceForRenameCollection(fromFile.getAbsolutePath(),
 						toFile.getAbsolutePath());
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjCopyInp.getParsedTags(),
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
 		if (response != null) {
@@ -1298,8 +1304,8 @@ IRODSFileSystemAO {
 
 		DataObjCopyInp dataObjCopyInp = DataObjCopyInp.instanceForRenameFile(
 				fromFile.getAbsolutePath(), toFile.getAbsolutePath());
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjCopyInp.getParsedTags(),
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
 				DataObjCopyInp.RENAME_FILE_API_NBR);
 
 		if (response != null) {
@@ -1419,8 +1425,9 @@ IRODSFileSystemAO {
 			apiNbr = DataObjInp.PHYMOVE_FILE_API_NBR;
 		}
 
-		Tag response = getIRODSProtocol().irodsFunction(DataObjInp.PI_TAG,
-				dataObjCopyInp.getParsedTags(), apiNbr);
+		Tag response = getIRODSProtocol().irodsFunction(
+				IRODSConstants.RODS_API_REQ, dataObjCopyInp.getParsedTags(),
+				apiNbr);
 
 		if (response != null) {
 			log.warn("unexpected response from irods, expected null message - logged and ignored ");

@@ -48,9 +48,11 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager)
-					throws JargonException {
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
+
+			final IRODSProtocolManager irodsProtocolManager,
+			final IRODSSession irodsSession) throws JargonException {
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+				irodsSession);
 	}
 
 	static final Logger log = LoggerFactory
@@ -77,27 +79,23 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 *            {@link Socket} being wrapped in this connection, this allows
 	 *            an arbitrary connected socket to be wrapped in low level
 	 *            jargon communication semantics.
+	 * @param IRODSession
+	 *            {@link IRODSSession} associated with this connection
 	 * @throws JargonException
 	 */
 	IRODSBasicTCPConnection(final IRODSAccount irodsAccount,
 			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager, final Socket socket)
+			final IRODSProtocolManager irodsProtocolManager,
+			final Socket socket, final IRODSSession irodsSession)
 					throws JargonException {
 
-		super(irodsAccount, pipelineConfiguration, irodsProtocolManager);
+		super(irodsAccount, pipelineConfiguration, irodsProtocolManager,
+				socket, irodsSession);
 
-		if (socket == null) {
-			throw new IllegalArgumentException("null socket");
-		}
-
-		connection = socket;
 		setUpSocketAndStreamsAfterConnection(irodsAccount);
-		connected = true;
-
 		if (socket instanceof SSLSocket) {
 			setEncryptionType(EncryptionType.SSL_WRAPPED);
 		}
-
 		log.debug("socket opened successfully");
 	}
 
@@ -271,6 +269,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 
 			log.debug("is connected for : {}", toString());
 			try {
+
 				connection.close();
 
 			} catch (Exception e) {
@@ -301,6 +300,18 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	@Override
 	public void obliterateConnectionAndDiscardErrors() {
 		closeDownSocketAndEatAnyExceptions();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSBasicTCPConnection []");
+		return builder.toString();
 	}
 
 }

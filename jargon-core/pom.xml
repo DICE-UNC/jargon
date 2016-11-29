@@ -21,6 +21,10 @@
 			<artifactId>commons-codec</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>commons-lang</groupId>
+			<artifactId>commons-lang</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.claymoresystems</groupId>
 			<artifactId>puretls</artifactId>
 			<type>jar</type>
@@ -104,6 +108,7 @@
 									test.option.federated.zone=${test.option.federated.zone}
 									test.option.kerberos=${test.option.kerberos}
 									test.option.pam=${test.option.pam}
+									test.option.ssl.configured=${test.option.ssl.configured}
 									jargon.test.pam.user=${jargon.test.pam.user}
 									jargon.test.pam.password=${jargon.test.pam.password}
 									test.federated.irods.admin=${jargon.test.federated.irods.admin}

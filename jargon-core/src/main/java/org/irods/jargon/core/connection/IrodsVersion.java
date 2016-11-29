@@ -1,11 +1,11 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.connection;
 
 /**
  * Represents an iRODS version in a structured and comparable way
- * 
+ *
  * @author Mike Conway - DFC
  *
  */
@@ -20,7 +20,7 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	private final int minor;
 	private final int patch;
 
-	public IrodsVersion(String reportedVersion) {
+	public IrodsVersion(final String reportedVersion) {
 		if (reportedVersion == null || reportedVersion.isEmpty()) {
 			throw new IllegalArgumentException("null or empty reportedVersion");
 		}
@@ -107,7 +107,7 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	/**
 	 * Convenience method to see if the current version in this instance is at
 	 * least the given version in the parameter
-	 * 
+	 *
 	 * @param versionString
 	 *            <code>String</code> with the rodsx.x.x version number
 	 * @return <code>boolean</code>
@@ -121,22 +121,22 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	 * less than, equal to, or greater than the specified object.
 	 */
 	@Override
-	public int compareTo(IrodsVersion otherVersion) {
-		if (this.major < otherVersion.major) {
+	public int compareTo(final IrodsVersion otherVersion) {
+		if (major < otherVersion.major) {
 			return -1;
-		} else if (this.major > otherVersion.major) {
+		} else if (major > otherVersion.major) {
 			return 1;
 		}
 		// major equal do minor
-		if (this.minor < otherVersion.minor) {
+		if (minor < otherVersion.minor) {
 			return -1;
-		} else if (this.minor > otherVersion.minor) {
+		} else if (minor > otherVersion.minor) {
 			return 1;
 		}
 		// minor equal do patch
-		if (this.patch < otherVersion.patch) {
+		if (patch < otherVersion.patch) {
 			return -1;
-		} else if (this.patch > otherVersion.patch) {
+		} else if (patch > otherVersion.patch) {
 			return 1;
 		}
 

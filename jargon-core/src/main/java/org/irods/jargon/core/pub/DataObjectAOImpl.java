@@ -648,13 +648,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				log.info("attempting a restart after exception", je);
 				fileRestartInfo = retrieveRestartInfoIfAvailable(
 						RestartType.PUT, irodsFileDestination.getAbsolutePath());
-				if (fileRestartInfo != null) {
+				if (fileRestartInfo == null) {
+					log.info("no restart info, rethrow exception", je);
+					throw je;
+				} else {
 					log.info("carrying out restart process..");
 					putRestartRetryTillMaxLoop(transferControlBlock,
 							targetFile, fileRestartInfo,
 							transferStatusCallbackListener);
-				}else{
-				    throw je;
 				}
 			}
 
@@ -923,7 +924,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 			} else {
 				throw je;
 			}
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.error(ERROR_IN_PARALLEL_TRANSFER, e);
 			throw new JargonException(ERROR_IN_PARALLEL_TRANSFER, e);
 		}
@@ -974,7 +975,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 				.instance(host, port, numberOfThreads, pass, localFile,
 						getIRODSAccessObjectFactory(), transferLength,
 						transferControlBlock, transferStatusCallbackListener,
-						fileRestartInfo);
+						fileRestartInfo, getIRODSProtocol()
+								.getStartupResponseData()
+								.getNegotiatedClientServerConfiguration());
 		log.info(
 				"getting ready to initiate parallel file transfer strategy:{}",
 				parallelPutFileStrategy);
@@ -1551,17 +1554,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					log.info("attempting a restart after exception", e);
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(
 							RestartType.GET, irodsFileToGet.getAbsolutePath());
-					if (fileRestartInfo != null) {
+					if (fileRestartInfo == null) {
+						log.info("no restart info available, rethrow the exception");
+						throw e;
+					} else {
 						log.info("carrying out restart process..");
 						getRestartRetryTillMaxLoop(transferControlBlock,
 								irodsFileToGet, fileRestartInfo,
 								transferStatusCallbackListener);
 					}
 
-					log.error(
-							" exception in get transfer, currently restart is not supported for get",
-							e);
-					throw e;
 				}
 			} else {
 				dataAOHelper.processNormalGetTransfer(localFileToHoldData,
@@ -1700,7 +1702,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 					.instance(host, port, numberOfThreads, password,
 							localFileToHoldData, getIRODSAccessObjectFactory(),
 							irodsFileLength, transferControlBlock,
-							transferStatusCallbackListener, fileRestartInfo);
+							transferStatusCallbackListener, fileRestartInfo,
+							getIRODSProtocol().getStartupResponseData()
+									.getNegotiatedClientServerConfiguration());
 
 			try {
 				parallelGetTransferStrategy.transfer();

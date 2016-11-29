@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
+import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
+
 /**
  * Immutable object represents the options controlling the behavior of the io
  * pipeline. Typically, these options are built based on the current state of
@@ -43,6 +46,29 @@ public class PipelineConfiguration {
 	private final int primaryTcpPerformancePrefsLatency;
 	private final int primaryTcpPerformancePrefsBandwidth;
 	private final int socketRenewalIntervalInSeconds;
+	/**
+	 * Default SSL negotiation policy, may be overrideen per request in the
+	 * IRODSAccount
+	 */
+	private final SslNegotiationPolicy negotiationPolicy;
+	/**
+	 * Encryption algo for parallel transfers
+	 */
+	private final EncryptionAlgorithmEnum encryptionAlgorithmEnum;
+	/**
+	 * Key size for encryption of parallel transfers when SSL negotiated
+	 */
+	private final int encryptionKeySize;
+	/**
+	 * Salt size for encryption of parallel transfers when SSL negotiated
+	 */
+	private final int encryptionSaltSize;
+
+	/**
+	 * Number of hash rounds for encryption of parallel transfers when SSL
+	 * negotiated
+	 */
+	private final int encryptionNumberHashRounds;
 
 	/**
 	 * Static initializer method will derive an immutable
@@ -109,6 +135,12 @@ public class PipelineConfiguration {
 				.getPrimaryTcpSendWindowSize();
 		socketRenewalIntervalInSeconds = jargonProperties
 				.getSocketRenewalIntervalInSeconds();
+		negotiationPolicy = jargonProperties.getNegotiationPolicy();
+		encryptionAlgorithmEnum = jargonProperties.getEncryptionAlgorithmEnum();
+		encryptionKeySize = jargonProperties.getEncryptionKeySize();
+		encryptionNumberHashRounds = jargonProperties
+				.getEncryptionNumberHashRounds();
+		encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
 
 	}
 
@@ -329,6 +361,26 @@ public class PipelineConfiguration {
 	 */
 	public int getSocketRenewalIntervalInSeconds() {
 		return socketRenewalIntervalInSeconds;
+	}
+
+	public SslNegotiationPolicy getNegotiationPolicy() {
+		return negotiationPolicy;
+	}
+
+	public EncryptionAlgorithmEnum getEncryptionAlgorithmEnum() {
+		return encryptionAlgorithmEnum;
+	}
+
+	public int getEncryptionKeySize() {
+		return encryptionKeySize;
+	}
+
+	public int getEncryptionSaltSize() {
+		return encryptionSaltSize;
+	}
+
+	public int getEncryptionNumberHashRounds() {
+		return encryptionNumberHashRounds;
 	}
 
 }

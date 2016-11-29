@@ -15,6 +15,7 @@ import java.util.Properties;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataObjectAO;
+import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
@@ -53,7 +54,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileNotExistsInScratch(
 			final String filePathRelativeToScratch)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -76,7 +77,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalFileExistsInScratch(
 			final String filePathRelativeToScratch)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		StringBuilder errorMessage = new StringBuilder();
 		errorMessage.append(ASSERTION_ERROR_MESSAGE);
@@ -101,7 +102,7 @@ public class AssertionHelper {
 	 */
 	public void assertLocalScratchFileLengthEquals(
 			final String filePathRelativeToScratch, final long expectedLength)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 		StringBuilder fullPathToLocalFile = computeFullPathToLocalFile(filePathRelativeToScratch);
 		File localFile = new File(fullPathToLocalFile.toString());
 		if (!localFile.exists()) {
@@ -167,14 +168,6 @@ public class AssertionHelper {
 				.get(GENERATED_FILE_DIRECTORY_KEY));
 		fullPathToLocalFile.append(filePathRelativeToScratch);
 		return fullPathToLocalFile;
-	}
-
-	public void assertIrodsFileMatchesLocalFileChecksum(
-			final String absoluteIRODSPathUnderScratch,
-			final String absoluteLocalFileUnderScratch)
-					throws IRODSTestAssertionException {
-
-		// FIXME: need to update for jargon-core
 	}
 
 	/**
@@ -313,7 +306,7 @@ public class AssertionHelper {
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(
 			final File file1, final File file2)
-					throws IRODSTestAssertionException {
+			throws IRODSTestAssertionException {
 
 		if (file1.getName().equals(".DS_Store")
 				|| file2.getName().equals(".DS_Store")) {
@@ -402,7 +395,7 @@ public class AssertionHelper {
 			final String avuAttribute,
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount)
-					throws IRODSTestAssertionException, JargonException {
+			throws IRODSTestAssertionException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -440,6 +433,19 @@ public class AssertionHelper {
 		if (actual.isEmpty()) {
 			throw new IRODSTestAssertionException("no avu found");
 		}
+
+	}
+
+	public void assertIrodsFileMatchesLocalFileChecksum(
+			final String irodsAbsolutePath, final String localAbsolutePath,
+			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount) throws JargonException {
+
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilities = irodsAccessObjectFactory
+				.getDataObjectChecksumUtilitiesAO(irodsAccount);
+
+		dataObjectChecksumUtilities.verifyLocalFileAgainstIrodsFileChecksum(
+				localAbsolutePath, irodsAbsolutePath);
 
 	}
 }

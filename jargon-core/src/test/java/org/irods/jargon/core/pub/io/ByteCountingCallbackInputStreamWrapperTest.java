@@ -82,7 +82,7 @@ public class ByteCountingCallbackInputStreamWrapperTest {
 				listener, dummyInputStream);
 		byte[] readBuffer = new byte[100];
 		Mockito.when(dummyInputStream.read(readBuffer, 0, expectedLen))
-		.thenReturn(expectedLen);
+				.thenReturn(expectedLen);
 
 		int actualRead = byteCountingCallbackInputStream.read(readBuffer, 0,
 				expectedLen);

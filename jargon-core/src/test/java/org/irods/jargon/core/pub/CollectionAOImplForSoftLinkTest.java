@@ -7,7 +7,6 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
-import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
@@ -40,7 +39,7 @@ public class CollectionAOImplForSoftLinkTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -58,12 +57,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -137,12 +136,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -208,12 +207,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -277,7 +276,7 @@ public class CollectionAOImplForSoftLinkTest {
 
 	/**
 	 * see https://github.com/DICE-UNC/jargon/issues/204
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -289,12 +288,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -302,8 +301,7 @@ public class CollectionAOImplForSoftLinkTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		// if (props.isAtLeastIrods410()) {
 		// return;
@@ -338,12 +336,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 		// read on target
 		collectionAO
-				.setAccessPermissionRead(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionRead(
+				"",
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
@@ -357,12 +355,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 		// write on source
 		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						sourceIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionWrite(
+				"",
+				sourceIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		// log in as the secondary user and test access
 
@@ -374,7 +372,7 @@ public class CollectionAOImplForSoftLinkTest {
 
 	/**
 	 * see https://github.com/DICE-UNC/jargon/issues/204
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Ignore
@@ -386,12 +384,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -399,8 +397,7 @@ public class CollectionAOImplForSoftLinkTest {
 		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
 						irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		// if (props.isConsortiumVersion()) {
 		// return;
@@ -435,12 +432,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 		// write on target
 		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						targetIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionWrite(
+				"",
+				targetIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem
 				.getIRODSFileFactory(secondaryAccount).instanceIRODSFile(
@@ -454,12 +451,12 @@ public class CollectionAOImplForSoftLinkTest {
 
 		// write on source
 		collectionAO
-				.setAccessPermissionWrite(
-						"",
-						sourceIrodsCollection,
-						testingProperties
-								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-						true);
+		.setAccessPermissionWrite(
+				"",
+				sourceIrodsCollection,
+				testingProperties
+				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+				true);
 
 		// log in as the secondary user and test read access
 
@@ -478,12 +475,12 @@ public class CollectionAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ sourceCollectionName);
+						+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-								+ targetCollectionName);
+						+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -513,15 +510,15 @@ public class CollectionAOImplForSoftLinkTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-				.setAccessPermissionInherit("", targetIrodsCollection, true);
+		.setAccessPermissionInherit("", targetIrodsCollection, true);
 		Assert.assertTrue(
 				"should return inherit asking via source collection",
 				collectionAO
-						.isCollectionSetForPermissionInheritance(sourceIrodsCollection));
+				.isCollectionSetForPermissionInheritance(sourceIrodsCollection));
 		Assert.assertTrue(
 				"should return inherit asking via target collection",
 				collectionAO
-						.isCollectionSetForPermissionInheritance(targetIrodsCollection));
+				.isCollectionSetForPermissionInheritance(targetIrodsCollection));
 
 	}
 

@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.core.packinstr;
 
@@ -7,7 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Analogue of SpecColl_PI
- * 
+ *
  * @author Mike Conway - DFC
  *
  */
@@ -44,7 +44,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 	 */
 
 	/**
-	 * 
+	 *
 	 */
 	public SpecColl() {
 	}
@@ -75,7 +75,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return collClass;
 	}
 
-	public void setCollClass(int collClass) {
+	public void setCollClass(final int collClass) {
 		this.collClass = collClass;
 	}
 
@@ -83,7 +83,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return type;
 	}
 
-	public void setType(int type) {
+	public void setType(final int type) {
 		this.type = type;
 	}
 
@@ -91,7 +91,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return collection;
 	}
 
-	public void setCollection(String collection) {
+	public void setCollection(final String collection) {
 		this.collection = collection;
 	}
 
@@ -99,7 +99,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return objPath;
 	}
 
-	public void setObjPath(String objPath) {
+	public void setObjPath(final String objPath) {
 		this.objPath = objPath;
 	}
 
@@ -107,7 +107,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return resource;
 	}
 
-	public void setResource(String resource) {
+	public void setResource(final String resource) {
 		this.resource = resource;
 	}
 
@@ -115,7 +115,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return rescHeir;
 	}
 
-	public void setRescHeir(String rescHeir) {
+	public void setRescHeir(final String rescHeir) {
 		this.rescHeir = rescHeir;
 	}
 
@@ -123,7 +123,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return phyPath;
 	}
 
-	public void setPhyPath(String phyPath) {
+	public void setPhyPath(final String phyPath) {
 		this.phyPath = phyPath;
 	}
 
@@ -131,7 +131,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return cacheDir;
 	}
 
-	public void setCacheDir(String cacheDir) {
+	public void setCacheDir(final String cacheDir) {
 		this.cacheDir = cacheDir;
 	}
 
@@ -139,7 +139,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return cacheDirty;
 	}
 
-	public void setCacheDirty(int cacheDirty) {
+	public void setCacheDirty(final int cacheDirty) {
 		this.cacheDirty = cacheDirty;
 	}
 
@@ -147,7 +147,7 @@ public class SpecColl extends AbstractIRODSPackingInstruction {
 		return replNum;
 	}
 
-	public void setReplNum(int replNum) {
+	public void setReplNum(final int replNum) {
 		this.replNum = replNum;
 	}
 

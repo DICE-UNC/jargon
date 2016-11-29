@@ -594,6 +594,8 @@ IRODSAccessObject {
 	 *
 	 *
 	 *
+	 *
+	 *
 	 * } that represents the
 	 *         collections and data objects beneath the parent
 	 * @throws FileNotFoundException

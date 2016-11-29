@@ -48,12 +48,12 @@ public class FederatedDataTransferOperationsImplTest {
 		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
 				testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 	}
 
@@ -88,15 +88,15 @@ public class FederatedDataTransferOperationsImplTest {
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
 		IRODSFile crossZoneColl = irodsFileSystem.getIRODSFileFactory(
 				crossZoneAccount).instanceIRODSFile(
-						irodsCollectionRootAbsolutePath);
+				irodsCollectionRootAbsolutePath);
 		crossZoneColl.deleteWithForceOption();
 		crossZoneColl.mkdirs();
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-				"testFile", ".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
+						"testFile", ".txt", 2, 2, 1, 2);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -142,11 +142,11 @@ public class FederatedDataTransferOperationsImplTest {
 						testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
-				"testGetCollectionWithTwoFilesInAnotherZone", ".txt",
-				2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testGetCollectionWithTwoFilesInAnotherZone", 1, 1, 1,
+						"testGetCollectionWithTwoFilesInAnotherZone", ".txt",
+						2, 2, 1, 2);
 
 		IRODSAccount crossZoneAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);

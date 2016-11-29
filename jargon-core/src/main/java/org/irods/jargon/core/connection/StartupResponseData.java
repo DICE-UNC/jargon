@@ -25,6 +25,14 @@ public class StartupResponseData {
 	private final String cookie;
 
 	/**
+	 * Holds the result of any client/server negotiation, will always be
+	 * present, even if no negotiation is done. Defaults to no ssl unless
+	 * negotiated later...
+	 */
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
+			false);
+
+	/**
 	 * Default constructor initializes all of the required fields in response to
 	 * a startup packet operation.
 	 *
@@ -132,6 +140,25 @@ public class StartupResponseData {
 		IrodsVersion irodsVersion = new IrodsVersion(getRelVersion());
 		return (irodsVersion.compareTo(new IrodsVersion("rods4.1.0")) >= 0);
 
+	}
+
+	/**
+	 * @return the negotiatedClientServerConfiguration
+	 */
+	public NegotiatedClientServerConfiguration getNegotiatedClientServerConfiguration() {
+		return negotiatedClientServerConfiguration;
+	}
+
+	/**
+	 * This setter is exposed because the startup response data may be augmented
+	 * after a client/server negotiation
+	 *
+	 * @param negotiatedClientServerConfiguration
+	 *            the negotiatedClientServerConfiguration to set
+	 */
+	public void setNegotiatedClientServerConfiguration(
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
+		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 	}
 
 }

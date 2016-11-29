@@ -56,13 +56,13 @@ public class IRODSThousandFilesTest {
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		irodsFileSystem = IRODSFileSystem.instance();
 		IRODSAccount irodsAccount = testingPropertiesHelper
@@ -147,9 +147,9 @@ public class IRODSThousandFilesTest {
 				.getIRODSFileFactory(account)
 				.instanceIRODSFile(
 						testingPropertiesHelper
-						.buildIRODSCollectionAbsolutePathFromTestProperties(
-								testingProperties,
-								IRODS_TEST_SUBDIR_PATH + '/' + collDir));
+								.buildIRODSCollectionAbsolutePathFromTestProperties(
+										testingProperties,
+										IRODS_TEST_SUBDIR_PATH + '/' + collDir));
 
 		// get a list of files underneath the top-level directory, and add some
 		// avu's to each one
@@ -183,9 +183,9 @@ public class IRODSThousandFilesTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements
-		.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-				avu1Attrib));
+				.add(AVUQueryElement.instanceForValueQuery(
+						AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+						avu1Attrib));
 
 		List<MetaDataAndDomainData> metadataElements = dataObjectAO
 				.findMetadataValuesByMetadataQuery(avuQueryElements);
@@ -263,7 +263,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -301,7 +301,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -325,7 +325,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -347,7 +347,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -364,7 +364,7 @@ public class IRODSThousandFilesTest {
 		while (true) {
 			entries = actual.listDataObjectsUnderPathWithPermissions(
 					targetIrodsCollection, entries.get(entries.size() - 1)
-					.getCount());
+							.getCount());
 			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
 					.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {
@@ -450,7 +450,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -488,7 +488,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -512,7 +512,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -534,7 +534,7 @@ public class IRODSThousandFilesTest {
 
 		entries = actual.listDataObjectsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -551,7 +551,7 @@ public class IRODSThousandFilesTest {
 		while (true) {
 			entries = actual.listDataObjectsUnderPathWithPermissions(
 					targetIrodsCollection, entries.get(entries.size() - 1)
-					.getCount());
+							.getCount());
 			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
 					.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {
@@ -613,9 +613,9 @@ public class IRODSThousandFilesTest {
 				irodsAccount.getDefaultStorageResource());
 
 		mountedCollectionAO
-		.createMountedFileSystemCollection(localAbsPath,
-				targetIrodsCollection,
-				irodsAccount.getDefaultStorageResource());
+				.createMountedFileSystemCollection(localAbsPath,
+						targetIrodsCollection,
+						irodsAccount.getDefaultStorageResource());
 
 		CollectionAndDataObjectListAndSearchAO actual = irodsFileSystem
 				.getIRODSAccessObjectFactory()

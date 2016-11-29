@@ -4,10 +4,17 @@ import java.io.File;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;
 import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.connection.SettableJargonProperties;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.transfer.encrypt.EncryptionWrapperFactory;
+import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
+import org.irods.jargon.core.transfer.encrypt.ParallelEncryptionCipherWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract superclass for a parallel transfer controller. This will process
@@ -17,6 +24,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  *
  */
 public abstract class AbstractParallelFileTransferStrategy {
+
+	public static final Logger log = LoggerFactory
+			.getLogger(AbstractParallelFileTransferStrategy.class);
 
 	public enum TransferType {
 		GET_TRANSFER, PUT_TRANSFER
@@ -33,9 +43,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 	private final PipelineConfiguration pipelineConfiguration;
 	private final FileRestartInfo fileRestartInfo;
 
-	public PipelineConfiguration getPipelineConfiguration() {
-		return pipelineConfiguration;
-	}
+	/**
+	 * Negotiated encryption configuration for transport security, and any other
+	 * future determined aspects of
+	 */
+	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final TransferControlBlock transferControlBlock;
@@ -75,9 +87,14 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * @param fileRestartInfo
 	 *            {@link FileRestartinfo} or <code>null</code> if not supporting
 	 *            a restart of this transfer
+	 * @param negotiatedClientServerConfiguration
+	 *            {@link NegotiatedClientServerConfiguration} represents the
+	 *            result of client server negotiation of any potential
+	 *            encryption.
 	 *
 	 * @throws JargonException
 	 */
+
 	protected AbstractParallelFileTransferStrategy(
 			final String host,
 			final int port,
@@ -88,7 +105,9 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final long transferLength,
 			final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
-			final FileRestartInfo fileRestartInfo) throws JargonException {
+			final FileRestartInfo fileRestartInfo,
+			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
+					throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -120,6 +139,11 @@ public abstract class AbstractParallelFileTransferStrategy {
 			throw new IllegalArgumentException("null transferControlBlock");
 		}
 
+		if (negotiatedClientServerConfiguration == null) {
+			throw new IllegalArgumentException(
+					"null negotiatedClientServerConfiguration");
+		}
+
 		this.host = host;
 		this.port = port;
 		this.numberOfThreads = numberOfThreads;
@@ -141,22 +165,83 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 		parallelSocketTimeoutInSecs = jargonProperties
 				.getIRODSParallelTransferSocketTimeout();
+		this.negotiatedClientServerConfiguration = negotiatedClientServerConfiguration;
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		final StringBuilder sb = new StringBuilder();
-		sb.append("parallel transfer operation:");
-		sb.append("\n   host:");
-		sb.append(host);
-		sb.append("\n   port:");
-		sb.append(port);
-		sb.append("\n   numberOfThreads:");
-		sb.append(numberOfThreads);
-		sb.append("\n   localFile:");
-		sb.append(localFile.getAbsolutePath());
-		return sb.toString();
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractParallelFileTransferStrategy [");
+		if (host != null) {
+			builder.append("host=");
+			builder.append(host);
+			builder.append(", ");
+		}
+		builder.append("port=");
+		builder.append(port);
+		builder.append(", numberOfThreads=");
+		builder.append(numberOfThreads);
+		builder.append(", password=");
+		builder.append(password);
+		builder.append(", ");
+		if (localFile != null) {
+			builder.append("localFile=");
+			builder.append(localFile);
+			builder.append(", ");
+		}
+		builder.append("transferLength=");
+		builder.append(transferLength);
+		builder.append(", ");
+		if (pipelineConfiguration != null) {
+			builder.append("pipelineConfiguration=");
+			builder.append(pipelineConfiguration);
+			builder.append(", ");
+		}
+		if (fileRestartInfo != null) {
+			builder.append("fileRestartInfo=");
+			builder.append(fileRestartInfo);
+			builder.append(", ");
+		}
+		if (negotiatedClientServerConfiguration != null) {
+			builder.append("negotiatedClientServerConfiguration=");
+			builder.append(negotiatedClientServerConfiguration);
+			builder.append(", ");
+		}
+		if (irodsAccessObjectFactory != null) {
+			builder.append("irodsAccessObjectFactory=");
+			builder.append(irodsAccessObjectFactory);
+			builder.append(", ");
+		}
+		if (transferControlBlock != null) {
+			builder.append("transferControlBlock=");
+			builder.append(transferControlBlock);
+			builder.append(", ");
+		}
+		if (transferStatusCallbackListener != null) {
+			builder.append("transferStatusCallbackListener=");
+			builder.append(transferStatusCallbackListener);
+			builder.append(", ");
+		}
+		if (connectionProgressStatusListener != null) {
+			builder.append("connectionProgressStatusListener=");
+			builder.append(connectionProgressStatusListener);
+			builder.append(", ");
+		}
+		builder.append("parallelSocketTimeoutInSecs=");
+		builder.append(parallelSocketTimeoutInSecs);
+		builder.append(", ");
+		if (jargonProperties != null) {
+			builder.append("jargonProperties=");
+			builder.append(jargonProperties);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 	public String getHost() {
@@ -251,6 +336,61 @@ public abstract class AbstractParallelFileTransferStrategy {
 	public AbstractRestartManager getRestartManager() {
 		return getIrodsAccessObjectFactory().getIrodsSession()
 				.getRestartManager();
+	}
+
+	/**
+	 * Handy method for threads to determine whether encryption should be done
+	 *
+	 * @return
+	 */
+	boolean doEncryption() {
+		return negotiatedClientServerConfiguration.isSslConnection();
+	}
+
+	public PipelineConfiguration getPipelineConfiguration() {
+		return pipelineConfiguration;
+	}
+
+	/**
+	 * Provides individual threads a hook to create the appropriate encryption
+	 * cipher if needed.
+	 *
+	 * @return {@link ParallelCipherWrapper}
+	 * @throws ClientServerNegotiationException
+	 */
+	ParallelEncryptionCipherWrapper initializeCypherForEncryption()
+			throws ClientServerNegotiationException {
+		log.debug("initializeCypherForEncryption()");
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
+			log.error("should not be trying to encrypt, is not ssl configured");
+			throw new ClientServerNegotiationException(
+					"attempt to encrypt a transfer when SSL not configured");
+		}
+
+		return EncryptionWrapperFactory.instanceEncrypt(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
+
+	}
+
+	/**
+	 * Provides individual threads a hook to create the appropriate encryption
+	 * cipher if needed.
+	 *
+	 * @return {@link ParallelCipherWrapper}
+	 * @throws ClientServerNegotiationException
+	 */
+	ParallelDecryptionCipherWrapper initializeCypherForDecryption()
+			throws ClientServerNegotiationException {
+		log.debug("initializeCypherForDecryption()");
+		if (!negotiatedClientServerConfiguration.isSslConnection()) {
+			log.error("should not be trying to decrypt, is not ssl configured");
+			throw new ClientServerNegotiationException(
+					"attempt to decrypt a transfer when SSL not configured");
+		}
+
+		return EncryptionWrapperFactory.instanceDecrypt(pipelineConfiguration,
+				negotiatedClientServerConfiguration);
+
 	}
 
 }

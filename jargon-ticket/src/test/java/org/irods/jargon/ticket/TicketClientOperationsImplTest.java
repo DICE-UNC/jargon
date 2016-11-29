@@ -445,8 +445,12 @@ public class TicketClientOperationsImplTest {
 		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
 				getIRODSFile, getLocalFile, null, null);
 
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		assertionHelper
+				.assertIrodsFileMatchesLocalFileChecksum(
+						getIRODSFile.getAbsolutePath(),
+						getLocalFile.getAbsolutePath(),
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						secondaryAccount);
 
 	}
 
@@ -521,8 +525,12 @@ public class TicketClientOperationsImplTest {
 		ticketClientService.getOperationFromIRODSUsingTicket(testFileName,
 				getIRODSFile, getLocalFile, null, null);
 
-		assertionHelper.assertIrodsFileMatchesLocalFileChecksum(
-				getIRODSFile.getAbsolutePath(), getLocalFile.getAbsolutePath());
+		assertionHelper
+				.assertIrodsFileMatchesLocalFileChecksum(
+						getIRODSFile.getAbsolutePath(),
+						getLocalFile.getAbsolutePath(),
+						irodsFileSystem.getIRODSAccessObjectFactory(),
+						secondaryAccount);
 
 	}
 

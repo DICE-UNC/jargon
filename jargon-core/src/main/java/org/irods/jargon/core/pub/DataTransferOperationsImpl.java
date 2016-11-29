@@ -824,7 +824,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 			processExceptionDuringPutOperation(sourceFile, targetIrodsFile,
 					transferStatusCallbackListener,
 					operativeTransferControlBlock, je);
-		} catch (Exception e) {
+		} catch (Throwable e) {
 			log.warn(
 					"unexepected exception occurred in transfer, not caught in transfer code, will wrap in a JargonException and process",
 					e);

@@ -56,10 +56,10 @@ class GSIAuth extends AuthMechanism {
 		log.debug("sending gsi auth request after startup...");
 
 		try {
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, GSI_AUTH_REQUEST_AN));
+			irodsCommands.sendHeader(
+
+			RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
+					GSI_AUTH_REQUEST_AN);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
