@@ -29,7 +29,7 @@ public class DataCacheServiceFactoryImpl implements DataCacheServiceFactory {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.datautils.image.ImageServiceFactory#instanceThumbnailService
 	 * (org.irods.jargon.core.connection.IRODSAccount)

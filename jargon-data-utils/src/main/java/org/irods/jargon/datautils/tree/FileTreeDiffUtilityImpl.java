@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.swing.tree.TreeNode;
+
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -37,7 +39,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
-implements FileTreeDiffUtility {
+		implements FileTreeDiffUtility {
 
 	private static Logger log = LoggerFactory
 			.getLogger(FileTreeDiffUtilityImpl.class);
@@ -100,7 +102,7 @@ implements FileTreeDiffUtility {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.datautils.tree.FileTreeDiffUtility#
 	 * verifyLocalAndIRODSTreesMatch(java.io.File, java.lang.String, long, long)
 	 */
@@ -109,7 +111,7 @@ implements FileTreeDiffUtility {
 			final String irodsAbsolutePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("verifyLocalAndIRODSTreesMatch");
 
@@ -132,10 +134,9 @@ implements FileTreeDiffUtility {
 
 		FileTreeNode childNode = null;
 		boolean noDiffs = true;
-		@SuppressWarnings("unchecked")
-		Enumeration<FileTreeNode> children = fileTreeNode.children();
+		Enumeration<TreeNode> children = fileTreeNode.children();
 		while (children.hasMoreElements()) {
-			childNode = children.nextElement();
+			childNode = (FileTreeNode) children.nextElement();
 			noDiffs = assertNoDiffsInTree(childNode);
 			if (noDiffs) {
 				break;
@@ -148,7 +149,7 @@ implements FileTreeDiffUtility {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.datautils.tree.FileTreeDiffUtility#generateDiffLocalToIRODS
 	 * (java.io.File, java.lang.String, long, long)
@@ -158,7 +159,7 @@ implements FileTreeDiffUtility {
 			final String irodsAbsolutePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		if (localFileRoot == null) {
 			throw new IllegalArgumentException("null LocalFileRoot");
@@ -261,7 +262,7 @@ implements FileTreeDiffUtility {
 			final File rightHandSide, final String rightHandSideRootPath,
 			final long timestampforLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		if (isCancelled()) {
 			return 0;
@@ -351,7 +352,7 @@ implements FileTreeDiffUtility {
 			final String leftHandSideAsRelativePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		if (isCancelled()) {
 			return;
@@ -400,7 +401,7 @@ implements FileTreeDiffUtility {
 			final String leftHandSideAsRelativePath,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		if (isCancelled()) {
 			return;
@@ -683,7 +684,7 @@ implements FileTreeDiffUtility {
 			final File leftHandSide, final File rightHandSide,
 			final long timestampForLastSynchLeftHandSide,
 			final long timestampForLastSynchRightHandSide)
-					throws JargonException {
+			throws JargonException {
 
 		if (isCancelled()) {
 			return;
