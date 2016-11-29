@@ -1,5 +1,7 @@
 package org.irods.jargon.core.unittest;
 
+import org.irods.jargon.core.connection.ClientServerNegotationPolicyFromPropertiesBuilderTest;
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicyTest;
 import org.irods.jargon.core.connection.ConnectionProgressStatusTest;
 import org.irods.jargon.core.connection.DefaultPropertiesJargonConfigTest;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCacheTest;
@@ -10,6 +12,7 @@ import org.irods.jargon.core.connection.IRODSSessionTest;
 import org.irods.jargon.core.connection.IRODSSimpleConnectionTest;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManagerTest;
 import org.irods.jargon.core.connection.PAMAuthTest;
+import org.irods.jargon.core.connection.PipelineConfigurationTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -20,7 +23,10 @@ import org.junit.runners.Suite;
 	IRODSServerPropertiesTest.class,
 	DefaultPropertiesJargonConfigTest.class,
 	ConnectionProgressStatusTest.class, PAMAuthTest.class,
-	DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class })
+	DiscoveredServerPropertiesCacheTest.class, IRODSAccountTest.class,
+	ClientServerNegotationPolicyFromPropertiesBuilderTest.class,
+	ClientServerNegotiationPolicyTest.class,
+	PipelineConfigurationTest.class })
 public class ConnectionTests {
 
 }

@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.MiscSvrInfo;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,7 +24,7 @@ public class EnvironmentalInfoAccessor {
 
 	public EnvironmentalInfoAccessor(
 			final AbstractIRODSMidLevelProtocol irodsProtocol)
-					throws JargonException {
+			throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
 		}
@@ -61,8 +62,8 @@ public class EnvironmentalInfoAccessor {
 			}
 		}
 
-		Tag response = irodsProtocol.irodsFunction(MiscSvrInfo.PI_TAG, "",
-				MiscSvrInfo.API_NBR);
+		Tag response = irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ,
+				"", MiscSvrInfo.API_NBR);
 		log.info("server response obtained");
 		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG)
 				.getIntValue();
@@ -85,17 +86,13 @@ public class EnvironmentalInfoAccessor {
 		IRODSServerProperties props = IRODSServerProperties.instance(
 				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
 
-		if (props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0.0")) {
-			props.setConsortiumVersion(true);
-		}
-
 		if (irodsProtocol.getIrodsSession() != null) {
 			irodsProtocol
-			.getIrodsSession()
-			.getDiscoveredServerPropertiesCache()
-			.cacheIRODSServerProperties(
-					irodsProtocol.getIrodsAccount().getHost(),
-					irodsProtocol.getIrodsAccount().getZone(), props);
+					.getIrodsSession()
+					.getDiscoveredServerPropertiesCache()
+					.cacheIRODSServerProperties(
+							irodsProtocol.getIrodsAccount().getHost(),
+							irodsProtocol.getIrodsAccount().getZone(), props);
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;

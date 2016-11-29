@@ -5,9 +5,8 @@ import java.io.UnsupportedEncodingException;
 
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.SSLEndInp;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.utils.IRODSConstants;
-import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -69,16 +68,16 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
+	Logger log = LoggerFactory.getLogger(IRODSMidLevelProtocol.class);
+
 	protected IRODSMidLevelProtocol(final AbstractConnection irodsConnection,
 			final IRODSProtocolManager irodsProtocolManager) {
 		super(irodsConnection, irodsProtocolManager);
 	}
 
-	Logger log = LoggerFactory.getLogger(IRODSMidLevelProtocol.class);
-
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
@@ -101,6 +100,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		super.finalize();
 	}
 
+	@Override
 	synchronized void closeOutSocketAndSetAsDisconnected() throws IOException {
 		getIrodsConnection().getConnection().close();
 		getIrodsConnection().setConnected(false);
@@ -112,39 +112,23 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *
 	 * @return
 	 */
-	boolean isPamFlush() { // FIXME: pam flush issue for 3.3.1?
+	boolean isPamFlush() {
 
-		boolean postThreeDotThree = MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-						getStartupResponseData().getRelVersion(), "rods3.3");
-
-		boolean beforeFourPointOne = !MiscIRODSUtils
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-						getStartupResponseData().getRelVersion(), "rods4.1.0");
-
-		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED
-				&& !postThreeDotThree) {
-			return true;
-		} else if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
-			// can be
-			// set by a
-			// jargon.properties
-			// setting
-			return true;
-			/*
-			 * Is the server 4.0.X and not yet 4.1? Then I need to worry about
-			 * pam flushes per https://github.com/DICE-UNC/jargon/issues/70 This
-			 * overhead will force the pam flush based on the forceSslFlush
-			 * flag, which will only be turned on to bracket the necessary calls
-			 * to the protocol, preventing a performance drop from unneeded
-			 * flushes later
-			 */
-		} else if (postThreeDotThree && beforeFourPointOne && isForceSslFlush()) {
-			log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+		if (getPipelineConfiguration().isForcePamFlush()) { // pam flush
 			return true;
 		} else {
-			return false;
+
+			IrodsVersion currentVersion = new IrodsVersion(
+					getStartupResponseData().getRelVersion());
+			if (currentVersion.getMajor() == 4
+					&& currentVersion.getMinor() == 0) {
+				log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+				return true;
+			} else {
+				return false;
+			}
 		}
+
 	}
 
 	/**
@@ -169,7 +153,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *            <code>byte[]</code> with binary data to send to iRODS.
 	 * @param byteOffset
 	 *            <code>int</code> with an offset into the byte array to send
-	 * @param byteStringLength
+	 * @param byteBufferLength
 	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
@@ -180,8 +164,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	public synchronized Tag irodsFunction(final String type,
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
-			final int byteOffset, final int byteStringLength, final int intInfo)
-			throws JargonException {
+			final int byteOffset, final int byteBufferLength, final int intInfo)
+					throws JargonException {
 
 		log.debug("calling irods function with byte array");
 
@@ -206,11 +190,16 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.getBytes(getEncoding()).length;
 			}
 
-			getIrodsConnection().send(
-					createHeader(IRODSConstants.RODS_API_REQ, messageLength,
-							errorLength, byteStringLength, intInfo));
+			/*
+			 * getIrodsConnection().send( createHeader(type, messageLength,
+			 * errorLength, byteBufferLength, intInfo));
+			 */
+			sendHeader(type, messageLength, errorLength, byteBufferLength,
+					intInfo);
 
-			if (isPamFlush()) {
+			if (getStartupResponseData() == null) {
+				log.debug("no ssl flush checking during negotiation");
+			} else if (isPamFlush()) {
 				log.debug("doing extra pam flush for iRODS 3.2");
 				getIrodsConnection().flush();
 			}
@@ -218,8 +207,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			getIrodsConnection().send(message);
 			getIrodsConnection().flush();
 
-			if (byteStringLength > 0) {
-				getIrodsConnection().send(bytes, byteOffset, byteStringLength);
+			if (byteBufferLength > 0) {
+				getIrodsConnection().send(bytes, byteOffset, byteBufferLength);
 			}
 
 			getIrodsConnection().flush();
@@ -233,6 +222,133 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 		}
 
 		return readMessage();
+	}
+
+	/**
+	 * Send the given iROD protocol request with any included binary data, and
+	 * return the iRODS response as a <code>Tag</code> object. This method has
+	 * detailed parameters, and there are other methods in the class with
+	 * simpler signatures that should be used.
+	 *
+	 * @param type
+	 *            <code>String</code> with the type of request, typically an
+	 *            iRODS protocol request
+	 * @param message
+	 *            <code>String</code> with an XML formatted messag
+	 * @param errorBytes
+	 *            <code>byte[]</code> with any error data to send to iRODS, can
+	 *            be set to <code>null</code>
+	 * @param errorOffset
+	 *            <code>int</code> with offset into the error data to send
+	 * @param errorLength
+	 *            <code>int</code> with the length of error data
+	 * @param bytes
+	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 * @param byteOffset
+	 *            <code>int</code> with an offset into the byte array to send
+	 * @param byteBufferLength
+	 *            <code>int</code> with the length of the bytes to send
+	 * @param intInfo
+	 *            <code>int</code> with the iRODS API number
+	 * @return
+	 * @throws JargonException
+	 */
+	@Override
+	public synchronized void irodsFunctionUnidirectional(final String type,
+			final byte[] message, final byte[] errorBytes,
+			final int errorOffset, final int errorLength, final byte[] bytes,
+			final int byteOffset, final int byteBufferLength, final int intInfo)
+					throws JargonException {
+
+		log.debug("calling irods function with byte array");
+		log.debug("calling irods function with:{}", message);
+		log.debug("api number is:{}", intInfo);
+
+		if (type == null || type.length() == 0) {
+			String err = "null or blank type";
+			log.error(err);
+			throw new JargonException(err);
+		}
+
+		// message may be null for some operations
+
+		try {
+			int messageLength = 0;
+
+			if (message != null) {
+				messageLength = message.length;
+			}
+
+			sendHeader(type, messageLength, errorLength, byteBufferLength,
+					intInfo);
+
+			if (getStartupResponseData() == null) {
+				log.debug("no pam flush check during negotiation phase");
+			} else if (isPamFlush()) {
+				log.debug("doing extra pam flush for iRODS 3.2");
+				getIrodsConnection().flush();
+			}
+
+			if (messageLength > 0) {
+				getIrodsConnection().send(message);
+				getIrodsConnection().flush();
+			}
+
+			if (byteBufferLength > 0) {
+				getIrodsConnection().send(bytes, byteOffset, byteBufferLength);
+			}
+
+			getIrodsConnection().flush();
+
+		} catch (UnsupportedEncodingException e) {
+			log.error("unsupported encoding", e);
+			throw new JargonException(e);
+		} catch (IOException e) {
+			disconnectWithForce();
+			throw new JargonException(e);
+		}
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see
+	 * org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#sendHeader
+	 * (java.lang.String, int, int, long, int)
+	 */
+	@Override
+	public void sendHeader(final String type, final int messageLength,
+			final int errorLength, final long byteStringLength,
+			final int intInfo) throws JargonException, IOException {
+
+		byte[] header = createHeader(type, messageLength, errorLength,
+				byteStringLength, intInfo);
+
+		int len = header.length;
+
+		getIrodsConnection().sendInNetworkOrder(len);
+		getIrodsConnection().send(header);
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#
+	 * preDisconnectAction()
+	 */
+	@Override
+	void preDisconnectAction() throws JargonException {
+		log.info("preDisconnectAction()");
+
+		if (getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+			log.info("sending SSL shutdown if ssl conn");
+			SSLEndInp sslEndInp = SSLEndInp.instance();
+			irodsFunction(sslEndInp);
+
+		}
+
 	}
 
 }

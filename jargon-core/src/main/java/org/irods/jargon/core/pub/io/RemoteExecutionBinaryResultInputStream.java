@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
+import org.irods.jargon.core.connection.IrodsVersion;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.ExecCmdStreamClose;
+import org.irods.jargon.core.packinstr.ExecCmdStreamClose419;
 import org.irods.jargon.core.packinstr.FileReadInp;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -61,9 +63,21 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	public void close() throws IOException {
 		log.info("closing input stream");
 		try {
-			ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose
-					.instance(fileDescriptor);
-			irodsCommands.irodsFunction(execCmdStreamClose);
+			IrodsVersion irodsVersion = irodsCommands
+					.getIRODSServerProperties().getIrodsVersion();
+			if (irodsVersion.hasVersionOfAtLeast("rods4.1.9")) {
+				log.debug("using 4.1.9 and later close");
+				ExecCmdStreamClose419 execCmdStreamClose = ExecCmdStreamClose419
+						.instance(fileDescriptor, "");
+				irodsCommands.irodsFunction(execCmdStreamClose);
+
+			} else {
+				log.debug("using pre4.1.9 close");
+				ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose
+						.instance(fileDescriptor);
+				irodsCommands.irodsFunction(execCmdStreamClose);
+
+			}
 		} catch (JargonException e) {
 			log.error(
 					"Jargon exception will be rethrown as an IOException for the method contracts",

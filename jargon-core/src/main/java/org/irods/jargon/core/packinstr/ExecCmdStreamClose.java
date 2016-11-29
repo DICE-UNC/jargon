@@ -18,7 +18,6 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "fileCloseInp_PI";
 	public static final String FILE_INX = "fileInx";
-
 	public static final int STREAM_CLOSE_API_NBR = 693;
 
 	private final int fileDescriptor;
@@ -74,7 +73,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

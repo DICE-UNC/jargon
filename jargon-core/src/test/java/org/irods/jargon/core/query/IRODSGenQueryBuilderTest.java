@@ -11,7 +11,7 @@ public class IRODSGenQueryBuilderTest {
 		IRODSGenQueryBuilder irodsGenQueryBuilder = new IRODSGenQueryBuilder(
 				true, true, null);
 		irodsGenQueryBuilder
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH);
 		IRODSGenQueryFromBuilder query = irodsGenQueryBuilder
 				.exportIRODSQueryFromBuilder(100);
 		Assert.assertTrue("should be distinct", query
@@ -25,7 +25,7 @@ public class IRODSGenQueryBuilderTest {
 		IRODSGenQueryBuilder irodsGenQueryBuilder = new IRODSGenQueryBuilder(
 				true, null);
 		irodsGenQueryBuilder
-		.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH);
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH);
 		IRODSGenQueryFromBuilder query = irodsGenQueryBuilder
 				.exportIRODSQueryFromBuilder(100);
 		Assert.assertTrue("should be distinct", query

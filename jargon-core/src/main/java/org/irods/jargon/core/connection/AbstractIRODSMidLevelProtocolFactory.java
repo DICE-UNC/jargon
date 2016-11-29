@@ -85,7 +85,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol instance(
 			final IRODSSession irodsSession, final IRODSAccount irodsAccount,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		log.info("instance() method...calling connection life cycle");
 
@@ -151,7 +151,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	protected AbstractIRODSMidLevelProtocol decorate(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession)
-					throws JargonException {
+			throws JargonException {
 
 		log.info("decorate()");
 
@@ -173,23 +173,9 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			EnvironmentalInfoAccessor environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 					irodsMidLevelProtocol);
 			irodsMidLevelProtocol
-			.setIrodsServerProperties(environmentalInfoAccessor
-					.getIRODSServerProperties());
+					.setIrodsServerProperties(environmentalInfoAccessor
+							.getIRODSServerProperties());
 
-			// add startup response cookie info indicating if eirods
-			int cookie = Integer.parseInt(irodsMidLevelProtocol
-					.getAuthResponse().getStartupResponse().getCookie());
-
-			if (cookie >= AbstractIRODSMidLevelProtocol.EIRODS_MIN
-					&& cookie <= AbstractIRODSMidLevelProtocol.EIRODS_MAX) {
-				log.info("setting to eirods based on cookie value");
-				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setConsortiumVersion(true);
-			} else if (irodsMidLevelProtocol.getIrodsServerProperties()
-					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4")) {
-				irodsMidLevelProtocol.getIrodsServerProperties()
-				.setConsortiumVersion(true);
-			}
 		}
 
 		log.info(irodsMidLevelProtocol.getIrodsServerProperties().toString());
@@ -227,7 +213,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 			final AbstractIRODSMidLevelProtocol protocol,
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 
 		log.info("authenticate()");
 

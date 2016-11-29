@@ -57,8 +57,8 @@ public class StructFileExtAndRegInpTest {
 		String tarFileCollection = "/test/tarFileCollection";
 		String destResource = null;
 		StructFileExtAndRegInp
-		.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-				tarFileCollection, destResource);
+				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
+						tarFileCollection, destResource);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -68,8 +68,8 @@ public class StructFileExtAndRegInpTest {
 		String tarFileCollection = "/test/tarFileCollection";
 		String destResource = "foo";
 		StructFileExtAndRegInp
-		.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-				tarFileCollection, destResource);
+				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
+						tarFileCollection, destResource);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -79,8 +79,8 @@ public class StructFileExtAndRegInpTest {
 		String tarFileCollection = null;
 		String destResource = "foo";
 		StructFileExtAndRegInp
-		.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
-				tarFileCollection, destResource);
+				.instanceForExtractBundleNoForceWithBulkOperation(tarFileName,
+						tarFileCollection, destResource);
 	}
 
 	@Test

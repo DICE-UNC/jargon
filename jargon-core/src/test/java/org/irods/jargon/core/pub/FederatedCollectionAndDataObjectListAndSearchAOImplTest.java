@@ -56,7 +56,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -344,21 +344,21 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				irodsFile.getAbsolutePath(),
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				irodsFile.getAbsolutePath(),
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = irodsFileSystem
 				.getIRODSAccessObjectFactory()
@@ -386,13 +386,13 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-							&& userFilePermission
+					&& userFilePermission
 							.getNameWithZone()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 									+ '#'
 									+ testingProperties
-									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
+											.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))) {
 				foundCrossZone = true;
 			}
 
@@ -437,21 +437,21 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 		irodsFile.mkdirs();
 
 		collectionAO
-		.setAccessPermissionRead(
-				"",
-				irodsFile.getAbsolutePath(),
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						"",
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+						true);
 
 		collectionAO
-		.setAccessPermissionRead(
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
-				irodsFile.getAbsolutePath(),
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
-				true);
+				.setAccessPermissionRead(
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY),
+						irodsFile.getAbsolutePath(),
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY),
+						true);
 
 		IRODSAccount zone2Account = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
@@ -481,7 +481,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 					.getUserZone()
 					.equals(testingProperties
 							.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY))
-							&& userFilePermission
+					&& userFilePermission
 							.getUserName()
 							.equals(testingProperties
 									.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY))) {
@@ -722,12 +722,12 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.mkdir();
 			irodsFile.close();
 			collectionAO
-			.setAccessPermissionWrite(
-					irodsAccount.getZone(),
-					irodsFile.getAbsolutePath(),
-					testingProperties
-					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-					false);
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
+							false);
 		}
 
 		for (int i = 0; i < count; i++) {
@@ -737,11 +737,11 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			irodsFile.createNewFile();
 			irodsFile.close();
 			dataObjectAO
-			.setAccessPermissionWrite(
-					irodsAccount.getZone(),
-					irodsFile.getAbsolutePath(),
-					testingProperties
-					.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+					.setAccessPermissionWrite(
+							irodsAccount.getZone(),
+							irodsFile.getAbsolutePath(),
+							testingProperties
+									.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
 		}
 
 		IRODSAccount zone1Account = testingPropertiesHelper
@@ -764,7 +764,7 @@ public class FederatedCollectionAndDataObjectListAndSearchAOImplTest {
 			} else {
 				Assert.assertEquals(
 
-						"did not have the  permissions for data objects", 3, entry
+				"did not have the  permissions for data objects", 3, entry
 						.getUserFilePermission().size());
 			}
 		}

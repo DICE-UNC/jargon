@@ -39,7 +39,7 @@ public class CollectionAndDataObjectListAndSearchAOImpForStrictACLTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 		anonymousAccount = testingPropertiesHelper
 				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);

@@ -76,10 +76,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("resource:{}", resource);
 
-		if (!getIRODSServerProperties().isConsortiumVersion()) {
-			log.error("does not work pre iRODS 4.0");
+		if (!getIRODSServerProperties().isAtLeastIrods410()) {
+			log.error("does not work pre iRODS 4.1");
 			throw new UnsupportedOperationException(
-					"add resource only works for 4.0+");
+					"add resource only works for 4.1+");
 		}
 
 		/*
@@ -108,6 +108,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForAddResource(resource);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
 		log.info("complete");
 	}
 
@@ -132,6 +134,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		} catch (DataNotFoundException e) {
 			log.warn("data not found deleting resource, silently ignore", e);
 		}
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
 		log.info("complete");
 
 	}
@@ -149,9 +153,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("addChildToResource");
 
-		if (!getIRODSServerProperties().isConsortiumVersion()) {
-			log.error("does not work pre iRODS 4.0");
-			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		if (!getIRODSServerProperties().isAtLeastIrods410()) {
+			log.error("does not work pre iRODS 4.1");
+			throw new UnsupportedOperationException("only works for iRODS 4.1+");
 		}
 
 		if (child == null || child.isEmpty()) {
@@ -180,6 +184,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				throw e;
 			}
 		}
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
 		log.info("complete");
 
 	}
@@ -197,9 +203,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 
 		log.info("removeChildFromResource");
 
-		if (!getIRODSServerProperties().isConsortiumVersion()) {
-			log.error("does not work pre iRODS 4.0");
-			throw new UnsupportedOperationException("only works for iRODS 4.0+");
+		if (!getIRODSServerProperties().isAtLeastIrods410()) {
+			log.error("does not work pre iRODS 4.1");
+			throw new UnsupportedOperationException("only works for iRODS 4.1+");
 		}
 
 		if (child == null || child.isEmpty()) {
@@ -214,6 +220,8 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 				.instanceForRemoveChildFromResource(child, parent);
 		log.debug("executing admin PI");
 		getIRODSProtocol().irodsFunction(adminPI);
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
 		log.info("complete");
 
 	}
@@ -475,7 +483,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		log.info("listResourceAndResourceGroupNames()..getting resource names");
 		List<String> combined = listResourceNames();
 
-		if (getIRODSServerProperties().isConsortiumVersion()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			log.info("is consortium irods, don't look for resource groups");
 			return combined;
 		}
@@ -504,7 +512,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_R_RESC_NAME,
 							OrderByType.ASC);
 
-			if (getIRODSServerProperties().isConsortiumVersion()) {
+			if (getIRODSServerProperties().isAtLeastIrods410()) {
 				builder.addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_R_RESC_PARENT,
 						QueryConditionOperators.EQUAL, "");
@@ -710,8 +718,9 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
-									.getOperator().getOperatorAsString()),
-					queryElement.getValue());
+
+							.getOperator().getOperatorAsString()), queryElement
+							.getValue());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 
 			builder.addConditionAsGenQueryField(
@@ -719,6 +728,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
 									.getOperator().getOperatorAsString()),
+
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {

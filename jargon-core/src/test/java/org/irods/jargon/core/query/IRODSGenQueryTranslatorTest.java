@@ -654,8 +654,8 @@ public class IRODSGenQueryTranslatorTest {
 				.getTranslatedQueryConditions().get(0);
 		Assert.assertEquals(
 				"this should be looked up and translated to irods code", String
-				.valueOf(RodsGenQueryEnum.COL_AUDIT_OBJ_ID
-						.getNumericValue()), testCondition
+						.valueOf(RodsGenQueryEnum.COL_AUDIT_OBJ_ID
+								.getNumericValue()), testCondition
 						.getColumnNumericTranslation());
 	}
 

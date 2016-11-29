@@ -8,7 +8,7 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
 
 public class TestingStatusCallbackListener implements
-TransferStatusCallbackListener {
+		TransferStatusCallbackListener {
 
 	private int successCallbackCount = 0;
 	private int errorCallbackCount = 0;

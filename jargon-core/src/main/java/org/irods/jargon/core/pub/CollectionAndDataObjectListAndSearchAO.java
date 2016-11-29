@@ -253,7 +253,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing collections that match the search term * @throws
-	 *         JargonException
+	 *         JargonException======= avuQueryElements
+	 *         .add(AVUQueryElement.instanceForValueQuery(
+	 *         AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL, avu1Attrib));
+	 *         >>>>>>> origin/master
 	 */
 	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
 			String searchTerm) throws JargonException;
@@ -590,8 +593,6 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
 	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
-	 * 
-	 * 
 	 * } that represents the
 	 *         collections and data objects beneath the parent
 	 * @throws FileNotFoundException

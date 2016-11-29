@@ -328,6 +328,7 @@ class CollectionListingUtils {
 					.retrieveObjectStatForPath(MiscIRODSUtils
 							.computeHomeDirectoryForIRODSAccountInFederatedZone(
 									irodsAccount, zone));
+
 			collectionAndDataObjectListingEntries
 					.add(createStandInForUserDir(homeStat));
 		} catch (FileNotFoundException fnf) {
@@ -344,6 +345,7 @@ class CollectionListingUtils {
 		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
 		StringBuilder sb;
 		ZoneAO zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
+
 		List<Zone> zones = zoneAO.listZones();
 
 		int count = 1;
@@ -513,8 +515,8 @@ class CollectionListingUtils {
 		specColInfo.setReplNum(objStat.getReplNumber());
 		specColInfo.setType(2);
 
-		if (irodsAccessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isConsortiumVersion()) {
+		if (this.irodsAccessObjectFactory.getIRODSServerProperties(
+				this.irodsAccount).isAtLeastIrods410()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
 

@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class ResourceGroupAOImpl extends IRODSGenericAO implements
-ResourceGroupAO {
+		ResourceGroupAO {
 
 	private static Logger log = LoggerFactory
 			.getLogger(ResourceGroupAOImpl.class);
@@ -44,7 +44,7 @@ ResourceGroupAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.ResourceGroupAO#listResourceGroupNames()
 	 */
 	@Override
@@ -52,7 +52,7 @@ ResourceGroupAO {
 
 		List<String> resourceNames = new ArrayList<String>();
 
-		if (getIRODSServerProperties().isConsortiumVersion()) {
+		if (getIRODSServerProperties().isAtLeastIrods410()) {
 			log.info("resource groups are not supported post iRODS4, simply list parent resources");
 			ResourceAO resourceAO = getIRODSAccessObjectFactory()
 					.getResourceAO(getIRODSAccount());

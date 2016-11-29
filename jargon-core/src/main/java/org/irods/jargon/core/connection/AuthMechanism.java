@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.InterruptedIOException;
 import java.nio.channels.ClosedChannelException;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
+import org.irods.jargon.core.exception.ClientServerNegotiationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.packinstr.ClientServerNegotiationStructInitNegotiation;
 import org.irods.jargon.core.packinstr.StartupPack;
 import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.protovalues.RequestTypes;
@@ -25,6 +28,8 @@ abstract class AuthMechanism {
 
 	public static final int AUTH_REQUEST_AN = 703;
 	public static final int AUTH_RESPONSE_AN = 704;
+	public static final String VERSION_PI_TAG = "Version_PI";
+
 	public String cachedChallenge = "";
 
 	public static final Logger log = LoggerFactory
@@ -41,12 +46,141 @@ abstract class AuthMechanism {
 
 	/**
 	 * Optional method that will be called after the startup pack is sent but
-	 * before the actual authentication attempt
+	 * before the actual authentication attempt, and before client/server
+	 * negotiation
 	 *
 	 * @throws JargonException
 	 */
 	protected void postConnectionStartupPreAuthentication()
 			throws JargonException {
+
+	}
+
+	/**
+	 * After startup pack, the client/server negotiation commences here, based
+	 * on configuration and the settings in the <code>IRODSAccount</code>
+	 * visible here.
+	 *
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} from startup pack
+	 *
+	 * @throws JargonException
+	 */
+	protected StartupResponseData clientServerNegotiationHook(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			final IRODSAccount irodsAccount) throws JargonException {
+		log.info("clientServerNegotiationHook()");
+		StartupResponseData startupResponseData = null;
+		if (irodsMidLevelProtocol.getIrodsConnection()
+				.getOperativeClientServerNegotiationPolicy()
+				.getSslNegotiationPolicy() != SslNegotiationPolicy.NO_NEGOTIATION) {
+			log.info("negotiation is required");
+			startupResponseData = clientServerNegotiation(
+					irodsMidLevelProtocol, irodsAccount);
+		} else {
+			Tag versionPI = irodsMidLevelProtocol.readMessage();
+			startupResponseData = buldStartupResponseFromVersionPI(versionPI);
+		}
+
+		log.info("startup response:{}", startupResponseData);
+		irodsMidLevelProtocol.setStartupResponseData(startupResponseData);
+
+		return startupResponseData;
+
+	}
+
+	/**
+	 * Handy method to build startup response data from a VersionPI tag response
+	 * from iRODS
+	 *
+	 * @param versionPI
+	 *            {@link Tag} protocol representation of version info
+	 * @return {@link StartupResponseData
+
+	 */
+	static StartupResponseData buldStartupResponseFromVersionPI(
+			final Tag versionPI) {
+		StartupResponseData startupResponseData;
+		startupResponseData = new StartupResponseData(versionPI
+				.getTag("status").getIntValue(), versionPI.getTag("relVersion")
+				.getStringValue(), versionPI.getTag("apiVersion")
+				.getStringValue(),
+				versionPI.getTag("reconnPort").getIntValue(), versionPI.getTag(
+						"reconnAddr").getStringValue(), versionPI.getTag(
+						"cookie").getStringValue());
+		return startupResponseData;
+	}
+
+	/**
+	 * After startup pack send, do a client server negotiation, analogous to
+	 * irods/lib/core/src/sockComm.cpp line 845
+	 *
+	 * @param irodsMidLevelProtocol
+	 * @param irodsAccount
+	 * @return
+	 * @throws JargonException
+	 */
+	private StartupResponseData clientServerNegotiation(
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
+			final IRODSAccount irodsAccount) throws JargonException {
+
+		log.info("clientServerNegotiation()");
+
+		/*
+		 * I expect to read in a cd_neg_t structure
+		 * 
+		 * struct cs_neg_t { int status_; char result_[MAX_NAME_LEN]; };
+		 */
+
+		Tag negResultPI = irodsMidLevelProtocol.readMessage();
+
+		/*
+		 * Did I just get a version pi back? If, so, no negotiation happened
+		 */
+
+		if (negResultPI.getName().equals(VERSION_PI_TAG)) {
+			log.info("got version pi back instead of negotiation status, so treat as no SSL");
+			return buldStartupResponseFromVersionPI(negResultPI);
+		} else if (negResultPI.getName().equals(
+				ClientServerNegotiationStructInitNegotiation.NEG_PI)) {
+
+			/*
+			 * NEG_PI sent in irods_client_negotiation.cpp line ~429
+			 */
+
+			ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
+					.instanceFromTag(negResultPI);
+
+			if (!struct.wasThisASuccess()) {
+				log.error("negotiation was unsuccesful:{}", struct);
+				throw new ClientServerNegotiationException(
+						"unsuccesful client-server negotiation");
+			}
+
+			log.info("have a server negotiation response:{}", struct.toString());
+
+			/*
+			 * Do the actual negotiation...The struct should have the response
+			 * from the startup pack to launch the negotiation process.
+			 * 
+			 * here I am tracking lib/core/src/irods_client_negotiation.cpp ~
+			 * line 293
+			 */
+
+			ClientServerNegotiationService clientServerNegotiationService = new ClientServerNegotiationService(
+					irodsMidLevelProtocol);
+
+			StartupResponseData startupResponseData = clientServerNegotiationService
+					.negotiate(struct);
+			log.info("negotiated configuration:{}", startupResponseData);
+			return startupResponseData;
+
+		} else {
+			log.error("unknown response to startup pack:{}",
+					negResultPI.getName());
+			throw new ClientServerNegotiationException(
+					"unexpected result from send of startup pack, was neither versionPI nor NegotiationPI");
+		}
 
 	}
 
@@ -74,9 +208,11 @@ abstract class AuthMechanism {
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException,
 			JargonException {
+		irodsMidLevelProtocol.setIrodsAccount(irodsAccount);
 		preConnectionStartup();
-		StartupResponseData startupResponseData = sendStartupPacket(
-				irodsAccount, irodsMidLevelProtocol);
+		sendStartupPacket(irodsAccount, irodsMidLevelProtocol);
+		StartupResponseData startupResponseData = clientServerNegotiationHook(
+				irodsMidLevelProtocol, irodsAccount);
 		postConnectionStartupPreAuthentication();
 		AbstractIRODSMidLevelProtocol authenticatedProtocol = processAuthenticationAfterStartup(
 				irodsAccount, irodsMidLevelProtocol, startupResponseData);
@@ -112,18 +248,17 @@ abstract class AuthMechanism {
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+			throws AuthenticationException, JargonException {
 		return irodsMidLevelProtocol;
 	}
 
 	protected String sendAuthRequestAndGetChallenge(
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
 		try {
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_API_REQ.getRequestType(), 0, 0,
-							0, AUTH_REQUEST_AN));
+			irodsCommands.sendHeader(
+					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
+					AUTH_REQUEST_AN);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
@@ -173,23 +308,40 @@ abstract class AuthMechanism {
 			IRODSAccount irodsAccount,
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException;
+			throws AuthenticationException, JargonException;
 
-	protected StartupResponseData sendStartupPacket(
-			final IRODSAccount irodsAccount,
+	protected void sendStartupPacket(final IRODSAccount irodsAccount,
 			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+			throws JargonException {
+
+		log.info("sendStartupPacket()");
+
+		String myOption;
+		if (irodsCommands.getIrodsConnection()
+				.getOperativeClientServerNegotiationPolicy()
+				.getSslNegotiationPolicy() == SslNegotiationPolicy.NO_NEGOTIATION) {
+			myOption = "iinit";
+		} else {
+			myOption = StartupPack.NEGOTIATE_OPTION;
+		}
 
 		StartupPack startupPack = new StartupPack(irodsAccount, irodsCommands
-				.getPipelineConfiguration().isReconnect());
+				.getPipelineConfiguration().isReconnect(), myOption);
+
 		String startupPackData = startupPack.getParsedTags();
 		log.debug("startupPackData:{}", startupPackData);
-		try {
 
-			irodsCommands.getIrodsConnection().send(
-					irodsCommands.createHeader(
-							RequestTypes.RODS_CONNECT.getRequestType(),
-							startupPackData.length(), 0, 0, 0));
+		// FIXME: NEG_PI here
+		/*
+		 * 
+		 * <CS_NEG_PI><status>1</status> <result>CS_NEG_DONT_CARE</result>
+		 * </CS_NEG_PI>
+		 */
+
+		try {
+			irodsCommands.sendHeader(
+					RequestTypes.RODS_CONNECT.getRequestType(),
+					startupPackData.length(), 0, 0, 0);
 			irodsCommands.getIrodsConnection().send(startupPackData);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
@@ -205,18 +357,7 @@ abstract class AuthMechanism {
 			e.printStackTrace();
 			throw new JargonException(e);
 		}
-		Tag versionPI = irodsCommands.readMessage();
-		StartupResponseData startupResponseData = new StartupResponseData(
-				versionPI.getTag("status").getIntValue(), versionPI.getTag(
-						"relVersion").getStringValue(), versionPI.getTag(
-								"apiVersion").getStringValue(), versionPI.getTag(
-										"reconnPort").getIntValue(), versionPI.getTag(
-												"reconnAddr").getStringValue(), versionPI.getTag(
-														"cookie").getStringValue());
 
-		log.info("startup response:{}", startupResponseData);
-		irodsCommands.setStartupResponseData(startupResponseData);
-		return startupResponseData;
 	}
 
 }

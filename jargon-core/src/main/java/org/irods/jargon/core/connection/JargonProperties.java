@@ -1,7 +1,9 @@
 package org.irods.jargon.core.connection;
 
+import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
+import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 
 /**
@@ -502,6 +504,45 @@ public interface JargonProperties {
 	 *         should be done
 	 */
 	boolean isLongTransferRestart();
+
+	/**
+	 * <<<<<<< HEAD Retreives the default negotiation policy
+	 *
+	 * @return {@link SslNegotiationPolicy}
+	 */
+	SslNegotiationPolicy getNegotiationPolicy();
+
+	/**
+	 * Retrieves the default encryption algo for parallel transfers when SSL is
+	 * enabled
+	 *
+	 * @return {@link EncryptionAlgorithmEnum}
+	 */
+	EncryptionAlgorithmEnum getEncryptionAlgorithmEnum();
+
+	/**
+	 * Return the key size for encryption algo for parallel transfers when SSL
+	 * is enabled.
+	 *
+	 * @return <code>int</code> with an encryption key size
+	 */
+	int getEncryptionKeySize();
+
+	/**
+	 * Return the salt size for encryption algo for parallel transfers when SSL
+	 * is enabled.
+	 *
+	 * @return <code>int</code> with an encryption salt size
+	 */
+	int getEncryptionSaltSize();
+
+	/**
+	 * Return the number of hash rounds for encryption algo for parallel
+	 * transfers when SSL is enabled.
+	 *
+	 * @return <code>int</code> with number of hash rounds
+	 */
+	int getEncryptionNumberHashRounds();
 
 	/**
 	 * Indicates whether SSL cert checks need to be bypassed. This is not
