@@ -10,6 +10,8 @@
 4.1.10 Release compatability relese
 for milestone: https://github.com/DICE-UNC/jargon/milestone/11
 
+This includes support for client-server negotiation and SSL encryption of transport
+
 =======
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
@@ -23,7 +25,6 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
-* jargon-workflow - support for iRODS workflows
 
 ## Requirements
 
@@ -71,6 +72,8 @@ toURI with white spaces gives URISyntaxException, url encode that information
 #### Add client/server negotiation support for SSL encryption #4
 
 Honor client server negotiation and SSL transport encryption, as well as shared-key encryption for parallel file transfers.  (docs coming soon).  This is early access and should be used with caution until release time.
+
+#### IndexOutOfBoundsException in PackingIrodsOutputStream #200
 
 
 
