@@ -5,7 +5,7 @@
 	<groupId>org.irods</groupId>
 	<artifactId>jargon</artifactId>
 	<packaging>pom</packaging>
-	<version>4.0.3.1-SNAPSHOT</version>
+	<version>4.2.1.0-SNAPSHOT</version>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>
@@ -17,10 +17,11 @@
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
-		<sl4j.version>1.6.6</sl4j.version>
+		<sl4j.version>1.6.6</sl4j.version> 
 		<log4j.version>1.2.16</log4j.version>
 		<java.version>1.7</java.version>
 		<commons.io.version>2.4</commons.io.version>
+		<commons.lang.version>2.6</commons.lang.version>
 		<commons.collections.version>3.2.1</commons.collections.version>
 	</properties>
 	<issueManagement>
@@ -129,10 +130,6 @@
 					<!-- <tagBase>https://svn.apache.org/repos/asf/maven/components/releases</tagBase> -->
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>findbugs-maven-plugin</artifactId>
-			</plugin>
 		</plugins>
 	</reporting>
 	<dependencyManagement>
@@ -175,6 +172,11 @@
 				<groupId>commons-collections</groupId>
 				<artifactId>commons-collections</artifactId>
 				<version>${commons.collections.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>commons-lang</groupId>
+				<artifactId>commons-lang</artifactId>
+				<version>${commons.lang.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-logging</groupId>
@@ -440,7 +442,6 @@
 		<module>jargon-ticket</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
-		<module>jargon-workflow</module>
 		<module>jargon-ruleservice</module>
 		<module>data-profile</module>
 		<module>jargon-zipservice</module>

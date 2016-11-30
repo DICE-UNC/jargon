@@ -109,7 +109,7 @@ public class ChecksumManagerImpl implements ChecksumManager {
 		IRODSServerProperties serverProperties = environmentalInfoAO
 				.getIRODSServerProperties();
 
-		boolean isConsortium = serverProperties.isConsortiumVersion();
+		boolean isConsortium = serverProperties.isAtLeastIrods410();
 
 		log.info("is this consortium? (post 3.3.1):{}", isConsortium);
 

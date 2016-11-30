@@ -44,11 +44,11 @@ public class IRODSThousandCollectionsTest {
 		irodsFileSystem = IRODSFileSystem.instance();
 
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -177,7 +177,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -207,7 +207,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -232,7 +232,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -253,7 +253,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -271,7 +271,7 @@ public class IRODSThousandCollectionsTest {
 		while (true) {
 			entries = actual.listCollectionsUnderPathWithPermissions(
 					targetIrodsCollection, entries.get(entries.size() - 1)
-					.getCount());
+							.getCount());
 			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
 					.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {
@@ -355,7 +355,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -385,7 +385,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -410,7 +410,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -431,7 +431,7 @@ public class IRODSThousandCollectionsTest {
 
 		entries = actual.listCollectionsUnderPathWithPermissions(
 				targetIrodsCollection, entries.get(entries.size() - 1)
-				.getCount());
+						.getCount());
 
 		Assert.assertNotNull(entries);
 		Assert.assertFalse(entries.isEmpty());
@@ -449,7 +449,7 @@ public class IRODSThousandCollectionsTest {
 		while (true) {
 			entries = actual.listCollectionsUnderPathWithPermissions(
 					targetIrodsCollection, entries.get(entries.size() - 1)
-					.getCount());
+							.getCount());
 			CollectionAndDataObjectListingEntry lastEntryOfLoopedQuery = entries
 					.get(entries.size() - 1);
 			if (lastEntryOfLoopedQuery.isLastResult() == true) {

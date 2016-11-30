@@ -36,7 +36,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	private final String argumentsToPassWithCommand;
 	private final String executionHost;
 	private final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn;
-	public static final String STREAMING_API_CUTOFF = "rods2.4.1";
+	public static final String STREAMING_API_CUTOFF = "rods4.1";
 	private PathHandlingMode pathHandlingMode = PathHandlingMode.NONE;
 
 	private static final Logger log = LoggerFactory
@@ -82,7 +82,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final AbstractIRODSMidLevelProtocol irodsCommands,
 			final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand, final String executionHost)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost, "", PathHandlingMode.NONE);
@@ -116,7 +116,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(
 				irodsCommands,
 				commandToExecuteWithoutArguments,
@@ -153,7 +153,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 			final String argumentsToPassWithCommand,
 			final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn)
-					throws JargonException {
+			throws JargonException {
 		return new RemoteExecuteServiceImpl(irodsCommands,
 				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				executionHost,
@@ -236,7 +236,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override
@@ -303,7 +303,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.remoteexecute.RemoteExecutionService#execute()
 	 */
 	@Override
@@ -379,7 +379,8 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 		if (status > 0) {
 			log.info("additional data will be streamed, opening up will create concatenated stream");
 
-			if (getIrodsCommands().getIRODSServerProperties().isConsortiumVersion()) {
+			if (!getIrodsCommands().getIRODSServerProperties()
+					.isAtLeastIrods410()) {
 
 				log.error("unable to stream large files in eirods");
 				throw new UnsupportedOperationException(

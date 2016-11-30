@@ -35,6 +35,7 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ AbstractIRODSPackingInstructionTest.class,
+
 	GenQueryInpTest.class, DataObjInpTest.class, CollInpTest.class,
 	DataObjCopyInpTest.class, GeneralAdminInpTest.class, ExecCmdTest.class,
 	OpenedDataObjInpTest.class, ModAvuMetadataInpTest.class,

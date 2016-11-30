@@ -48,7 +48,7 @@ public class IRODSRandomAccessFileTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -123,7 +123,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// read back the test file so I can compare
@@ -172,7 +172,7 @@ public class IRODSRandomAccessFileTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File localFile = new File(localFileName);
 
 		// now put the file
@@ -195,7 +195,7 @@ public class IRODSRandomAccessFileTest {
 				.computeChecksumOnDataObject(destFile);
 
 		byte[] buffer = new byte[irodsFileSystem.getIRODSAccessObjectFactory()
-		                         .getJargonProperties().getPutBufferSize()];
+				.getJargonProperties().getPutBufferSize()];
 
 		IRODSRandomAccessFile irodsRaFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount)
@@ -313,7 +313,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		// here I'm saving the source file as a byte array as my 'expected'
@@ -378,7 +378,7 @@ public class IRODSRandomAccessFileTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory

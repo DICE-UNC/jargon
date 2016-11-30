@@ -118,6 +118,7 @@ public final class DataAOHelper extends AOHelper {
 							RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+					// FIXME: use resc id for 4.2 --> lookup of the leaf
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)

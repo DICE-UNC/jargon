@@ -215,7 +215,7 @@ public class UserGroupAOImplTest {
 		for (UserGroup actual : userGroup) {
 			Assert.assertFalse("should not have user name in results",
 					irodsAccount.getUserName()
-					.equals(actual.getUserGroupName()));
+							.equals(actual.getUserGroupName()));
 		}
 
 	}

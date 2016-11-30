@@ -37,11 +37,11 @@ public class FederatedDataObjectAOImplTest {
 
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -74,7 +74,7 @@ public class FederatedDataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountForFederatedZoneFromTestProperties(testingProperties);
@@ -128,7 +128,7 @@ public class FederatedDataObjectAOImplTest {
 		String targetIrodsFile = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ testFileName);
+								+ testFileName);
 		File sourceFile = new File(localFileName);
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);

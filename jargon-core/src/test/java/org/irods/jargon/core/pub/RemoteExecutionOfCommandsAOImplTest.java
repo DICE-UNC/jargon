@@ -271,10 +271,6 @@ public class RemoteExecutionOfCommandsAOImplTest {
 		IRODSServerProperties props = environmentalInfoAO
 				.getIRODSServerPropertiesFromIRODSServer();
 
-		if (props.isConsortiumVersion()) {
-			return;
-		}
-
 		if (!props
 				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion(RemoteExecuteServiceImpl.STREAMING_API_CUTOFF)) {
 			irodsFileSystem.closeAndEatExceptions();

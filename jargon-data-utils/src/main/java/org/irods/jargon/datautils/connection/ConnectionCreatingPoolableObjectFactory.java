@@ -94,7 +94,7 @@ PoolableObjectFactory {
 		AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = (AbstractIRODSMidLevelProtocol) objectToDestroy;
 		irodsMidLevelProtocol.setIrodsProtocolManager(irodsProtocolManager);
 		log.info("disconnecting");
-		irodsMidLevelProtocol.directDisconnect();
+		irodsMidLevelProtocol.shutdown();
 	}
 
 	/*

@@ -14,8 +14,8 @@ public class IRODSGenQueryFromBuilderTest {
 				true, true, null);
 		irodsGenQueryBuilder.addSelectAsGenQueryValue(
 				RodsGenQueryEnum.COL_D_DATA_PATH).addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_COLL_ACCESS_NAME,
-						QueryConditionOperators.EQUAL, testValue);
+				RodsGenQueryEnum.COL_COLL_ACCESS_NAME,
+				QueryConditionOperators.EQUAL, testValue);
 		IRODSGenQueryFromBuilder query = irodsGenQueryBuilder
 				.exportIRODSQueryFromBuilder(10);
 		TranslatedIRODSGenQuery translatedIRODSGenQuery = query
@@ -34,8 +34,8 @@ public class IRODSGenQueryFromBuilderTest {
 				true, false, null);
 		irodsGenQueryBuilder.addSelectAsGenQueryValue(
 				RodsGenQueryEnum.COL_D_DATA_PATH).addConditionAsGenQueryField(
-						RodsGenQueryEnum.COL_COLL_ACCESS_NAME,
-						QueryConditionOperators.EQUAL, testValue);
+				RodsGenQueryEnum.COL_COLL_ACCESS_NAME,
+				QueryConditionOperators.EQUAL, testValue);
 		IRODSGenQueryFromBuilder query = irodsGenQueryBuilder
 				.exportIRODSQueryFromBuilder(10);
 		TranslatedIRODSGenQuery translatedIRODSGenQuery = query

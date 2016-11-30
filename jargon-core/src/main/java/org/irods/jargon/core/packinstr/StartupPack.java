@@ -7,10 +7,13 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 
 	public static final String PI_TAG = "StartupPack_PI";
 	public static final String CHALLENGE = "challenge";
+	public static final String SP_OPTION_IINIT = "iinit";
 	public static final String protocolType = "1"; // 1 = xml protocol
 	private final IRODSAccount irodsAccount;
 	private int reconnFlag = 0;
 	private int connectCnt = 0;
+	private String option = "";
+	public static final String NEGOTIATE_OPTION = "request_server_negotiation";
 
 	public StartupPack(final IRODSAccount irodsAccount) {
 		super();
@@ -20,11 +23,16 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 		this.irodsAccount = irodsAccount;
 	}
 
-	public StartupPack(final IRODSAccount irodsAccount, final boolean reconnect) {
+	public StartupPack(final IRODSAccount irodsAccount,
+			final boolean reconnect, final String option) {
 		this(irodsAccount);
 		if (reconnect) {
 			reconnFlag = 200;
 		}
+		if (option == null) {
+			throw new IllegalArgumentException("null option");
+		}
+		this.option = option;
 	}
 
 	@Override
@@ -42,7 +50,7 @@ public class StartupPack extends AbstractIRODSPackingInstruction {
 						IRODSAccount.IRODS_JARGON_RELEASE_NUMBER),
 						new Tag("apiVersion", IRODSAccount.IRODS_API_VERSION),
 						// new Tag("option", "0") });
-						new Tag("option", "iinit") });
+						new Tag("option", option) });
 		return startupPacket;
 	}
 

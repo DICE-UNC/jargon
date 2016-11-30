@@ -4,25 +4,16 @@
 package org.irods.jargon.core.connection;
 
 import java.io.IOException;
-import java.security.KeyManagementException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 
-import javax.net.ssl.HandshakeCompletedEvent;
-import javax.net.ssl.HandshakeCompletedListener;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
 
+import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.SSLEndInp;
-import org.irods.jargon.core.packinstr.SSLStartInp;
 import org.irods.jargon.core.packinstr.Tag;
 
 /**
@@ -40,120 +31,51 @@ public class PAMAuth extends AuthMechanism {
 	@Override
 	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
 			final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		// start ssl
-		log.info("startSSL for PAM auth");
-		SSLStartInp sslStartInp = SSLStartInp.instance();
-		irodsCommands.irodsFunction(sslStartInp);
+		boolean needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
+				.getEncryptionType() == EncryptionType.NONE;
 
-		SSLContext ctx;
-		try {
-			ctx = SSLContext.getInstance("TLS", "SunJSSE");
-		} catch (NoSuchAlgorithmException | NoSuchProviderException e) {
-			// The SunJSSE provider should always be available.
-			throw new AssertionError(e);
-		}
-
-		TrustManager[] trustManagers = null;
-
-		if (irodsCommands.getIrodsSession().getX509TrustManager() != null) {
-			trustManagers = new TrustManager[] { irodsCommands
-					.getIrodsSession().getX509TrustManager() };
-		}
-		try {
-			ctx.init(null, trustManagers, null);
-		} catch (KeyManagementException e1) {
-			log.error("error initializing ssl context:{}", e1);
-			throw new JargonRuntimeException("ssl context init exception", e1);
-		}
-
-		// if all went well (no exceptions) then the server is ready for the
-		// credential exchange, first grab an SSL enabled connection
-		log.debug("getting ssl socket factory");
-		SSLSocketFactory sslSocketFactory = ctx.getSocketFactory();
-		log.debug("supported cyphers:{}",
-				sslSocketFactory.getSupportedCipherSuites());
-
-		SSLSocket sslSocket = null;
-		try {
-
-			sslSocket = (SSLSocket) sslSocketFactory.createSocket(irodsCommands
-					.getIrodsConnection().getConnection(), irodsAccount
-					.getHost(), irodsAccount.getPort(), false);
-			log.debug("ssl socket created for credential exchage..now connect");
-
-		} catch (IOException e) {
-			log.error("ioException creating socket", e);
-			throw new JargonException(
-					"unable to create the underlying ssl socket", e);
-		}
-
+		AbstractIRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
 		/*
-		 * register a callback for handshaking completion event
+		 * Save the original commands if we will temporarily use an SSL
+		 * connection, otherwise will remain null If, through client/server
+		 * negotiation, we already have an SSL connection, then no need to wrap
+		 * the PAM auth in SSL.
 		 */
-		if (log.isDebugEnabled()) {
-			sslSocket
-					.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-						@Override
-						public void handshakeCompleted(
-								final HandshakeCompletedEvent event) {
-							log.debug("Handshake finished!");
-							log.debug("\t CipherSuite:{}",
-									event.getCipherSuite());
-							log.debug("\t SessionId {}", event.getSession());
-							log.debug("\t PeerHost {}", event.getSession()
-									.getPeerHost());
-						}
-					});
+		if (needToWrapWithSsl) {
+			log.info("will wrap commands with ssl");
+			irodsMidLevelProtocolToUse = establishSecureConnectionForPamAuth(
+					irodsAccount, irodsMidLevelProtocol);
+		} else {
+			log.info("no need to SSL tunnel for PAM");
+			irodsMidLevelProtocolToUse = irodsMidLevelProtocol;
+
 		}
-
-		log.debug("starting SSL handshake");
-		try {
-			sslSocket.setUseClientMode(true);
-			sslSocket.startHandshake();
-		} catch (IOException e) {
-			log.error("ssl exception in handshake", e);
-			throw new JargonException("unable to start SSL socket", e);
-		}
-		log.debug("ssl handshake successful");
-
-		log.info("creating secure protcol connection layer");
-		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(
-				irodsAccount, irodsCommands.getPipelineConfiguration(),
-				irodsCommands.getIrodsProtocolManager(), sslSocket);
-
-		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
-				secureConnection, irodsCommands.getIrodsProtocolManager());
-
-		log.info("carrying over startup pack with server info");
-		secureIRODSCommands.setStartupResponseData(irodsCommands
-				.getStartupResponseData());
-
-		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
 
 		// send pam auth request
 
-		int pamTimeToLive = irodsCommands.getIrodsSession()
+		int pamTimeToLive = irodsMidLevelProtocolToUse.getIrodsSession()
 				.getJargonProperties().getPAMTimeToLive();
 
 		Tag response = null;
-		if (startupResponseData.isEirods()) {
-			secureIRODSCommands.setForceSslFlush(true);
+
+		if (startupResponseData.checkIs410OrLater()) {
 			log.info("using eirods pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
-			response = secureIRODSCommands.irodsFunction(pi);
+			response = irodsMidLevelProtocolToUse.irodsFunction(pi);
 
 		} else {
 			log.info("using normal irods pam auth request");
 			PamAuthRequestInp pamAuthRequestInp = PamAuthRequestInp.instance(
 					irodsAccount.getProxyName(), irodsAccount.getPassword(),
 					pamTimeToLive);
-			response = secureIRODSCommands.irodsFunction(pamAuthRequestInp);
+			response = irodsMidLevelProtocolToUse
+					.irodsFunction(pamAuthRequestInp);
 		}
 
 		if (response == null) {
@@ -161,7 +83,7 @@ public class PAMAuth extends AuthMechanism {
 		}
 
 		String tempPasswordForPam;
-		if (startupResponseData.isEirods()) {
+		if (startupResponseData.checkIs410OrLater()) {
 			tempPasswordForPam = response.getTag("result_").getStringValue();
 		} else {
 			tempPasswordForPam = response.getTag("irodsPamPassword")
@@ -170,19 +92,13 @@ public class PAMAuth extends AuthMechanism {
 
 		if (tempPasswordForPam == null || tempPasswordForPam.isEmpty()) {
 			throw new AuthenticationException(
-					"unable to retrive the temp password resulting from the pam auth response");
+					"unable to retrieve the temp password resulting from the pam auth response");
 		}
 
 		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
-		SSLEndInp sslEndInp = SSLEndInp.instance();
-		secureIRODSCommands.irodsFunction(sslEndInp);
-
-		try {
-			secureIRODSCommands.closeOutSocketAndSetAsDisconnected();
-		} catch (IOException e) {
-			log.error("error closing ssl socket", e);
-			throw new JargonException("error closing ssl socket", e);
-		}
+		shutdownSslAndCloseConnection(irodsMidLevelProtocolToUse);
+		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
+		AuthResponse authResponse = new AuthResponse();
 
 		IRODSAccount irodsAccountUsingTemporaryIRODSPassword = new IRODSAccount(
 				irodsAccount.getHost(), irodsAccount.getPort(),
@@ -195,17 +111,73 @@ public class PAMAuth extends AuthMechanism {
 		log.info(
 				"derived and logging in with temporary password from a new agent:{}",
 				irodsAccountUsingTemporaryIRODSPassword);
-
-		AuthResponse authResponse = new AuthResponse();
+		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse
 				.setAuthenticatedIRODSAccount(irodsAccountUsingTemporaryIRODSPassword);
-		authResponse.setAuthenticatingIRODSAccount(irodsAccount);
 		authResponse.setStartupResponse(startupResponseData);
 		authResponse.setSuccessful(true);
-		irodsCommands.setAuthResponse(authResponse);
+		irodsMidLevelProtocolToUse.setAuthResponse(authResponse);
 
-		return irodsCommands;
+		return irodsMidLevelProtocolToUse;
 
+	}
+
+	/**
+	 * @param irodsCommandsToUse
+	 * @throws JargonException
+	 */
+	private void shutdownSslAndCloseConnection(
+			final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
+			throws JargonException {
+		SSLEndInp sslEndInp = SSLEndInp.instance();
+		irodsCommandsToUse.irodsFunction(sslEndInp);
+
+		try {
+			irodsCommandsToUse.closeOutSocketAndSetAsDisconnected();
+		} catch (IOException e) {
+			log.error("error closing ssl socket", e);
+			throw new JargonException("error closing ssl socket", e);
+		}
+	}
+
+	/**
+	 * @param irodsAccount
+	 * @param irodsCommands
+	 * @return
+	 * @throws JargonException
+	 * @throws AssertionError
+	 */
+	private AbstractIRODSMidLevelProtocol establishSecureConnectionForPamAuth(
+			final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException, AssertionError {
+
+		if (irodsCommands.getIrodsConnection().getEncryptionType() == EncryptionType.SSL_WRAPPED) {
+			log.info("already ssl enabled");
+			return irodsCommands;
+		}
+
+		log.info("not ssl wrapped, use an SSL connection for the pam auth");
+
+		SSLSocket sslSocket = irodsCommands.getIrodsSession()
+				.instanceSslConnectionUtilities()
+				.createSslSocketForProtocol(irodsAccount, irodsCommands, true);
+
+		log.info("creating secure protcol connection layer");
+		IRODSBasicTCPConnection secureConnection = new IRODSBasicTCPConnection(
+				irodsAccount, irodsCommands.getPipelineConfiguration(),
+				irodsCommands.getIrodsProtocolManager(), sslSocket,
+				irodsCommands.getIrodsSession());
+
+		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
+				secureConnection, irodsCommands.getIrodsProtocolManager());
+
+		log.info("carrying over startup pack with server info");
+		secureIRODSCommands.setStartupResponseData(irodsCommands
+				.getStartupResponseData());
+
+		log.debug("created secureIRODSCommands wrapped around an SSL socket\nSending PamAuthRequest...");
+		return secureIRODSCommands;
 	}
 
 	/*
@@ -222,12 +194,15 @@ public class PAMAuth extends AuthMechanism {
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		IRODSAccount originalAuthenticatingAccount = irodsMidLevelProtocol
-				.getAuthResponse().getAuthenticatingIRODSAccount();
+		/*
+		 * I'm creating a new protocol for PAM, using the newly renegotiated
+		 * account with the new password, So save the auth information from the
+		 * prior one used in the pam bootstrapping process
+		 */
+		AuthResponse originalAuthResponse = irodsMidLevelProtocol
+				.getAuthResponse();
 
 		AbstractIRODSMidLevelProtocol actualProtocol = null;
-
-		irodsMidLevelProtocol.disconnectWithForce();
 
 		actualProtocol = irodsMidLevelProtocol
 				.getIrodsProtocolManager()
@@ -237,9 +212,7 @@ public class PAMAuth extends AuthMechanism {
 						irodsMidLevelProtocol.getAuthResponse()
 								.getAuthenticatedIRODSAccount(),
 						irodsMidLevelProtocol.getIrodsProtocolManager());
-		actualProtocol.getAuthResponse().setAuthenticatingIRODSAccount(
-				originalAuthenticatingAccount);
-		actualProtocol.setIrodsAccount(originalAuthenticatingAccount);
+		actualProtocol.setAuthResponse(originalAuthResponse);
 		return actualProtocol;
 
 	}

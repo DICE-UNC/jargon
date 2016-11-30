@@ -24,7 +24,7 @@ public class LocalFileUtilsTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@AfterClass
@@ -39,10 +39,10 @@ public class LocalFileUtilsTest {
 						+ '/' + rootCollection);
 
 		FileGenerator
-		.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
-				localCollectionAbsolutePath,
-				"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
-				".txt", 2, 2, 1, 2);
+				.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
+						localCollectionAbsolutePath,
+						"testPutCollectionWithTwoFiles", 1, 1, 1, "testFile",
+						".txt", 2, 2, 1, 2);
 
 		File rootCollectionFile = new File(localCollectionAbsolutePath);
 		int fileCtr = LocalFileUtils.countFilesInDirectory(rootCollectionFile);

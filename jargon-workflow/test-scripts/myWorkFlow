@@ -1,5 +1,0 @@
-#!/bin/sh
-# Just a test to copy an existing file
-# one may look at this as taking afile and creating a new one possibly after conversion
-# mycp is a file that takes tt as input and creates a new output file
-cmd/mycp cmd/tt  "$1"

@@ -50,7 +50,7 @@ public class FederatedUserAOTest {
 				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)
 				+ "#"
 				+ testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
+						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -61,18 +61,18 @@ public class FederatedUserAOTest {
 		User user = userAO.findByName(testUserName);
 		Assert.assertEquals(
 				testingProperties
-				.getProperty(
-						"did not get federated user",
-						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
-						user.getName());
+						.getProperty(
+								"did not get federated user",
+								testingProperties
+										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_USER_KEY)),
+				user.getName());
 		Assert.assertEquals(
 				testingProperties
-				.getProperty(
-						"did not get federated zone",
-						testingProperties
-						.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
-						user.getZone());
+						.getProperty(
+								"did not get federated zone",
+								testingProperties
+										.getProperty(TestingPropertiesHelper.IRODS_FEDERATED_ZONE_KEY)),
+				user.getZone());
 
 	}
 

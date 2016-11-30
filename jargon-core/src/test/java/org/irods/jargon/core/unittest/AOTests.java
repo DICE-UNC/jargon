@@ -54,7 +54,8 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSGenQueryExecutorImplTest.class,
-		EnvironmentalInfoAOTest.class, ResourceAOTest.class, UserAOTest.class,
+
+EnvironmentalInfoAOTest.class, ResourceAOTest.class, UserAOTest.class,
 		ZoneAOTest.class, UserGroupAOImplTest.class,
 		CollectionAOImplTest.class, DataObjectAOImplTest.class,
 		RuleProcessingAOImplTest.class, IRODSFileSystemTest.class,

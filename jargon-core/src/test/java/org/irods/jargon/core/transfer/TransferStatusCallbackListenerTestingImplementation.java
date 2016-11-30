@@ -15,7 +15,7 @@ import org.irods.jargon.core.transfer.TransferStatus.TransferType;
  *
  */
 public class TransferStatusCallbackListenerTestingImplementation implements
-TransferStatusCallbackListener {
+		TransferStatusCallbackListener {
 
 	/**
 	 * Just counts the initial file callbacks no matter what

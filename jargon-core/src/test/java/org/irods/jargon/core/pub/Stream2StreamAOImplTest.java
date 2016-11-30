@@ -41,11 +41,11 @@ public class Stream2StreamAOImplTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -189,8 +189,8 @@ public class Stream2StreamAOImplTest {
 
 		BufferedOutputStream outputStream = new BufferedOutputStream(
 				irodsFileSystem.getIRODSAccessObjectFactory()
-						.getIRODSFileFactory(irodsAccount)
-						.instanceIRODSFileOutputStream(targetIrodsFile));
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFileOutputStream(targetIrodsFile));
 
 		Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
 				.getStream2StreamAO(irodsAccount);

@@ -25,7 +25,7 @@ public final class CollectionAOHelperTest {
 		final String[] columnNames = { "0", "1", "2", "3", "4", "5", "6", "7" };
 		final String[] columnValues = { "/path/to", "/path/to/collection",
 				"1000000000", "1000000000", "10000", "user", "zone",
-		"linkPoint" };
+				"linkPoint" };
 		final IRODSQueryResultRow row = IRODSQueryResultRow.instance(
 				asList(columnValues), asList(columnNames));
 		final CollectionAndDataObjectListingEntry entry = buildCollectionListEntryFromResultSetRowForCollectionQuery(

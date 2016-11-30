@@ -16,6 +16,7 @@ import java.util.concurrent.Callable;
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.transfer.encrypt.ParallelDecryptionCipherWrapper;
 import org.irods.jargon.core.utils.Host;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,10 +30,15 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelGetTransferThread extends
-AbstractParallelTransferThread implements
-Callable<ParallelTransferResult> {
+		AbstractParallelTransferThread implements
+		Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
+
+	/**
+	 * Will contain the symmetric decryption handler if ssl negotiation dictates
+	 */
+	private ParallelDecryptionCipherWrapper parallelDecryptionCipherWrapper;
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetTransferThread.class);
@@ -69,6 +75,13 @@ Callable<ParallelTransferResult> {
 		}
 
 		this.parallelGetFileTransferStrategy = parallelGetFileTransferStrategy;
+		log.info("setting up the encryption if so negotiated");
+		if (this.parallelGetFileTransferStrategy.doEncryption()) {
+			log.debug("am doing encryption, enable the cypher");
+			parallelDecryptionCipherWrapper = this.parallelGetFileTransferStrategy
+					.initializeCypherForDecryption();
+			log.debug("cypher initialized");
+		}
 	}
 
 	@Override
@@ -93,9 +106,9 @@ Callable<ParallelTransferResult> {
 					.getPipelineConfiguration()
 					.getParallelTcpPerformancePrefsConnectionTime(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsLatency(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsBandwidth());
+							.getParallelTcpPerformancePrefsBandwidth());
 
 			InetSocketAddress address = new InetSocketAddress(
 					parallelGetFileTransferStrategy.getHost(),
@@ -223,6 +236,7 @@ Callable<ParallelTransferResult> {
 
 		// How much to read/write
 		long length = readLong();
+		// length
 		log.info(">>>new offset:{}", offset);
 		log.info(">>>new length:{}", length);
 
@@ -240,14 +254,6 @@ Callable<ParallelTransferResult> {
 
 		log.info("seeking to offset: {}", offset);
 		try {
-			if (length <= 0) {
-				return;
-			} else {
-				// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
-				// unsigned char );
-				buffer = new byte[parallelGetFileTransferStrategy
-				                  .getJargonProperties().getParallelCopyBufferSize()];
-			}
 
 			seekToOffset(local, offset);
 
@@ -258,14 +264,51 @@ Callable<ParallelTransferResult> {
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-							"interrupted, consider connection corrupted and return IOException to clear");
+					"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("reading....");
 
-				read = myRead(getIn(), buffer, Math.min(
-						parallelGetFileTransferStrategy.getJargonProperties()
-						.getParallelCopyBufferSize(), (int) length));
+				int newSize;
+
+				/*
+				 * if encrypted, first read an int that reflects the new length,
+				 * as encryption may change the length of the data
+				 */
+
+				if (parallelGetFileTransferStrategy.doEncryption()) {
+					// length is littleEndian
+					newSize = Integer.reverseBytes(readInt());
+					log.debug("new size of encrypted traffic:{}", newSize);
+
+				} else {
+					newSize = Math.min(parallelGetFileTransferStrategy
+							.getJargonProperties().getParallelCopyBufferSize(),
+							(int) length);
+					log.debug("newSize of non-encrypted traffic:{}", newSize);
+
+				}
+
+				if (newSize <= 0) {
+					return;
+				} else {
+					// c code - size_t buf_size = ( 2 * TRANS_BUF_SZ ) * sizeof(
+					// unsigned char );
+					buffer = new byte[newSize];
+				}
+
+				read = myRead(getIn(), buffer, newSize);
+
+				/*
+				 * If encrypted, strip off the iv and decrypt before writing
+				 */
+
+				if (parallelGetFileTransferStrategy.doEncryption()) {
+					buffer = this.parallelDecryptionCipherWrapper
+							.decrypt(buffer);
+					read = buffer.length;
+
+				}
 
 				totalWrittenSinceLastRestartUpdate += read;
 
@@ -282,22 +325,22 @@ Callable<ParallelTransferResult> {
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-							.getConnectionProgressStatusListener()
-							.connectionProgressStatusCallback(
-									ConnectionProgressStatus
-									.instanceForReceive(read));
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
 						}
 
 						if (parallelGetFileTransferStrategy
 								.getFileRestartInfo() != null) {
 
 							parallelGetFileTransferStrategy.getRestartManager()
-							.updateLengthForSegment(
-									parallelGetFileTransferStrategy
-									.getFileRestartInfo()
-									.identifierFromThisInfo(),
-									getThreadNumber(),
-									totalWrittenSinceLastRestartUpdate);
+									.updateLengthForSegment(
+											parallelGetFileTransferStrategy
+													.getFileRestartInfo()
+													.identifierFromThisInfo(),
+											getThreadNumber(),
+											totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 
@@ -336,10 +379,10 @@ Callable<ParallelTransferResult> {
 						if (parallelGetFileTransferStrategy
 								.getConnectionProgressStatusListener() != null) {
 							parallelGetFileTransferStrategy
-							.getConnectionProgressStatusListener()
-							.connectionProgressStatusCallback(
-									ConnectionProgressStatus
-									.instanceForReceive(read));
+									.getConnectionProgressStatusListener()
+									.connectionProgressStatusCallback(
+											ConnectionProgressStatus
+													.instanceForReceive(read));
 						}
 
 					}
@@ -434,11 +477,11 @@ Callable<ParallelTransferResult> {
 
 			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
 				parallelGetFileTransferStrategy.getRestartManager()
-				.updateOffsetForSegment(
-						parallelGetFileTransferStrategy
-						.getFileRestartInfo()
-						.identifierFromThisInfo(),
-						getThreadNumber(), offset);
+						.updateOffsetForSegment(
+								parallelGetFileTransferStrategy
+										.getFileRestartInfo()
+										.identifierFromThisInfo(),
+								getThreadNumber(), offset);
 			}
 
 			try {
