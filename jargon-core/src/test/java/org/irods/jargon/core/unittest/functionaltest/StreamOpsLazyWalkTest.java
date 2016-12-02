@@ -86,7 +86,7 @@ public class StreamOpsLazyWalkTest {
 		int clientBufferSizeWalkBound = 3 * 1024;
 
 		int fileSizeIterations = 50;
-		int bufferTwiddleIterations = 50;
+		int bufferTwiddleIterations = 10;
 
 		int fileSizeBase = fileSizeSeed;
 		int putGetBufferSize;
