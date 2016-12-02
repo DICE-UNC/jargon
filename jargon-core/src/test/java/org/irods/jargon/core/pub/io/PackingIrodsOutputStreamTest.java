@@ -177,6 +177,134 @@ public class PackingIrodsOutputStreamTest {
 
 	}
 
+	/**
+	 * test for https://github.com/DICE-UNC/jargon/issues/200
+	 * 
+	 * IndexOutOfBoundsException in PackingIrodsOutputStream #200
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testWriteStreamBug200b() throws Exception {
+
+		String testFileName = "testWriteStreamBug200b.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						21 * 1024 * 1024);
+
+		new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getIrodsSession().getJargonProperties();
+		settableJargonProperties.setPutBufferSize(32768);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+		PackingIrodsOutputStream packingIrodsOutputStream = new PackingIrodsOutputStream(
+				irodsFileOutputStream);
+		InputStream fileInputStream = new BufferedInputStream(
+				new FileInputStream(new File(localFilePath)));
+
+		int buffSize = 32768;
+		byte[] buffer = new byte[buffSize];
+
+		int n = 0;
+
+		while (-1 != (n = fileInputStream.read(buffer))) {
+			packingIrodsOutputStream.write(buffer, 0, n);
+		}
+		packingIrodsOutputStream.flush();
+		fileInputStream.close();
+		packingIrodsOutputStream.close();
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(irodsAccount);
+		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
+				localFilePath, irodsFile.getAbsolutePath()); // throws exception
+		// if mismatch
+
+	}
+
+	/**
+	 * test for https://github.com/DICE-UNC/jargon/issues/200
+	 * 
+	 * IndexOutOfBoundsException in PackingIrodsOutputStream #200
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testWriteStreamBug200c() throws Exception {
+
+		String testFileName = "testWriteStreamBug200c.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFilePath = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						21 * 1024);
+
+		new File(localFilePath);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+
+		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
+				.getIrodsSession().getJargonProperties();
+		settableJargonProperties.setPutBufferSize(32768);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+		PackingIrodsOutputStream packingIrodsOutputStream = new PackingIrodsOutputStream(
+				irodsFileOutputStream);
+		InputStream fileInputStream = new BufferedInputStream(
+				new FileInputStream(new File(localFilePath)));
+
+		int buffSize = 1024;
+		byte[] buffer = new byte[buffSize];
+
+		int n = 0;
+
+		while (-1 != (n = fileInputStream.read(buffer))) {
+			packingIrodsOutputStream.write(buffer, 0, n);
+		}
+		packingIrodsOutputStream.flush();
+		fileInputStream.close();
+		packingIrodsOutputStream.close();
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(irodsAccount);
+		dataObjectChecksumUtilitiesAO.verifyLocalFileAgainstIrodsFileChecksum(
+				localFilePath, irodsFile.getAbsolutePath()); // throws exception
+		// if mismatch
+
+	}
+
 	@Test
 	public void testWriteLargeStream2() throws Exception {
 		String testFileName = "testWriteLargeStream2.txt";
