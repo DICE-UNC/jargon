@@ -17,7 +17,6 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class PackingIrodsOutputStreamTest {
@@ -185,7 +184,7 @@ public class PackingIrodsOutputStreamTest {
 	 * 
 	 * @throws Exception
 	 */
-	@Ignore
+	@Test
 	public void testWriteStreamBug200b() throws Exception {
 
 		String testFileName = "testWriteStreamBug200b.txt";

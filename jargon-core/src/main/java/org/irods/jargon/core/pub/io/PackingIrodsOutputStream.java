@@ -33,7 +33,6 @@ public class PackingIrodsOutputStream extends OutputStream {
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 
 	private int byteBufferSizeMax;
-	private int ptr = 0;
 	private ByteArrayOutputStream byteArrayOutputStream = null;
 	private final IRODSFileOutputStream irodsFileOutputStream;
 	private long controlByteCount = 0;
@@ -74,39 +73,26 @@ public class PackingIrodsOutputStream extends OutputStream {
 			throws IOException {
 		log.debug("write()");
 		controlBytesIn += len;
-		int projectedLen = ptr + len;
+		log.debug("controlBytesIn:{}", controlBytesIn);
+		int projectedLen = byteArrayOutputStream.size() + (len - off);
 		log.info("projectedLen:{}", projectedLen);
-		int lenToHoldOver = len;
-		int myOff = off;
-
-		if (projectedLen >= byteBufferSizeMax) {
-			log.info("greater than buffer max so write cache to iRODS");
-			// would overflow the buff, so write partial to iRODS and start a
-			// new buffer
-			lenToHoldOver = projectedLen - byteBufferSizeMax;
-			log.info("holdingOver:{}", lenToHoldOver);
-			int lenToAddToBuff = len - lenToHoldOver;
-			myOff = off + lenToAddToBuff;
-			if (lenToAddToBuff > 0) {
-				log.info("adding to buffer:{}", lenToAddToBuff);
-				byteArrayOutputStream.write(b, off, lenToAddToBuff);
-			}
+		if (projectedLen < byteBufferSizeMax) {
+			log.debug("less than buffer max so cache until full");
+			byteArrayOutputStream.write(b, off, len);
+		} else {
+			log.debug("buffer is full, write to irods and reset");
+			byteArrayOutputStream.write(b, off, len);
 			flushAndResetBufferStream();
 		}
-
-		byteArrayOutputStream.write(b, myOff, lenToHoldOver);
-		ptr += lenToHoldOver;
-		log.info("ptr after write is:{}", ptr);
 	}
 
 	private void flushAndResetBufferStream() throws IOException {
 		if (byteArrayOutputStream.size() > 0) {
 			irodsFileOutputStream.write(byteArrayOutputStream.toByteArray());
 			controlByteCount += byteArrayOutputStream.size();
+			log.debug("controlByteCount:{}", controlByteCount);
 			byteArrayOutputStream.reset();
 		}
-		ptr = 0;
-
 	}
 
 	/*
@@ -154,7 +140,7 @@ public class PackingIrodsOutputStream extends OutputStream {
 	@Override
 	public void flush() throws IOException {
 		log.debug("flush()...see if any bytes are buffered");
-		if (ptr > 0) {
+		if (this.byteArrayOutputStream.size() > 0) {
 			log.debug("flushing buffered bytes and resetting");
 			flushAndResetBufferStream();
 			log.debug("now flushing the underlying iRODS stream");

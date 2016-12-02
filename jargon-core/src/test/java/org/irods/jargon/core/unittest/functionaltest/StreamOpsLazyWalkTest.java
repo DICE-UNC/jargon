@@ -75,17 +75,71 @@ public class StreamOpsLazyWalkTest {
 	 * @throws Exception
 	 */
 	@Test
-	public void lazyWalk() throws Exception {
+	public void lazyWalkPutGetBiggerThanClient() throws Exception {
 
 		String testFileName = "lazyWalk.txt";
 		int fileSizeSeed = 1 * 1024;
 		int putGetBufferSizeSeed = 1 * 1024;
 		int clientSpecifiedBufferSizeSeed = 1 * 2024;
-		int fileSizeWalkBound = 10 * 1024;
-		int putGetBufferSizeWalkBound = 5 * 1024;
-		int clientBufferSizeWalkBound = 3 * 1024;
+		int fileSizeWalkBound = 5 * 1024;
+		int putGetBufferSizeWalkBound = 3 * 1024;
+		int clientBufferSizeWalkBound = 2 * 1024;
 
-		int fileSizeIterations = 50;
+		int fileSizeIterations = 20;
+		int bufferTwiddleIterations = 10;
+
+		int fileSizeBase = fileSizeSeed;
+		int putGetBufferSize;
+		int clientSpecifiedBufferSize;
+
+		for (int i = 0; i <= fileSizeIterations; i++) {
+
+			fileSizeBase = fileSizeBase
+					+ ThreadLocalRandom.current().nextInt(fileSizeBase,
+							fileSizeBase + fileSizeWalkBound) * 2;
+			putGetBufferSize = putGetBufferSizeSeed;
+			clientSpecifiedBufferSize = clientSpecifiedBufferSizeSeed;
+
+			for (int j = 0; j <= bufferTwiddleIterations; j++) {
+
+				doATest(putGetBufferSize, clientSpecifiedBufferSize,
+						fileSizeBase, testFileName);
+
+				putGetBufferSize = putGetBufferSize
+						+ ThreadLocalRandom.current().nextInt(putGetBufferSize,
+								putGetBufferSize + putGetBufferSizeWalkBound);
+
+				clientSpecifiedBufferSize = clientSpecifiedBufferSize
+						+ ThreadLocalRandom.current().nextInt(
+								clientSpecifiedBufferSize,
+								clientSpecifiedBufferSize
+										+ clientBufferSizeWalkBound);
+
+			}
+
+		}
+
+	}
+
+	/**
+	 * test for https://github.com/DICE-UNC/jargon/issues/200
+	 * 
+	 * IndexOutOfBoundsException in PackingIrodsOutputStream #200
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void lazyWalkPutGetLessThanClient() throws Exception {
+
+		String testFileName = "lazyWalk.txt";
+		int fileSizeSeed = 1 * 1024;
+		int putGetBufferSizeSeed = 1 * 1024;
+		int clientSpecifiedBufferSizeSeed = 1 * 2024;
+		int fileSizeWalkBound = 5 * 1024;
+		int putGetBufferSizeWalkBound = 1 * 1024;
+		int clientBufferSizeWalkBound = 2 * 1024;
+
+		int fileSizeIterations = 10;
 		int bufferTwiddleIterations = 10;
 
 		int fileSizeBase = fileSizeSeed;
