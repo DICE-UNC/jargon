@@ -117,6 +117,60 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#modifyResource(org.irods.jargon.core
+	 * .pub.domain.Resource)
+	 */
+	@Override
+	public void modifyResource(final Resource resource, String what)
+			throws JargonException {
+		log.info("modifyResource()");
+		if (resource == null) {
+			throw new IllegalArgumentException("null resource");
+		}
+
+		log.info("resource:{}", resource);
+
+		if (!getIRODSServerProperties().isAtLeastIrods410()) {
+			log.error("does not work pre iRODS 4.1");
+			throw new UnsupportedOperationException(
+					"add resource only works for 4.1+");
+		}
+
+		/*
+		 * arg0 modify
+		 * 
+		 * generalAdminInp->arg1, "resource"
+		 * 
+		 * std::string resc_name( _generalAdminInp->arg2 );
+		 * 
+		 * std::string resc_type( _generalAdminInp->arg3 );
+		 * 
+		 * std::string resc_host_path(_generalAdminInp->arg4 );
+		 * 
+		 * for host path can be blank, otherwise in / separate the
+		 * location:/vault/path pair
+		 * 
+		 * std::string resc_ctx(_generalAdminInp->arg5 );
+		 * 
+		 * 
+		 * examples
+		 * 
+		 * "iadmin mkresc rrResc random",
+		 */
+
+		GeneralAdminInpForResources adminPI = GeneralAdminInpForResources
+				.instanceForModifyResource(resource, what);
+		log.debug("executing admin PI");
+		getIRODSProtocol().irodsFunction(adminPI);
+		getIRODSAccessObjectFactory().closeSession(getIRODSAccount());
+
+		log.info("complete");
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
 	 */
 	@Override
@@ -789,6 +843,52 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 		}
 
 		log.debug("metadata added");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.ResourceAO#setAVUMetadata(java.lang.String,
+	 * org.irods.jargon.core.pub.domain.AvuData)
+	 */
+	@Override
+	public void setAVUMetadata(final String resourceName, final AvuData avuData)
+			throws InvalidResourceException, JargonException {
+
+		if (resourceName == null || resourceName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resource name");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("setting avu metadata to resource: {}", resourceName);
+		log.info("avu: {}", avuData);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp
+				.instanceForSetResourceMetadata(resourceName, avuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException(
+						"Target resource was not found, could not add AVU");
+			}
+
+			log.error("jargon exception setting AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata set");
 
 	}
 
