@@ -78,6 +78,71 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	}
 
+  /**
+   * Generate the packing instruction suitable for modifying a
+   * <code>Resource</code>
+   *
+   * @param Resource
+   *            {@link Resource} to be added to iRODS.
+   * @param option
+   *            attribute to modify (any of "type", "status", "comment", "info", "context").
+   * @return {@link GeneralAdminInp}
+   * @throws JargonException
+   */
+  public static final GeneralAdminInpForResources instanceForModifyResource(
+      final Resource resource, String option) throws JargonException {
+
+    if (resource == null) {
+      throw new IllegalArgumentException("null resource");
+    }
+
+    if (resource.getName() == null || resource.getName().isEmpty()) {
+      throw new IllegalArgumentException("resource name is null or empty");
+    }
+
+    String newValue;
+    switch (option) {
+      case "type" :
+        if (resource.getType() == null || resource.getType().isEmpty()) {
+          throw new IllegalArgumentException("null or empty type");
+        }
+        newValue = resource.getType();
+        break;
+      case "status" :
+        if (resource.getStatus() == null) {
+          throw new IllegalArgumentException("null status");
+        }
+        newValue = resource.getStatus();
+        break;
+      case "comment" : 
+        if (resource.getComment() == null) {
+          throw new IllegalArgumentException("null comment string");
+        }
+        newValue = resource.getComment();
+        break;
+      case "info" :
+        if (resource.getInfo() == null) {
+          throw new IllegalArgumentException("null info string");
+        }
+        newValue = resource.getInfo();
+        break;
+      case "context" : 
+        if (resource.getContextString() == null) {
+          throw new IllegalArgumentException("Null context string");
+        }
+        newValue = resource.getContextString();
+        break;
+      default :
+        throw new IllegalArgumentException("Impossible to change " + option + " attribute for resource " + resource.getName());
+    }
+
+    return new GeneralAdminInpForResources("modify", "resource",
+        resource.getName(), option, newValue,
+        BLANK, BLANK, BLANK, BLANK, BLANK,
+        GEN_ADMIN_INP_API_NBR);
+
+  }
+
 	/**
 	 * Packing instruction to add a child to a resource
 	 *

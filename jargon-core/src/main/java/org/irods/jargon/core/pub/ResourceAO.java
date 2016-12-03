@@ -144,6 +144,20 @@ public interface ResourceAO extends IRODSAccessObject {
 			JargonException;
 
 	/**
+	 * Set AVU metadata for this resource.
+	 * Be aware setting a metadata forces just this one attribute name to exist (it will delete all the possibly existing ones)
+	 * @param resourceName
+	 *            <code>String</code> with the name of the resource
+	 * @param avuData
+	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 * @throws JargonException
+	 * @throws InvalidResourceException
+	 *             when resource is missing
+	 */
+	void setAVUMetadata(String resourceName, AvuData avuData)
+			throws InvalidResourceException, JargonException;
+
+	/**
 	 * Remove Resource AVU data, silently ignore if metadata is not found.
 	 *
 	 * @param resourceName
@@ -167,6 +181,17 @@ public interface ResourceAO extends IRODSAccessObject {
 	 */
 	void addResource(final Resource resource) throws DuplicateDataException,
 	JargonException;
+
+	/**
+	 * Modify a resource
+	 *
+	 * @param resource
+	 *            {@link Resource} to be modified
+	 * @param what
+	 *            what is modified among type, status, comment, info, context
+	 * @throws JargonException
+	 */
+	void modifyResource(final Resource resource, String what) throws JargonException;
 
 	void deleteResource(final String resourceName) throws Exception;
 
