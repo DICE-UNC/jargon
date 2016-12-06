@@ -75,5 +75,5 @@ Honor client server negotiation and SSL transport encryption, as well as shared-
 
 #### IndexOutOfBoundsException in PackingIrodsOutputStream #200
 
-
+Simplified the buffering code and added unit and functional tests, especially for conditions when the putBufferSize is manipulated in jargon.properties.  
 
