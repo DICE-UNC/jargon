@@ -45,7 +45,7 @@ public enum RodsGenQueryEnum {
 																																													"DATA_STATUS", 414), COL_D_DATA_CHECKSUM("DATA_CHECKSUM", 415), COL_D_EXPIRY(
 																																															"DATA_EXPIRY", 416), COL_D_MAP_ID("DATA_MAP_ID", 417), COL_D_COMMENTS(
 																																																	"DATA_COMMENTS", 418), COL_D_CREATE_TIME("DATA_CREATE_TIME", 419), COL_D_MODIFY_TIME(
-																																																			"DATA_MODIFY_TIME", 420), COL_D_DATA_MODE("DATA_MODE", 421),
+																																																			"DATA_MODIFY_TIME", 420), COL_D_DATA_MODE("DATA_MODE", 421), COL_D_RESC_HIER("DATA_RESC_HIER", 422),COL_D_RESC_ID("DATA_RESC_ID", 423),
 																																																			// data access
 																																																			COL_DATA_ACCESS_TYPE("DATA_ACCESS_TYPE", 700), COL_DATA_ACCESS_NAME(
 																																																					"DATA_ACCESS_NAME", 701), COL_DATA_TOKEN_NAMESPACE(
