@@ -77,3 +77,10 @@ Honor client server negotiation and SSL transport encryption, as well as shared-
 
 Simplified the buffering code and added unit and functional tests, especially for conditions when the putBufferSize is manipulated in jargon.properties.  
 
+
+
+### Additional testing for reported issues, minor changes
+
+#### Login fails if password contains linux escape characters #202 
+
+
