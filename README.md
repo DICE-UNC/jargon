@@ -77,6 +77,10 @@ Honor client server negotiation and SSL transport encryption, as well as shared-
 
 Simplified the buffering code and added unit and functional tests, especially for conditions when the putBufferSize is manipulated in jargon.properties.  
 
+#### -23000 error code from iRODS with parallel file operations #199
+
+Testing with CyberDuck.  Added a new IRODSAccessObjectFactory.authenticateIRODSAccountUtilizingCachedConnectionIfPresent to avoid double-opening a connection, reducing side effects
+for some usage patterns.
 
 
 ### Additional testing for reported issues, minor changes
