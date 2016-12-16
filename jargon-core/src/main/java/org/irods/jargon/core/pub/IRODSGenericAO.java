@@ -67,7 +67,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#isInstrumented()
 	 */
 	@Override
@@ -77,7 +77,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSSession()
 	 */
 	@Override
@@ -87,7 +87,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccount()
 	 */
 	@Override
@@ -97,7 +97,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSServerProperties()
 	 */
@@ -117,7 +117,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
@@ -128,7 +128,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getJargonProperties()
 	 */
 	@Override
@@ -138,7 +138,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock
 	 * ()
@@ -152,7 +152,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
@@ -164,7 +164,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSFileFactory()
 	 */
 	@Override
@@ -175,7 +175,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
@@ -188,7 +188,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#operationComplete(int)
 	 */
 	@Override
@@ -196,6 +196,56 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 		OperationComplete operationComplete = OperationComplete
 				.instance(status);
 		return getIRODSProtocol().irodsFunction(operationComplete);
+	}
+
+	@Override
+	public void closeSession() throws JargonException {
+
+		irodsSession.closeSession();
+	}
+
+	@Override
+	public void closeSessionAndEatExceptions() {
+		try {
+			irodsSession.closeSession();
+		} catch (JargonException e) {
+			log.warn("ignored exception on connection close:{}",
+					e.getMessage(), e);
+		}
+
+	}
+
+	@Override
+	public void closeSession(final IRODSAccount irodsAccount)
+			throws JargonException {
+		if (irodsSession == null) {
+			throw new JargonException("null session");
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		irodsSession.closeSession(irodsAccount);
+
+	}
+
+	@Override
+	public void closeSessionAndEatExceptions(final IRODSAccount irodsAccount) {
+		if (irodsSession == null) {
+			return;
+		}
+
+		if (irodsAccount == null) {
+			throw new IllegalArgumentException("null irodsAccount");
+		}
+
+		try {
+			irodsSession.closeSession(irodsAccount);
+		} catch (Exception e) {
+			log.warn("error encountered closing session, ignored", e);
+		}
+
 	}
 
 }
