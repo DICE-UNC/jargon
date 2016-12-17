@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.pub;
 
-import java.util.Map;
-
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
@@ -217,8 +215,8 @@ public final class IRODSFileSystem {
 	 * @return {@link AbstractIRODSMidLevelProtocol} that represent
 	 *         protocol-level connection to iRODS (above the socket level)
 	 */
-	public Map<String, AbstractIRODSMidLevelProtocol> getConnectionMap() {
-		return irodsSession.getIRODSCommandsMap();
+	public AbstractIRODSMidLevelProtocol getConnection() {
+		return irodsSession.getIrodsMidLevelProtocol();
 
 	}
 

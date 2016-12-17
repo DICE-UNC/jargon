@@ -701,7 +701,7 @@ public class IRODSFileOutputStreamTest {
 				"did not get session closing stream for re-route",
 				irodsFileOutputStream instanceof SessionClosingIRODSFileOutputStream);
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 
@@ -735,7 +735,7 @@ public class IRODSFileOutputStreamTest {
 		Assert.assertTrue("did not get normal stream for re-route",
 				irodsFileOutputStream instanceof IRODSFileOutputStream);
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 
