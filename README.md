@@ -82,9 +82,14 @@ Simplified the buffering code and added unit and functional tests, especially fo
 Testing with CyberDuck.  Added a new IRODSAccessObjectFactory.authenticateIRODSAccountUtilizingCachedConnectionIfPresent to avoid double-opening a connection, reducing side effects
 for some usage patterns.
 
+#### add checksum support to Jargon streaming API #194
+
+Added support for checksumming on close of an IRODSFileOutputStream, respecting checksum and checksum with verification flags in jargon.properties.  If either of those flags is true,
+a checksum is computed and stored in iRODS.  Given the nature of the java.io API, actual verification is not done, just computation and storage in the iCAT.
 
 ### Additional testing for reported issues, minor changes
 
 #### Login fails if password contains linux escape characters #202 
+
 
 

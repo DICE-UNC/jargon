@@ -15,6 +15,8 @@ import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.connection.JargonProperties;
+import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.DataObjectAO;
@@ -24,6 +26,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
 import org.irods.jargon.core.query.AVUQueryOperatorEnum;
@@ -31,6 +34,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -44,6 +48,7 @@ public class IRODSFileOutputStreamTest {
 	private static org.irods.jargon.testutils.IRODSTestSetupUtilities irodsTestSetupUtilities = null;
 	private static org.irods.jargon.testutils.AssertionHelper assertionHelper = null;
 	private static IRODSFileSystem irodsFileSystem;
+	private static JargonProperties originalJargonProperties;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -54,14 +59,97 @@ public class IRODSFileOutputStreamTest {
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
+		originalJargonProperties = irodsFileSystem.getJargonProperties();
+
 	}
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@Before
+	public void beforeEach() throws Exception {
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				originalJargonProperties);
+	}
+
+	@Test
+	public final void testComputeChecksum() throws Exception {
+
+		SettableJargonProperties jargonProps = new SettableJargonProperties(
+				originalJargonProperties);
+		jargonProps.setComputeChecksumAfterTransfer(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
+		String testFileName = "testComputeChecksum.csv";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		int writtenInt = 3;
+		irodsFileOutputStream.write(writtenInt);
+		irodsFileOutputStream.close();
+
+		ObjStat objStat = accessObjectFactory.getDataObjectAO(irodsAccount)
+				.getObjectStatForAbsolutePath(irodsFile.getAbsolutePath());
+
+		Assert.assertFalse("no checksum found", objStat.getChecksum().isEmpty());
+
+	}
+
+	@Test
+	public final void testDontComputeChecksum() throws Exception {
+
+		SettableJargonProperties jargonProps = new SettableJargonProperties(
+				originalJargonProperties);
+		jargonProps.setComputeChecksumAfterTransfer(false);
+		jargonProps.setComputeAndVerifyChecksumAfterTransfer(false);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProps);
+		String testFileName = "testDontComputeChecksum.csv";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
+				.instanceIRODSFileOutputStream(irodsFile);
+
+		int writtenInt = 3;
+		irodsFileOutputStream.write(writtenInt);
+		irodsFileOutputStream.close();
+
+		ObjStat objStat = accessObjectFactory.getDataObjectAO(irodsAccount)
+				.getObjectStatForAbsolutePath(irodsFile.getAbsolutePath());
+
+		Assert.assertTrue("checksum found", objStat.getChecksum().isEmpty());
+
 	}
 
 	@Test
@@ -687,8 +775,8 @@ public class IRODSFileOutputStreamTest {
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		irodsFile
-		.setResource(testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
+				.setResource(testingProperties
+						.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY));
 
 		IRODSFileOutputStream irodsFileOutputStream = irodsFileFactory
 				.instanceIRODSFileOutputStreamWithRerouting(irodsFile);
@@ -769,7 +857,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory
@@ -822,7 +910,7 @@ public class IRODSFileOutputStreamTest {
 		for (int i = 0; i < numberWrites; i++) {
 			outputStreamWriter = new OutputStreamWriteTestWriter(absPath,
 					targetIrodsCollection + "/" + testFileNamePrefix + i
-					+ testFileNameSuffix,
+							+ testFileNameSuffix,
 					irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 			writerThreads.add(outputStreamWriter);
 		}
@@ -863,7 +951,7 @@ public class IRODSFileOutputStreamTest {
 				fileNameAndPath.toString(),
 				targetIrodsCollection,
 				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 				null, null);
 
 		IRODSFileFactory irodsFileFactory = accessObjectFactory

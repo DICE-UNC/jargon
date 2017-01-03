@@ -6,6 +6,7 @@ package org.irods.jargon.core.pub.io;
 import java.io.IOException;
 import java.io.OutputStream;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObject;
 
@@ -122,4 +123,15 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 */
 	public long seek(int fd, long seek, SeekWhenceType whence)
 			throws JargonException;
+
+	/**
+	 * Convenience method to compute a checksum on a given iRODS file
+	 * 
+	 * @param irodsFileAbsolutePath
+	 *            <code>String</code> with an iRODS absolute path to a file
+	 * @return {@link ChecksumValue} with the resulting checksum
+	 * @throws JargonException
+	 */
+	public ChecksumValue computeChecksumOnIrodsFile(
+			final String irodsFileAbsolutePath) throws JargonException;
 }

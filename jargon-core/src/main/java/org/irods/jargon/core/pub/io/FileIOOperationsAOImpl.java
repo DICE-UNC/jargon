@@ -5,12 +5,14 @@ package org.irods.jargon.core.pub.io;
 
 import java.io.OutputStream;
 
+import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.OpenedDataObjInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.DataObjectChecksumUtilitiesAO;
 import org.irods.jargon.core.pub.IRODSGenericAO;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
@@ -26,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *         should be used.
  */
 final class FileIOOperationsAOImpl extends IRODSGenericAO implements
-FileIOOperations {
+		FileIOOperations {
 
 	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
 
@@ -42,7 +44,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#write(int, byte[],
 	 * int, int)
 	 */
@@ -101,7 +103,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int,
 	 * java.io.OutputStream, long)
 	 */
@@ -138,7 +140,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#fileRead(int, byte[],
 	 * int, int)
 	 */
@@ -181,7 +183,7 @@ FileIOOperations {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.FileIOOperations#seek(int, long,
 	 * org.irods.jargon.core.pub.io.FileIOOperations.SeekWhenceType)
 	 */
@@ -210,5 +212,34 @@ FileIOOperations {
 		message = getIRODSProtocol().irodsFunction(openedDataObjInp);
 
 		return message.getTag(IRODSConstants.offset).getLongValue();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.io.FileIOOperations#computeChecksumOnIrodsFile
+	 * (java.lang.String)
+	 */
+	@Override
+	public ChecksumValue computeChecksumOnIrodsFile(String irodsFileAbsolutePath)
+			throws JargonException {
+
+		log.info("computeChecksumOnIrodsFile()");
+		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsFileAbsolutePath");
+		}
+		log.info("irodsFileAbsolutePath:{}", irodsFileAbsolutePath);
+
+		IRODSFile irodsFile = this.getIRODSFileFactory().instanceIRODSFile(
+				irodsFileAbsolutePath);
+
+		DataObjectChecksumUtilitiesAO dataObjectChecksumUtilitiesAO = this
+				.getIRODSAccessObjectFactory()
+				.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
+		return dataObjectChecksumUtilitiesAO
+				.computeChecksumOnDataObject(irodsFile);
+
 	}
 }
