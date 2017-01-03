@@ -60,14 +60,14 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.authScheme = authScheme;
 		this.userName = userName;
-		this.password = password;
+		this.password = password.replaceAll(";", "\\\\;");
 		setApiNumber(AUTH_REQ_API_NBR);
 		this.timeToLive = timeToLive;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

@@ -87,9 +87,16 @@ for some usage patterns.
 Added support for checksumming on close of an IRODSFileOutputStream, respecting checksum and checksum with verification flags in jargon.properties.  If either of those flags is true,
 a checksum is computed and stored in iRODS.  Given the nature of the java.io API, actual verification is not done, just computation and storage in the iCAT.
 
+
+#### PAM auth failure when password includes semicolon #195
+
+Added KVP packing instruction support to escape ; character in PAM password, added unit test verification
+
+
 ### Additional testing for reported issues, minor changes
 
 #### Login fails if password contains linux escape characters #202 
+
 
 
 
