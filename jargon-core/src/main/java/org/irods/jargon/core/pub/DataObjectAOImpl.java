@@ -4252,8 +4252,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 		UserFilePermission userFilePermission = getPermissionViaGenQuery(
 				irodsFile.getName(), userName, irodsFile.getParent());
 
-		// be tolerant if the specific query facility is not available. FIXME:
-		// add to cache.this is a patch
+		// be tolerant if the specific query facility is not available.
 		UserFilePermission groupFilePermission;
 		try {
 			groupFilePermission = getPermissionViaSpecQueryAsGroupMember(

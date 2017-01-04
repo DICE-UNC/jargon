@@ -93,10 +93,13 @@ a checksum is computed and stored in iRODS.  Given the nature of the java.io API
 Added KVP packing instruction support to escape ; character in PAM password, added unit test verification
 
 
+
 ### Additional testing for reported issues, minor changes
 
 #### Login fails if password contains linux escape characters #202 
 
+#### "Catalog SQL error" in jargon-core when using Oracle #196 
+Replicated issue, identified as iRODS server issue, and currently pending 
 
 
 
