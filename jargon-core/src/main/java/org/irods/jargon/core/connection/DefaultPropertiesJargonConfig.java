@@ -549,8 +549,8 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.name())) {
 			return SslNegotiationPolicy.CS_NEG_REFUSE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
-			return SslNegotiationPolicy.CS_NEG_REQ;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.name())) {
+			return SslNegotiationPolicy.CS_NEG_REQUIRE;
 		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
 				.name())) {
 			return SslNegotiationPolicy.NO_NEGOTIATION;

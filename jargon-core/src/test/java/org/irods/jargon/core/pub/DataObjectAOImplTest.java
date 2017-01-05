@@ -45,6 +45,7 @@ import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
+import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -77,6 +78,11 @@ public class DataObjectAOImplTest {
 
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
+		irodsFileSystem.closeAndEatExceptions();
+	}
+
+	@After
+	public void afterEach() throws Exception {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 

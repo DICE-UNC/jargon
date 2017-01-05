@@ -134,7 +134,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 

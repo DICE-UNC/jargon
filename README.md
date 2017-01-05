@@ -87,7 +87,6 @@ for some usage patterns.
 Added support for checksumming on close of an IRODSFileOutputStream, respecting checksum and checksum with verification flags in jargon.properties.  If either of those flags is true,
 a checksum is computed and stored in iRODS.  Given the nature of the java.io API, actual verification is not done, just computation and storage in the iCAT.
 
-
 #### PAM auth failure when password includes semicolon #195
 
 Added KVP packing instruction support to escape ; character in PAM password, added unit test verification
@@ -100,6 +99,9 @@ pending...consider adding a fail fast option...
 
 Added toString methods to result set and result row, limited debug logging of result rows to 100 rows.  Fixed a typo in the logging statement for collection listings.
 
+#### iRODS CS_NEG_REQUIRE + PAM authentication #215
+
+Fixed mismatch between local SSL negotiation stance enum values and iRODS negotiation enum values.
 
 ### Additional testing for reported issues, minor changes
 
@@ -107,6 +109,4 @@ Added toString methods to result set and result row, limited debug logging of re
 
 #### "Catalog SQL error" in jargon-core when using Oracle #196 
 Replicated issue, identified as iRODS server issue, and currently pending 
-
-
 

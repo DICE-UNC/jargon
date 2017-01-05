@@ -100,7 +100,7 @@ public class EncryptedTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -152,7 +152,7 @@ public class EncryptedTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -222,7 +222,7 @@ public class EncryptedTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -264,7 +264,7 @@ public class EncryptedTransferTests {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties
-				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
