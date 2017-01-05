@@ -116,4 +116,42 @@ public interface IRODSAccessObject {
 	 */
 	boolean isInstrumented();
 
+	/**
+	 * Convenience method closes all sessions associated with the current
+	 * Thread.
+	 * 
+	 * @throws JargonException
+	 */
+	void closeSession() throws JargonException;
+
+	/**
+	 * Convenience method closes all sessions associated with the current
+	 * Thread, intercepts and logs/ignores any exceptions that occur in the
+	 * close operation.
+	 * 
+	 * @throws JargonException
+	 */
+	void closeSessionAndEatExceptions();
+
+	/**
+	 * Convenience method closes any session associated with the given
+	 * <code>IRODSAccount</code> in the current thread.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} associated with the connection
+	 * @throws JargonException
+	 */
+	void closeSession(IRODSAccount irodsAccount) throws JargonException;
+
+	/**
+	 * Convenience method closes any session associated with the given
+	 * <code>IRODSAccount</code> in the current thread. Logs and ignores any
+	 * exception in the close operation.
+	 * 
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} associated with the connection
+	 * @throws JargonException
+	 */
+	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
+
 }

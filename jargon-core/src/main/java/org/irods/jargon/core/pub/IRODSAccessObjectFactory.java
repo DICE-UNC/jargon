@@ -463,6 +463,39 @@ public interface IRODSAccessObjectFactory {
 	 * <code>AuthResponse</code> augmented with information about the principal.
 	 * <p/>
 	 * Note that the account information is actually cached in a thread local by
+	 * the <code>IRODSSession</code>, so this method will preemptively destroy
+	 * any connection that may have been cached and start a new agent. For web
+	 * applications and other 'session per request' forms, this is the
+	 * recommended approach.
+	 * <p/>
+	 * Some API uses may cause more than one call to the authenticate method in
+	 * the course of handling a request (usually dictated by the style of the
+	 * API calling Jargon), and this method will avoid any preemptive shutdown
+	 * of a connection in order to obtain a new authentication. Rather, this
+	 * method will silently return an already-cached authentication for the
+	 * current connection
+	 *
+	 * @param irodsAccount
+	 *            {@IRODSAccount} with the authenticating
+	 *            principal
+	 * @return {@link AuthResponse} containing information about the
+	 *         authenticated principal. Note that the authentication process may
+	 *         cause the authenticating <code>IRODSAccount</code> to be altered
+	 *         or augmented. The resulting account that can be cached and
+	 *         re-used by applications will be in the authenticated account.
+	 * @throws AuthenticationException
+	 *             If the principal cannot be authenticated. This will be thrown
+	 *             on initial authentication
+	 * @throws JargonException
+	 */
+	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException;
+
+	/**
+	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
+	 * <code>AuthResponse</code> augmented with information about the principal.
+	 * <p/>
+	 * Note that the account information is actually cached in a thread local by
 	 * the <code>IRODSSession</code>, so this method will return the cached
 	 * response if already authenticated. If not cached, this method causes an
 	 * authentication process.
@@ -480,8 +513,9 @@ public interface IRODSAccessObjectFactory {
 	 *             on initial authentication
 	 * @throws JargonException
 	 */
-	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount)
-			throws AuthenticationException, JargonException;
+	AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(
+			IRODSAccount irodsAccount) throws AuthenticationException,
+			JargonException;
 
 	/**
 	 * Handy method to see if we're using the dynamic server properties cache.

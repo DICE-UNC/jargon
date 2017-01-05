@@ -70,8 +70,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	 */
 	protected IRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-					throws NoResourceDefinedException, FileNotFoundException,
-					JargonException {
+			throws NoResourceDefinedException, FileNotFoundException,
+			JargonException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -160,13 +160,29 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#close()
 	 */
 	@Override
 	public void close() throws IOException {
 		try {
 			irodsFile.close();
+
+			/*
+			 * If checksum compute is true, add an iRODS checksum
+			 */
+
+			if (this.getFileIOOperations().getJargonProperties()
+					.isComputeAndVerifyChecksumAfterTransfer()
+					|| this.getFileIOOperations().getJargonProperties()
+							.isComputeChecksumAfterTransfer()) {
+				log.info("computing checksum per jargon properties settings");
+
+				this.getFileIOOperations().computeChecksumOnIrodsFile(
+						this.irodsFile.getAbsolutePath());
+
+			}
+
 		} catch (JargonException e) {
 			String msg = "JargonException caught in constructor, rethrow as IOException";
 			log.error(msg, e);
@@ -184,7 +200,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#write(byte[], int, int)
 	 */
 	@Override
@@ -209,7 +225,7 @@ public class IRODSFileOutputStream extends OutputStream {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.FileOutputStream#write(byte[])
 	 */
 	@Override

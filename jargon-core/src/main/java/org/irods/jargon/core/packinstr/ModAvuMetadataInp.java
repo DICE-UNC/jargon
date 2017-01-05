@@ -34,7 +34,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * Modify action
 	 */
 	public enum ActionType {
-		ADD, REMOVE, MOD
+		ADD, REMOVE, MOD, SET
 	}
 
 	private final String targetIdentifier;
@@ -161,6 +161,21 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 			final String targetIdentifier, final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier,
 				MetadataTargetType.RESOURCE, avuData, null, ActionType.ADD);
+	}
+
+  	/**
+	 * Create an instance of the packing instruction that will set the AVU to a
+	 * resource.
+	 *
+	 * @param targetIdentifier
+	 *            <code>String</code> with the path or unique name of the object
+	 *            to which the metadata will be added
+	 * @return
+	 */
+	public static final ModAvuMetadataInp instanceForSetResourceMetadata(
+			final String targetIdentifier, final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier,
+				MetadataTargetType.RESOURCE, avuData, null, ActionType.SET);
 	}
 
 	/**
@@ -295,6 +310,8 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 			argList.add("rmw");
 		} else if (actionType == ActionType.MOD) {
 			argList.add("mod");
+		} else if (actionType == ActionType.SET) {
+			argList.add("set");
 		}
 
 		if (metadataTargetType == MetadataTargetType.COLLECTION) {

@@ -873,10 +873,10 @@ public class UserAOTest {
 		Assert.assertFalse("no avus returned", avuList.isEmpty());
 	}
 
-	@Ignore
+	@Test
 	// https://github.com/DICE-UNC/jargon/issues/130
 	public void testChangeUserPassword() throws Exception {
-		String testUser = "testx";
+		String testUser = "testChangeUserPassword";
 		String password1 = "test";
 		String password2 = "PaZz!word123";
 		String password3 = "p@ssw000000000000000000000000000000000rd3";

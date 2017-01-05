@@ -5,6 +5,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.connection.auth.AuthResponse;
+import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.pub.EnvironmentalInfoAO;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -83,6 +84,45 @@ public class PAMAuthTest {
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 		// now try something that uses tha
+
+		irodsFileSystem.closeAndEatExceptions();
+
+	}
+
+	/**
+	 * Unit test for PAM auth failure when password includes semicolon #195
+	 * original problem was a -158000 exception in the pack struct, so an auth
+	 * exception is expected and shows 'success' in processing the ; char.
+	 * 
+	 * @throws Exception
+	 */
+	@Test(expected = AuthenticationException.class)
+	public final void testPAMAuthSemicolonBug195() throws Exception {
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
+		String pamUser = "someuserBug195";
+		String pamPassword = "howAbout;Here";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
+						testingProperties, pamUser, pamPassword);
+
+		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
+						irodsAccount);
+		environmentalInfoAO.getIRODSServerCurrentTime();
+
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
+				.getAuthResponse();
+		Assert.assertNotNull("no authenticating account",
+				authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type",
+				AuthScheme.PAM, authResponse
+
+				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
 
 		irodsFileSystem.closeAndEatExceptions();
 
