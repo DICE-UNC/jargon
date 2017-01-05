@@ -12,7 +12,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilderTest {
 	public void testClientServerNegotationPolicyFromPropertiesBuilder()
 			throws Exception {
 		SettableJargonProperties jargonProperties = new SettableJargonProperties();
-		jargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		jargonProperties.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		IRODSSession irodsSession = Mockito.mock(IRODSSession.class);
 		Mockito.when(irodsSession.getJargonProperties()).thenReturn(
 				jargonProperties);
@@ -20,7 +20,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilderTest {
 				irodsSession);
 		ClientServerNegotiationPolicy actual = builder
 				.buildClientServerNegotiationPolicyFromJargonProperties();
-		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQ,
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQUIRE,
 				actual.getSslNegotiationPolicy());
 	}
 }

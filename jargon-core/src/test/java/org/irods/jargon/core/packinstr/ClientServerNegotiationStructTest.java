@@ -52,12 +52,12 @@ public class ClientServerNegotiationStructTest {
 	public void testInstanceFromTagReq() throws Exception {
 		Tag tag = new Tag(ClientServerNegotiationStructInitNegotiation.NEG_PI);
 		tag.addTag("status", 1);
-		tag.addTag("result", SslNegotiationPolicy.CS_NEG_REQ.name());
+		tag.addTag("result", SslNegotiationPolicy.CS_NEG_REQUIRE.name());
 		ClientServerNegotiationStructInitNegotiation struct = ClientServerNegotiationStructInitNegotiation
 				.instanceFromTag(tag);
 		Assert.assertNotNull(struct);
 		Assert.assertEquals(1, struct.getStatus());
-		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQ,
+		Assert.assertEquals(SslNegotiationPolicy.CS_NEG_REQUIRE,
 				struct.getSslNegotiationPolicy());
 
 	}

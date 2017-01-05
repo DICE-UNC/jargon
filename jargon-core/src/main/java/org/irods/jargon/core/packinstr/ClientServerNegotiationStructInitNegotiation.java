@@ -50,8 +50,8 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
-		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQ.name())) {
-			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQ);
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.name())) {
+			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		} else {
 			throw new ClientServerNegotiationException(
 					"Unrecognized ssl negotiation response:" + sslNegResult);

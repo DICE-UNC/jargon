@@ -186,6 +186,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
 			pagingAwareCollectionListing
 					.setCollectionAndDataObjectListingEntries(entries);
+
 			descriptor.setCollectionsComplete(true);
 			descriptor.setCount(entries.size());
 			return pagingAwareCollectionListing;
@@ -217,6 +218,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			descriptor.setCount(queriedEntries.get(queriedEntries.size() - 1)
 					.getCount());
 			descriptor.setTotalRecords(queriedEntries.get(0).getTotalRecords());
+
 			pagingAwareCollectionListing
 					.getCollectionAndDataObjectListingEntries().addAll(
 							queriedEntries);
@@ -453,9 +455,14 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 							+ absolutePathToParent);
 		}
 
+
 		return collectionListingUtils.countDataObjectsUnderPath(objStat);
 
+
+
 	}
+
+	
 
 	/*
 	 * (non-Javadoc)
@@ -516,6 +523,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	@Override
 	public int countCollectionsUnderPath(final String absolutePathToParent)
 			throws FileNotFoundException, JargonException {
+
 
 		if (absolutePathToParent == null) {
 			throw new IllegalArgumentException("absolutePathToParent is null");
@@ -1161,7 +1169,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		IRODSQueryResultSet resultSet = collectionListingUtils
 				.queryForPathAndReturnResultSet(effectiveAbsolutePath, builder,
 						partialStartIndex, objStat);
-		log.debug("got result set:{}}, resultSet");
+		log.debug("got result set:{}", resultSet);
 
 		return buildDataObjectListingWithAccessInfoFromResultSet(resultSet,
 				objStat);

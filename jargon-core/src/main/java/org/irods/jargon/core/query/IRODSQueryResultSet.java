@@ -42,7 +42,7 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final List<IRODSQueryResultRow> results,
 			final int continuationIndex, final int totalRecords)
-					throws JargonException {
+			throws JargonException {
 
 		// get a list of the column names
 		List<String> columnNames = new ArrayList<String>();
@@ -75,6 +75,36 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() {
 		return translatedIRODSQuery;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 100;
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSQueryResultSet [");
+		if (translatedIRODSQuery != null) {
+			builder.append("translatedIRODSQuery=")
+					.append(translatedIRODSQuery).append(", ");
+		}
+		if (results != null) {
+			builder.append("results=")
+					.append(results.subList(0, Math.min(results.size(), maxLen)))
+					.append(", ");
+		}
+		builder.append("hasMoreRecords=").append(hasMoreRecords).append(", ");
+		if (columnNames != null) {
+			builder.append("columnNames=")
+					.append(columnNames.subList(0,
+							Math.min(columnNames.size(), maxLen))).append(", ");
+		}
+		builder.append("continuationIndex=").append(continuationIndex)
+				.append(", totalRecords=").append(totalRecords).append("]");
+		return builder.toString();
 	}
 
 }
