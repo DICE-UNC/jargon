@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *         should be used.
  */
 
-final class FileIOOperationsAOImpl extends IRODSGenericAO implements
+public final class FileIOOperationsAOImpl extends IRODSGenericAO implements
 		FileIOOperations {
 
 	static Logger log = LoggerFactory.getLogger(FileIOOperationsAOImpl.class);
