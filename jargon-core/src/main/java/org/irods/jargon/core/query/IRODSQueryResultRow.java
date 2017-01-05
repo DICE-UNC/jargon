@@ -91,7 +91,7 @@ public class IRODSQueryResultRow {
 			final List<String> queryResultColumns,
 			final List<String> columnNames, final int recordCount,
 			final boolean lastResult, final int totalRecords)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSQueryResultRow(queryResultColumns, columnNames,
 				recordCount, lastResult);
 	}
@@ -297,6 +297,33 @@ public class IRODSQueryResultRow {
 
 	public boolean isLastResult() {
 		return lastResult;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 100;
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSQueryResultRow [");
+		if (queryResultColumns != null) {
+			builder.append("queryResultColumns=")
+					.append(queryResultColumns.subList(0,
+							Math.min(queryResultColumns.size(), maxLen)))
+					.append(", ");
+		}
+		builder.append("recordCount=").append(recordCount)
+				.append(", lastResult=").append(lastResult).append(", ");
+		if (columnNames != null) {
+			builder.append("columnNames=")
+					.append(columnNames.subList(0,
+							Math.min(columnNames.size(), maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

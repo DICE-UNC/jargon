@@ -92,6 +92,13 @@ a checksum is computed and stored in iRODS.  Given the nature of the java.io API
 
 Added KVP packing instruction support to escape ; character in PAM password, added unit test verification
 
+#### failing parallel file operation should throw exception #133
+
+pending...consider adding a fail fast option...
+
+#### improve logging in CollectionAndDataObjectListAndSearchAOImpl #135
+
+Added toString methods to result set and result row, limited debug logging of result rows to 100 rows.  Fixed a typo in the logging statement for collection listings.
 
 
 ### Additional testing for reported issues, minor changes
