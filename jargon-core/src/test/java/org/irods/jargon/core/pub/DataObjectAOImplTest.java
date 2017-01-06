@@ -1123,7 +1123,7 @@ public class DataObjectAOImplTest {
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
 				.getIRODSAccessObjectFactory();
 
-		String getFileName = "testGetResult.txt";
+		String getFileName = "testGetWithParensBug1 (1) result ().txt";
 		String getResultLocalPath = scratchFileUtils
 				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
 				+ getFileName;
