@@ -1289,7 +1289,7 @@ public class DataObjectAOImplTest {
 		// with no error, check it was truly overwritten by making source file a
 		// different length and checking
 
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		sourceLocalFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
@@ -1374,7 +1374,7 @@ public class DataObjectAOImplTest {
 		// with no error, check it was truly overwritten by making source file a
 		// different length and checking
 
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		sourceLocalFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
@@ -1457,7 +1457,7 @@ public class DataObjectAOImplTest {
 		// with no error, check it was truly overwritten by making source file a
 		// different length and checking
 
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		sourceLocalFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
@@ -1543,7 +1543,7 @@ public class DataObjectAOImplTest {
 		// with no error, check it was truly overwritten by making source file a
 		// different length and checking
 
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		sourceLocalFileAbsolutePath = FileGenerator
 				.generateFileOfFixedLengthGivenName(absPath, sourceFileName,
 						secondLength);
@@ -2761,7 +2761,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile testFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
-		testFile.deleteWithForceOption();
+		testFile.delete();
 		testFile.mkdirs();
 
 		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
@@ -2884,7 +2884,7 @@ public class DataObjectAOImplTest {
 		IRODSFile targetFile = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		targetFile.deleteWithForceOption();
+		targetFile.delete();
 		targetFile.mkdirs();
 		String dataObjectAbsPath = targetIrodsCollection + '/' + testFileName;
 
@@ -2944,7 +2944,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -2985,7 +2985,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -3318,7 +3318,7 @@ public class DataObjectAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile rmFile = factory.instanceIRODSFile(targetIrodsCollection,
 				testFileName);
-		rmFile.deleteWithForceOption();
+		rmFile.delete();
 
 		DataTransferOperations dto = accessObjectFactory
 				.getDataTransferOperations(irodsAccount);
@@ -3495,7 +3495,7 @@ public class DataObjectAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -3541,7 +3541,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.delete();
 		targetIrodsFile.mkdirs();
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -3587,7 +3587,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.delete();
 		targetIrodsFile.mkdirs();
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -5501,7 +5501,7 @@ public class DataObjectAOImplTest {
 		IRODSFile testSubdir = irodsFileSystem
 				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
 						targetIrodsCollection);
-		testSubdir.deleteWithForceOption();
+		testSubdir.delete();
 		testSubdir.mkdirs();
 
 		DataObjectAO dAO = aoFactory.getDataObjectAO(irodsAccount);
@@ -5726,7 +5726,7 @@ public class DataObjectAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -5781,7 +5781,7 @@ public class DataObjectAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		irodsFile.mkdirs();
 
 		DataObjectAO dataObjectAO = irodsFileSystem
@@ -5907,7 +5907,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -5991,7 +5991,7 @@ public class DataObjectAOImplTest {
 				.getIRODSFileFactory(irodsAccount);
 		IRODSFile irodsFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 		irodsFile.mkdirs();
 
 		DataTransferOperations dto = accessObjectFactory
@@ -6038,7 +6038,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -6093,7 +6093,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -6177,7 +6177,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -6234,7 +6234,7 @@ public class DataObjectAOImplTest {
 
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		irodsFile.deleteWithForceOption();
+		irodsFile.delete();
 
 		irodsFile.setResource(testingProperties
 				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY));
@@ -6299,7 +6299,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.delete();
 		targetIrodsFile.mkdirs();
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(
@@ -6357,7 +6357,7 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(targetIrodsCollection);
-		targetIrodsFile.deleteWithForceOption();
+		targetIrodsFile.delete();
 		targetIrodsFile.mkdirs();
 		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataTransferOperations(

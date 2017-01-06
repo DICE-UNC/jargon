@@ -103,10 +103,16 @@ Added toString methods to result set and result row, limited debug logging of re
 
 Fixed mismatch between local SSL negotiation stance enum values and iRODS negotiation enum values.
 
+#### "Catalog SQL error" in jargon-core when using Oracle #196
+Replicated issue, identified as iRODS server issue, due to missing specific queries.  For cat sql errors when checking group authorization, a 'specific_query_patch-bug196.sh' demonstrates a repair to a 4.1.x iRODS installation with Oracle iCAT.  See https://github.com/DICE-UNC/jargon/issues/196 for details.
+
 ### Additional testing for reported issues, minor changes
 
 #### Login fails if password contains linux escape characters #202 
 
-#### "Catalog SQL error" in jargon-core when using Oracle #196 
-Replicated issue, identified as iRODS server issue, and currently pending 
+
+
+
+
+
 
