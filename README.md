@@ -3,7 +3,6 @@
 ### Date:
 ### Release Version: 4.2.1.0-SNAPSHOT
 ### git tag: 
-
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -28,9 +27,9 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.7+
+* Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.2.0 consortium
+* Jargon supports iRODS iRODS 3.3.1 community, through iRODS 4.2.0 consortium
 
 ## Libraries
 
