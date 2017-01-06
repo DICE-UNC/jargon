@@ -1104,6 +1104,61 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
+	 * test for transfer get of file with parens and spaces in name gives file
+	 * not found #1
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetWithParensBug1() throws Exception {
+
+		String testFileName = "testGetWithParensBug1 (1).txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName, 100);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		String getFileName = "testGetResult.txt";
+		String getResultLocalPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/')
+				+ getFileName;
+		File localFile = new File(getResultLocalPath);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		DataTransferOperations dataTransferOperations = accessObjectFactory
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations
+				.putOperation(
+						localFileName,
+						targetIrodsCollection,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
+						null, null);
+
+		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) accessObjectFactory
+				.getDataObjectAO(irodsAccount);
+		IRODSFile irodsFile = dataObjectAO
+				.instanceIRODSFileForPath(targetIrodsCollection + '/'
+						+ testFileName);
+
+		dataObjectAO.getDataObjectFromIrods(irodsFile, localFile, null, null);
+
+		assertionHelper.assertLocalFileExistsInScratch(IRODS_TEST_SUBDIR_PATH
+				+ '/' + getFileName);
+		assertionHelper.assertLocalScratchFileLengthEquals(
+				IRODS_TEST_SUBDIR_PATH + '/' + getFileName, 100);
+
+	}
+
+	/**
 	 * Do a get when the local file aready exists (should throw an error for
 	 * overwrite)
 	 *

@@ -106,10 +106,18 @@ Fixed mismatch between local SSL negotiation stance enum values and iRODS negoti
 #### "Catalog SQL error" in jargon-core when using Oracle #196
 Replicated issue, identified as iRODS server issue, due to missing specific queries.  For cat sql errors when checking group authorization, a 'specific_query_patch-bug196.sh' demonstrates a repair to a 4.1.x iRODS installation with Oracle iCAT.  See https://github.com/DICE-UNC/jargon/issues/196 for details.
 
+
+
+
 ### Additional testing for reported issues, minor changes
 
 #### Login fails if password contains linux escape characters #202 
 
+Added test cases, fails to replicate
+
+#### transfer get of file with parens and spaces in name gives file not found #1 
+
+Added test case that fails to replicate
 
 
 
