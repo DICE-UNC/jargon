@@ -17,8 +17,8 @@
 		<hibernate.version>3.3.2.GA</hibernate.version>
 		<globus.version>1.8.0</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
-		<sl4j.version>1.6.6</sl4j.version> 
-		<log4j.version>1.2.16</log4j.version>
+		<sl4j.version>1.7.22</sl4j.version> 
+		<log4j.version>1.2.17</log4j.version>
 		<java.version>1.8</java.version>
 		<commons.io.version>2.4</commons.io.version>
 		<commons.lang.version>2.6</commons.lang.version>
