@@ -1,6 +1,8 @@
 package org.irods.jargon.core.connection.auth;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -165,6 +167,55 @@ public class AuthResponse {
 	public void setAuthenticatingIRODSAccount(
 			final IRODSAccount authenticatingIRODSAccount) {
 		this.authenticatingIRODSAccount = authenticatingIRODSAccount;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		final int maxLen = 100;
+		StringBuilder builder = new StringBuilder();
+		builder.append("AuthResponse [successful=").append(successful)
+				.append(", ");
+		if (authMessage != null) {
+			builder.append("authMessage=").append(authMessage).append(", ");
+		}
+		if (authenticatingIRODSAccount != null) {
+			builder.append("authenticatingIRODSAccount=")
+					.append(authenticatingIRODSAccount).append(", ");
+		}
+		if (authenticatedIRODSAccount != null) {
+			builder.append("authenticatedIRODSAccount=")
+					.append(authenticatedIRODSAccount).append(", ");
+		}
+		if (responseProperties != null) {
+			builder.append("responseProperties=")
+					.append(toString(responseProperties.entrySet(), maxLen))
+					.append(", ");
+		}
+		if (startupResponse != null) {
+			builder.append("startupResponse=").append(startupResponse);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	private String toString(Collection<?> collection, int maxLen) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		int i = 0;
+		for (Iterator<?> iterator = collection.iterator(); iterator.hasNext()
+				&& i < maxLen; i++) {
+			if (i > 0) {
+				builder.append(", ");
+			}
+			builder.append(iterator.next());
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

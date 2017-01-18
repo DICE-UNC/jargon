@@ -58,4 +58,41 @@ public class ClientServerNegotiationPolicy {
 		return builder.toString();
 	}
 
+	/**
+	 * Handy method (this is a bit awkward and needs to be refactored) to find
+	 * the ssl negotiation policy as an enum value from a given string
+	 * 
+	 * @param policyString
+	 * @return
+	 */
+	public static SslNegotiationPolicy findSslNegotiationPolicyFromString(
+			final String policyString) {
+
+		if (policyString == null || policyString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty policyString");
+		}
+
+		if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.toString())) {
+			return SslNegotiationPolicy.CS_NEG_REQUIRE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
+				.toString())) {
+			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
+				.toString())) {
+			return SslNegotiationPolicy.CS_NEG_REFUSE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
+				.toString())) {
+			return SslNegotiationPolicy.NO_NEGOTIATION;
+		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
+				.toString())) {
+			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_FAILURE
+				.toString())) {
+			return SslNegotiationPolicy.CS_NEG_FAILURE;
+		} else {
+			throw new IllegalArgumentException("unknown negotitation policy");
+		}
+
+	}
+
 }

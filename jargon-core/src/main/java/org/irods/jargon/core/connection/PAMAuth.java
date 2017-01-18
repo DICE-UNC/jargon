@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.connection;
 
-import java.io.IOException;
-
 import javax.net.ssl.SSLSocket;
 
 import org.irods.jargon.core.connection.AbstractConnection.EncryptionType;
@@ -13,7 +11,6 @@ import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
-import org.irods.jargon.core.packinstr.SSLEndInp;
 import org.irods.jargon.core.packinstr.Tag;
 
 /**
@@ -28,6 +25,8 @@ import org.irods.jargon.core.packinstr.Tag;
  */
 public class PAMAuth extends AuthMechanism {
 
+	private boolean needToWrapWithSsl = false;
+
 	@Override
 	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
 			final IRODSAccount irodsAccount,
@@ -35,13 +34,13 @@ public class PAMAuth extends AuthMechanism {
 			final StartupResponseData startupResponseData)
 			throws AuthenticationException, JargonException {
 
-		boolean needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
+		needToWrapWithSsl = irodsMidLevelProtocol.getIrodsConnection()
 				.getEncryptionType() == EncryptionType.NONE;
 
 		AbstractIRODSMidLevelProtocol irodsMidLevelProtocolToUse = null;
 		/*
 		 * Save the original commands if we will temporarily use an SSL
-		 * connection, otherwise will remain null If, through client/server
+		 * connection, otherwise will remain null. If, through client/server
 		 * negotiation, we already have an SSL connection, then no need to wrap
 		 * the PAM auth in SSL.
 		 */
@@ -97,7 +96,7 @@ public class PAMAuth extends AuthMechanism {
 
 		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
 		shutdownSslAndCloseConnection(irodsMidLevelProtocolToUse);
-		log.info("have the temporary password to use to log in via pam\nsending sslEnd...");
+
 		AuthResponse authResponse = new AuthResponse();
 
 		IRODSAccount irodsAccountUsingTemporaryIRODSPassword = new IRODSAccount(
@@ -129,15 +128,14 @@ public class PAMAuth extends AuthMechanism {
 	private void shutdownSslAndCloseConnection(
 			final AbstractIRODSMidLevelProtocol irodsCommandsToUse)
 			throws JargonException {
-		SSLEndInp sslEndInp = SSLEndInp.instance();
-		irodsCommandsToUse.irodsFunction(sslEndInp);
-
-		try {
-			irodsCommandsToUse.closeOutSocketAndSetAsDisconnected();
-		} catch (IOException e) {
-			log.error("error closing ssl socket", e);
-			throw new JargonException("error closing ssl socket", e);
-		}
+		// SSLEndInp sslEndInp = SSLEndInp.instance();
+		// irodsCommandsToUse.irodsFunction(sslEndInp);
+		irodsCommandsToUse.shutdown();
+		/*
+		 * try { irodsCommandsToUse.closeOutSocketAndSetAsDisconnected(); }
+		 * catch (IOException e) { log.error("error closing ssl socket", e);
+		 * throw new JargonException("error closing ssl socket", e); }
+		 */
 	}
 
 	/**
@@ -202,9 +200,7 @@ public class PAMAuth extends AuthMechanism {
 		AuthResponse originalAuthResponse = irodsMidLevelProtocol
 				.getAuthResponse();
 
-		AbstractIRODSMidLevelProtocol actualProtocol = null;
-
-		actualProtocol = irodsMidLevelProtocol
+		AbstractIRODSMidLevelProtocol actualProtocol = irodsMidLevelProtocol
 				.getIrodsProtocolManager()
 				.getIrodsMidLevelProtocolFactory()
 				.instance(
