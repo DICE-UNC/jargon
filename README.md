@@ -117,6 +117,10 @@ Added test cases, fails to replicate
 
 Added test case that fails to replicate
 
+#### Connections left open in 4.1.10.0-RC1 #222
+
+Added verification test (mostly to allow observing logging, mirroring provided code snippet).  Test does verify clearing and garbage collection of connection pool.
+
 
 
 
