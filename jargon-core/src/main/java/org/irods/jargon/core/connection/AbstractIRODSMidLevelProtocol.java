@@ -105,7 +105,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -209,7 +209,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final byte[] errorBytes, final int errorOffset,
 			final int errorLength, final byte[] bytes, final int byteOffset,
 			final int byteStringLength, final int intInfo)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * iRODS protocol request that sends data to iRODS using the
@@ -250,7 +250,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final int byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -349,7 +349,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			final long byteStreamLength,
 			final InputStream byteStream,
 			final ConnectionProgressStatusListener connectionProgressStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsPI == null) {
 			throw new IllegalArgumentException("null irodsPI");
@@ -533,7 +533,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	public synchronized void read(final OutputStream destination,
 			final long length,
 			final ConnectionProgressStatusListener intraFileStatusListener)
-					throws JargonException {
+			throws JargonException {
 
 		if (length <= 0) {
 			throw new JargonException("length out of range");
@@ -790,6 +790,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 				irodsConnection.flush();
 				log.debug("finally, shutdown is being called on the given connection");
 				irodsConnection.shutdown();
+				if (getIrodsConnectionNonEncryptedRef() != null) {
+					getIrodsConnectionNonEncryptedRef().shutdown();
+				}
 			} catch (ClosedChannelException e) {
 				log.error("closed channel", e);
 				disconnectWithForce();
@@ -1049,7 +1052,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			 * message length in front of the message. Causing unexpected
 			 * results when attempting to parse the message, ie. <REr are
 			 * interpreted as the message length.
-			 *
+			 * 
 			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000
 			 * </status> <msg>ERROR: msiDataObjPut: rsDataObjPut failed for
 			 * <MsgHeader_PI> <type>RODS_API_REPLY </type> <msgLen>0 </msgLen>
@@ -1186,7 +1189,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.IRODSManagedConnection#
 	 * obliterateConnectionAndDiscardErrors()
 	 */

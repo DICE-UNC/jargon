@@ -36,13 +36,14 @@ public class SslNegotiationFunctionalTests {
 	private static Properties testingProperties = new Properties();
 	private static TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static IRODSFileSystem irodsFileSystem = null;
+	private static SettableJargonProperties settableJargonProperties;
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsFileSystem = IRODSFileSystem.instance();
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+		settableJargonProperties = new SettableJargonProperties(
 				irodsFileSystem.getJargonProperties());
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
@@ -55,8 +56,7 @@ public class SslNegotiationFunctionalTests {
 
 	@Before
 	public void before() throws Exception {
-		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
+
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 	}
@@ -71,7 +71,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
+				.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -99,7 +99,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 		TrustAllX509TrustManager manager = new TrustAllX509TrustManager();
@@ -134,7 +134,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -168,7 +168,7 @@ public class SslNegotiationFunctionalTests {
 			return;
 		}
 
-		int times = 50;
+		int times = 150;
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildPamIrodsAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
@@ -176,7 +176,7 @@ public class SslNegotiationFunctionalTests {
 		SettableJargonProperties settableJargonProperties = (SettableJargonProperties) irodsFileSystem
 				.getJargonProperties();
 		settableJargonProperties
-		.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(
 				settableJargonProperties);
 
@@ -190,6 +190,7 @@ public class SslNegotiationFunctionalTests {
 			// Do some thing
 			EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
 					.getEnvironmentalInfoAO(irodsAccount);
+			environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 			long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 			Assert.assertTrue("time val was missing", timeVal > 0);
 			accessObjectFactory.closeSessionAndEatExceptions();

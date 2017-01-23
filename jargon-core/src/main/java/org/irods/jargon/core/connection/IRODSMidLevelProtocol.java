@@ -77,7 +77,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#finalize()
 	 */
 	@Override
@@ -165,7 +165,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final String message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteBufferLength, final int intInfo)
-					throws JargonException {
+			throws JargonException {
 
 		log.debug("calling irods function with byte array");
 
@@ -190,10 +190,6 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.getBytes(getEncoding()).length;
 			}
 
-			/*
-			 * getIrodsConnection().send( createHeader(type, messageLength,
-			 * errorLength, byteBufferLength, intInfo));
-			 */
 			sendHeader(type, messageLength, errorLength, byteBufferLength,
 					intInfo);
 
@@ -258,7 +254,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			final byte[] message, final byte[] errorBytes,
 			final int errorOffset, final int errorLength, final byte[] bytes,
 			final int byteOffset, final int byteBufferLength, final int intInfo)
-					throws JargonException {
+			throws JargonException {
 
 		log.debug("calling irods function with byte array");
 		log.debug("calling irods function with:{}", message);
@@ -312,7 +308,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#sendHeader
 	 * (java.lang.String, int, int, long, int)
@@ -334,7 +330,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol#
 	 * preDisconnectAction()
 	 */

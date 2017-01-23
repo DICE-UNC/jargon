@@ -5,6 +5,7 @@ import java.util.Properties;
 import junit.framework.Assert;
 
 import org.irods.jargon.core.protovalues.UserTypeEnum;
+import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
 import org.irods.jargon.core.pub.UserAO;
 import org.irods.jargon.core.pub.domain.User;
@@ -143,6 +144,42 @@ public class IRODSSimpleConnectionTest {
 		// now clean up as an admin
 
 		adminUserAO.deleteUser(testUser);
+
+	}
+
+	/**
+	 * refers to Connections left open in 4.1.10.0-RC1 #222
+	 */
+	@Test
+	public void testConnAndFinalizationViaIrodsFileSystemBug222()
+			throws Exception {
+
+		int times = 50;
+
+		IRODSFileSystem fs = null;
+
+		for (int i = 0; i < times; i++) {
+
+			try {
+				fs = IRODSFileSystem.instance();
+				IRODSAccount account = testingPropertiesHelper
+						.buildPamIrodsAccountFromTestProperties(testingProperties);
+				account.setAuthenticationScheme(AuthScheme.PAM);
+				IRODSAccessObjectFactory f = fs.getIRODSAccessObjectFactory();
+				f.authenticateIRODSAccount(account);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				if (fs != null) {
+					fs.close();
+				}
+				System.gc();
+				System.runFinalization();
+			}
+
+			Assert.assertTrue("should be no conns in map", fs.getIrodsSession()
+					.getIRODSCommandsMap() == null);
+		}
 
 	}
 
