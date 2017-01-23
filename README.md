@@ -2,12 +2,12 @@
 # Project: Jargon-core API
 #### Date: 
 #### Release Version:
-#### git tag: 4.1.10.0-RC1
+#### git tag: 4.1.10.0-RC2
 #### Developer: Mike Conway - DICE
 
 ## News
 
-4.1.10 Release compatability release candidate
+4.1.10 Release compatability release candidate 2
 for milestone: https://github.com/DICE-UNC/jargon/milestone/11
 
 This includes support for client-server negotiation and SSL encryption of transport
@@ -106,6 +106,9 @@ Fixed mismatch between local SSL negotiation stance enum values and iRODS negoti
 #### "Catalog SQL error" in jargon-core when using Oracle #196
 Replicated issue, identified as iRODS server issue, due to missing specific queries.  For cat sql errors when checking group authorization, a 'specific_query_patch-bug196.sh' demonstrates a repair to a 4.1.x iRODS installation with Oracle iCAT.  See https://github.com/DICE-UNC/jargon/issues/196 for details.
 
+#### Connections left open in 4.1.10.0-RC1 #222
+
+Expanded testing to more complete PAM + SSL negotiation permutations, fixed some issues with finalizers triggering and opening and closing the various tunnelled and non-secure connections in these PAM scenarios.  There are two paths for SSL tunneling and there were some interactions between these two paths to clean up that caused errors, or showed up in the Jargon logs as finalizer warnings about unclosed connections.
 
 ### Additional testing for reported issues, minor changes
 
