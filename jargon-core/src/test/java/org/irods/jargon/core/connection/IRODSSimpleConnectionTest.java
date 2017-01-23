@@ -162,7 +162,6 @@ public class IRODSSimpleConnectionTest {
 
 			try {
 				fs = IRODSFileSystem.instance();
-				IRODSSession session = fs.getIrodsSession();
 				IRODSAccount account = testingPropertiesHelper
 						.buildPamIrodsAccountFromTestProperties(testingProperties);
 				account.setAuthenticationScheme(AuthScheme.PAM);
