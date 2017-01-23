@@ -170,6 +170,9 @@ public class PAMAuth extends AuthMechanism {
 		IRODSMidLevelProtocol secureIRODSCommands = new IRODSMidLevelProtocol(
 				secureConnection, irodsCommands.getIrodsProtocolManager());
 
+		secureIRODSCommands.setIrodsConnectionNonEncryptedRef(irodsCommands
+				.getIrodsConnection());
+
 		log.info("carrying over startup pack with server info");
 		secureIRODSCommands.setStartupResponseData(irodsCommands
 				.getStartupResponseData());
