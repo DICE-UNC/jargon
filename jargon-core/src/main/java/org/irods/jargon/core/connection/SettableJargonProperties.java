@@ -1240,7 +1240,7 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/*
-	 * (non-Javadoc) <<<<<<< HEAD
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
@@ -1266,9 +1266,8 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
-	 * <<<<<<< HEAD
-	 *
+	 * 
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
 	 * ()
@@ -1300,9 +1299,9 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * ======= >>>>>>> master
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionSaltSize()
 	 */
