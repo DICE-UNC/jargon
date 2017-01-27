@@ -506,7 +506,6 @@ public interface JargonProperties {
 	boolean isLongTransferRestart();
 
 	/**
-	 * <<<<<<< HEAD Retreives the default negotiation policy
 	 *
 	 * @return {@link SslNegotiationPolicy}
 	 */

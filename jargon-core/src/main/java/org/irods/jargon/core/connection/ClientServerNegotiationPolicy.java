@@ -3,6 +3,9 @@
  */
 package org.irods.jargon.core.connection;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Captures the client-server negotiation policy for iRODS. This can be tuned
  * through jargon.properties and interactively. The {@link IRODSAccount} can
@@ -20,6 +23,10 @@ public class ClientServerNegotiationPolicy {
 	 * enum ordinals are used in the {@link ClientServerNegotiationService} to
 	 * interpolate with the negotiation table.
 	 */
+
+	private static Logger log = LoggerFactory
+			.getLogger(ClientServerNegotiationPolicy.class);
+
 	public enum SslNegotiationPolicy {
 		CS_NEG_REQUIRE, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION, CS_NEG_FAILURE
 	}
@@ -72,23 +79,24 @@ public class ClientServerNegotiationPolicy {
 			throw new IllegalArgumentException("null or empty policyString");
 		}
 
+		log.info("policyString:{}", policyString);
+
 		if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.toString())) {
+			log.info("setting to neg require");
 			return SslNegotiationPolicy.CS_NEG_REQUIRE;
 		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
 				.toString())) {
+			log.info("setting to neg dont care");
 			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
-				.toString())) {
-			return SslNegotiationPolicy.CS_NEG_REFUSE;
 		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.toString())) {
-			return SslNegotiationPolicy.NO_NEGOTIATION;
+			log.info("setting to neg refuse");
+
+			return SslNegotiationPolicy.CS_NEG_REFUSE;
 		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
 				.toString())) {
-			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_FAILURE
-				.toString())) {
-			return SslNegotiationPolicy.CS_NEG_FAILURE;
+			log.info("setting to no negotiation");
+			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
 			throw new IllegalArgumentException("unknown negotitation policy");
 		}

@@ -39,7 +39,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-
 #### Remove old thumbnail code #165 
 
 Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
