@@ -3620,6 +3620,63 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(dataObjects.size() >= 1);
 	}
 
+	/**
+	 * Test for https://github.com/DICE-UNC/jargon/issues/227
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testAddAVUMetadataToDataObjectSpecialCharsBug227()
+			throws Exception {
+		String testFileName = "testBulkAddAVUMetadataToDataObjectSpecialCharsBug227.txt";
+		String expectedAttribName = "testBulkAddAVUMetadataToDataObject";
+		String expectedValueName = "áàâ";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/"
+				+ testFileName;
+
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(
+				absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.delete();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig),
+				targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedValueName, "");
+
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				expectedAttribName));
+
+		List<MetaDataAndDomainData> metadata = dataObjectAO
+				.findMetadataValuesByMetadataQuery(avuQueryElements);
+		Assert.assertTrue(metadata.size() >= 1);
+		MetaDataAndDomainData actual = metadata.get(0);
+		Assert.assertEquals("char mismatch", expectedValueName,
+				actual.getAvuValue());
+
+	}
+
 	@Test
 	public void testBulkAddAVUMetadataToDataObject() throws Exception {
 		String testFileName = "testBulkAddAVUMetadataToDataObject.txt";

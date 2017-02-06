@@ -117,7 +117,9 @@ Added test cases, fails to replicate
 
 Added test case that fails to replicate
 
+#### irods + mysql and latin1 charset issues #227
 
+Added test case for MySQL testing
 
 
 
