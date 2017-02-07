@@ -113,7 +113,7 @@ public class IRODSFileSystemTest {
 				.getIRODSAccessObjectFactory();
 		irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 		irodsFileSystem.close();
-		Assert.assertNull(irodsFileSystem.getConnectionMap());
+		Assert.assertNull(irodsFileSystem.getConnection());
 	}
 
 	/**
@@ -130,7 +130,7 @@ public class IRODSFileSystemTest {
 		irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 		irodsFileSystem.close();
 		irodsFileSystem.close();
-		Assert.assertNull(irodsFileSystem.getConnectionMap());
+		Assert.assertNull(irodsFileSystem.getConnection());
 	}
 
 	/**
@@ -148,16 +148,12 @@ public class IRODSFileSystemTest {
 
 		irodsFileSystem.getIRODSFileFactory(irodsAccount);
 		irodsFileSystem.getIRODSFileFactory(irodsAccount2);
-		Assert.assertNotNull(irodsFileSystem.getConnectionMap());
-		Assert.assertEquals(2, irodsFileSystem.getConnectionMap().values()
-				.size());
+		Assert.assertNotNull(irodsFileSystem.getConnection());
 
 		irodsFileSystem.close(irodsAccount);
-		Assert.assertEquals(1, irodsFileSystem.getConnectionMap().values()
-				.size());
 		irodsFileSystem.close(irodsAccount2);
 
-		Assert.assertNull(irodsFileSystem.getConnectionMap());
+		Assert.assertNull(irodsFileSystem.getConnection());
 	}
 
 }

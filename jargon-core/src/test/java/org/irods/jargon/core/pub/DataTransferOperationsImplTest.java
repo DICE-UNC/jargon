@@ -736,7 +736,7 @@ public class DataTransferOperationsImplTest {
 		// there should only be one connection in the session map (secondary
 		// account should have been closed
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 
@@ -801,7 +801,7 @@ public class DataTransferOperationsImplTest {
 		// there should only be one connection in the session map (secondary
 		// account should have been closed
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 

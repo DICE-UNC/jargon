@@ -183,7 +183,7 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		Assert.assertTrue("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 
@@ -237,7 +237,7 @@ public class RODSFIleInputStreamForSoftLinksTest {
 		Assert.assertFalse("did not get instance of session closing stream",
 				fis instanceof SessionClosingIRODSFileInputStream);
 		Assert.assertNull("session from reroute leaking",
-				irodsFileSystem.getConnectionMap());
+				irodsFileSystem.getConnection());
 
 	}
 
