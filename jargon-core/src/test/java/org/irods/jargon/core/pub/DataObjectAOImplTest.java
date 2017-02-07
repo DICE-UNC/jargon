@@ -3623,13 +3623,17 @@ public class DataObjectAOImplTest {
 	/**
 	 * Test for https://github.com/DICE-UNC/jargon/issues/227
 	 * 
+	 * imeta add -d testBulkAddAVUMetadataToDataObjectSpecialCharsBug227.txt
+	 * icommand áàâ
+	 * 
+	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testAddAVUMetadataToDataObjectSpecialCharsBug227()
 			throws Exception {
-		String testFileName = "testBulkAddAVUMetadataToDataObjectSpecialCharsBug227.txt";
-		String expectedAttribName = "testBulkAddAVUMetadataToDataObject";
+		String testFileName = "testBulkAddAVUMetadataToDataObjectSpecialCharsBug227X.txt";
+		String expectedAttribName = "testAddAVUMetadataToDataObjectSpecialCharsBug227";
 		String expectedValueName = "áàâ";
 
 		String targetIrodsCollection = testingPropertiesHelper
