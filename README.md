@@ -119,7 +119,11 @@ Added test case that fails to replicate
 
 #### irods + mysql and latin1 charset issues #227
 
-Added test case for MySQL testing
+Added test case for MySQL testing.  This appears to be resolved by setting UTF8 in MySql as well as in the odbc.ini on iRODS.  Will retain test.
+
+#### Parallel file transfer does not work #228
+
+Added test case.
 
 
 

@@ -245,6 +245,63 @@ public class EncryptedTransferTests {
 
 	}
 
+	/**
+	 * Test for https://github.com/DICE-UNC/jargon/issues/228
+	 * 
+	 * @throws JargonException
+	 * @throws TestingUtilsException
+	 * @throws IRODSTestAssertionException
+	 */
+	@Test
+	public void testParallelTransferSetNoNegotiationBug228()
+			throws JargonException, TestingUtilsException,
+			IRODSTestAssertionException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.STANDARD);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		settableJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		long length = 2l * 1024l * 1024l * 1024l;
+		String testFileName = "testParallelTransferSetNoNegotiationBug228.txt";
+		String returnedTestFileName = "testParallelTransferSetNoNegotiationBug228Get.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						length);
+
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFileName, targetIrodsPath,
+				"", null, null);
+
+		File getFile = new File(absPath, returnedTestFileName);
+		dataTransferOperationsAO.getOperation(targetIrodsPath,
+				getFile.getAbsolutePath(), "", null, null);
+
+	}
+
 	@Test
 	public void testNormalTransferWithAesEncryptionSet()
 			throws JargonException, TestingUtilsException,
