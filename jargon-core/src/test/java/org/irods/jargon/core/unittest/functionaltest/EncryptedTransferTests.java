@@ -16,6 +16,7 @@ import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestAssertionException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
@@ -242,6 +243,82 @@ public class EncryptedTransferTests {
 						testingProperties
 								.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
 						null, null);
+
+	}
+
+	/**
+	 * Test for https://github.com/DICE-UNC/jargon/issues/228
+	 * 
+	 * @throws JargonException
+	 * @throws TestingUtilsException
+	 * @throws IRODSTestAssertionException
+	 */
+	@Test
+	public void testParallelTransferSetNoNegotiationBug228()
+			throws JargonException, TestingUtilsException,
+			IRODSTestAssertionException {
+
+		/*
+		 * Only run if ssl enabled
+		 */
+		if (!testingPropertiesHelper.isTestSsl(testingProperties)) {
+			return;
+		}
+
+		/*
+		 * Only run if pam enabled
+		 */
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildPamIrodsAccountFromTestProperties(testingProperties);
+		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
+
+		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(
+				irodsFileSystem.getJargonProperties());
+		settableJargonProperties
+				.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
+		settableJargonProperties.setComputeAndVerifyChecksumAfterTransfer(true);
+		irodsFileSystem.getIrodsSession().setJargonProperties(
+				settableJargonProperties);
+
+		long length = 2l * 1024l * 1024l * 1024l;
+		String testFileName = "testParallelTransferSetNoNegotiationBug228.txt";
+		String returnedTestFileName = "testParallelTransferSetNoNegotiationBug228Get.txt";
+		String absPath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator
+				.generateFileOfFixedLengthGivenName(absPath, testFileName,
+						length);
+
+		String targetIrodsPath = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromPamTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		IRODSFile collFile = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsPath);
+		IRODSFile parentFile = (IRODSFile) collFile.getParentFile();
+		parentFile.delete();
+		parentFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataTransferOperations(
+						irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFileName, targetIrodsPath,
+				"", null, null);
+
+		File getFile = new File(absPath, returnedTestFileName);
+		File getFileParent = getFile.getParentFile();
+		getFileParent.delete();
+		getFileParent.mkdirs();
+		dataTransferOperationsAO.getOperation(targetIrodsPath,
+				getFile.getAbsolutePath(), "", null, null);
+
+		// checksum verification is in place, so no error = success
 
 	}
 
