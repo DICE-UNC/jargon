@@ -1,13 +1,13 @@
 
 # Project: Jargon-core API
-#### Date: 
-#### Release Version:
-#### git tag: 4.1.10.0-RC2
+#### Date: 2/9/2017 
+#### Release Version: 4.1.10.0-RELEASE
+#### git tag: 4.1.10.0-RELEASE
 #### Developer: Mike Conway - DICE
 
 ## News
 
-4.1.10 Release compatability release candidate 2
+4.1.10 Release compatability release
 for milestone: https://github.com/DICE-UNC/jargon/milestone/11
 
 This includes support for client-server negotiation and SSL encryption of transport
@@ -28,9 +28,9 @@ Jargon-core consists of the following libraries
 
 ## Requirements
 
-* Jargon depends on Java 1.7+
+* Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through iRODS 3.3.1 community, as well as iRODS 4.2.0 consortium
+* Jargon supports iRODS 3.0 through 4.1.10, with preliminary testing complete for iRODS 4.2
 
 ## Libraries
 
@@ -123,7 +123,7 @@ Added test case for MySQL testing.  This appears to be resolved by setting UTF8 
 
 #### Parallel file transfer does not work #228
 
-Added test case.
+Added test case. This does not replicate and is pending further study.
 
 
 
