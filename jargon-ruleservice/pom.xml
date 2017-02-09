@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>org.irods.jargon</groupId>
 			<artifactId>jargon-core</artifactId>
-			<scope>compile</scope>
+			<version>${project.version}</version>
 		</dependency>
 	</dependencies>  
 	<build>

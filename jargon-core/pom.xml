@@ -32,15 +32,8 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>org.globus.jglobus</groupId>
-			<artifactId>cog-jglobus</artifactId>
-			<type>jar</type>
-			<exclusions>
-				<exclusion>
-					<artifactId>jce</artifactId>
-					<groupId>org.bouncycastle</groupId>
-				</exclusion>
-			</exclusions>
+				<groupId>uk.org.mygrid.resources</groupId>
+				<artifactId>cog-jglobus</artifactId>
 		</dependency>
 	</dependencies>
 	<build>

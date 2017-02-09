@@ -22,10 +22,6 @@
 		<dependency>
 			<groupId>org.irods.jargon</groupId>
 			<artifactId>jargon-core</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.irods.jargon</groupId>
-			<artifactId>jargon-core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
@@ -41,7 +37,6 @@
 		<dependency>
 			<groupId>org.apache.tika</groupId>
 			<artifactId>tika-core</artifactId>
-			<version>1.5</version>
 		</dependency>
 	</dependencies>
 	<description>Represents a high-level summary of a data object or collection, gathering metadata, ACL information, and other facets of a data object or collection, suitable for presentation in an interface.  This includes awareness of applicable special metadata types as well as any rules or operations associated with a collection or file</description>

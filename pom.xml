@@ -8,7 +8,7 @@
 	<parent>
 		<groupId>org.irods</groupId>
 		<artifactId>jargon-pom</artifactId>
-		<version>4.2.0.1-SNAPSHOT</version>
+		<version>4.2.1.0-SNAPSHOT</version>
 	</parent>
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
@@ -40,7 +40,6 @@
 			</roles>
 		</developer>
 	</developers>
-	
 	<reporting>
 		<plugins>
 			<plugin>
