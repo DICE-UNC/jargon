@@ -1,16 +1,15 @@
 
 # Project: Jargon-core API
 #### Date: 2/9/2017 
-#### Release Version: 4.1.10.0-RELEASE
-#### git tag: 4.1.10.0-RELEASE
+#### Release Version: 4.2.0.0-SNAPSHOT 
+#### git tag: 
 #### Developer: Mike Conway - DICE
 
 ## News
 
-4.1.10 Release compatability release
-for milestone: https://github.com/DICE-UNC/jargon/milestone/11
+4.2.0 Compatability and maintenance
+for milestone: https://github.com/DICE-UNC/jargon/milestone/16
 
-This includes support for client-server negotiation and SSL encryption of transport
 
 =======
 
@@ -30,7 +29,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through 4.1.10, with preliminary testing complete for iRODS 4.2
+* Jargon supports iRODS 3.0 through 4.2.0
 
 ## Libraries
 
@@ -39,91 +38,4 @@ Jargon-core uses Maven for dependency management.  See the pom.xml file for refe
 Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
 
 ## Changes
-
-#### FileNotFoundException declared in PackingIrodsOutputStream signature #150
-
-Removed extraneous exceptions from method signature
-
-#### deprecate WSO support in jargon altogether #51
-
-Removed jargon-workflow code (WSO) as non-supported in iRODS
-
-#### add speccol pi to dataobjinppi to avoid xml parse messages in irods log #149
-
-Avoid logged iRODS errors for missing section of DataObjInp_PI by providing SpecColl_PI and KeyValPair_PI structures
-
-#### Fix lexographic comparison of iRODS version #203
-
-Changed from a string comparison of iRODS reported version to a more sophisticated comparator object 
-
-#### Update FileCloseInp for in_pdmo for iRODS 4.1.9 #205
-
-Update FileCloseInp packing instruction for additional resource information
-
-#### Special character handling in delete operations seems to be off. #170
-
-Directories can be created with multiple special chars (notably &) but problems may occur in delete. Unit test shows
-an iRODS issue referenced at Create/delete file with & char allows create, causes -816000 error on delete #3398, will ignore unit test for now.
-
-#### IRODSAccount fails with whitespace in default path #189
-
-toURI with white spaces gives URISyntaxException, url encode that information
-
-#### Add client/server negotiation support for SSL encryption #4
-
-Honor client server negotiation and SSL transport encryption, as well as shared-key encryption for parallel file transfers.  (docs coming soon).  This is early access and should be used with caution until release time.
-
-#### IndexOutOfBoundsException in PackingIrodsOutputStream #200
-
-Simplified the buffering code and added unit and functional tests, especially for conditions when the putBufferSize is manipulated in jargon.properties.  
-
-#### -23000 error code from iRODS with parallel file operations #199
-
-Testing with CyberDuck.  Added a new IRODSAccessObjectFactory.authenticateIRODSAccountUtilizingCachedConnectionIfPresent to avoid double-opening a connection, reducing side effects
-for some usage patterns.
-
-#### add checksum support to Jargon streaming API #194
-
-Added support for checksumming on close of an IRODSFileOutputStream, respecting checksum and checksum with verification flags in jargon.properties.  If either of those flags is true,
-a checksum is computed and stored in iRODS.  Given the nature of the java.io API, actual verification is not done, just computation and storage in the iCAT.
-
-#### PAM auth failure when password includes semicolon #195
-
-Added KVP packing instruction support to escape ; character in PAM password, added unit test verification
-
-
-#### improve logging in CollectionAndDataObjectListAndSearchAOImpl #135
-
-Added toString methods to result set and result row, limited debug logging of result rows to 100 rows.  Fixed a typo in the logging statement for collection listings.
-
-#### iRODS CS_NEG_REQUIRE + PAM authentication #215
-
-Fixed mismatch between local SSL negotiation stance enum values and iRODS negotiation enum values.  Fixed double send of SslEndInp.
-
-#### "Catalog SQL error" in jargon-core when using Oracle #196
-Replicated issue, identified as iRODS server issue, due to missing specific queries.  For cat sql errors when checking group authorization, a 'specific_query_patch-bug196.sh' demonstrates a repair to a 4.1.x iRODS installation with Oracle iCAT.  See https://github.com/DICE-UNC/jargon/issues/196 for details.
-
-#### Connections left open in 4.1.10.0-RC1 #222
-
-Expanded testing to more complete PAM + SSL negotiation permutations, fixed some issues with finalizers triggering and opening and closing the various tunnelled and non-secure connections in these PAM scenarios.  There are two paths for SSL tunneling and there were some interactions between these two paths to clean up that caused errors, or showed up in the Jargon logs as finalizer warnings about unclosed connections.
-
-### Additional testing for reported issues, minor changes
-
-#### Login fails if password contains linux escape characters #202 
-
-Added test cases, fails to replicate
-
-#### transfer get of file with parens and spaces in name gives file not found #1 
-
-Added test case that fails to replicate
-
-#### irods + mysql and latin1 charset issues #227
-
-Added test case for MySQL testing.  This appears to be resolved by setting UTF8 in MySql as well as in the odbc.ini on iRODS.  Will retain test.
-
-#### Parallel file transfer does not work #228
-
-Added test case. This does not replicate and is pending further study.
-
-
 
