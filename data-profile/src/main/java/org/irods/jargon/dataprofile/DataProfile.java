@@ -27,7 +27,9 @@ public class DataProfile<T extends IRODSDomainObject> {
 	private boolean isStarred = false;
 	private boolean isShared = false;
 	private String mimeType = "";
+	private String infoType = "";
 	private List<IRODSTagValue> irodsTagValues = new ArrayList<IRODSTagValue>();
+	
 	/**
 	 * parent of the current data object
 	 */
@@ -156,67 +158,32 @@ public class DataProfile<T extends IRODSDomainObject> {
 		this.pathComponents = pathComponents;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		final int maxLen = 5;
-		StringBuilder builder = new StringBuilder();
-		builder.append("DataProfile [file=");
-		builder.append(file);
-		builder.append(", ");
-		if (domainObject != null) {
-			builder.append("domainObject=");
-			builder.append(domainObject);
-			builder.append(", ");
-		}
-		if (metadata != null) {
-			builder.append("metadata=");
-			builder.append(metadata.subList(0,
-					Math.min(metadata.size(), maxLen)));
-			builder.append(", ");
-		}
-		if (acls != null) {
-			builder.append("acls=");
-			builder.append(acls.subList(0, Math.min(acls.size(), maxLen)));
-			builder.append(", ");
-		}
-		builder.append("isStarred=");
-		builder.append(isStarred);
-		builder.append(", isShared=");
-		builder.append(isShared);
-		builder.append(", ");
-		if (mimeType != null) {
-			builder.append("mimeType=");
-			builder.append(mimeType);
-			builder.append(", ");
-		}
-		if (irodsTagValues != null) {
-			builder.append("irodsTagValues=");
-			builder.append(irodsTagValues.subList(0,
-					Math.min(irodsTagValues.size(), maxLen)));
-			builder.append(", ");
-		}
-		if (parentPath != null) {
-			builder.append("parentPath=");
-			builder.append(parentPath);
-			builder.append(", ");
-		}
-		if (childName != null) {
-			builder.append("childName=");
-			builder.append(childName);
-			builder.append(", ");
-		}
-		if (pathComponents != null) {
-			builder.append("pathComponents=");
-			builder.append(pathComponents.subList(0,
-					Math.min(pathComponents.size(), maxLen)));
-		}
-		builder.append("]");
-		return builder.toString();
+		return "DataProfile [file=" + file + ", domainObject=" + domainObject
+				+ ", metadata=" + metadata + ", acls=" + acls + ", isStarred="
+				+ isStarred + ", isShared=" + isShared + ", mimeType="
+				+ mimeType + ", infoType=" + infoType + ", irodsTagValues="
+				+ irodsTagValues + ", parentPath=" + parentPath
+				+ ", childName=" + childName + ", pathComponents="
+				+ pathComponents + "]";
+	}
+
+	/**
+	 * @return the infoType
+	 */
+	public String getInfoType() {
+		return infoType;
+	}
+
+	/**
+	 * @param infoType the infoType to set
+	 */
+	public void setInfoType(String infoType) {
+		this.infoType = infoType;
 	}
 
 }
