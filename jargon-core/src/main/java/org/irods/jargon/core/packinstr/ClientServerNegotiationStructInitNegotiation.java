@@ -50,7 +50,8 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
 				.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
-		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.name())) {
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQUIRE
+				.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		} else {
 			throw new ClientServerNegotiationException(
@@ -63,7 +64,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	 * Create an instance of the struct based on deserializing the Tag structure
 	 *
 	 * @param tag
-	 * @return
+	 * @return {@link ClientServerNegotiationStructInitNegotiation}
 	 * @throws ClientServerNegotiationException
 	 */
 	public static ClientServerNegotiationStructInitNegotiation instanceFromTag(
@@ -125,7 +126,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	/**
 	 * Was this negotiation a success?
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	public boolean wasThisASuccess() {
 		return getStatus() == 1;

@@ -26,13 +26,13 @@ public class IRODSRuleExecResult {
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @param resultParameters
 	 *            <code>Tag</code> with the response from iRODS
-	 * @return
+	 * @return {@link IRODSRuleExecResult}
 	 * @throws JargonException
 	 */
 	public static IRODSRuleExecResult instance(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-					throws JargonException {
+			throws JargonException {
 		return new IRODSRuleExecResult(irodsRule, resultParameters);
 	}
 
@@ -50,7 +50,7 @@ public class IRODSRuleExecResult {
 	private IRODSRuleExecResult(
 			final IRODSRule irodsRule,
 			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-					throws JargonException {
+			throws JargonException {
 
 		if (irodsRule == null) {
 			throw new JargonException("null irodsRule");

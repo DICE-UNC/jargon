@@ -71,7 +71,7 @@ public class GSIUtilities {
 	 *            <code>String</code> with the iRODS host name
 	 * @param port
 	 *            <code>int</code> with the iRODS server port
-	 * @param certficate
+	 * @param certificate
 	 *            <code>String</code> with the GSI proxy certificate in
 	 *            <code>String</code> form
 	 * @param defaultStorageResource
@@ -149,7 +149,7 @@ public class GSIUtilities {
 	 * Derive the user distinguished name from the provided cert.
 	 *
 	 * @param account
-	 * @return
+	 * @return <code>String</code> with DN
 	 * @throws JargonException
 	 */
 	public static String getDN(final GSIIRODSAccount account)

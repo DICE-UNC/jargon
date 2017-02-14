@@ -70,7 +70,7 @@ public class ClientServerNegotiationPolicy {
 	 * the ssl negotiation policy as an enum value from a given string
 	 * 
 	 * @param policyString
-	 * @return
+	 * @return {@link SslNegotiationPolicy}
 	 */
 	public static SslNegotiationPolicy findSslNegotiationPolicyFromString(
 			final String policyString) {

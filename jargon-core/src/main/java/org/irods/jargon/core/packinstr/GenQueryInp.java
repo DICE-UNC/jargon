@@ -17,7 +17,7 @@ import org.irods.jargon.core.utils.IRODSConstants;
  * @author Mike Conway - DICE (www.irods.org)
  */
 public class GenQueryInp extends AbstractIRODSPackingInstruction implements
-IRodsPI {
+		IRodsPI {
 
 	private final TranslatedIRODSGenQuery translatedIRODSQuery;
 	private final int continueIndex;
@@ -61,7 +61,7 @@ IRodsPI {
 	public static GenQueryInp instance(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final String zoneName)
-					throws JargonException {
+			throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, continueIndex, 0, zoneName);
 	}
 
@@ -72,7 +72,7 @@ IRodsPI {
 	 * @param continueIndex
 	 *            <code>int</code> with value passed back from iRODS with the
 	 *            last query result.
-	 * @return
+	 * @return {@link GenQueryInp}
 	 */
 	public static GenQueryInp instanceForCloseQuery(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
@@ -98,7 +98,7 @@ IRodsPI {
 	public static GenQueryInp instanceWithPartialStart(
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int partialStartIndex, final String zoneName)
-					throws JargonException {
+			throws JargonException {
 		return new GenQueryInp(translatedIRODSQuery, 0, partialStartIndex,
 				zoneName);
 	}
@@ -110,6 +110,7 @@ IRodsPI {
 	 * @param continueIndex
 	 *            <code>int</code> with value passed back from iRODS with the
 	 *            last query result.
+	 * @return {@link GenQueryInp}
 	 */
 	private GenQueryInp(final TranslatedIRODSGenQuery translatedIRODSGenQuery,
 			final int continueIndex) {
@@ -165,11 +166,10 @@ IRodsPI {
 	}
 
 	/**
-	 * @return {@link org.irods.jargon.core.TranslatedIRODSGenQuery.TranslatedIRODSQuery
-	 *         TranslatedIRODSQuery} represents the parsed view of the query.
-	 *         Note that an exception is thrown if the translated query has not
-	 *         been derived TODO: refactor out, possibly with a return container
-	 *         of multiple objects in getParsedTags()
+	 * @return {@link TranslatedIRODSQuery} represents the parsed view of the
+	 *         query. Note that an exception is thrown if the translated query
+	 *         has not been derived TODO: refactor out, possibly with a return
+	 *         container of multiple objects in getParsedTags()
 	 * @throws JargonException
 	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery()
@@ -183,7 +183,7 @@ IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -225,7 +225,7 @@ IRodsPI {
 
 		Tag[] subTags = null;
 		int[] orderByFlags = new int[translatedIRODSQuery.getSelectFields()
-		                             .size()];
+				.size()];
 		int j = 1;
 		int k = 0;
 
@@ -295,7 +295,7 @@ IRodsPI {
 			// package the conditions
 
 			subTags = new Tag[translatedIRODSQuery
-			                  .getTranslatedQueryConditions().size() * 2 + 1];
+					.getTranslatedQueryConditions().size() * 2 + 1];
 			subTags[0] = new Tag(ISLEN, translatedIRODSQuery
 					.getTranslatedQueryConditions().size());
 			j = 1;

@@ -318,10 +318,6 @@ public class IRODSAccount implements Serializable {
 	 *            the IRODS zone of the user
 	 * @param defaultStorageResource
 	 *            default storage resource
-	 * @param clientServerNegotiationPolicy
-	 *            {@link ClientServerNegotiationPolicy} object describing
-	 *            overrides from the default policy, may be set to
-	 *            <code>null</code> to
 	 */
 	public IRODSAccount(final String host, final int port,
 			final String userName, final String password,

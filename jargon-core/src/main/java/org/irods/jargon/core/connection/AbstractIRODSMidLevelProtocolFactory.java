@@ -189,7 +189,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * produce an authenticated mid level protocol handler that wraps a live
 	 * connection
 	 *
-	 * @param connection
+	 * @param protocol
 	 *            {@link AbstractConnection} to iRODS
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that defines the instance and principal

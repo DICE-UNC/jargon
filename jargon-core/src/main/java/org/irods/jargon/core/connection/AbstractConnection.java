@@ -159,7 +159,7 @@ public abstract class AbstractConnection {
 	 *            {@link PipelineConfiguration} that defines the low level
 	 *            connection and networking configuration
 	 * @param irodsProtocolManager
-	 *            {@link irodsProtocolManager} that requested this connection
+	 *            {@link IRODSProtocolManager} that requested this connection
 	 *
 	 * @param irodsSession
 	 *            {@link IRODSSession} that is associated with this connection
@@ -280,10 +280,6 @@ public abstract class AbstractConnection {
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that contains information on host/port
-	 * @param startupResponseData
-	 *            {@link StartupResponseData} that would carry necessary info to
-	 *            divert the socket to a reconnect host/port. Otherwise, this is
-	 *            set to <code>null</code> and ignored.
 	 * @throws JargonException
 	 */
 	protected abstract void connect(final IRODSAccount irodsAccount)
@@ -441,7 +437,6 @@ public abstract class AbstractConnection {
 	 *            done here.
 	 * @param length
 	 *            <code>long</code> with the length of data to send
-	 * @param lengthLeftToSend
 	 * @param connectionProgressStatusListener
 	 *            {link ConnectionProgressStatusListener} or <code>null</code>
 	 *            if no listener desired. This listener can then receive
@@ -549,7 +544,7 @@ public abstract class AbstractConnection {
 	 * Reads an int from the server
 	 *
 	 * @param value
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonException
 	 */
 	protected int read(final byte[] value) throws IOException {

@@ -31,7 +31,7 @@ public enum EncryptionAlgorithmEnum {
 	 * Given a text value resolve the encoding
 	 *
 	 * @param userType
-	 * @return
+	 * @return {@link EncryptionAlgorithmEnum}
 	 */
 	public static EncryptionAlgorithmEnum findTypeByString(final String userType) {
 		EncryptionAlgorithmEnum checksumEncodingValue = null;

@@ -591,7 +591,7 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @param localFileInputStremBufferSize
+	 * @param localFileInputStreamBufferSize
 	 *            the localFileInputStreamBufferSize to set
 	 */
 	public synchronized void setLocalFileInputStreamBufferSize(
@@ -697,7 +697,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	@Override
 	public synchronized boolean isInstrument() {

@@ -50,7 +50,7 @@ public final class ParallelGetTransferThread extends
 	 * as is the <code>parallelFileTransferStrategy</code> that this object
 	 * holds a reference to.
 	 *
-	 * @param parallelFileTransferStrategy
+	 * @param parallelGetFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy}
 	 *            that controls the transfer threads.
 	 * @param threadNumber

@@ -76,7 +76,7 @@ public class PipelineConfiguration {
 	 * <code>JargonProperties</code> at the time the connection is created.
 	 *
 	 * @param jargonProperties
-	 * @return
+	 * @return {@link PipelineConfiguration}
 	 */
 	public static PipelineConfiguration instance(
 			final JargonProperties jargonProperties) {
@@ -290,7 +290,7 @@ public class PipelineConfiguration {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

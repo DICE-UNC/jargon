@@ -15,9 +15,9 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	 * Generate the packing instruction suitable for creating a
 	 * <code>Resource</code>
 	 *
-	 * @param Resource
+	 * @param resource
 	 *            {@link Resource} to be added to iRODS.
-	 * @return {@link GeneralAdminInp}
+	 * @return {@link GeneralAdminInpForResources}
 	 * @throws JargonException
 	 */
 	public static final GeneralAdminInpForResources instanceForAddResource(
@@ -78,70 +78,71 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	}
 
-  /**
-   * Generate the packing instruction suitable for modifying a
-   * <code>Resource</code>
-   *
-   * @param Resource
-   *            {@link Resource} to be added to iRODS.
-   * @param option
-   *            attribute to modify (any of "type", "status", "comment", "info", "context").
-   * @return {@link GeneralAdminInp}
-   * @throws JargonException
-   */
-  public static final GeneralAdminInpForResources instanceForModifyResource(
-      final Resource resource, String option) throws JargonException {
+	/**
+	 * Generate the packing instruction suitable for modifying a
+	 * <code>Resource</code>
+	 *
+	 * @param resource
+	 *            {@link Resource} to be added to iRODS.
+	 * @param option
+	 *            attribute to modify (any of "type", "status", "comment",
+	 *            "info", "context").
+	 * @return {@link GeneralAdminInp}
+	 * @throws JargonException
+	 */
+	public static final GeneralAdminInpForResources instanceForModifyResource(
+			final Resource resource, String option) throws JargonException {
 
-    if (resource == null) {
-      throw new IllegalArgumentException("null resource");
-    }
+		if (resource == null) {
+			throw new IllegalArgumentException("null resource");
+		}
 
-    if (resource.getName() == null || resource.getName().isEmpty()) {
-      throw new IllegalArgumentException("resource name is null or empty");
-    }
+		if (resource.getName() == null || resource.getName().isEmpty()) {
+			throw new IllegalArgumentException("resource name is null or empty");
+		}
 
-    String newValue;
-    switch (option) {
-      case "type" :
-        if (resource.getType() == null || resource.getType().isEmpty()) {
-          throw new IllegalArgumentException("null or empty type");
-        }
-        newValue = resource.getType();
-        break;
-      case "status" :
-        if (resource.getStatus() == null) {
-          throw new IllegalArgumentException("null status");
-        }
-        newValue = resource.getStatus();
-        break;
-      case "comment" : 
-        if (resource.getComment() == null) {
-          throw new IllegalArgumentException("null comment string");
-        }
-        newValue = resource.getComment();
-        break;
-      case "info" :
-        if (resource.getInfo() == null) {
-          throw new IllegalArgumentException("null info string");
-        }
-        newValue = resource.getInfo();
-        break;
-      case "context" : 
-        if (resource.getContextString() == null) {
-          throw new IllegalArgumentException("Null context string");
-        }
-        newValue = resource.getContextString();
-        break;
-      default :
-        throw new IllegalArgumentException("Impossible to change " + option + " attribute for resource " + resource.getName());
-    }
+		String newValue;
+		switch (option) {
+		case "type":
+			if (resource.getType() == null || resource.getType().isEmpty()) {
+				throw new IllegalArgumentException("null or empty type");
+			}
+			newValue = resource.getType();
+			break;
+		case "status":
+			if (resource.getStatus() == null) {
+				throw new IllegalArgumentException("null status");
+			}
+			newValue = resource.getStatus();
+			break;
+		case "comment":
+			if (resource.getComment() == null) {
+				throw new IllegalArgumentException("null comment string");
+			}
+			newValue = resource.getComment();
+			break;
+		case "info":
+			if (resource.getInfo() == null) {
+				throw new IllegalArgumentException("null info string");
+			}
+			newValue = resource.getInfo();
+			break;
+		case "context":
+			if (resource.getContextString() == null) {
+				throw new IllegalArgumentException("Null context string");
+			}
+			newValue = resource.getContextString();
+			break;
+		default:
+			throw new IllegalArgumentException("Impossible to change " + option
+					+ " attribute for resource " + resource.getName());
+		}
 
-    return new GeneralAdminInpForResources("modify", "resource",
-        resource.getName(), option, newValue,
-        BLANK, BLANK, BLANK, BLANK, BLANK,
-        GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInpForResources("modify", "resource",
+				resource.getName(), option, newValue, BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 
-  }
+	}
 
 	/**
 	 * Packing instruction to add a child to a resource
@@ -153,7 +154,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	 * @param context
 	 *            <code>String</code> with an optional context, blank of not
 	 *            needed
-	 * @return
+	 * @return {@link GeneralAdminInpForResources}
 	 * @throws JargonException
 	 */
 	public static final GeneralAdminInpForResources instanceForAddChildToResource(
@@ -182,7 +183,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	public static final GeneralAdminInpForResources instanceForRemoveChildFromResource(
 			final String childResourceName, final String parentResourceName)
-					throws JargonException {
+			throws JargonException {
 
 		if (childResourceName == null || childResourceName.isEmpty()) {
 			throw new IllegalArgumentException(
@@ -227,7 +228,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 			final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7,
 			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+			throws JargonException {
 		super(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9,
 				apiNumber);
 	}

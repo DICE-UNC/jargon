@@ -50,7 +50,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForAddCollectionMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -163,7 +163,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 				MetadataTargetType.RESOURCE, avuData, null, ActionType.ADD);
 	}
 
-  	/**
+	/**
 	 * Create an instance of the packing instruction that will set the AVU to a
 	 * resource.
 	 *

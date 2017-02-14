@@ -23,7 +23,7 @@ public enum ChecksumEncodingEnum {
 	 * Given a text value resolve the encoding
 	 *
 	 * @param userType
-	 * @return
+	 * @return {@link ChecksumEncodingEnum}
 	 */
 	public static ChecksumEncodingEnum findTypeByString(final String userType) {
 		ChecksumEncodingEnum checksumEncodingValue = null;

@@ -28,15 +28,15 @@ public abstract class IRODSConnectionFactory {
 	 *            {@link IRODSAccount} describing the connection host and
 	 *            principal
 	 * @param irodsSession
-	 *            {@link IRDOSSession} that is producing this connection
+	 *            {@link IRODSSession} that is producing this connection
 	 * @param irodsProtocolManager
-	 *            {@link irodsProtocolManager} that requested this connection
+	 *            {@link IRODSProtocolManager} that requested this connection
 	 * @return {@link AbstractConnection} implementation
 	 * @throws JargonException
 	 */
 	protected abstract AbstractConnection instance(
 			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
 			final IRODSProtocolManager irodsProtocolManager)
-					throws JargonException;
+			throws JargonException;
 
 }

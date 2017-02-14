@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.transfer.encrypt;
 
-import javax.crypto.Cipher;
-
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;
 import org.irods.jargon.core.exception.ClientServerNegotiationException;
@@ -38,7 +36,7 @@ public class EncryptionWrapperFactory {
 	public static ParallelEncryptionCipherWrapper instanceEncrypt(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
@@ -62,7 +60,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored encryption algo:"
 							+ pipelineConfiguration
-							.getEncryptionAlgorithmEnum());
+									.getEncryptionAlgorithmEnum());
 		}
 
 	}
@@ -78,15 +76,12 @@ public class EncryptionWrapperFactory {
 	 *            {@link NegotiatedClientServerConfiguration}
 	 * @return {@link ParallelCipherWrapper} to be used by parallel transfer
 	 *         threads
-	 * @param mode
-	 *            <code>int</code> that indicates encrypt/decrypt using the
-	 *            constants in {@link Cipher}
 	 * @throws ClientServerNegotiationException
 	 */
 	public static ParallelDecryptionCipherWrapper instanceDecrypt(
 			final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws ClientServerNegotiationException {
+			throws ClientServerNegotiationException {
 		if (pipelineConfiguration == null) {
 			throw new IllegalArgumentException("null pipelineConfiguration");
 		}
@@ -109,7 +104,7 @@ public class EncryptionWrapperFactory {
 			throw new ClientServerNegotiationException(
 					"unsuppored decryption algo:"
 							+ pipelineConfiguration
-							.getEncryptionAlgorithmEnum());
+									.getEncryptionAlgorithmEnum());
 		}
 
 	}

@@ -60,10 +60,10 @@ abstract class AuthMechanism {
 	 * After startup pack, the client/server negotiation commences here, based
 	 * on configuration and the settings in the <code>IRODSAccount</code>
 	 * visible here.
-	 *
-	 * @param startupResponseData
-	 *            {@link StartupResponseData} from startup pack
-	 *
+	 * 
+	 * @param irodsMidLevelProtocol
+	 * @param irodsAccount
+	 * @return {@link StartupResponseData}
 	 * @throws JargonException
 	 */
 	protected StartupResponseData clientServerNegotiationHook(
@@ -235,8 +235,9 @@ abstract class AuthMechanism {
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} that is already
 	 *            connected, but not authenticated
-	 * @param irodsAccount
-	 *            {@link IRODSAccount} that defines the connection as requested
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} representing the response from
+	 *            iRODS on initiation of connection
 	 * @return {@link AbstractIRODSMidLevelProtocol} that represents a
 	 *         connected, authenticated session with an iRODS agent. Note that
 	 *         the protocol returned may not be the one originally provided,
