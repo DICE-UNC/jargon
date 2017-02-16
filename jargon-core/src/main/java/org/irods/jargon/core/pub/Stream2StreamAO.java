@@ -90,7 +90,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * @param readBuffSize
 	 *            <code>int</code> with the buffer size used for the transfer.
 	 *            Setting to 0 will cause the default buffer size to be used.
-	 * @return {@link TranseferStatistics} that give information about the
+	 * @return {@link TransferStatistics} that give information about the
 	 *         transfer size and rate
 	 * @throws JargonException
 	 */
@@ -126,12 +126,12 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 *            {@link InputStream}. If not buffered, it will be buffered
 	 * @param outputStream
 	 *            {@link OutputStream}. If not buffered, it will be buffered
-	 * @return {@link TranseferStatistics} that give information about the
+	 * @return {@link TransferStatistics} that give information about the
 	 *         transfer size and rate
 	 * @throws JargonException
 	 */
 	TransferStatistics streamToStreamCopyUsingStandardIO(
 			InputStream inputStream, OutputStream outputStream)
-					throws JargonException;
+			throws JargonException;
 
 }

@@ -51,7 +51,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *             indicates that the resource with the given name is not found
 	 */
 	Resource findByName(final String resourceName) throws JargonException,
-	DataNotFoundException;
+			DataNotFoundException;
 
 	/**
 	 * Find a resource by its id
@@ -64,7 +64,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws DataNotFoundException
 	 */
 	Resource findById(final String resourceId) throws JargonException,
-	DataNotFoundException;
+			DataNotFoundException;
 
 	/**
 	 * List the AVU metadata, as well as information identifying the Resource
@@ -88,8 +88,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *
 	 * @param resourceName
 	 *            <code>String</code> containing the resource name
-	 * @return <code>List</code> of {@link org.irods.jargon.core.domain.AVUData}
-	 *         for this resource
+	 * @return <code>List</code> of {@link AvuData} for this resource
 	 * @throws JargonException
 	 */
 	List<AvuData> listResourceMetadata(String resourceName)
@@ -144,8 +143,10 @@ public interface ResourceAO extends IRODSAccessObject {
 			JargonException;
 
 	/**
-	 * Set AVU metadata for this resource.
-	 * Be aware setting a metadata forces just this one attribute name to exist (it will delete all the possibly existing ones)
+	 * Set AVU metadata for this resource. Be aware setting a metadata forces
+	 * just this one attribute name to exist (it will delete all the possibly
+	 * existing ones)
+	 * 
 	 * @param resourceName
 	 *            <code>String</code> with the name of the resource
 	 * @param avuData
@@ -180,7 +181,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void addResource(final Resource resource) throws DuplicateDataException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Modify a resource
@@ -191,7 +192,8 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *            what is modified among type, status, comment, info, context
 	 * @throws JargonException
 	 */
-	void modifyResource(final Resource resource, String what) throws JargonException;
+	void modifyResource(final Resource resource, String what)
+			throws JargonException;
 
 	void deleteResource(final String resourceName) throws Exception;
 

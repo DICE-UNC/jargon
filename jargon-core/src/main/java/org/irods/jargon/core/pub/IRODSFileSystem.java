@@ -226,7 +226,7 @@ public final class IRODSFileSystem {
 	 * Obtain a reference to the <code>IRODSSession</code> object that obtains
 	 * connections on behalf of the caller
 	 *
-	 * @return
+	 * @return {@link IRODSSession}
 	 */
 	public IRODSSession getIrodsSession() {
 		return irodsSession;

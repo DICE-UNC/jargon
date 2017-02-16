@@ -41,7 +41,7 @@ public class ObjStat {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -369,8 +369,6 @@ public class ObjStat {
 	 * iRODS. This is meant to handle special collections, such as soft links,
 	 * where the iCAT data may be associated with the canonical path
 	 *
-	 * @param objStat
-	 *            {@link ObjStat} with information on the given iRODS object
 	 * @return <code>String</code> with the canonical iRODS path
 	 */
 	public String determineAbsolutePathBasedOnCollTypeInObjectStat() {

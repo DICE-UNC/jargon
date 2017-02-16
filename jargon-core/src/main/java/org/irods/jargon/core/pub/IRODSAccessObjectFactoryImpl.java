@@ -218,7 +218,7 @@ public final class IRODSAccessObjectFactoryImpl implements
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession} that is
 	 *            capable of creating connections to iRODS on demand.
-	 * @return
+	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
 	 */
 	public static IRODSAccessObjectFactory instance(

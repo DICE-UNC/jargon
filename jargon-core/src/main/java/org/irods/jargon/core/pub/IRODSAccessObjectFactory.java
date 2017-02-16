@@ -476,8 +476,7 @@ public interface IRODSAccessObjectFactory {
 	 * current connection
 	 *
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the
 	 *         authenticated principal. Note that the authentication process may
 	 *         cause the authenticating <code>IRODSAccount</code> to be altered
@@ -501,8 +500,7 @@ public interface IRODSAccessObjectFactory {
 	 * authentication process.
 	 *
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the
 	 *         authenticated principal. Note that the authentication process may
 	 *         cause the authenticating <code>IRODSAccount</code> to be altered
@@ -548,8 +546,7 @@ public interface IRODSAccessObjectFactory {
 	 * Get a utiltity to deal with checksums in iRODS
 	 *
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous
 	 *         checksum operations
 	 * @throws JargonException

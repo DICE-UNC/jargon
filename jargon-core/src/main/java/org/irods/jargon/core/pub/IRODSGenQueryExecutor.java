@@ -44,7 +44,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQuery(
 			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
-					throws JargonException, JargonQueryException;
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -73,7 +73,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryInZone(
 			AbstractIRODSGenQuery irodsQuery, int continueIndex, String zoneName)
-					throws JargonException, JargonQueryException;
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -93,7 +93,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryWithPaging(
 			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-					throws JargonException, JargonQueryException;
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
@@ -129,7 +129,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * @param irodsQueryResultSet
 	 *            {@link org.irods.jargon.core.query.IRODSQueryResultSet} that
 	 *            contains the results of the previous query.
-	 * @param zone
+	 * @param zoneName
 	 *            <code>String</code> with the zone for the query
 	 * @return <code>IRODSQueryResultSet</code> containing the previous batch of
 	 *         query results.
@@ -138,7 +138,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet getMoreResultsInZone(
 			IRODSQueryResultSet irodsQueryResultSet, String zoneName)
-					throws JargonException, JargonQueryException;
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Close the result set that had been continued
@@ -175,7 +175,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 */
 	IRODSQueryResultSet executeIRODSQueryAndCloseResult(
 			AbstractIRODSGenQuery irodsQuery, int partialStartIndex)
-					throws JargonException, JargonQueryException;
+			throws JargonException, JargonQueryException;
 
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO

@@ -5,7 +5,6 @@ import java.net.URI;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
-import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
@@ -32,7 +31,8 @@ public interface IRODSFileFactory {
 	 * Creates an instance of an iRODS file by using the standard irods URL
 	 * format
 	 *
-	 * @parm URI <code>URI</code> in iRODS specific format.
+	 * @param uri
+	 *            <code>URI</code> in iRODS specific format.
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
 	 */
@@ -71,15 +71,15 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
 	 * iRODS file. This method takes an <code>OpenFlags</code> parameter that
-	 * dicates the open mode and file create mode. See
-	 * {@link DataObjInp.OpenFlags} for details
+	 * dicates the open mode and file create mode. See {@link OpenFlags} for
+	 * details
 	 *
 	 * @param file
 	 *            {@link IRODSFile} that will be written to via the given
 	 *            stream.
 	 * @param openFlags
-	 *            {@link DataObjInp.OpenFlags} parameter that dicates open mode
-	 *            and automatic create behavior, as well as overwrite/truncation
+	 *            {@link OpenFlags} parameter that dicates open mode and
+	 *            automatic create behavior, as well as overwrite/truncation
 	 *            behavior
 	 *
 	 * @return {@link IRODSFileOutputStream} with an opened and positioned
@@ -116,8 +116,8 @@ public interface IRODSFileFactory {
 	 *            <code>String</code> with and absolute path to the file that
 	 *            will be written to via the given stream.
 	 * @param openFlags
-	 *            {@link DataObjInp.OpenFlags} parameter that dicates open mode
-	 *            and automatic create behavior, as well as overwrite/truncation
+	 *            {@link OpenFlags} parameter that dicates open mode and
+	 *            automatic create behavior, as well as overwrite/truncation
 	 *            behavior
 	 * @return {@link IRODSFileOutputStream} implementation of a
 	 *         <code>java.io.OutputStream</code>
@@ -186,7 +186,7 @@ public interface IRODSFileFactory {
 	 * {@link SessionClosingIRODSFileInputStream} that will close the re-routed
 	 * connection when the stream is closed.
 	 *
-	 * @param name
+	 * @param irodsAbsolutePath
 	 *            <code>String</code> with and absolute path to the file that
 	 *            will be read to via the given stream.
 	 * @return {@link IRODSFileInputStream} implementation of a
@@ -204,7 +204,7 @@ public interface IRODSFileFactory {
 	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} that
 	 *            encapsulates the underlying IRODS File
-	 * @return
+	 * @return {@link IRODSRandomAccessFile}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -220,7 +220,7 @@ public interface IRODSFileFactory {
 	 *
 	 * @param name
 	 *            <code>String</code> with the absolute path to the file.
-	 * @return
+	 * @return {@link IRODSRandomAccessFile}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -253,7 +253,7 @@ public interface IRODSFileFactory {
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</code> containing the absolute path to the iRODS
 	 *            file to be read
-	 * @return
+	 * @return {@link IRODSFileReader}
 	 * @throws JargonException
 	 */
 	IRODSFileReader instanceIRODSFileReader(String irodsFileAbsolutePath)
@@ -277,17 +277,14 @@ public interface IRODSFileFactory {
 			throws JargonException;
 
 	/**
-	 * Create an instance of a
-	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream}.
-	 * This special input stream will close the underlying iRODS connection when
-	 * the stream is closed.
+	 * Create an instance of a {@link SessionClosingIRODSFileInputStream}. This
+	 * special input stream will close the underlying iRODS connection when the
+	 * stream is closed.
 	 *
 	 * @param name
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            that will be read and streamed.
-	 * @return{@link
-	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
-	 *               }
+	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws JargonException
 	 */
 	SessionClosingIRODSFileInputStream instanceSessionClosingIRODSFileInputStream(
@@ -299,49 +296,41 @@ public interface IRODSFileFactory {
 	 * This special input stream will close the underlying iRODS connection when
 	 * the stream is closed.
 	 *
-	 * @param name
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
-	 *            file that will be opened and streamed.
-	 * @return{@link
-	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
-	 *               }
+	 * @param file
+	 *            {@link IRODSFile} with the iRODS file that will be opened and
+	 *            streamed.
+	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws JargonException
 	 */
 	SessionClosingIRODSFileInputStream instanceSessionClosingIRODSFileInputStream(
 			IRODSFile file) throws JargonException;
 
 	/**
-	 * Create an instance of a
-	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream}.
-	 * This special input stream will close the underlying iRODS connection when
-	 * the stream is closed. This method provides the ability to add the
+	 * Create an instance of a {@link SessionClosingIRODSFileInputStream}. This
+	 * special input stream will close the underlying iRODS connection when the
+	 * stream is closed. This method provides the ability to add the
 	 * <code>fd</code> when the file is already opened.
 	 *
-	 * @param name
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 * @param file
+	 *            <code>File</code> with the absolute path to the iRODS file
 	 *            that will be read and streamed.
 	 * @param fd
 	 *            <code>int</code> with the file descriptor
-	 * @return{@link
-	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
-	 *               }
+	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws JargonException
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStreamGivingFD(IRODSFile file,
 			int fd) throws JargonException;
 
 	/**
-	 * Create an instance of a
-	 * {@link org.irods.jargon.core.pub.io.SessionClosingIRODSFileOutputStream}.
-	 * This special output stream will close the underlying iRODS connection
-	 * when the stream is closed.
+	 * Create an instance of a {@link SessionClosingIRODSFileOutputStream}. This
+	 * special output stream will close the underlying iRODS connection when the
+	 * stream is closed.
 	 *
-	 * @param name
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} with the iRODS
-	 *            file that will be opened and streamed.
-	 * @return{@link
-	 *               org.irods.jargon.core.pub.io.SessionClosingIRODSFileInputStream
-	 *               }
+	 * @param File
+	 *            {@link IRODSFile} with the iRODS file that will be opened and
+	 *            streamed.
+	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -375,7 +364,7 @@ public interface IRODSFileFactory {
 	 * @param openFlags
 	 *            {@link OpenFlags} that defines how the file is to be opened
 	 *            (e.g. Read only versus Read/write)
-	 * @return
+	 * @return {@link IRODSRandomAccessFile}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
