@@ -59,14 +59,13 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * <p/>
  * Transfers can have multiple options that control their behavior. These will
  * be added as necessary, but will likely be too numerous to specify
- * individually. For this reason, a {@TransferOptions} class
- * has been developed. By default, Jargon will consult the
- * {@link JargonProperties} as configured in the {@link IRODSSession} object.
- * Those may be loaded from the default <code>jargon.properties</code> file, or
- * those properties can be set up by an application. If no
- * <code>TransferOptions</code> are specified, the <code>JargonProperties</code>
- * will be consulted to build a default set. In many cases, this is all that is
- * required.
+ * individually. For this reason, a {@link TransferOptions} class has been
+ * developed. By default, Jargon will consult the {@link JargonProperties} as
+ * configured in the {@link IRODSSession} object. Those may be loaded from the
+ * default <code>jargon.properties</code> file, or those properties can be set
+ * up by an application. If no <code>TransferOptions</code> are specified, the
+ * <code>JargonProperties</code> will be consulted to build a default set. In
+ * many cases, this is all that is required.
  * <p/>
  * If particular properties are required for an individual transfer, it is
  * possible to specify those options, where they apply. These will be mostly
@@ -95,9 +94,6 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param absolutePathToSourceFile
 	 *            <code>String</code> with the absolute path to the source file
 	 *            in iRODS.
-	 * @param absolutePathToTargetFile
-	 *            <code>String</code> with the absolute path to the target file
-	 *            in iRODS.
 	 * @param targetResource
 	 *            <code>String</code> with the target resource name iRODS.
 	 * @throws JargonException
@@ -106,7 +102,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 */
 	void physicalMove(final String absolutePathToSourceFile,
 			final String targetResource)
-					throws JargonFileOrCollAlreadyExistsException, JargonException;
+			throws JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
 	 * Move a file or collection between two locations in iRODS. This method
@@ -138,7 +134,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 */
 	void move(final String absolutePathToSourceFile,
 			final String absolutePathToTargetFile)
-					throws JargonFileOrCollAlreadyExistsException, JargonException;
+			throws JargonFileOrCollAlreadyExistsException, JargonException;
 
 	/**
 	 * Put a file or a collection (recursively) to iRODS. This method allows
@@ -181,7 +177,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws DataNotFoundException, OverwriteException, JargonException;
+			throws DataNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
@@ -220,7 +216,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Get a file or collection from iRODS to the local file system. This method
@@ -250,7 +246,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * @param irodsSourceFileAbsolutePath
 	 *            <code>String</code> with the absolute path to the iRODS source
 	 *            file to retrieve to the client
-	 * @param targetLocalFile
+	 * @param targetLocalFileAbsolutePath
 	 *            <code>String</code> that is the absolute path to file in the
 	 *            local file system to which the iRODS data will be transferred
 	 * @param sourceResourceName
@@ -283,7 +279,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String targetLocalFileAbsolutePath, String sourceResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Perform a replication operation. This will copy the given file to a
@@ -316,7 +312,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock)
-					throws JargonException;
+			throws JargonException;
 
 	/**
 	 * Copy a file or collection from iRODS to iRODS.
@@ -361,7 +357,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String irodsTargetFileAbsolutePath,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			boolean force, TransferControlBlock transferControlBlock)
-					throws OverwriteException, DataNotFoundException, JargonException;
+			throws OverwriteException, DataNotFoundException, JargonException;
 
 	/**
 	 * Transfer a file from the local file system to iRODS. This will be a
@@ -407,7 +403,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String targetIrodsFileAbsolutePath, String targetResourceName,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-					throws FileNotFoundException, OverwriteException, JargonException;
+			throws FileNotFoundException, OverwriteException, JargonException;
 
 	/**
 	 * Move a file or collection between two locations in iRODS. This method
@@ -490,7 +486,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 			String irodsTargetFileAbsolutePath,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-					throws OverwriteException, FileNotFoundException, JargonException;
+			throws OverwriteException, FileNotFoundException, JargonException;
 
 	/**
 	 * Copy a file or collection from one iRODS location to another. This is the
@@ -538,5 +534,5 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	void copy(IRODSFile irodsSourceFile, IRODSFile irodsTargetFile,
 			TransferStatusCallbackListener transferStatusCallbackListener,
 			TransferControlBlock transferControlBlock)
-					throws OverwriteException, DataNotFoundException, JargonException;
+			throws OverwriteException, DataNotFoundException, JargonException;
 }

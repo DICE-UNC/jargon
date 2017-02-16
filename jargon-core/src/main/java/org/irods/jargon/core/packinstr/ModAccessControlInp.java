@@ -129,7 +129,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetInheritOnACollectionInAdminMode(
 			final boolean recursive, final String zone,

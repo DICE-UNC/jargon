@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
-FileCatalogObjectAO {
+		FileCatalogObjectAO {
 
 	protected transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
@@ -57,7 +57,7 @@ FileCatalogObjectAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
 	 * java.lang.String, java.lang.String)
@@ -129,7 +129,7 @@ FileCatalogObjectAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
 	 * java.lang.String, java.lang.String)
@@ -196,7 +196,7 @@ FileCatalogObjectAO {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getObjectStatForAbsolutePath
 	 * (java.lang.String)
@@ -247,7 +247,7 @@ FileCatalogObjectAO {
 	 *            <code>String</code> with the parent path to the file
 	 * @param fileName
 	 *            <code>String</code> with the child file name
-	 * @return{@link ObjStat} with the file data from iRODS
+	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */

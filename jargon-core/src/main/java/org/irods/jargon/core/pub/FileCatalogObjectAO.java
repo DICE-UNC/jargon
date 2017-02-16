@@ -44,9 +44,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * Note that this method will return <code>null</code> if no rerouting is
 	 * done
 	 *
-	 * @param targetAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS file or
-	 *            collection
+	 * 
 	 * @param resourceName
 	 *            <code>String</code> that contains the resource name, or blank
 	 *            if not used

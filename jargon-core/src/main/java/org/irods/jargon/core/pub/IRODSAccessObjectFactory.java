@@ -540,7 +540,7 @@ public interface IRODSAccessObjectFactory {
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
 	 *
-	 * @return
+	 * @return {@link DiscoveredServerPropertiesCache}
 	 */
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 

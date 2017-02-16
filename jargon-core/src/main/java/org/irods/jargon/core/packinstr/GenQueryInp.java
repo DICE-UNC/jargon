@@ -85,10 +85,6 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * paging behavior.
 	 *
 	 * @param translatedIRODSQuery
-	 * @param continueIndex
-	 *            <code>int</code> with a 0 or 1 to indicate continuation of a
-	 *            previous query that had more results
-	 * @return <code>GenQueryInp</code> instance
 	 * @param partialStartIndex
 	 *            <code>int</code> with the offset within the result set to
 	 *            start returning rows from
@@ -166,7 +162,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	}
 
 	/**
-	 * @return {@link TranslatedIRODSQuery} represents the parsed view of the
+	 * @return {@link TranslatedIRODSGenQuery} represents the parsed view of the
 	 *         query. Note that an exception is thrown if the translated query
 	 *         has not been derived TODO: refactor out, possibly with a return
 	 *         container of multiple objects in getParsedTags()

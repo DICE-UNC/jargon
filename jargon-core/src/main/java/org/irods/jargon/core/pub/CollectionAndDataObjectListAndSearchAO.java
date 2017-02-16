@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -48,7 +47,7 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  *
  */
 public interface CollectionAndDataObjectListAndSearchAO extends
-IRODSAccessObject {
+		IRODSAccessObject {
 
 	/**
 	 * Specific query for coll listing with ACLs
@@ -89,7 +88,7 @@ IRODSAccessObject {
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of files in a
@@ -122,7 +121,7 @@ IRODSAccessObject {
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
 			final String absolutePathToParent, final int partialStartIndex)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -274,9 +273,10 @@ IRODSAccessObject {
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
-	 * @param <code>int</code> with a partial start index of 0 or greater that
-	 *        indicates the offset into the returned results, suitable for
-	 *        paging.
+	 * @param partialStartIndex
+	 *            <code>int</code> with a partial start index of 0 or greater
+	 *            that indicates the offset into the returned results, suitable
+	 *            for paging.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing collections that match the search term * @throws
@@ -370,10 +370,10 @@ IRODSAccessObject {
 			String searchTerm) throws JargonException;
 
 	/**
-	 * Handy method will get the full domain object, {@link DataObject} or
-	 * {@link Collection}, based on the given absolute path. This can be handy
-	 * for display in interfaces or other applications that are concerned with
-	 * retrieving 'info' about a given path.
+	 * Handy method will get the full domain object, DataObject or Collection,
+	 * based on the given absolute path. This can be handy for display in
+	 * interfaces or other applications that are concerned with retrieving
+	 * 'info' about a given path.
 	 *
 	 * @param objectAbsolutePath
 	 *            <code>String</code> with the absolute path to the given data
@@ -415,7 +415,7 @@ IRODSAccessObject {
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of data objects in a
@@ -444,7 +444,7 @@ IRODSAccessObject {
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
 			String absolutePathToParent, int partialStartIndex)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -584,23 +584,16 @@ IRODSAccessObject {
 			throws FileNotFoundException, JargonException;
 
 	/**
-	 * List data objects and collections found underneath the parent described
-	 * in the given objStat
-	 *
+	 * List data objects and collections underneath the given parent (as an
+	 * ObjStat)
+	 * 
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
-	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
-	 * 
-	 *
-	 *
-	 *
-	 *
-	 *
-	 * } that represents the
-	 *         collections and data objects beneath the parent
+	 * @return List of {@link CollectionAndDataObjectListingEntry}
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
+
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			ObjStat objStat) throws FileNotFoundException, JargonException;
 

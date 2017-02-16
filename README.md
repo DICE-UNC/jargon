@@ -39,3 +39,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
+#### fix javadoc gen issues #230
+
+Clean up javadocs to allow generation via Maven

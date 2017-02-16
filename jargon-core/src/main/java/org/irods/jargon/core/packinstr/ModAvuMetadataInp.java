@@ -65,7 +65,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForModifyCollectionMetadata(
 			final String targetIdentifier, final AvuData avuData,
@@ -87,7 +87,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteCollectionMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -102,7 +102,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForAddDataObjectMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -117,7 +117,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForModifyDataObjectMetadata(
 			final String targetIdentifier, final AvuData avuData,
@@ -139,7 +139,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteDataObjectMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -155,7 +155,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForAddResourceMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -170,7 +170,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForSetResourceMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -185,7 +185,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForModifyResourceMetadata(
 			final String targetIdentifier, final AvuData avuData,
@@ -207,7 +207,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteResourceMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -222,7 +222,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForAddUserMetadata(
 			final String targetIdentifier, final AvuData avuData) {
@@ -237,7 +237,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForModifyUserMetadata(
 			final String targetIdentifier, final AvuData avuData,
@@ -258,7 +258,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * @param targetIdentifier
 	 *            <code>String</code> with the path or unique name of the object
 	 *            to which the metadata will be added
-	 * @return
+	 * @return {@link ModAvuMetadataInp}
 	 */
 	public static final ModAvuMetadataInp instanceForDeleteUserMetadata(
 			final String targetIdentifier, final AvuData avuData) {
