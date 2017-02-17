@@ -58,8 +58,8 @@ public class IRODSFileOutputStream extends OutputStream {
 	 * file, or for some other reason cannot be opened for reading then a
 	 * <code>FileNotFoundException</code> is thrown.
 	 *
-	 * @param name
-	 *            the system-dependent file name.
+	 * @param irodsFile
+	 *            {@link IRODSFile} that underlies the stream
 	 * @exception NoResourceDefinedException
 	 *                if no storage resource is defined, and iRODS has not
 	 *                default resource rule

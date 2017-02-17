@@ -18,7 +18,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	/**
 	 * Get the (optional) hint that points to the correct zone to query
 	 *
-	 * @return
+	 * @return <code>String</code> with the zone hint
 	 */
 	public String getZoneHint() {
 		return zoneHint;

@@ -51,14 +51,14 @@ public class IRODSQueryResultRow {
 	 * @param queryResultColumns
 	 *            <code>List<String</code> with the values for each column of
 	 *            the query
-	 * @param translatedIRODSQuery
-	 *            {@link TranslatedIRODSQuery} that produced this result
+	 * @param columnNames
+	 *            <code>List<String</code> with the values for each column name
 	 * @param recordCount
 	 *            <code>int</code> with the index of the current record
 	 * @param lastResult
 	 *            <code>boolean</code> of <code>true</code> if there are more
 	 *            records to page
-	 * @return
+	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
@@ -77,14 +77,16 @@ public class IRODSQueryResultRow {
 	 * @param queryResultColumns
 	 *            <code>List<String</code> with the values for each column of
 	 *            the query
-	 * @param translatedIRODSQuery
-	 *            {@link TranslatedIRODSQuery} that produced this result
+	 * @param columnNames
+	 *            <code>List<String</code> with the values for each column name
 	 * @param recordCount
 	 *            <code>int</code> with the index of the current record
 	 * @param lastResult
 	 *            <code>boolean</code> of <code>true</code> if there are more
 	 *            records to page
-	 * @return
+	 * @param totalRecords
+	 *            <code>int</code> with the total records that will be returned
+	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
@@ -133,7 +135,7 @@ public class IRODSQueryResultRow {
 	/**
 	 * Given a columnNumber, return the value of the column in the result set.
 	 *
-	 * @param columnName
+	 * @param columnNumber
 	 *            <code>int</code> with the location of the desired field.
 	 * @return <code>String</code> containing the value of the column. It is up
 	 *         to the caller to cast to the appropriate type.
@@ -261,7 +263,7 @@ public class IRODSQueryResultRow {
 	 * The match is case-insensitive;
 	 *
 	 * @param columnName
-	 * @return
+	 * @return <code>int</code>
 	 */
 	protected int getColumnNamePosition(final String columnName) {
 		int colPos = -1;

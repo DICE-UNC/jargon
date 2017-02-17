@@ -12,9 +12,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * IRODS specific implementation of the <code>java.io.FileInputStream</code>.
- * This object is created by the {@link
- * org.irods.jargon.core.public.io.IRODSFileFactory}, and once created can be
- * treated as usual. *
+ * This object is created by the {@link IRODSFileFactory}, and once created can
+ * be treated as usual. *
  * <p/>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
@@ -42,8 +41,10 @@ public class IRODSFileInputStream extends InputStream {
 	 * file, or for some other reason cannot be opened for reading then a
 	 * <code>FileNotFoundException</code> is thrown.
 	 *
-	 * @param name
-	 *            the system-dependent file name.
+	 * @param irodsFile
+	 *            {@link IRODSFile} with the file that will be the basis of the
+	 *            input stream
+	 * 
 	 * @exception IOException
 	 *                if the file does not exist, is a directory rather than a
 	 *                regular file, or for some other reason cannot be opened
@@ -51,7 +52,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-					throws FileNotFoundException {
+			throws FileNotFoundException {
 
 		super();
 		checkFileParameter(irodsFile);
@@ -74,10 +75,10 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		/*
-		 *
+		 * 
 		 * TODO: replace(?) when bug is resolved: [#621] error reading file
 		 * w/group permissions
-		 *
+		 * 
 		 * if (!irodsFile.canRead()) { final String msg =
 		 * "cannot read the file:" + irodsFile.getAbsolutePath();
 		 * log.error(msg); throw new FileNotFoundException(msg); }
@@ -127,7 +128,7 @@ public class IRODSFileInputStream extends InputStream {
 	 */
 	protected IRODSFileInputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final int fd)
-					throws FileNotFoundException {
+			throws FileNotFoundException {
 
 		super();
 

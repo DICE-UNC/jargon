@@ -57,7 +57,7 @@ public class GenQueryProcessor {
 			final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int continueIndex, final int partialStartIndex,
 			final QueryCloseBehavior queryCloseBehavior, final String zoneName)
-					throws JargonException {
+			throws JargonException {
 
 		if (continueIndex < 0) {
 			throw new JargonException("continue index must be >= 0");
@@ -129,11 +129,12 @@ public class GenQueryProcessor {
 	}
 
 	/**
-	 * @param translatedIRODSQuery
-	 * @param continueIndex
-	 * @param partialStartIndex
-	 * @return
+	 * Send the query
+	 * 
+	 * @param genQueryInp
+	 * @return {@link Tag}
 	 * @throws JargonException
+	 * @throws DataNotFoundException
 	 */
 	public Tag sendGenQueryAndReturnResponse(final GenQueryInp genQueryInp)
 			throws JargonException, DataNotFoundException {
@@ -171,8 +172,10 @@ public class GenQueryProcessor {
 	}
 
 	/**
+	 * translate the given query
+	 * 
 	 * @param irodsQuery
-	 * @return
+	 * @return {@link TranslatedIRODSGenQuery}
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */

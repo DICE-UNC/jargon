@@ -327,7 +327,7 @@ public interface IRODSFileFactory {
 	 * special output stream will close the underlying iRODS connection when the
 	 * stream is closed.
 	 *
-	 * @param File
+	 * @param file
 	 *            {@link IRODSFile} with the iRODS file that will be opened and
 	 *            streamed.
 	 * @return {@link SessionClosingIRODSFileInputStream}

@@ -33,7 +33,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param hasMoreRecords
 	 *            <code>boolean</code> that indicates whether there are more
 	 *            records to retrieve.
-	 * @return
+	 * @return {@link IRODSSimpleQueryResultSet}
 	 */
 	public static IRODSSimpleQueryResultSet instance(
 			final AbstractAliasedQuery simpleQuery,
@@ -74,7 +74,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.query.AbstractIRODSQueryResultSet#
 	 * getNumberOfResultColumns()
 	 */
@@ -85,7 +85,7 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.query.AbstractIRODSQueryResultSet#getColumnNames()
 	 */

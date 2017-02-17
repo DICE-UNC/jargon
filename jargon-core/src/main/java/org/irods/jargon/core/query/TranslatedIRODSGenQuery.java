@@ -40,16 +40,14 @@ public class TranslatedIRODSGenQuery {
 	 * This version allows specification of 'upperCase'
 	 *
 	 * @param translatedSelectFields
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
-	 *            representing the selects.
+	 *            <code>List</code> of {@link GenQuerySelectField} representing
+	 *            the selects.
 	 * @param translatedQueryConditions
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            <code>List</code> of {@link TranslatedGenQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
-	 *            encapsulates the original user query.
+	 *            {@link AbstractIRODSGenQuery} that encapsulates the original
+	 *            user query.
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
@@ -76,16 +74,14 @@ public class TranslatedIRODSGenQuery {
 	 * parsed and translated query.
 	 *
 	 * @param translatedSelectFields
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
-	 *            representing the selects.
+	 *            <code>List</code> of {@link GenQuerySelectField} representing
+	 *            the selects.
 	 * @param translatedQueryConditions
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            <code>List</code> of {@link TranslatedGenQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
-	 *            encapsulates the original user query.
+	 *            {@link IRODSGenQuery} that encapsulates the original user
+	 *            query.
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
@@ -96,7 +92,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQuerySelectField> translatedSelectFields,
 			final List<TranslatedGenQueryCondition> translatedQueryConditions,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct)
-					throws JargonException {
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, null, irodsQuery, distinct, false,
 				false);
@@ -109,19 +105,17 @@ public class TranslatedIRODSGenQuery {
 	 * translated query.
 	 *
 	 * @param translatedSelectFields
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
-	 *            representing the selects.
+	 *            <code>List</code> of {@link GenQuerySelectField} representing
+	 *            the selects.
 	 * @param translatedQueryConditions
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            <code>List</code> of {@link TranslatedGenQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param orderByFields
 	 *            <code>List</code> of {@link GenQueryOrderByField} that has
 	 *            order by data
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
-	 *            encapsulates the original user query.
+	 *            {@link AbstractIRODSGenQuery} that encapsulates the original
+	 *            user query.
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
@@ -149,19 +143,17 @@ public class TranslatedIRODSGenQuery {
 	 * translated query.
 	 *
 	 * @param translatedSelectFields
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
-	 *            representing the selects.
+	 *            <code>List</code> of {@link GenQuerySelectField} representing
+	 *            the selects.
 	 * @param translatedQueryConditions
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            <code>List</code> of {@link TranslatedGenQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param orderByFields
 	 *            <code>List</code> of {@link GenQueryOrderByField} that has
 	 *            order by data
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
-	 *            encapsulates the original user query.
+	 *            {@link AbstractIRODSGenQuery} that encapsulates the original
+	 *            user query.
 	 * @param distinct
 	 *            <code>boolean</code> indicating whether this is a distinct
 	 *            query.
@@ -183,7 +175,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
 			final boolean caseInsensitive, final boolean computeTotalRowCount)
-					throws JargonException {
+			throws JargonException {
 		return new TranslatedIRODSGenQuery(translatedSelectFields,
 				translatedQueryConditions, orderByFields, irodsQuery, distinct,
 				caseInsensitive, computeTotalRowCount);
@@ -196,17 +188,15 @@ public class TranslatedIRODSGenQuery {
 	 * parsed and translated query.
 	 *
 	 * @param translatedSelectFields
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.GenQuerySelectField.SelectField}
-	 *            representing the selects.
+	 *            <code>List</code> of {@link GenQuerySelectField} representing
+	 *            the selects.
 	 * @param translatedQueryConditions
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.pub.TranslatedGenQueryCondition.TranslatedQueryCondition}
+	 *            <code>List</code> of {@link TranslatedGenQueryCondition}
 	 *            representing the parsed conditions.
 	 * @param irodsQuery
-	 *            {@link org.irods.jargon.core.query.IRODSGenQuery} that
-	 *            encapsulates the original user query.
-	 * @return
+	 *            {@link AbstractIRODSGenQuery} that encapsulates the original
+	 *            user query.
+	 * @return {@link TranslatedIRODSGenQuery}
 	 * @throws JargonException
 	 */
 	public static TranslatedIRODSGenQuery instance(
@@ -224,7 +214,7 @@ public class TranslatedIRODSGenQuery {
 			final List<GenQueryOrderByField> orderByFields,
 			final AbstractIRODSGenQuery irodsQuery, final boolean distinct,
 			final boolean upperCase, final boolean computeTotalRowCount)
-					throws JargonException {
+			throws JargonException {
 
 		if (translatedQueryConditions == null) {
 			throw new JargonException("conditions are null");
@@ -258,8 +248,8 @@ public class TranslatedIRODSGenQuery {
 	}
 
 	/**
-	 * Get the {@link org.irods.jargon.core.query.RodsGenQueryEnum
-	 * RodsGenQueryEnum} data that describes the particular select column.
+	 * Get the {@link RodsGenQueryEnum RodsGenQueryEnum} data that describes the
+	 * particular select column.
 	 *
 	 * @return <code>RodsGenQueryEnum</code> with the column names translated in
 	 *         the internal representation.
@@ -272,9 +262,8 @@ public class TranslatedIRODSGenQuery {
 	 * Get the condition portion of a query translated into the internal
 	 * representation.
 	 *
-	 * @return {@link org.irods.jargon.core.query.TranslatedGenQueryCondition
-	 *         TranslatedQueryCondition} containing the internal represntation
-	 *         of the condition portion of the query.
+	 * @return {@link TranslatedGenQueryCondition} containing the internal
+	 *         representation of the condition portion of the query.
 	 */
 	public List<TranslatedGenQueryCondition> getTranslatedQueryConditions() {
 		return translatedQueryConditions;
@@ -319,7 +308,7 @@ public class TranslatedIRODSGenQuery {
 	/**
 	 * Indicates that
 	 *
-	 * @return
+	 * @return <code>boolean</code> with the translated query
 	 */
 	public boolean isUpperCase() {
 		return upperCase;

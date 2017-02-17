@@ -27,7 +27,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  *
  */
 public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
-implements Comparable<CollectionAndDataObjectListingEntry> {
+		implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	/**
 	 * Analogous to objType_t defined in rodsType.h
@@ -168,7 +168,7 @@ implements Comparable<CollectionAndDataObjectListingEntry> {
 	 * give the intended result if used to query the iCAT for information about
 	 * the file or collection.
 	 *
-	 * @return
+	 * @return <code>String</code> with the formatted path
 	 */
 	public String getFormattedAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
@@ -262,19 +262,19 @@ implements Comparable<CollectionAndDataObjectListingEntry> {
 	}
 
 	/**
-	 * @return the specColType {@link ObjStat.SpecColType} enum value that
-	 *         indicates if this is some type of special collection
+	 * @return the specColType {@link SpecColType} enum value that indicates if
+	 *         this is some type of special collection
 	 */
-	public ObjStat.SpecColType getSpecColType() {
+	public SpecColType getSpecColType() {
 		return specColType;
 	}
 
 	/**
 	 * @param specColType
-	 *            the specColType to set {@link ObjStat.SpecColType} enum value
-	 *            that indicates if this is some type of special collection
+	 *            the specColType to set {@link SpecColType} enum value that
+	 *            indicates if this is some type of special collection
 	 */
-	public void setSpecColType(final ObjStat.SpecColType specColType) {
+	public void setSpecColType(final SpecColType specColType) {
 		this.specColType = specColType;
 	}
 
