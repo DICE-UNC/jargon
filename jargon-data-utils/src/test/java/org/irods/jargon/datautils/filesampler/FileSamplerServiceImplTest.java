@@ -4,15 +4,23 @@
 package org.irods.jargon.datautils.filesampler;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.exception.FileNotFoundException;
+import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.DataTransferOperations;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
+import org.irods.jargon.core.pub.domain.AvuData;
+import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -211,6 +219,69 @@ public class FileSamplerServiceImplTest {
 		String helloFromIrods = service.convertFileContentsToString(
 				targetFile.getAbsolutePath(), 0);
 		Assert.assertEquals(hello, helloFromIrods);
+
+	}
+
+	/**
+	 * Test for https://github.com/DICE-UNC/jargon/issues/232
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testStringToFileTwiceSaveMetadataBug232() throws Exception {
+		String testFileName = "testStringToFileTwice.txt";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFile targetFile = accessObjectFactory.getIRODSFileFactory(
+				irodsAccount).instanceIRODSFile(targetIrodsCollection,
+				testFileName);
+
+		FileSamplerService service = new FileSamplerServiceImpl(
+				accessObjectFactory, irodsAccount);
+		String hello = "hello there from jargon";
+		service.saveStringToFile(hello, targetFile.getAbsolutePath());
+
+		String expectedAttribName = "testStringToFileTwiceSaveMetadataBug232";
+		String expectedValueName = "testval1";
+		AvuData avuData = AvuData.instance(expectedAttribName,
+				expectedValueName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem
+				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.addAVUMetadata(targetFile.getAbsolutePath(), avuData);
+
+		service.saveStringToFile(hello, targetFile.getAbsolutePath());
+
+		String helloFromIrods = service.convertFileContentsToString(
+				targetFile.getAbsolutePath(), 0);
+		Assert.assertEquals(hello, helloFromIrods);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+				expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO
+				.findDomainByMetadataQuery(avuQueryElements);
+
+		int nonTrashCount = 0;
+
+		for (DataObject dataObject : dataObjects) {
+			if (!dataObject.getAbsolutePath().contains("trash")) {
+				nonTrashCount++;
+			}
+		}
+
+		if (nonTrashCount == 0) {
+			Assert.fail("avus were not preserved");
+		}
 
 	}
 

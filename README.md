@@ -11,7 +11,6 @@
 4.2.0 Compatability and maintenance
 for milestone: https://github.com/DICE-UNC/jargon/milestone/16
 
-
 This version of Jargon is currently targeted at Cloud Browser and REST.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
