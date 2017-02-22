@@ -18,6 +18,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoResourceDefinedException;
+import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileOutputStream;
 import org.irods.jargon.core.utils.ChannelTools;
@@ -66,15 +67,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null irodsTargetFile");
 		}
 
-		// delete the target file for overwrite
-
-		irodsTargetFile.delete();
-
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
 
 		OutputStream ifOs = getIRODSFileFactory()
-				.instanceIRODSFileOutputStream(irodsTargetFile);
+				.instanceIRODSFileOutputStream(irodsTargetFile,
+						OpenFlags.WRITE_TRUNCATE);
 		InputStream bis = new ByteArrayInputStream(bytesToStream);
 
 		final ReadableByteChannel inputChannel = Channels.newChannel(bis);
