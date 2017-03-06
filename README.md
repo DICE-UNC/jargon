@@ -52,3 +52,7 @@ Add file to string and vice versa in FileSamplerService of data utils.  This all
 #### File save via cloud browser is deleting metadata #232
 
 Fix save of string to file (in Stream2StreamAO) to not delete a file when overwriting, so as to preserve metadata
+
+#### Add list user groups like x method #233
+
+Enhanced user group and user queries for cloud browser

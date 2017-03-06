@@ -1161,6 +1161,21 @@ public class UserAOTest {
 	}
 
 	@Test
+	public void testFindUsers() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		List<User> users = userAO.findUsersLike("");
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+
+	@Test
 	public void testFindUserNameWhereUserNameLikeNoResultExpected()
 			throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

@@ -57,7 +57,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *             indicates some syntax exception in the provided where clause
 	 */
 	List<UserGroup> findWhere(String whereClause) throws JargonException,
-	JargonQueryException;
+			JargonQueryException;
 
 	/**
 	 * Given a user name, return the user groups that the given user belongs to,
@@ -81,7 +81,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void addUserGroup(UserGroup userGroup) throws DuplicateDataException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Remove the given user group from iRODS. Note that if the user group is
@@ -181,5 +181,16 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void removeUserGroup(String userGroupName) throws JargonException;
+
+	/**
+	 * Given a search term, find user groups like that term. A blank term will
+	 * find all
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with
+	 * @return
+	 * @throws JargonException
+	 */
+	List<UserGroup> findUserGroups(String userGroupName) throws JargonException;
 
 }

@@ -129,6 +129,45 @@ public class UserGroupAOImplTest {
 	}
 
 	@Test
+	public final void findUserGroups() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+		UserGroup userGroup = userGroupAO.findByName((String) testingProperties
+				.get(TestingPropertiesHelper.IRODS_USER_GROUP_KEY));
+		Assert.assertNotNull("no user group returned", userGroup);
+
+		List<UserGroup> userGroups = userGroupAO.findUserGroups(userGroup
+				.getUserGroupName().substring(0,
+						userGroup.getUserGroupName().length() - 2));
+		Assert.assertFalse("no user groups found", userGroups.isEmpty());
+	}
+
+	@Test
+	public final void findUserGroupsEmptyTerm() throws Exception {
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
+				.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession
+				.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
+				.instance(irodsSession);
+		UserGroupAO userGroupAO = accessObjectFactory
+				.getUserGroupAO(irodsAccount);
+
+		List<UserGroup> userGroups = userGroupAO.findUserGroups("");
+		Assert.assertFalse("no user groups found", userGroups.isEmpty());
+	}
+
+	@Test
 	public final void testFindByNameNotExists() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
