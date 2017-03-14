@@ -24,8 +24,8 @@ public class UserGroupAOHelper {
 	 */
 	public static void buildSelectsByAppendingToBuilder(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
-		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID)
-				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME);
+		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID);
 
 	}
 
