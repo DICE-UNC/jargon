@@ -41,6 +41,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private static final char COMMA = ',';
+	private static final String RODS_GROUP = "rodsgroup";
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
 	/**
@@ -475,10 +476,12 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		sb.append(userGroupName.trim());
 		sb.append('%');
 
-		builder.addConditionAsGenQueryField(
-				RodsGenQueryEnum.COL_USER_GROUP_NAME,
-				QueryConditionOperators.LIKE, sb.toString());
+		builder
 
+		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME,
+				QueryConditionOperators.LIKE, sb.toString())
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE,
+						QueryConditionOperators.EQUAL, RODS_GROUP);
 		IRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder

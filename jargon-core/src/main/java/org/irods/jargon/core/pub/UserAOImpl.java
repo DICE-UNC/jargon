@@ -61,6 +61,8 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 	private static final String AND = " AND ";
 	private static final String EQUALS = " = ";
 	private static final String STRING_TO_HASH_WITH = "stringToHashWith";
+
+	private static final String RODS_GROUP = "rodsgroup";
 	private IRODSGenQueryExecutor irodsGenQueryExecutor = null;
 
 	protected UserAOImpl(final IRODSSession irodsSession,
@@ -537,6 +539,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE,
 							OrderByType.ASC)
 					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_TYPE,
+							QueryConditionOperators.NOT_EQUAL, RODS_GROUP)
+					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
 							QueryConditionOperators.LIKE,
 							userQuery.toString().trim());
@@ -592,6 +597,9 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 					OrderByType.ASC)
 					.addOrderByGenQueryField(RodsGenQueryEnum.COL_USER_ZONE,
 							OrderByType.ASC)
+					.addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_TYPE,
+							QueryConditionOperators.NOT_EQUAL, RODS_GROUP)
 					.addConditionAsGenQueryField(
 							RodsGenQueryEnum.COL_USER_NAME,
 							QueryConditionOperators.LIKE,

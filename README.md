@@ -56,3 +56,7 @@ Fix save of string to file (in Stream2StreamAO) to not delete a file when overwr
 #### Add list user groups like x method #233
 
 Enhanced user group and user queries for cloud browser
+
+#### add col user type to genquery #235
+
+Add user type to LIKE queries to discriminate users from groups in find 'like' queries
