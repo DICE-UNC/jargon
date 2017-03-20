@@ -31,7 +31,7 @@ public class PagingAwareCollectionListingDescriptor {
 	 * as separate entities with a paging status for each type, while other
 	 * listings might have a single source.
 	 */
-	private PagingStyle pagingStyle;
+	private PagingStyle pagingStyle; // FIXME: remove paging style for pacl
 	/**
 	 * Offset into collections represented by the results, if the mode is mixed
 	 * (collections and data objects together, this is just the offset into the
@@ -57,10 +57,10 @@ public class PagingAwareCollectionListingDescriptor {
 	 */
 	private int totalRecords;
 	/**
-	 * Count of files in results, will be 0 if no files
+	 * Count of files available on the server itself
 	 * <p/>
-	 * To differentiate from total records, the count is the total number of
-	 * results in this page.
+	 * To differentiate from count, the count is the total number of results in
+	 * this page.
 	 */
 	private int dataObjectsCount;
 	/**
@@ -84,35 +84,41 @@ public class PagingAwareCollectionListingDescriptor {
 	 * Reflects the page size
 	 */
 	private int pageSizeUtilized;
-	
+
 	/**
 	 * Are there more colls or data objects to return?
+	 * 
 	 * @return
 	 */
 	public boolean hasMore() {
 		return !(this.dataObjectsComplete && this.collectionsComplete);
 	}
-	
+
 	/**
-	 * Return an <code>int<code> that is the absolute offset across both collections and data objects.  Collections are listed first
+	 * Return an
+	 * <code>int<code> that is the absolute offset across both collections and data objects.  Collections are listed first
 	 * so the offset for data objects will be the total offset of the collections added to the offset of any data objects.
-	 * @return <code>int</code> with the continuous count of data objects and collections.
-	 * <p/>
-	 * Remember that 'counts' are 1 based, so the last count value in the listing is the offset for the next listing (offset is 0 based)
+	 * 
+	 * @return <code>int</code> with the continuous count of data objects and
+	 *         collections.
+	 *         <p/>
+	 *         Remember that 'counts' are 1 based, so the last count value in
+	 *         the listing is the offset for the next listing (offset is 0
+	 *         based)
 	 */
 	public int computeAbsoluteNextOffset() {
 		return this.count + this.dataObjectsCount;
 	}
 
 	/**
-	 * Return the total records for both collections and data objects together.  
+	 * Return the total records for both collections and data objects together.
+	 * 
 	 * @return <code>int</code> with the total size of the set
 	 */
 	public int computeAbsoluteTotalSize() {
 		return this.totalRecords + this.dataObjectsTotalRecords;
 	}
-	
-	
+
 	public PagingAwareCollectionListingDescriptor() {
 	}
 
