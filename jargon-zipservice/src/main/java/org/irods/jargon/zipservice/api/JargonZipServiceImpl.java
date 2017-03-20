@@ -111,6 +111,7 @@ public class JargonZipServiceImpl extends AbstractJargonService implements
 	 * @see org.irods.jargon.zipservice.api.JargonZipService#
 	 * obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(java.util.List)
 	 */
+	@SuppressWarnings("resource")
 	@Override
 	public BundleStreamWrapper obtainBundleAsInputStreamWithAdditionalMetadataGivenPaths(
 			final List<String> irodsAbsolutePaths) throws ZipServiceException {
