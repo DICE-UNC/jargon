@@ -120,7 +120,7 @@ public class MetadataQueryServiceImplTest {
 				.getPagingAwareCollectionListingDescriptor().getCount());
 		Assert.assertTrue("should reflect end of colls", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertTrue("should show data objs complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isDataObjectsComplete());
@@ -205,7 +205,7 @@ public class MetadataQueryServiceImplTest {
 				.getPagingAwareCollectionListingDescriptor().getCount());
 		Assert.assertTrue("should reflect end of colls", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertTrue("should show data objs complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isDataObjectsComplete());
@@ -337,7 +337,7 @@ public class MetadataQueryServiceImplTest {
 				.getPagingAwareCollectionListingDescriptor().getCount());
 		Assert.assertTrue("should reflect end of colls", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertTrue("should show data objs complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isDataObjectsComplete());
@@ -564,7 +564,7 @@ public class MetadataQueryServiceImplTest {
 				.getPagingAwareCollectionListingDescriptor().getCount());
 		Assert.assertTrue("should reflect end of colls", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertTrue("should show data objs complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isDataObjectsComplete());
@@ -730,7 +730,7 @@ public class MetadataQueryServiceImplTest {
 				.isDataObjectsComplete());
 		Assert.assertTrue("should show colls complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 
 	}
 
@@ -867,7 +867,7 @@ public class MetadataQueryServiceImplTest {
 				.isDataObjectsComplete());
 		Assert.assertTrue("should show colls complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 
 	}
 
@@ -1008,7 +1008,7 @@ public class MetadataQueryServiceImplTest {
 				.isDataObjectsComplete());
 		Assert.assertTrue("should show colls complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 
 	}
 

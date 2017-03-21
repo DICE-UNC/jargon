@@ -84,10 +84,10 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
 		Assert.assertFalse("collection should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertFalse("data objects should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertEquals("total colls should be files and queries max",
 				jargonProperties.getMaxFilesAndDirsQueryMax() * 2, actual
 						.getPagingAwareCollectionListingDescriptor()
@@ -178,10 +178,10 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null actual ", actual);
 		Assert.assertFalse("collection should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertFalse("data objects should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertEquals("total colls", 20000, actual
 				.getPagingAwareCollectionListingDescriptor().getTotalRecords());
 		Assert.assertEquals("count", 10000, actual
@@ -402,11 +402,11 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null actual ", actual);
 		Assert.assertTrue("collection should  be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 
 		Assert.assertTrue("data objects should  be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 
 	}
 
@@ -467,10 +467,10 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
 		Assert.assertFalse("collection should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertFalse("data objects should not be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertEquals("total colls should be files and queries max",
 				jargonProperties.getMaxFilesAndDirsQueryMax() * 2, actual
 						.getPagingAwareCollectionListingDescriptor()
@@ -541,7 +541,7 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
 		Assert.assertTrue("collection should be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertTrue("data objects should  be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
 				.isDataObjectsComplete());
@@ -628,7 +628,7 @@ public class CollectionPagerAOImplTest {
 		Assert.assertNotNull("null PagingAwareCollectionListing", actual);
 		Assert.assertTrue("collection should be complete", actual
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertFalse("colls should not be empty", actual
 				.getPagingAwareCollectionListingDescriptor().getCount() == 0);
 		Assert.assertTrue("data objects should  be complete", actual

@@ -90,13 +90,13 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 
 		log.info("next page based on descriptor:{}", lastListingDescriptor);
 
-		if (!lastListingDescriptor.isCollectionsComplete()) {
+		if (!lastListingDescriptor.isComplete()) {
 			log.info("more collections to page..");
 			PagingAwareCollectionListing listing = pageForwardInCollections(lastListingDescriptor);
 			// if I've paged out of collections add the first page of data
 			// objects
 			if (listing.getPagingAwareCollectionListingDescriptor()
-					.isCollectionsComplete()) {
+					.isComplete()) {
 				log.info("colletions complete, page into data objects");
 				addDataObjectsToExistingListing(listing);
 			}
@@ -175,7 +175,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						listAndCount.getOffsetStart());
 		pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
-				.setCollectionsComplete(listAndCount.isEndOfRecords());
+				.setComplete(listAndCount.isEndOfRecords());
 
 		pagingAwareCollectionListing
 				.setCollectionAndDataObjectListingEntries(listAndCount
@@ -224,7 +224,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements
 						listAndCount.getOffsetStart());
 		pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
-				.setCollectionsComplete(listAndCount.isEndOfRecords());
+				.setComplete(listAndCount.isEndOfRecords());
 
 		pagingAwareCollectionListing
 				.setCollectionAndDataObjectListingEntries(listAndCount

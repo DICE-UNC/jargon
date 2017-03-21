@@ -1,5 +1,6 @@
 package org.irods.jargon.core.query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.pub.domain.ObjStat;
@@ -31,49 +32,87 @@ public class PagingAwareCollectionListingDescriptor {
 	 * as separate entities with a paging status for each type, while other
 	 * listings might have a single source.
 	 */
-	private PagingStyle pagingStyle; // FIXME: remove paging style for pacl
+	private PagingStyle pagingStyle;
 	/**
-	 * Offset into collections represented by the results, if the mode is mixed
-	 * (collections and data objects together, this is just the offset into the
-	 * whole mess
+	 * 
+	 * <b>for continuous</b>
+	 * <p/>
+	 * The offset represents the starting point of the listing in the total
+	 * available listing. So the second page of results would be pageSize
+	 * 
+	 * <b>for mixed</b>
+	 * 
+	 * Offset into collections represented by the results. The
+	 * <code>dataObjectsOffset</code> will reflect the offset into data objects
 	 */
 	private int offset;
 	/**
-	 * Offset into data objects represented by the results
+	 * <b>for continuous</b>
+	 * <p/>
+	 * This value is unused
+	 * 
+	 * <b>for mixed</b>
+	 * 
+	 * Offset into data objects represented by the results. The
+	 * <code>offset</code> will reflect the offset into collections
 	 */
 	private int dataObjectsOffset;
 	/**
-	 * In split mode, Count of collections in results, will be 0 if no
-	 * collections. In mixed mode, the total count in results.
+	 * <b>for continuous</b>
+	 * <p/>
+	 * 
+	 * Count of collections and data objects in results. The
+	 * <code>dataObjectsCount</code> is unused and would be 0
+	 * 
+	 * <b>for mixed</b>
+	 * <p/>
+	 * 
+	 * Count of collections in results, will be 0 if no collections.
+	 * 
 	 * <p/>
 	 * To differentiate from total records, the count is the total number of
-	 * results in this page.
+	 * results in this page. It may be the page size, or it may be less, if
+	 * fewer records were returned.
 	 */
 	private int count;
 	/**
-	 * If not split count, the total records available in the catalog (if
-	 * available), if split count, this will contain the total number of
-	 * collections
+	 * 
+	 * <b>for continuous</b>
+	 * <p/>
+	 * 
+	 * The total records available in the catalog (if available).
+	 * 
+	 * 
+	 * <b>for mixed</b>
+	 * <p/>
+	 * 
+	 * 
+	 * The total number of collections
 	 */
 	private int totalRecords;
 	/**
-	 * Count of files available on the server itself
-	 * <p/>
-	 * To differentiate from count, the count is the total number of results in
-	 * this page.
+	 * Count of files in result (current page). Only used when split mode. This
+	 * is usually the same as page size but may be less if fewer results were
+	 * available.
 	 */
 	private int dataObjectsCount;
 	/**
 	 * Total data object records available in the catalog (may not be available
-	 * on all databases)
+	 * on all databases). This is only used in split mode
 	 */
 	private int dataObjectsTotalRecords;
 	/**
-	 * Indicates whether the set of collections is complete, or whether more
-	 * results exist. Will be <code>true</code> if complete OR if no collections
-	 * exist
+	 * <b>for continuous</b>
+	 * <p/>
+	 * The offset represents the starting point of the listing in the total
+	 * available listing. So the second page of results would be pageSize
+	 * 
+	 * <b>for mixed</b>
+	 * <p/>
+	 * Indicates that collection listing is complete, there may be data objects
+	 * in this page, and more data objects on the server
 	 */
-	private boolean collectionsComplete;
+	private boolean complete;
 	/**
 	 * Indicates whether the set of data objects is complete, or whether more
 	 * results exist. Will be <code>true</code> if complete OR if no data
@@ -85,13 +124,16 @@ public class PagingAwareCollectionListingDescriptor {
 	 */
 	private int pageSizeUtilized;
 
+	private List<PagingChunk> pagingChunks = new ArrayList<>();
+
 	/**
-	 * Are there more colls or data objects to return?
+	 * Are there more colls or data objects to return? This is uniform across
+	 * continuous and mixed listings
 	 * 
 	 * @return
 	 */
 	public boolean hasMore() {
-		return !(this.dataObjectsComplete && this.collectionsComplete);
+		return !(this.dataObjectsComplete && this.complete);
 	}
 
 	/**
@@ -194,12 +236,12 @@ public class PagingAwareCollectionListingDescriptor {
 		this.dataObjectsTotalRecords = dataObjectsTotalRecords;
 	}
 
-	public boolean isCollectionsComplete() {
-		return collectionsComplete;
+	public boolean isComplete() {
+		return complete;
 	}
 
-	public void setCollectionsComplete(boolean collectionsComplete) {
-		this.collectionsComplete = collectionsComplete;
+	public void setComplete(boolean complete) {
+		this.complete = complete;
 	}
 
 	public boolean isDataObjectsComplete() {
@@ -226,25 +268,54 @@ public class PagingAwareCollectionListingDescriptor {
 		this.objStat = objStat;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		final int maxLen = 10;
-		return "PagingAwareCollectionListingDescriptor ["
-				+ (objStat != null ? "objStat=" + objStat + ", " : "")
-				+ (parentAbsolutePath != null ? "parentAbsolutePath="
-						+ parentAbsolutePath + ", " : "")
-				+ (pathComponents != null ? "pathComponents="
-						+ pathComponents.subList(0,
-								Math.min(pathComponents.size(), maxLen)) + ", "
-						: "")
-				+ (pagingStyle != null ? "pagingStyle=" + pagingStyle + ", "
-						: "") + "offset=" + offset + ", dataObjectsOffset="
-				+ dataObjectsOffset + ", count=" + count + ", totalRecords="
-				+ totalRecords + ", dataObjectsCount=" + dataObjectsCount
-				+ ", dataObjectsTotalRecords=" + dataObjectsTotalRecords
-				+ ", collectionsComplete=" + collectionsComplete
-				+ ", dataObjectsComplete=" + dataObjectsComplete
-				+ ", pageSizeUtilized=" + pageSizeUtilized + "]";
+		StringBuilder builder = new StringBuilder();
+		builder.append("PagingAwareCollectionListingDescriptor [");
+		if (objStat != null) {
+			builder.append("objStat=").append(objStat).append(", ");
+		}
+		if (parentAbsolutePath != null) {
+			builder.append("parentAbsolutePath=").append(parentAbsolutePath).append(", ");
+		}
+		if (pathComponents != null) {
+			builder.append("pathComponents=").append(pathComponents.subList(0, Math.min(pathComponents.size(), maxLen)))
+					.append(", ");
+		}
+		if (pagingStyle != null) {
+			builder.append("pagingStyle=").append(pagingStyle).append(", ");
+		}
+		builder.append("offset=").append(offset).append(", dataObjectsOffset=").append(dataObjectsOffset)
+				.append(", count=").append(count).append(", totalRecords=").append(totalRecords)
+				.append(", dataObjectsCount=").append(dataObjectsCount).append(", dataObjectsTotalRecords=")
+				.append(dataObjectsTotalRecords).append(", complete=").append(complete).append(", dataObjectsComplete=")
+				.append(dataObjectsComplete).append(", pageSizeUtilized=").append(pageSizeUtilized).append(", ");
+		if (pagingChunks != null) {
+			builder.append("pagingChunks=").append(pagingChunks.subList(0, Math.min(pagingChunks.size(), maxLen)));
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
+	/**
+	 * @return the pagingChunks
+	 */
+	public List<PagingChunk> getPagingChunks() {
+		return pagingChunks;
+	}
+
+	/**
+	 * @param pagingChunks
+	 *            the pagingChunks to set
+	 */
+	public void setPagingChunks(List<PagingChunk> pagingChunks) {
+		this.pagingChunks = pagingChunks;
 	}
 
 }

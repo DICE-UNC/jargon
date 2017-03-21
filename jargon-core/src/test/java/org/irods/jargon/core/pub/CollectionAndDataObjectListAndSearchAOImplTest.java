@@ -281,7 +281,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getPagingAwareCollectionListingDescriptor().getOffset());
 		Assert.assertTrue(pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertEquals(irodsFileSystem.getJargonProperties()
 				.getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
@@ -514,7 +514,7 @@ public class CollectionAndDataObjectListAndSearchAOImplTest {
 				.getPagingAwareCollectionListingDescriptor().getOffset());
 		Assert.assertTrue(pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()
-				.isCollectionsComplete());
+				.isComplete());
 		Assert.assertEquals(irodsFileSystem.getJargonProperties()
 				.getMaxFilesAndDirsQueryMax(), pagingAwareCollectionListing
 				.getPagingAwareCollectionListingDescriptor()

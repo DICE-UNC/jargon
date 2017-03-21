@@ -187,7 +187,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			pagingAwareCollectionListing
 					.setCollectionAndDataObjectListingEntries(entries);
 
-			descriptor.setCollectionsComplete(true);
+			descriptor.setComplete(true);
 			descriptor.setCount(entries.size());
 			return pagingAwareCollectionListing;
 		}
@@ -208,12 +208,12 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 */
 		if (queriedEntries.isEmpty()) {
 			log.info("no child collections");
-			descriptor.setCollectionsComplete(true);
+			descriptor.setComplete(true);
 			descriptor.setCount(0);
 			descriptor.setOffset(0);
 		} else {
 			log.info("adding child collections");
-			descriptor.setCollectionsComplete(queriedEntries.get(
+			descriptor.setComplete(queriedEntries.get(
 					queriedEntries.size() - 1).isLastResult());
 			descriptor.setCount(queriedEntries.get(queriedEntries.size() - 1)
 					.getCount());

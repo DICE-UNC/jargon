@@ -118,13 +118,13 @@ public class MetadataQueryServiceImpl extends AbstractJargonService implements
 			listing.setCollectionAndDataObjectListingEntries(collections
 					.getCollectionAndDataObjectListingEntries());
 			listing.getPagingAwareCollectionListingDescriptor()
-					.setCollectionsComplete(collections.isEndOfRecords());
+					.setComplete(collections.isEndOfRecords());
 			listing.getPagingAwareCollectionListingDescriptor().setCount(
 					collections.getCountThisPage());
 
 		} else {
 			listing.getPagingAwareCollectionListingDescriptor()
-					.setCollectionsComplete(true);
+					.setComplete(true);
 
 		}
 
