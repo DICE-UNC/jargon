@@ -26,10 +26,30 @@ public class PagingChunk {
 		NONE, COLLECTION, DATA_OBJECT, MIXED, CONTINUOUS
 	}
 
+	/**
+	 * 
+	 * If you think of the chunk as a hint at desigining navigation through
+	 * links or buttons, this enumeration describes the type of link or button.
+	 * Chunks are laid out:
+	 * 
+	 * FIRST-SKIP_BACKWARD-NUMBERED-NUMBERED-CURRENT-NUMBERED-NUMBERED-SKIP_FORWARD-LAST
+	 * 
+	 * Where the current page is in the center, and some number of 'numbered'
+	 * chunks bracket it. Then there are 'elipses' or similar that move the
+	 * center node. Additional chunks on the shoulder of the center chunk are
+	 * dictated by the maxChunks specified when building. That maxChunks is also
+	 * the distance in chunks that is moved when skipping.
+	 *
+	 */
+	public enum ChunkPosition {
+		FIRST, SKIP_BACKWARD, NUMBERED, CURRENT, SKIP_FORWARD, LAST
+	}
+
 	private int chunkNumber = 0;
 	private int offset = 0;
 	private String link = "";
 	private ChunkType chunkType = ChunkType.NONE;
+	private ChunkPosition chunkPosition = ChunkPosition.NUMBERED;
 
 	/**
 	 * @return the chunkNumber
@@ -91,6 +111,21 @@ public class PagingChunk {
 		this.chunkType = chunkType;
 	}
 
+	/**
+	 * @return the chunkPosition
+	 */
+	public ChunkPosition getChunkPosition() {
+		return chunkPosition;
+	}
+
+	/**
+	 * @param chunkPosition
+	 *            the chunkPosition to set
+	 */
+	public void setChunkPosition(ChunkPosition chunkPosition) {
+		this.chunkPosition = chunkPosition;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -104,7 +139,10 @@ public class PagingChunk {
 			builder.append("link=").append(link).append(", ");
 		}
 		if (chunkType != null) {
-			builder.append("chunkType=").append(chunkType);
+			builder.append("chunkType=").append(chunkType).append(", ");
+		}
+		if (chunkPosition != null) {
+			builder.append("chunkPosition=").append(chunkPosition);
 		}
 		builder.append("]");
 		return builder.toString();

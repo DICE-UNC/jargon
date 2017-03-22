@@ -137,6 +137,19 @@ public class PagingAwareCollectionListingDescriptor {
 	}
 
 	/**
+	 * Is there any data to show at all?
+	 * 
+	 * @return <code>boolean</code> that will be
+	 */
+	public boolean hasAnyDataToShow() {
+		if (!hasMore() && count == 0 && dataObjectsCount == 0) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	/**
 	 * Return an
 	 * <code>int<code> that is the absolute offset across both collections and data objects.  Collections are listed first
 	 * so the offset for data objects will be the total offset of the collections added to the offset of any data objects.
