@@ -37,6 +37,12 @@ public class CollectionPagerHelper {
 			final PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor, final int maxChunks) {
 		List<PagingChunk> pagingChunks = new ArrayList<>();
 
+		// are there any records?
+
+		if (!pagingAwareCollectionListingDescriptor.hasAnyDataToShow()) {
+			return pagingChunks;
+		}
+
 		int totalSize = pagingAwareCollectionListingDescriptor.computeAbsoluteTotalSize();
 
 		return pagingChunks;
