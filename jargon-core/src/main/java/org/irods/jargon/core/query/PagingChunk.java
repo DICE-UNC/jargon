@@ -42,14 +42,14 @@ public class PagingChunk {
 	 *
 	 */
 	public enum ChunkPosition {
-		FIRST, SKIP_BACKWARD, NUMBERED, CURRENT, SKIP_FORWARD, LAST
+		FIRST, NORMAL, CURRENT, LAST
 	}
 
 	private int chunkNumber = 0;
 	private int offset = 0;
 	private String link = "";
 	private ChunkType chunkType = ChunkType.NONE;
-	private ChunkPosition chunkPosition = ChunkPosition.NUMBERED;
+	private ChunkPosition chunkPosition = ChunkPosition.NORMAL;
 
 	/**
 	 * @return the chunkNumber
