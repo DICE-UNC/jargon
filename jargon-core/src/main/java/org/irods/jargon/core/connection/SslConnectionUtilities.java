@@ -101,8 +101,7 @@ class SslConnectionUtilities {
 		// if all went well (no exceptions) then the server is ready for the
 		// credential exchange, first grab an SSL enabled connection
 		log.debug("getting ssl socket factory");
-		SSLSocketFactory sslSocketFactory = (SSLSocketFactory) SSLSocketFactory
-				.getDefault();
+		SSLSocketFactory sslSocketFactory = ctx.getSocketFactory();
 		log.debug("supported cyphers:{}",
 				sslSocketFactory.getSupportedCipherSuites());
 
