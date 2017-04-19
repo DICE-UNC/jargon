@@ -24,7 +24,8 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
-
+* jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
+ 
 ## Requirements
 
 * Jargon depends on Java 1.8+
@@ -50,3 +51,7 @@ Removed extra flush behavior that was an artifact of previous iRODS versions.  H
 #### Fix usage of SSL socket factory from custom context. #242
 
 Fix provided by pull request.
+
+#### Connection pooling implementation #225
+
+Initial implementation of commons-pool for connections
