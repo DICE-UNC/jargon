@@ -29,7 +29,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through 4.2.0
+* Jargon supports iRODS 4.1.0 through 4.2.X
 
 ## Libraries
 
@@ -42,3 +42,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 #### fix javadoc gen issues #230
 
 Clean up javadocs to allow generation via Maven
+
+#### Performance regression in 4.1.10.0-RELEASE #243
+
+Removed extra flush behavior that was an artifact of previous iRODS versions.  Have begun to deemphasize 3.3.1 through 4.0 iRODS server versions.
+
+#### Fix usage of SSL socket factory from custom context. #242
+
+Fix provided by pull request.
