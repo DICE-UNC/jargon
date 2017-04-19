@@ -106,10 +106,8 @@ public abstract class AbstractConnection {
 	 *            {@link IRODSSession} associated with this connection
 	 * @throws JargonException
 	 */
-	AbstractConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager,
-			final Socket socket, final IRODSSession irodsSession)
+	AbstractConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager, final Socket socket, final IRODSSession irodsSession)
 			throws JargonException {
 
 		if (irodsAccount == null) {
@@ -165,10 +163,8 @@ public abstract class AbstractConnection {
 	 *            {@link IRODSSession} that is associated with this connection
 	 * @throws JargonException
 	 */
-	protected AbstractConnection(final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSProtocolManager irodsProtocolManager,
-			final IRODSSession irodsSession) throws JargonException {
+	protected AbstractConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
+			final IRODSProtocolManager irodsProtocolManager, final IRODSSession irodsSession) throws JargonException {
 
 		log.info("AbstractConnection()");
 		if (irodsAccount == null) {
@@ -190,15 +186,12 @@ public abstract class AbstractConnection {
 		if (irodsAccount.getClientServerNegotiationPolicy() != null) {
 			log.info("using override negotiation policy from IRODSAccount:{}",
 					irodsAccount.getClientServerNegotiationPolicy());
-			operativeClientServerNegotiationPolicy = irodsAccount
-					.getClientServerNegotiationPolicy();
+			operativeClientServerNegotiationPolicy = irodsAccount.getClientServerNegotiationPolicy();
 		} else {
 			ClientServerNegotationPolicyFromPropertiesBuilder builder = new ClientServerNegotationPolicyFromPropertiesBuilder(
 					irodsSession);
-			operativeClientServerNegotiationPolicy = builder
-					.buildClientServerNegotiationPolicyFromJargonProperties();
-			log.info("using default negotiation policy:{}",
-					operativeClientServerNegotiationPolicy);
+			operativeClientServerNegotiationPolicy = builder.buildClientServerNegotiationPolicyFromJargonProperties();
+			log.info("using default negotiation policy:{}", operativeClientServerNegotiationPolicy);
 		}
 
 		initInternalBufferIfNeeded(pipelineConfiguration);
@@ -210,22 +203,18 @@ public abstract class AbstractConnection {
 	/**
 	 * @param pipelineConfiguration
 	 */
-	private void initInternalBufferIfNeeded(
-			final PipelineConfiguration pipelineConfiguration) {
+	private void initInternalBufferIfNeeded(final PipelineConfiguration pipelineConfiguration) {
 		/*
 		 * If using the custom internal buffer, initialize it
 		 */
 
 		if (pipelineConfiguration.getInternalCacheBufferSize() > 0) {
-			log.info("using internal cache buffer of size:{}",
-					pipelineConfiguration.getInternalCacheBufferSize());
-			outputBuffer = new byte[pipelineConfiguration
-					.getInternalCacheBufferSize()];
+			log.info("using internal cache buffer of size:{}", pipelineConfiguration.getInternalCacheBufferSize());
+			outputBuffer = new byte[pipelineConfiguration.getInternalCacheBufferSize()];
 		}
 	}
 
-	protected void initializeConnection(final IRODSAccount irodsAccount)
-			throws JargonException {
+	protected void initializeConnection(final IRODSAccount irodsAccount) throws JargonException {
 		// connect to irods, do handshake
 		// save the irods startup information to the IRODSServerProperties
 		// object in the irodsConnection
@@ -234,8 +223,7 @@ public abstract class AbstractConnection {
 
 		if (irodsAccount == null) {
 			log.error("no irods account");
-			throw new JargonException(
-					"no irods account specified, cannot connect");
+			throw new JargonException("no irods account specified, cannot connect");
 		}
 
 		if (irodsProtocolManager == null) {
@@ -255,19 +243,15 @@ public abstract class AbstractConnection {
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	private void initializeIdentifier(final IRODSAccount irodsAccount)
-			throws JargonException {
+	private void initializeIdentifier(final IRODSAccount irodsAccount) throws JargonException {
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
-		connectionInternalIdentifierBuilder.append(irodsAccount.toURI(false)
-				.toASCIIString());
+		connectionInternalIdentifierBuilder.append(irodsAccount.toURI(false).toASCIIString());
 		connectionInternalIdentifierBuilder.append('/');
-		connectionInternalIdentifierBuilder.append(Thread.currentThread()
-				.getName());
+		connectionInternalIdentifierBuilder.append(Thread.currentThread().getName());
 		connectionInternalIdentifierBuilder.append('/');
 		connectionInternalIdentifierBuilder.append(System.currentTimeMillis());
-		connectionInternalIdentifier = connectionInternalIdentifierBuilder
-				.toString();
+		connectionInternalIdentifier = connectionInternalIdentifierBuilder.toString();
 	}
 
 	/**
@@ -282,8 +266,7 @@ public abstract class AbstractConnection {
 	 *            {@link IRODSAccount} that contains information on host/port
 	 * @throws JargonException
 	 */
-	protected abstract void connect(final IRODSAccount irodsAccount)
-			throws JargonException;
+	protected abstract void connect(final IRODSAccount irodsAccount) throws JargonException;
 
 	public boolean isConnected() {
 		return connected;
@@ -324,8 +307,7 @@ public abstract class AbstractConnection {
 
 			if (pipelineConfiguration.getInternalCacheBufferSize() <= 0) {
 				irodsOutputStream.write(value);
-			} else if ((value.length + outputOffset) >= pipelineConfiguration
-					.getInternalCacheBufferSize()) {
+			} else if ((value.length + outputOffset) >= pipelineConfiguration.getInternalCacheBufferSize()) {
 				// in cases where OUTPUT_BUFFER_LENGTH isn't big enough
 				irodsOutputStream.write(outputBuffer, 0, outputOffset);
 				irodsOutputStream.write(value);
@@ -333,8 +315,7 @@ public abstract class AbstractConnection {
 			} else {
 
 				// the message sent isn't longer than OUTPUT_BUFFER_LENGTH
-				System.arraycopy(value, 0, outputBuffer, outputOffset,
-						value.length);
+				System.arraycopy(value, 0, outputBuffer, outputOffset, value.length);
 				outputOffset += value.length;
 
 			}
@@ -359,8 +340,7 @@ public abstract class AbstractConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	public void send(final byte[] value, final int offset, final int length)
-			throws IOException {
+	public void send(final byte[] value, final int offset, final int length) throws IOException {
 
 		if (value == null) {
 			log.error("value cannot be null");
@@ -424,7 +404,6 @@ public abstract class AbstractConnection {
 
 		Host.copyInt(value, bytes);
 		send(bytes);
-		flush();
 	}
 
 	/**
@@ -444,11 +423,8 @@ public abstract class AbstractConnection {
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
-	protected long send(
-			final InputStream source,
-			long length,
-			final ConnectionProgressStatusListener connectionProgressStatusListener)
-			throws IOException {
+	protected long send(final InputStream source, long length,
+			final ConnectionProgressStatusListener connectionProgressStatusListener) throws IOException {
 
 		if (source == null) {
 			String err = "value is null";
@@ -457,9 +433,7 @@ public abstract class AbstractConnection {
 		}
 
 		int lenThisRead = 0;
-		long lenOfTemp = Math.min(
-				pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
-				length);
+		long lenOfTemp = Math.min(pipelineConfiguration.getInputToOutputCopyBufferByteSize(), length);
 		long dataSent = 0;
 
 		byte[] temp = new byte[(int) lenOfTemp];
@@ -469,7 +443,7 @@ public abstract class AbstractConnection {
 			if (Thread.interrupted()) {
 				throw new IOException(
 
-				"interrupted, consider connection corrupted and return IOException to clear");
+						"interrupted, consider connection corrupted and return IOException to clear");
 			}
 
 			if (temp.length > length) {
@@ -490,8 +464,7 @@ public abstract class AbstractConnection {
 			 */
 			if (connectionProgressStatusListener != null) {
 				connectionProgressStatusListener
-						.connectionProgressStatusCallback(ConnectionProgressStatus
-								.instanceForSend(lenThisRead));
+						.connectionProgressStatusCallback(ConnectionProgressStatus.instanceForSend(lenThisRead));
 			}
 		}
 
@@ -556,8 +529,7 @@ public abstract class AbstractConnection {
 	 * read length bytes from the server socket connection and write them to
 	 * destination
 	 */
-	void read(final OutputStream destination, final long length)
-			throws IOException {
+	void read(final OutputStream destination, final long length) throws IOException {
 		read(destination, length, null);
 	}
 
@@ -578,8 +550,7 @@ public abstract class AbstractConnection {
 	 *            call-backs.
 	 */
 	public void read(final OutputStream destination, long length,
-			final ConnectionProgressStatusListener intraFileStatusListener)
-			throws IOException {
+			final ConnectionProgressStatusListener intraFileStatusListener) throws IOException {
 
 		if (destination == null) {
 			String err = "destination is null";
@@ -595,9 +566,7 @@ public abstract class AbstractConnection {
 
 		BufferedOutputStream bos = new BufferedOutputStream(destination);
 		try {
-			byte[] temp = new byte[Math.min(
-					pipelineConfiguration.getInputToOutputCopyBufferByteSize(),
-					(int) length)];
+			byte[] temp = new byte[Math.min(pipelineConfiguration.getInputToOutputCopyBufferByteSize(), (int) length)];
 
 			int n = 0;
 			while (length > 0) {
@@ -606,11 +575,10 @@ public abstract class AbstractConnection {
 					bos.close();
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
-				n = read(temp, 0, Math.min(pipelineConfiguration
-						.getInputToOutputCopyBufferByteSize(), (int) length));
+				n = read(temp, 0, Math.min(pipelineConfiguration.getInputToOutputCopyBufferByteSize(), (int) length));
 
 				if (n > 0) {
 					length -= n;
@@ -620,8 +588,7 @@ public abstract class AbstractConnection {
 					 */
 					if (intraFileStatusListener != null) {
 						intraFileStatusListener
-								.connectionProgressStatusCallback(ConnectionProgressStatus
-										.instanceForSend(n));
+								.connectionProgressStatusCallback(ConnectionProgressStatus.instanceForSend(n));
 					}
 				} else {
 					length = n;
@@ -665,8 +632,7 @@ public abstract class AbstractConnection {
 		}
 
 		if (log.isDebugEnabled()) {
-			log.debug("IRODSConnection.read, byte array size =  {}",
-					value.length);
+			log.debug("IRODSConnection.read, byte array size =  {}", value.length);
 			log.debug("offset = {}", offset);
 			log.debug("length = {}", length);
 		}
@@ -680,19 +646,16 @@ public abstract class AbstractConnection {
 		int result = 0;
 		if (length + offset > value.length) {
 			log.error("index out of bounds exception, length + offset larger then byte array");
-			throw new IllegalArgumentException(
-					"length + offset larger than byte array");
+			throw new IllegalArgumentException("length + offset larger than byte array");
 		}
 
 		try {
 			int bytesRead = 0;
 			while (bytesRead < length) {
 				if (Thread.interrupted()) {
-					throw new IOException(
-							"interrupted, consider connection corrupted and return IOException to clear");
+					throw new IOException("interrupted, consider connection corrupted and return IOException to clear");
 				}
-				int read = irodsInputStream.read(value, offset + bytesRead,
-						length - bytesRead);
+				int read = irodsInputStream.read(value, offset + bytesRead, length - bytesRead);
 				if (read == -1) {
 					break;
 				}
@@ -747,9 +710,9 @@ public abstract class AbstractConnection {
 		if (connected) {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
-			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
-			log.error("********  connection is:{}, will attempt to disconnect",
-					connectionInternalIdentifier);
+			log.error(
+					"********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
+			log.error("********  connection is:{}, will attempt to disconnect", connectionInternalIdentifier);
 			log.error("**************************************************************************************");
 			shutdown();
 		}
@@ -761,8 +724,7 @@ public abstract class AbstractConnection {
 	 * @param irodsProtocolManager
 	 *            the irodsProtocolManager to set
 	 */
-	public void setIrodsProtocolManager(
-			final IRODSProtocolManager irodsProtocolManager) {
+	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
