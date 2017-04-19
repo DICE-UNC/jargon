@@ -43,8 +43,7 @@ public abstract class IRODSProtocolManager {
 	 *            {@link AuthenticationFactory} that will create objects that
 	 *            can authenticate <code>iRODSAccount</code>s
 	 */
-	public void setAuthenticationFactory(
-			final AuthenticationFactory authenticationFactory) {
+	public void setAuthenticationFactory(final AuthenticationFactory authenticationFactory) {
 		if (authenticationFactory == null) {
 			throw new IllegalArgumentException("null authenticationFactory");
 		}
@@ -82,11 +81,9 @@ public abstract class IRODSProtocolManager {
 	 * @exception JargonException
 	 *                if a general error occurs
 	 */
-	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(
-			IRODSAccount irodsAccount,
-			PipelineConfiguration pipelineConfiguration,
-			IRODSSession irodsSession) throws AuthenticationException,
-			JargonException;
+	public abstract AbstractIRODSMidLevelProtocol getIRODSProtocol(IRODSAccount irodsAccount,
+			PipelineConfiguration pipelineConfiguration, IRODSSession irodsSession)
+			throws AuthenticationException, JargonException;
 
 	/**
 	 * Called by a client that no longer needs the connection to iRODS. This
@@ -98,9 +95,8 @@ public abstract class IRODSProtocolManager {
 	 * @param abstractIRODSMidLevelProtocol
 	 * @throws JargonException
 	 */
-	protected abstract void returnIRODSProtocol(
-			AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
-					throws JargonException;
+	protected abstract void returnIRODSProtocol(AbstractIRODSMidLevelProtocol abstractIRODSMidLevelProtocol)
+			throws JargonException;
 
 	/**
 	 * Create a fresh protocol (mid level interface to protocol operations)
@@ -121,15 +117,11 @@ public abstract class IRODSProtocolManager {
 	 * @exception JargonException
 	 *                if a general error occurs
 	 */
-	protected AbstractIRODSMidLevelProtocol createNewProtocol(
-			final IRODSAccount irodsAccount,
-			final PipelineConfiguration pipelineConfiguration,
-			final IRODSSession irodsSession) throws AuthenticationException,
-			JargonException {
+	protected AbstractIRODSMidLevelProtocol createNewProtocol(final IRODSAccount irodsAccount,
+			final PipelineConfiguration pipelineConfiguration, final IRODSSession irodsSession)
+			throws AuthenticationException, JargonException {
 
-		log.debug(
-				"creating a fresh AbstractIRODSMidLevelProtocol for account:{}",
-				irodsAccount);
+		log.debug("creating a fresh AbstractIRODSMidLevelProtocol for account:{}", irodsAccount);
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -143,8 +135,8 @@ public abstract class IRODSProtocolManager {
 			throw new IllegalArgumentException("null irodsSession");
 		}
 
-		return getIrodsMidLevelProtocolFactory().instance(irodsSession,
-				irodsAccount, this);
+		return getIrodsMidLevelProtocolFactory().instance(irodsSession, irodsAccount, this);
+
 	}
 
 	/**
@@ -159,8 +151,7 @@ public abstract class IRODSProtocolManager {
 	 * @param irodsMidLevelProtocol
 	 *            {@link AbstractIRODSMidLevelProtocol} to be returned
 	 */
-	protected void returnWithForce(
-			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
+	protected void returnWithForce(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("connection returned with IOException, will forcefully close and remove from session cache");
 		if (irodsMidLevelProtocol != null) {
 			irodsMidLevelProtocol.obliterateConnectionAndDiscardErrors();

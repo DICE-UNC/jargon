@@ -31,14 +31,14 @@ public interface JargonProperties {
 	/**
 	 * Get the character set encoding used by Jargon
 	 *
-	 * @return
+	 * @return <code>String</code>
 	 */
 	String getEncoding();
 
 	/**
 	 * Do I want parallel transfers at all?
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isUseParallelTransfer();
 
@@ -46,7 +46,7 @@ public interface JargonProperties {
 	 * If doing parallel transfers, what is the maximum number of threads I
 	 * should specify?
 	 *
-	 * @return
+	 * @return <code>int</code>
 	 */
 	int getMaxParallelThreads();
 
@@ -64,7 +64,7 @@ public interface JargonProperties {
 	 *             /** Sets a default number of results to ask for when
 	 *             executing GenQuery for listing files and collections.
 	 *
-	 * @return
+	 * @return <code>int</code>
 	 */
 	int getMaxFilesAndDirsQueryMax();
 
@@ -151,7 +151,7 @@ public interface JargonProperties {
 	 * Get the time-out, in seconds, for the main iRODS socket. Will be zero or
 	 * less if not specified
 	 *
-	 * @return
+	 * @return <code>int</code> with socket timeout
 	 */
 	int getIRODSSocketTimeout();
 
@@ -242,7 +242,7 @@ public interface JargonProperties {
 	 * Get the time-out, in seconds, for the parallel transfer sockets. Will be
 	 * zero or less if not specified
 	 *
-	 * @return
+	 * @return <code>int</code>
 	 */
 	int getIRODSParallelTransferSocketTimeout();
 
@@ -250,7 +250,7 @@ public interface JargonProperties {
 	 * Get the size of the file segment for each successive call in normal put
 	 * operations.
 	 *
-	 * @return
+	 * @return <code>int</code>
 	 */
 	int getPutBufferSize();
 
@@ -267,7 +267,7 @@ public interface JargonProperties {
 	 * renewed every 10 minutes to get around certain firewall issues. This is
 	 * equvalent to the -T option in the iput and iget iCommands.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isReconnect();
 
@@ -292,7 +292,7 @@ public interface JargonProperties {
 	 * done as certain operations are tuned. Initially, this will represent the
 	 * infrastructure for such tuning information.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isInstrument();
 
@@ -350,7 +350,7 @@ public interface JargonProperties {
 	 * have explicit permissions, and is a member of a group that has access
 	 * instead.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup();
 
@@ -366,14 +366,14 @@ public interface JargonProperties {
 	 * turned off because it introduces performance overhead. It is useful when
 	 * using PAM prior to iRODS 3.3.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isForcePamFlush();
 
 	/**
 	 * Is TCP keep alive set for the primary (1247) irods Socket?
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isParallelTcpKeepAlive();
 
@@ -432,7 +432,7 @@ public interface JargonProperties {
 	/**
 	 * Is TCP keep alive set for the primary irods Socket?
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	boolean isPrimaryTcpKeepAlive();
 
@@ -485,7 +485,7 @@ public interface JargonProperties {
 	 * connections to iRODS (currently the values are limited to 'tcp'). If no
 	 * property is found, then 'tcp' will be defaulted.
 	 *
-	 * @return
+	 * @return <code>String</code>
 	 */
 	String getConnectionFactory();
 

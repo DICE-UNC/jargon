@@ -31,12 +31,10 @@ public class IRODSFileReader extends Reader {
 	 * from the binary stream data.
 	 *
 	 * @param irodsFile
-	 *            {@link org.irods.jargon.pub.io.IRODSFile} that will be the
-	 *            source of the stream
+	 *            {@link IRODSFile} that will be the source of the stream
 	 * @param irodsFileFactory
-	 *            {@link org.irods.jargon.pub.io.IRODSFileFactory} that can be
-	 *            used to create various Jargon implementations of
-	 *            <code>java.io.*</code> classes.
+	 *            {@link IRODSFileFactory} that can be used to create various
+	 *            Jargon implementations of <code>java.io.*</code> classes.
 	 * @throws IOException
 	 */
 	public IRODSFileReader(final IRODSFile irodsFile,
@@ -67,7 +65,7 @@ public class IRODSFileReader extends Reader {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.Reader#close()
 	 */
 	@Override
@@ -78,7 +76,7 @@ public class IRODSFileReader extends Reader {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.Reader#read(char[], int, int)
 	 */
 	@Override

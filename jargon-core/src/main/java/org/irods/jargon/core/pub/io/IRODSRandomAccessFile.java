@@ -73,7 +73,6 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * @param fileIOOperations
 	 *            <code>FileIOOperations</code> that will encapsulate the actual
 	 *            methods in IRODS
-	 * @return <code>IRODSRandomAccessFile</code>
 	 * @throws JargonException
 	 */
 	protected IRODSRandomAccessFile(final IRODSFile irodsFile,
@@ -262,7 +261,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @param b
 	 *            the buffer into which the data is read.
-	 * @param off
+	 * @param offset
 	 *            the start offset of the data.
 	 * @param len
 	 *            the number of bytes to read.
@@ -431,7 +430,6 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *             if the bytes do not represent valid UTF-8 encoding of a
 	 *             Unicode string.
 	 *
-	 * @see edu.sdsc.grid.io.GeneralRandomAccessFile#readUnsignedShort()
 	 */
 	@Override
 	public String readUTF() throws IOException {
@@ -560,7 +558,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @param b
 	 *            the data.
-	 * @param off
+	 * @param offset
 	 *            the start offset in the data.
 	 * @param len
 	 *            the number of bytes to write.
@@ -653,7 +651,6 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            a <code>String</code> value to be written.
 	 * @throws IOException
 	 *             if an I/O error occurs.
-	 * @see edu.sdsc.grid.io.GeneralRandomAccessFile#writeChar(int)
 	 */
 	@Override
 	public void writeChars(final String s) throws IOException {
@@ -959,7 +956,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * change only by writing after the offset has been set beyond the end of
 	 * the file.
 	 *
-	 * @param pos
+	 * @param position
 	 *            the offset position, measured in bytes from the at which to
 	 *            set the file pointer.
 	 * @param origin
@@ -1000,7 +997,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @param b
 	 *            the buffer into which the data is read.
-	 * @param off
+	 * @param offset
 	 *            the start offset of the data.
 	 * @param len
 	 *            the maximum number of bytes read.

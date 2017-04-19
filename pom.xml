@@ -197,6 +197,7 @@
 		<module>jargon-user-tagging</module>
 		<module>jargon-data-utils</module>
 		<module>jargon-ticket</module>
+		<module>jargon-pool</module>
 		<module>jargon-httpstream</module>
 		<module>jargon-user-profile</module>
 		<module>jargon-ruleservice</module>

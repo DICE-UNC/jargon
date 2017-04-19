@@ -31,7 +31,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the password
 	 * @param timeToLive
 	 *            <code>int</code> with time to live for password
-	 * @return
+	 * @return {@link AuthReqPluginRequestInp}
 	 */
 	public static AuthReqPluginRequestInp instancePam(final String userName,
 			final String password, final int timeToLive) {

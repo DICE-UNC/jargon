@@ -61,7 +61,7 @@ public final class ParallelPutFileTransferStrategy extends
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration} including
 	 *            encryption requirements
-	 * @return
+	 * @return {@link ParallelPutFileTransferStrategy}
 	 * @throws JargonException
 	 */
 	public static ParallelPutFileTransferStrategy instance(

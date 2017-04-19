@@ -37,7 +37,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * @param destRescName
 	 *            <code>String</code>, blank if unused, that describes the
 	 *            destination resource name
-	 * @return
+	 * @return {@link DataObjInpForMcoll}
 	 */
 	public static DataObjInpForMcoll instanceForMSSOMount(
 			final String microServiceSourceFile,
@@ -56,7 +56,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the irods collection to be mounted
 	 * @param destRescName
 	 *            <code>String</code> with the storage resource
-	 * @return
+	 * @return {@link DataObjInpForMcoll}
 	 */
 	public static DataObjInpForMcoll instanceForFileSystemMount(
 			final String localFileSystemAbsolutePath,
@@ -79,7 +79,7 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * @param destRescName
 	 *            <code>String</code>, blank if unused, that describes the
 	 *            destination resource name
-	 * @return
+	 * @return {@link DataObjInpForMcoll}
 	 */
 	public static DataObjInpForMcoll instanceForSoftLinkMount(
 			final String sourceFileAbsolutePath,
@@ -165,8 +165,8 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	}
 
 	/*
-	 *
-	 *
+	 * 
+	 * 
 	 * sending msg: <DataObjInp_PI>
 	 * <objPath>/test1/home/test1/jargon-scratch/MountedCollectionAOImplForMSSOTest
 	 * /testMountMSSOWorkflow/mounted</objPath> <createMode>0</createMode>

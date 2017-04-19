@@ -70,15 +70,11 @@ public class IRODSAccount implements Serializable {
 	 *            overrides from the default policy, may be set to
 	 *            <code>null</code> to accept defaults from Jargon properties.
 	 */
-	public static IRODSAccount instance(final String host, final int port,
-			final String userName, final String password,
-			final String homeDirectory, final String zone,
-			final String defaultStorageResource,
-			final ClientServerNegotiationPolicy clientServerNegotiationPolicy)
-			throws JargonException {
-		return new IRODSAccount(host, port, userName, password, homeDirectory,
-				zone, defaultStorageResource, userName, zone, null,
-				clientServerNegotiationPolicy);
+	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
+			final String homeDirectory, final String zone, final String defaultStorageResource,
+			final ClientServerNegotiationPolicy clientServerNegotiationPolicy) throws JargonException {
+		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, userName,
+				zone, null, clientServerNegotiationPolicy);
 	}
 
 	/**
@@ -101,12 +97,10 @@ public class IRODSAccount implements Serializable {
 	 * @param defaultStorageResource
 	 *            default storage resource
 	 */
-	public static IRODSAccount instance(final String host, final int port,
-			final String userName, final String password,
-			final String homeDirectory, final String zone,
-			final String defaultStorageResource) throws JargonException {
-		return new IRODSAccount(host, port, userName, password, homeDirectory,
-				zone, defaultStorageResource, userName, zone, null, null);
+	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
+			final String homeDirectory, final String zone, final String defaultStorageResource) throws JargonException {
+		return new IRODSAccount(host, port, userName, password, homeDirectory, zone, defaultStorageResource, userName,
+				zone, null, null);
 	}
 
 	/**
@@ -131,10 +125,8 @@ public class IRODSAccount implements Serializable {
 	 * @param authenticationScheme
 	 *            authenticationScheme to use
 	 */
-	public static IRODSAccount instance(final String host, final int port,
-			final String userName, final String password,
-			final String homeDirectory, final String zone,
-			final String defaultStorageResource,
+	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
+			final String homeDirectory, final String zone, final String defaultStorageResource,
 			final AuthScheme authenticationScheme) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
@@ -161,8 +153,8 @@ public class IRODSAccount implements Serializable {
 			throw new IllegalArgumentException("defaultStorageResource is null");
 		}
 
-		IRODSAccount irodsAccount = new IRODSAccount(host, port, userName,
-				password, homeDirectory, zone, defaultStorageResource);
+		IRODSAccount irodsAccount = new IRODSAccount(host, port, userName, password, homeDirectory, zone,
+				defaultStorageResource);
 
 		if (authenticationScheme == null) {
 			throw new IllegalArgumentException("null authenticationScheme");
@@ -194,11 +186,9 @@ public class IRODSAccount implements Serializable {
 	 * @return <code>IRODSAccount</code> suitable for anonymous access
 	 * @throws JargonException
 	 */
-	public static IRODSAccount instanceForAnonymous(final String host,
-			final int port, final String homeDirectory, final String zone,
-			final String defaultStorageResource) throws JargonException {
-		return instance(host, port, PUBLIC_USERNAME, "", "", zone,
-				defaultStorageResource);
+	public static IRODSAccount instanceForAnonymous(final String host, final int port, final String homeDirectory,
+			final String zone, final String defaultStorageResource) throws JargonException {
+		return instance(host, port, PUBLIC_USERNAME, "", "", zone, defaultStorageResource);
 	}
 
 	/**
@@ -213,8 +203,7 @@ public class IRODSAccount implements Serializable {
 	 * @return <code>IRODSAccount</code> connected to the new host.
 	 * @throws JargonException
 	 */
-	public static IRODSAccount instanceForReroutedHost(
-			final IRODSAccount initialAccount, final String reroutedHostName)
+	public static IRODSAccount instanceForReroutedHost(final IRODSAccount initialAccount, final String reroutedHostName)
 			throws JargonException {
 
 		if (initialAccount == null) {
@@ -225,12 +214,10 @@ public class IRODSAccount implements Serializable {
 			throw new IllegalArgumentException("null or empty reroutedHostName");
 		}
 
-		return new IRODSAccount(reroutedHostName, initialAccount.getPort(),
-				initialAccount.getUserName(), initialAccount.getPassword(),
-				initialAccount.getHomeDirectory(), initialAccount.getZone(),
-				initialAccount.getDefaultStorageResource(),
-				initialAccount.getProxyName(), initialAccount.getProxyZone(),
-				null, initialAccount.getClientServerNegotiationPolicy());
+		return new IRODSAccount(reroutedHostName, initialAccount.getPort(), initialAccount.getUserName(),
+				initialAccount.getPassword(), initialAccount.getHomeDirectory(), initialAccount.getZone(),
+				initialAccount.getDefaultStorageResource(), initialAccount.getProxyName(),
+				initialAccount.getProxyZone(), null, initialAccount.getClientServerNegotiationPolicy());
 
 	}
 
@@ -257,15 +244,12 @@ public class IRODSAccount implements Serializable {
 	 * @param proxyZone
 	 *            the zone where the proxy is authenticated
 	 */
-	public static IRODSAccount instanceWithProxy(final String host,
-			final int port, final String userName, final String password,
-			final String homeDirectory, final String userZone,
-			final String defaultStorageResource, final String proxyName,
-			final String proxyZone, final AuthScheme authScheme,
-			final ClientServerNegotiationPolicy clientServerNegotiationPolicy) {
-		return new IRODSAccount(host, port, userName, password, homeDirectory,
-				userZone, defaultStorageResource, proxyName, proxyZone,
-				authScheme, clientServerNegotiationPolicy);
+	public static IRODSAccount instanceWithProxy(final String host, final int port, final String userName,
+			final String password, final String homeDirectory, final String userZone,
+			final String defaultStorageResource, final String proxyName, final String proxyZone,
+			final AuthScheme authScheme, final ClientServerNegotiationPolicy clientServerNegotiationPolicy) {
+		return new IRODSAccount(host, port, userName, password, homeDirectory, userZone, defaultStorageResource,
+				proxyName, proxyZone, authScheme, clientServerNegotiationPolicy);
 	}
 
 	/**
@@ -291,14 +275,11 @@ public class IRODSAccount implements Serializable {
 	 * @param proxyZone
 	 *            the zone where the proxy is authenticated
 	 */
-	public static IRODSAccount instanceWithProxy(final String host,
-			final int port, final String userName, final String password,
-			final String homeDirectory, final String userZone,
-			final String defaultStorageResource, final String proxyName,
-			final String proxyZone) {
-		return new IRODSAccount(host, port, userName, password, homeDirectory,
-				userZone, defaultStorageResource, proxyName, proxyZone, null,
-				null);
+	public static IRODSAccount instanceWithProxy(final String host, final int port, final String userName,
+			final String password, final String homeDirectory, final String userZone,
+			final String defaultStorageResource, final String proxyName, final String proxyZone) {
+		return new IRODSAccount(host, port, userName, password, homeDirectory, userZone, defaultStorageResource,
+				proxyName, proxyZone, null, null);
 	}
 
 	/**
@@ -318,15 +299,9 @@ public class IRODSAccount implements Serializable {
 	 *            the IRODS zone of the user
 	 * @param defaultStorageResource
 	 *            default storage resource
-	 * @param clientServerNegotiationPolicy
-	 *            {@link ClientServerNegotiationPolicy} object describing
-	 *            overrides from the default policy, may be set to
-	 *            <code>null</code> to
 	 */
-	public IRODSAccount(final String host, final int port,
-			final String userName, final String password,
-			final String homeDirectory, final String userZone,
-			final String defaultStorageResource) {
+	public IRODSAccount(final String host, final int port, final String userName, final String password,
+			final String homeDirectory, final String userZone, final String defaultStorageResource) {
 		this.host = host;
 		this.port = port;
 		this.userName = userName;
@@ -361,22 +336,20 @@ public class IRODSAccount implements Serializable {
 	 * @param clientServerNegotiationPolicy
 	 *            {@link ClientServerNegotiationPolicy} object describing
 	 *            overrides from the default policy, may be set to <code>nu
-	 * @param proxyName
+	 * &#64;param proxyName
 	 *            the name of the user's proxy
-	 * @param proxyZone
+	 * &#64;param proxyZone
 	 *            the zone where the proxy is authenticated
-	 * @param authScheme
+	 * &#64;param authScheme
 	 *            {@link AuthScheme}
-	 * @param clientServerNegotiationPolicy
+	 * &#64;param clientServerNegotiationPolicy
 	 *            {@link ClientServerNegotiationPolicy} object describing
 	 *            overrides from the default policy, may be set to <code>null
 	 *            </code> to accept defaults from Jargon properties.
 	 */
-	private IRODSAccount(final String host, final int port,
-			final String userName, final String password,
-			final String homeDirectory, final String userZone,
-			final String defaultStorageResource, final String proxyName,
-			final String proxyZone, final AuthScheme authScheme,
+	private IRODSAccount(final String host, final int port, final String userName, final String password,
+			final String homeDirectory, final String userZone, final String defaultStorageResource,
+			final String proxyName, final String proxyZone, final AuthScheme authScheme,
 			final ClientServerNegotiationPolicy clientServerNegotiationPolicy) {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -534,8 +507,7 @@ public class IRODSAccount implements Serializable {
 		}
 
 		try {
-			return new URI("irods", sb.toString(), getHost(), getPort(),
-					getHomeDirectory(), null, null);
+			return new URI("irods", sb.toString(), getHost(), getPort(), getHomeDirectory(), null, null);
 		} catch (URISyntaxException e) {
 			throw new JargonException("unable to convert to URI", e);
 		}

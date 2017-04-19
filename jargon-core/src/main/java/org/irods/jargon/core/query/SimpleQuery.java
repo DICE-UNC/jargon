@@ -44,7 +44,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param continuationValue
 	 *            <code>int</code> with the offset into the results., 0 if no
 	 *            offset.
-	 * @return
+	 * @return {@link SimpleQuery}
 	 */
 	public static SimpleQuery instanceWithNoArguments(final String queryString,
 			final int continuationValue) {
@@ -64,7 +64,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param continuationValue
 	 *            <code>int</code> with the offset into the results., 0 if no
 	 *            offset.
-	 * @return
+	 * @return {@link SimpleQuery}
 	 */
 	public static SimpleQuery instanceWithOneArgument(final String queryString,
 			final String arg, final int continuationValue) {
@@ -94,7 +94,7 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * @param continuationValue
 	 *            <code>int</code> with the offset into the results., 0 if no
 	 *            offset.
-	 * @return
+	 * @return {@link SimpleQuery}
 	 */
 	public static SimpleQuery instanceWithTwoArguments(
 			final String queryString, final String arg1, final String arg2,

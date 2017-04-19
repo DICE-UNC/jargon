@@ -29,10 +29,9 @@ public class IRODSFileWriter extends Writer {
 	 * Create an instance of a writer for iRODS.
 	 *
 	 * @param irodsFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} to write to.
+	 *            {@link IRODSFile} to write to.
 	 * @param irodsFileFactory
-	 *            {@link org.irods.jargon.pub.io.IRODSFileFactory} that will
-	 *            create the file.
+	 *            {@link IRODSFileFactory} that will create the file.
 	 * @throws IOException
 	 */
 	public IRODSFileWriter(final IRODSFile irodsFile,
@@ -63,7 +62,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.Writer#close()
 	 */
 	@Override
@@ -74,7 +73,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.Writer#flush()
 	 */
 	@Override
@@ -84,7 +83,7 @@ public class IRODSFileWriter extends Writer {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.io.Writer#write(char[], int, int)
 	 */
 	@Override

@@ -65,7 +65,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 *
 	 * @param userName
 	 *            <code>String</code> with an IRODS user name
-	 * @return <code>List</code> of {@UserGroup}
+	 * @return <code>List</code> of {@link UserGroup}
 	 * @throws JargonException
 	 */
 	List<UserGroup> findUserGroupsForUser(String userName)

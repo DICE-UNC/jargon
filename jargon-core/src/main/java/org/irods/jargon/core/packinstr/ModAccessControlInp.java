@@ -56,7 +56,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param permission
 	 *            <code>String</code> of value read, write, or own to describe
 	 *            the permission.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetPermission(
 			final boolean recursive, final String zone,
@@ -85,7 +85,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param permission
 	 *            <code>String</code> of value read, write, or own to describe
 	 *            the permission.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetPermissionInAdminMode(
 			final boolean recursive, final String zone,
@@ -107,7 +107,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetInheritOnACollection(
 			final boolean recursive, final String zone,
@@ -129,7 +129,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetInheritOnACollectionInAdminMode(
 			final boolean recursive, final String zone,
@@ -151,7 +151,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetNoInheritOnACollection(
 			final boolean recursive, final String zone,
@@ -173,7 +173,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the iRODS file
 	 *            or collection.
-	 * @return
+	 * @return {@link ModAccessControlInp}
 	 */
 	public static ModAccessControlInp instanceForSetNoInheritOnACollectionInAdminMode(
 			final boolean recursive, final String zone,
@@ -255,7 +255,7 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()

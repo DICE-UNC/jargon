@@ -35,7 +35,7 @@ public class IRODSRuleExecResultOutputParameter {
 	 *            <code>Object</code> with the value associated with the
 	 *            parameter. This result can be cast to the appropriate type by
 	 *            the caller based on the parameter name it is associated with.
-	 * @return
+	 * @return {@link IRODSRuleExecResultOutputParameter}
 	 * @throws JargonException
 	 */
 	public static final IRODSRuleExecResultOutputParameter instance(
@@ -60,7 +60,7 @@ public class IRODSRuleExecResultOutputParameter {
 
 	protected IRODSRuleExecResultOutputParameter(final String parameterName,
 			final OutputParamType outputParamType, final Object resultObject)
-					throws JargonException {
+			throws JargonException {
 
 		if (parameterName == null || parameterName.isEmpty()) {
 			throw new JargonException("parameterName is null or empty");

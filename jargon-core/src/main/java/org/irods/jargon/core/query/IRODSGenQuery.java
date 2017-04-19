@@ -23,9 +23,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 *            <code>String</code> version of an IRODS Query
 	 * @param numberOfResultsDesired
 	 *            <code>int</code> with the number of desired results
-	 * @param partialStartIndex
-	 *            <code>int</code> with offest into results
-	 * @return
+	 * @return {@link IRODSGenQuery}
 	 * @throws JargonException
 	 */
 	public static IRODSGenQuery instance(final String queryString,
@@ -41,8 +39,6 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 *            <code>String</code> version of an IRODS Query
 	 * @param numberOfResultsDesired
 	 *            <code>int</code> with the number of desired results
-	 * @param partialStartIndex
-	 *            <code>int</code> with offest into results
 	 * @param rowCountOption
 	 * @return <code>RowCountOptions</code> enumeration indicating the type of
 	 *         row count to be returned.
@@ -58,7 +54,7 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	private IRODSGenQuery(final String queryString,
 			final int numberOfResultsDesired,
 			final RowCountOptions rowCountOption, final int skip)
-					throws JargonException {
+			throws JargonException {
 
 		super(numberOfResultsDesired);
 

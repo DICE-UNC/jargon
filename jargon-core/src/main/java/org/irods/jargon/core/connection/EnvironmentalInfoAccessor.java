@@ -39,7 +39,7 @@ public class EnvironmentalInfoAccessor {
 	 * Class to access underlying <code>IRODSServerProperties</code>. Note that
 	 * this uses a caching optimization.
 	 *
-	 * @return
+	 * @return {@link IRODSServerProperties}
 	 * @throws JargonException
 	 */
 	public IRODSServerProperties getIRODSServerProperties()

@@ -31,10 +31,8 @@ public class QueryResultProcessingUtils {
 	 * @param queryResponse
 	 *            <code>Tag</code> set with the raw GenQuery response from
 	 *            iRODS.
-	 * @param translatedIRODSQuery
-	 *            {@link org.irods.jargon.core.query.TranslatedIRODSGenQuery}
-	 *            that has information about the query used to obtain the given
-	 *            response
+	 * @param columnNames
+	 *            <code>List<String></code> with the column names
 	 * @param continuation
 	 *            <code>int</code>
 	 * @param partialStartIndex
@@ -50,7 +48,7 @@ public class QueryResultProcessingUtils {
 	public static List<IRODSQueryResultRow> translateResponseIntoResultSet(
 			final Tag queryResponse, final List<String> columnNames,
 			final int continuation, final int partialStartIndex)
-					throws JargonException {
+			throws JargonException {
 
 		if (queryResponse == null) {
 			// no response, create an empty result set, and never return null

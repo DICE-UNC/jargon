@@ -38,10 +38,8 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 
 	/**
 	 * Create an instance to send to iRODS for failure of SSL negotiation
-	 *
-	 * @param status
-	 * @param sslNegotiationPolicy
-	 * @return
+	 * 
+	 * @return {@link ClientServerNegotiationStructNotifyServerOfResult}
 	 */
 	public static ClientServerNegotiationStructNotifyServerOfResult instanceForFailure() {
 		return new ClientServerNegotiationStructNotifyServerOfResult(
@@ -52,8 +50,8 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	 * Create an instance to send to iRODS
 	 *
 	 * @param status
-	 * @param sslNegotiationPolicy
-	 * @return
+	 * @param result
+	 * @return {@link ClientServerNegotiationStructNotifyServerOfResult}
 	 */
 	public static ClientServerNegotiationStructNotifyServerOfResult instance(
 			final int status, final String result) {
@@ -109,7 +107,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	/**
 	 * Was this negotiation a success?
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	public boolean wasThisASuccess() {
 		return getStatus() == 1;

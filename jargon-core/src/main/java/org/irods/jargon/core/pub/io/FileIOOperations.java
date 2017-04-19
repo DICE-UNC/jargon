@@ -87,22 +87,13 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * <code>b</code> and the number of bytes read before the exception occurred
 	 * is returned. Subclasses are encouraged to provide a more efficient
 	 * implementation of this method.
-	 *
-	 * @param b
-	 *            the buffer into which the data is read.
-	 * @param off
-	 *            the start offset in array <code>b</code> at which the data is
-	 *            written.
-	 * @param len
-	 *            the maximum number of bytes to read.
-	 * @return the total number of bytes read into the buffer, or
-	 *         <code>-1</code> if there is no more data because the end of the
-	 *         stream has been reached.
-	 * @exception IOException
-	 *                if an I/O error occurs.
-	 * @exception NullPointerException
-	 *                if <code>b</code> is <code>null</code>.
-	 * @see java.io.InputStream#read()
+	 * 
+	 * @param fd
+	 * @param buffer
+	 * @param offset
+	 * @param length
+	 * @return <code>int</code> with the amount of data read
+	 * @throws JargonException
 	 */
 	int fileRead(int fd, byte buffer[], int offset, int length)
 			throws JargonException;

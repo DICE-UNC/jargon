@@ -295,7 +295,7 @@ public final class EscapeTagChars {
 		return result.toString();
 	}
 
-	/**
+/**
 	   Return <tt>aText</tt> with all <tt>'<'</tt> and <tt>'>'</tt> characters
 	   replaced by their escaped equivalents.
 	 */
@@ -388,21 +388,8 @@ public final class EscapeTagChars {
 	}
 
 	/**
-	 * Escape <tt>'$'</tt> and <tt>'\'</tt> characters in replacement strings.
+	 * Escape characters in replacement strings.
 	 *
-	 * <P>
-	 * Synonym for <tt>Matcher.quoteReplacement(String)</tt>.
-	 *
-	 * <P>
-	 * The following methods use replacement strings which treat <tt>'$'</tt>
-	 * and <tt>'\'</tt> as special characters:
-	 * <ul>
-	 * <li><tt>String.replaceAll(String, String)</tt>
-	 * <li><tt>String.replaceFirst(String, String)</tt>
-	 * <li><tt>Matcher.appendReplacement(StringBuffer, String)</tt>
-	 * </ul>
-	 *
-	 * <P>
 	 * If replacement text can contain arbitrary characters, then you will
 	 * usually need to escape that text, to ensure special characters are
 	 * interpreted literally.
@@ -411,12 +398,6 @@ public final class EscapeTagChars {
 		return Matcher.quoteReplacement(aInput);
 	}
 
-	/**
-	 * Disable all <tt><SCRIPT></tt> tags in <tt>aText</tt>.
-	 *
-	 * <P>
-	 * Insensitive to case.
-	 */
 	public static String forScriptTagsOnly(final String aText) {
 		String result = null;
 		Matcher matcher = SCRIPT.matcher(aText);

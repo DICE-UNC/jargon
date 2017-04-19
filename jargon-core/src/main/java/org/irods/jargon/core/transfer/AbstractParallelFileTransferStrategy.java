@@ -45,7 +45,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/**
 	 * Negotiated encryption configuration for transport security, and any other
-	 * future determined aspects of
+	 * future determined aspects of negotiation
 	 */
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration;
 
@@ -85,7 +85,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
 	 * @param fileRestartInfo
-	 *            {@link FileRestartinfo} or <code>null</code> if not supporting
+	 *            {@link FileRestartInfo} or <code>null</code> if not supporting
 	 *            a restart of this transfer
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration} represents the
@@ -107,7 +107,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final FileRestartInfo fileRestartInfo,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration)
-					throws JargonException {
+			throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("host is null or empty");
@@ -158,7 +158,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 		 */
 		jargonProperties = new SettableJargonProperties(
 				irodsAccessObjectFactory.getIrodsSession()
-				.getJargonProperties());
+						.getJargonProperties());
 		pipelineConfiguration = irodsAccessObjectFactory.getIrodsSession()
 				.buildPipelineConfigurationBasedOnJargonProperties();
 		this.fileRestartInfo = fileRestartInfo;
@@ -171,7 +171,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

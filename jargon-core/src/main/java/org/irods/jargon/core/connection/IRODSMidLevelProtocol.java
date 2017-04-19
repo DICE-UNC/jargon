@@ -157,7 +157,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
-	 * @return
+	 * @return {@link Tag}
 	 * @throws JargonException
 	 */
 	@Override
@@ -246,7 +246,6 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
-	 * @return
 	 * @throws JargonException
 	 */
 	@Override

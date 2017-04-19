@@ -44,7 +44,7 @@ public class ConnectionProgressStatus {
 	 * @param byteCount
 	 *            <code>long</code> with the number of bytes instantaneously
 	 *            sent.
-	 * @return
+	 * @return {@link ConnectionProgressStatus}
 	 */
 	public static ConnectionProgressStatus instanceForSend(final long byteCount) {
 		return new ConnectionProgressStatus(CallbackType.SEND_PROGRESS,
@@ -57,7 +57,7 @@ public class ConnectionProgressStatus {
 	 * @param byteCount
 	 *            <code>long</code> with the number of bytes instantaneously
 	 *            sent.
-	 * @return
+	 * @return {@link ConnectionProgressStatus}
 	 */
 	public static ConnectionProgressStatus instanceForReceive(
 			final long byteCount) {

@@ -97,7 +97,7 @@ public class Collection extends IRODSDomainObject {
 	 * This will be the absolute path to the parent collection of this
 	 * collection
 	 *
-	 * @return
+	 * @return <code>String</code>
 	 */
 	public String getCollectionParentName() {
 		return collectionParentName;
@@ -107,7 +107,7 @@ public class Collection extends IRODSDomainObject {
 	 * Returns the absolute path for a collection, this is synonymous with the
 	 * <code>getCollectionName()</code>.
 	 *
-	 * @return
+	 * @return <code>String</code>
 	 */
 	public String getAbsolutePath() {
 		return getCollectionName();
