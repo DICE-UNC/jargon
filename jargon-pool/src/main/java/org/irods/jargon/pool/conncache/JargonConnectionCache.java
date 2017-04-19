@@ -24,6 +24,9 @@ public class JargonConnectionCache extends GenericKeyedObjectPool<IRODSAccount, 
 			JargonKeyedPoolConfig config) {
 		super(factory);
 		this.setMaxIdlePerKey(config.getMaxIdlePerKey());
+		this.setMinEvictableIdleTimeMillis(30000);
+		this.setTimeBetweenEvictionRunsMillis(45000);
+		this.setTestOnBorrow(true);
 	}
 
 	/*

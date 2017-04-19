@@ -73,7 +73,6 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 				throw new JargonException(e);
 			}
 		}
-
 	}
 
 	/*
@@ -90,6 +89,9 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 		if (abstractIrodsMidLevelProtocol == null) {
 			throw new IllegalArgumentException("null abstractIRODSMidLevelProtocol");
 		}
+
+		IRODSAccount irodsAccount = abstractIrodsMidLevelProtocol.getIrodsAccount();
+		log.info("irodsAccount being returned:{}", irodsAccount);
 
 		this.jargonConnectionCache.returnObject(abstractIrodsMidLevelProtocol.getIrodsAccount(),
 				abstractIrodsMidLevelProtocol);
@@ -147,17 +149,11 @@ public class CachedIrodsProtocolManager extends IRODSProtocolManager {
 	@Override
 	protected void returnWithForce(AbstractIRODSMidLevelProtocol irodsMidLevelProtocol) {
 		log.warn("returning with force, mark as disconnected");
-		if (irodsMidLevelProtocol == null) {
-			throw new IllegalArgumentException("Null irodsMidLevelProtocol");
-		}
-
-		if (irodsMidLevelProtocol.isConnected()) {
-			try {
-				irodsMidLevelProtocol.shutdown();
-			} catch (JargonException e) {
-				log.warn("shutdown caused exception, logged and ignored");
-			}
-
+		try {
+			this.getJargonConnectionCache().invalidateObject(irodsMidLevelProtocol.getIrodsAccount(),
+					irodsMidLevelProtocol);
+		} catch (Exception e) {
+			log.error("exception returning with force, will be eaten", e);
 		}
 
 	}

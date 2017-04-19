@@ -75,6 +75,7 @@ public class JargonPooledObjectFactory
 
 	@Override
 	public boolean validateObject(IRODSAccount key, PooledObject<AbstractIRODSMidLevelProtocol> p) {
+
 		return p.getObject().isConnected();
 	}
 
