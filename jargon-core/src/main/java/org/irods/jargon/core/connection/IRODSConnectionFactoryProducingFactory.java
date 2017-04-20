@@ -31,7 +31,7 @@ public class IRODSConnectionFactoryProducingFactory {
 	 * create the networking layer
 	 *
 	 * @param jargonProperties
-	 * @return
+	 * @return {@link IRODSConnectionFactory}
 	 * @throws JargonException
 	 */
 	public IRODSConnectionFactory instance(

@@ -36,7 +36,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * installed in the target iRODS server/cmd/bin directory, otherwise, a
 	 * DataNotFoundException will be thrown.
 	 *
-	 * @return
+	 * @return List of {@link RemoteCommandInformation}
 	 * @throws DataNotFoundException
 	 *             if the <code>listCommands.sh</code> script is not in the
 	 *             iRODS remote exec bin directory

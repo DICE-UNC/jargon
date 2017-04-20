@@ -50,8 +50,8 @@ public interface MountedCollectionAO {
 	void createASoftLink(
 			final String absolutePathToTheIRODSCollectionToBeMounted,
 			final String absolutePathToLinkedCollectionToBeCreated)
-					throws FileNotFoundException, CollectionNotEmptyException,
-					JargonException;
+			throws FileNotFoundException, CollectionNotEmptyException,
+			JargonException;
 
 	/**
 	 * Unmount the collection at the given absolute path
@@ -77,20 +77,19 @@ public interface MountedCollectionAO {
 	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
 	 * given the provided path to the desired collection, and the .wss file that
 	 * was just
-	 *
-	 * @param absolutePathToTheMSSOToBeMounted
-	 *            <code>String</code> with the absolute path to msso structured
+	 * 
+	 * @param absoluteLocalPathToWssFile
+	 *            <code>String</code> with the absolute path to wss structured
 	 *            object to mount
+	 * @param absoluteIRODSTargetPathToTheWssToBeMounted
 	 * @param absolutePathToMountedCollection
-	 *            <code>String</code> with the absolute path to the iRODS
-	 *            collection that will be created based on the MSSO service
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	void createAnMSSOMountForWorkflow(String absoluteLocalPathToWssFile,
 			String absoluteIRODSTargetPathToTheWssToBeMounted,
 			String absolutePathToMountedCollection)
-					throws FileNotFoundException, JargonException;
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Create a file system mount point in iRODS. Mounting the file system at
@@ -119,7 +118,7 @@ public interface MountedCollectionAO {
 	 */
 	void createMountedFileSystemCollection(String absolutePhysicalPathOnServer,
 			String absoluteIRODSTargetPathToBeMounted, String storageResource)
-					throws CollectionNotMountedException, FileNotFoundException,
-					JargonException;
+			throws CollectionNotMountedException, FileNotFoundException,
+			JargonException;
 
 }

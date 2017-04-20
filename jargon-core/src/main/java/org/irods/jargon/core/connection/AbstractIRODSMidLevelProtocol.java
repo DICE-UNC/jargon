@@ -202,7 +202,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
-	 * @return
+	 * @return {@link Tag}
 	 * @throws JargonException
 	 */
 	public abstract Tag irodsFunction(final String type, final String message,
@@ -463,7 +463,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            <code>int</code> offset into target array
 	 * @param length
 	 *            <code>long</code> length of data to read into array
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonException
 	 */
 	public synchronized int read(final byte[] value, final int offset,
@@ -633,7 +633,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @param errorLength
 	 * @param byteStringLength
 	 * @param intInfo
-	 * @return
+	 * @return <code>byte[]</code>
 	 * @throws JargonException
 	 */
 	public static byte[] createHeaderBytesFromData(final String type,
@@ -877,7 +877,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * Get the <code>IRODSAccount</code> that describes the current connection
 	 *
-	 * @return
+	 * @return {@link IRODSAccount}
 	 */
 	public synchronized IRODSAccount getIrodsAccount() {
 		return irodsAccount;
@@ -928,8 +928,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Set the <code>IRODSSession</code> that was used to obtain this connection
-	 *
-	 * @return {@link IRODSSession}
 	 */
 	public synchronized void setIrodsSession(final IRODSSession irodsSession) {
 		if (irodsSession == null) {
@@ -1292,7 +1290,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * jargon properties and describes the various networing and buffering
 	 * options
 	 *
-	 * @return
+	 * @return {@link PipelineConfiguration}
 	 */
 	public PipelineConfiguration getPipelineConfiguration() {
 		return irodsConnection.getPipelineConfiguration();
@@ -1356,11 +1354,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            <code>byte[]</code> with binary data to send to iRODS.
 	 * @param byteOffset
 	 *            <code>int</code> with an offset into the byte array to send
-	 * @param byteStringLength
-	 *            <code>int</code> with the length of the bytes to send
 	 * @param intInfo
 	 *            <code>int</code> with the iRODS API number
-	 * @return
 	 * @throws JargonException
 	 */
 	public abstract void irodsFunctionUnidirectional(String type,

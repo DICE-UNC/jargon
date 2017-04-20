@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.pub.domain.DataObject;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
@@ -47,8 +46,7 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public interface CollectionAndDataObjectListAndSearchAO extends
-		IRODSAccessObject {
+public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObject {
 
 	/**
 	 * Specific query for coll listing with ACLs
@@ -87,9 +85,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
-			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final String absolutePathToParent,
+			final int partialStartIndex) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of files in a
@@ -120,9 +117,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
-			final String absolutePathToParent, final int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(final String absolutePathToParent,
+			final int partialStartIndex) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -161,9 +157,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the given path does not exist
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws FileNotFoundException,
-			JargonException;
+	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(final String absolutePathToParent)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -209,8 +204,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws JargonException
 	 */
 	PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
-			String absolutePathToParent) throws FileNotFoundException,
-			JargonException;
+			String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -231,9 +225,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
-	int countDataObjectsAndCollectionsUnderPath(
-			final String absolutePathToParent) throws FileNotFoundException,
-			JargonException;
+	int countDataObjectsAndCollectionsUnderPath(final String absolutePathToParent)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Provides a search capability to search for any collections that have a
@@ -258,8 +251,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *         AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL, avu1Attrib));
 	 *         >>>>>>> origin/master
 	 */
-	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
-			String searchTerm) throws JargonException;
+	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(String searchTerm) throws JargonException;
 
 	/**
 	 * Provides a search capability to search for any collections that have a
@@ -277,16 +269,17 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            <code>String</code> that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
-	 * @param <code>int</code> with a partial start index of 0 or greater that
-	 *        indicates the offset into the returned results, suitable for
-	 *        paging.
+	 * @param partialStartIndex
+	 *            <code>int</code> with a partial start index of 0 or greater
+	 *            that indicates the offset into the returned results, suitable
+	 *            for paging.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing collections that match the search term * @throws
 	 *         JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(
-			String searchTerm, int partialStartIndex) throws JargonException;
+	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(String searchTerm, int partialStartIndex)
+			throws JargonException;
 
 	/**
 	 * Provides a search capability to search for any data objects that have a
@@ -311,8 +304,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *         containing data objects that match the search term
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(
-			String searchTerm, int partialStartIndex) throws JargonException;
+	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(String searchTerm, int partialStartIndex)
+			throws JargonException;
 
 	/**
 	 * Provides a search capability to search for any data objects that have a
@@ -335,8 +328,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *         containing data objects that match the search term
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(
-			String searchTerm) throws JargonException;
+	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(String searchTerm) throws JargonException;
 
 	/**
 	 * Provides a search capability to search for any collections and data
@@ -369,14 +361,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *         containing data objects that match the search term
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> searchCollectionsAndDataObjectsBasedOnName(
-			String searchTerm) throws JargonException;
+	List<CollectionAndDataObjectListingEntry> searchCollectionsAndDataObjectsBasedOnName(String searchTerm)
+			throws JargonException;
 
 	/**
-	 * Handy method will get the full domain object, {@link DataObject} or
-	 * {@link Collection}, based on the given absolute path. This can be handy
-	 * for display in interfaces or other applications that are concerned with
-	 * retrieving 'info' about a given path.
+	 * Handy method will get the full domain object, DataObject or Collection,
+	 * based on the given absolute path. This can be handy for display in
+	 * interfaces or other applications that are concerned with retrieving
+	 * 'info' about a given path.
 	 *
 	 * @param objectAbsolutePath
 	 *            <code>String</code> with the absolute path to the given data
@@ -391,8 +383,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
 	 */
-	Object getFullObjectForType(String objectAbsolutePath)
-			throws FileNotFoundException, JargonException;
+	Object getFullObjectForType(String objectAbsolutePath) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve a list of collections (not data objects) underneath a given
@@ -416,9 +407,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(
-			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(String absolutePathToParent,
+			int partialStartIndex) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This is a method that can support listing and paging of data objects in a
@@ -445,9 +435,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *             exception if the given absolutePathToParent does not exist
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(
-			String absolutePathToParent, int partialStartIndex)
-			throws FileNotFoundException, JargonException;
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(String absolutePathToParent,
+			int partialStartIndex) throws FileNotFoundException, JargonException;
 
 	/**
 	 * This method is in support of applications and interfaces that need to
@@ -494,8 +483,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
-			String absolutePathToParent) throws FileNotFoundException,
-			JargonException;
+			String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
@@ -507,14 +495,13 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            <code>String</code> with the absolute path to an iRODS
 	 *            collection or data object.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
-	 * be found
+	 *         <code>FileNotFoundException<code> will occur if the objStat
+	 *         cannot be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found
 	 * @throws JargonException
 	 */
-	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath)
-			throws FileNotFoundException, JargonException;
+	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Return the <code>CollectionAndDataObjectListingEntry</code> that is
@@ -531,8 +518,8 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(
-			String absolutePath) throws FileNotFoundException, JargonException;
+	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(String absolutePath)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
@@ -547,14 +534,14 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            <code>String</code> with the data object name for which the
 	 *            <code>ObjStat</code> will be returned.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
-	 * be found
+	 *         <code>FileNotFoundException<code> will occur if the objStat
+	 *         cannot be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found
 	 * @throws JargonException
 	 */
-	ObjStat retrieveObjectStatForPathAndDataObjectName(String parentPath,
-			String fileName) throws FileNotFoundException, JargonException;
+	ObjStat retrieveObjectStatForPathAndDataObjectName(String parentPath, String fileName)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Count the number of collections (directories) under the given path. This
@@ -568,8 +555,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	int countCollectionsUnderPath(String absolutePathToParent)
-			throws FileNotFoundException, JargonException;
+	int countCollectionsUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Count the number of data objects (files) under the given path. This does
@@ -583,23 +569,22 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	int countDataObjectsUnderPath(String absolutePathToParent)
-			throws FileNotFoundException, JargonException;
+	int countDataObjectsUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
-	 * List data objects and collections found underneath the parent described
-	 * in the given objStat
-	 *
+	 * List data objects and collections underneath the given parent (as an
+	 * ObjStat)
+	 * 
 	 * @param objStat
 	 *            {@link ObjStat} that describes the file
-	 * @return <code>List</code> of         {@CollectionAndDataObjectListingEntry
-	 * } that represents the
-	 *         collections and data objects beneath the parent
+	 * @return <code>List</code> of {@CollectionAndDataObjectListingEntry} that
+	 *         represents the collections and data objects beneath the parent
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
-			ObjStat objStat) throws FileNotFoundException, JargonException;
+
+	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(ObjStat objStat)
+			throws FileNotFoundException, JargonException;
 
 	/**
 	 * Given a parent path, get a total of the data sizes underneath that path
@@ -611,8 +596,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	long totalDataObjectSizesUnderPath(String absolutePathToParent)
-			throws FileNotFoundException, JargonException;
+	long totalDataObjectSizesUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Retrieve an <code>ObjStat</code> for a given path. This version of
@@ -633,8 +617,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * 
 	 * @throws JargonException
 	 */
-	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(
-			final String irodsAbsolutePath) throws FileNotFoundException,
-			JargonException;
+	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException;
 
 }

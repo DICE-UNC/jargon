@@ -25,10 +25,8 @@ public interface AuthenticationFactory {
 	 * Note that this factory will defaut to a standard iRODS auth when the
 	 * public (anonymous) account is supplied.
 	 *
-	 * @param authScheme
-	 *            <code>String</code> with the desired auth mechanism. This
-	 *            value is dependent on the particular implementation of this
-	 *            interface.
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} account containing desired auth scheme
 	 * @return {@link AuthMechanism} that is created based on the
 	 *         <code>authScheme</code> in the given <code>IRODSAccount</code>
 	 * @throws AuthUnavailableException

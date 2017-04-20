@@ -176,7 +176,7 @@ public interface IRODSFile {
 	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
 	 * operate with.
 	 *
-	 * @return
+	 * @return <code>String</code> with the resource name
 	 * @throws JargonException
 	 */
 	String getResource() throws JargonException;
@@ -189,6 +189,7 @@ public interface IRODSFile {
 	 * operate with.
 	 *
 	 * @param resource
+	 *            <code>String</code> with the resource name
 	 */
 	void setResource(String resource);
 

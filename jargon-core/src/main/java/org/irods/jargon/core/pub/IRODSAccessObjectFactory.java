@@ -86,8 +86,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.EnvironmentalInfoAO}
 	 * @throws JargonException
 	 */
-	EnvironmentalInfoAO getEnvironmentalInfoAO(final IRODSAccount irodsAccount)
-			throws JargonException;
+	EnvironmentalInfoAO getEnvironmentalInfoAO(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Create an instance of a <code>IRODSGenQueryExecutor</code> access object
@@ -98,8 +97,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.IRODSGenQueryExecutor}
 	 * @throws JargonException
 	 */
-	IRODSGenQueryExecutor getIRODSGenQueryExecutor(
-			final IRODSAccount irodsAccount) throws JargonException;
+	IRODSGenQueryExecutor getIRODSGenQueryExecutor(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Create an instance of a <code>ZoneAO</code> access object to interact
@@ -134,8 +132,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.IRODSFileSystemAO}
 	 * @throws JargonException
 	 */
-	IRODSFileSystemAO getIRODSFileSystemAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	IRODSFileSystemAO getIRODSFileSystemAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns an <code>IRODSFileFactory</code> that can be used to create
@@ -146,8 +143,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.io.IRODSFileFactory}
 	 * @throws JargonException
 	 */
-	IRODSFileFactory getIRODSFileFactory(IRODSAccount irodsAccount)
-			throws JargonException;
+	IRODSFileFactory getIRODSFileFactory(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Create an instance of a <code>UserGroupAO</code> access object to
@@ -158,8 +154,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.UserGroupAO}
 	 * @throws JargonException
 	 */
-	UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount)
-			throws JargonException;
+	UserGroupAO getUserGroupAO(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Close all connections associated with the current thread.
@@ -177,8 +172,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
 	 * @throws JargonException
 	 */
-	CollectionAO getCollectionAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	CollectionAO getCollectionAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>DataObjectAO</code> implementation that works on IRODS
@@ -189,8 +183,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.DataObjectAO}
 	 * @throws JargonException
 	 */
-	DataObjectAO getDataObjectAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	DataObjectAO getDataObjectAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>CollectionAndDataObjectListAndSearchAO</code> that
@@ -203,8 +196,8 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.CollectionAO}
 	 * @throws JargonException
 	 */
-	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(
-			IRODSAccount irodsAccount) throws JargonException;
+	CollectionAndDataObjectListAndSearchAO getCollectionAndDataObjectListAndSearchAO(IRODSAccount irodsAccount)
+			throws JargonException;
 
 	/**
 	 * Returns a <code>RuleProcessingAO</code> implementation that interacts
@@ -215,8 +208,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.RuleProcessingAO}
 	 * @throws JargonException
 	 */
-	RuleProcessingAO getRuleProcessingAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	RuleProcessingAO getRuleProcessingAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>DataTransferOperations</code> object that provides a
@@ -227,8 +219,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.DataTransferOperations}
 	 * @throws JargonException
 	 */
-	DataTransferOperations getDataTransferOperations(
-			final IRODSAccount irodsAccount) throws JargonException;
+	DataTransferOperations getDataTransferOperations(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Returns a <code>RemoteExecutionOfCommandsAO</code> that can execute
@@ -239,8 +230,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.RemoteExecutionOfCommandsAO}
 	 * @throws JargonException
 	 */
-	RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(
-			IRODSAccount irodsAccount) throws JargonException;
+	RemoteExecutionOfCommandsAO getRemoteExecutionOfCommandsAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Close the underlying connection for the given IRODSAccount.
@@ -276,8 +266,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link BulkFileOperationsAO}
 	 * @throws JargonException
 	 */
-	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	BulkFileOperationsAO getBulkFileOperationsAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get the access object that can manage quota information and settings.
@@ -301,8 +290,7 @@ public interface IRODSAccessObjectFactory {
 	 *         simple query.
 	 * @throws JargonException
 	 */
-	SimpleQueryExecutorAO getSimpleQueryExecutorAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	SimpleQueryExecutorAO getSimpleQueryExecutorAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Close all connections for this session. Any resulting exceptions are
@@ -329,8 +317,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link Stream2StreamAO}
 	 * @throws JargonException
 	 */
-	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	Stream2StreamAO getStream2StreamAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Convenience method to obtain a reference to the
@@ -348,8 +335,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link DataObjectAuditAO}
 	 * @throws JargonException
 	 */
-	DataObjectAuditAO getDataObjectAuditAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	DataObjectAuditAO getDataObjectAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO to query audit trail info for a collection
@@ -359,8 +345,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link CollectionAuditAO}
 	 * @throws JargonException
 	 */
-	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	CollectionAuditAO getCollectionAuditAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO to administer mounted collections and soft links
@@ -370,8 +355,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link MountedCollectionAO}
 	 * @throws JargonException
 	 */
-	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	MountedCollectionAO getMountedCollectionAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get an AO that manages iRODS file registration and de-registration
@@ -381,8 +365,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link IRODSRegistrationOfFilesAO}
 	 * @throws JargonException
 	 */
-	IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(
-			IRODSAccount irodsAccount) throws JargonException;
+	IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Build a <code>TransferControlBlock</code> reflecting the default options
@@ -392,8 +375,7 @@ public interface IRODSAccessObjectFactory {
 	 *         properties.
 	 * @throws JargonException
 	 */
-	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
-			throws JargonException;
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException;
 
 	/**
 	 * Get the default transfer options based on the properties that have been
@@ -403,8 +385,7 @@ public interface IRODSAccessObjectFactory {
 	 *         properties
 	 * @throws JargonException
 	 */
-	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			throws JargonException;
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException;
 
 	/**
 	 * Get an AO that allows extension of jargon core libraries by other
@@ -417,8 +398,7 @@ public interface IRODSAccessObjectFactory {
 	 *         with iRODS using packing instructions.
 	 * @throws JargonException
 	 */
-	ProtocolExtensionPoint getProtocolExtensionPoint(IRODSAccount irodsAccount)
-			throws JargonException;
+	ProtocolExtensionPoint getProtocolExtensionPoint(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Get the properties of the iRODS server described by the provided
@@ -430,8 +410,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link IRODSServerProperties} for the server at the given account
 	 * @throws JargonException
 	 */
-	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount)
-			throws JargonException;
+	IRODSServerProperties getIRODSServerProperties(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Return a <code>ResourceGroupAO</code> object that can handle the resource
@@ -443,8 +422,7 @@ public interface IRODSAccessObjectFactory {
 	 *         the iCAT
 	 * @throws JargonException
 	 */
-	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	ResourceGroupAO getResourceGroupAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Create an instance of a <code>SpecificQueryAO</code> access object to
@@ -455,8 +433,7 @@ public interface IRODSAccessObjectFactory {
 	 * @return {@link org.irods.jargon.core.pub.SpecificQueryAO}
 	 * @throws JargonException
 	 */
-	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount)
-			throws JargonException;
+	SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException;
 
 	/**
 	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
@@ -476,8 +453,7 @@ public interface IRODSAccessObjectFactory {
 	 * current connection
 	 *
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the
 	 *         authenticated principal. Note that the authentication process may
 	 *         cause the authenticating <code>IRODSAccount</code> to be altered
@@ -488,8 +464,7 @@ public interface IRODSAccessObjectFactory {
 	 *             on initial authentication
 	 * @throws JargonException
 	 */
-	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount)
-			throws AuthenticationException, JargonException;
+	AuthResponse authenticateIRODSAccount(IRODSAccount irodsAccount) throws AuthenticationException, JargonException;
 
 	/**
 	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
@@ -501,8 +476,7 @@ public interface IRODSAccessObjectFactory {
 	 * authentication process.
 	 *
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link AuthResponse} containing information about the
 	 *         authenticated principal. Note that the authentication process may
 	 *         cause the authenticating <code>IRODSAccount</code> to be altered
@@ -513,9 +487,8 @@ public interface IRODSAccessObjectFactory {
 	 *             on initial authentication
 	 * @throws JargonException
 	 */
-	AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(
-			IRODSAccount irodsAccount) throws AuthenticationException,
-			JargonException;
+	AuthResponse authenticateIRODSAccountUtilizingCachedConnectionIfPresent(IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException;
 
 	/**
 	 * Handy method to see if we're using the dynamic server properties cache.
@@ -540,7 +513,7 @@ public interface IRODSAccessObjectFactory {
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
 	 *
-	 * @return
+	 * @return {@link DiscoveredServerPropertiesCache}
 	 */
 	DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache();
 
@@ -549,20 +522,19 @@ public interface IRODSAccessObjectFactory {
 	 * deal with checksums in iRODS
 	 * 
 	 * @param irodsAccount
-	 *            {@IRODSAccount} with the authenticating
-	 *            principal
+	 *            {@IRODSAccount} with the authenticating principal
 	 * @return {@link CollectionPagerAO}
 	 * @throws JargonException
 	 */
-	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount)
-			throws JargonException;
+	CollectionPagerAO getCollectionPagerAO(IRODSAccount irodsAccount) throws JargonException;
 
 	/**
+	 * @param irodsAccount
+	 *            {@link IRODSAccount} with the authenticating principal
 	 * @return {@link DataObjectChecksumUtilitiesAO} that supports varous
 	 *         checksum operations
 	 * @throws JargonException
 	 */
-	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(
-			IRODSAccount irodsAccount) throws JargonException;
+	DataObjectChecksumUtilitiesAO getDataObjectChecksumUtilitiesAO(IRODSAccount irodsAccount) throws JargonException;
 
 }

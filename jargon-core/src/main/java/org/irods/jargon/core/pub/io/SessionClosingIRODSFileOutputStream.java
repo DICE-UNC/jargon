@@ -35,7 +35,7 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 */
 	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 		super(irodsFile, fileIOOperations, DataObjInp.OpenFlags.WRITE);
 	}
 
@@ -49,8 +49,8 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 *            {@link FileIOOperations} object that handles the actual iRODS
 	 *            communication.
 	 * @param openFlags
-	 *            {@link DataObjInp.OpenFlags} enum value that dictates file
-	 *            open, create, positioning for the stream
+	 *            {@link OpenFlags} enum value that dictates file open, create,
+	 *            positioning for the stream
 	 * @throws FileNotFoundException
 	 *             if file cannot be found
 	 * @throws JargonException
@@ -58,13 +58,13 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 	 */
 	protected SessionClosingIRODSFileOutputStream(final IRODSFile irodsFile,
 			final FileIOOperations fileIOOperations, final OpenFlags openFlags)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 		super(irodsFile, fileIOOperations, openFlags);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.pub.io.IRODSFileInputStream#close()
 	 */
 	@Override

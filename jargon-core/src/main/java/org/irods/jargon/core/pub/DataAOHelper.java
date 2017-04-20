@@ -146,10 +146,8 @@ public final class DataAOHelper extends AOHelper {
 	 * query
 	 *
 	 * @param row
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultRow}
-	 *            containing the result of a query
-	 * @return {@link org.irods.jargon.pub.domain.DataObject} that represents
-	 *         the data in the row.
+	 *            {@link IRODSQueryResultRow} containing the result of a query
+	 * @return {@link DataObject} that represents the data in the row.
 	 * @throws JargonException
 	 */
 	public static DataObject buildDomainFromResultSetRow(

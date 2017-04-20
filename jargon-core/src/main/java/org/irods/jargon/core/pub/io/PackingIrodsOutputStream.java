@@ -4,12 +4,9 @@
 package org.irods.jargon.core.pub.io;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.exception.NoResourceDefinedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,12 +36,10 @@ public class PackingIrodsOutputStream extends OutputStream {
 	private long controlBytesIn = 0;
 
 	/**
-	 * @param irodsFile
-	 * @param fileIOOperations
-	 * @param openFlags
-	 * @throws NoResourceDefinedException
-	 * @throws FileNotFoundException
-	 * @throws JargonException
+	 * Constructor
+	 * 
+	 * @param irodsFileOutputStream
+	 *            {@link IRODSFileOutputStream} that underlies this stream
 	 */
 	public PackingIrodsOutputStream(
 			final IRODSFileOutputStream irodsFileOutputStream) {

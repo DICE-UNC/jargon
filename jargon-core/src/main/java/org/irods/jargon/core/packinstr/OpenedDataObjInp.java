@@ -70,7 +70,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param fileDescriptor
 	 * @param length
-	 * @return
+	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileRead(
 			final int fileDescriptor, final long length) {
@@ -84,7 +84,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param fileDescriptor
 	 * @param offset
 	 * @param length
-	 * @return
+	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileWrite(
 			final int fileDescriptor, final long offset, final long length) {
@@ -97,7 +97,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
 	 * @param length
-	 * @return
+	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFilePut(
 			final int fileDescriptor, final long length) {
@@ -112,7 +112,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
-	 * @return
+	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileCloseWithPutOpr(
 			final int fileDescriptor) {
@@ -125,7 +125,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param fileDescriptor
 	 *            <code>int</code> that iRODS assigns to the file when opening.
-	 * @return
+	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileClose(
 			final int fileDescriptor) {

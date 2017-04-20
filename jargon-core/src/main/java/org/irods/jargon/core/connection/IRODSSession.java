@@ -85,8 +85,7 @@ public class IRODSSession {
 	 */
 	private ExecutorService parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
-	private static final Logger log = LoggerFactory
-			.getLogger(IRODSSession.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSSession.class);
 
 	/**
 	 * Trust manager (which can have a custom manager injected) for SSL
@@ -118,8 +117,7 @@ public class IRODSSession {
 	 *            constructing iRODS session using the constructor that takes a
 	 *            <code>JargonProperties</code> parameter, with the bypassSslCet
 	 */
-	public synchronized void setX509TrustManager(
-			final X509TrustManager x509TrustManager) {
+	public synchronized void setX509TrustManager(final X509TrustManager x509TrustManager) {
 		this.x509TrustManager = x509TrustManager;
 	}
 
@@ -181,14 +179,11 @@ public class IRODSSession {
 	 *         {@link JargonProperties}
 	 * @throws JargonException
 	 */
-	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
-			throws JargonException {
-		TransferControlBlock transferControlBlock = DefaultTransferControlBlock
-				.instance();
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException {
+		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
 		synchronized (this) {
 
-			transferControlBlock
-					.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
+			transferControlBlock.setTransferOptions(buildTransferOptionsBasedOnJargonProperties());
 		}
 		return transferControlBlock;
 	}
@@ -220,27 +215,18 @@ public class IRODSSession {
 
 		TransferOptions transferOptions = new TransferOptions();
 		synchronized (this) {
-			transferOptions.setMaxThreads(jargonProperties
-					.getMaxParallelThreads());
-			transferOptions.setUseParallelTransfer(jargonProperties
-					.isUseParallelTransfer());
-			transferOptions.setAllowPutGetResourceRedirects(jargonProperties
-					.isAllowPutGetResourceRedirects());
-			transferOptions
-					.setComputeAndVerifyChecksumAfterTransfer(jargonProperties
-							.isComputeAndVerifyChecksumAfterTransfer());
-			transferOptions.setComputeChecksumAfterTransfer(jargonProperties
-					.isComputeChecksumAfterTransfer());
-			transferOptions.setIntraFileStatusCallbacks(jargonProperties
-					.isIntraFileStatusCallbacks());
-			transferOptions
-					.setIntraFileStatusCallbacksNumberCallsInterval(jargonProperties
-							.getIntraFileStatusCallbacksNumberCallsInterval());
-			transferOptions
-					.setIntraFileStatusCallbacksTotalBytesInterval(jargonProperties
-							.getIntraFileStatusCallbacksTotalBytesInterval());
-			transferOptions.setChecksumEncoding(jargonProperties
-					.getChecksumEncoding());
+			transferOptions.setMaxThreads(jargonProperties.getMaxParallelThreads());
+			transferOptions.setUseParallelTransfer(jargonProperties.isUseParallelTransfer());
+			transferOptions.setAllowPutGetResourceRedirects(jargonProperties.isAllowPutGetResourceRedirects());
+			transferOptions.setComputeAndVerifyChecksumAfterTransfer(
+					jargonProperties.isComputeAndVerifyChecksumAfterTransfer());
+			transferOptions.setComputeChecksumAfterTransfer(jargonProperties.isComputeChecksumAfterTransfer());
+			transferOptions.setIntraFileStatusCallbacks(jargonProperties.isIntraFileStatusCallbacks());
+			transferOptions.setIntraFileStatusCallbacksNumberCallsInterval(
+					jargonProperties.getIntraFileStatusCallbacksNumberCallsInterval());
+			transferOptions.setIntraFileStatusCallbacksTotalBytesInterval(
+					jargonProperties.getIntraFileStatusCallbacksTotalBytesInterval());
+			transferOptions.setChecksumEncoding(jargonProperties.getChecksumEncoding());
 
 		}
 
@@ -258,21 +244,17 @@ public class IRODSSession {
 	 */
 	public void closeSession() throws JargonException {
 		log.debug("closing all irods sessions");
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
-				.get();
+		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
 			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
-		for (AbstractIRODSMidLevelProtocol irodsMidLevelProtocol : irodsProtocols
-				.values()) {
-			log.debug("found and am closing connection to : {}",
-					irodsMidLevelProtocol.getIrodsAccount().toString());
+		for (AbstractIRODSMidLevelProtocol irodsMidLevelProtocol : irodsProtocols.values()) {
+			log.debug("found and am closing connection to : {}", irodsMidLevelProtocol.getIrodsAccount().toString());
 			// irodsMidLevelProtocol.disconnect();
-			getIrodsProtocolManager()
-					.returnIRODSProtocol(irodsMidLevelProtocol);
+			getIrodsProtocolManager().returnIRODSProtocol(irodsMidLevelProtocol);
 			// I don't remove from the map because the map is just going to be
 			// set to null in the ThreadLocal below
 		}
@@ -282,8 +264,7 @@ public class IRODSSession {
 	}
 
 	public IRODSSession(final JargonProperties jargonProperties) {
-		log.info("IRODSSession(jargonProperties) with properties of: {}",
-				jargonProperties);
+		log.info("IRODSSession(jargonProperties) with properties of: {}", jargonProperties);
 		if (jargonProperties == null) {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
@@ -295,8 +276,7 @@ public class IRODSSession {
 	public IRODSSession() {
 		log.debug("IRODS Session creation, loading default properties, these may be overridden...");
 		try {
-			jargonProperties = new SettableJargonProperties(
-					new DefaultPropertiesJargonConfig());
+			jargonProperties = new SettableJargonProperties(new DefaultPropertiesJargonConfig());
 			if (jargonProperties.isLongTransferRestart()) {
 				// by default, at startup, if the long transfer restart is
 				// selected, then start out with the default
@@ -333,8 +313,7 @@ public class IRODSSession {
 	 *            connections
 	 * @throws JargonException
 	 */
-	public IRODSSession(final IRODSProtocolManager irodsConnectionManager)
-			throws JargonException {
+	public IRODSSession(final IRODSProtocolManager irodsConnectionManager) throws JargonException {
 
 		this();
 
@@ -351,13 +330,11 @@ public class IRODSSession {
 	 * dependency injection. Look to see this deprecated.
 	 *
 	 * @param irodsConnectionManager
-	 * @return
+	 * @return {@link IRODSSession}
 	 * @throws JargonException
 	 */
 
-	public static IRODSSession instance(
-			final IRODSProtocolManager irodsConnectionManager)
-			throws JargonException {
+	public static IRODSSession instance(final IRODSProtocolManager irodsConnectionManager) throws JargonException {
 		return new IRODSSession(irodsConnectionManager);
 	}
 
@@ -375,8 +352,7 @@ public class IRODSSession {
 	 *         communications to iRODS.
 	 * @throws JargonException
 	 */
-	public AbstractIRODSMidLevelProtocol currentConnection(
-			final IRODSAccount irodsAccount) throws JargonException {
+	public AbstractIRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
 
 		if (irodsProtocolManager == null) {
 			log.error("no irods connection manager provided");
@@ -391,16 +367,13 @@ public class IRODSSession {
 
 		AbstractIRODSMidLevelProtocol irodsProtocol = null;
 
-		Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
-				.get();
+		Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 
 		if (irodsProtocols == null) {
 			log.debug("no connections are cached, so create a new cache map");
 			irodsProtocols = new HashMap<String, AbstractIRODSMidLevelProtocol>();
-			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
-					irodsProtocols);
-			log.debug("put a reference to a new connection for account: {}",
-					irodsAccount.toString());
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount, irodsProtocols);
+			log.debug("put a reference to a new connection for account: {}", irodsAccount.toString());
 			sessionMap.set(irodsProtocols);
 			return irodsProtocol;
 		}
@@ -411,18 +384,15 @@ public class IRODSSession {
 
 		if (irodsProtocol == null) {
 			log.debug("null connection in thread local, using IRODSConnectionManager to create a new connection");
-			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
-					irodsProtocols);
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount, irodsProtocols);
 		} else if (irodsProtocol.isConnected()) {
 
-			log.debug("session using previously established connection:{}",
-					irodsProtocol);
+			log.debug("session using previously established connection:{}", irodsProtocol);
 		} else {
 			log.warn(
 					"***************** session has a connection marked closed, create a new one and put back into the cache:{}",
 					irodsProtocol);
-			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount,
-					irodsProtocols);
+			irodsProtocol = connectAndAddToProtocolsMap(irodsAccount, irodsProtocols);
 		}
 
 		return irodsProtocol;
@@ -441,9 +411,8 @@ public class IRODSSession {
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
-	public AbstractIRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(
-			final IRODSAccount irodsAccount) throws AuthenticationException,
-			JargonException {
+	public AbstractIRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(final IRODSAccount irodsAccount)
+			throws AuthenticationException, JargonException {
 
 		log.info("renewConnection()");
 		if (irodsAccount == null) {
@@ -474,19 +443,16 @@ public class IRODSSession {
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
-	private boolean evaluateConnectionForRenewal(
-			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
+	private boolean evaluateConnectionForRenewal(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol)
 			throws AuthenticationException, JargonException {
 
-		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration()
-				.getSocketRenewalIntervalInSeconds();
+		int renewalInterval = irodsMidLevelProtocol.getPipelineConfiguration().getSocketRenewalIntervalInSeconds();
 		// 0 means ignore
 		if (renewalInterval == 0) {
 			return false;
 		}
 		// compute a window based on time of connection...restart?
-		long renewalWindow = irodsMidLevelProtocol.getConnectTimeInMillis()
-				+ renewalInterval * 1000;
+		long renewalWindow = irodsMidLevelProtocol.getConnectTimeInMillis() + renewalInterval * 1000;
 		long currTime = System.currentTimeMillis();
 		if (currTime > renewalWindow) {
 			log.debug("renewing:{}", irodsMidLevelProtocol);
@@ -503,17 +469,14 @@ public class IRODSSession {
 	 * @return
 	 * @throws JargonException
 	 */
-	private AbstractIRODSMidLevelProtocol connectAndAddToProtocolsMap(
-			final IRODSAccount irodsAccount,
-			final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols)
-			throws JargonException {
+	private AbstractIRODSMidLevelProtocol connectAndAddToProtocolsMap(final IRODSAccount irodsAccount,
+			final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols) throws JargonException {
 		AbstractIRODSMidLevelProtocol irodsProtocol;
 		irodsProtocol = irodsProtocolManager.getIRODSProtocol(irodsAccount,
 				buildPipelineConfigurationBasedOnJargonProperties(), this);
 		if (irodsProtocol == null) {
 			log.error("no connection returned from connection manager");
-			throw new JargonRuntimeException(
-					"null connection returned from connection manager");
+			throw new JargonRuntimeException("null connection returned from connection manager");
 		}
 
 		// irodsProtocol.setIrodsSession(this);
@@ -528,16 +491,14 @@ public class IRODSSession {
 			addUserInfoForGSIAccount(irodsAccount, irodsProtocol);
 		}
 
-		log.debug("put a reference to a new connection for account: {}",
-				irodsAccount.toString());
+		log.debug("put a reference to a new connection for account: {}", irodsAccount.toString());
 		sessionMap.set(irodsProtocols);
 		log.debug("returned new connection:{}", irodsProtocol);
 		return irodsProtocol;
 	}
 
 	private void addUserInfoForGSIAccount(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands)
-			throws JargonException {
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws JargonException {
 		log.debug("addUserInfoForGSIAccount()");
 
 		if (irodsAccount == null) {
@@ -545,8 +506,7 @@ public class IRODSSession {
 		}
 
 		if (!(irodsAccount instanceof GSIIRODSAccount)) {
-			throw new IllegalArgumentException(
-					"irodsAccount parameter is not a GSIIRODSAccount");
+			throw new IllegalArgumentException("irodsAccount parameter is not a GSIIRODSAccount");
 		}
 
 		GSIIRODSAccount gsiIRODSAccount = (GSIIRODSAccount) irodsAccount;
@@ -556,35 +516,27 @@ public class IRODSSession {
 			final String dn = gsiIRODSAccount.getDistinguishedName().trim();
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN,
-							QueryConditionOperators.EQUAL, dn);
-			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-					irodsCommands);
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_DN, QueryConditionOperators.EQUAL, dn);
+			GenQueryProcessor genQueryProcessor = new GenQueryProcessor(irodsCommands);
 
-			IRODSGenQueryFromBuilder query = builder
-					.exportIRODSQueryFromBuilder(1);
+			IRODSGenQueryFromBuilder query = builder.exportIRODSQueryFromBuilder(1);
 
-			TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
-					.translateProvidedQuery(query);
+			TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor.translateProvidedQuery(query);
 
-			IRODSQueryResultSetInterface resultSet = genQueryProcessor
-					.executeTranslatedIRODSQuery(translatedIRODSQuery, 0, 0,
-							QueryCloseBehavior.AUTO_CLOSE, "");
+			IRODSQueryResultSetInterface resultSet = genQueryProcessor.executeTranslatedIRODSQuery(translatedIRODSQuery,
+					0, 0, QueryCloseBehavior.AUTO_CLOSE, "");
 
 			IRODSQueryResultRow row = resultSet.getFirstResult();
 			gsiIRODSAccount.setUserName(row.getColumn(0));
 			gsiIRODSAccount.setZone(row.getColumn(1));
-			gsiIRODSAccount.setHomeDirectory(MiscIRODSUtils
-					.computeHomeDirectoryForIRODSAccount(gsiIRODSAccount));
+			gsiIRODSAccount.setHomeDirectory(MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(gsiIRODSAccount));
 
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query for user DN", e);
-			throw new JargonException(
-					"query builder exception building user DN query", e);
+			throw new JargonException("query builder exception building user DN query", e);
 		} catch (JargonQueryException e) {
 			log.error("error building query for user DN", e);
-			throw new JargonException(
-					"jargon query  exception building user DN query", e);
+			throw new JargonException("jargon query  exception building user DN query", e);
 		}
 	}
 
@@ -599,8 +551,7 @@ public class IRODSSession {
 	 * @param irodsConnectionManager
 	 *            the irodsConnectionManager to set
 	 */
-	public void setIrodsConnectionManager(
-			final IRODSProtocolManager irodsConnectionManager) {
+	public void setIrodsConnectionManager(final IRODSProtocolManager irodsConnectionManager) {
 		irodsProtocolManager = irodsConnectionManager;
 	}
 
@@ -614,31 +565,27 @@ public class IRODSSession {
 	 *             if an error occurs on the close. If the connection does not
 	 *             exist it is logged and ignored.
 	 */
-	public void closeSession(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public void closeSession(final IRODSAccount irodsAccount) throws JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 
 		log.debug("closing irods session for: {}", irodsAccount.toString());
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
-				.get();
+		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			log.warn("closing session that is already closed, silently ignore");
 			return;
 		}
 
-		final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = irodsProtocols
-				.get(irodsAccount.toString());
+		final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol = irodsProtocols.get(irodsAccount.toString());
 
 		if (irodsMidLevelProtocol == null) {
 			log.warn("closing a connection that is not held, silently ignore");
 			return;
 
 		}
-		log.debug("found and am closing connection to : {}",
-				irodsAccount.toString());
+		log.debug("found and am closing connection to : {}", irodsAccount.toString());
 
 		getIrodsProtocolManager().returnIRODSProtocol(irodsMidLevelProtocol);
 
@@ -663,8 +610,7 @@ public class IRODSSession {
 	public void discardSessionForErrors(final IRODSAccount irodsAccount) {
 
 		log.warn("discarding irods session for: {}", irodsAccount.toString());
-		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap
-				.get();
+		final Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
 		if (irodsProtocols == null) {
 			log.warn("discarding session that is already closed, silently ignore");
 			return;
@@ -688,18 +634,17 @@ public class IRODSSession {
 	 * direct handle on the connections for this Thread in cases where such
 	 * status information needs to be kept. Returns null if no map is available.
 	 *
-	 * @return
+	 * @return <code>Map<String, AbstractIRODSMidLevelProtocol></code>
 	 */
 	public Map<String, AbstractIRODSMidLevelProtocol> getIRODSCommandsMap() {
 		return sessionMap.get();
 	}
 
-	protected IRODSProtocolManager getIrodsProtocolManager() {
+	public IRODSProtocolManager getIrodsProtocolManager() {
 		return irodsProtocolManager;
 	}
 
-	protected void setIrodsProtocolManager(
-			final IRODSProtocolManager irodsProtocolManager) {
+	public void setIrodsProtocolManager(final IRODSProtocolManager irodsProtocolManager) {
 		this.irodsProtocolManager = irodsProtocolManager;
 	}
 
@@ -716,8 +661,7 @@ public class IRODSSession {
 	 *         configured in the jargon properties.
 	 * @throws JargonException
 	 */
-	public ExecutorService getParallelTransferThreadPool()
-			throws JargonException {
+	public ExecutorService getParallelTransferThreadPool() throws JargonException {
 		log.debug("getting the ParallelTransferThreadPool");
 		synchronized (this) {
 
@@ -731,23 +675,18 @@ public class IRODSSession {
 				return parallelTransferThreadPool;
 			}
 
-			int poolSize = jargonProperties
-					.getTransferThreadPoolMaxSimultaneousTransfers()
+			int poolSize = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers()
 					* jargonProperties.getMaxParallelThreads();
 			int maxParallelThreads = jargonProperties.getMaxParallelThreads();
 
 			log.debug("creating the parallel transfer threads pool");
 			log.debug("   max # threads: {}", maxParallelThreads);
 
-			log.debug("   pool timeout millis:{}",
-					jargonProperties.getTransferThreadPoolTimeoutMillis());
+			log.debug("   pool timeout millis:{}", jargonProperties.getTransferThreadPoolTimeoutMillis());
 
-			parallelTransferThreadPool = new ThreadPoolExecutor(
-					maxParallelThreads, poolSize,
-					jargonProperties.getTransferThreadPoolTimeoutMillis(),
-					TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(
-							poolSize),
-					new RejectedParallelThreadExecutionHandler());
+			parallelTransferThreadPool = new ThreadPoolExecutor(maxParallelThreads, poolSize,
+					jargonProperties.getTransferThreadPoolTimeoutMillis(), TimeUnit.MILLISECONDS,
+					new ArrayBlockingQueue<Runnable>(poolSize), new RejectedParallelThreadExecutionHandler());
 
 			log.debug("parallelTransferThreadPool created");
 			return parallelTransferThreadPool;
@@ -780,7 +719,7 @@ public class IRODSSession {
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
 	 *
-	 * @return
+	 * @return {@link DiscoveredServerPropertiesCache}
 	 */
 	public DiscoveredServerPropertiesCache getDiscoveredServerPropertiesCache() {
 		return discoveredServerPropertiesCache;
@@ -790,7 +729,7 @@ public class IRODSSession {
 	 * Handy method to see if we're using the dynamic server properties cache.
 	 * This is set in the jargon properties.
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	public boolean isUsingDynamicServerPropertiesCache() {
 		// getjargonProperties is already sync'd
@@ -819,8 +758,7 @@ public class IRODSSession {
 		return restartManager;
 	}
 
-	public synchronized void setRestartManager(
-			final AbstractRestartManager restartManager) {
+	public synchronized void setRestartManager(final AbstractRestartManager restartManager) {
 		this.restartManager = restartManager;
 	}
 

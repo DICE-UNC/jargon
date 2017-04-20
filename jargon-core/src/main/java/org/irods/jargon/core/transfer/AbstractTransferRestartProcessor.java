@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AbstractTransferRestartProcessor extends
-AbstractJargonService {
+		AbstractJargonService {
 
 	private final AbstractRestartManager restartManager;
 	private static Logger log = LoggerFactory
@@ -39,8 +39,7 @@ AbstractJargonService {
 	 * Constructor with required dependencies
 	 *
 	 * @param irodsAccessObjectFactory
-	 *            {@IRODSAccessObjectFactory
-	 *            irodsAccessObjectFactory}
+	 *            {@link IRODSAccessObjectFactory irodsAccessObjectFactory}
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @param restartManager
@@ -74,11 +73,9 @@ AbstractJargonService {
 
 	/**
 	 * Check the need to restart the file, and do the restart processing if
-	 * needed, based on the data held by the restart manager.
-	 *
-	 * @return {@link RestartResult} with details of the restart processing
-	 * @throws RestartFailedException
-	 *             if the actual restart process failed
+	 * needed, based on the data held by the restart manager. * @throws
+	 * RestartFailedException if the actual restart process failed
+	 * 
 	 * @throws FileRestartManagementException
 	 *             if the restart failed for configuration or other reasons, and
 	 *             restart should not be attempted again
@@ -94,13 +91,13 @@ AbstractJargonService {
 	 *
 	 * @param fileRestartInfo
 	 *            {@link FileRestartInfo} that describes the transfer
-	 * @return
+	 * @return {@link RandomAccessFile}
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
 	protected RandomAccessFile localFileAsFileAndCheckExists(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-					throws FileNotFoundException, JargonException {
+			throws FileNotFoundException, JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 
 		RandomAccessFile localFile = localFileAsFile(fileRestartInfo, openType);
@@ -122,7 +119,7 @@ AbstractJargonService {
 	 */
 	protected RandomAccessFile localFileAsFile(
 			final FileRestartInfo fileRestartInfo, final OpenType openType)
-					throws JargonException {
+			throws JargonException {
 		log.info("localFileAsFileAndCheckExists()");
 		if (fileRestartInfo == null) {
 			throw new IllegalArgumentException("null fileRestartInfo");
@@ -167,7 +164,7 @@ AbstractJargonService {
 	 */
 	protected FileRestartInfo retrieveFileRestartInfoForIdentifier(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier)
-					throws FileRestartManagementException {
+			throws FileRestartManagementException {
 		if (fileRestartInfoIdentifier == null) {
 			throw new IllegalArgumentException("null fileRestartInfoIdentifier");
 		}
@@ -187,13 +184,13 @@ AbstractJargonService {
 	 *
 	 * @param irodsAbsolutePath
 	 * @param restartType
-	 * @return
+	 * @return {@link FileRestartInfo}
 	 * @throws FileRestartManagementException
 	 */
 	protected FileRestartInfo retrieveRestartIfConfiguredOrNull(
 			final String irodsAbsolutePath,
 			final FileRestartInfo.RestartType restartType)
-					throws FileRestartManagementException {
+			throws FileRestartManagementException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException(

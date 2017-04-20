@@ -97,7 +97,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 *
 	 * @param specColInfo
 	 *            {@link SpecColInfo} parameter holding object
-	 * @return {@Tag} representation of the SpecColl_PI tag
+	 * @return {@link Tag} representation of the SpecColl_PI tag
 	 */
 	protected Tag createSpecCollTag(final SpecColInfo specColInfo) {
 
@@ -190,7 +190,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getParsedTags()
 	 */
 	@Override
@@ -218,7 +218,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see org.irods.jargon.core.packinstr.IRodsPI#getApiNumber()
 	 */
 	@Override

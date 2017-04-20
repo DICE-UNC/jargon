@@ -67,9 +67,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Collections that match the metadata query
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @return <code>List</code> of org.irods.jargon.core.pub.domain.Collection}
 	 *         with domain objects that satisfy the query.
 	 * @throws JargonQueryException
@@ -87,9 +86,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * query
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @param caseInsensitive
 	 *            <code>boolean</code> that will cause the AVU query to be
 	 *            case-insensitive
@@ -108,9 +106,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * attached, based on a metadata query
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @param offset
 	 *            <code>int</code> with a paging offset
 	 * @return <code>List</code> of
@@ -127,9 +124,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * on a metadata query
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
@@ -146,9 +142,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @param caseInsensitive
 	 *            <code>boolean</code> that, when <code>true</code> will do case
 	 *            insensitive avu queries
@@ -167,9 +162,8 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * insensitivity
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @param offset
 	 *            <code>int</code> with a paging offset
 	 * @param caseInsensitive
@@ -219,7 +213,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            <code>String</code> with the absolute path to the target
 	 *            collection
 	 * @param avuData
-	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
+	 *            {@link AvuData}
 	 * @throws FileNotFoundException
 	 *             if the target iRODS collection is missing
 	 * @throws JargonException
@@ -241,10 +235,10 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * This method takes the path as given and finds that metadata.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
-	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 *            <code>List</code> of {@link AVUQueryElement} that defines the
+	 *            metadata query
+	 * @param collectionAbsolutePath
+	 *            <code>String with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
@@ -272,13 +266,16 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * This method allows request for case-insensitive AVU queries
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
-	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 *            <code>List</code> of {@link AVUQueryElement} that defines the
+	 *            metadata query
+	 * @param collectionAbsolutePath
+	 *            <code>String with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
-	 * @param <code>boolean</code> indicates that this is a case-insensitive
-	 *        query.
+	 * @param partialStartIndex
+	 *            <code>int</code> with the partial start index start point
+	 * @param caseInsensitive
+	 *            <code>boolean</code> indicates that this is a case-insensitive
+	 *            query.
 	 * @return <code>List</code> of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws FileNotFoundExcepton
@@ -349,13 +346,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * partial start as an offset into the result set to get paging behaviors.
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElements} with the
-	 *            query specification
+	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            specification
 	 * @param partialStartIndex
 	 *            <code>int</code> that has the partial start offset into the
 	 *            result set
-	 * @return
+	 * @return List of {@link Collection}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
@@ -372,8 +368,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *
 	 * @param irodsCollectionAbsolutePath
 	 *            <code>String</code> with the absolute path to the collection
-	 * @return {@link org.irods.jargon.core.pub.domain.Collection} or null if no
-	 *         collection found
+	 * @return {@link Collection} or null if no collection found
 	 * @throws DataNotFoundException
 	 *             if collection does not exist
 	 * @throws JargonException
@@ -390,13 +385,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * canonical file path
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
-	 * @param <code>String with the absolute path of the collection of interest.  If this path
+	 *            <code>List</code> of {@link AVUQueryElement} that defines the
+	 *            metadata query
+	 * @param collectionAbsolutePath
+	 *            <code>String with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
-	 * @return <code>List</code> of
-	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
+	 * @return <code>List</code> of {@link MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
@@ -560,7 +554,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the collection.
-	 * @return
+	 * @return <code>boolean<code>
 	 * @throws FileNotFoundException
 	 *             if the collection does not exist
 	 * @throws JargonException
@@ -599,7 +593,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * and a soft linked collection will have the same permissions as the
 	 * canonical collection
 	 *
-	 * @param absolutePath
+	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the absolute path to the collection.
 	 * @param userName
 	 *            <code>String</code> with the user name whose permissions will
@@ -677,7 +671,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * @param absolutePath
 	 *            <code>String</code> with the absolute path to the target
 	 *            collection
-	 * @param currentAvuData
+	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the existing Avu name and unit, with the desired new value
 	 * @throws DataNotFoundException

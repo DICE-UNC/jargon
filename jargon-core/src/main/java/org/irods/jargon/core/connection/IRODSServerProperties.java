@@ -176,7 +176,7 @@ public class IRODSServerProperties {
 	/**
 	 * Is the server at least iRODS 4.1.0
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	public boolean isAtLeastIrods410() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
@@ -185,7 +185,7 @@ public class IRODSServerProperties {
 	/**
 	 * Is the server at least iRODS 4.2.0
 	 *
-	 * @return
+	 * @return <code>boolean</code>
 	 */
 	public boolean isAtLeastIrods420() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.0");

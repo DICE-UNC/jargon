@@ -64,7 +64,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * TODO: work in progress
 	 *
 	 * @param partialStartIndex
-	 * @return
+	 * @return List of <code>DelayedRuleExecution</code>
 	 * @throws JargonException
 	 */
 	List<DelayedRuleExecution> listAllDelayedRuleExecutions(
@@ -86,7 +86,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            <code>List</code> of {@link IRODSRuleParameter} with overrides
 	 *            to parameters defined in the rule file. This can be set to
 	 *            <code>null</code> if no overrides are needed.
-	 * @param RuleProcessingType
+	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} that describes how
 	 *            parameters are resolved (@internal, @external, classic for
 	 *            rules in the classic rule language, pre iRODS 3.0).
@@ -97,7 +97,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	IRODSRuleExecResult executeRuleFromResource(String resourcePath,
 			List<IRODSRuleParameter> irodsRuleInputParameters,
 			RuleProcessingType ruleProcessingType)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a rule file that exists as an iRODS file. This will be a rule file
@@ -114,7 +114,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            <code>List</code> of {@link IRODSRuleParameter} with overrides
 	 *            to parameters defined in the rule file. This can be set to
 	 *            <code>null</code> if no overrides are needed.
-	 * @param RuleProcessingType
+	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} that describes how
 	 *            parameters are resolved (@internal, @external, classic for
 	 *            rules in the classic rule language, pre iRODS 3.0).

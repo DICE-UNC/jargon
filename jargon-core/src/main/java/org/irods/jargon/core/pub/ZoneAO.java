@@ -11,7 +11,7 @@ public interface ZoneAO extends IRODSAccessObject {
 	/**
 	 * List all zones
 	 *
-	 * @return
+	 * @return List of {@link Zone}
 	 * @throws JargonException
 	 */
 	List<Zone> listZones() throws JargonException;
@@ -36,6 +36,6 @@ public interface ZoneAO extends IRODSAccessObject {
 	 * @throws DataNotFoundException
 	 */
 	Zone getZoneByName(String zoneName) throws JargonException,
-	DataNotFoundException;
+			DataNotFoundException;
 
 }

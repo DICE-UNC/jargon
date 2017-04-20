@@ -43,7 +43,7 @@ public interface IRODSAccessObject {
 	 * Convenience method that gets the underlying
 	 * <code>IRODSServerProperties</code> associated with the connection.
 	 *
-	 * @return
+	 * @return {@link IRODSServerProperties}
 	 */
 	IRODSServerProperties getIRODSServerProperties() throws JargonException;
 

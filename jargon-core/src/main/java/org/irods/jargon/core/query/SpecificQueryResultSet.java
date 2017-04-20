@@ -49,9 +49,6 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
-	 * @param results
-	 *            <code>List</code> of {@link IRODSQueryResultRow} with each row
-	 *            of the query results
 	 * @param columnNames
 	 *            <code>List<String></code> of columns in the results
 	 */
@@ -65,7 +62,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	}
 
 	/**
-	 * @return the specificQuery
+	 * @return the {@link SpecificQuery}
 	 */
 	public SpecificQuery getSpecificQuery() {
 		return specificQuery;

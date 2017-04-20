@@ -41,7 +41,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	boolean isFileWriteable(IRODSFile irodsFile) throws FileNotFoundException,
-	JargonException;
+			JargonException;
 
 	/**
 	 * Check if the given file exists in iRODS.
@@ -71,7 +71,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * DataObject, the files in the parent collection are given.
 	 *
 	 * @param irodsFile
-	 * @return
+	 * @return <code>List<String></code>
 	 * @throws JargonException
 	 * @throws FileNoFoundException
 	 *             Thrown if the file does not exist in iRODS
@@ -85,7 +85,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 *            <code>IRODSFile</code>
 	 * @param fileNameFilter
-	 * @return
+	 * @return <code>List<String></code>
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
@@ -98,7 +98,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 * @param fileFilter
-	 * @return
+	 * @return <code>List<File></code>
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
@@ -110,8 +110,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * Get the iRODS file type for the given file
 	 *
 	 * @param irodsFile
-	 * @return {@link ObjStat.ObjectType} enum value that is the file type in
-	 *         the iRODS catalog.
+	 * @return {@link ObjectType} enum value that is the file type in the iRODS
+	 *         catalog.
 	 * @throws FileNotFoundException
 	 *             if the iRODS file is not found
 	 * @throws JargonFileOrCollAlreadyExistsException
@@ -129,7 +129,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param absolutePath
 	 * @param openFlags
 	 * @param createMode
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 * @throws NoResourceDefinedException
 	 * @throws JargonException
@@ -144,13 +144,13 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param openFlags
 	 * @param createMode
 	 * @param resource
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonException
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 */
 	int createFileInResource(String absolutePath,
 			DataObjInp.OpenFlags openFlags, int createMode, String resource)
-					throws JargonException, JargonFileOrCollAlreadyExistsException;
+			throws JargonException, JargonFileOrCollAlreadyExistsException;
 
 	/**
 	 * Create the directories in IRODS as specified by the given
@@ -222,7 +222,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * <code>IRODSFile</code>
 	 *
 	 * @param irodsFile
-	 * @return
+	 * @return <code>String</code>
 	 * @throws JargonException
 	 */
 	String getResourceNameForFile(IRODSFile irodsFile) throws JargonException;
@@ -245,9 +245,6 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param absolutePathToSourceFile
 	 *            <code>String</code> with the absolute path to the source file
-	 *            in iRODS.
-	 * @param absolutePathToTargetFile
-	 *            <code>String</code> with the absolute path to the target file
 	 *            in iRODS.
 	 * @param targetResource
 	 *            <code>String</code> with the target resource name iRODS.
@@ -313,7 +310,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 * @param userName
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonException
 	 */
 	int getDirectoryPermissionsForGivenUser(IRODSFile irodsFile, String userName)
@@ -324,7 +321,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 * @param userName
-	 * @return
+	 * @return <code>int</code>
 	 * @throws JargonException
 	 */
 	int getFilePermissionsForGivenUser(IRODSFile irodsFile, String userName)
@@ -345,7 +342,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * Check if the data object (must exist) is a file versus a collection or
 	 * directory
 	 *
-	 * @param irodsFileImpl
+	 * @param irodsFile
 	 *            {@link IRODSFile} to test
 	 * @return <code> true</code> if a data object and it exists
 	 * @throws JargonException
@@ -363,7 +360,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	ObjStat getObjStat(String irodsAbsolutePath) throws FileNotFoundException,
-	JargonException;
+			JargonException;
 
 	void fileClose(int fileDescriptor, boolean putOpr) throws JargonException;
 

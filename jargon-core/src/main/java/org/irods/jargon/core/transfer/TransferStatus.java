@@ -129,7 +129,7 @@ public class TransferStatus {
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
-	 * @param totalFilesSkipedSoFar
+	 * @param totalFilesSkippedSoFar
 	 *            <code>int<code> with the total files skipped in restarting,
 	 *            including this status callback
 	 * @param totalFilesToTransfer
@@ -142,7 +142,7 @@ public class TransferStatus {
 	 *            <code>String</code> with the host name for the transfer
 	 * @param transferZone
 	 *            <code>String</code> with the zone name for the transfer
-	 * @return
+	 * @return {@link TransferStatus}
 	 * @throws JargonException
 	 */
 	public static TransferStatus instanceForSynch(
@@ -169,26 +169,12 @@ public class TransferStatus {
 	 *
 	 * @param transferType
 	 *            <code>TransferType</code> that indicates the type of transfer
-	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> absolute path to the source file
-	 * @param targetFileAbsolutePath
-	 *            <code>String</code> absolute path to the target file
-	 * @param targetResource
-	 *            <code>String</code> with an optional resource, set to blank if
-	 *            unused.
 	 * @param totalSize
 	 *            <code>long</code> with the total size of the file
 	 * @param bytesTransfered
 	 *            <code>long</code> with the total transferred so far, which is
 	 *            some fraction of the total size
-	 * @param totalFilesTransferredSoFar
-	 *            <code>int<code> with the total files transferred, including this status callback
-	 * @param totalFilesToTransfer
-	 *            <code>int</code> with the total files involved in this
-	 *            operation * @param transferHost <code>String</code> with the
-	 *            host name for the transfer
-	 * @param transferZone
-	 *            <code>String</code> with the zone name for the transfer
+	 * @return {@link TransferStatus}
 	 *
 	 */
 	public static TransferStatus instanceForIntraFileStatus(
@@ -265,14 +251,14 @@ public class TransferStatus {
 	 * @param totalSize
 	 * @param bytesTransfered
 	 * @param totalFilesTransferredSoFar
-	 * @param totalFileSkippedSoFar
+	 * @param totalFilesSkippedSoFar
 	 * @param totalFilesToTransfer
 	 * @param exception
 	 * @param transferHost
 	 *            <code>String</code> with the host name for the transfer
 	 * @param transferZone
 	 *            <code>String</code> with the zone name for the transfer
-	 * @return
+	 * @return {@link TransferStatus}
 	 * @throws JargonException
 	 */
 	public static TransferStatus instanceForExceptionForSynch(

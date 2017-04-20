@@ -4,7 +4,7 @@
 package org.irods.jargon.core.connection;
 
 /**
- * Utility to build a {@link ClientServerNegotationPolicy} from the jargon
+ * Utility to build a {@link ClientServerNegotiationPolicy} from the jargon
  * default properties
  *
  * @author Mike Conway - DICE

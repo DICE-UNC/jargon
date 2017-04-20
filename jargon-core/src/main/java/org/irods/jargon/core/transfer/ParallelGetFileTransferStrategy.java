@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class ParallelGetFileTransferStrategy extends
-AbstractParallelFileTransferStrategy {
+		AbstractParallelFileTransferStrategy {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ParallelGetFileTransferStrategy.class);
@@ -65,7 +65,7 @@ AbstractParallelFileTransferStrategy {
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration} including
 	 *            encryption requirements
-	 * @return
+	 * @return {@link ParallelGetFileTransferStrategy}
 	 * @throws JargonException
 	 */
 	public static ParallelGetFileTransferStrategy instance(
@@ -128,7 +128,7 @@ AbstractParallelFileTransferStrategy {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.transfer.AbstractParallelFileTransferStrategy#transfer
 	 * ()

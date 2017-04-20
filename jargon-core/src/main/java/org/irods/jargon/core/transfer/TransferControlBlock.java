@@ -31,7 +31,7 @@ public interface TransferControlBlock {
 	 * Indicates that the given operation should be paused. This method must be
 	 * synchronized
 	 *
-	 * @return<code>boolean</code> if the operation should be paused.
+	 * @return <code>boolean</code> if the operation should be paused.
 	 */
 	boolean isPaused();
 
@@ -121,8 +121,9 @@ public interface TransferControlBlock {
 	/**
 	 * Gets the total number of files to be transferred. This is initialized
 	 * automatically if a callback listener has been added.
+	 * 
+	 * @return <code>int</code>
 	 *
-	 * @return
 	 */
 	int getTotalFilesToTransfer();
 
@@ -137,16 +138,16 @@ public interface TransferControlBlock {
 	/**
 	 * Get a running total of the files transferred so far. This is initialized
 	 * automatically if a callback listener has been added.
-	 *
-	 * @return
+	 * 
+	 * @return <code>int</code>
 	 */
 	int getTotalFilesTransferredSoFar();
 
 	/**
 	 * Get the total of files transferred, minus any files transferred by
 	 * skipping
-	 *
-	 * @return
+	 * 
+	 * @return <code>int</code>
 	 */
 	int getActualFilesTransferredWithoutSkippedSoFar();
 

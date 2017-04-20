@@ -26,12 +26,13 @@ Jargon-core consists of the following libraries
 * jargon-ticket - support for ticket processing
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
-
+* jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
+ 
 ## Requirements
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 3.0 through 4.2.0
+* Jargon supports iRODS 4.1.0 through 4.2.X
 
 ## Libraries
 
@@ -41,6 +42,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
+<<<<<<< HEAD
 #### Remove old thumbnail code #165 
 
 Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
@@ -60,3 +62,20 @@ Enhanced user group and user queries for cloud browser
 #### add col user type to genquery #235
 
 Add user type to LIKE queries to discriminate users from groups in find 'like' queries
+=======
+#### fix javadoc gen issues #230
+
+Clean up javadocs to allow generation via Maven
+
+#### Performance regression in 4.1.10.0-RELEASE #243
+
+Removed extra flush behavior that was an artifact of previous iRODS versions.  Have begun to deemphasize 3.3.1 through 4.0 iRODS server versions.
+
+#### Fix usage of SSL socket factory from custom context. #242
+
+Fix provided by pull request.
+
+#### Connection pooling implementation #225
+
+Initial implementation of commons-pool for connections
+>>>>>>> origin/master

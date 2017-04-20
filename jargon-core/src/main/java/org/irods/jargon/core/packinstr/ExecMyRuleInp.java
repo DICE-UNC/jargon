@@ -66,7 +66,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 * @param zone
 	 *            <code>String</code> giving the zone the rule should execute
 	 *            on.
-	 * @return
+	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
 	 */
 	public static final ExecMyRuleInp instanceWithRemoteAttributes(
@@ -80,7 +80,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
-	 * @return
+	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
 	 */
 	public static final ExecMyRuleInp instance(final IRODSRule irodsRule)
@@ -125,7 +125,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 	/*
 	 * (non-Javadoc)
-	 *
+	 * 
 	 * @see
 	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
 	 * ()
@@ -135,11 +135,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		final Tag message = new Tag(PI_TAG,
 				new Tag[] {
-				new Tag(MY_RULE, irodsRule.getRuleBody()),
-				new Tag(RHOSTADDR_PI, new Tag[] {
-						new Tag(HOST_ADDR, host),
-						new Tag(RODS_ZONE, zone), new Tag(PORT, port),
-						new Tag(DUMMY_INT, 0), }),
+						new Tag(MY_RULE, irodsRule.getRuleBody()),
+						new Tag(RHOSTADDR_PI, new Tag[] {
+								new Tag(HOST_ADDR, host),
+								new Tag(RODS_ZONE, zone), new Tag(PORT, port),
+								new Tag(DUMMY_INT, 0), }),
 						Tag.createKeyValueTag(null), });
 
 		// process output parameters
@@ -160,7 +160,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		for (IRODSRuleParameter irodsRuleInputParameter : irodsRule
 				.getIrodsRuleInputParameters()) {
 			paramArray
-			.addTag(getMsParamArrayTagForInputParameter(irodsRuleInputParameter));
+					.addTag(getMsParamArrayTagForInputParameter(irodsRuleInputParameter));
 		}
 
 		message.addTag(paramArray);
@@ -181,8 +181,10 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		if (type.equals(INT_PI)) {
 			param.addTag(new Tag(INT_PI, new Tag[] {
+
 					// only one parameter, the int
 					new Tag(MY_INT, irodsRuleInputParameter.retrieveIntValue()), }));
+
 		} else if (type.equals(BUF_LEN_PI)) {
 			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
 					// send a byte buffer

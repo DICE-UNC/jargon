@@ -23,13 +23,10 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 
 	/**
 	 * Add a specific query to iRODS
-	 *
-	 * @param sqlQuery
-	 *            <code>String</code> with the a valid SQL query
-	 * @param alias
-	 *            <code>String</code> with a unique alias name for this SQL
-	 *            query
-	 * @throws IllegalArgumentException
+	 * 
+	 * @param specificQuery
+	 *            {@link SpecificQuery} to be added
+	 * @throws JargonException
 	 * @throws DuplicateDataException
 	 */
 	void addSpecificQuery(SpecificQueryDefinition specificQuery)
@@ -71,7 +68,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *
 	 */
 	void removeAllSpecificQueryBySQL(String sqlQuery) throws JargonException,
-	DuplicateDataException;
+			DuplicateDataException;
 
 	/**
 	 * Execute a specific query by providing the alias that the sql had been
@@ -103,7 +100,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			SpecificQuery specificQuery, int maxRows)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the alias that the sql had been
@@ -159,7 +156,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingAlias(
 			SpecificQuery specificQuery, int maxRows, int userDefinedOffset)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the exact sql that was registered
@@ -188,7 +185,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingSql(
 			SpecificQuery specificQuery, int maxRows)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Execute a specific query by providing the exact sql that was registered
@@ -224,7 +221,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	SpecificQueryResultSet executeSpecificQueryUsingSql(
 			SpecificQuery specificQuery, int maxRows, int userDefinedOffset)
-					throws DataNotFoundException, JargonException, JargonQueryException;
+			throws DataNotFoundException, JargonException, JargonQueryException;
 
 	/**
 	 * Given a portion of a query alias, find matching specific queries as
@@ -266,7 +263,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 */
 	List<SpecificQueryDefinition> listSpecificQueryByAliasLike(
 			String specificQueryAlias, String zoneHint)
-					throws DataNotFoundException, JargonException;
+			throws DataNotFoundException, JargonException;
 
 	/**
 	 * Given a specific query alias name, return the associated specific query
@@ -274,7 +271,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *
 	 * @param specificQueryAlias
 	 *            <code>String</code> with the given alias for the query
-	 * @return {@list SpecificQueryDefinition} with details about the given
+	 * @return {@link SpecificQueryDefinition} with details about the given
 	 *         query
 	 * @throws DataNotFoundException
 	 *             if the query with the given alias cannot be found
@@ -293,7 +290,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *            <code>String</code> with a zone hint used to decide which
 	 *            federated zone to query. Note that this should be set to blank
 	 *            if not used
-	 * @return {@list SpecificQueryDefinition} with details about the given
+	 * @return {@link SpecificQueryDefinition} with details about the given
 	 *         query
 	 * @throws DataNotFoundException
 	 *             if the query with the given alias cannot be found

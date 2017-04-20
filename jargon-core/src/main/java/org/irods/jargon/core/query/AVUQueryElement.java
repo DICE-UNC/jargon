@@ -45,7 +45,7 @@ public class AVUQueryElement {
 	 * @param value
 	 *            <code>String</code> representing the actual value to test
 	 *            against the operator for the given part of the query.
-	 * @return
+	 * @return {@link AVUQueryElement}
 	 * @throws JargonQueryException
 	 */
 	public static AVUQueryElement instanceForValueQuery(

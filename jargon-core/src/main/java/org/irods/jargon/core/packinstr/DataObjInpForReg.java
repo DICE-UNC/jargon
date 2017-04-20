@@ -65,7 +65,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	 *            checksum,required if the <code>checksumHandling</code>
 	 *            indicates that the checksum should be verified. Should be set
 	 *            to blank otherwise.
-	 * @return
+	 * @return {@link DataObjInpForReg}
 	 * @throws JargonException
 	 */
 	public static final DataObjInpForReg instance(
@@ -74,7 +74,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 			final String resourceToStoreTo, final boolean force,
 			final boolean recursive, final ChecksumHandling checksumHandling,
 			final boolean registerAsReplica, final String localFileChecksumValue)
-					throws JargonException {
+			throws JargonException {
 		return new DataObjInpForReg(physicalFileAbsolutePath,
 				irodsFileAbsolutePath, resourceGroup, resourceToStoreTo, force,
 				recursive, checksumHandling, registerAsReplica,
@@ -86,7 +86,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 			final String resourceToStoreTo, final boolean force,
 			final boolean recursive, final ChecksumHandling checksumHandling,
 			final boolean registerAsReplica, final String localFileChecksumValue)
-					throws JargonException {
+			throws JargonException {
 
 		super();
 		if (physicalFileAbsolutePath == null

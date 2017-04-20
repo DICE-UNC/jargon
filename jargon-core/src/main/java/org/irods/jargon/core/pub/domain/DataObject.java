@@ -122,7 +122,7 @@ public class DataObject extends IRODSDomainObject {
 	 * outside of internal routines that build the data object from iCAT values
 	 * has no meaning.
 	 *
-	 * @param id
+	 * @param collectionId
 	 *            <code>int</code> with the unique id of the parent collection
 	 *            from the iRODS ICAT.
 	 */

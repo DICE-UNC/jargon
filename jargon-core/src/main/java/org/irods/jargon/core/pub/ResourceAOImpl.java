@@ -649,7 +649,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * parameters, return a list of Resources that match the metadata query
 	 *
 	 * @param avuQueryElements
-	 * @return
+	 * @return List of {@link Resource}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
