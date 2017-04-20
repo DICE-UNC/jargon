@@ -181,18 +181,14 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 
 		if (type.equals(INT_PI)) {
 			param.addTag(new Tag(INT_PI, new Tag[] {
-<<<<<<< HEAD
+
 					// only one parameter, the int
 					new Tag(MY_INT, irodsRuleInputParameter.retrieveIntValue()), }));
-=======
-			// only one parameter, the int
-			new Tag(MY_INT, irodsRuleInputParameter.getIntValue()), }));
->>>>>>> origin/master
+
 		} else if (type.equals(BUF_LEN_PI)) {
 			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
 					// send a byte buffer
 					new Tag(BUF_LEN,
-<<<<<<< HEAD
 							irodsRuleInputParameter.retrieveByteValue().length),
 							// maybe convert to Base64?
 							new Tag(BUF, new String(irodsRuleInputParameter
@@ -203,18 +199,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 					// if default, try sending the string value, might
 					// work...
 					new Tag(MY_STR, irodsRuleInputParameter.retrieveStringValue()), }));
-=======
-							irodsRuleInputParameter.getByteValue().length),
-					// maybe convert to Base64?
-					new Tag(BUF, new String(irodsRuleInputParameter
-							.getByteValue())), }));
-		} else {// STR_PI or NULL_PI
-			param.addTag(new Tag(STR_PI, new Tag[] {
-			// only one parameter, the string
-			// if default, try sending the string value, might
-			// work...
-			new Tag(MY_STR, irodsRuleInputParameter.getStringValue()), }));
->>>>>>> origin/master
 		}
 		return param;
 	}
