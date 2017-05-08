@@ -7,6 +7,7 @@ import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.filearchive.LocalFileGzipCompressorTest;
 import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
 import org.irods.jargon.datautils.filesampler.FileSamplerServiceImplTest;
+import org.irods.jargon.datautils.metadatamanifest.MetadataManifestProcessorImplTest;
 import org.irods.jargon.datautils.sharing.AnonymousAccessServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
@@ -35,7 +36,7 @@ import org.junit.runners.Suite;
 		FileTreeIteratorVisitorInvokerTest.class,
 		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
 		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class,
-		ConnectionTesterImplTest.class })
+		ConnectionTesterImplTest.class, MetadataManifestProcessorImplTest.class })
 public class AllTests {
 
 }

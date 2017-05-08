@@ -18,16 +18,23 @@ public class BulkAVUOperationResponse {
 		OK, DUPLICATE_AVU, MISSING_METADATA_TARGET, OTHER_ERROR
 	}
 
-	private AvuData avuData;
-	private ResultStatus resultStatus;
-	private String message;
+	private final AvuData avuData;
+	private final ResultStatus resultStatus;
+	private final String message;
+	private final String path;
 
 	public static BulkAVUOperationResponse instance(
 			final ResultStatus resultStatus, final AvuData avuData,
 			final String message) {
 		return new BulkAVUOperationResponse(resultStatus, avuData, message);
 	}
-
+	
+	public static BulkAVUOperationResponse instance(
+			final ResultStatus resultStatus, final AvuData avuData,
+			final String message, final String path) {
+		return new BulkAVUOperationResponse(resultStatus, avuData, message, path);
+	}
+	
 	/**
 	 *
 	 */
@@ -49,35 +56,42 @@ public class BulkAVUOperationResponse {
 		this.avuData = avuData;
 		this.resultStatus = resultStatus;
 		this.message = message;
+		this.path = "";
+
+	}
+	
+	private BulkAVUOperationResponse(final ResultStatus resultStatus,
+			final AvuData avuData, final String message, final String path) {
+
+		if (resultStatus == null) {
+			throw new IllegalArgumentException("null resultStatus");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null avuData");
+		}
+
+		if (message == null) {
+			throw new IllegalArgumentException("null message");
+		}
+		
+		if (path == null) {
+			throw new IllegalArgumentException("null path");
+		}
+
+		this.avuData = avuData;
+		this.resultStatus = resultStatus;
+		this.message = message;
+		this.path = path;
 
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder sBuilder = new StringBuilder();
-		sBuilder.append("BulkAVUOperationResponse");
-		sBuilder.append("\n\tavuData:");
-		sBuilder.append(avuData);
-		sBuilder.append("\n\tresultStatus:");
-		sBuilder.append(resultStatus);
-		sBuilder.append("\n\tmessage:");
-		sBuilder.append(message);
-		return sBuilder.toString();
-	}
-
+	
 	/**
 	 * @return the avuData
 	 */
 	public AvuData getAvuData() {
 		return avuData;
-	}
-
-	/**
-	 * @param avuData
-	 *            the avuData to set
-	 */
-	public void setAvuData(final AvuData avuData) {
-		this.avuData = avuData;
 	}
 
 	/**
@@ -88,26 +102,14 @@ public class BulkAVUOperationResponse {
 	}
 
 	/**
-	 * @param resultStatus
-	 *            the resultStatus to set
-	 */
-	public void setResultStatus(final ResultStatus resultStatus) {
-		this.resultStatus = resultStatus;
-	}
-
-	/**
 	 * @return the message
 	 */
 	public String getMessage() {
 		return message;
 	}
 
-	/**
-	 * @param message
-	 *            the message to set
-	 */
-	public void setMessage(final String message) {
-		this.message = message;
+	public String getPath() {
+		return path;
 	}
 
 }
