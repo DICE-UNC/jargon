@@ -1,8 +1,8 @@
 
 # Project: Jargon-core API
-#### Date: 2/9/2017 
-#### Release Version: 4.2.0.0-SNAPSHOT 
-#### git tag: 
+#### Date: 5/7/2017 
+#### Release Version: 4.2.0.0-RELEASE 
+#### git tag: 4.2.0.0-RELEASE 
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -44,7 +44,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 Clean up javadocs to allow generation via Maven
 
-#### Performance regression in 4.1.10.0-RELEASE #243
+#### Performance regression in 4.1.10.0-RELEASE #243, #234
 
 Removed extra flush behavior that was an artifact of previous iRODS versions.  Have begun to deemphasize 3.3.1 through 4.0 iRODS server versions.
 
