@@ -32,18 +32,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  * @author mcc
  *
  */
-public class MetadataManifestProcessorImpl extends AbstractJargonService {
+public class MetadataManifestProcessorImpl extends AbstractJargonService implements MetadataManifestProcessor {
 
 	public static final Logger log = LoggerFactory.getLogger(MetadataManifestProcessorImpl.class);
 
-	/**
-	 * Convert a <code>MetadataManifest</code> to string-ified json
-	 * 
-	 * @param metadataManifest
-	 *            {@link MetadataManifest}
-	 * @return <code>String</code> containing JSON
-	 * @throws JargonException
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#metadataManifestToJson(org.irods.jargon.datautils.metadatamanifest.MetadataManifest)
 	 */
+	@Override
 	public String metadataManifestToJson(final MetadataManifest metadataManifest) throws JargonException {
 		log.info("metadataManifestToJson()");
 		if (metadataManifest == null) {
@@ -61,14 +57,10 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService {
 		}
 	}
 
-	/**
-	 * Convert a json string to a <code>MetadataManifest</code>
-	 * 
-	 * @param jsonString
-	 *            <code>String</code> containing json
-	 * @return {@link MetadataManifest}
-	 * @throws JargonException
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#stringJsonToMetadataManifest(java.lang.String)
 	 */
+	@Override
 	public MetadataManifest stringJsonToMetadataManifest(final String jsonString) throws JargonException {
 		log.info("stringJsonToMetadataManifest()");
 		if (jsonString == null || jsonString.isEmpty()) {
@@ -85,6 +77,10 @@ public class MetadataManifestProcessorImpl extends AbstractJargonService {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see org.irods.jargon.datautils.metadatamanifest.MetdataManifest#processManifest(org.irods.jargon.datautils.metadatamanifest.MetadataManifest)
+	 */
+	@Override
 	public List<BulkAVUOperationResponse> processManifest(final MetadataManifest metadataManifest)
 			throws JargonException {
 		log.info("processManifest()");

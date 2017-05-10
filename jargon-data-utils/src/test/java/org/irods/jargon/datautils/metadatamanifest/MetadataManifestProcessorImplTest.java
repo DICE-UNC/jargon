@@ -76,7 +76,7 @@ public class MetadataManifestProcessorImplTest {
 		final IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
 
-		final MetadataManifestProcessorImpl impl = new MetadataManifestProcessorImpl(
+		final MetadataManifestProcessor impl = new MetadataManifestProcessorImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		final String json = impl.metadataManifestToJson(manifest);
@@ -132,7 +132,7 @@ public class MetadataManifestProcessorImplTest {
 		manifest.getOperation().add(
 				new MetadataManifestOperation(expectedAttribName, expectedValueName, "", testFileName2, Action.ADD));
 
-		final MetadataManifestProcessorImpl impl = new MetadataManifestProcessorImpl(
+		final MetadataManifestProcessor impl = new MetadataManifestProcessorImpl(
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		final List<BulkAVUOperationResponse> response = impl.processManifest(manifest);
 		Assert.assertNotNull("no response", response);
