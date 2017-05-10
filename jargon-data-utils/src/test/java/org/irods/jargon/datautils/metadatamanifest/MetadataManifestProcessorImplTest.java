@@ -53,6 +53,42 @@ public class MetadataManifestProcessorImplTest {
 	}
 
 	@Test
+	public void testManifestToJsonRoundTrip() throws Exception {
+		final MetadataManifest manifest = new MetadataManifest();
+		manifest.setFailureMode(FailureMode.FAIL_FAST);
+		manifest.setParentIrodsTargetPath("parent/path");
+		MetadataManifestOperation op;
+
+		op = new MetadataManifestOperation();
+		op.setAction(Action.ADD);
+		op.setAttribute("attr1");
+		op.setValue("val1");
+		op.setUnit("");
+		manifest.getOperation().add(op);
+
+		op = new MetadataManifestOperation();
+		op.setAction(Action.ADD);
+		op.setAttribute("attr2");
+		op.setValue("val2");
+		op.setUnit("unit2");
+		manifest.getOperation().add(op);
+
+		final IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		final MetadataManifestProcessorImpl impl = new MetadataManifestProcessorImpl(
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+
+		final String json = impl.metadataManifestToJson(manifest);
+		Assert.assertNotNull("null json", json);
+		Assert.assertFalse("empty json", json.isEmpty());
+
+		final MetadataManifest deserialized = impl.stringJsonToMetadataManifest(json);
+		Assert.assertNotNull("null deserialized", deserialized);
+
+	}
+
+	@Test
 	public void testProcessValidManifestFailFastRelativePath() throws Exception {
 		final String testParentName = "testProcessValidManifestFailFastRelativePath";
 		final String testFileName = "testProcessValidManifestFailFastRelativePath.txt";

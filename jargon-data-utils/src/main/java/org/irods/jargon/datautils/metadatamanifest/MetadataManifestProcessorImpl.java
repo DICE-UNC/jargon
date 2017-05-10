@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.datautils.metadatamanifest;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,9 @@ import org.irods.jargon.datautils.metadatamanifest.MetadataManifest.FailureMode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 /**
  * Implementation of a manifest processor that can manage AVUs at a given path
  * via a bulk operation
@@ -31,6 +35,55 @@ import org.slf4j.LoggerFactory;
 public class MetadataManifestProcessorImpl extends AbstractJargonService {
 
 	public static final Logger log = LoggerFactory.getLogger(MetadataManifestProcessorImpl.class);
+
+	/**
+	 * Convert a <code>MetadataManifest</code> to string-ified json
+	 * 
+	 * @param metadataManifest
+	 *            {@link MetadataManifest}
+	 * @return <code>String</code> containing JSON
+	 * @throws JargonException
+	 */
+	public String metadataManifestToJson(final MetadataManifest metadataManifest) throws JargonException {
+		log.info("metadataManifestToJson()");
+		if (metadataManifest == null) {
+			throw new IllegalArgumentException("null metadataManifest");
+		}
+		log.info("metadataManifest:{}", metadataManifest);
+		final ObjectMapper mapper = new ObjectMapper();
+
+		// Object to JSON in String
+		try {
+			return mapper.writeValueAsString(metadataManifest);
+		} catch (final JsonProcessingException e) {
+			log.error("cannot write json for object:{}", metadataManifest, e);
+			throw new JargonException("error writing metadataManifest to string", e);
+		}
+	}
+
+	/**
+	 * Convert a json string to a <code>MetadataManifest</code>
+	 * 
+	 * @param jsonString
+	 *            <code>String</code> containing json
+	 * @return {@link MetadataManifest}
+	 * @throws JargonException
+	 */
+	public MetadataManifest stringJsonToMetadataManifest(final String jsonString) throws JargonException {
+		log.info("stringJsonToMetadataManifest()");
+		if (jsonString == null || jsonString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty jsonString");
+		}
+		log.info("jsonString:{}", jsonString);
+		final ObjectMapper mapper = new ObjectMapper();
+		try {
+			return mapper.readValue(jsonString, MetadataManifest.class);
+		} catch (final IOException e) {
+			log.error("cannot convert json to object:{}", jsonString, e);
+			throw new JargonException("error writing json to metadataManifest", e);
+		}
+
+	}
 
 	public List<BulkAVUOperationResponse> processManifest(final MetadataManifest metadataManifest)
 			throws JargonException {
