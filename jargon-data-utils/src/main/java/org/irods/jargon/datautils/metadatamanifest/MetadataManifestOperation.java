@@ -10,11 +10,11 @@ import org.irods.jargon.datautils.metadatamanifest.MetadataManifest.Action;
  */
 public class MetadataManifestOperation {
 
-	private String attribute;
-	private String value;
-	private String unit;
-	private String irodsPath;
-	private Action action;
+	private String attribute = "";
+	private String value = "";
+	private String unit = "";
+	private String irodsPath = "";
+	private Action action = Action.ADD;
 
 	/**
 	 * Create an operation

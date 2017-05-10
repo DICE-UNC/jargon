@@ -63,6 +63,8 @@ public class LocalFileUtils {
 
 		final PrintWriter out = new PrintWriter(file.getAbsolutePath());
 		out.println(string);
+		out.flush();
+		out.close();
 
 	}
 
