@@ -407,6 +407,25 @@ public abstract class AbstractConnection {
 	}
 
 	/**
+	 * Writes an int to the output stream as four bytes, network order (high
+	 * byte first). This will optionally add a flush()
+	 *
+	 * @param value
+	 *            value to be sent
+	 * @param flush
+	 *            <code>boolean</code> that will add a flush() if
+	 *            <code>true</code>
+	 * @throws IOException
+	 *             If an IOException occurs
+	 */
+	protected void sendInNetworkOrder(final int value, boolean flush) throws IOException {
+		sendInNetworkOrder(value);
+		if (flush) {
+			flush();
+		}
+	}
+
+	/**
 	 * Writes the given input stream content, for the given length, to the iRODS
 	 * agent
 	 *
