@@ -12,6 +12,7 @@ import java.nio.channels.ClosedChannelException;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Host;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -403,6 +404,7 @@ public abstract class AbstractConnection {
 		byte bytes[] = new byte[INT_LENGTH];
 
 		Host.copyInt(value, bytes);
+		log.debug("send bytes:{}", LocalFileUtils.digestByteArrayToString(bytes));
 		send(bytes);
 	}
 

@@ -891,6 +891,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 */
 	public synchronized void sendInNetworkOrderWithFlush(final int value) throws JargonException {
 		try {
+			// irodsConnection.flush();
 			irodsConnection.sendInNetworkOrder(value, true);
 		} catch (IOException e) {
 			disconnectWithForce();

@@ -1355,9 +1355,11 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					// don't send the reply.
 
 					Tag fileCountTag = ackResult.getTag("filesCnt");
-					int fileCount = Integer.parseInt((String) fileCountTag.getValue());
-
-					if (fileCount < IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_SIZE) {
+					// int fileCount = Integer.parseInt((String)
+					// fileCountTag.getValue());
+					Tag msgHeaderTag = ackResult.getTag("MsgHeader_PI");
+					;
+					if (msgHeaderTag == null) {
 						done = true;
 					} else {
 						getIRODSProtocol().sendInNetworkOrderWithFlush(IRODSConstants.SYS_CLI_TO_SVR_COLL_STAT_REPLY);
