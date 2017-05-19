@@ -620,4 +620,42 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;
 
+	/**
+	 * List data objects underneath a given parent path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that has already been obtained
+	 * @param partialStartIndex
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(ObjStat objStat, int partialStartIndex)
+			throws JargonException;
+
+	/**
+	 * List collections underneath a given parent path
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} that has already been obtained
+	 * @param partialStartIndex
+	 *            <code>int</code> with a paging offset
+	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 * @throws JargonException
+	 */
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws FileNotFoundException, JargonException;
+
+	/**
+	 * Return a count of the number of collections under the path represented by
+	 * the objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the target collection
+	 * @return <code>int</code> with the collection count
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException;
+
 }
