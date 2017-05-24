@@ -417,6 +417,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	}
 
+	@Override
 	public int countDataObjectsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
 		if (objStat == null) {

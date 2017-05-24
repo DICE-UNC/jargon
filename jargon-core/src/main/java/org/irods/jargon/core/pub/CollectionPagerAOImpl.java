@@ -321,44 +321,37 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	}
 
 	private ListAndCount listDataObjectsGivenObjStat(final ObjStat objStat, final int offset) throws JargonException {
-		return null;
 
-		/*
-		 * log.info("listDataObjectsGivenObjStat()"); final ListAndCount
-		 * listAndCount = new ListAndCount();
-		 * listAndCount.setCollectionAndDataObjectListingEntries(
-		 * collectionListingUtils.listDataObjectsUnderPath(objStat, offset));
-		 * 
-		 * 
-		 * 
-		 * if
-		 * (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
-		 * listAndCount.setCountTotal(0); listAndCount.setEndOfRecords(true);
-		 * log.info("empty results returned"); return listAndCount; }
-		 * 
-		 * final int lastEntryIdx =
-		 * listAndCount.getCollectionAndDataObjectListingEntries().size() - 1;
-		 * final CollectionAndDataObjectListingEntry lastEntry =
-		 * listAndCount.getCollectionAndDataObjectListingEntries()
-		 * .get(lastEntryIdx);
-		 * listAndCount.setCountThisPage(lastEntry.getCount());
-		 * listAndCount.setEndOfRecords(lastEntry.isLastResult());
-		 * listAndCount.setOffsetStart(listAndCount.
-		 * getCollectionAndDataObjectListingEntries().get(0).getCount());
-		 * 
-		 * int count =
-		 * listAndCount.getCollectionAndDataObjectListingEntries().get(0).
-		 * getTotalRecords(); if (count > 0) {
-		 * listAndCount.setCountTotal(count);
-		 * log.info("total records was in the result set already"); return
-		 * listAndCount; }
-		 * 
-		 * 
-		 * 
-		 * log.info("separate query to get a count"); count =
-		 * collectionListingUtils.countDataObjectsUnderPath(objStat);
-		 * listAndCount.setCountTotal(count); return listAndCount;
-		 */
+		log.info("listDataObjectsGivenObjStat()");
+		final ListAndCount listAndCount = new ListAndCount();
+		listAndCount.setCollectionAndDataObjectListingEntries(
+				collectionAndDataObjectListAndSearchAO.listDataObjectsUnderPath(objStat, offset));
+
+		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
+			listAndCount.setCountTotal(0);
+			listAndCount.setEndOfRecords(true);
+			log.info("empty results returned");
+			return listAndCount;
+		}
+
+		final int lastEntryIdx = listAndCount.getCollectionAndDataObjectListingEntries().size() - 1;
+		final CollectionAndDataObjectListingEntry lastEntry = listAndCount.getCollectionAndDataObjectListingEntries()
+				.get(lastEntryIdx);
+		listAndCount.setCountThisPage(lastEntry.getCount());
+		listAndCount.setEndOfRecords(lastEntry.isLastResult());
+		listAndCount.setOffsetStart(listAndCount.getCollectionAndDataObjectListingEntries().get(0).getCount());
+
+		int count = listAndCount.getCollectionAndDataObjectListingEntries().get(0).getTotalRecords();
+		if (count > 0) {
+			listAndCount.setCountTotal(count);
+			log.info("total records was in the result set already");
+			return listAndCount;
+		}
+
+		log.info("separate query to get a count");
+		count = collectionAndDataObjectListAndSearchAO.countDataObjectsUnderPath(objStat);
+		listAndCount.setCountTotal(count);
+		return listAndCount;
 
 	}
 
