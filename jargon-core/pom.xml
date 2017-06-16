@@ -30,8 +30,8 @@
 			<type>jar</type>
 		</dependency>
 		<dependency>
-			<groupId>org.globus.jglobus</groupId>
-			<artifactId>cog-jglobus</artifactId>
+			<groupId>org.jglobus</groupId>
+			<artifactId>gss</artifactId>
 			<type>jar</type>
 			<exclusions>
 				<exclusion>

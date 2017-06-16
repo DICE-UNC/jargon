@@ -15,7 +15,7 @@
 		<spring.core.version>3.0.5.RELEASE</spring.core.version>
 		<spring.security.version>3.0.5.RELEASE</spring.security.version>
 		<hibernate.version>3.3.2.GA</hibernate.version>
-		<globus.version>1.8.0</globus.version>
+		<globus.version>2.0.6</globus.version>
 		<findbugs.version>2.5.2</findbugs.version>
 		<sl4j.version>1.6.6</sl4j.version> 
 		<log4j.version>1.2.16</log4j.version>
@@ -142,8 +142,8 @@
 				<type>jar</type>
 			</dependency>
 			<dependency>
-				<groupId>org.globus.jglobus</groupId>
-				<artifactId>cog-jglobus</artifactId>
+				<groupId>org.jglobus</groupId>
+				<artifactId>gss</artifactId>
 				<scope>compile</scope>
 				<version>${globus.version}</version>
 				<type>jar</type>
