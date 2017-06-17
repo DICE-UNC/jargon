@@ -25,11 +25,6 @@
 			<artifactId>commons-lang</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.claymoresystems</groupId>
-			<artifactId>puretls</artifactId>
-			<type>jar</type>
-		</dependency>
-		<dependency>
 			<groupId>org.jglobus</groupId>
 			<artifactId>gss</artifactId>
 			<type>jar</type>
