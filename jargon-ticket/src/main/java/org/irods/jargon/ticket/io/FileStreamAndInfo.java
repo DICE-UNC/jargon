@@ -4,7 +4,7 @@ import java.io.InputStream;
 
 /**
  * Value object holds an
- * <code>InputStream<code> as a result of a ticket based 'get' of a file, where a stream of the file data is desired.  Note
+ * {@code InputStream} as a result of a ticket based 'get' of a file, where a stream of the file data is desired.  Note
  * that currently only 'get' and 'put' are supported via tickets, so mid-tier applications that wish to stream data back to the client need to do an 
  * intermediate get to the mid-tier platform and then stream from this location.
  * <p>

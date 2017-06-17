@@ -19,8 +19,8 @@ public interface AnonymousAccessService {
 	 * absolute path. This can be either a file or a collection.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String<code> with an absolute path to an iRODS file or collection
-	 * @return <code>boolean<code> if anonymous has at least read access
+	 *            {@code String} with an absolute path to an iRODS file or collection
+	 * @return {@code boolean} if anonymous has at least read access
 	 * @throws FileNotFoundException
 	 *             if the given path does not exist
 	 * @throws JargonException

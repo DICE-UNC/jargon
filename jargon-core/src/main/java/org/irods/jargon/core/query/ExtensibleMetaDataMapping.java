@@ -32,7 +32,7 @@ public final class ExtensibleMetaDataMapping {
 	 * previous construction, therefore, the access methods are synchronized.
 	 *
 	 * @param extensibleMappings
-	 *            <code>Map<String,String><code> containing
+	 *            {@code Map<String,String>} containing
 	 * @return {@link ExtensibleMetaDataMapping}
 	 * @throws JargonException
 	 */
@@ -64,7 +64,7 @@ public final class ExtensibleMetaDataMapping {
 	 * Note that method can return {@code null}
 	 *
 	 * @param columnName
-	 *            <code>String<code> containing the column name of the extensible metadata
+	 *            {@code String} containing the column name of the extensible metadata
 	 * @return {@code String} containing the corresponding index, or
 	 *         {@code null} if no match is found.
 	 */

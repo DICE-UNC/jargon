@@ -233,9 +233,9 @@ public class AssertionHelper {
 	 * number of subdirectories/files.
 	 *
 	 * @param dir1
-	 *            <code>String<code> with the absolute path to a directory
+	 *            {@code String} with the absolute path to a directory
 	 * @param dir2
-	 *            <code>String<code> with
+	 *            {@code String} with
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalDirectoriesHaveSameData(final String dir1,
@@ -301,7 +301,7 @@ public class AssertionHelper {
 	 * @param file1
 	 *            {@code File} with a file or directory
 	 * @param file2
-	 *            <code>File<code> with a file or directory
+	 *            {@code File} with a file or directory
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(

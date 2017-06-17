@@ -124,7 +124,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * and ignored.
 	 *
 	 * @param absolutePathToSourceFile
-	 *            <code>String<code> with the absolute path to the source file.
+	 *            {@code String} with the absolute path to the source file.
 	 * @param absolutePathToTargetFile
 	 *            {@code String} with the absolute path to the target of
 	 *            the move.
@@ -325,7 +325,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 *            {@code String} with the optional (blank if not specified)
 	 *            resource to which the file or collection will be copied
 	 * @param irodsTargetFileAbsolutePath
-	 *            <code>String<code> with the absolute path to the target iRODS file or collection.   A file may be copied to a collection
+	 *            {@code String} with the absolute path to the target iRODS file or collection.   A file may be copied to a collection
 	 * @param force
 	 *            {@code boolean} that indicates that any files that exist
 	 *            in the target will be copied over
@@ -423,7 +423,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * and ignored.
 	 *
 	 * @param irodsSourceFile
-	 *            <code>IRODSFile<code> with the the source file.
+	 *            {@code IRODSFile} with the the source file.
 	 * @param irodsTargetFile
 	 *            {@code IRODSFile} with the target of the move.
 	 * @throws JargonException

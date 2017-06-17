@@ -44,7 +44,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 *            {@code String} with the absolute path to the desired
 	 *            iRODS location the file will be registered under.
 	 * @param force
-	 *            {@code boolean<code> which, if <code>true} indicates that
+	 *            {@code boolean} which, if {@code true} indicates that
 	 *            an overwrite of an iRODS path will occur.
 	 * @param destinationResource
 	 *            {@code String}, blank if the default should be used, that
@@ -95,7 +95,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 *            This may be set to blank, if not used. If this is specified, a
 	 *            {@code destinationResource} must also be specified.
 	 * @param generateChecksumInIRODS
-	 *            {@code boolean<code> that, if <code>true} cause iRODS to
+	 *            {@code boolean} that, if {@code true} cause iRODS to
 	 *            generate a checksum value and store it in the catalog.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
@@ -196,7 +196,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 *            This may be set to blank, if not used. If this is specified, a
 	 *            {@code destinationResource} must also be specified.
 	 * @param generateChecksumInIRODS
-	 *            {@code boolean<code> that, if <code>true} cause iRODS to
+	 *            {@code boolean} that, if {@code true} cause iRODS to
 	 *            generate a checksum value and store it in the catalog.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not

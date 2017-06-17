@@ -500,7 +500,7 @@ public interface JargonProperties {
 	/**
 	 * Indicates whether long file transfer retarts should be done.
 	 *
-	 * @return {@code boolean<code> of <code>true} if long file restarts
+	 * @return {@code boolean} of {@code true} if long file restarts
 	 *         should be done
 	 */
 	boolean isLongTransferRestart();

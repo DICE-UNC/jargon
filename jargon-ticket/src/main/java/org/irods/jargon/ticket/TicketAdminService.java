@@ -175,7 +175,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Generate a list of all iRODS users that can use this ticket. Passing a
-	 * <code>null<code> expiration will cause
+	 * {@code null} expiration will cause
 	 * the expiration to be removed altogether.
 	 * 
 	 * @param ticketId

@@ -351,7 +351,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 
 	/**
 	 * Handy method to return the
-	 * <code>ObjStat<code> that represents the given iRODS file path
+	 * {@code ObjStat} that represents the given iRODS file path
 	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the iRODS file absolute path

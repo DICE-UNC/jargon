@@ -98,8 +98,8 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * {@code UserGroup}.
 	 *
 	 * @param userGroupName
-	 *            <code>String<code> with the name of an iRODS user group
-	 * @return <code>List<code> of {@link User} with the group membership. This
+	 *            {@code String} with the name of an iRODS user group
+	 * @return {@code List} of {@link User} with the group membership. This
 	 *         will be an empty {@code List} if the group has no members.
 	 * @throws JargonException
 	 */

@@ -504,7 +504,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            {@code String} with the absolute path to an iRODS
 	 *            collection or data object.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 *         {@code FileNotFoundException} will occur if the objStat cannot
 	 * be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found
@@ -544,7 +544,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 *            {@code String} with the data object name for which the
 	 *            {@code ObjStat} will be returned.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 *         {@code FileNotFoundException} will occur if the objStat cannot
 	 * be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found

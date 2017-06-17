@@ -96,7 +96,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the distinguished name of the user, if applicable
 	 *
 	 * @param userDN
-	 *            <code>String<code> with the distinguished name of the user.
+	 *            {@code String} with the distinguished name of the user.
 	 */
 	public void setUserDN(final String userDN) {
 		this.userDN = userDN;

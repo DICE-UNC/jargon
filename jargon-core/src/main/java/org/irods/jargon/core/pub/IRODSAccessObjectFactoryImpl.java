@@ -108,7 +108,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	}
 
 	/**
-	 * Construct an instance with the given <code>IRODSSession<code>
+	 * Construct an instance with the given {@code IRODSSession}
 	 *
 	 * @param irodsSession
 	 */

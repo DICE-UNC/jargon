@@ -60,7 +60,7 @@ public interface IRODSFile {
 	 * the trash (no force option). Note that for a collection, the iRODS
 	 * collection is recursively deleted.
 	 *
-	 * @return <code>boolean<code> with the success of the delete operation.
+	 * @return {@code boolean} with the success of the delete operation.
 	 */
 	boolean delete();
 
@@ -263,7 +263,7 @@ public interface IRODSFile {
 	 * descriptor.
 	 *
 	 * @param fd
-	 *            <code>int<code> with the file descriptor associated with this file that should be closed in iRODS.
+	 *            {@code int} with the file descriptor associated with this file that should be closed in iRODS.
 	 * @throws JargonException
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;

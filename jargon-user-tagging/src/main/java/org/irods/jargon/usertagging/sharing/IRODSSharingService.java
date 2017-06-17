@@ -112,7 +112,7 @@ public interface IRODSSharingService {
 	 *            jargon-user-tagging project to set up all required specific
 	 *            queries. See project documentation. This method requires and
 	 *            iRODS server that supports Specific Query (iRODS 3.1+)
-	 * @return <code>List<code> of {@link IRODSSharedFileOrCollection} that is
+	 * @return {@code List} of {@link IRODSSharedFileOrCollection} that is
 	 *         shared by the user
 	 * @throws OperationNotSupportedByThisServerException
 	 *             if specific query support is not enabled
@@ -145,7 +145,7 @@ public interface IRODSSharingService {
 	 *            jargon-user-tagging project to set up all required specific
 	 *            queries. See project documentation. This method requires and
 	 *            iRODS server that supports Specific Query (iRODS 3.1+)
-	 * @return <code>List<code> of {@link IRODSSharedFileOrCollection} that is
+	 * @return {@code List} of {@link IRODSSharedFileOrCollection} that is
 	 *         shared by a party with the user
 	 * @throws OperationNotSupportedByThisServerException
 	 *             if specific query support is not enabled

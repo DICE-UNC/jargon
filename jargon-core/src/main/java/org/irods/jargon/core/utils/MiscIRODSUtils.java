@@ -319,7 +319,7 @@ public class MiscIRODSUtils {
 	 * @param input
 	 *            {@code String} with the value to be converted to an MD5
 	 *            Hash
-	 * @return <code>String<code> which is the MD5 has of the string.
+	 * @return {@code String} which is the MD5 has of the string.
 	 */
 
 	public static String computeMD5HashOfAStringValue(final String input)

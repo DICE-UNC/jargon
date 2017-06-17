@@ -80,7 +80,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * overridden by any values passed in as an input parameter.
 	 *
 	 * @param resourcePath
-	 *            <code>String<code> that will be a path from which the resource will be loaded, using the rules
+	 *            {@code String} that will be a path from which the resource will be loaded, using the rules
 	 * associated with {@code Class.getResourceAsStream(String)}.
 	 * @param irodsRuleInputParameters
 	 *            {@code List} of {@link IRODSRuleParameter} with overrides

@@ -85,7 +85,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param comment
-	 *            <code>String<code> with the data to be stored in the user comment.
+	 *            {@code String} with the data to be stored in the user comment.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -112,7 +112,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param info
-	 *            <code>String<code> with the data to be stored in the user info.
+	 *            {@code String} with the data to be stored in the user info.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -293,7 +293,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param zone
-	 *            <code>String<code> with the user's zone.
+	 *            {@code String} with the user's zone.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -373,7 +373,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param password
-	 *            <code>String<code> with the user's password.
+	 *            {@code String} with the user's password.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -401,7 +401,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param password
-	 *            <code>String<code> with the user's password.
+	 *            {@code String} with the user's password.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */

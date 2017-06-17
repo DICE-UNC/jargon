@@ -554,7 +554,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *
 	 * @param absolutePath
 	 *            {@code String} with the absolute path to the collection.
-	 * @return <code>boolean<code>
+	 * @return {@code boolean}
 	 * @throws FileNotFoundException
 	 *             if the collection does not exist
 	 * @throws JargonException

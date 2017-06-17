@@ -78,9 +78,9 @@ public class TransferStatus {
 	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            <code>int<code> with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this status callback
 	 * @param totalFilesSkippedSoFar
-	 *            <code>int<code> with the total files skipped if this is a
+	 *            {@code int} with the total files skipped if this is a
 	 *            restart, including this status callback
 	 * @param totalFilesToTransfer
 	 *            {@code int} with the total files involved in this
@@ -128,9 +128,9 @@ public class TransferStatus {
 	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            <code>int<code> with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this status callback
 	 * @param totalFilesSkippedSoFar
-	 *            <code>int<code> with the total files skipped in restarting,
+	 *            {@code int} with the total files skipped in restarting,
 	 *            including this status callback
 	 * @param totalFilesToTransfer
 	 *            {@code int} with the total files involved in this
@@ -205,9 +205,9 @@ public class TransferStatus {
 	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
-	 *            <code>int<code> with the total files transferred, including this status callback
+	 *            {@code int} with the total files transferred, including this status callback
 	 * @param totalFilesSkippedSoFar
-	 *            <code>int<code> with the total files skipped in restarting,
+	 *            {@code int} with the total files skipped in restarting,
 	 *            including this status callback
 	 * @param totalFilesToTransfer
 	 *            {@code int} with the total files involved in this

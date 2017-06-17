@@ -427,7 +427,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@code String} containing the absolute path to the target
 	 *            iRODS file to replicate.
 	 * @param irodsResourceGroupName
-	 *            <code>String<code> with the name of the resource group to which the file will be replicated.  The replication will be to
+	 *            {@code String} with the name of the resource group to which the file will be replicated.  The replication will be to
 	 * all members of the resource group.
 	 * @throws JargonException
 	 */
