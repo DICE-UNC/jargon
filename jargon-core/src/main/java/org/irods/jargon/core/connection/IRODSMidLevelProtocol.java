@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Note that the IRODS Connection object that this protocol utilizes is not
  * synchronized. Since a connection manager may also be managing the connection.
- * This <code>IRODSProtocol</code> object manages any necessary synchronization
+ * This {@code IRODSProtocol} object manages any necessary synchronization
  * on the connection to the underlying {@link IRODSBasicTCPConnection
  * IRODSConnection} This connection should not be shared between threads. A rule
  * of thumb is to treat a connection to IRODS the same way you would treat a
@@ -34,33 +34,33 @@ import org.slf4j.LoggerFactory;
  * There are several cooperating objects involved in obtaining a connection.
  * There is an {@link IRODSSession} object that maintains a ThreadLocal cache of
  * connections by account. Jargon asks for connections from the
- * <code>IRODSSession</code> when you create access objects or files. When you
- * call <code>close()</code> methods, you are actually telling
- * <code>IRODSSession</code> to close the connection on your behalf and remove
- * it from the cache. <code>IRODSSession</code> will tell the
+ * {@code IRODSSession} when you create access objects or files. When you
+ * call {@code close()} methods, you are actually telling
+ * {@code IRODSSession} to close the connection on your behalf and remove
+ * it from the cache. {@code IRODSSession} will tell the
  * {@link IRODSProtocolManager} that you are through with the connection. The
- * actual behavior of the <code>IRODSProtocolManager</code> depends on the
+ * actual behavior of the {@code IRODSProtocolManager} depends on the
  * implementation. It may just close the connection at that point, or return it
- * to a pool or cache. When the <code>IRODSProtocolManager</code> does decide to
- * actually close a connection, it will call the <code>disconnect</code> method
+ * to a pool or cache. When the {@code IRODSProtocolManager} does decide to
+ * actually close a connection, it will call the {@code disconnect} method
  * here.
  * <p>
  * If something bad happens on the network level (IOException like a broken
  * pipe), then it is doubtful that the iRODS disconnect sequence will succeed,
  * or that the connection to the agent is still reliable. In this case, it is
- * the responsibility of the <code>IRODSConnection</code> that is wrapped by
+ * the responsibility of the {@code IRODSConnection} that is wrapped by
  * this class, to forcefully close the socket connection (without doing the
- * disconnect sequence), and to tell the <code>IRODSSession</code> to remove the
- * connection from the cache. <code>IRODSSession</code> also has a secondary
+ * disconnect sequence), and to tell the {@code IRODSSession} to remove the
+ * connection from the cache. {@code IRODSSession} also has a secondary
  * check when it hands out a connection to the caller, to make sure the returned
- * <code>IRODSCommands</code> object is connected. It does this by interrogating
- * the <code>isConnected()</code> method. In the future, or in alternative
+ * {@code IRODSCommands} object is connected. It does this by interrogating
+ * the {@code isConnected()} method. In the future, or in alternative
  * implementations, an actual ping could be made against the underlying
  * connection, but this is not currently done.
  * <p>
- * Bottom line, use the <code>IRODSSession</code> close methods. These are
- * exposed in the <code>IRODSFileSystem</code> and
- * <code>IRODSAccesObjectFactory</code> as well. Do not attempt to manipulate
+ * Bottom line, use the {@code IRODSSession} close methods. These are
+ * exposed in the {@code IRODSFileSystem} and
+ * {@code IRODSAccesObjectFactory} as well. Do not attempt to manipulate
  * the connection using the methods here!
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -133,30 +133,30 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Send the given iROD protocol request with any included binary data, and
-	 * return the iRODS response as a <code>Tag</code> object. This method has
+	 * return the iRODS response as a {@code Tag} object. This method has
 	 * detailed parameters, and there are other methods in the class with
 	 * simpler signatures that should be used.
 	 *
 	 * @param type
-	 *            <code>String</code> with the type of request, typically an
+	 *            {@code String} with the type of request, typically an
 	 *            iRODS protocol request
 	 * @param message
-	 *            <code>String</code> with an XML formatted messag
+	 *            {@code String} with an XML formatted messag
 	 * @param errorBytes
-	 *            <code>byte[]</code> with any error data to send to iRODS, can
-	 *            be set to <code>null</code>
+	 *            {@code byte[]} with any error data to send to iRODS, can
+	 *            be set to {@code null}
 	 * @param errorOffset
-	 *            <code>int</code> with offset into the error data to send
+	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
-	 *            <code>int</code> with the length of error data
+	 *            {@code int} with the length of error data
 	 * @param bytes
-	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 *            {@code byte[]} with binary data to send to iRODS.
 	 * @param byteOffset
-	 *            <code>int</code> with an offset into the byte array to send
+	 *            {@code int} with an offset into the byte array to send
 	 * @param byteBufferLength
-	 *            <code>int</code> with the length of the bytes to send
+	 *            {@code int} with the length of the bytes to send
 	 * @param intInfo
-	 *            <code>int</code> with the iRODS API number
+	 *            {@code int} with the iRODS API number
 	 * @return {@link Tag}
 	 * @throws JargonException
 	 */
@@ -222,30 +222,30 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Send the given iROD protocol request with any included binary data, and
-	 * return the iRODS response as a <code>Tag</code> object. This method has
+	 * return the iRODS response as a {@code Tag} object. This method has
 	 * detailed parameters, and there are other methods in the class with
 	 * simpler signatures that should be used.
 	 *
 	 * @param type
-	 *            <code>String</code> with the type of request, typically an
+	 *            {@code String} with the type of request, typically an
 	 *            iRODS protocol request
 	 * @param message
-	 *            <code>String</code> with an XML formatted messag
+	 *            {@code String} with an XML formatted messag
 	 * @param errorBytes
-	 *            <code>byte[]</code> with any error data to send to iRODS, can
-	 *            be set to <code>null</code>
+	 *            {@code byte[]} with any error data to send to iRODS, can
+	 *            be set to {@code null}
 	 * @param errorOffset
-	 *            <code>int</code> with offset into the error data to send
+	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
-	 *            <code>int</code> with the length of error data
+	 *            {@code int} with the length of error data
 	 * @param bytes
-	 *            <code>byte[]</code> with binary data to send to iRODS.
+	 *            {@code byte[]} with binary data to send to iRODS.
 	 * @param byteOffset
-	 *            <code>int</code> with an offset into the byte array to send
+	 *            {@code int} with an offset into the byte array to send
 	 * @param byteBufferLength
-	 *            <code>int</code> with the length of the bytes to send
+	 *            {@code int} with the length of the bytes to send
 	 * @param intInfo
-	 *            <code>int</code> with the iRODS API number
+	 *            {@code int} with the iRODS API number
 	 * @throws JargonException
 	 */
 	@Override

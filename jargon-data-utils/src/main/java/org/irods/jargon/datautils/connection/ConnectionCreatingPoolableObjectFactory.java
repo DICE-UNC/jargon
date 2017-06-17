@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory for a pool-able object that is an iRODS connection. In the current
  * implementation, this is a pool of 1 iRODS connection (and
- * <code>IRODSCommands</code> instance) that will block waiting to get a handle.
+ * {@code IRODSCommands} instance) that will block waiting to get a handle.
  * This is intended for clients that are sharing a single connection to iRODS,
  * and specifically for clients sharing a temporary password connection.
  * <p>
@@ -36,7 +36,7 @@ public class ConnectionCreatingPoolableObjectFactory implements
 
 	/**
 	 * Constructor will build a connection source based on the given
-	 * <code>cachedIRODSAccount</code> and return an open connection on demand.
+	 * {@code cachedIRODSAccount} and return an open connection on demand.
 	 * 
 	 * @param cachedIRODSAccount
 	 *            {@link IRODSAccount} that will describe the source of the

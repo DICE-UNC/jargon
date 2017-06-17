@@ -54,7 +54,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param simpleQuery
 	 *            {@link SimpleQuery} that contains the query to send to iRODS.
-	 * @return <code>SimpleQueryInp</code> packing instruction.
+	 * @return {@code SimpleQueryInp} packing instruction.
 	 */
 	public static SimpleQueryInp instance(final AbstractAliasedQuery simpleQuery) {
 		return new SimpleQueryInp(SIMPLE_QUERY_API_NBR, simpleQuery);

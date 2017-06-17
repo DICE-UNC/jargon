@@ -51,15 +51,15 @@ public interface IRODSSharingService {
 
 	/**
 	 * Given an absolute path to an iRODS file or collection, return the
-	 * <code>IRODSSahredFileOrCollection</code> that may exist. Note that
-	 * <code>null</code> is returned if no such share exists, and a
-	 * <code>FileNotFoundException</code> is returned if the absolute path does
+	 * {@code IRODSSahredFileOrCollection} that may exist. Note that
+	 * {@code null} is returned if no such share exists, and a
+	 * {@code FileNotFoundException} is returned if the absolute path does
 	 * not exist.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with a valid iRODS absolute path to a file
+	 *            {@code String} with a valid iRODS absolute path to a file
 	 *            or collection
-	 * @return {@link IRODSSharedFileOrCollection} or <code>null</code>
+	 * @return {@link IRODSSharedFileOrCollection} or {@code null}
 	 * @throws FileNotFoundException
 	 *             if the target absolute path does not exist in iRODS
 	 * @throws JargonException
@@ -79,7 +79,7 @@ public interface IRODSSharingService {
 	 * associated ACLs.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with a valid iRODS absolute path to a file
+	 *            {@code String} with a valid iRODS absolute path to a file
 	 *            or collection
 	 * @throws FileNotFoundException
 	 *             if the iRODS absolute path does not point to a file or
@@ -99,10 +99,10 @@ public interface IRODSSharingService {
 	 * this extra processing
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the name of the user who is doing the
+	 *            {@code String} with the name of the user who is doing the
 	 *            sharing, based on the owner of the collection.
 	 * @param userZone
-	 *            <code>String</code> with the zone for the user. This may be
+	 *            {@code String} with the zone for the user. This may be
 	 *            set to blank, in which case the zone of the logged in user
 	 *            will be used
 	 *            <p>
@@ -132,10 +132,10 @@ public interface IRODSSharingService {
 	 * this extra processing
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the name of the user who is doing the
+	 *            {@code String} with the name of the user who is doing the
 	 *            sharing, based on the owner of the collection.
 	 * @param userZone
-	 *            <code>String</code> with the zone for the user. This may be
+	 *            {@code String} with the zone for the user. This may be
 	 *            set to blank, in which case the zone of the logged in user
 	 *            will be used
 	 *            <p>
@@ -160,9 +160,9 @@ public interface IRODSSharingService {
 	 * absolute path. Note that if there is no share, an empty list is returned.
 	 * This seems to convey the message with the least amount of surprise.
 	 * 
-	 * @param <code>String</code> with a valid iRODS absolute path to a file or
+	 * @param {@code String} with a valid iRODS absolute path to a file or
 	 *        collection
-	 * @return <code>List</code> of {@link ShareUser}
+	 * @return {@code List} of {@link ShareUser}
 	 * @throws FileNotFoundException
 	 *             if the path cannot be found
 	 * @throws OperationNotSupportedByThisServerException
@@ -176,10 +176,10 @@ public interface IRODSSharingService {
 	 * Update the name of the share at the given path
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with a valid iRODS absolute path to a file
+	 *            {@code String} with a valid iRODS absolute path to a file
 	 *            or collection
 	 * @param newShareName
-	 *            <code>String</code> with the desired name of the share
+	 *            {@code String} with the desired name of the share
 	 * @throws FileNotFoundException
 	 *             if the iRODS file or collection is missing
 	 * @throws DataNotFoundException
@@ -195,10 +195,10 @@ public interface IRODSSharingService {
 	 * does not attempt to set users
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with a valid iRODS absolute path to a file
+	 *            {@code String} with a valid iRODS absolute path to a file
 	 *            or collection
 	 * @param shareName
-	 *            <code>String</code> with an alias for the share
+	 *            {@code String} with an alias for the share
 	 * @throws ShareAlreadyExistsException
 	 * @throws FileNotFoundException
 	 * @throws JargonException

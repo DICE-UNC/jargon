@@ -30,12 +30,12 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 	 * for reading the stream data
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor bound to the stream
+	 *            {@code int} with the file descriptor bound to the stream
 	 *            in iRODS.
 	 * @param length
-	 *            <code>long</code> with the length of the stream data to be
+	 *            {@code long} with the length of the stream data to be
 	 *            read
-	 * @return <code>FileReadInp</code> instance
+	 * @return {@code FileReadInp} instance
 	 */
 	public static final FileReadInp instanceForReadStream(
 			final int fileDescriptor, final long length) throws JargonException {
@@ -46,13 +46,13 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 	 * Private constructor.
 	 *
 	 * @param apiNumber
-	 *            <code>int</code> with the appropriate API number for this
+	 *            {@code int} with the appropriate API number for this
 	 *            invocation
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor bound to the stream
+	 *            {@code int} with the file descriptor bound to the stream
 	 *            in iRODS.
 	 * @param length
-	 *            <code>long</code> with the length of the stream data to be
+	 *            {@code long} with the length of the stream data to be
 	 *            read
 	 */
 	private FileReadInp(final int apiNumber, final int fileDescriptor,

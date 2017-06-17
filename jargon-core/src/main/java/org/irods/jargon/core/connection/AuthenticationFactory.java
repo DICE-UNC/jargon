@@ -14,12 +14,12 @@ public interface AuthenticationFactory {
 
 	/**
 	 * This is an abstract factory, so implementations need to use an arbitrary
-	 * <code>String</code> to determine the proper <code>AuthMechanism</code>
+	 * {@code String} to determine the proper {@code AuthMechanism}
 	 * implementation to return.
 	 * <p>
 	 * In the default representation, the mechanism is the {@link IRODSAccount}
-	 * enum value contained in the <code>IRODSAccount</code> as returned by the
-	 * <code>getName()</code> method. Custom implementations of this factory may
+	 * enum value contained in the {@code IRODSAccount} as returned by the
+	 * {@code getName()} method. Custom implementations of this factory may
 	 * use other schemes.
 	 * <p>
 	 * Note that this factory will defaut to a standard iRODS auth when the
@@ -28,9 +28,9 @@ public interface AuthenticationFactory {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} account containing desired auth scheme
 	 * @return {@link AuthMechanism} that is created based on the
-	 *         <code>authScheme</code> in the given <code>IRODSAccount</code>
+	 *         {@code authScheme} in the given {@code IRODSAccount}
 	 * @throws AuthUnavailableException
-	 *             if the given <code>authScheme</code> is not supported by the
+	 *             if the given {@code authScheme} is not supported by the
 	 *             factory implementation.
 	 * @throws JargonException
 	 */

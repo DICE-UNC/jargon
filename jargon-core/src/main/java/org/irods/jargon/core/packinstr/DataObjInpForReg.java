@@ -37,32 +37,32 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	 * Create an instance for an ireg operation
 	 *
 	 * @param physicalFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the physical
+	 *            {@code String} with the absolute path to the physical
 	 *            file to be registered
 	 * @param irodsFileAbsolutePath
 	 *            <code>String</coce> with the absolute path to the iRODS file to be registered
 	 * @param resourceGroup
-	 *            <code>String</code>specifies the resource group of the
+	 *            {@code String}specifies the resource group of the
 	 *            resource. This must be input together with the
 	 *            resourceToStoreTo
 	 * @param resourceToStoreTo
-	 *            <code>String</code> specifies the resource to store to. This
+	 *            {@code String} specifies the resource to store to. This
 	 *            can also be specified in your environment or via a rule set up
 	 *            by the administrator
 	 * @param force
-	 *            <code>boolean</code> indicates overwrite
+	 *            {@code boolean} indicates overwrite
 	 * @param recursive
-	 *            <code>boolean</code> which, if <code>true</code>, indicates
+	 *            {@code boolean} which, if {@code true}, indicates
 	 *            that this is a recursive registration of a collection.
 	 * @param checksumHandling
 	 *            {@link ChecksumHandling} enum value that indicates the
 	 *            approach used for checksums
 	 * @param registerAsReplica
-	 *            <code>boolean</code> which, if true, registers the file as a
+	 *            {@code boolean} which, if true, registers the file as a
 	 *            replica
 	 * @param localFileChecksumValue
-	 *            <code>String</code> with an optional local file
-	 *            checksum,required if the <code>checksumHandling</code>
+	 *            {@code String} with an optional local file
+	 *            checksum,required if the {@code checksumHandling}
 	 *            indicates that the checksum should be verified. Should be set
 	 *            to blank otherwise.
 	 * @return {@link DataObjInpForReg}

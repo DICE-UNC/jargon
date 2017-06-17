@@ -61,12 +61,12 @@ public final class ExtensibleMetaDataMapping {
 	 * IRODS extendediCat.h), return the numeric value which should be sent in
 	 * an IRODS query.
 	 *
-	 * Note that method can return <code>null</code>
+	 * Note that method can return {@code null}
 	 *
 	 * @param columnName
 	 *            <code>String<code> containing the column name of the extensible metadata
-	 * @return <code>String</code> containing the corresponding index, or
-	 *         <code>null</code> if no match is found.
+	 * @return {@code String} containing the corresponding index, or
+	 *         {@code null} if no match is found.
 	 */
 	public String getIndexFromColumnName(final String columnName) {
 		String index = extensibleMappings.get(columnName);
@@ -76,13 +76,13 @@ public final class ExtensibleMetaDataMapping {
 	/**
 	 * For a given numeric index, get the equivalent column name.
 	 *
-	 * Note that method can return <code>null</code>
+	 * Note that method can return {@code null}
 	 *
 	 * @param index
-	 *            <code>String</code> containing the value of the extensible
+	 *            {@code String} containing the value of the extensible
 	 *            metadata numeric index.
-	 * @return <code>String</code> with the extensible metaata column name, or
-	 *         <code>null</code> if not found.
+	 * @return {@code String} with the extensible metaata column name, or
+	 *         {@code null} if not found.
 	 */
 	public String getColumnNameFromIndex(final String index) {
 		String columnName = null;

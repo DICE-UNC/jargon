@@ -8,8 +8,8 @@ import org.irods.jargon.core.packinstr.DataObjInp;
 import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
- * This is a special version of a <code>IRODSFileOutputStream</code> that adds
- * the capability to close the underlying <code>IRODSSession</code> when the
+ * This is a special version of a {@code IRODSFileOutputStream} that adds
+ * the capability to close the underlying {@code IRODSSession} when the
  * stream is closed. This is used in situations where a stream is created and
  * returned from a method, and the caller is not aware of the need to close the
  * iRODS connection.

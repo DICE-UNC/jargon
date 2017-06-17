@@ -1245,7 +1245,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * associated file permissions
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the original absolute path as
+	 *            {@code String} with the original absolute path as
 	 *            requested. This may not be the canonical path if this is a
 	 *            special collection (e.g. soft links)
 	 * @param partialStartIndex

@@ -25,7 +25,7 @@ public class IRODSRuleExecResult {
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @param resultParameters
-	 *            <code>Tag</code> with the response from iRODS
+	 *            {@code Tag} with the response from iRODS
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws JargonException
 	 */
@@ -76,7 +76,7 @@ public class IRODSRuleExecResult {
 	 * Return the standard output from the rule invocation, this is a short-cut
 	 * to getting the ruleExecOut from the output parameters.
 	 *
-	 * @return <code>String</code> with the rule exec out. This will be a blank
+	 * @return {@code String} with the rule exec out. This will be a blank
 	 *         value (not null) if no output was found.
 	 */
 	public String getRuleExecOut() {
@@ -98,7 +98,7 @@ public class IRODSRuleExecResult {
 	 * Return the standard error from the rule invocation, this is a short-cut
 	 * to getting the ruleExecOut from the output parameters.
 	 *
-	 * @return <code>String</code> with the rule exec err. This will be a blank
+	 * @return {@code String} with the rule exec err. This will be a blank
 	 *         value (not null) if no output was found.
 	 */
 	public String getRuleExecErr() {

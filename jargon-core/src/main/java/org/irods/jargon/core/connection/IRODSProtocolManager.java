@@ -9,7 +9,7 @@ public abstract class IRODSProtocolManager {
 
 	/**
 	 * Factory that will associate an iRODS authentication scheme handler with
-	 * an iRODS authentication scheme in an <code>IRODSAccount</code> when
+	 * an iRODS authentication scheme in an {@code IRODSAccount} when
 	 * logging in.
 	 */
 	private AuthenticationFactory authenticationFactory = new AuthenticationFactoryImpl();
@@ -29,7 +29,7 @@ public abstract class IRODSProtocolManager {
 	 * demand
 	 *
 	 * @return {@link AuthenticationFactory} that will create objects that can
-	 *         authenticate <code>iRODSAccount</code>s
+	 *         authenticate {@code iRODSAccount}s
 	 */
 	AuthenticationFactory getAuthenticationFactory() {
 		return authenticationFactory;
@@ -37,11 +37,11 @@ public abstract class IRODSProtocolManager {
 
 	/**
 	 * Inject a factory that will be used to authentication
-	 * <code>IRODSAccount</code>s when a new connection needs to be made
+	 * {@code IRODSAccount}s when a new connection needs to be made
 	 *
 	 * @param authenticationFactory
 	 *            {@link AuthenticationFactory} that will create objects that
-	 *            can authenticate <code>iRODSAccount</code>s
+	 *            can authenticate {@code iRODSAccount}s
 	 */
 	public void setAuthenticationFactory(final AuthenticationFactory authenticationFactory) {
 		if (authenticationFactory == null) {
@@ -88,7 +88,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * Called by a client that no longer needs the connection to iRODS. This
 	 * signals a normal close from the higher level API. The
-	 * <code>IRODSProtocolManager</code> can then decide how to treat a normally
+	 * {@code IRODSProtocolManager} can then decide how to treat a normally
 	 * returned connection. This can either be shut down, returned to a cache or
 	 * pool, or any other sort of custom behavior.
 	 *

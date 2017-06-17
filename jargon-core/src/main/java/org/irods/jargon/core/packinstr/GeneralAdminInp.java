@@ -49,7 +49,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * iRODS.
 	 * <p>
 	 * Note that the user DN is not updated in this call, as there appears to be
-	 * bug where it gets truncated. The <code>UserAO</code> methods will instead
+	 * bug where it gets truncated. The {@code UserAO} methods will instead
 	 * add a call to the equivalent of 'iadmin aua' to insert the user DN. See
 	 * comments for that class.
 	 *
@@ -83,7 +83,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param comment
 	 *            <code>String<code> with the data to be stored in the user comment.
 	 * @return {@link GeneralAdminInp}
@@ -110,7 +110,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param info
 	 *            <code>String<code> with the data to be stored in the user info.
 	 * @return {@link GeneralAdminInp}
@@ -135,7 +135,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Generate the packing instruction suitable for removing a user from iRODS.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name to be removed.
+	 *            {@code String} with the iRODS user name to be removed.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -154,9 +154,9 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to set user quota total for a user
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name
+	 *            {@code String} with the user name
 	 * @param quotaValue
-	 *            <code>long</code> with the total (across resources) quota
+	 *            {@code long} with the total (across resources) quota
 	 *            value
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
@@ -183,9 +183,9 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Set the 'total' quota for a user group
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name
+	 *            {@code String} with the user group name
 	 * @param quotaValue
-	 *            <code>long</code> with the quota value for the given resource
+	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -211,10 +211,10 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to set the user quota for a given resource
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name
+	 *            {@code String} with the user name
 	 * @param resourceName
 	 * @param quotaValue
-	 *            <code>long</code> with the quota value for the given resource
+	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -245,10 +245,10 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * resource
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name
+	 *            {@code String} with the user group name
 	 * @param resourceName
 	 * @param quotaValue
-	 *            <code>long</code> with the quota value for the given resource
+	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -291,7 +291,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param zone
 	 *            <code>String<code> with the user's zone.
 	 * @return {@link GeneralAdminInp}
@@ -317,9 +317,9 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * a user DN
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name
+	 *            {@code String} with the iRODS user name
 	 * @param userDN
-	 *            <code>String</code> with the DN for the user
+	 *            {@code String} with the DN for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -344,9 +344,9 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * removes a user DN
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name
+	 *            {@code String} with the iRODS user name
 	 * @param userDN
-	 *            <code>String</code> with the DN for the user
+	 *            {@code String} with the DN for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
@@ -371,7 +371,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param password
 	 *            <code>String<code> with the user's password.
 	 * @return {@link GeneralAdminInp}
@@ -399,7 +399,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param password
 	 *            <code>String<code> with the user's password.
 	 * @return {@link GeneralAdminInp}
@@ -445,13 +445,13 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to add a user to a given iRODS user group
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name to which the user
+	 *            {@code String} with the user group name to which the user
 	 *            will be added
 	 * @param userName
-	 *            <code>String</code> user name to add to the group
+	 *            {@code String} user name to add to the group
 	 * @param zoneName
-	 *            <code>String</code> that is optional (set to blank or
-	 *            <code>null</code> if not applicable, that sets the zone for
+	 *            {@code String} that is optional (set to blank or
+	 *            {@code null} if not applicable, that sets the zone for
 	 *            the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
@@ -484,13 +484,13 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to remove a user from a group
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name from which the
+	 *            {@code String} with the user group name from which the
 	 *            user will be removed
 	 * @param userName
-	 *            <code>String</code> user name to remove
+	 *            {@code String} user name to remove
 	 * @param zoneName
-	 *            <code>String</code> that is optional (set to blank or
-	 *            <code>null</code> if not applicable, that sets the zone for
+	 *            {@code String} that is optional (set to blank or
+	 *            {@code null} if not applicable, that sets the zone for
 	 *            the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
@@ -542,7 +542,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * associated with the given user.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
+	 *            {@code String} with the iRODS user name.
 	 * @param userType
 	 *            {@link org.irods.jargon.core.protovalues.UserTypeEnum} value
 	 *            for the user.
@@ -597,7 +597,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg0() {
 		return arg0;
@@ -606,7 +606,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg1() {
 		return arg1;
@@ -615,7 +615,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg2() {
 		return arg2;
@@ -624,7 +624,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg3() {
 		return arg3;
@@ -633,7 +633,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg4() {
 		return arg4;
@@ -642,7 +642,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg5() {
 		return arg5;
@@ -651,7 +651,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg6() {
 		return arg6;
@@ -660,7 +660,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg7() {
 		return arg7;
@@ -669,7 +669,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg8() {
 		return arg8;
@@ -678,7 +678,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the argument
 	 *
-	 * @return <code>String</code> with the argument at this position
+	 * @return {@code String} with the argument at this position
 	 */
 	public String getArg9() {
 		return arg9;

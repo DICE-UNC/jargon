@@ -12,7 +12,7 @@ import java.util.List;
  * <p>
  * Note that this is used by the older 'string' query technique, which uses
  * iquest like queries, and is not used in the recommended
- * <code>IRODSGenQueryBuilder</code> query technique.
+ * {@code IRODSGenQueryBuilder} query technique.
  * <p>
  * This is a partial implementation of the code, and currently is limited in
  * usage.
@@ -32,7 +32,7 @@ public class AVUQueryElement {
 	private List<Object> valuesTable;
 
 	/**
-	 * Create an instance of an <code>AVUQueryElement</code> that represents a
+	 * Create an instance of an {@code AVUQueryElement} that represents a
 	 * component of a larger AVU query, specifiying the part (attrib, value, or
 	 * unit), the operator, and the value to test agains
 	 *
@@ -43,7 +43,7 @@ public class AVUQueryElement {
 	 *            {@link AVUQueryOperatorEnum} that represents the operator in
 	 *            the query condition
 	 * @param value
-	 *            <code>String</code> representing the actual value to test
+	 *            {@code String} representing the actual value to test
 	 *            against the operator for the given part of the query.
 	 * @return {@link AVUQueryElement}
 	 * @throws JargonQueryException

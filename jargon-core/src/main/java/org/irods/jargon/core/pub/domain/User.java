@@ -29,7 +29,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Name of user
 	 *
-	 * @return <code>String</code> with name of user.
+	 * @return {@code String} with name of user.
 	 */
 	public String getName() {
 		return name;
@@ -39,7 +39,7 @@ public final class User extends IRODSDomainObject {
 	 * Get the user name in the standard user#zone format. This is the standard
 	 * for displays of user names in iRODS user interfaces.
 	 *
-	 * @return <code>String</code> with the extended zone
+	 * @return {@code String} with the extended zone
 	 */
 	public String getNameWithZone() {
 		StringBuilder sb = new StringBuilder();
@@ -56,7 +56,7 @@ public final class User extends IRODSDomainObject {
 	 * Set name of user
 	 *
 	 * @param name
-	 *            <code>String</code> with the name of the user.
+	 *            {@code String} with the name of the user.
 	 */
 	public void setName(final String name) {
 		this.name = name;
@@ -65,7 +65,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get the type of user
 	 *
-	 * @return <code>UserTypeEnum</code> value with type of user
+	 * @return {@code UserTypeEnum} value with type of user
 	 */
 	public UserTypeEnum getUserType() {
 		return userType;
@@ -75,7 +75,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the type of user
 	 *
 	 * @param userType
-	 *            <code>UserTypeEnum</code> value with type of user
+	 *            {@code UserTypeEnum} value with type of user
 	 */
 	public void setUserType(final UserTypeEnum userType) {
 		this.userType = userType;
@@ -86,7 +86,7 @@ public final class User extends IRODSDomainObject {
 	 * distinguished name is not retrieved unless asked for in the various query
 	 * methods.
 	 *
-	 * @return <code>String</code> with the distinguished name
+	 * @return {@code String} with the distinguished name
 	 */
 	public String getUserDN() {
 		return userDN;
@@ -131,7 +131,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get the unique id of the user in the catalog
 	 *
-	 * @return <code>int</code> with the unique user id
+	 * @return {@code int} with the unique user id
 	 */
 	public String getId() {
 		return id;
@@ -141,7 +141,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the unique id of the user in the catalog
 	 *
 	 * @param id
-	 *            <code>int</code> with the unique userid
+	 *            {@code int} with the unique userid
 	 */
 	public void setId(final String id) {
 		this.id = id;
@@ -150,7 +150,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get the zone name for the user
 	 *
-	 * @return <code>String</code> with the zone name for the user
+	 * @return {@code String} with the zone name for the user
 	 */
 	public String getZone() {
 		return zone;
@@ -160,7 +160,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the user zone
 	 *
 	 * @param zone
-	 *            <code>String</code> with the zone
+	 *            {@code String} with the zone
 	 */
 	public void setZone(final String zone) {
 		this.zone = zone;
@@ -169,7 +169,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get misc info for the user
 	 *
-	 * @return <code>String</code> with the user misc info
+	 * @return {@code String} with the user misc info
 	 */
 	public String getInfo() {
 		return info;
@@ -179,7 +179,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the misc info for the user
 	 *
 	 * @param info
-	 *            <code>String</code> with the user misc info
+	 *            {@code String} with the user misc info
 	 */
 	public void setInfo(final String info) {
 		this.info = info;
@@ -188,7 +188,7 @@ public final class User extends IRODSDomainObject {
 	/**
 	 * Get the comment for the user
 	 *
-	 * @return <code>String</code> with the user comment info
+	 * @return {@code String} with the user comment info
 	 */
 	public String getComment() {
 		return comment;
@@ -198,7 +198,7 @@ public final class User extends IRODSDomainObject {
 	 * Set the comment for the user
 	 *
 	 * @param comment
-	 *            <code>String</code> with the comment for the user
+	 *            {@code String} with the comment for the user
 	 */
 	public void setComment(final String comment) {
 		this.comment = comment;

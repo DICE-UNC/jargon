@@ -48,7 +48,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
-	 *            <code>long</code> with the total size of the file under
+	 *            {@code long} with the total size of the file under
 	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} with information about the
@@ -80,7 +80,7 @@ public class DefaultIntraFileProgressCallbackListener implements
 	 * @param transferType
 	 *            {@link TransferType} enum value
 	 * @param totalBytesToTransfer
-	 *            <code>long</code> with the total size of the file under
+	 *            {@code long} with the total size of the file under
 	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} with information about the

@@ -25,11 +25,11 @@ public class FileStreamAndInfo {
 	 * @param inputStream
 	 *            {@link CleanUpWhenClosedInputStream} is returned as the
 	 *            underlying stream object. This is a subclass of
-	 *            <code>InputStream</code> that gets rid of the cached file on
+	 *            {@code InputStream} that gets rid of the cached file on
 	 *            close. Note that, when obtained through the ticket services,
 	 *            this stream is already buffered
 	 * @param length
-	 *            <code>long</code> with the length of data to be streamed
+	 *            {@code long} with the length of data to be streamed
 	 */
 	public FileStreamAndInfo(final InputStream inputStream, final long length) {
 

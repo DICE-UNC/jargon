@@ -89,12 +89,12 @@ import org.slf4j.LoggerFactory;
  * Access Object provides 'DAO' operations on IRODS Data Objects (files).
  * <p>
  * Note that traditional file io per the java.io.* interfaces is handled through
- * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
+ * the objects in the {@code org.irods.jargon.core.pub.io} package. This
  * class represents operations that are outside of the contracts one would
- * expect from an <code>java.io.File</code> object or the various streams.
+ * expect from an {@code java.io.File} object or the various streams.
  * <p>
  * Note that the operations are tuned using parameters set in the
- * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
+ * {@code JargonProperties} object kept in {@code IRODSession}. Unless
  * specifically indicated in the method signatures or comments, the defaults
  * control such aspects as whether parallel file transfers are done.
  *
@@ -126,7 +126,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param irodsAccount
 	 *            (@link org.irods.jargon.core.connection.IRODSAccount} that
 	 *            contains the connection information used to get a connection
-	 *            from the <code>irodsSession</code>
+	 *            from the {@code irodsSession}
 	 * @throws JargonException
 	 */
 	protected DataObjectAOImpl(final IRODSSession irodsSession,
@@ -364,29 +364,29 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
 	 * <p>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * If the {@code TransferOptions} specified in the
+	 * {@code TransferControlBlock} indicates no force, then an attempted
+	 * overwrite will throw the {@code OverwriteException}. If the tranfer
 	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * {@code TransferStatusCallbackListener} will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
 	 *
 	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
+	 *            {@code File} with a source file or directory in the local
 	 *            file system
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that will control aspects of the
 	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            a member of the {@code TransferControlBlock} may be
 	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
+	 *            to {@code null} a default block will be created, and the
+	 *            {@code TransferOptions} will be set to the defined
 	 *            default parameters
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            {@link TransferStatusCallbackListener}, or {@code null}
 	 *            if not specified, that can receive callbacks on the status of
 	 *            the transfer operation
 	 * @throws OverwriteException
@@ -397,7 +397,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 *             if the source local file does not exist or the target iRODS
 	 *             collection does not exist
 	 * @ignoreChecks ignores overwrite checks, for operations like restarts. If
-	 *               doing a long file restart, set this to <code>true</code> to
+	 *               doing a long file restart, set this to {@code true} to
 	 *               bypass certain prerequisite checks
 	 * @throws JargonException
 	 */
@@ -424,21 +424,21 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * collections. See {@link DataTransferOperations} for recursive data
 	 * transfers.
 	 * <p>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
+	 * If the {@code TransferOptions} specified in the
+	 * {@code TransferControlBlock} indicates no force, then an attempted
+	 * overwrite will throw the {@code OverwriteException}. If the tranfer
 	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * {@code TransferStatusCallbackListener} will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
 	 *
 	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
+	 *            {@code File} with a source file or directory in the local
 	 *            file system
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether data should be
+	 *            {@code boolean} that indicates whether data should be
 	 *            overwritten at the target
 	 * @throws OverwriteException
 	 *             if an overwrite is attempted and the force option has not
@@ -477,26 +477,26 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
 	 * <p>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
+	 * If the {@code TransferOptions} specified in the
+	 * {@code TransferControlBlock} indicates no force, then an attempted
+	 * overwrite will throw the {@code OverwriteException}. If the transfer
 	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * {@code TransferStatusCallbackListener} will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
 	 *
 	 * @param localFile
-	 *            <code>File</code> with a source file or directory in the local
+	 *            {@code File} with a source file or directory in the local
 	 *            file system
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that will control aspects of the
 	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            a member of the {@code TransferControlBlock} may be
 	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
+	 *            to {@code null} a default block will be created, and the
+	 *            {@code TransferOptions} will be set to the defined
 	 *            default parameters
 	 * @throws JargonException
 	 */
@@ -779,7 +779,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * parallel transfers policy, in which case, the transfer will fall back to
 	 * direct streaming of data
 	 * <p>
-	 * A note on error handling here. <code>DataTransferOperationsImpl</code>
+	 * A note on error handling here. {@code DataTransferOperationsImpl}
 	 * can wrap transfer operations and trap any exceptions that are thrown, it
 	 * will, if a callback listener is configured, quash the exception and
 	 * return that exception as a callback. The method here will simply pass on
@@ -790,24 +790,24 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * of failure up to a threshold value.
 	 *
 	 * @param localFile
-	 *            <code>File</code> with source of the transfer in the local
+	 *            {@code File} with source of the transfer in the local
 	 *            file system
 	 * @param targetFile
 	 *            {@link IRODSFile} that is the target of the transfer
 	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether to over-write the
+	 *            {@code boolean} that indicates whether to over-write the
 	 *            current file. This is a per file value that is derived from
 	 *            the transfer options contained in the
-	 *            <code>TransferControlBlock</code>, but accounts for any
+	 *            {@code TransferControlBlock}, but accounts for any
 	 *            real-time decisions on whether to proceed with an over-write
 	 *            by including responses of clients.
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls the transfer, and
 	 *            any options involved, this is required
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} or <code>null</code>
+	 *            {@link TransferStatusCallbackListener} or {@code null}
 	 *            for an optional listener to get status call-backs, this may be
-	 *            <code>null</code>
+	 *            {@code null}
 	 */
 	private void processAsAParallelPutOperationIfMoreThanZeroThreads(
 			final File localFile, final IRODSFile targetFile,
@@ -1013,41 +1013,41 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Get operation for a single data object. This method allows the the
-	 * definition of a <code>TransferControlBlock</code> object as well as a
-	 * <code>TransferStatusCallbackListener</code>.
+	 * definition of a {@code TransferControlBlock} object as well as a
+	 * {@code TransferStatusCallbackListener}.
 	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
 	 * <p>
-	 * If the <code>TransferOptions</code> specified in the
-	 * <code>TransferControlBlock</code> indicates no force, then an attempted
-	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
+	 * If the {@code TransferOptions} specified in the
+	 * {@code TransferControlBlock} indicates no force, then an attempted
+	 * overwrite will throw the {@code OverwriteException}. If the transfer
 	 * option is set to ask the callback listener, then the
-	 * <code>TransferStatusCallbackListener</code> will receive a message asking
+	 * {@code TransferStatusCallbackListener} will receive a message asking
 	 * for the overwrite option for this transfer operation. This is the
 	 * appropriate mode when the client is interactive.
 	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. Setting the resource name in the
-	 *            <code>irodsFileToGet</code> will specify that the file is
+	 *            {@code irodsFileToGet} will specify that the file is
 	 *            retrieved from that particular resource.
 	 *
 	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer. If the
+	 *            {@code File} which is the target of the transfer. If the
 	 *            given target is a collection, the file name of the iRODS file
 	 *            is used as the file name of the local file.
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that will control aspects of the
 	 *            data transfer. Note that the {@link TransferOptions} that are
-	 *            a member of the <code>TransferControlBlock</code> may be
+	 *            a member of the {@code TransferControlBlock} may be
 	 *            specified here to pass to the running transfer. If this is set
-	 *            to <code>null</code> a default block will be created, and the
-	 *            <code>TransferOptions</code> will be set to the defined
+	 *            to {@code null} a default block will be created, and the
+	 *            {@code TransferOptions} will be set to the defined
 	 *            default parameters
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener}, or <code>null</code>
+	 *            {@link TransferStatusCallbackListener}, or {@code null}
 	 *            if not specified, that can receive call-backs on the status of
 	 *            the transfer operation
 	 * @throws OverwriteException
@@ -1356,14 +1356,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the transfer. The resource of the
-	 *            <code>IRODSFile</code> is controlling.
+	 *            {@code IRODSFile} is controlling.
 	 * @param localFileToHoldData
-	 *            <code>File</code> which is the target of the transfer
+	 *            {@code File} which is the target of the transfer
 	 * @param {@link TransferOptions} to control the transfer, or null if not
-	 *        specified. Note that the <code>TransferOptions</code> object will
+	 *        specified. Note that the {@code TransferOptions} object will
 	 *        be cloned, and as such the passed-in parameter will not be
 	 *        altered.
-	 * @return <code>int</code> that represents the handle (l1descInx) for the
+	 * @return {@code int} that represents the handle (l1descInx) for the
 	 *         opened file, to be used for sending operation complete messages
 	 * @throws JargonException
 	 */
@@ -1418,7 +1418,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * execution.
 	 * <p>
 	 * Note that an iRODS file length is passed here. This avoids any query from
-	 * an <code>IRODSFile.length()</code> operation. The length is passed in, as
+	 * an {@code IRODSFile.length()} operation. The length is passed in, as
 	 * there are some occasions where the multi-step protocol can show a zero
 	 * file length, such as when iRODS is preparing to treat a get operation as
 	 * a parallel file transfer. There are cases where iRODS responds with a
@@ -1439,9 +1439,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * @param transferStatusCallbackListener
 	 * @param transferControlBlock
 	 * @param clientSideAction
-	 *            <code>boolean</code> that is <code>true</code> if this is a
+	 *            {@code boolean} that is {@code true} if this is a
 	 *            client-side action in rule processing
-	 * @return <code>int</code> that is the file handle (l1descInx) that iRODS
+	 * @return {@code int} that is the file handle (l1descInx) that iRODS
 	 *         uses for this file
 	 * @throws JargonException
 	 * @throws DataNotFoundException
@@ -1774,7 +1774,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
-	 * Only retrieve a restart if it exists, <code>null</code> if it does not
+	 * Only retrieve a restart if it exists, {@code null} if it does not
 	 *
 	 * @param restartType
 	 * @param irodsAbsolutePath
@@ -2621,9 +2621,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	/**
 	 * Copy a file from one iRODS location to another. This is the preferred
 	 * method signature for copy operations, with other forms now deprecated.
-	 * Note that the <code>transferControlBlock</code> and
-	 * <code>TransferStatusCallbackListener</code> objects are optional and may
-	 * be set to <code>null</code> if not required.
+	 * Note that the {@code transferControlBlock} and
+	 * {@code TransferStatusCallbackListener} objects are optional and may
+	 * be set to {@code null} if not required.
 	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
@@ -4316,13 +4316,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	}
 
 	/**
-	 * Check the provided <code>TransferControlBlock</code> to make sure the
-	 * <code>TransferOptions</code> are specified. If they are not specified,
+	 * Check the provided {@code TransferControlBlock} to make sure the
+	 * {@code TransferOptions} are specified. If they are not specified,
 	 * then put in defaults.
 	 *
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} to check for
-	 *            <code>TransferOptions</code>, can be <code>null</code>
+	 *            {@code TransferOptions}, can be {@code null}
 	 * @throws JargonException
 	 */
 	private TransferControlBlock checkTransferControlBlockForOptionsAndSetDefaultsIfNotSpecified(
@@ -4445,22 +4445,22 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * the parameter notes carefully.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
 	 * @param fileName
-	 *            <code>String</code> with the file name of the data object to
+	 *            {@code String} with the file name of the data object to
 	 *            be trimmed
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not specified)
+	 *            {@code String} with the optional (blank if not specified)
 	 *            replica resource to trim
 	 * @param numberOfCopiesToKeep
-	 *            <code>int</code> with the optional (leave -1 if not specified)
+	 *            {@code int} with the optional (leave -1 if not specified)
 	 *            number of copies to retain
 	 * @param replicaNumberToDelete
-	 *            <code>int</code> with a specific replica number to trim (leave
+	 *            {@code int} with a specific replica number to trim (leave
 	 *            as -1 if not specified)
 	 * @param asIRODSAdmin
-	 *            <code>boolean</code> to process the given action as the
+	 *            {@code boolean} to process the given action as the
 	 *            rodsAdmin
 	 * @throws JargonException
 	 */

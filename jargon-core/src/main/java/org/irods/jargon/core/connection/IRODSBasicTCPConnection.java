@@ -16,13 +16,13 @@ import org.slf4j.LoggerFactory;
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.
  * <p>
- * Jargon services do not directly access the <code>IRODSConnection</code>,
+ * Jargon services do not directly access the {@code IRODSConnection},
  * rather, they use the {@link IRODSMidLevelProtocol IRODSProtocol} interface.
  * <p>
  * The connection is confined to one thread, and as such the various methods do
  * not need to be synchronized. All operations pass through the
- * <code>IRODScommands</code> object wrapping this connection, and
- * <code>IRODSCommands</code> does maintain synchronized access to operations
+ * {@code IRODScommands} object wrapping this connection, and
+ * {@code IRODSCommands} does maintain synchronized access to operations
  * that read and write to this connection.
  *
  * @author Mike Conway - DICE (www.irods.org)

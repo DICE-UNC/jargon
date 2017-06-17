@@ -57,10 +57,10 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 	 * Create the DataObjInp packing instruction to get an object stat.
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the file absolute path.
+	 *            {@code String} with the file absolute path.
 	 * @param lockType
 	 *            {@link LockCommandType}
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */

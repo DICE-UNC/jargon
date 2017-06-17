@@ -31,17 +31,17 @@ public interface MountedCollectionAO {
 	 * The link collection must not exist or must be an empty collection
 	 *
 	 * @param absolutePathToTheIRODSCollectionToBeMounted
-	 *            <code>String</code> with the absolute path to an existing
+	 *            {@code String} with the absolute path to an existing
 	 *            iRODS collection that will be soft linked at the name provided
 	 *            in the second parameter. This must exist and be a collection.
 	 * @param absolutePathToLinkedCollectionToBeCreated
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection that will be created, pointing to the soft link. If
 	 *            this does not exist, it will be created.
 	 *
 	 * @throws FileNotFoundException
 	 *             occurs if the
-	 *             <code>absolutePathToTheIRODSCollectionToBeMounted</code> does
+	 *             {@code absolutePathToTheIRODSCollectionToBeMounted} does
 	 *             not exist
 	 * @throws CollectionNotEmptyException
 	 *             occurs if the collection for the created link is not empty
@@ -57,13 +57,13 @@ public interface MountedCollectionAO {
 	 * Unmount the collection at the given absolute path
 	 *
 	 * @param absolutePathToCollectionToUnmount
-	 *            <code>String</code> with the absolute path to the collection
+	 *            {@code String} with the absolute path to the collection
 	 *            to be unmounted
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not used)
+	 *            {@code String} with the optional (blank if not used)
 	 *            resource name
-	 * @return <code>boolean</code> will return <code>true</code> if unmounted,
-	 *         <code>false</code> if the collection to unmount was not found
+	 * @return {@code boolean} will return {@code true} if unmounted,
+	 *         {@code false} if the collection to unmount was not found
 	 * @throws JargonException
 	 */
 	boolean unmountACollection(String absolutePathToCollectionToUnmount,
@@ -79,7 +79,7 @@ public interface MountedCollectionAO {
 	 * was just
 	 * 
 	 * @param absoluteLocalPathToWssFile
-	 *            <code>String</code> with the absolute path to wss structured
+	 *            {@code String} with the absolute path to wss structured
 	 *            object to mount
 	 * @param absoluteIRODSTargetPathToTheWssToBeMounted
 	 * @param absolutePathToMountedCollection
@@ -102,13 +102,13 @@ public interface MountedCollectionAO {
 	 * mounted collections
 	 *
 	 * @param absolutePhysicalPathOnServer
-	 *            <code>String</code> with the absolute path to the local file
+	 *            {@code String} with the absolute path to the local file
 	 *            system (local to the iRODS server) that is to be mounted.
 	 * @param absoluteIRODSTargetPathToBeMounted
-	 *            <code>String</code> with the iRODS absolute path to the new
+	 *            {@code String} with the iRODS absolute path to the new
 	 *            mounted collection
 	 * @param storageResource
-	 *            <code>String</code> with the required storage resource for the
+	 *            {@code String} with the required storage resource for the
 	 *            mount
 	 * @throws CollectionNotMountedException
 	 *             for cases such as duplicate mount points

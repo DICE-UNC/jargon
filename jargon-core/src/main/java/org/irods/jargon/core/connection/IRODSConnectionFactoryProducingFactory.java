@@ -27,7 +27,7 @@ public class IRODSConnectionFactoryProducingFactory {
 	}
 
 	/**
-	 * Given the <code>JargonProperties</code>, return the factory that will
+	 * Given the {@code JargonProperties}, return the factory that will
 	 * create the networking layer
 	 *
 	 * @param jargonProperties

@@ -113,7 +113,7 @@ public class TestingPropertiesHelper {
 	 * Load the properties that control various tests from the
 	 * testing.properties file on the code path
 	 *
-	 * @return <code>Properties</code> class with the test values
+	 * @return {@code Properties} class with the test values
 	 * @throws TestingUtilsException
 	 */
 	public Properties getTestProperties() throws TestingUtilsException {
@@ -165,13 +165,13 @@ public class TestingPropertiesHelper {
 	 * testing.properties
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @param fileName
-	 *            <code>String</code> with the path (no leading '/') below the
+	 *            {@code String} with the path (no leading '/') below the
 	 *            user scratch directory as defined in testing.properties
-	 * @return <code>URI</code>
+	 * @return {@code URI}
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDir(
@@ -231,13 +231,13 @@ public class TestingPropertiesHelper {
 	 * testing.properties
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @param fileName
-	 *            <code>String</code> with the path (no leading '/') below the
+	 *            {@code String} with the path (no leading '/') below the
 	 *            user scratch directory as defined in testing.properties
-	 * @return <code>URI</code>
+	 * @return {@code URI}
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInUserDirNoPasswordOrZone(
@@ -275,13 +275,13 @@ public class TestingPropertiesHelper {
 	 * testing.properties
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @param fileName
-	 *            <code>String</code> with the path (no leading '/') below the
+	 *            {@code String} with the path (no leading '/') below the
 	 *            user scratch directory as defined in testing.properties
-	 * @return <code>URI</code>
+	 * @return {@code URI}
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileNoUserInfo(
@@ -309,19 +309,19 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * Create a URI compatable with a local <code>IRODSFileImpl</code> based on
+	 * Create a URI compatable with a local {@code IRODSFileImpl} based on
 	 * a set of peroperties, as well as a relative path (no leading '/')
 	 * underneath the users local scratch directory as defined in
 	 * testing.properties.
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> defined in the testing.properties file
+	 *            {@code Properties} defined in the testing.properties file
 	 * @param fileName
-	 *            <code>String</code> containing the relative path (no leading
+	 *            {@code String} containing the relative path (no leading
 	 *            '/') underneath the local scratch directory. Note that the
 	 *            subdirectories will be created if they do not aleady exist.
-	 * @return <code>URI</code> to a local file in a format that can be used
-	 *         with an <code>IRODSFileImpl</code>
+	 * @return {@code URI} to a local file in a format that can be used
+	 *         with an {@code IRODSFileImpl}
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInLocalScratchDir(
@@ -348,13 +348,13 @@ public class TestingPropertiesHelper {
 	 * testing.properties
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @param fileName
-	 *            <code>String</code> with the path (no leading '/') below the
+	 *            {@code String} with the path (no leading '/') below the
 	 *            user scratch directory as defined in testing.properties
-	 * @return <code>URI</code>
+	 * @return {@code URI}
 	 * @throws URISyntaxException
 	 */
 	public URI buildUriFromTestPropertiesForFileInSecondaryUserDir(
@@ -388,7 +388,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -419,7 +419,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -450,7 +450,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -481,7 +481,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
@@ -503,7 +503,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
@@ -525,11 +525,11 @@ public class TestingPropertiesHelper {
 	}
 
 	/**
-	 * Build an <code>IRODSAccount</code> object for connecting to the federated
+	 * Build an {@code IRODSAccount} object for connecting to the federated
 	 * zone as defined in the testing.properties file.
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -591,15 +591,15 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @param userName
-	 *            <code>String</code> user name which will be used for the
+	 *            {@code String} user name which will be used for the
 	 *            account (will not automatically set the user from testing
 	 *            properties).
 	 * @param password
-	 *            <code>String</code> with the password to be used for the
+	 *            {@code String} with the password to be used for the
 	 *            account.
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
@@ -628,7 +628,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -660,7 +660,7 @@ public class TestingPropertiesHelper {
 
 	/**
 	 * @param testingProperties
-	 *            <code>Properties</code> file with the standard names defined
+	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
 	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
@@ -695,11 +695,11 @@ public class TestingPropertiesHelper {
 	 * given collection in the IRODS test scratch area on IRODS
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -732,11 +732,11 @@ public class TestingPropertiesHelper {
 	 * user
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -769,11 +769,11 @@ public class TestingPropertiesHelper {
 	 * configured federated zone.
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -807,11 +807,11 @@ public class TestingPropertiesHelper {
 	 * returned would be /zone2/home/user1#zone1 plus the extra path info
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -843,11 +843,11 @@ public class TestingPropertiesHelper {
 	 * given collection in the IRODS test scratch area on IRODS
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -879,11 +879,11 @@ public class TestingPropertiesHelper {
 	 * given collection in the IRODS test scratch area on IRODS
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException
@@ -915,11 +915,11 @@ public class TestingPropertiesHelper {
 	 * under the home directory for the described user
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws URISyntaxException
 	 */
@@ -1147,7 +1147,7 @@ public class TestingPropertiesHelper {
 	 * file.
 	 *
 	 * @param testingProperties
-	 * @return <code>true</code> if the federated zone testing should occur
+	 * @return {@code true} if the federated zone testing should occur
 	 */
 	public boolean isTestFederatedZone(final Properties testingProperties) {
 		String val = (String) testingProperties
@@ -1165,7 +1165,7 @@ public class TestingPropertiesHelper {
 	 * provisioning of a /zone/home/public directory with anonymous rights
 	 *
 	 * @param testingProperties
-	 * @return <code>true</code> if strict ACL testing should occur
+	 * @return {@code true} if strict ACL testing should occur
 	 */
 	public boolean isTestStrictACL(final Properties testingProperties) {
 		String val = (String) testingProperties.get("test.option.strictACL");
@@ -1198,11 +1198,11 @@ public class TestingPropertiesHelper {
 	 * configured federated zone enabled for writing cross-zone.
 	 *
 	 * @param testingProperties
-	 *            <code>Properties</code> that define test behavior
+	 *            {@code Properties} that define test behavior
 	 * @param collectionPathBelowScratch
-	 *            <code>String</code> with no leading '/' that defines the
+	 *            {@code String} with no leading '/' that defines the
 	 *            desired path underneath the IRODS scratch directory
-	 * @return <code>String</code> with trailing '/' that gives the absolute
+	 * @return {@code String} with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
 	 * @throws TestingUtilsException
 	 * @throws URISyntaxException

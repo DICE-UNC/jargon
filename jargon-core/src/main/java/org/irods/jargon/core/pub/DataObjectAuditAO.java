@@ -22,19 +22,19 @@ public interface DataObjectAuditAO {
 	/**
 	 * List all audit records for a given data object. This has a partial start
 	 * index for paging through very large data sets. The
-	 * <code>AuditedAction</code> objects contain information about 'more
+	 * {@code AuditedAction} objects contain information about 'more
 	 * results' as well as sequence numbers to aid in paging.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param partialStart
-	 *            <code>int</code> that is 0 or an offset into the result set,
+	 *            {@code int} that is 0 or an offset into the result set,
 	 *            for paging
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> that indicates the number of results to
+	 *            {@code int} that indicates the number of results to
 	 *            return in one query
 	 *
-	 * @return <code>List</code> of {@link AuditedAction} with information about
+	 * @return {@code List} of {@link AuditedAction} with information about
 	 *         the audit history of the data object
 	 * @throws FileNotFoundException
 	 *             if data object is missing
@@ -53,12 +53,12 @@ public interface DataObjectAuditAO {
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param auditActionCode
-	 *            <code>String</code> with the audited action code (the event
+	 *            {@code String} with the audited action code (the event
 	 *            type)
 	 * @param timeStampInIRODSFormat
-	 *            <code>String</code> with the time stamp (in irods format) that
+	 *            {@code String} with the time stamp (in irods format) that
 	 *            is associated with this event. Conveniently, the
-	 *            <code>AuditedAction</code> object returned from a query has
+	 *            {@code AuditedAction} object returned from a query has
 	 *            this data in the correct format.
 	 * @return {@link AuditedAction} with available details about the audit
 	 *         event

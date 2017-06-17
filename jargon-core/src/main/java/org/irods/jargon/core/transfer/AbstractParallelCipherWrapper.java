@@ -75,10 +75,10 @@ abstract class AbstractParallelCipherWrapper {
 
 	/**
 	 * Generate a salt value configured by the
-	 * <code>PipelineConfiguration</code> that was the decided upon during
+	 * {@code PipelineConfiguration} that was the decided upon during
 	 * client/server negotiation
 	 *
-	 * @return <code>byte[]</code> of the desired salt size
+	 * @return {@code byte[]} of the desired salt size
 	 */
 	byte[] generateSalt() throws JargonException {
 		if (!negotiatedClientServerConfiguration.isSslConnection()) {

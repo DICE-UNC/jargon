@@ -201,8 +201,8 @@ SpecificQueryAO {
 	 * Given an sql query, parse out the column names and return as a list
 	 *
 	 * @param sql
-	 *            <code>String</code> with the sql
-	 * @return <code>List<String></code> of column names. These will appear as
+	 *            {@code String} with the sql
+	 * @return {@code List<String>} of column names. These will appear as
 	 *         lower case
 	 */
 	public static List<String> parseColumnNamesFromQuery(final String sql) {
@@ -260,9 +260,9 @@ SpecificQueryAO {
 	 * Given a query string, count the number of arguments expected
 	 *
 	 * @param sql
-	 *            <code>String</code> with the actual sql used in the specific
+	 *            {@code String} with the actual sql used in the specific
 	 *            query
-	 * @return <code>int</code> with the expected number of arguments
+	 * @return {@code int} with the expected number of arguments
 	 */
 	public static int countArgumentsInQuery(final String sql) {
 		if (sql == null || sql.isEmpty()) {
@@ -401,13 +401,13 @@ SpecificQueryAO {
 
 	/**
 	 * Used internally when querying on alias to avoid recursively looking up
-	 * those aliases. Note that the <code>specificQuery</code> parameter can
+	 * those aliases. Note that the {@code specificQuery} parameter can
 	 * contain a zone hint, and this is used to properly route the request.
 	 *
 	 * @param specificQuery
 	 * @param maxRows
 	 * @param justTryWithoutSupportCheck
-	 *            <code>boolean</code> that indicates that checks for support
+	 *            {@code boolean} that indicates that checks for support
 	 *            for specific query should be bypassed. This is used to test
 	 *            support by trying, which is an overhead because eIRODS version
 	 *            numbers are off
@@ -520,7 +520,7 @@ SpecificQueryAO {
 	 * @param maxRows
 	 * @param specificQueryDefinition
 	 * @param userDefinedOffset
-	 *            <code>int</code> that represents an offset to use in the
+	 *            {@code int} that represents an offset to use in the
 	 *            returned record counts that is enforced within the sql itself.
 	 *            This is used because users often use LIMIT and OFFSET
 	 *            statements inside the actual SQL to accomplish custom paging.

@@ -26,9 +26,9 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the packing instruction to close the given stream.
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor representing the
+	 *            {@code int} with the file descriptor representing the
 	 *            stream to close
-	 * @return <code>ExecCmdStreamClose</code> instance.
+	 * @return {@code ExecCmdStreamClose} instance.
 	 * @throws JargonException
 	 */
 	public static ExecCmdStreamClose instance(final int fileDescriptor)
@@ -50,9 +50,9 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	 * instruction call.
 	 *
 	 * @param apiNumber
-	 *            <code>int</code> with the api number to use with this call.
+	 *            {@code int} with the api number to use with this call.
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor representing the
+	 *            {@code int} with the file descriptor representing the
 	 *            stream to close
 	 * @throws JargonException
 	 */

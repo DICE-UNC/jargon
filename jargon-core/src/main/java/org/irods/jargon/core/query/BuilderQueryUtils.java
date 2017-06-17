@@ -1,5 +1,5 @@
 /**
- * General utilities for builder gen queries as defined in <code>IRODSGenQueryBuilder</code>
+ * General utilities for builder gen queries as defined in {@code IRODSGenQueryBuilder}
  */
 package org.irods.jargon.core.query;
 

@@ -5,7 +5,7 @@ package org.irods.jargon.core.connection;
 
 /**
  * Factory that will create authenticated and connected
- * <code>IRODSMidLevelProtocol</code> implementations.
+ * {@code IRODSMidLevelProtocol} implementations.
  *
  * @author Mike Conway - DICE (www.irods.org) see http://code.renci.org for
  *         trackers, access info, and documentation
@@ -19,7 +19,7 @@ AbstractIRODSMidLevelProtocolFactory {
 	 * handlers'. This represents the layer that jargon uses internally to send
 	 * different protocol operations and receive protocol responses from iRODS.
 	 * This is above the low level networking level, which is produced by the
-	 * provided <code>IRODSConnectionFactory</code>.
+	 * provided {@code IRODSConnectionFactory}.
 	 * <p>
 	 * The goal of this factory is to return a live, connected, and
 	 * authentication connection to an iRODS agent with the correct version of

@@ -21,10 +21,10 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * Execute a script remotely and return the results as an InputStream.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the command name. Do not provide
+	 *            {@code String} with the command name. Do not provide
 	 *            input arguments here.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> with the arguments for the command.
+	 *            {@code String} with the arguments for the command.
 	 * @return <code>InputStream<code> with the reults of the command invocation.
 	 * @throws JargonException
 	 */
@@ -34,15 +34,15 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 
 	/**
 	 * Execute a script remotely on the given host. Note that a
-	 * <code>JargonException</code> will occur if the host does not exist.
+	 * {@code JargonException} will occur if the host does not exist.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the command name. Do not provide
+	 *            {@code String} with the command name. Do not provide
 	 *            input arguments here.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> with the arguments for the command.
+	 *            {@code String} with the arguments for the command.
 	 * @param executionHost
-	 *            <code>String</code> with the name of the host on which to run
+	 *            {@code String} with the name of the host on which to run
 	 *            the command
 	 * @return <code>InputStream<code> with the reults of the command invocation.
 	 * @throws JargonException
@@ -60,12 +60,12 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * This corresponds to the -P option of the iexec command.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the command name. Do not provide
+	 *            {@code String} with the command name. Do not provide
 	 *            input arguments here.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> with the arguments for the command.
+	 *            {@code String} with the arguments for the command.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> with the absolute path to an iRODS file
+	 *            {@code String} with the absolute path to an iRODS file
 	 *            used to find the corresponding physical path, which will be
 	 *            passed to the remote script as the first argument.
 	 * @return <code>InputStream<code> with the reults of the command invocation.  Empty buffer if file was not found.
@@ -84,12 +84,12 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * This corresponds to the -p option of the iexec command.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the command name. Do not provide
+	 *            {@code String} with the command name. Do not provide
 	 *            input arguments here.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> with the arguments for the command.
+	 *            {@code String} with the arguments for the command.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> with the absolute path to an iRODS file
+	 *            {@code String} with the absolute path to an iRODS file
 	 *            used to find the corresponding physical path, which will be
 	 *            passed to the remote script as the first argument.
 	 * @return <code>InputStream<code> with the reults of the command invocation.  Empty buffer if file was not found.

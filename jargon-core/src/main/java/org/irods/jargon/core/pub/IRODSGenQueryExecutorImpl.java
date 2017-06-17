@@ -42,7 +42,7 @@ IRODSGenQueryExecutor {
 	 * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}, this is
 	 * not meant to be created directly by API users. The visibility of this
 	 * constructor is public so it may be invoked by
-	 * <code>org.irods.jargon.core.pub.io</code> classes. Those classes may
+	 * {@code org.irods.jargon.core.pub.io} classes. Those classes may
 	 * later be converted to create this object via factory
 	 *
 	 * @param irodsSession

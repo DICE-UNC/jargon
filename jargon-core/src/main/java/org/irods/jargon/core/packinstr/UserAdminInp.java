@@ -45,13 +45,13 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 * user password.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name that will have the
+	 *            {@code String} with the user name that will have the
 	 *            password changed.
 	 * @param obfuscatedPassword
-	 *            <code>String</code> with the properly obfuscated password. See
+	 *            {@code String} with the properly obfuscated password. See
 	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities}
 	 *            for obfuscation routines.
-	 * @return instance of <code>userAdminInp</code> packing instruction to
+	 * @return instance of {@code userAdminInp} packing instruction to
 	 *         change the password.
 	 * @throws JargonException
 	 */

@@ -25,7 +25,7 @@ public interface IRODSAccessObject {
 	AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException;
 
 	/**
-	 * Get the <code>IRODSSession</code> that provides connections to the iRODS
+	 * Get the {@code IRODSSession} that provides connections to the iRODS
 	 * server.
 	 *
 	 * @return {@link IRODSSession}
@@ -33,7 +33,7 @@ public interface IRODSAccessObject {
 	IRODSSession getIRODSSession();
 
 	/**
-	 * Get the <code>IRODSAccount</code> that describes the connection.
+	 * Get the {@code IRODSAccount} that describes the connection.
 	 *
 	 * @return {@link IRODSAccount}
 	 */
@@ -41,7 +41,7 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Convenience method that gets the underlying
-	 * <code>IRODSServerProperties</code> associated with the connection.
+	 * {@code IRODSServerProperties} associated with the connection.
 	 *
 	 * @return {@link IRODSServerProperties}
 	 */
@@ -74,9 +74,9 @@ public interface IRODSAccessObject {
 	IRODSFileFactory getIRODSFileFactory() throws JargonException;
 
 	/**
-	 * Convenience method builds a default <code>TransferControlBlock</code>
-	 * that has default <code>TransferOptions</code> based on the
-	 * <code>JargonProperties</code> configured for the system.
+	 * Convenience method builds a default {@code TransferControlBlock}
+	 * that has default {@code TransferOptions} based on the
+	 * {@code JargonProperties} configured for the system.
 	 *
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
@@ -101,7 +101,7 @@ public interface IRODSAccessObject {
 	 * Send an operation complete message
 	 *
 	 * @param status
-	 *            <code>int</code> with the operation complete status to send
+	 *            {@code int} with the operation complete status to send
 	 * @return {@link Tag} with any response (could be null)
 	 * @throws JargonException
 	 */
@@ -111,7 +111,7 @@ public interface IRODSAccessObject {
 	 * Upon creation, refer to jargon properties and see if this code should be
 	 * instrumented
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if performance
+	 * @return {@code boolean} of {@code true} if performance
 	 *         instrumentation is desired
 	 */
 	boolean isInstrumented();
@@ -135,7 +135,7 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Convenience method closes any session associated with the given
-	 * <code>IRODSAccount</code> in the current thread.
+	 * {@code IRODSAccount} in the current thread.
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} associated with the connection
@@ -145,7 +145,7 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Convenience method closes any session associated with the given
-	 * <code>IRODSAccount</code> in the current thread. Logs and ignores any
+	 * {@code IRODSAccount} in the current thread. Logs and ignores any
 	 * exception in the close operation.
 	 * 
 	 * @param irodsAccount

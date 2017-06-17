@@ -109,8 +109,8 @@ public class IrodsVersion implements Comparable<IrodsVersion> {
 	 * least the given version in the parameter
 	 *
 	 * @param versionString
-	 *            <code>String</code> with the rodsx.x.x version number
-	 * @return <code>boolean</code>
+	 *            {@code String} with the rodsx.x.x version number
+	 * @return {@code boolean}
 	 */
 	public boolean hasVersionOfAtLeast(final String versionString) {
 		return compareTo(new IrodsVersion(versionString)) >= 0;

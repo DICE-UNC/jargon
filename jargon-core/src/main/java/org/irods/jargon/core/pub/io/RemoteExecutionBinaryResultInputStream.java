@@ -15,7 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Special subclass of <code>InputStream</code> meant to encapsulate binary data
+ * Special subclass of {@code InputStream} meant to encapsulate binary data
  * streamed from iRODS as the result of a remote execution. Normally, when a
  * remote script is executed on iRODS, the data is returned in the response
  * packing instruction as BASE64-encoded binary data. It is possible to request
@@ -44,10 +44,10 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	/**
 	 * iRODS streams are simulated, so there are not bytes waiting to be read
 	 * from the socket until read is requested. This is set to return an
-	 * <code>int</code> value of 1 so it does not block if used. This may need
+	 * {@code int} value of 1 so it does not block if used. This may need
 	 * some further thought!
 	 *
-	 * @return <code>int</code> with the available bytes
+	 * @return {@code int} with the available bytes
 	 */
 	@Override
 	public int available() throws IOException {
@@ -88,7 +88,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
 	/**
 	 * mark() is not supported, so calling this method will result in an
-	 * <code>UnsupportedOperationException</code>
+	 * {@code UnsupportedOperationException}
 	 */
 	@Override
 	public synchronized void mark(final int readlimit) {
@@ -165,7 +165,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
 	/**
 	 * reset() is not supported and will result in an
-	 * <code>UnsupportedOperationException</code>
+	 * {@code UnsupportedOperationException}
 	 */
 	@Override
 	public void reset() throws IOException {
@@ -179,8 +179,8 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * the stream is encountered.
 	 *
 	 * @param n
-	 *            <code>long</code> with the amount to skip
-	 * @return <code>long</code>
+	 *            {@code long} with the amount to skip
+	 * @return {@code long}
 	 */
 	@Override
 	public long skip(final long n) throws IOException {
@@ -232,13 +232,13 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	 * manner could cause noticeable slow-downs.
 	 *
 	 * Reads the next byte of data from the input stream. The value byte is
-	 * returned as an <code>int</code> in the range <code>0</code> to
-	 * <code>255</code>. If no byte is available because the end of the stream
-	 * has been reached, the value <code>-1</code> is returned. This method
+	 * returned as an {@code int} in the range {@code 0} to
+	 * {@code 255}. If no byte is available because the end of the stream
+	 * has been reached, the value {@code -1} is returned. This method
 	 * blocks until input data is available, the end of the stream is detected,
 	 * or an exception is thrown.
 	 *
-	 * @return the next byte of data, or <code>-1</code> if the end of the
+	 * @return the next byte of data, or {@code -1} if the end of the
 	 *         stream is reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.

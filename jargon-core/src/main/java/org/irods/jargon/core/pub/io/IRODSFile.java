@@ -13,19 +13,19 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * Interface followed by {@link org.irods.jargon.core.pub.io.IRODSFileImpl}. The
- * class <code>IRODSFileImpl</code> extends the <code>java.io.File</code> class.
+ * class {@code IRODSFileImpl} extends the {@code java.io.File} class.
  * This interface is available to allow easier testing and potentially other
  * implementations.
  * <p>
- * The <code>IRODSFile</code>, and the <code>IRODSFileImpl</code> implementation
- * class are meant to strictly follow the <code>java.io.File</code> interface,
+ * The {@code IRODSFile}, and the {@code IRODSFileImpl} implementation
+ * class are meant to strictly follow the {@code java.io.File} interface,
  * with a minimum of iRODS-specific methods.
  * <p>
- * The <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
+ * The {@code org.irods.jargon.core.pub.io.} classes provide familiar file
  * operations. In older versions of Jargon, various iRODS operations were mixed
- * in with the <code>java.io.*</code> implementation classes, and these have
+ * in with the {@code java.io.*} implementation classes, and these have
  * been refactored to a set of access objects found in the
- * <code>org.irods.jargon.core.pub.*</code> classes. There you will find
+ * {@code org.irods.jargon.core.pub.*} classes. There you will find
  * facilities to manipulate the metadata catalog entities, do AVU operations,
  * transfers of various sorts, queries, and other iRODS operations.
  * <p>
@@ -138,25 +138,25 @@ public interface IRODSFile {
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setLastModified(long time);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadable(boolean readable, boolean ownerOnly);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadable(boolean readable);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadOnly();
 
@@ -173,10 +173,10 @@ public interface IRODSFile {
 	 * Get the resource (if set by the user) associated with the file. Note that
 	 * this does not inquire to the iCAT for the resource for this particular
 	 * file, instead, this is used by any Jargon methods that have
-	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
+	 * {@code IRODSFile} as a paramenter to tell iRODS what resoruce to
 	 * operate with.
 	 *
-	 * @return <code>String</code> with the resource name
+	 * @return {@code String} with the resource name
 	 * @throws JargonException
 	 */
 	String getResource() throws JargonException;
@@ -185,11 +185,11 @@ public interface IRODSFile {
 	 * Set the resource (if set by the user) associated with the file. Note that
 	 * this does not inquire to the iCAT for the resource for this particular
 	 * file, instead, this is used by any Jargon methods that have
-	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
+	 * {@code IRODSFile} as a paramenter to tell iRODS what resoruce to
 	 * operate with.
 	 *
 	 * @param resource
-	 *            <code>String</code> with the resource name
+	 *            {@code String} with the resource name
 	 */
 	void setResource(String resource);
 
@@ -203,7 +203,7 @@ public interface IRODSFile {
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read/write mode.
 	 *
-	 * @return <code>int</code> with the iRODS file descriptor.
+	 * @return {@code int} with the iRODS file descriptor.
 	 * @throws JargonException
 	 */
 	int open() throws JargonException;
@@ -215,7 +215,7 @@ public interface IRODSFile {
 	 * @param openFlags
 	 *            {@link OpenFlags} enum value that will dictate the open
 	 *            behavior
-	 * @return <code>int</code> with the iRODS file descriptor value
+	 * @return {@code int} with the iRODS file descriptor value
 	 * @throws JargonException
 	 */
 	int open(final OpenFlags openFlags) throws JargonException;
@@ -224,7 +224,7 @@ public interface IRODSFile {
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
 	 *
-	 * @return <code>int</code> with the irods file descriptor.
+	 * @return {@code int} with the irods file descriptor.
 	 * @throws JargonException
 	 * @deprecated use the <code>open(OpenFlags)</code method
 	 */
@@ -242,9 +242,9 @@ public interface IRODSFile {
 	 * moved to trash, and metadata will be deleted. Note that if the given
 	 * iRODS file is a collection, the delete will be automatically recursive.
 	 * This particular method is not part of the standard
-	 * <code>java.io.File</code> contracts.
+	 * {@code java.io.File} contracts.
 	 *
-	 * @return <code>boolean</code> with success of operation.
+	 * @return {@code boolean} with success of operation.
 	 */
 	boolean deleteWithForceOption();
 
@@ -259,7 +259,7 @@ public interface IRODSFile {
 	/**
 	 * Special form of close that can take a file descriptor to close. This has
 	 * special uses for narrow cases in Jargon, and should not typically be
-	 * used. In normal usage, the <code>IRODSFile</code> keeps track of its file
+	 * used. In normal usage, the {@code IRODSFile} keeps track of its file
 	 * descriptor.
 	 *
 	 * @param fd
@@ -271,10 +271,10 @@ public interface IRODSFile {
 	/**
 	 * Create a new file, and detect errors where no default storage resource is
 	 * available. This is an iRODS oriented variation on the
-	 * <code>java.io.File createNewFile()</code> method to handle cases where no
+	 * {@code java.io.File createNewFile()} method to handle cases where no
 	 * defautl storage resource is found
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if the file could be
+	 * @return {@code boolean} of {@code true} if the file could be
 	 *         created
 	 * @throws NoResourceDefinedException
 	 *             if no default storage resource is defined, and no default

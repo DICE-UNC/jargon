@@ -101,8 +101,8 @@ class CollectionListingUtils {
 	 *
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the current parent
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 *            {@code String} with the current parent
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 *         that has the children under the parent. These children may be
 	 *         simulated per the given rules
 	 * @throws JargonException
@@ -785,7 +785,7 @@ class CollectionListingUtils {
 
 	/**
 	 * List the data objects underneath the given path given an already obtained
-	 * <code>ObjStat</code>
+	 * {@code ObjStat}
 	 *
 	 * @param objStat
 	 * @param partialStartIndex
@@ -890,16 +890,16 @@ class CollectionListingUtils {
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
-	 *            <code>String</code> with the path used to query, this will be
+	 *            {@code String} with the path used to query, this will be
 	 *            the canonical path for the parent collection, and should
 	 *            correspond to the absolute path information in the given
-	 *            <code>entry</code>.
+	 *            {@code entry}.
 	 * @param entry
 	 *            {@link CollectionAndDataObjectListingEntry} which is the raw
 	 *            data returned from querying the iCat based on the
-	 *            <code>effectiveAbsolutePath</code>. This information is from
+	 *            {@code effectiveAbsolutePath}. This information is from
 	 *            the perspective of the canonical path, and the given method
-	 *            will reframe the <code>entry</code> from the perspective of
+	 *            will reframe the {@code entry} from the perspective of
 	 *            the requested path This means that a query on children of a
 	 *            soft link carry the data from the perspective of the soft
 	 *            linked directory, even though the iCAT carries the information

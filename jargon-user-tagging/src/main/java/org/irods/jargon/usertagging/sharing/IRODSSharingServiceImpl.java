@@ -394,7 +394,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 
 	/**
 	 * Given an objStat, look for the share AVU marker and create the
-	 * <code>IRODSSharedFileOrCollection</code> from the AVU and ACL data.
+	 * {@code IRODSSharedFileOrCollection} from the AVU and ACL data.
 	 * <p>
 	 * Note that null is returned if no share exists.
 	 * 
@@ -848,7 +848,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	}
 
 	/**
-	 * Will return <code>true</code> if I have already checked, and know that
+	 * Will return {@code true} if I have already checked, and know that
 	 * the sharing specific queries are not set up on iRODS.
 	 * 
 	 * @return

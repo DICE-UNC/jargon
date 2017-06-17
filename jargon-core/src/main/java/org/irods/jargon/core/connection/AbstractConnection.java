@@ -71,7 +71,7 @@ public abstract class AbstractConnection {
 	/**
 	 * @return the operativeClientServerNegotiationPolicy, meaning it has
 	 *         consulted the default jargon properties as well as any override
-	 *         in the <code>IRODSAccount</code>
+	 *         in the {@code IRODSAccount}
 	 */
 	ClientServerNegotiationPolicy getOperativeClientServerNegotiationPolicy() {
 		return operativeClientServerNegotiationPolicy;
@@ -257,7 +257,7 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Do an initial (first) connection to iRODS based on account and
-	 * properties. This is differentiated from the <code>reconnect()</code>
+	 * properties. This is differentiated from the {@code reconnect()}
 	 * method which is used to periodically renew a socket
 	 * <p>
 	 * At the successful completion of this method, the networking is created,
@@ -415,8 +415,8 @@ public abstract class AbstractConnection {
 	 * @param value
 	 *            value to be sent
 	 * @param flush
-	 *            <code>boolean</code> that will add a flush() if
-	 *            <code>true</code>
+	 *            {@code boolean} that will add a flush() if
+	 *            {@code true}
 	 * @throws IOException
 	 *             If an IOException occurs
 	 */
@@ -432,13 +432,13 @@ public abstract class AbstractConnection {
 	 * agent
 	 *
 	 * @param source
-	 *            <code>InputStream</code> to the data to be written. This
+	 *            {@code InputStream} to the data to be written. This
 	 *            stream will have been buffered by the caller, no buffering is
 	 *            done here.
 	 * @param length
-	 *            <code>long</code> with the length of data to send
+	 *            {@code long} with the length of data to send
 	 * @param connectionProgressStatusListener
-	 *            {link ConnectionProgressStatusListener} or <code>null</code>
+	 *            {link ConnectionProgressStatusListener} or {@code null}
 	 *            if no listener desired. This listener can then receive
 	 *            call-backs of instantaneous byte counts.
 	 * @throws IOException
@@ -538,7 +538,7 @@ public abstract class AbstractConnection {
 	 * Reads an int from the server
 	 *
 	 * @param value
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 * @throws JargonException
 	 */
 	protected int read(final byte[] value) throws IOException {
@@ -556,18 +556,18 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
-	 * from iRODS to the given <code>OutputStream</code>.
+	 * from iRODS to the given {@code OutputStream}.
 	 *
 	 * @param destination
-	 *            <code>OutputStream</code> to which data will be streamed from
+	 *            {@code OutputStream} to which data will be streamed from
 	 *            iRODS. Note that this method will wrap the output stream with
 	 *            a buffered stream for you.
 	 * @param length
-	 *            <code>long</code> with the length of data to be read from
+	 *            {@code long} with the length of data to be read from
 	 *            iRODS and pushed to the stream.
 	 * @param intraFileStatusListener
 	 *            {@link ConnectionProgressStatusListener} that will receive
-	 *            progress on the streaming, or <code>null</code> for no such
+	 *            progress on the streaming, or {@code null} for no such
 	 *            call-backs.
 	 */
 	public void read(final OutputStream destination, long length,
@@ -628,7 +628,7 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * Reads a byte array from the server. Blocks until <code>length</code>
+	 * Reads a byte array from the server. Blocks until {@code length}
 	 * number of bytes are read.
 	 *
 	 * @param length
@@ -781,7 +781,7 @@ public abstract class AbstractConnection {
 	 * Set the status to disconnected. This is only used in special
 	 * circumstances, such as when wrapping a socket in an SSL connection when
 	 * doing PAM authentication. These are special occasions where an
-	 * <code>IRODSConnection</code> is created outside of the normal factory.
+	 * {@code IRODSConnection} is created outside of the normal factory.
 	 * <p>
 	 * For general usage, this method should not called.
 	 *

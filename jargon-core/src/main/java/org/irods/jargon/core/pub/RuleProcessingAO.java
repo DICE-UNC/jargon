@@ -39,7 +39,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *
 	 *
 	 * @param irodsRuleAsString
-	 *            <code>String</code> containing an iRODS rule as would be
+	 *            {@code String} containing an iRODS rule as would be
 	 *            submitted via irule
 	 * @throws JargonRuleException
 	 *             error in translation of the rule, typically syntax
@@ -54,7 +54,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p>
 	 * <b>Note: this method purges ALL rules in the queue</b>
 	 *
-	 * @return <code>int</code> with a count of the rules purged from the
+	 * @return {@code int} with a count of the rules purged from the
 	 *         delayed execution queue
 	 * @throws JargonException
 	 */
@@ -64,7 +64,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * TODO: work in progress
 	 *
 	 * @param partialStartIndex
-	 * @return List of <code>DelayedRuleExecution</code>
+	 * @return List of {@code DelayedRuleExecution}
 	 * @throws JargonException
 	 */
 	List<DelayedRuleExecution> listAllDelayedRuleExecutions(
@@ -81,11 +81,11 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *
 	 * @param resourcePath
 	 *            <code>String<code> that will be a path from which the resource will be loaded, using the rules
-	 * associated with <code>Class.getResourceAsStream(String)</code>.
+	 * associated with {@code Class.getResourceAsStream(String)}.
 	 * @param irodsRuleInputParameters
-	 *            <code>List</code> of {@link IRODSRuleParameter} with overrides
+	 *            {@code List} of {@link IRODSRuleParameter} with overrides
 	 *            to parameters defined in the rule file. This can be set to
-	 *            <code>null</code> if no overrides are needed.
+	 *            {@code null} if no overrides are needed.
 	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} that describes how
 	 *            parameters are resolved (@internal, @external, classic for
@@ -108,12 +108,12 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * overridden by any values passed in as an input parameter.
 	 *
 	 * @param ruleFileAbsolutePath
-	 *            <code>String</code> with the absolute path to a file in iRODS
+	 *            {@code String} with the absolute path to a file in iRODS
 	 *            containing the rule
 	 * @param irodsRuleInputParameters
-	 *            <code>List</code> of {@link IRODSRuleParameter} with overrides
+	 *            {@code List} of {@link IRODSRuleParameter} with overrides
 	 *            to parameters defined in the rule file. This can be set to
-	 *            <code>null</code> if no overrides are needed.
+	 *            {@code null} if no overrides are needed.
 	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} that describes how
 	 *            parameters are resolved (@internal, @external, classic for
@@ -134,8 +134,8 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * <p>
 	 * Note that the rule processing type needs to be set according to the type
 	 * of rule being processed. The 'classic' rule processing type is meant for
-	 * the 'classic' rule language. The <code>EXTERNAL</code> and
-	 * <code>INTERNAL</code>.
+	 * the 'classic' rule language. The {@code EXTERNAL} and
+	 * {@code INTERNAL}.
 	 * <p>
 	 * * Note that this method will, if running on iRODS 3.0 or higher, add the @external
 	 * flag, which is explained below. The @external flag is used when
@@ -158,15 +158,15 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * string "10".
 	 *
 	 * @param irodsRuleAsString
-	 *            <code>String</code> with the rule body, as well as input and
+	 *            {@code String} with the rule body, as well as input and
 	 *            output parameters.
 	 * @param inputParameterOverrides
-	 *            <code>List</code> of {@link IRODSRuleParameter} that overrides
+	 *            {@code List} of {@link IRODSRuleParameter} that overrides
 	 *            the parameters derived from the rule bodies.
 	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} enum value. Note
-	 *            that it should be set to <code>CLASSIC</code> for classic
-	 *            rules, and <code>EXTERNAL</code> or <code>INTERNAL</code> for
+	 *            that it should be set to {@code CLASSIC} for classic
+	 *            rules, and {@code EXTERNAL} or {@code INTERNAL} for
 	 *            new format rules.
 	 * @return {@link IRODSRuleExecResult} that represents the results of
 	 *         processing the rule.
@@ -186,7 +186,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * This method will silently ignore a rule not on the queue
 	 *
 	 * @param queueId
-	 *            <code>int</code> with an id that relates to a stored rule to
+	 *            {@code int} with an id that relates to a stored rule to
 	 *            be removed
 	 * @throws JargonException
 	 */

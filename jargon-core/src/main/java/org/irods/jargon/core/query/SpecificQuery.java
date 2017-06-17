@@ -18,7 +18,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	/**
 	 * Get the (optional) hint that points to the correct zone to query
 	 *
-	 * @return <code>String</code> with the zone hint
+	 * @return {@code String} with the zone hint
 	 */
 	public String getZoneHint() {
 		return zoneHint;
@@ -28,15 +28,15 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query with no arguments
 	 *
 	 * @param queryString
-	 *            <code>String</code> with either the exact SQL as registered by
+	 *            {@code String} with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
 	 * @param continuationValue
-	 *            <code>int</code> with the continuation value from a previous
+	 *            {@code int} with the continuation value from a previous
 	 *            page of results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
-	 * @return <code>SpecificQuery</code> instance that can be run against the
+	 * @return {@code SpecificQuery} instance that can be run against the
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceWithNoArguments(
@@ -50,17 +50,17 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query including one argument
 	 *
 	 * @param queryString
-	 *            <code>String</code> with either the exact SQL as registered by
+	 *            {@code String} with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
 	 * @param argument
-	 *            <code>String<String></code> with a single argument
+	 *            {@code String<String>} with a single argument
 	 * @param continuationValue
-	 *            <code>int</code> with the continuation value from a previous
+	 *            {@code int} with the continuation value from a previous
 	 *            page of results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
-	 * @return <code>SpecificQuery</code> instance that can be run against the
+	 * @return {@code SpecificQuery} instance that can be run against the
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceWithOneArgument(
@@ -76,20 +76,20 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * Create an instance of a specific (SQL) query including arguments
 	 *
 	 * @param queryString
-	 *            <code>String</code> with either the exact SQL as registered by
+	 *            {@code String} with either the exact SQL as registered by
 	 *            an admin, or an alias as registered by an admin
 	 * @param arguments
-	 *            <code>List<String></code> with a maximum of 10 arguments to be
+	 *            {@code List<String>} with a maximum of 10 arguments to be
 	 *            bound to variables defined in the specific query registered by
-	 *            an administrator. This may be set to <code>null</code> if not
+	 *            an administrator. This may be set to {@code null} if not
 	 *            used
 	 * @param continuationValue
-	 *            <code>int</code> with the continuation value from a previous
+	 *            {@code int} with the continuation value from a previous
 	 *            page of results, or the value 0 if this is an initial query
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
-	 * @return <code>SpecificQuery</code> instance that can be run against the
+	 * @return {@code SpecificQuery} instance that can be run against the
 	 *         iRODS catalog
 	 */
 	public static SpecificQuery instanceArguments(final String queryString,
@@ -106,7 +106,7 @@ public class SpecificQuery extends AbstractAliasedQuery {
 	 * @param arguments
 	 * @param continuationValue
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
 	 */
 	private SpecificQuery(final String queryString,

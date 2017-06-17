@@ -12,11 +12,11 @@ import org.irods.jargon.core.connection.IRODSAccount;
 public interface TaggingServiceFactory {
 
 	/**
-	 * Retrieve an instance of <code>FreeTaggingService</code> that supports
+	 * Retrieve an instance of {@code FreeTaggingService} that supports
 	 * display and update of user tags as a space-delimited free tag string.
 	 * 
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> describing the user and desired
+	 *            {@code IRODSAccount} describing the user and desired
 	 *            iRODS host
 	 * @return {@link FreeTaggingService} implementation
 	 */
@@ -24,11 +24,11 @@ public interface TaggingServiceFactory {
 			final IRODSAccount irodsAccount);
 
 	/**
-	 * Retrieve an instance of <code>IRODSTaggingService</code> that supports
+	 * Retrieve an instance of {@code IRODSTaggingService} that supports
 	 * display and update of user tags by maintaining special AVU's
 	 * 
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> describing the user and desired
+	 *            {@code IRODSAccount} describing the user and desired
 	 *            iRODS host
 	 * @return {@link IRODSTaggingService} implementation
 	 */
@@ -36,11 +36,11 @@ public interface TaggingServiceFactory {
 			final IRODSAccount irodsAccount);
 
 	/**
-	 * Retrieve an instance of <code>UserTagCloudService</code> that supports
+	 * Retrieve an instance of {@code UserTagCloudService} that supports
 	 * display of a tag cloud for a given user
 	 * 
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> describing the user and desired
+	 *            {@code IRODSAccount} describing the user and desired
 	 *            iRODS host
 	 * @return {@link UserTagCloudService} implementation
 	 */

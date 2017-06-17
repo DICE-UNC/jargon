@@ -98,7 +98,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link IRODSGenQueryBuilder} that will be appended with the
 	 *            selects
 	 *
-	 * @return <code>String</code> with select statements for the domain object.
+	 * @return {@code String} with select statements for the domain object.
 	 */
 	void buildSelects(final IRODSGenQueryBuilder builder)
 			throws JargonException {
@@ -143,7 +143,7 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Return a <code>DataObject</code> domain object given a result row from a
+	 * Return a {@code DataObject} domain object given a result row from a
 	 * query
 	 *
 	 * @param row
@@ -362,10 +362,10 @@ public final class DataAOHelper extends AOHelper {
 	 * {@link DataTransferOperations} access object.
 	 *
 	 * @param localFile
-	 *            <code>File</code> which points to the local data object or
+	 *            {@code File} which points to the local data object or
 	 *            collection to uplaod
 	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether the data can be
+	 *            {@code boolean} that indicates whether the data can be
 	 *            overwritten // FIXME: migrate to the transfer control block
 	 * @param targetFile
 	 *            {@link IRODSFile} that will be the target of the put
@@ -377,7 +377,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            controls the transfer operation, this is required
 	 * @param transferStatusCallbackListener
 	 *            {@link StatusCallbackListener} implementation to receive
-	 *            status callbacks, this can be set to <code>null</code> if
+	 *            status callbacks, this can be set to {@code null} if
 	 *            desired
 	 * @throws JargonException
 	 * @throws FileNotFoundException
@@ -479,7 +479,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @param localFile
 	 * @param overrideChecksumEncoding
 	 *            {@link ChecksumEncodingEnum} to use explicitly, otherwise will
-	 *            use a default and <code>null</code> can be passed here
+	 *            use a default and {@code null} can be passed here
 	 * @return
 	 * @throws JargonException
 	 */
@@ -854,7 +854,7 @@ public final class DataAOHelper extends AOHelper {
 
 	/**
 	 * Given the provide builder, add the selects for the iCAT data object.
-	 * These will be appended to the provided <code>IRODSGenQueryBuilder</code>
+	 * These will be appended to the provided {@code IRODSGenQueryBuilder}
 	 * object
 	 *
 	 * @param builder
@@ -922,14 +922,14 @@ public final class DataAOHelper extends AOHelper {
 
 	/**
 	 * Given a result set from the
-	 * <code>buildDataObjectQuerySelectsNoReplicationInfo()</code> method,
-	 * return a result set of <code>CollectionAndDataObjectListingEntry</code>
+	 * {@code buildDataObjectQuerySelectsNoReplicationInfo()} method,
+	 * return a result set of {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow} entry from query
 	 * @param totalRecords
-	 *            <code>int</code> with total records in the result set
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 *            {@code int} with total records in the result set
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(

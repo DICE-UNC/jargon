@@ -30,11 +30,11 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * special collections
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the file absolute path.
+	 *            {@code String} with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
 	 *
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */
@@ -50,15 +50,15 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * special collections as a continuation
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the file absolute path.
+	 *            {@code String} with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
 	 *
 	 * @param continueInx
-	 *            <code>int</code> with the continueInx value from a previous
+	 *            {@code int} with the continueInx value from a previous
 	 *            request
 	 *
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 *
 	 * @throws JargonException
@@ -75,10 +75,10 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * collections
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the file absolute path.
+	 *            {@code String} with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */
@@ -98,13 +98,13 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	 * collections
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the file absolute path.
+	 *            {@code String} with the file absolute path.
 	 * @param specColInfo
 	 *            {@link SpecColInfo} with particulars about the query
 	 * @param continueInx
-	 *            <code>int</code> with the continueInx value from a previous
+	 *            {@code int} with the continueInx value from a previous
 	 *            request
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */

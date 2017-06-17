@@ -19,7 +19,7 @@ public interface TreeSummarizingService {
 	 * Create a summary describing the contents of an iRODS file tree
 	 * 
 	 * @param irodsFilePath
-	 *            <code>String</code> with an absolute path to an iRODS tree
+	 *            {@code String} with an absolute path to an iRODS tree
 	 * @return {@link TreeSummary}
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -31,7 +31,7 @@ public interface TreeSummarizingService {
 	 * Create a summary describing the contents of a local file tree
 	 * 
 	 * @param irodsFilePath
-	 *            <code>String</code> with an absolute path to a local file
+	 *            {@code String} with an absolute path to a local file
 	 *            system tree
 	 * @return {@link TreeSummary}
 	 * @throws FileNotFoundException

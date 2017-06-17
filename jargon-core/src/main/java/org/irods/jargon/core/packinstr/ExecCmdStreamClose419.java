@@ -30,12 +30,12 @@ public final class ExecCmdStreamClose419 extends
 	 * Create an instance of the packing instruction to close the given stream.
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor representing the
+	 *            {@code int} with the file descriptor representing the
 	 *            stream to close
 	 * @param pdmo
-	 *            <code>String</code> with the post disconnect mx operation to
+	 *            {@code String} with the post disconnect mx operation to
 	 *            carry out. Blank if not used.
-	 * @return <code>ExecCmdStreamClose</code> instance.
+	 * @return {@code ExecCmdStreamClose} instance.
 	 * @throws JargonException
 	 */
 	public static ExecCmdStreamClose419 instance(final int fileDescriptor,
@@ -49,12 +49,12 @@ public final class ExecCmdStreamClose419 extends
 	 * instruction call.
 	 *
 	 * @param apiNumber
-	 *            <code>int</code> with the api number to use with this call.
+	 *            {@code int} with the api number to use with this call.
 	 * @param fileDescriptor
-	 *            <code>int</code> with the file descriptor representing the
+	 *            {@code int} with the file descriptor representing the
 	 *            stream to close
 	 * @param pdmo
-	 *            <code>String</code> with the post disconnect mx operation to
+	 *            {@code String} with the post disconnect mx operation to
 	 *            carry out. Blank if not used.
 	 * @throws JargonException
 	 */

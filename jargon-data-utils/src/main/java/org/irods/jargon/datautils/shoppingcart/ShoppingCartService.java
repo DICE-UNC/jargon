@@ -20,16 +20,16 @@ public interface ShoppingCartService extends DataUtilsService {
 	 * delimited by the \n character) the contents of the shopping cart into an
 	 * iRODS file. The cart contents will be encrypted by the provided key. By
 	 * default, the cart file goes in a special working directory in the iRODS
-	 * home directory of the user represented by the <code>IRODSAccount</code>
+	 * home directory of the user represented by the {@code IRODSAccount}
 	 * provided by this service.
 	 * 
 	 * @param fileShoppingCart
 	 *            {@link FileShoppingCart} with the contents. Note that, if the
 	 *            cart is empty, an empty cart file is generated.
 	 * @param key
-	 *            <code>String</code> with an arbitrary key used to encrypt the
+	 *            {@code String} with an arbitrary key used to encrypt the
 	 *            contents of the file
-	 * @return <code>String</code> with the absolute path to the cart file in
+	 * @return {@code String} with the absolute path to the cart file in
 	 *         iRODS
 	 * @throws JargonException
 	 */
@@ -54,14 +54,14 @@ public interface ShoppingCartService extends DataUtilsService {
 			DataCacheServiceFactory dataCacheServiceFactory);
 
 	/**
-	 * Retrieve a <code>FileShoppingCart</code> from iRODS. This has been
+	 * Retrieve a {@code FileShoppingCart} from iRODS. This has been
 	 * serialized and encrypted by an arbitrary key for the user that is logged
 	 * in.
 	 * 
 	 * @param key
-	 *            <code>String</code> that was used to serialize the shopping
+	 *            {@code String} that was used to serialize the shopping
 	 *            cart using the
-	 *            <code>serializeShoppingCartAsLoggedInUser</code> method.
+	 *            {@code serializeShoppingCartAsLoggedInUser} method.
 	 *            Without the correct key, the cart cannot be found or
 	 *            de-serialized.
 	 * @return {@link FileShoppingCart} representing the de-serialized data
@@ -86,14 +86,14 @@ public interface ShoppingCartService extends DataUtilsService {
 	 *            {@link FileShoppingCart} representing the file cart data to
 	 *            persist
 	 * @param key
-	 *            <code>String</code> that will be used to serialize the
+	 *            {@code String} that will be used to serialize the
 	 *            shopping cart. Without the correct key, the cart cannot be
 	 *            found or de-serialized. This is just an arbitrary shared key
 	 *            value.
 	 * @param userName
-	 *            <code>String</code> with the name of the user for whom the
+	 *            {@code String} with the name of the user for whom the
 	 *            cart will be serialized.
-	 * @return <code>String</code> with the temporary password that may be used
+	 * @return {@code String} with the temporary password that may be used
 	 *         to access the cart for the given user and key.
 	 * @throws JargonException
 	 */

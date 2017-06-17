@@ -13,7 +13,7 @@ import org.irods.jargon.core.connection.StartupResponseData;
  * meant to hold generic responses to an authorization attempt.
  * <p>
  * Note that the authentication process may alter the iRODS account information,
- * and as such, the response contains both the <code>IRODSAccount</code> as
+ * and as such, the response contains both the {@code IRODSAccount} as
  * presented for login, and the account after the login process completes. For
  * example, when using PAM, the original account is presented as a PAM login,
  * but the PAM process creates a temporary account and then uses this account in
@@ -46,7 +46,7 @@ public class AuthResponse {
 	/**
 	 * Get the (optional) challenge value used in the iRODS exchange.
 	 *
-	 * @return the challengeValue as an optional <code>String</code>, which is
+	 * @return the challengeValue as an optional {@code String}, which is
 	 *         blank if not used
 	 */
 	public String getChallengeValue() {
@@ -62,12 +62,12 @@ public class AuthResponse {
 	}
 
 	/**
-	 * Get a <code>Map<String,Object></code> with optional properties generated
+	 * Get a {@code Map<String,Object>} with optional properties generated
 	 * as a result of this authentication process.
 	 *
-	 * @return the responseProperties <code>Map<String,Object></code> with
+	 * @return the responseProperties {@code Map<String,Object>} with
 	 *         optional properties from the authentication. Note that the
-	 *         <code>Map</code> will always be returned, but may be empty.
+	 *         {@code Map} will always be returned, but may be empty.
 	 */
 	public Map<String, Object> getResponseProperties() {
 		return responseProperties;
@@ -85,7 +85,7 @@ public class AuthResponse {
 	// ? is this success thing even needed?
 
 	/**
-	 * @return a <code>boolean</code> that indicates success in the
+	 * @return a {@code boolean} that indicates success in the
 	 *         authentication process
 	 */
 	public boolean isSuccessful() {
@@ -94,7 +94,7 @@ public class AuthResponse {
 
 	/**
 	 * @param successful
-	 *            <code>boolean</code> that will be true if the authentication
+	 *            {@code boolean} that will be true if the authentication
 	 *            process did not succeed
 	 */
 	public void setSuccessful(final boolean successful) {

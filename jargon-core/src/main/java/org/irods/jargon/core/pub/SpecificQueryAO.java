@@ -48,7 +48,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * Remove a specific query from iRODS using alias name as identifier
 	 *
 	 * @param alias
-	 *            <code>String</code> with a unique alias name for this SQL
+	 *            {@code String} with a unique alias name for this SQL
 	 *            query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
@@ -62,7 +62,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * that match the provided SQL query String
 	 *
 	 * @param sqlQuery
-	 *            <code>String</code> with the a valid SQL query
+	 *            {@code String} with the a valid SQL query
 	 * @throws IllegalArgumentException
 	 * @throws DuplicateDataException
 	 *
@@ -76,17 +76,17 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * bind parameters. This method allows the optional specification of those
 	 * parameters. Note that this variant of the query will not close the query
 	 * out, instead, it supports paging by the specification of the
-	 * <code>continueIndex</code> that may have been returned in a previous
+	 * {@code continueIndex} that may have been returned in a previous
 	 * query paging call.
 	 * <p>
-	 * Note that a <code>DataNotFoundException</code> will occur if the query
+	 * Note that a {@code DataNotFoundException} will occur if the query
 	 * alias is not found.
 	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to return.
+	 *            {@code int} with the maximum number of rows to return.
 	 *            Note that setting this to 0 causes the query to close
 	 *            automatically.
 	 * @return {@link IRODSQueryResultSet} implementation with the result rows
@@ -108,10 +108,10 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * bind parameters. This method allows the optional specification of those
 	 * parameters. Note that this variant of the query will not close the query
 	 * out, instead, it supports paging by the specification of the
-	 * <code>continueIndex</code> that may have been returned in a previous
+	 * {@code continueIndex} that may have been returned in a previous
 	 * query paging call.
 	 * <p>
-	 * Note that a <code>DataNotFoundException</code> will occur if the query
+	 * Note that a {@code DataNotFoundException} will occur if the query
 	 * alias is not found.
 	 *
 	 * <p>
@@ -135,11 +135,11 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to return.
+	 *            {@code int} with the maximum number of rows to return.
 	 *            Note that setting this to 0 causes the query to close
 	 *            automatically.
 	 * @param userDefinedOffset
-	 *            <code>int</code> that represents an offset to use in the
+	 *            {@code int} that represents an offset to use in the
 	 *            returned record counts that is enforced within the sql itself.
 	 *            This is used because users often use LIMIT and OFFSET
 	 *            statements inside the actual SQL to accomplish custom paging.
@@ -164,14 +164,14 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * parameters. This method allows the optional specification of those
 	 * parameters. Note that this variant of the query will not close the query
 	 * out, instead, it supports paging by the specification of the
-	 * <code>continueIndex</code> that may have been returned in a previous
+	 * {@code continueIndex} that may have been returned in a previous
 	 * query paging call.
 	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to return.
+	 *            {@code int} with the maximum number of rows to return.
 	 *            Note that setting this to 0 causes the query to close
 	 *            automatically.
 	 * @return {@link IRODSQueryResultSet} implementation with the result rows
@@ -193,18 +193,18 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * parameters. This method allows the optional specification of those
 	 * parameters. Note that this variant of the query will not close the query
 	 * out, instead, it supports paging by the specification of the
-	 * <code>continueIndex</code> that may have been returned in a previous
+	 * {@code continueIndex} that may have been returned in a previous
 	 * query paging call.
 	 *
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that defines the query alias or sql, and
 	 *            any associated parameters to use
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to return.
+	 *            {@code int} with the maximum number of rows to return.
 	 *            Note that setting this to 0 causes the query to close
 	 *            automatically.
 	 * @param userDefinedOffset
-	 *            <code>int</code> that represents an offset to use in the
+	 *            {@code int} that represents an offset to use in the
 	 *            returned record counts that is enforced within the sql itself.
 	 *            This is used because users often use LIMIT and OFFSET
 	 *            statements inside the actual SQL to accomplish custom paging.
@@ -227,12 +227,12 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * Given a portion of a query alias, find matching specific queries as
 	 * stored in iRODS. Note that wildcards in the 'like' statement are not
 	 * imposed by this method and must be provided by the caller in the provided
-	 * <code>specificQueryAlias</code>.
+	 * {@code specificQueryAlias}.
 	 *
 	 * @param specificQueryAlias
-	 *            <code>String</code> with a part of a query alias to search
+	 *            {@code String} with a part of a query alias to search
 	 *            for.
-	 * @return <code>List</code> of {@link SpecificQueryDefinition}
+	 * @return {@code List} of {@link SpecificQueryDefinition}
 	 * @throws DataNotFoundException
 	 *             if no queries found with a matching alias
 	 * @throws JargonException
@@ -246,17 +246,17 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * stored in iRODS. This variant allows provision of a zohe hint that
 	 * indicates which federated zone to query. Note that wildcards in the
 	 * 'like' statement are not imposed by this method and must be provided by
-	 * the caller in the provided <code>specificQueryAlias</code>.
+	 * the caller in the provided {@code specificQueryAlias}.
 	 *
 	 * @param specificQueryAlias
-	 *            <code>String</code> with a part of a query alias to search
+	 *            {@code String} with a part of a query alias to search
 	 *            for.
 	 * @param zoneHint
-	 *            <code>String</code> with a zone hint used to decide which
+	 *            {@code String} with a zone hint used to decide which
 	 *            federated zone to query. Note that this should be set to blank
 	 *            if not used
 	 *
-	 * @return <code>List</code> of {@link SpecificQueryDefinition}
+	 * @return {@code List} of {@link SpecificQueryDefinition}
 	 * @throws DataNotFoundException
 	 *             if no queries found with a matching alias
 	 * @throws JargonException
@@ -270,7 +270,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * definition information.
 	 *
 	 * @param specificQueryAlias
-	 *            <code>String</code> with the given alias for the query
+	 *            {@code String} with the given alias for the query
 	 * @return {@link SpecificQueryDefinition} with details about the given
 	 *         query
 	 * @throws DataNotFoundException
@@ -285,9 +285,9 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * definition information.
 	 *
 	 * @param specificQueryAlias
-	 *            <code>String</code> with the given alias for the query
+	 *            {@code String} with the given alias for the query
 	 * @param zoneHint
-	 *            <code>String</code> with a zone hint used to decide which
+	 *            {@code String} with a zone hint used to decide which
 	 *            federated zone to query. Note that this should be set to blank
 	 *            if not used
 	 * @return {@link SpecificQueryDefinition} with details about the given
@@ -303,12 +303,12 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * Check and see if, as a result of previous requests, or based on the
 	 * server version, I know that the jargon specific queries required to
 	 * support specific query via this API are not available. This method will
-	 * return <code>true</code> only if I know that the support is not there. If
+	 * return {@code true} only if I know that the support is not there. If
 	 * I have not checked previously, or I am not using the dynamic properties
 	 * cache, which is configured via {@link JargonProperties}, then a
-	 * <code>false</code> will be returned.
+	 * {@code false} will be returned.
 	 *
-	 * @return <code>boolean</code> that will only be <code>true</code> if I
+	 * @return {@code boolean} that will only be {@code true} if I
 	 *         know that the jargon specific query support is not configured.
 	 *         This can be used to determine whether it is worth bothering to
 	 *         issue such requests.
@@ -324,7 +324,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * trying a specific query. This should only be done once if the jargon
 	 * properties are set to cache discovered server properties.
 	 *
-	 * @return <code>boolean</code> if I support specific query
+	 * @return {@code boolean} if I support specific query
 	 * @throws JargonException
 	 */
 	boolean isSupportsSpecificQuery() throws JargonException;

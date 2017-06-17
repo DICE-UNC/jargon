@@ -64,18 +64,18 @@ public class TransferStatus {
 	 * transfer.
 	 *
 	 * @param transferType
-	 *            <code>TransferType</code> that indicates the type of transfer
+	 *            {@code TransferType} that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> absolute path to the source file
+	 *            {@code String} absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> absolute path to the target file
+	 *            {@code String} absolute path to the target file
 	 * @param targetResource
-	 *            <code>String</code> with an optional resource, set to blank if
+	 *            {@code String} with an optional resource, set to blank if
 	 *            unused.
 	 * @param totalSize
-	 *            <code>long</code> with the total size of the file
+	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            <code>long</code> with the total transferred so far, which is
+	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
@@ -83,15 +83,15 @@ public class TransferStatus {
 	 *            <code>int<code> with the total files skipped if this is a
 	 *            restart, including this status callback
 	 * @param totalFilesToTransfer
-	 *            <code>int</code> with the total files involved in this
+	 *            {@code int} with the total files involved in this
 	 *            operation
 	 * @param transferState
-	 *            <code>TransferState</code> indicating whether the transfer is
+	 *            {@code TransferState} indicating whether the transfer is
 	 *            ongoing or has completed
 	 * @param transferHost
-	 *            <code>String</code> with the host name for the transfer
+	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
-	 *            <code>String</code> with the zone name for the transfer
+	 *            {@code String} with the zone name for the transfer
 	 */
 	public static TransferStatus instance(final TransferType transferType,
 			final String sourceFileAbsolutePath,
@@ -114,18 +114,18 @@ public class TransferStatus {
 	 * Create a callback for a step in a synchronization process.
 	 *
 	 * @param transferType
-	 *            <code>TransferType</code> that indicates the type of transfer
+	 *            {@code TransferType} that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> absolute path to the source file
+	 *            {@code String} absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> absolute path to the target file
+	 *            {@code String} absolute path to the target file
 	 * @param targetResource
-	 *            <code>String</code> with an optional resource, set to blank if
+	 *            {@code String} with an optional resource, set to blank if
 	 *            unused.
 	 * @param totalSize
-	 *            <code>long</code> with the total size of the file
+	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            <code>long</code> with the total transferred so far, which is
+	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
@@ -133,15 +133,15 @@ public class TransferStatus {
 	 *            <code>int<code> with the total files skipped in restarting,
 	 *            including this status callback
 	 * @param totalFilesToTransfer
-	 *            <code>int</code> with the total files involved in this
+	 *            {@code int} with the total files involved in this
 	 *            operation
 	 * @param transferState
-	 *            <code>TransferState</code> indicating whether the transfer is
+	 *            {@code TransferState} indicating whether the transfer is
 	 *            ongoing or has completed
 	 * @param transferHost
-	 *            <code>String</code> with the host name for the transfer
+	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
-	 *            <code>String</code> with the zone name for the transfer
+	 *            {@code String} with the zone name for the transfer
 	 * @return {@link TransferStatus}
 	 * @throws JargonException
 	 */
@@ -168,11 +168,11 @@ public class TransferStatus {
 	 * file. This status object represents partial progress within a file.
 	 *
 	 * @param transferType
-	 *            <code>TransferType</code> that indicates the type of transfer
+	 *            {@code TransferType} that indicates the type of transfer
 	 * @param totalSize
-	 *            <code>long</code> with the total size of the file
+	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            <code>long</code> with the total transferred so far, which is
+	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @return {@link TransferStatus}
 	 *
@@ -190,19 +190,19 @@ public class TransferStatus {
 	 * Create an immutable transfer status object including an exception
 	 *
 	 * @param transferType
-	 *            <code>TransferType</code> that indicates the type of transfer
+	 *            {@code TransferType} that indicates the type of transfer
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> absolute path to the source file
+	 *            {@code String} absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> absolute path to the target file, set to
+	 *            {@code String} absolute path to the target file, set to
 	 *            blank if unused
 	 * @param targetResource
-	 *            <code>String</code> with an optional resource, set to blank if
+	 *            {@code String} with an optional resource, set to blank if
 	 *            unused.
 	 * @param totalSize
-	 *            <code>long</code> with the total size of the file
+	 *            {@code long} with the total size of the file
 	 * @param bytesTransfered
-	 *            <code>long</code> with the total transferred so far, which is
+	 *            {@code long} with the total transferred so far, which is
 	 *            some fraction of the total size
 	 * @param totalFilesTransferredSoFar
 	 *            <code>int<code> with the total files transferred, including this status callback
@@ -210,15 +210,15 @@ public class TransferStatus {
 	 *            <code>int<code> with the total files skipped in restarting,
 	 *            including this status callback
 	 * @param totalFilesToTransfer
-	 *            <code>int</code> with the total files involved in this
+	 *            {@code int} with the total files involved in this
 	 *            operation
 	 * @param exception
-	 *            <code>TransferState</code> indicating whether the transfer is
+	 *            {@code TransferState} indicating whether the transfer is
 	 *            ongoing or has completed
 	 * @param transferHost
-	 *            <code>String</code> with the host name for the transfer
+	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
-	 *            <code>String</code> with the zone name for the transfer
+	 *            {@code String} with the zone name for the transfer
 	 */
 
 	public static TransferStatus instanceForException(
@@ -255,9 +255,9 @@ public class TransferStatus {
 	 * @param totalFilesToTransfer
 	 * @param exception
 	 * @param transferHost
-	 *            <code>String</code> with the host name for the transfer
+	 *            {@code String} with the host name for the transfer
 	 * @param transferZone
-	 *            <code>String</code> with the zone name for the transfer
+	 *            {@code String} with the zone name for the transfer
 	 * @return {@link TransferStatus}
 	 * @throws JargonException
 	 */

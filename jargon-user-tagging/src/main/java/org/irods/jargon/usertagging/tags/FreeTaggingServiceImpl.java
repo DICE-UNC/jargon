@@ -63,12 +63,12 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * that interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
-	 * @return <code>FreeTaggingService</code> implementation instance.
+	 * @return {@code FreeTaggingService} implementation instance.
 	 */
 	public static FreeTaggingService instance(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
@@ -78,21 +78,21 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	}
 
 	/**
-	 * Static initializer that allows a <code>IRODSTaggingService</code>
+	 * Static initializer that allows a {@code IRODSTaggingService}
 	 * implementation to be passed in at construction time. Otherwise a new,
 	 * default tagging service is initialized.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 * @param irodsTaggingService
 	 *            {@link org.irods.jargon.usertagging.tags.IRODSTaggingService}
 	 *            implementation that will handle CRUD operations on the
 	 *            underlying tags as AVU's in iRODS.
-	 * @return <code>FreeTaggingService</code> implementation instance.
+	 * @return {@code FreeTaggingService} implementation instance.
 	 * @throws JargonException
 	 */
 	public static FreeTaggingService instanceProvidingATagUpdateService(
@@ -109,10 +109,10 @@ public final class FreeTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * that interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 * @param irodsTaggingService
 	 *            {@link org.irods.jargon.usertagging.tags.IRODSTaggingService}

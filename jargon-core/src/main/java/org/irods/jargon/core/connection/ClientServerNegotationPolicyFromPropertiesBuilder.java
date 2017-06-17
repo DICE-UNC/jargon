@@ -14,7 +14,7 @@ public class ClientServerNegotationPolicyFromPropertiesBuilder {
 	private final IRODSSession irodsSession;
 
 	/**
-	 * Default constructor that accepts an <code>IRODSSession</code>
+	 * Default constructor that accepts an {@code IRODSSession}
 	 *
 	 * @param irodsSession
 	 *            {@link IRODSSession} with a link to properties and settings

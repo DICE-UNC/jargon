@@ -5,7 +5,7 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 /**
  * Represents options that control the transfer of data to and from iRODS (get
  * and put). This is not an immutable object to make setting the various options
- * easier on the caller. Within Jargon, the <code>TransferOptions</code> are not
+ * easier on the caller. Within Jargon, the {@code TransferOptions} are not
  * shared, rather a copy constructor creates a new instance in the various data
  * transfer methods, as these copies may be overridden in the code when dealing
  * with an individual file transfer.
@@ -60,14 +60,14 @@ public class TransferOptions {
 	/**
 	 * Store a checksum of the file after it has been transferred. This will
 	 * only take precedence over
-	 * <code>computeAndVerifyChecksumAfterTransfer</code> if the value there is
-	 * <code>false</code>
+	 * {@code computeAndVerifyChecksumAfterTransfer} if the value there is
+	 * {@code false}
 	 */
 	private boolean computeChecksumAfterTransfer = false;
 	/**
 	 * Store a checksum of the file and verify after it has been transferred.
-	 * This is 'stronger' than <code>computeChecksumAfterTransfer</code>, and
-	 * will do the verify even if both values are <code>true</code>
+	 * This is 'stronger' than {@code computeChecksumAfterTransfer}, and
+	 * will do the verify even if both values are {@code true}
 	 */
 	private boolean computeAndVerifyChecksumAfterTransfer = false;
 
@@ -122,12 +122,12 @@ public class TransferOptions {
 	}
 
 	/**
-	 * Copy constructor creates a new <code>TransferOptions</code> based on the
+	 * Copy constructor creates a new {@code TransferOptions} based on the
 	 * passed-in version. This is done so that the options may be safely passed
 	 * between transfer methods that may update the transfer options.
 	 *
 	 * @param transferOptions
-	 *            <code>TransferOptions</code>
+	 *            {@code TransferOptions}
 	 */
 	public TransferOptions(final TransferOptions transferOptions) {
 		this();
@@ -166,7 +166,7 @@ public class TransferOptions {
 	/**
 	 * Get the desired max threads value for paralell transfers
 	 *
-	 * @return <code>int</code> with the desired max parallel transfer threads.
+	 * @return {@code int} with the desired max parallel transfer threads.
 	 *         0 means use default in iRODS.
 	 */
 	public synchronized int getMaxThreads() {
@@ -177,7 +177,7 @@ public class TransferOptions {
 	 * Set the desired max threads value for parallel transfers.
 	 *
 	 * @param maxThreads
-	 *            <code>int</code> with the maximum desired parallel transfer
+	 *            {@code int} with the maximum desired parallel transfer
 	 *            threads, 0 means use the default in iRODS.
 	 */
 	public synchronized void setMaxThreads(final int maxThreads) {
@@ -187,7 +187,7 @@ public class TransferOptions {
 	/**
 	 * Get the UDP send rate if UDP transfers in use.
 	 *
-	 * @return <code>int</code> with the UDP send rate
+	 * @return {@code int} with the UDP send rate
 	 */
 	public synchronized int getUdpSendRate() {
 		return udpSendRate;
@@ -197,7 +197,7 @@ public class TransferOptions {
 	 * Set the UDP send rate if UDP transfers in use.
 	 *
 	 * @param udpSendRate
-	 *            <code>int</code> with the desired UDP send rate.
+	 *            {@code int} with the desired UDP send rate.
 	 */
 	public synchronized void setUdpSendRate(final int udpSendRate) {
 		this.udpSendRate = udpSendRate;
@@ -206,7 +206,7 @@ public class TransferOptions {
 	/**
 	 * Get the desired UDP packet size if UDP transfers are in use.
 	 *
-	 * @return <code>int</code> with desired UDP packet size.
+	 * @return {@code int} with desired UDP packet size.
 	 */
 	public synchronized int getUdpPacketSize() {
 		return udpPacketSize;
@@ -225,8 +225,8 @@ public class TransferOptions {
 	 * Should puts/gets redirect to the resource server that holds the data?
 	 * (equivalent to the -I in iput/iget>
 	 *
-	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
-	 *         be <code>true</code> if redirecting is desired
+	 * @return the allowPutGetResourceRedirects {@code boolean} that will
+	 *         be {@code true} if redirecting is desired
 	 */
 	public synchronized boolean isAllowPutGetResourceRedirects() {
 		return allowPutGetResourceRedirects;
@@ -277,7 +277,7 @@ public class TransferOptions {
 	}
 
 	/**
-	 * @return the intraFileStatusCallbacks value. If <code>true</code>, then
+	 * @return the intraFileStatusCallbacks value. If {@code true}, then
 	 *         call-backs will be sent on progress within-file, if a listener is
 	 *         present.
 	 */
@@ -287,8 +287,8 @@ public class TransferOptions {
 
 	/**
 	 * @param intraFileStatusCallbacks
-	 *            <code>boolean</code> with the intraFileStatusCallbacks
-	 *            behavior desired. If <code>true</code> and a call-back
+	 *            {@code boolean} with the intraFileStatusCallbacks
+	 *            behavior desired. If {@code true} and a call-back
 	 *            listener is provided, then within-file status call-backs will
 	 *            be generated during transfers. This has a slight performance
 	 *            penalty.
@@ -321,8 +321,8 @@ public class TransferOptions {
 	/**
 	 * Is parallel transfer allowed for this operation?
 	 *
-	 * @return useParallelTransfer <code>boolean</code> which is
-	 *         <code>true</code> if parallel transfers can be usd
+	 * @return useParallelTransfer {@code boolean} which is
+	 *         {@code true} if parallel transfers can be usd
 	 */
 	public synchronized boolean isUseParallelTransfer() {
 		return useParallelTransfer;
@@ -332,7 +332,7 @@ public class TransferOptions {
 	 * Set whether parallel transfers can be used
 	 *
 	 * @param useParallelTransfer
-	 *            <code>boolean</code> with the useParallelTransfer option
+	 *            {@code boolean} with the useParallelTransfer option
 	 */
 	public synchronized void setUseParallelTransfer(
 			final boolean useParallelTransfer) {

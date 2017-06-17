@@ -34,7 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Manage the storage and retrieval of <code>UserProfile</code> information in
+ * Manage the storage and retrieval of {@code UserProfile} information in
  * iRODS.
  * <p>
  * This implementation uses a convention of a .profile file in the user home dir

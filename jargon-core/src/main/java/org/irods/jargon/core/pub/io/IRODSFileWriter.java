@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * iRODS specific implementation of a <code>java.io.Writer</code>
+ * iRODS specific implementation of a {@code java.io.Writer}
  *
  * @author Mike Conway - DICE (www.irods.org)
  *

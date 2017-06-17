@@ -8,7 +8,7 @@ import java.util.Set;
 
 /**
  * This class manages the serializing and deserializing the user info portion of
- * an <code>irods:</code> URI.
+ * an {@code irods:} URI.
  */
 public final class IRODSUriUserInfo {
 
@@ -103,8 +103,8 @@ public final class IRODSUriUserInfo {
 	 *
 	 * @param encodedStr
 	 *            The serialized user info portion of an irods URI
-	 * @return It returns an instance or <code>null</code> if infoStr is
-	 *         <code>null</code> or empty.
+	 * @return It returns an instance or {@code null} if infoStr is
+	 *         {@code null} or empty.
 	 */
 	static IRODSUriUserInfo fromString(final String encodedStr) {
 		if (encodedStr == null || encodedStr.isEmpty()) {
@@ -194,9 +194,9 @@ public final class IRODSUriUserInfo {
 	}
 
 	/**
-	 * Serializes the object for inclusion in an <code>irods:</code> URI.
+	 * Serializes the object for inclusion in an {@code irods:} URI.
 	 *
-	 * @return the user info portion of an <code>irods:</code> URI
+	 * @return the user info portion of an {@code irods:} URI
 	 */
 	@Override
 	public String toString() {

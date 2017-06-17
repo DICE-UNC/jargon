@@ -34,7 +34,7 @@ public class CacheServiceConfiguration {
 
 	/**
 	 * Directory path for cache files. If caching in home directory, this is a
-	 * relative path under home. If cacheInHomeDir is <code>false</code>, then
+	 * relative path under home. If cacheInHomeDir is {@code false}, then
 	 * path is an absolute path to the desired cache dir.
 	 */
 	private String cacheDirPath = "cacheServiceTempDir";

@@ -49,7 +49,7 @@ class SslConnectionUtilities {
 	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
 	 *            current connection
 	 * @param doSslStartupSequence
-	 *            <code>boolean</code> that indicates that
+	 *            {@code boolean} that indicates that
 	 * @return {@link SSLSocket} that can be inserted into the existing
 	 *         connection. Note that this method will not manipulate the mid
 	 *         level protocol object, it is up to the caller to handle the
@@ -181,7 +181,7 @@ class SslConnectionUtilities {
 	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
 	 *            current connection
 	 * @param doSslStartupSequence
-	 *            <code>boolean</code> that indicates that
+	 *            {@code boolean} that indicates that
 	 * @return {@link SSLSocket} that can be inserted into the existing
 	 *         connection. Note that this method will not manipulate the mid
 	 *         level protocol object, it is up to the caller to handle the

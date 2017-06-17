@@ -66,16 +66,16 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * Static instance method for a remote execution service.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 *
-	 * @return <code>RemoteExecutionService</code>
+	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
 	 */
 	public static final RemoteExecutionService instance(
@@ -94,20 +94,20 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * command argument.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
-	 * @return <code>RemoteExecutionService</code>
+	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToSetCommandArg(
@@ -131,20 +131,20 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 * provided iRODS absolute path to find the host upon which to execute.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
-	 * @return <code>RemoteExecutionService</code>
+	 * @return {@code RemoteExecutionService}
 	 * @throws JargonException
 	 */
 	public static final RemoteExecutionService instanceWhenUsingAbsPathToFindExecutionHost(
@@ -169,16 +169,16 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            that will be used to send commands to iRODS. The connection is
 	 *            used but not closed or altered.
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
@@ -186,7 +186,7 @@ public class RemoteExecuteServiceImpl implements RemoteExecutionService {
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
 	 *            additional information about the request functionality. This
 	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to <code>NONE</code>
+	 *            set to {@code NONE}
 	 * @throws JargonException
 	 */
 	private RemoteExecuteServiceImpl(

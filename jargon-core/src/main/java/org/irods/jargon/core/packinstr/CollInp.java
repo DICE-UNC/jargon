@@ -43,9 +43,9 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	 * moving the deleted files to the trash.
 	 *
 	 * @param collectionName
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection to be deleted.
-	 * @return <code>CollInp</code> packing instruction.
+	 * @return {@code CollInp} packing instruction.
 	 * @throws JargonException
 	 */
 	public static final CollInp instanceForRecursiveDeleteCollectionNoForce(
@@ -57,12 +57,12 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance for unregistering a collection regestered via ireg
 	 *
 	 * @param collectionName
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection
 	 * @param force
-	 *            <code>boolean</code> indicates force option
+	 *            {@code boolean} indicates force option
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether to recursively
+	 *            {@code boolean} that indicates whether to recursively
 	 *            unregister
 	 * @return {@link CollInp}
 	 * @throws JargonException
@@ -78,9 +78,9 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	 * without moving the deleted files and collections to the trash
 	 *
 	 * @param collectionName
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection to be deleted.
-	 * @return <code>CollInp</code> packing instruction.
+	 * @return {@code CollInp} packing instruction.
 	 * @throws JargonException
 	 */
 	public static final CollInp instanceForRecursiveDeleteCollectionWithForce(

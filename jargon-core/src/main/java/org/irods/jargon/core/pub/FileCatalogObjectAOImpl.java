@@ -211,10 +211,10 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	}
 
 	/**
-	 * Given an iRODS absolute path, retrieve the <code>ObjStat</code>
+	 * Given an iRODS absolute path, retrieve the {@code ObjStat}
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the iRODS absolute path
+	 *            {@code String} with the iRODS absolute path
 	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -241,12 +241,12 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	}
 
 	/**
-	 * Given an iRODS parent and child path, retrieve the <code>ObjStat</code>
+	 * Given an iRODS parent and child path, retrieve the {@code ObjStat}
 	 *
 	 * @param parentPath
-	 *            <code>String</code> with the parent path to the file
+	 *            {@code String} with the parent path to the file
 	 * @param fileName
-	 *            <code>String</code> with the child file name
+	 *            {@code String} with the child file name
 	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -268,12 +268,12 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	}
 
 	/**
-	 * Given an <code>ObjStat</code> return the absolute path to use considering
+	 * Given an {@code ObjStat} return the absolute path to use considering
 	 * things like soft links.
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has been previously retrieved
-	 * @return <code>String</code> with the absolute path to use to get to the
+	 * @return {@code String} with the absolute path to use to get to the
 	 *         actual file
 	 * @throws JargonException
 	 */
@@ -313,7 +313,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 * @param userFilePermission
 	 * @param groupFilePermission
 	 * @return {@link UserFilePermission} that is the highest level, or
-	 *         <code>null</code> if no permissions found
+	 *         {@code null} if no permissions found
 	 */
 	protected UserFilePermission scoreAndReturnHighestPermission(
 			final UserFilePermission userFilePermission,

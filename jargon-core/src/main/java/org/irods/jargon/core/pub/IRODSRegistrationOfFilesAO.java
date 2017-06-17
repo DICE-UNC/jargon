@@ -38,23 +38,23 @@ public interface IRODSRegistrationOfFilesAO {
 	 * collection, an error will result.
 	 *
 	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
+	 *            {@code String} with the absolute path to the physical
 	 *            file located on the iRODS resource server.
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
+	 *            {@code String} with the absolute path to the desired
 	 *            iRODS location the file will be registered under.
 	 * @param force
-	 *            <code>boolean<code> which, if <code>true</code> indicates that
+	 *            {@code boolean<code> which, if <code>true} indicates that
 	 *            an overwrite of an iRODS path will occur.
 	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
+	 *            {@code String}, blank if the default should be used, that
 	 *            indicates the the resource to store to. This can also be
 	 *            specified in your environment or via a rule set up by the
 	 *            administrator.
 	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
+	 *            {@code String} with a resource group for the resource.
 	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
+	 *            {@code destinationResource} must also be specified.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
 	 *             exist
@@ -71,7 +71,7 @@ public interface IRODSRegistrationOfFilesAO {
 
 	/**
 	 * Register a single file (data object) to iRODS. This can also, if the
-	 * <code>generateChecksumInIRODS</code> value is <code>true</code>, cause an
+	 * {@code generateChecksumInIRODS} value is {@code true}, cause an
 	 * iRODS checksum to be computed and stored. Note that there is a separate
 	 * method that generates a local checksum and causes it to be verified in
 	 * iRODS.
@@ -80,22 +80,22 @@ public interface IRODSRegistrationOfFilesAO {
 	 * paths are an iRODS collection.
 	 *
 	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
+	 *            {@code String} with the absolute path to the physical
 	 *            file located on the iRODS resource server.
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
+	 *            {@code String} with the absolute path to the desired
 	 *            iRODS location the file will be registered under.
 	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
+	 *            {@code String}, blank if the default should be used, that
 	 *            indicates the the resource to store to. This can also be
 	 *            specified in your environment or via a rule set up by the
 	 *            administrator.
 	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
+	 *            {@code String} with a resource group for the resource.
 	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
+	 *            {@code destinationResource} must also be specified.
 	 * @param generateChecksumInIRODS
-	 *            <code>boolean<code> that, if <code>true</code> cause iRODS to
+	 *            {@code boolean<code> that, if <code>true} cause iRODS to
 	 *            generate a checksum value and store it in the catalog.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
@@ -120,21 +120,21 @@ public interface IRODSRegistrationOfFilesAO {
 	 * paths are an iRODS collection.
 	 *
 	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
+	 *            {@code String} with the absolute path to the physical
 	 *            file located on the iRODS resource server.
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
+	 *            {@code String} with the absolute path to the desired
 	 *            iRODS location the file will be registered under.
 	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
+	 *            {@code String}, blank if the default should be used, that
 	 *            indicates the the resource to store to. This can also be
 	 *            specified in your environment or via a rule set up by the
 	 *            administrator.
 	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
+	 *            {@code String} with a resource group for the resource.
 	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
-	 * @return <code>String</code> with the locally generated checksum value
+	 *            {@code destinationResource} must also be specified.
+	 * @return {@code String} with the locally generated checksum value
 	 *         that was sent to iRODS.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
@@ -158,12 +158,12 @@ public interface IRODSRegistrationOfFilesAO {
 	 * Please see: https://www.irods.org/index.php/irm
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            to be unregistered.
-	 * @return <code>boolean</code> that indicates that the unregister was
+	 * @return {@code boolean} that indicates that the unregister was
 	 *         successful (e.g. a data not found exception on delete is not
 	 *         returned as an exception, but the return will be a
-	 *         <code>false</code>
+	 *         {@code false}
 	 * @throws JargonException
 	 */
 	boolean unregisterDataObject(final String irodsAbsolutePath)
@@ -172,7 +172,7 @@ public interface IRODSRegistrationOfFilesAO {
 	/**
 	 * Register a single file (data object) to iRODS as a replica of the given
 	 * iRODS data object. This can also, if the
-	 * <code>generateChecksumInIRODS</code> value is <code>true</code>, cause an
+	 * {@code generateChecksumInIRODS} value is {@code true}, cause an
 	 * iRODS checksum to be computed and stored. Note that there is a separate
 	 * method that generates a local checksum and causes it to be verified in
 	 * iRODS.
@@ -181,22 +181,22 @@ public interface IRODSRegistrationOfFilesAO {
 	 * paths are an iRODS collection.
 	 *
 	 * @param physicalPath
-	 *            <code>String</code> with the absolute path to the physical
+	 *            {@code String} with the absolute path to the physical
 	 *            file located on the iRODS resource server.
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the desired
+	 *            {@code String} with the absolute path to the desired
 	 *            iRODS location the file will be registered under.
 	 * @param destinationResource
-	 *            <code>String</code>, blank if the default should be used, that
+	 *            {@code String}, blank if the default should be used, that
 	 *            indicates the the resource to store to. This can also be
 	 *            specified in your environment or via a rule set up by the
 	 *            administrator.
 	 * @param resourceGroup
-	 *            <code>String</code> with a resource group for the resource.
+	 *            {@code String} with a resource group for the resource.
 	 *            This may be set to blank, if not used. If this is specified, a
-	 *            <code>destinationResource</code> must also be specified.
+	 *            {@code destinationResource} must also be specified.
 	 * @param generateChecksumInIRODS
-	 *            <code>boolean<code> that, if <code>true</code> cause iRODS to
+	 *            {@code boolean<code> that, if <code>true} cause iRODS to
 	 *            generate a checksum value and store it in the catalog.
 	 * @throws DataNotFoundException
 	 *             if the flle to register or the target collection does not
@@ -222,12 +222,12 @@ public interface IRODSRegistrationOfFilesAO {
 	 * Please see: https://www.irods.org/index.php/irm
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection
 	 * @param recursive
-	 *            <code>boolean</code> that indicates that the unregister
+	 *            {@code boolean} that indicates that the unregister
 	 *            operation should descend child directories
-	 * @return <code>boolean</code> that will be <code>true</code> if the
+	 * @return {@code boolean} that will be {@code true} if the
 	 *         unregister operation was successful.
 	 * @throws CollectionNotEmptyException
 	 *             if the collection is not empty, and recursion is not

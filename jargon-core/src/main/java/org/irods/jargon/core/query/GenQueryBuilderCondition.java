@@ -46,17 +46,17 @@ class GenQueryBuilderCondition {
 	 * query
 	 *
 	 * @param selectFieldColumnName
-	 *            <code>String</code> with the column name
+	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            <code>String</code> with the numeric iRODS gen query protocol
+	 *            {@code String} with the numeric iRODS gen query protocol
 	 *            value that maps to this field
 	 * @param operator
 	 *            {@linkQueryConditionOperators} value with the operation for
 	 *            the condition
 	 * @param value
-	 *            <code>String</code> with the right hand side of the query
+	 *            {@code String} with the right hand side of the query
 	 *            condition
 	 * @return
 	 */
@@ -77,14 +77,14 @@ class GenQueryBuilderCondition {
 	 * quotes, which will be added during processing
 	 *
 	 * @param selectFieldColumnName
-	 *            <code>String</code> with the column name
+	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            <code>String</code> with the numeric iRODS gen query protocol
+	 *            {@code String} with the numeric iRODS gen query protocol
 	 *            value that maps to this field
 	 * @param valuesWithoutQuotes
-	 *            <code>List<String></code> of in arguments, as non quoted
+	 *            {@code List<String>} of in arguments, as non quoted
 	 *            strings
 	 * @return
 	 */
@@ -119,14 +119,14 @@ class GenQueryBuilderCondition {
 	 * will be added during processing
 	 *
 	 * @param selectFieldColumnName
-	 *            <code>String</code> with the column name
+	 *            {@code String} with the column name
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} that reflects the type of field
 	 * @param selectFieldNumericTranslation
-	 *            <code>String</code> with the numeric iRODS gen query protocol
+	 *            {@code String} with the numeric iRODS gen query protocol
 	 *            value that maps to this field
 	 * @param valuesWithoutQuotes
-	 *            <code>List<String></code> of in arguments, as non quoted
+	 *            {@code List<String>} of in arguments, as non quoted
 	 *            strings
 	 * @return
 	 */

@@ -12,7 +12,7 @@ import org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker.VisitorDes
 
 /**
  * For each file provided by an iterator, calculate summary statistics that can
- * be obtained by calling <code>getTreeSummary()</code> after the iteration
+ * be obtained by calling {@code getTreeSummary()} after the iteration
  * process is complete.
  * 
  * @author Mike Conway - DICE

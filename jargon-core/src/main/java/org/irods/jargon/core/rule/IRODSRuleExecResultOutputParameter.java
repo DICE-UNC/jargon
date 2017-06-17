@@ -26,13 +26,13 @@ public class IRODSRuleExecResultOutputParameter {
 	 * rule for a specific designated output parameter
 	 *
 	 * @param parameterName
-	 *            <code>String</code> with the parameter name as specified in
+	 *            {@code String} with the parameter name as specified in
 	 *            the rule
 	 * @param outputParamType
-	 *            <code>OutputParamType</code> enum value that indicates the
+	 *            {@code OutputParamType} enum value that indicates the
 	 *            type of result
 	 * @param resultObject
-	 *            <code>Object</code> with the value associated with the
+	 *            {@code Object} with the value associated with the
 	 *            parameter. This result can be cast to the appropriate type by
 	 *            the caller based on the parameter name it is associated with.
 	 * @return {@link IRODSRuleExecResultOutputParameter}

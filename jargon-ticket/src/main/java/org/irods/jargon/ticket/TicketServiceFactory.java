@@ -17,7 +17,7 @@ import org.irods.jargon.core.exception.JargonException;
 public interface TicketServiceFactory {
 
 	/**
-	 * Create a new instance of the <code>TicketAdminService</code> that can
+	 * Create a new instance of the {@code TicketAdminService} that can
 	 * create and modify tickets
 	 * 
 	 * @param irodsAccount
@@ -30,7 +30,7 @@ public interface TicketServiceFactory {
 			throws JargonException;
 
 	/**
-	 * Create a new instance of the <code>TicketClientOperations</code> that can
+	 * Create a new instance of the {@code TicketClientOperations} that can
 	 * redeem tickets
 	 * 
 	 * @param irodsAccount
@@ -43,7 +43,7 @@ public interface TicketServiceFactory {
 			IRODSAccount irodsAccount) throws JargonException;
 
 	/**
-	 * Create a new instance of the <code>TicketDistributionService</code> that
+	 * Create a new instance of the {@code TicketDistributionService} that
 	 * can distribute tickets via various channels
 	 * 
 	 * @param irodsAccount

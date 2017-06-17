@@ -17,7 +17,7 @@ public interface ResourceGroupAO {
 	 * Convenience method to obtain a list of resource group names in the
 	 * current zone
 	 *
-	 * @return <code>List<String></code> of resoruce group names
+	 * @return {@code List<String>} of resoruce group names
 	 * @throws JargonException
 	 */
 	List<String> listResourceGroupNames() throws JargonException;

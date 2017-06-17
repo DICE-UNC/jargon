@@ -67,7 +67,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * Gets the count of arguments, this is set when this data is retrieved from
 	 * iRODS by query
 	 *
-	 * @return the argumentCount <code>int</code> with the count of arguments in
+	 * @return the argumentCount {@code int} with the count of arguments in
 	 *         the sql query
 	 */
 	public int getArgumentCount() {
@@ -86,7 +86,7 @@ public class SpecificQueryDefinition extends IRODSDomainObject {
 	 * Gets the column names by parsing the SQL query. Note that this is only
 	 * available when querying the object from iRODS.
 	 *
-	 * @return the columnNames <code>List<String></code> with the parsed column
+	 * @return the columnNames {@code List<String>} with the parsed column
 	 *         names from the query
 	 */
 	public List<String> getColumnNames() {

@@ -30,13 +30,13 @@ import org.slf4j.LoggerFactory;
  * connection is determined by the
  * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when
  * the access object is created. The connection is managed using a
- * <code>ThreadLocal</code>, such that any access objects created in the same
+ * {@code ThreadLocal}, such that any access objects created in the same
  * thread by this factory will automatically create a connection, or will share
  * an already created connection. This also means that, at the end of any set of
  * operations, the connection must be closed. Typically, and
  * {@link IRODSFileSystem} is instantiated, and that
- * <code>IRODSFileSystem</code> is used to get a reference to this access object
- * factory. Once operations are done, the <code>IRODSFileSystem</code> can be
+ * {@code IRODSFileSystem} is used to get a reference to this access object
+ * factory. Once operations are done, the {@code IRODSFileSystem} can be
  * used to close connections in that thread. This factory has hooks to also
  * close those connections, and this can be used in cases where this factory is
  * injected itself into another service.
@@ -118,8 +118,8 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 
 	/**
 	 * Default constructor which does not initialize the
-	 * <code>IRODSSession</code>. It is up to the developer to inject the
-	 * <code>IRODSsession</code> or an exception will result.
+	 * {@code IRODSSession}. It is up to the developer to inject the
+	 * {@code IRODSsession} or an exception will result.
 	 */
 	public IRODSAccessObjectFactoryImpl() {
 		super();

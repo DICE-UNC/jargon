@@ -76,22 +76,22 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	 * statement
 	 *
 	 * @param args
-	 *            <code>List<String></code> of arguments that match query
+	 *            {@code List<String>} of arguments that match query
 	 *            parameters. Note that there may be a max of 10 parameters
 	 *            provided, or an error will result. This may be set to
-	 *            <code>null</code> if no parameters are passed in
+	 *            {@code null} if no parameters are passed in
 	 * @param queryOrAlias
 	 *            <cod>String</code> with either the query alias, or a query
 	 *            that matches exactly to a query stored on the grid via the
 	 *            rods administrator.
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to be
+	 *            {@code int} with the maximum number of rows to be
 	 *            returned.
 	 * @param continueIndex
-	 *            <code>int</code> with the index passed back from a preceeding
+	 *            {@code int} with the index passed back from a preceeding
 	 *            query
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
 	 */
 	public static final SpecificQueryInp instance(final List<String> args,
@@ -119,23 +119,23 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	/**
 	 *
 	 * @param args
-	 *            <code>List<String></code> of arguments that match query
+	 *            {@code List<String>} of arguments that match query
 	 *            parameters. Note that there may be a max of 10 parameters
 	 *            provided, or an error will result. This may be set to
-	 *            <code>null</code> if no parameters are passed in
+	 *            {@code null} if no parameters are passed in
 	 * @param queryOrAlias
 	 *            <cod>String</code> with either the query alias, or a query
 	 *            that matches exactly to a query stored on the grid via the
 	 *            rods administrator.
 	 * @param maxRows
-	 *            <code>int</code> with the maximum number of rows to be
+	 *            {@code int} with the maximum number of rows to be
 	 *            returned. Note that this will be ignored if the
-	 *            <code>autoClose</code> parameter is set to <code>true</code>
+	 *            {@code autoClose} parameter is set to {@code true}
 	 * @param continueIndexj
-	 *            <code>int</code> with the index passed back from a preceeding
+	 *            {@code int} with the index passed back from a preceeding
 	 *            query
 	 * @param zoneHint
-	 *            <code>String</code> (optional, blank if not needed) zone hint
+	 *            {@code String} (optional, blank if not needed) zone hint
 	 *            for cross-zone invocation
 	 */
 	private SpecificQueryInp(final List<String> args,

@@ -26,12 +26,12 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created
 	 *            this result set.
 	 * @param results
-	 *            <code>List<List<String>></code> with the results in row/column
+	 *            {@code List<List<String>>} with the results in row/column
 	 *            format.
 	 * @param columnNames
-	 *            <code>List<String></code> with the headers for each column.
+	 *            {@code List<String>} with the headers for each column.
 	 * @param hasMoreRecords
-	 *            <code>boolean</code> that indicates whether there are more
+	 *            {@code boolean} that indicates whether there are more
 	 *            records to retrieve.
 	 * @return {@link IRODSSimpleQueryResultSet}
 	 */

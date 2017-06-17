@@ -22,7 +22,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	/**
 	 * Get the current time on the iRODS server
 	 *
-	 * @return <code>long</code> with the time since epoch that is the current
+	 * @return {@code long} with the time since epoch that is the current
 	 *         server time
 	 * @throws JargonException
 	 */
@@ -38,7 +38,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return List of {@link RemoteCommandInformation}
 	 * @throws DataNotFoundException
-	 *             if the <code>listCommands.sh</code> script is not in the
+	 *             if the {@code listCommands.sh} script is not in the
 	 *             iRODS remote exec bin directory
 	 * @throws JargonException
 	 */
@@ -52,7 +52,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * This method will operate on iRODS servers version 3.0 and up.
 	 *
-	 * @return <code>List<String></code> with the names of the available
+	 * @return {@code List<String>} with the names of the available
 	 *         microservices.
 	 * @throws JargonException
 	 */
@@ -67,7 +67,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * For EIRODS3.0, it is recommended to use the
 	 * SpecificQueryAO.isSupportsSpecificQuery method
 	 *
-	 * @return <code>boolean</code> that will be <code>true</code> if I can run
+	 * @return {@code boolean} that will be {@code true} if I can run
 	 *         specific query
 	 * @throws JargonException
 	 */

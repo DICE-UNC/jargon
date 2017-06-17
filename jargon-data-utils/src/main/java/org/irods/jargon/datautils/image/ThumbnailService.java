@@ -23,7 +23,7 @@ public interface ThumbnailService {
 	public static final String THUMBNAIL_RULE_DATA_PARAMETER = "*StdoutStr";
 
 	/**
-	 * Given a <code>File</code> that represents a local working directory, ask
+	 * Given a {@code File} that represents a local working directory, ask
 	 * iRODS to generate a thumbnail image for the iRODS data object at the
 	 * given absolute path. This temporary thumbnail file is then returned to
 	 * the caller.
@@ -31,16 +31,16 @@ public interface ThumbnailService {
 	 * This method will call an image processing routine on the iRODS server,
 	 * and the thumbnail data will be streamed back to this method. The
 	 * resulting thumbnail is stored underneath the temporary thumbnail
-	 * directory based on an internal scheme. The <code>File</code> that is
+	 * directory based on an internal scheme. The {@code File} that is
 	 * returned from this method points to this thumbnail image.
 	 * 
 	 * @param workingDirectory
-	 *            <code>File</code> with the path to the top level of a working
+	 *            {@code File} with the path to the top level of a working
 	 *            directory to hold the thumbnail image.
 	 * @param irodsAbsolutePathToGenerateThumbnailFor
-	 *            <code>String</code> that is the absolute path to the iRODS
+	 *            {@code String} that is the absolute path to the iRODS
 	 *            file for which a thumbnail will be generated.
-	 * @return <code>File</code> that points to the thumbnail image.
+	 * @return {@code File} that points to the thumbnail image.
 	 * @throws IRODSThumbnailProcessUnavailableException
 	 *             if thumbnail processing is not set up on iRODS (imagemagik
 	 *             services)
@@ -52,7 +52,7 @@ public interface ThumbnailService {
 
 	/**
 	 * Given an iRODS absolute path to a data object, retrieve an
-	 * <code>InputStream</code> which is a thumbnail of the given file at the
+	 * {@code InputStream} which is a thumbnail of the given file at the
 	 * iRODS path.
 	 * <p>
 	 * Currently, this is done by generating the thumbnail when requested,
@@ -60,9 +60,9 @@ public interface ThumbnailService {
 	 * (local verus in iRODS AVU, etc). Consider this a first approximation.
 	 * 
 	 * @param irodsAbsolutePathToGenerateThumbnailFor
-	 *            <code>String</code> that is the absolute path to the iRODS
+	 *            {@code String} that is the absolute path to the iRODS
 	 *            file for which a thumbnail will be generated.
-	 * @return <code>InputStream</code> that is the thumbnail image data. No
+	 * @return {@code InputStream} that is the thumbnail image data. No
 	 *         buffering is done to the stream that is returned.
 	 * @throws JargonException
 	 */
@@ -74,12 +74,12 @@ public interface ThumbnailService {
 	/**
 	 * Do a check to see whether the thumbnail service is available on the iRODS
 	 * server. If it is not available, the mid-tier fallback can be used
-	 * <code>createThumbnailLocally()</code>.
+	 * {@code createThumbnailLocally()}.
 	 * <p>
 	 * Note that it is not efficient to call this method repeatedly, rather, a
 	 * client service should call once for an iRODS server and cache the result.
 	 * 
-	 * @return <code>true</code> if the iRODS server has support for imagemagik
+	 * @return {@code true} if the iRODS server has support for imagemagik
 	 *         thumbnail generation. If the hueristic cannot determine, it will
 	 *         return false. The current heuristic is to use the listCommands.sh
 	 *         script, which must be added to the /server/bin/cmd directory,

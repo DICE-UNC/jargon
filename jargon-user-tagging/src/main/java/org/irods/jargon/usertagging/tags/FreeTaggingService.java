@@ -8,10 +8,10 @@ public interface FreeTaggingService {
 
 	/**
 	 * For a data object, return a set of free tags in the form of a
-	 * space-delimited <code>String</code>.
+	 * space-delimited {@code String}.
 	 * 
 	 * @param dataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 *            for which the tag string will be produced.
 	 * 
 	 *            The user in the account used to initialize the service is used
@@ -26,11 +26,11 @@ public interface FreeTaggingService {
 
 	/**
 	 * For an iRODS collection, return a set of free tags in the form of a
-	 * space-delimited <code>String</code>. The user in the account used to
+	 * space-delimited {@code String}. The user in the account used to
 	 * initialize the service is used by default.
 	 * 
 	 * @param collectionAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection that has free tags associated.
 	 * @return {@link org.irods.jargon.usertagging.domain.IRODSTagGrouping} with
 	 *         the collection tags in free tag form.
@@ -40,12 +40,12 @@ public interface FreeTaggingService {
 			String collectionAbsolutePath) throws JargonException;
 
 	/**
-	 * Given a string of free tags included in the <code>IRODSTagValue</code>,
+	 * Given a string of free tags included in the {@code IRODSTagValue},
 	 * generate a delta between the desired and current set of tags on the iRODS
-	 * domain object described in the <code>IRODSTagValue</code>, which
+	 * domain object described in the {@code IRODSTagValue}, which
 	 * describes the type of object being tagged. Note that this method
 	 * validates that the user associated with the tags is the logged-in user
-	 * depicted in the <code>IRODSAccount</code>, and will throw a
+	 * depicted in the {@code IRODSAccount}, and will throw a
 	 * JargonException if they are different.
 	 * <p>
 	 * In the future, additional signatures can be added that allow 'override'
@@ -75,7 +75,7 @@ public interface FreeTaggingService {
 	 * the particular domain (collection and data object) the entry is for.
 	 * 
 	 * @param searchTags
-	 *            <code>String</code> with free space-delimited tags. These tags
+	 *            {@code String} with free space-delimited tags. These tags
 	 *            will be AND-d together.
 	 * @return {@link org.irods.jargon.usertagging.domain.TagQuerySearchResult}
 	 *         with the results of the query.
@@ -91,15 +91,15 @@ public interface FreeTaggingService {
 	 * will be accomplished.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with absolute path to the iRODS data
+	 *            {@code String} with absolute path to the iRODS data
 	 *            object or collection
 	 * @param userName
-	 *            <code>String</code> with the user name to associate with the
+	 *            {@code String} with the user name to associate with the
 	 *            tag. The method does not check whether this is the logged in
 	 *            user, so this type of validation is the responsibility of the
 	 *            calling client.
 	 * @param tags
-	 *            <code>String</code> which is the space-delimited free form tag
+	 *            {@code String} which is the space-delimited free form tag
 	 *            set
 	 * @throws JargonException
 	 */

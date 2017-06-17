@@ -29,15 +29,15 @@ public class UserFilePermission {
 	 * Public values constructor.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the name of the user (no #zone)
+	 *            {@code String} with the name of the user (no #zone)
 	 * @param userId
-	 *            <code>String</code> with the id of the user
+	 *            {@code String} with the id of the user
 	 * @param filePermissionEnum
 	 *            {@link FilePermissionEnum} for the given user
 	 * @param userType
 	 *            {@link UserTypeEnum} value for user
 	 * @param userZone
-	 *            <code>String</code> with an optional zone name, set to blank
+	 *            {@code String} with an optional zone name, set to blank
 	 *            if not used
 	 */
 	public UserFilePermission(final String userName, final String userId,
@@ -97,7 +97,7 @@ public class UserFilePermission {
 	/**
 	 * Get the name of the user in user#zone format
 	 *
-	 * @return <code>String</code> with the user name
+	 * @return {@code String} with the user name
 	 */
 	public String getUserName() {
 		return userName;
@@ -107,7 +107,7 @@ public class UserFilePermission {
 	 * Set the name of the user
 	 *
 	 * @param userName
-	 *            <code>String</code> with the name of the user
+	 *            {@code String} with the name of the user
 	 */
 	public void setUserName(final String userName) {
 		this.userName = userName;
@@ -117,7 +117,7 @@ public class UserFilePermission {
 	 * Get the user name in the standard user#zone format. This is the standard
 	 * for displays of user names in iRODS user interfaces.
 	 *
-	 * @return <code>String</code> with the extended zone
+	 * @return {@code String} with the extended zone
 	 */
 	public String getNameWithZone() {
 		StringBuilder sb = new StringBuilder();
@@ -130,7 +130,7 @@ public class UserFilePermission {
 	/**
 	 * Get the unique user id database key
 	 *
-	 * @return <code>String</code> with the user id primary key value
+	 * @return {@code String} with the user id primary key value
 	 */
 	public String getUserId() {
 		return userId;
@@ -140,7 +140,7 @@ public class UserFilePermission {
 	 * Sets the unique user id primary key
 	 *
 	 * @param userId
-	 *            <code>String</code> user id to set
+	 *            {@code String} user id to set
 	 */
 	public void setUserId(final String userId) {
 		this.userId = userId;

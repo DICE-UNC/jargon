@@ -155,7 +155,7 @@ public abstract class AbstractTransferRestartProcessor extends
 
 	/**
 	 * Method to retrieve the restart info from the manager, this may end up
-	 * being <code>null</code>
+	 * being {@code null}
 	 *
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
@@ -179,7 +179,7 @@ public abstract class AbstractTransferRestartProcessor extends
 	 * restarts.
 	 * <p>
 	 * This method will check the configuration as well as the actual restart
-	 * manager, and will return <code>null</code>
+	 * manager, and will return {@code null}
 	 *
 	 *
 	 * @param irodsAbsolutePath

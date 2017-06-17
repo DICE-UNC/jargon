@@ -61,31 +61,31 @@ public abstract class AbstractParallelFileTransferStrategy {
 	 * the parallel transfer threads and process the transfer.
 	 *
 	 * @param host
-	 *            <code>String</code> with the name of the host for the transfer
+	 *            {@code String} with the name of the host for the transfer
 	 * @param port
-	 *            <code>int</code> with the port for the transfer
+	 *            {@code int} with the port for the transfer
 	 * @param numberOfThreads
-	 *            <code>int</code> with the number of threads to spawn, which is
+	 *            {@code int} with the number of threads to spawn, which is
 	 *            set by iRODS.
 	 * @param password
-	 *            <code>int</code> with the one-time transfer token set by
+	 *            {@code int} with the one-time transfer token set by
 	 *            iRODS.
 	 * @param localFile
-	 *            <code>File</code> that will transferrred.
+	 *            {@code File} that will transferrred.
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @param transferLength
-	 *            <code>long</code> with the total length of the file to
+	 *            {@code long} with the total length of the file to
 	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
+	 *            {@link TransferStatusCallbackListener} or {@code null} if
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
 	 * @param fileRestartInfo
-	 *            {@link FileRestartInfo} or <code>null</code> if not supporting
+	 *            {@link FileRestartInfo} or {@code null} if not supporting
 	 *            a restart of this transfer
 	 * @param negotiatedClientServerConfiguration
 	 *            {@link NegotiatedClientServerConfiguration} represents the
@@ -328,7 +328,7 @@ public abstract class AbstractParallelFileTransferStrategy {
 
 	/**
 	 * Retrieves a reference to the restart manager, if configured. It may be
-	 * <code>null</code>
+	 * {@code null}
 	 *
 	 * @return {@link AbstractRestartManager}
 	 *

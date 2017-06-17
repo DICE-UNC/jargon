@@ -20,16 +20,16 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * that is the resource server that contains the data. This is used in
 	 * connection re-routing.
 	 * <p>
-	 * Note that this method will return <code>null</code> if no rerouting is
+	 * Note that this method will return {@code null} if no rerouting is
 	 * done
 	 *
 	 * @param targetAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS file or
+	 *            {@code String} with the absolute path to an iRODS file or
 	 *            collection
 	 * @param resourceName
-	 *            <code>String</code> that contains the resource name, or blank
+	 *            {@code String} that contains the resource name, or blank
 	 *            if not used
-	 * @return <code>String</code> with the iRODS host name that should be used
+	 * @return {@code String} with the iRODS host name that should be used
 	 *         to connect, or null if no reconnect host is needed.
 	 * @throws JargonException
 	 */
@@ -41,14 +41,14 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * that is the resource server that contains the data. This is used in
 	 * connection re-routing.
 	 * <p>
-	 * Note that this method will return <code>null</code> if no rerouting is
+	 * Note that this method will return {@code null} if no rerouting is
 	 * done
 	 *
 	 * 
 	 * @param resourceName
-	 *            <code>String</code> that contains the resource name, or blank
+	 *            {@code String} that contains the resource name, or blank
 	 *            if not used
-	 * @return <code>String</code> with the iRODS host name that should be used
+	 * @return {@code String} with the iRODS host name that should be used
 	 *         to connect, or null if no reconnect host is needed.
 	 * @throws JargonException
 	 */
@@ -56,11 +56,11 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 			throws JargonException;
 
 	/**
-	 * Given an iRODS absolute path, retrive the <code>ObjStat</code> object
+	 * Given an iRODS absolute path, retrive the {@code ObjStat} object
 	 * that represents the basic information about the iRODS file
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 * @return {@link ObjStat} with the status information for the given iRODS
 	 *         file
 	 * @throws FileNotFoundException
@@ -76,11 +76,11 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * path
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name to check for
+	 *            {@code String} with the iRODS user name to check for
 	 *            access
-	 * @return <code>boolean</code> of <code>true</code> if access is available
+	 * @return {@code boolean} of {@code true} if access is available
 	 * @throws JargonException
 	 */
 	boolean isUserHasAccess(String irodsAbsolutePath, String userName)

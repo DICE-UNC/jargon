@@ -6,13 +6,13 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 /**
  * Handy base class that can be used to build 'services' on top of Jargon. These
  * are higher level components that use a mix of 'access objects' and i/o
- * objects created by the <code>IRODSAccessObjectFactory</code>.
+ * objects created by the {@code IRODSAccessObjectFactory}.
  * <p>
  * Testing note:
  * <p>
  * Typically, jargon 'services' are created by a factory themselves, and this
  * allows easier mocking of the objects for testing. One may inject a mock
- * <code>IRODSAccessObjectFactory</code> and then test services without
+ * {@code IRODSAccessObjectFactory} and then test services without
  * requiring an actual iRODS server connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -53,7 +53,7 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * get the <code>IRODSAccessObjectFactory</code> that is the key object for
+	 * get the {@code IRODSAccessObjectFactory} that is the key object for
 	 * creating Jargon services.
 	 *
 	 * @return {@link IRODSAccessObjectFactory}
@@ -63,7 +63,7 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * Set the <code>IRODSAccessObjectFactory</code> that is the key object for
+	 * Set the {@code IRODSAccessObjectFactory} that is the key object for
 	 * creating Jargon services.
 	 *
 	 * @param irodsAccessObjectFactory
@@ -75,8 +75,8 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * Get the <code>IRODSAccount</code> that will be used to create objects
-	 * from the <code>IRODSAccessObjectFactory</code>
+	 * Get the {@code IRODSAccount} that will be used to create objects
+	 * from the {@code IRODSAccessObjectFactory}
 	 *
 	 * @return {@link IRODSAccount}
 	 */
@@ -85,8 +85,8 @@ public abstract class AbstractJargonService {
 	}
 
 	/**
-	 * Set the <code>IRODSAccount</code> that will be used to create objects
-	 * from the <code>IRODSAccessObjectFactory</code>
+	 * Set the {@code IRODSAccount} that will be used to create objects
+	 * from the {@code IRODSAccessObjectFactory}
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}

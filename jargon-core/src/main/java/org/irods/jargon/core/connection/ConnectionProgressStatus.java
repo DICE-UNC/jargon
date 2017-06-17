@@ -42,7 +42,7 @@ public class ConnectionProgressStatus {
 	 * Create an immutable callback for progress sending data (PUT)
 	 *
 	 * @param byteCount
-	 *            <code>long</code> with the number of bytes instantaneously
+	 *            {@code long} with the number of bytes instantaneously
 	 *            sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */
@@ -55,7 +55,7 @@ public class ConnectionProgressStatus {
 	 * Create an immutable callback for progress receiving data (GET)
 	 *
 	 * @param byteCount
-	 *            <code>long</code> with the number of bytes instantaneously
+	 *            {@code long} with the number of bytes instantaneously
 	 *            sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */
