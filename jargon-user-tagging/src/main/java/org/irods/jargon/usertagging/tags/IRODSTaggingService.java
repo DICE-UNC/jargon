@@ -202,7 +202,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Add a description for a data object, using the user supplied in the
 	 * <code>IRODSTagValue</code>.
-	 * <p/>
+	 * <p>
 	 * Note that, if the description is blank, an attempt will be made to delete
 	 * any description information currently stored.
 	 * 
@@ -276,7 +276,7 @@ public interface IRODSTaggingService {
 	/**
 	 * Add a description to the collection using the user in the provided
 	 * <code>IRODSTagValue</code>
-	 * <p/>
+	 * <p>
 	 * Note that adding a blank description will delete any description AVU data
 	 * in iRODS. Adding a description when one already exists will replace the
 	 * previous value.

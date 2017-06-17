@@ -10,7 +10,7 @@ import org.irods.jargon.core.query.JargonQueryException;
 
 /**
  * Access object to process 'iquest-like' GenQuery.
- * <p/>
+ * <p>
  * This access object can accept a query in iquest form, and will process that
  * query and return a result set with the query response and other related
  * information.
@@ -24,7 +24,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	/**
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object.
-	 * <p/>
+	 * <p>
 	 * Note: this command will not close the underlying result set, so that it
 	 * may be paged by getting next result. It is up to the caller to call
 	 * <code>closeResults()</code> when done with the result set. Alternately,
@@ -50,7 +50,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object. This query allows specification of the target zone, so that
 	 * queries may be run on federated zones.
-	 * <p/>
+	 * <p>
 	 * Note: this command will not close the underlying result set, so that it
 	 * may be paged by getting next result. It is up to the caller to call
 	 * <code>closeResults()</code> when done with the result set. Alternately,
@@ -99,7 +99,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * Execute an iquest-like query and return results in a convenient POJO
 	 * object. This method allows partial starts to do paging of large query
 	 * results.
-	 * <p/>
+	 * <p>
 	 * This version of the method allows the optional specification of a zone to
 	 * run the query in.
 	 *
@@ -155,7 +155,7 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * object. This method allows partial starts to do paging of large query
 	 * results. This method will send a close to iRODS if more results are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * Note that the <code>getMoreResults()</code> method will not work, since
 	 * the result set was closed. This version of the query execute is suitable
 	 * for 'session per request' situations, such as mid-tier web applications,
@@ -182,9 +182,9 @@ public interface IRODSGenQueryExecutor extends IRODSAccessObject {
 	 * object. This method allows partial starts to do paging of large query
 	 * results. This method will send a close to iRODS if more results are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * This method allows optional specification of a target zone for the query.
-	 * <p/>
+	 * <p>
 	 * Note that the <code>getMoreResults()</code> method will not work, since
 	 * the result set was closed. This version of the query execute is suitable
 	 * for 'session per request' situations, such as mid-tier web applications,

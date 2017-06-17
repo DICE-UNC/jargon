@@ -15,7 +15,7 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * Represents a first class shared file or folder. If this is a collection, only
  * the top level is marked as a share, and child data will be part of this named
  * share.
- * <p/>
+ * <p>
  * All fields are final and immutable.
  * 
  * @author Mike Conway - DICE (www.irods.org)

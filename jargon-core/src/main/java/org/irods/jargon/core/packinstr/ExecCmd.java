@@ -8,7 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Immutable object gives translation of an ExecCmd operation into XML. This is
  * the operation for remote execution protocol format.
- * <p/>
+ * <p>
  * Note that this packing instruction must deal with backwards compatability for
  * versions of ExecCmd prior to the addition of enhanced streaming of large
  * result sets. The method names indicate which version of iRODS the packing

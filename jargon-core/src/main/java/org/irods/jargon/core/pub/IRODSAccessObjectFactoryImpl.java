@@ -19,13 +19,13 @@ import org.slf4j.LoggerFactory;
  * Factory to produce IRODS access objects. This is the key object which can be
  * used to create components that can interact directly with iRODS to query
  * metadata attributes, update the catalog, and move data.
- * <p/>
+ * <p>
  * Access objects are styled after traditional DAO's, in that they deal with a
  * particular domain or service, and have methods to query for data about things
  * in iRODS, and methods to update things in iRODS. The access objects use
  * 'POJO' domain objects for input and output parameters, giving some nice,
  * simple abstractions of the iRODS metadata catalog.
- * <p/>
+ * <p>
  * Access objects are connected to iRODS at the time they are created. The
  * connection is determined by the
  * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when

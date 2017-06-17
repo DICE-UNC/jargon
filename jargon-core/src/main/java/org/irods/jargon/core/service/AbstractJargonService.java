@@ -7,9 +7,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
  * Handy base class that can be used to build 'services' on top of Jargon. These
  * are higher level components that use a mix of 'access objects' and i/o
  * objects created by the <code>IRODSAccessObjectFactory</code>.
- * <p/>
+ * <p>
  * Testing note:
- * <p/>
+ * <p>
  * Typically, jargon 'services' are created by a factory themselves, and this
  * allows easier mocking of the objects for testing. One may inject a mock
  * <code>IRODSAccessObjectFactory</code> and then test services without

@@ -9,7 +9,7 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
  * shared, rather a copy constructor creates a new instance in the various data
  * transfer methods, as these copies may be overridden in the code when dealing
  * with an individual file transfer.
- * <p/>
+ * <p>
  * Note that UDP options are included here, but the UDP option is not yet
  * implemented in jargon, and will have no effect.
  *

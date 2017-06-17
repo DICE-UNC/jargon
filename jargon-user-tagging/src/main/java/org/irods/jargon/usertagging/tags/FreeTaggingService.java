@@ -47,7 +47,7 @@ public interface FreeTaggingService {
 	 * validates that the user associated with the tags is the logged-in user
 	 * depicted in the <code>IRODSAccount</code>, and will throw a
 	 * JargonException if they are different.
-	 * <p/>
+	 * <p>
 	 * In the future, additional signatures can be added that allow 'override'
 	 * of the user, but this default behavior prevents tagging on behalf of an
 	 * arbitrary user. This is not a severe issue, but sensible defaulting will
@@ -68,7 +68,7 @@ public interface FreeTaggingService {
 	 * collections and data objects that match the combination of tags. Note
 	 * that these results are page-able, and the result objects contain
 	 * information on the existence of more records.
-	 * <p/>
+	 * <p>
 	 * There are methods in this class that allow paging of the individual data
 	 * object and collection domain types that can be utilized to page the
 	 * different types of results. Each result entry has a value that indicates

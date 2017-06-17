@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
  * resources. Some of the methods in this object are implemented elsewhere, and
  * are delegated to in order to provide one class for typical data movement
  * operations.
- * <p/>
+ * <p>
  * Note that this object treats data objects and collections as objects, instead
  * of emulating <code>File</code> operations. There is a package that implements
  * iRODS data objects and collections as typical <code>java.io.*</code> objects
  * that can be found in the <code>org.irods.jargon.core.pub.io.*</code> package.
- * <p/>
+ * <p>
  * Note that there are objects that can be used to access and manipulate data
  * and metadata about data objects and collections, and to query about data
  * objects and collections. These can be found in the
@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * {@link org.irods.jargon.core.pub.CollectionAOImpl}. Those access objects can
  * retrieve domain objects that represent details about collections and data
  * objects.
- * <p/>
+ * <p>
  * Note that this object handles soft linked files and collections, and will
  * operate as expected whether a soft link or a canonical path is provided.
  *

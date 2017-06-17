@@ -14,12 +14,12 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * listing of collections and data objects, suitable for developing tree
  * depictions of an iRODS file system, and searching that file system on file
  * and collection names.
- * <p/>
+ * <p>
  * This access object is being designed to support basic interface functionality
  * for both Swing and web GUI tree models, and basic search boxes for file or
  * collection names. More advanced searching based on metadata or other criteria
  * are available elsewhere in the API.
- * <p/>
+ * <p>
  * <b>NOTE:</b> Within iRODS, Collections (directories) and Data Objects (files)
  * are different parts of the iCAT. For this reason, the listings are generated
  * separately, with the convention of collections first, and data objects
@@ -35,7 +35,7 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * access whether there are more entries, and at what sequence in a result
  * collection the 'has more' entry occurs, so that offset is available for
  * re-query.
- * <p/>
+ * <p>
  * Note that this access object supports iRODS special collections ,note the
  * comments on individual methods for details. The Information returned is meant
  * to reflect the object or collection at the requested path, so if it is
@@ -63,11 +63,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * contains information about paging for each object. Clients of this method
 	 * can inspect the returned results to determine the position of each result
 	 * and whether there are more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not recursive, it only lists the collections under the
 	 * given parent. The parent is an absolute path, this particular method does
 	 * not 'search', rather it just lists.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
@@ -97,10 +97,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * that contains information about paging for each object. Clients of this
 	 * method can inspect the returned results to determine the position of each
 	 * result and whether there are more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not a search method, it simply lists the directories that
 	 * are direct children of the given path.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
@@ -129,7 +129,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method will
 	 * list objects that are direct children underneath the given parent.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
@@ -143,7 +143,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>listCollectionsUnderPath</code> methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
@@ -170,7 +170,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method will
 	 * list objects that are direct children underneath the given parent.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
@@ -184,12 +184,12 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>listCollectionsUnderPath</code> methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
-	 * <p/>
+	 * <p>
 	 * This variant of the files and collections listing entries wraps the
 	 * resulting listing in a <code>PagingAwareCollectionListing</code> that
 	 * contains information about the paging status of the separate collection
@@ -216,7 +216,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * support listing and paging of collections. This method returns a simple
 	 * count of the children (data objects and collections) underneath this
 	 * directory, and includes all children.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the count by inspecting the canonical directory that is the
 	 * parent.
@@ -238,7 +238,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any collections that have a
 	 * match on the search term. The typical case would be a search box on a
 	 * form to find all collections that have the given string.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
 	 *
 	 * <pre>
@@ -261,9 +261,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any collections that have a
 	 * match on the search term. The typical case would be a search box on a
 	 * form to find all collections that have the given string.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
@@ -289,9 +289,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any data objects that have a
 	 * match on the given search term. The typical case would be a search box on
 	 * a form to find all data objects that have the given string in the name.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -315,9 +315,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any data objects that have a
 	 * match on the given search term. The typical case would be a search box on
 	 * a form to find all data objects that have the given string in the name.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -346,15 +346,15 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * inspected using the methods defined in
 	 * {@link org.irods.jargon.core.pub.domain.IRODSDomainObject} to see if more
 	 * results are available.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
-	 * <p/>
+	 * <p>
 	 * Note that this method will compensate if strict ACL's are in place
 	 *
 	 * @param searchTerm
@@ -425,7 +425,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * paging for each object. Clients of this method can inspect the returned
 	 * results to determine the position of each result and whether there are
 	 * more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not a search method, it simply lists.
 	 *
 	 * @param absolutePathToParent
@@ -452,7 +452,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method adds
 	 * the user ACL information, which is derived from an extended query.
-	 * <p/>
+	 * <p>
 	 * Note that there is an issue with GenQuery that makes it impossible to
 	 * derive user zone in this query. This is something that may be addressed
 	 * by converting the GenQuery to 'specific SQL query' at a later time. If
@@ -460,11 +460,11 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * <code>listPermissionsForDataObject()</code> in {@link DataObjectAO} and
 	 * <code>listPermissionsForCollection</code> in {@link CollectionAO} be
 	 * consulted.
-	 * <p/>
+	 * <p>
 	 * This method is meant for listings, or building trees. As such, it does
 	 * not show any information about replicas, rather, it groups the data by
 	 * data object path for all replicas.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
@@ -603,7 +603,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * preclude obtaining an objStat. Path guessing will return fake
 	 * <code>ObjStat</code> for root, zone, and /zone/home directories if asked,
 	 * and if jargon properties allow this.
-	 * <p/>
+	 * <p>
 	 * Note that the returned <code>ObjStat</code> has an indicator if a
 	 * 'stand-in' objStat was returned.
 	 *

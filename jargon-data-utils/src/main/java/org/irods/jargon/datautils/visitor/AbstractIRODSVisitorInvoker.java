@@ -16,14 +16,14 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSAccount</code> and <code>IRODSAccessObjectFactory</code>
  * references to do additional operations on the iRODS grid containing the
  * relevant data.
- * <p/>
+ * <p>
  * Note that this class takes a generic reference <E> that represents the type
  * of data to be iterated or 'visited', such as a gen query result or a list of
  * Jargon domain objects from some Jargon operation.
- * <p/>
+ * <p>
  * Note that the visited object has the ability to return a code to halt
  * operations, and this class has a method to cancel operations too.
- * <p/>
+ * <p>
  * NOTE: this is an initial implementation, currently in use for the HIVE
  * project, and it is expected that this will change (and we'll write some nice
  * unit tests under here) as the actual requirements take shape. Use with
@@ -71,7 +71,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * Access iRODS and derive the data that will be iterated and provided to
 	 * the visitor object. The execute method should iterate or process over the
 	 * underlying data and make invocations to the <code>visit()</code> method.
-	 * <p/>
+	 * <p>
 	 * This method will honor any cancellation signal when iterating
 	 * 
 	 * @throws NoMoreItemsException
@@ -144,7 +144,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 
 	/**
 	 * Complete the operation, called even if cancel or error occurs.
-	 * <p/>
+	 * <p>
 	 * Any resource freeing or final evaluation should be implemented here
 	 * 
 	 * @throws JargonException

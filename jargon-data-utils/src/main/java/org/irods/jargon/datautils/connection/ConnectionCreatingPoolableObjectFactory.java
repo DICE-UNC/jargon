@@ -16,7 +16,7 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSCommands</code> instance) that will block waiting to get a handle.
  * This is intended for clients that are sharing a single connection to iRODS,
  * and specifically for clients sharing a temporary password connection.
- * <p/>
+ * <p>
  * In the future, more generalized pooling implementations may be developed, but
  * for now, this is narrowly focused.
  * 

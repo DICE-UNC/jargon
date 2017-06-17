@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract connection to iRODS, representing the network layer of communication
  * between Jargon and iRODS.
- * <p/>
+ * <p>
  * This abstraction will eventually be able to handle TCP as well as NIO, with
  * indicators to determine which techniques are available depending on the lower
  * level implementation. This will evolve over time but will not change the
@@ -83,10 +83,10 @@ public abstract class AbstractConnection {
 	 * Socket opened to iRODS, and you want to wrap that socket with the low
 	 * level iRODS semantics. An example use case is when you need to to PAM
 	 * authentication and wrap an existing iRODS connection with an SSL socket.
-	 * <p/>
+	 * <p>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * <p/>
+	 * <p>
 	 * Note that this method does not set up the socket streams, this is the
 	 * responsibility of the subclass. This is all kind of a mess with the
 	 * introduction of negotiation and seems a bit too involved for its own
@@ -259,7 +259,7 @@ public abstract class AbstractConnection {
 	 * Do an initial (first) connection to iRODS based on account and
 	 * properties. This is differentiated from the <code>reconnect()</code>
 	 * method which is used to periodically renew a socket
-	 * <p/>
+	 * <p>
 	 * At the successful completion of this method, the networking is created,
 	 * though the handshake and authentication steps remain
 	 *
@@ -782,7 +782,7 @@ public abstract class AbstractConnection {
 	 * circumstances, such as when wrapping a socket in an SSL connection when
 	 * doing PAM authentication. These are special occasions where an
 	 * <code>IRODSConnection</code> is created outside of the normal factory.
-	 * <p/>
+	 * <p>
 	 * For general usage, this method should not called.
 	 *
 	 * @param connected

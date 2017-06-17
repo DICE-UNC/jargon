@@ -16,11 +16,11 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
  * class <code>IRODSFileImpl</code> extends the <code>java.io.File</code> class.
  * This interface is available to allow easier testing and potentially other
  * implementations.
- * <p/>
+ * <p>
  * The <code>IRODSFile</code>, and the <code>IRODSFileImpl</code> implementation
  * class are meant to strictly follow the <code>java.io.File</code> interface,
  * with a minimum of iRODS-specific methods.
- * <p/>
+ * <p>
  * The <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
  * operations. In older versions of Jargon, various iRODS operations were mixed
  * in with the <code>java.io.*</code> implementation classes, and these have
@@ -28,7 +28,7 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
  * <code>org.irods.jargon.core.pub.*</code> classes. There you will find
  * facilities to manipulate the metadata catalog entities, do AVU operations,
  * transfers of various sorts, queries, and other iRODS operations.
- * <p/>
+ * <p>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
  *

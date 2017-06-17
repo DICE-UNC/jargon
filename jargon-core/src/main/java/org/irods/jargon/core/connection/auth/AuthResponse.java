@@ -11,7 +11,7 @@ import org.irods.jargon.core.connection.StartupResponseData;
 /**
  * Represents information in response to an authentication attempt. This is
  * meant to hold generic responses to an authorization attempt.
- * <p/>
+ * <p>
  * Note that the authentication process may alter the iRODS account information,
  * and as such, the response contains both the <code>IRODSAccount</code> as
  * presented for login, and the account after the login process completes. For

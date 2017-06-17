@@ -227,7 +227,7 @@ abstract class AuthMechanism {
 	 * has completed. By default, the method just returns the protocol as passed
 	 * in. In some authentication scenarios, follow on steps may manipulate, or
 	 * even create a different authenticated protocol layer and return that.
-	 * <p/>
+	 * <p>
 	 * Note that the protocol contains a reference to the {@link AuthResponse}
 	 * that details the authenticating and authenticated accounts and
 	 * identities.
@@ -289,7 +289,7 @@ abstract class AuthMechanism {
 	/**
 	 * Hook method in the life cycle after the startup packet has been sent,
 	 * encapsulating the actual authentication process.
-	 * <p/>
+	 * <p>
 	 * This abstract method should be implemented in a subclass authentication
 	 * handler
 	 *

@@ -16,7 +16,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * receives call-backs from the lower-level connection, and can then generate
  * higher-level status call-backs as needed. The lifetime of this listener
  * should be for a transfer of one file.
- * <p/>
+ * <p>
  * This object uses simple optimizations, such as aggregating multiple low-level
  * call-backs to fewer higher-level call-backs, to keep the chatter to a
  * minimum. Note that this is an initial implementation, and further

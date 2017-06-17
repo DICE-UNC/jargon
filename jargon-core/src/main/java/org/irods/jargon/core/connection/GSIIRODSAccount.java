@@ -187,7 +187,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * Returns a string representation of this file system object. The string is
 	 * formated according to the iRODS URI model. Note: the user password will
 	 * not be included in the URI.
-	 * <p/>
+	 * <p>
 	 * This version using the user DN as the user name. This may change in the
 	 * future.
 	 */

@@ -8,7 +8,7 @@ package org.irods.jargon.userprofile;
  * to the public. This is actually controlled by controlling the visibility of
  * the source of this information to the inquiring user, so that protection is
  * optional.
- * <p/>
+ * <p>
  * Note that some of the base attributes are based on the RFC for eduPerson at:
  * http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-
  * 200806.html And going forward more attributes may be added.

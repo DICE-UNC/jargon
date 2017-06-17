@@ -61,7 +61,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * Create a base instance of the mid level protocol, which may be processed
 	 * through multiple phases before being ready for use.
-	 * <p/>
+	 * <p>
 	 * The life cycle of this connection is mediated by the
 	 * <code>AbstractIRODSMidLevelProtocolFactory</code> implemenation used, and
 	 * these connections should be obtained from that factory, typically through
@@ -216,7 +216,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * will not wrap any buffering around the input stream. It is the
 	 * responsibility of the caller of this method to properly close the
 	 * <code>inputStream</code> object at the appropriate time.
-	 * <p/>
+	 * <p>
 	 * This method is meant to handle the put operation when streaming to iRODS,
 	 * this occurs when a parallel operation is overridden in server side
 	 * policy, and is not used for typical put operations.
@@ -310,7 +310,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * the entire <code>inputStream</code> data to the given length at one time.
 	 * This is used for normal put operations that do not required parallel
 	 * transfers.
-	 * <p/>
+	 * <p>
 	 * Note that the <code>inputStream</code> object is closed by this method
 	 * when completed. Any buffering that should be done on the stream must be
 	 * done before passing the stream to this method, as this method does not
@@ -734,11 +734,11 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * <b>If you are a client, you should not call this!</b> Shutdown hook used
 	 * by the {@link IRODSProtocolManager} to cause the actual connection to be
 	 * terminated normally by sending a disconnect method.
-	 * <p/>
+	 * <p>
 	 * Clients should use the methods in {@link IRODSSession} to obtain and
 	 * return connections, and let the IRODSSession work with the configured
 	 * {@link IRODSProtocolManager} to enforce the connection life-cycle.
-	 * <p/>
+	 * <p>
 	 * This method may be called by pooling implementations that are pruning
 	 * connections in a pool rather than returning them to the pool.
 	 *
@@ -793,7 +793,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * Method that will cause the connection to be released, returning it to the
 	 * <code>IRODSProtocolManager</code> for actual shutdown or return to a
 	 * pool.
-	 * <p/>
+	 * <p>
 	 * This method is called for normal close of a connection from a higher
 	 * level API method, and typically is not used by clients of the API. The
 	 * exception would be when implementing a custom
@@ -813,7 +813,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * <code>IRODSProtocolManager</code> for shutdown when something has gone
 	 * wrong with the agent or connection, and the connection should not be
 	 * re-used.
-	 * <p/>
+	 * <p>
 	 * This method is called for a forced error close of a connection from a
 	 * higher level API method, and typically is not used by clients of the API.
 	 * The exception would be when implementing a custom

@@ -7,7 +7,7 @@ import org.irods.jargon.core.packinstr.TransferOptions;
  * An interface for an object that can control a recursive transfer process,
  * providing a common reference object between the transferring process and the
  * recursive transfer method (get, put, replicate, etc).
- * <p/>
+ * <p>
  * Implementations of this class can act as a filter to select items for
  * transfer, and can also be used to signal a cancel.
  *

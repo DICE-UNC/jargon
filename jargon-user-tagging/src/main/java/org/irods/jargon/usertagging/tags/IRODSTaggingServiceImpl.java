@@ -32,13 +32,13 @@ import org.slf4j.LoggerFactory;
  * of Jargon to maintain user-defined tags on iRODS domain objects. The service
  * also allows a single 'comment' or description on a file or collection per
  * user.
- * <p/>
+ * <p>
  * Note that tags are by user. Various signatures within this service either
  * default to the logged-in user, or utilize the user passed in as part of the
  * method parameters. Please note carefully the comments for each method to
  * ensure that this is appropriately controlled. This service does not attempt
  * to do any edits of which user is updating which tag.
- * <p/>
+ * <p>
  * The <code>FreeTaggingService</code> is appropriate for end-user interfaces,
  * and does ensure that tag query/maintenance operations are done as the
  * logged-in user. Generally, the caller of this lower level service is

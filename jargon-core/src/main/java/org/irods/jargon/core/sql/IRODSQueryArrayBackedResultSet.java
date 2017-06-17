@@ -26,9 +26,9 @@ import java.util.Map;
  * is based on data parsed into an array of <code>String</code> data, and
  * includes other information about the generating query, and the capability to
  * page the results.
- * <p/>
+ * <p>
  * Notes:
- * <p/>
+ * <p>
  * This might need to be abstract with subclasses for the various query types,
  * need to consider whether this is stateful (page results) or stateless (use
  * offsets).

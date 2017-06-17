@@ -11,7 +11,7 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
  * Interface defines an enhanced service for dealing with rules. Specifically,
  * this service provides hooks suitable for developing intefaces used to compose
  * and execute rules.
- * <p/>
+ * <p>
  * Note that this service class refines and extends the jargon-core
  * <code>RuleProcessingAO</code> services, which represents basic rule
  * execution.

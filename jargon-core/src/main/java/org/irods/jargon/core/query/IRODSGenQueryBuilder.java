@@ -11,11 +11,11 @@ import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
  * Builder facility for iRODS gen queries. This class allows an iRODS general
  * query to be built via code, including the specification of select fields,
  * conditions, and order by parameters.
- * <p/>
+ * <p>
  * This technique allows richer query development then the original 'iquest'
  * syntax facility that relied on the building of queries as 'iquest' select
  * strings.
- * <p/>
+ * <p>
  * This class is not thread-safe, but really does not need to be. The queries
  * produced by the builder are immutable references to the fields in this
  * builder.
@@ -62,7 +62,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
-	 * <p/>
+	 * <p>
 	 * This version allows the specification of case insensitive queries
 	 *
 	 * @param distinct
@@ -87,7 +87,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
 	 * extensible metadata is to be used in the query processing.
-	 * <p/>
+	 * <p>
 	 * This version allows the specification of case insensitive queries
 	 *
 	 * @param distinct

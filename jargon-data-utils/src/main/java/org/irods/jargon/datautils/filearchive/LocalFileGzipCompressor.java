@@ -97,7 +97,7 @@ public class LocalFileGzipCompressor {
 
 	/**
 	 * Given a file, unzip it.
-	 * <p/>
+	 * <p>
 	 * Note the result file will either be the same name with the .gzip removed,
 	 * leaving the original extension. If a .gzip extension is not found it will
 	 * make it a .tar file by default

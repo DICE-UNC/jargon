@@ -8,14 +8,14 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Interface for an access object that can handle the registration of files to
  * iRODS. This mirrors the functionality of the ireg command
- * <p/>
+ * <p>
  * https://www.irods.org/index.php/ireg
- * <p/>
+ * <p>
  * Register a file or a directory of files and subdirectory into iRODS. The file
  * or the directory of files must already exist on the server where the resource
  * is located. The full path must be supplied for both the physicalFilePath and
  * the irodsPath.
- * <p/>
+ * <p>
  * An admin user will be able to register any Unix directory. But for a regular
  * user, he/she needs to have a UNIX account on the server with the same name as
  * his/her iRODS user account and only UNIX directories created with this
@@ -75,7 +75,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * iRODS checksum to be computed and stored. Note that there is a separate
 	 * method that generates a local checksum and causes it to be verified in
 	 * iRODS.
-	 * <p/>
+	 * <p>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
 	 *
@@ -115,7 +115,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * Register a single file (data object) to iRODS. This method will first
 	 * generate a checksum value for the local file, and then send this checksum
 	 * to irods so that it can be verified and stored.
-	 * <p/>
+	 * <p>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
 	 *
@@ -153,7 +153,7 @@ public interface IRODSRegistrationOfFilesAO {
 	/**
 	 * Remove this registered file from the iRODS catalog. Note that this method
 	 * does not delete the physical file.
-	 * <p/>
+	 * <p>
 	 * This method is analagous to calling the irm icommand with the -U flag.
 	 * Please see: https://www.irods.org/index.php/irm
 	 *
@@ -176,7 +176,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * iRODS checksum to be computed and stored. Note that there is a separate
 	 * method that generates a local checksum and causes it to be verified in
 	 * iRODS.
-	 * <p/>
+	 * <p>
 	 * This method is for data objects, and will cause an error if the provided
 	 * paths are an iRODS collection.
 	 *
@@ -217,7 +217,7 @@ public interface IRODSRegistrationOfFilesAO {
 	 * Remove this registered collection from the iRODS catalog. Note that this
 	 * method does not delete the physical files, rather it removes them from
 	 * the catalog but leavess
-	 * <p/>
+	 * <p>
 	 * This method is analagous to calling the irm icommand with the -U flag.
 	 * Please see: https://www.irods.org/index.php/irm
 	 *

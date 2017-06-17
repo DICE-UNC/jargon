@@ -6,7 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 /**
  * An annotation in the source code that indicates that the method is meant to
  * automatically handle operations across federated zones.
- * <p/>
+ * <p>
  * This is a new addition, and will be added over time as each relevant method
  * is tested and certified to be cross-zone compatible.
  *

@@ -40,16 +40,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A service to share Collections and Data Objects
- * <p/>
+ * <p>
  * Like the star and tagging facility, a share is a special metadata tag on a
  * Collection or Data Object, naming that item as shared. In the process of
  * declaring the share, the proper ACL settings are done.
- * <p/>
+ * <p>
  * Sharing using a special tag at the 'root' of the share avoids representing
  * every file or collection in a deeply nested shared collection as 'shared', as
  * it would be based purely on the ACL settings. As a first class object, a
  * share can have an alias name, and is considered one unit.
- * <p/>
+ * <p>
  * Note that shares are just using metadata to make a shared collection or data
  * object a 'first class' object, differentiated from all of the child
  * collections and data objects. The members who can view a share are simply
@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * normal methods in the jargon-core {@link DataObjectAO} and
  * {@link CollectionAO} services. Look there if you need to tweak members of a
  * share.
- * <p/>
+ * <p>
  * This means that anytiome you create a share, that any ACL manipulation in
  * that share will invite people to see that as a share.
  * 
@@ -395,7 +395,7 @@ public class IRODSSharingServiceImpl extends AbstractIRODSTaggingService
 	/**
 	 * Given an objStat, look for the share AVU marker and create the
 	 * <code>IRODSSharedFileOrCollection</code> from the AVU and ACL data.
-	 * <p/>
+	 * <p>
 	 * Note that null is returned if no share exists.
 	 * 
 	 * @param irodsAbsolutePath

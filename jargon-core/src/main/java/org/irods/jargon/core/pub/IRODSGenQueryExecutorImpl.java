@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Implementation class that can process iquest-like queries using the genquery
  * facility of iRODS.
- * <p/>
+ * <p>
  * Note that this implementation provides the ability to close query results
  * held in iRODS, or, alternately, to leave the results open so that the next
  * set of results may be retrieved. The former mode is more suitable for

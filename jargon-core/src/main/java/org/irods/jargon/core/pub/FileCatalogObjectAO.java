@@ -19,7 +19,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * Given a target file, and an optional resource, retrieve the host name
 	 * that is the resource server that contains the data. This is used in
 	 * connection re-routing.
-	 * <p/>
+	 * <p>
 	 * Note that this method will return <code>null</code> if no rerouting is
 	 * done
 	 *
@@ -40,7 +40,7 @@ public interface FileCatalogObjectAO extends IRODSAccessObject {
 	 * Given a target file, and an optional resource, retrieve the host name
 	 * that is the resource server that contains the data. This is used in
 	 * connection re-routing.
-	 * <p/>
+	 * <p>
 	 * Note that this method will return <code>null</code> if no rerouting is
 	 * done
 	 *

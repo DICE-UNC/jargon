@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * from the remotely executed script. In this case, the first segement of data
  * is sent and processed as before, while the remainder streams back as binary
  * data sent after the packing instruction message.
- * <p/>
+ * <p>
  * This stream represents the supplementary binary data coming back from iRODS.
  *
  * @author Mike Conway - DICE (www.irods.org)

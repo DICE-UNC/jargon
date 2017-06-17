@@ -36,7 +36,7 @@ public class TranslatedIRODSGenQuery {
 	 * Create an instance of the query translation, this contains information
 	 * about the original iquest-like query, as well as information about the
 	 * parsed and translated query.
-	 * <p/>
+	 * <p>
 	 * This version allows specification of 'upperCase'
 	 *
 	 * @param translatedSelectFields

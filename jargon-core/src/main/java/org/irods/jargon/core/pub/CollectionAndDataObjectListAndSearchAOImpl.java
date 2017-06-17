@@ -45,13 +45,13 @@ import org.slf4j.LoggerFactory;
  * This access object contains methods that can assist in searching across
  * Collections and Data Objects, and in listing across Collections And Data
  * Objects.
- * <p/>
+ * <p>
  * It is very common to create interfaces with search boxes, and with tree views
  * of the iRODS hierarchy. This class is meant to contain such methods. Note
  * that there are specific search and query methods for Data Objects
  * {@link DataObjectAO} and Collections {@link CollectionAO} that are useful for
  * general development.
- * <p/>
+ * <p>
  * Note the comments in individual methods for details on behavior of these
  * methods across s federation, and with special collections (e.g. soft links,
  * mounted collections) supported.
@@ -868,7 +868,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 	/**
 	 * List collections under a path, given that the objStat is known.
-	 * <p/>
+	 * <p>
 	 * Handles soft links
 	 *
 	 * @param absolutePathToParent

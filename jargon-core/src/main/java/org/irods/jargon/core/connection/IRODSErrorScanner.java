@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * response, and to detect and throw appropriate Exceptions based on the status
  * of the iRODS response. Specifically, this object detects iRODS error codes in
  * the 'intInfo' part of the response, and maps them to Jargon exceptions.
- * <p/>
+ * <p>
  * Note that this is an early implementation, and a fuller error hierarchy will
  * develop over time.
  *

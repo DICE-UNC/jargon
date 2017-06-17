@@ -24,12 +24,12 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * collections - {@link org.irods.jargon.core.pub.DataObjectAO}, and that
  * represent iRODS data objects and collections as <code>java.io.*</code>
  * operations - see {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * <p/>
+ * <p>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
  * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactory} implementation.
- * <p/>
+ * <p>
  * A word should be said about controlling transfers. There are two important
  * components to most of the methods in this class, these are the
  * {@link TransferStatusCallbackListener} and the {@link TransferControlBlock}.
@@ -46,17 +46,17 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * The <code>TransferControlBlock</code> can signal a cancellation of a process,
  * adjust a transfer as it progresses, and contains aggregate information about
  * the transfer as it runs.
- * <p/>
+ * <p>
  * Note that both the <code>TransferControlBlock</code> and
  * <code>TransferStatusCallbackListener</code> are optional, and may be set to
  * <code>null</code> in the various method signatures if not needed.
- * <p/>
+ * <p>
  * Note that the status call-backs you receive need to be quickly processed by
  * the implementor of the <code>TransferStatusCallbackListener</code>. Jargon
  * does not play any tricks to queue up these call-backs, they are direct calls
  * from the transfer process and can block progress of a transfer if not handled
  * efficiently.
- * <p/>
+ * <p>
  * Transfers can have multiple options that control their behavior. These will
  * be added as necessary, but will likely be too numerous to specify
  * individually. For this reason, a {@link TransferOptions} class has been
@@ -66,7 +66,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * up by an application. If no <code>TransferOptions</code> are specified, the
  * <code>JargonProperties</code> will be consulted to build a default set. In
  * many cases, this is all that is required.
- * <p/>
+ * <p>
  * If particular properties are required for an individual transfer, it is
  * possible to specify those options, where they apply. These will be mostly
  * relevant to 'put' and 'get' operations. If custom properties should be set,
@@ -80,7 +80,7 @@ import org.irods.jargon.core.transfer.TransferStatusCallbackListener;
  * is running, one may create a new instance of <code>TransferOptions</code>,
  * and then use the synchronized method to set those options in the
  * <code>TransferControlBlock</code>
- * <p/>
+ * <p>
  * Note that soft links are supported as iRODS paths in these operations.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -111,15 +111,15 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * target location. There are other methods in this class that will take the
 	 * last part of the source path, and use that as the collection name in the
 	 * target.
-	 * <p/>
+	 * <p>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.
-	 * <p/>
+	 * <p>
 	 * For a data object, this method will automatically handle a case where the
 	 * source file is a data object, and the target file is a collection. In
 	 * this case, the file name is propagated as the name of the file under the
 	 * target collection.
-	 * <p/>
+	 * <p>
 	 * If an attempt is made to move a file to itself, the case will be logged
 	 * and ignored.
 	 *
@@ -141,10 +141,10 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * registration of a <code>TransferStatusCallbackListener</code> that will
 	 * provide call-backs about the status of the transfer suitable for progress
 	 * monitoring.
-	 * <p/>
+	 * <p>
 	 * Note that this method will, if the correct jargon properties are set,
 	 * support connection re-routing to appropriate resources for the transfer.
-	 * <p/>
+	 * <p>
 	 * Note: certain extended transfer options for put (such as target data
 	 * type) are set in the {@link TransferOptions} object, which is specified
 	 * by creating and passing within the {@link TransferControlBlock}. For
@@ -223,7 +223,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * will detect whether this is a get of a single file, or of a collection.
 	 * If this is a get of a collection, the method will recursively obtain the
 	 * data from iRODS.
-	 * <p/>
+	 * <p>
 	 * Note that the <code>TransferControlBlock</code> contains a
 	 * <code>TransferOptions</code> object that can control details of transfer
 	 * behavior for the given transfer. These options may be set before the
@@ -232,7 +232,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * option in this case controls whether the local file in the get should be
 	 * over-written if it exists already. The standard default should be to
 	 * throw an <code>OverwriteException</code> if a local file already exists.
-	 * <p/>
+	 * <p>
 	 * There is a force option setting in <code>TransferOptions</code> for
 	 * <code>ForceOption.ASK_CALLBACK_LISTENER</code>. If this option is set,
 	 * and a file overwrite is detected, the
@@ -364,7 +364,7 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * recursive operation if a collection is specified. If a collection is
 	 * specified, that collection will become a sub-directory added underneath
 	 * the given parent.
-	 * <p/>
+	 * <p>
 	 * Note that this method will, if the correct jargon properties are set,
 	 * support connection re-routing to appropriate resources for the transfer.
 	 *
@@ -410,15 +410,15 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * will inspect the paths and create the appropriate command to iRODS
 	 * automatically. In this method, the target file is expressed as the actual
 	 * target location.
-	 * <p/>
+	 * <p>
 	 * For this method, if the source is /coll1/coll2/coll3 and the target is
 	 * /coll4/coll5/coll6, the result will be /coll4/coll5/coll6/coll3.
-	 * <p/>
+	 * <p>
 	 * For a data object, this method will automatically handle a case where the
 	 * source file is a data object, and the target file is a collection. In
 	 * this case, the file name is propagated as the name of the file under the
 	 * target collection.
-	 * <p/>
+	 * <p>
 	 * If an attempt is made to move a file to itself, the case will be logged
 	 * and ignored.
 	 *
@@ -442,10 +442,10 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * deprecated. Note that the <code>transferControlBlock</code> and
 	 * <code>TransferStatusCallbackListener</code> objects are optional and may
 	 * be set to <code>null</code> if not required.
-	 * <p/>
+	 * <p>
 	 * Note that this operation can handle a single data object, or a
 	 * collection.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
@@ -494,10 +494,10 @@ public interface DataTransferOperations extends IRODSAccessObject {
 	 * deprecated. Note that the <code>transferControlBlock</code> and
 	 * <code>TransferStatusCallbackListener</code> objects are optional and may
 	 * be set to <code>null</code> if not required.
-	 * <p/>
+	 * <p>
 	 * Note that this operation can handle a single data object, or a
 	 * collection.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the transfer

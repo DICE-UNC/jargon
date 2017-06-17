@@ -267,9 +267,9 @@ public class TestingPropertiesHelper {
 	/**
 	 * Get a URI in IRODS format that points to a scratch file, given the file
 	 * name and any additional path to that file without a leading '/'.
-	 * <p/>
+	 * <p>
 	 * This version will not include user information.
-	 * <p/>
+	 * <p>
 	 *
 	 * Note that the scratch directory and everything above it is computed from
 	 * testing.properties

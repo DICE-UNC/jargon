@@ -14,7 +14,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  * Value object that holds information on data objects and collections. This
  * object includes info to distinguish between data object and collection, to
  * identify it by path, and also information that can be used for paging.
- * <p/>
+ * <p>
  * This object is meant to be used for use cases such as iRODS file tree
  * browsing, and as such it is meant to be returned in collections. The behavior
  * of these objects in the collection is such that objects for collections and

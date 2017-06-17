@@ -22,7 +22,7 @@ import org.slf4j.LoggerFactory;
  * the iexecmd. This is a lower-level service, and is not meant for use as a
  * public API. Please consult the appropriate access object for public
  * interfaces for command execution.
- * <p/>
+ * <p>
  * This object is immutable, but should not be shared between threads, as it
  * holds a reference to a connection to an iRODS Agent.
  *

@@ -20,7 +20,7 @@ AbstractIRODSMidLevelProtocolFactory {
 	 * different protocol operations and receive protocol responses from iRODS.
 	 * This is above the low level networking level, which is produced by the
 	 * provided <code>IRODSConnectionFactory</code>.
-	 * <p/>
+	 * <p>
 	 * The goal of this factory is to return a live, connected, and
 	 * authentication connection to an iRODS agent with the correct version of
 	 * the mid level protocol handler, therefore an authentication factory is

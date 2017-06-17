@@ -11,7 +11,7 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
  * Typically, properties that control Jargon are pulled from a default
  * jargon.properties file. This class would allow, for example, the wiring of
  * property options via Spring through various setters.
- * <p/>
+ * <p>
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
  * <code>TransferOptions</code>
@@ -693,7 +693,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Return <code>boolean</code> that indicates whether detailed performance
 	 * information is gathered and reported to the DEBUG log. This may introduce
 	 * overhead to operations.
-	 * <p/>
+	 * <p>
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
 	 *

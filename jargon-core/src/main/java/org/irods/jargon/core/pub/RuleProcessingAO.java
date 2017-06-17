@@ -21,19 +21,19 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * flag, which is explained below. The @external flag is used when
 	 * processing rules in the new rule format, and is not in effect (or causes
 	 * any harm) if executing a 'classic' style rule.
-	 * <p/>
+	 * <p>
 	 * The difference between having @external not having it is how the rule
 	 * engine interprets string input parameters. For external, the input
 	 * parameters are "code", for internal the input parameters are "values".
 	 * For example, if you have,
-	 * <p/>
+	 * <p>
 	 * INPUT *A=10
-	 * <p/>
+	 * <p>
 	 * The packed binary/XML will have a string 1.
-	 * <p/>
+	 * <p>
 	 * If the rule is external, 10 is interpreted as "code", so the value is
 	 * integer 10.
-	 * <p/>
+	 * <p>
 	 * If the rule is internal, 10 is interpreted as a "value", so the value is
 	 * string "10".
 	 *
@@ -51,7 +51,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
 	 * TODO: work in progress Purge all rules from the delayed exec queue.
-	 * <p/>
+	 * <p>
 	 * <b>Note: this method purges ALL rules in the queue</b>
 	 *
 	 * @return <code>int</code> with a count of the rules purged from the
@@ -75,7 +75,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * the class loader. This will be a rule file that will be executed. The
 	 * input parameters passed in can be used to override parameters discovered
 	 * in the rule body.
-	 * <p/>
+	 * <p>
 	 * The rule will be run based on the default values in the given rule,
 	 * overridden by any values passed in as an input parameter.
 	 *
@@ -103,7 +103,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * Given a rule file that exists as an iRODS file. This will be a rule file
 	 * that will be executed. The input parameters passed in can be used to
 	 * override parameters discovered in the rule body.
-	 * <p/>
+	 * <p>
 	 * The rule will be run based on the default values in the given rule,
 	 * overridden by any values passed in as an input parameter.
 	 *
@@ -131,29 +131,29 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * override parameters derived by processing the rule body. This method
 	 * applies to either the classic (pre iRODS 3.0) and new (as of iRODS 3.0)
 	 * rule language.
-	 * <p/>
+	 * <p>
 	 * Note that the rule processing type needs to be set according to the type
 	 * of rule being processed. The 'classic' rule processing type is meant for
 	 * the 'classic' rule language. The <code>EXTERNAL</code> and
 	 * <code>INTERNAL</code>.
-	 * <p/>
+	 * <p>
 	 * * Note that this method will, if running on iRODS 3.0 or higher, add the @external
 	 * flag, which is explained below. The @external flag is used when
 	 * processing rules in the new rule format, and is not in effect effect (or
 	 * causes any harm) if executing a 'classic' style rule.
-	 * <p/>
+	 * <p>
 	 * The difference between having @external not having it is how the rule
 	 * engine interprets string input parameters. For external, the input
 	 * parameters are "code", for internal the input parameters are "values".
 	 * For example, if you have,
-	 * <p/>
+	 * <p>
 	 * INPUT *A=10
-	 * <p/>
+	 * <p>
 	 * The packed binary/XML will have a string 1.
-	 * <p/>
+	 * <p>
 	 * If the rule is external, 10 is interpreted as "code", so the value is
 	 * integer 10.
-	 * <p/>
+	 * <p>
 	 * If the rule is internal, 10 is interpreted as a "value", so the value is
 	 * string "10".
 	 *
@@ -182,7 +182,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 
 	/**
 	 * Delete selected rule from the delayed execution queue.
-	 * <p/>
+	 * <p>
 	 * This method will silently ignore a rule not on the queue
 	 *
 	 * @param queueId

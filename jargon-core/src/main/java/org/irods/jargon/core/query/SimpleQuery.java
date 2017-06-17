@@ -10,7 +10,7 @@ import java.util.List;
  * Represents an sql statement as a 'simple query', which is an iRODS facility
  * that allows certain SQL statements to be executed. These statements are
  * configured within iRODS.
- * <p/>
+ * <p>
  * This class is immutable and thread-safe.
  *
  * @author Mike Conway - DICE (www.irods.org)

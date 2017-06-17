@@ -38,7 +38,7 @@ public class MiscIRODSUtils {
 	 * Given an iRODS path to a file, and an iRODS account, get a default
 	 * storage resource name from the iRODS account if that path is in the same
 	 * zone as an iRODS account, otherwise, return an empty resource.
-	 * <p/>
+	 * <p>
 	 * This is used in places in Jargon so that a default storage resource in an
 	 * iRODS account is not propagated to the wrong zone.
 	 *
@@ -250,7 +250,7 @@ public class MiscIRODSUtils {
 	 * @param userName
 	 *            <code>String</code> with a user name that can be just a name,
 	 *            or a user name in user#zone format.
-	 *            <p/>
+	 *            <p>
 	 *            This will give you back the user name in any case, and will
 	 *            return blank if given blank or null.
 	 * @return <code>String</code> with the userName, with any zone info trimmed
@@ -277,7 +277,7 @@ public class MiscIRODSUtils {
 	 * @param userName
 	 *            <code>String</code> with a user name that can be just a name,
 	 *            or a user name in user#zone format.
-	 *            <p/>
+	 *            <p>
 	 *            This will give you back the zone name in any case, and will
 	 *            return blank if given blank or null.
 	 * @return <code>String</code> with the zone, with any user info trimmed
@@ -393,7 +393,7 @@ public class MiscIRODSUtils {
 	 * Compute a home directory path in /zone/home/username format given an
 	 * <code>IRODSAccount</code> that describes the zone, and a user name for
 	 * the target user.
-	 * <p/>
+	 * <p>
 	 * This variant is meant to allow the computation of a home directory for an
 	 * arbitrary user based on the zone I'm logged into.
 	 *
@@ -802,7 +802,7 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Handy method to lop off the first part of a path based on a prefix.
-	 * <p/>
+	 * <p>
 	 * Does a verification if the first part of the path is not the prefix
 	 *
 	 * @param prefix

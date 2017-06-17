@@ -6,7 +6,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Access object to remotely execute scripts and commands on iRODS.
- * <p/>
+ * <p>
  * Note that in iRODS versions post 2.4.1, it is possible to stream large
  * results from remote execution. This object will interrogate the capabilities
  * of the iRODS server, and automatically use the advanced streaming algorithm
@@ -56,7 +56,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	 * Execute a script remotely. Use the provided iRODS absolute path to
 	 * calculate the physical path to the file, and then provide that physical
 	 * path as a command argument to the target script.
-	 * <p/>
+	 * <p>
 	 * This corresponds to the -P option of the iexec command.
 	 *
 	 * @param commandToExecuteWithoutArguments
@@ -80,7 +80,7 @@ public interface RemoteExecutionOfCommandsAO extends IRODSAccessObject {
 	/**
 	 * Execute a script remotely. Use the provided iRODS absolute path to
 	 * determine the server upon which the command will be run
-	 * <p/>
+	 * <p>
 	 * This corresponds to the -p option of the iexec command.
 	 *
 	 * @param commandToExecuteWithoutArguments

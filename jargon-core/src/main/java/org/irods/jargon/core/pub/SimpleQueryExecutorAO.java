@@ -13,7 +13,7 @@ import org.irods.jargon.core.query.SimpleQuery;
  * is mainly used for administrative queries, as in the <code>iadmin</code>
  * icommand. Typically these commands require <code>rodsadmin</code>, and will
  * fail if executed without admin rights.
- * <p/>
+ * <p>
  * Simple Query allows the the execution of queries as parameterized SQL. These
  * SQL statements are pre-loaded in iRODS and validated before being allowed to
  * run. Other techniques, such as GenQuery, and the new SpecialQuery facility,

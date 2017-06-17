@@ -38,7 +38,7 @@ public interface IRODSStarringService {
 	 * Annotate a file or collection as 'starred' or a favorite folder. This is
 	 * implemented as an iRODS AVU. The AVU is owned by the user who is logged
 	 * in, and includes a free text description.
-	 * <p/>
+	 * <p>
 	 * Note that this method will either add or update, based on previous data.
 	 * 
 	 * @param irodsAbsolutePath
@@ -72,7 +72,7 @@ public interface IRODSStarringService {
 
 /**
 	 * List those collections marked as 'starred'.  Note that this method allows paging by providing an offset.
-	 * <p/>
+	 * <p>
 	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
 	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
 	 * results.
@@ -87,7 +87,7 @@ public interface IRODSStarringService {
 
 /**
 	 * List those data objects marked as 'starred'.  Note that this method allows paging by providing an offset.
-	 * <p/>
+	 * <p>
 	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
 	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
 	 * results.

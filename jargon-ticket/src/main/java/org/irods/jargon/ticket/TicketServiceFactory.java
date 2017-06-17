@@ -7,7 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
  * Factory for various services that support iRODS tickets. This is helpful for
  * creating these services in various applications in a way that is easy to mock
  * and test.
- * <p/>
+ * <p>
  * Note that tickets are not supported in versions before iRODS 3.1
  * 
  * 

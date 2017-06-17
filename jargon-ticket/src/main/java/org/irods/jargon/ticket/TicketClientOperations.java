@@ -15,7 +15,7 @@ public interface TicketClientOperations {
 
 	/**
 	 * Wraps a put operation with ticket semantics.
-	 * <p/>
+	 * <p>
 	 * Put a file or collection to iRODS. Note that 'force' is not supported
 	 * with tickets at this time, so overwrites will return an
 	 * <code>OverwriteException</code>
@@ -58,7 +58,7 @@ public interface TicketClientOperations {
 
 	/**
 	 * Wraps a get operation with ticket semantics.
-	 * <p/>
+	 * <p>
 	 * Get a file or collection from iRODS to the local file system. This method
 	 * will detect whether this is a get of a single file, or of a collection.
 	 * If this is a get of a collection, the method will recursively obtain the
@@ -105,12 +105,12 @@ public interface TicketClientOperations {
 	 * <code>InputStream</code> for that file, as well as the length of data to
 	 * be streamed. This method is oriented towards applications that need to
 	 * represent the data from iRODS as a stream.
-	 * <p/>
+	 * <p>
 	 * Note that currently only 'get' and 'put' are supported via tickets, so
 	 * mid-tier applications that wish to stream data back to the client need to
 	 * do an intermediate get to the mid-tier platform and then stream from this
 	 * location.
-	 * <p/>
+	 * <p>
 	 * Tickets are limited in what they can access, so various operations that
 	 * refer to the iCAT, such as obtaining the length, or differentiating
 	 * between a file and a collection, cannot be done in the typical way. As a
@@ -151,7 +151,7 @@ public interface TicketClientOperations {
 	 * that file to iRODS. Once the operation is complete, the temporary file
 	 * will be removed. This removal is done in a finally block, so that if the
 	 * put operation fails, it should minimize leakage of old files.
-	 * <p/>
+	 * <p>
 	 * The primary use case for this method is in mid-tier applications where a
 	 * file is being uploaded from a browser. Since the iRODS ticket system does
 	 * not support input or output streams, the upload needs to be wrapped to

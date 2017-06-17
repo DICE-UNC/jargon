@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract superclass for a manager of file restarts. This allows in-memory,
  * file based, and other variants to maintain long file restart information.
- * <p/>
+ * <p>
  * This manager serves as a repository of file restart info and a place to
  * update that information, maintaining a representation of
  * {@link FileRestartInfo} for a given path

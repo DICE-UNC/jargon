@@ -36,11 +36,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Manage the storage and retrieval of <code>UserProfile</code> information in
  * iRODS.
- * <p/>
+ * <p>
  * This implementation uses a convention of a .profile file in the user home dir
  * with the values attached as AVU's, and a .protected file in the user home dir
  * with the values in the file as properties.
- * <p/>
+ * <p>
  * This scheme is necessary as AVU's are publicly query-able. Having some data
  * in AVU's will help in that they are more easily queried.
  * 

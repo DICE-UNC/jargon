@@ -9,7 +9,7 @@ import org.irods.jargon.core.exception.JargonException;
  * Immutable object gives translation of an ExecCmd operation into XML in order
  * to close a stream opened by ExecCmd. For simplicity, this variant of the
  * packing instruction is factored into its own class.
- * <p/>
+ * <p>
  * This version is for iRODS 4.1.9 or later
  *
  * @author Mike Conway - DICE (www.irods.org)

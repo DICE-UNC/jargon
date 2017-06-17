@@ -7,7 +7,7 @@ package org.irods.jargon.core.connection;
  * Defines an immutable callback of status of invocation of an iRODS function.
  * This includes the ability to provide progress on an underlying stream for get
  * and put operations.
- * <p/>
+ * <p>
  * This is new development, and can eventually include the ability to provide
  * callbacks on deletes and other operations.
  *

@@ -131,7 +131,7 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
 	 * iRODS file.
-	 * <p/>
+	 * <p>
 	 * This particular method will inspect the target resource, as set in the
 	 * <code>irodsFile</code>, and potentially re-route the connection to that
 	 * resource.
@@ -179,7 +179,7 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS input stream such that data can be read to the given
 	 * iRODS file.
-	 * <p/>
+	 * <p>
 	 * Note that this method signature will do any necessary connection
 	 * re-routing based to a resource actually containing the file. If such
 	 * rerouting is done, the <code>InputStream</code> will be wrapped with a

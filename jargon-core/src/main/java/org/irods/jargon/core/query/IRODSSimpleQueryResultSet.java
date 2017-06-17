@@ -7,7 +7,7 @@ import java.util.List;
  * Implements a simple result set view resulting from the execution of an iRODS
  * SimpleQuery. See {@link org.irods.jargon.core.pub.SimpleQueryExecutorAO} for
  * the public API to query iRODS via SimpleQuery and produce this result.
- * <p/>
+ * <p>
  * This class is immutable.
  *
  * @author Mike Conway - DICE (www.irods.org)

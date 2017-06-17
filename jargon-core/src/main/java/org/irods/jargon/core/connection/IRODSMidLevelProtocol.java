@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Encapsulates sending of messages and parsing of responses above the socket
  * read/write level and below the abstract operation level.
- * <p/>
+ * <p>
  * Note that the IRODS Connection object that this protocol utilizes is not
  * synchronized. Since a connection manager may also be managing the connection.
  * This <code>IRODSProtocol</code> object manages any necessary synchronization
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * IRODSConnection} This connection should not be shared between threads. A rule
  * of thumb is to treat a connection to IRODS the same way you would treat a
  * JDBC database connection.
- * <p/>
+ * <p>
  * A note on iRODS connections and handling when things go bad. Typically, an
  * iRODS connection is created by opening a socket, and doing a handshake and
  * other start-up procedures. Once that is done you are connected to an iRODS
@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * caller from knowledge about the actual networking that goes on, helps protect
  * the integrity of the connection, and also centralizes i/o in case something
  * bad happens on the network level.
- * <p/>
+ * <p>
  * There are several cooperating objects involved in obtaining a connection.
  * There is an {@link IRODSSession} object that maintains a ThreadLocal cache of
  * connections by account. Jargon asks for connections from the
@@ -44,7 +44,7 @@ import org.slf4j.LoggerFactory;
  * to a pool or cache. When the <code>IRODSProtocolManager</code> does decide to
  * actually close a connection, it will call the <code>disconnect</code> method
  * here.
- * <p/>
+ * <p>
  * If something bad happens on the network level (IOException like a broken
  * pipe), then it is doubtful that the iRODS disconnect sequence will succeed,
  * or that the connection to the agent is still reliable. In this case, it is
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * the <code>isConnected()</code> method. In the future, or in alternative
  * implementations, an actual ping could be made against the underlying
  * connection, but this is not currently done.
- * <p/>
+ * <p>
  * Bottom line, use the <code>IRODSSession</code> close methods. These are
  * exposed in the <code>IRODSFileSystem</code> and
  * <code>IRODSAccesObjectFactory</code> as well. Do not attempt to manipulate

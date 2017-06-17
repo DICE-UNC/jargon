@@ -88,12 +88,12 @@ class CollectionListingUtils {
 	 * This is a compensating method used to deal with the top of the tree when
 	 * permissions do not allow listing 'into' the tree to get to things the
 	 * user actually has access to.
-	 * <p/>
+	 * <p>
 	 * Phase 1 - when path is / - obtain a listing of zones and display as
 	 * subdirectories
-	 * <p/>
+	 * <p>
 	 * Phase 2 when path is /zone - interpolate a 'home' directory
-	 * <p/>
+	 * <p>
 	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
 	 * user name, see if a public dir. For foreign zone, add a dir for
 	 * user#homeZone and see if a public dir
@@ -466,7 +466,7 @@ class CollectionListingUtils {
 
 	/**
 	 * List the collections underneath the given path
-	 * <p/>
+	 * <p>
 	 * Works with soft links
 	 *
 	 * @param objStat

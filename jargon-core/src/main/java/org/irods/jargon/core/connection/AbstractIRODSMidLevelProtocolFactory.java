@@ -11,11 +11,11 @@ import org.slf4j.LoggerFactory;
 /**
  * Factory for creating the <code>AbstractIRODSMidLevelProtocol</code> object
  * that will create the protocol (packing instruction) level interface to iRODS.
- * <p/>
+ * <p>
  * This factory will be provided with the appropriate factories to create the
  * lower level networking layer (the <code>AbstractConnection</code>) as well as
  * the factory used to create pluggable authentication schemes.
- * <p/>
+ * <p>
  * This whole arrangement is then used by the <code>IRODSProtocolManager</code>
  * to create new connections when requested.
  *
@@ -37,7 +37,7 @@ abstract class AbstractIRODSMidLevelProtocolFactory {
 	 * different protocol operations and receive protocol responses from iRODS.
 	 * This is above the low level networking level, which is produced by the
 	 * provided <code>IRODSConnectionFactory</code>.
-	 * <p/>
+	 * <p>
 	 * The goal of this factory is to return a live, connected, and
 	 * authentication connection to an iRODS agent with the correct version of
 	 * the mid level protocol handler, therefore an authentication factory is

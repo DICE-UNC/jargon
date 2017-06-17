@@ -10,10 +10,10 @@ import org.irods.jargon.core.exception.JargonException;
  * be used to define and manipulate mounted collections. Note that mounted
  * collections are then accessed using the normal iRODS operations found
  * elsewhere in the API (e.g. get, put list operations)
- * <p/>
+ * <p>
  * This access object implements various operations that are accomplished using
  * the imcoll icommand: https://www.irods.org/index.php/imcoll
- * <p/>
+ * <p>
  * See also: https://www.irods.org/index.php/Mounted_iRODS_Collection
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -24,7 +24,7 @@ public interface MountedCollectionAO {
 	/**
 	 * Create a soft link to the given iRODS collection. This mirrors the imcoll
 	 * command with the -l option
-	 * <p/>
+	 * <p>
 	 * If the mountType is 'l' or 'link', the request is for a collection soft
 	 * link. the first argument is the iRODS collection to be linked or the
 	 * target collection name. The second argument is the link collection name
@@ -72,7 +72,7 @@ public interface MountedCollectionAO {
 	/**
 	 * Create an MSSO mount using the given MSSO file, mounting the result to
 	 * the provided collection path.
-	 * <p/>
+	 * <p>
 	 * This method takes a local file path to the mso object that will be 'put'
 	 * to iRODS as an mso file. Then the given collection is 'mounted' as a WSSO
 	 * given the provided path to the desired collection, and the .wss file that
@@ -94,10 +94,10 @@ public interface MountedCollectionAO {
 	/**
 	 * Create a file system mount point in iRODS. Mounting the file system at
 	 * the given local absolute path on the server to the given collection.
-	 * <p/>
+	 * <p>
 	 * Be aware that this is a physical file path on the iRODS server in
 	 * question, this does not mount a local (to the client) file system!
-	 * <p/>
+	 * <p>
 	 * See https://www.irods.org/index.php/Mounted_iRODS_Collection for notes on
 	 * mounted collections
 	 *

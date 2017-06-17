@@ -15,17 +15,17 @@ import org.slf4j.LoggerFactory;
  * are discovered as a result of calling a function in Jargon. Instead of trying
  * and failing to get a certain service from iRODS over and over again, a result
  * can be cached here to check.
- * <p/>
+ * <p>
  * This is a map of maps, the cache is by concatenated host + zone name. For
  * each host+zone, it will contain a map of plain <code>String</code> name/value
  * pairs.
- * <p/>
+ * <p>
  * Note that we'll this using a modest {@link ConcurrentHashMap} implementation,
  * so that synch overhead is minimized. Note that the worst case side effect
  * would be asking iRODS for something (e.g. trying to run a specific query)
  * more than once, so I'm trying to minimize synchronization. We can allow some
  * 'fuzziness' here. The point is to minimize such redundant calls.
- * <p/>
+ * <p>
  * This class also includes other cacheable data, such as the
  * <code>IRODSServerProperties</code> that is otherwise repeatedly obtained from
  * iRODS on connection

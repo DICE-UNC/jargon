@@ -24,14 +24,14 @@ import org.slf4j.LoggerFactory;
  * default manager will create a new connection for each requested connection.
  * For other behaviors, such as pooling or cacheing of connections, use other
  * implementations of <code>IRODSProtocolManager</code> directly.
- * <p/>
+ * <p>
  * Typical usage would be to create an instance of this object, then use the
  * <code>IRODSFileSystem</code> class to obtain a reference of an
  * <code>IRODSAccessObjectFactory</code> and a <code>IRODSFileFactory</code> .
  * These two factory objects allow creation of various iRODS file
  * implementations that map to the <code>java.io.*</code> packages, and to
  * create various Access Objects.
- * <p/>
+ * <p>
  * An Access Object represents the various domains within iRODS (such as User,
  * Resource, Collection) and allows accessing, updating, managing metadata, and
  * other operations specific to each of these objects. Access Objects will
@@ -41,11 +41,11 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSAccount</code> indicates the iRODS server to which that Access or
  * file object is connected. In other words, one IRODSFileSystem object will
  * manage connections to multiple iRODS servers.
- * <p/>
+ * <p>
  * After a connection is no longer needed, it must be closed by using the proper
  * close method contained in the <code>IRODSFileSystem</code> object. Please
  * consult the method documentation of this class for various close options.
- * <p/>
+ * <p>
  * It is important to note that the <code>IRODSFileSystem</code> is not created
  * multiple times in typical usage. The proper technique is to create the
  * <code>IRODSFileSystem</code>, and place it in a shared context (such as in
@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * that manage connections, and these objects are intended to manage the
  * creation of connections across the entire application. The shared objects are
  * designed to manage these connections across multiple threads.
- * <p/>
+ * <p>
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -188,7 +188,7 @@ public final class IRODSFileSystem {
 	 * this <code>IRODSFileSystem</code>, that Thread must close their own
 	 * connection. Connections are stored in a <code>ThreadLocal</code> which
 	 * means a Thread's connections to iRODS are only visible from that Thread.
-	 * <p/>
+	 * <p>
 	 * Note that this method wraps the close in a try/catch block, so that any
 	 * exception on close is logged and eaten. This is useful in code for neater
 	 * finally blocks. If you do want an error thrown, use the

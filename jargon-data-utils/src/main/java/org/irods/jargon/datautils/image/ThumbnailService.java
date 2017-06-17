@@ -27,7 +27,7 @@ public interface ThumbnailService {
 	 * iRODS to generate a thumbnail image for the iRODS data object at the
 	 * given absolute path. This temporary thumbnail file is then returned to
 	 * the caller.
-	 * <p/>
+	 * <p>
 	 * This method will call an image processing routine on the iRODS server,
 	 * and the thumbnail data will be streamed back to this method. The
 	 * resulting thumbnail is stored underneath the temporary thumbnail
@@ -54,7 +54,7 @@ public interface ThumbnailService {
 	 * Given an iRODS absolute path to a data object, retrieve an
 	 * <code>InputStream</code> which is a thumbnail of the given file at the
 	 * iRODS path.
-	 * <p/>
+	 * <p>
 	 * Currently, this is done by generating the thumbnail when requested,
 	 * later, this can include a caching scheme, and alternative cache locations
 	 * (local verus in iRODS AVU, etc). Consider this a first approximation.
@@ -75,7 +75,7 @@ public interface ThumbnailService {
 	 * Do a check to see whether the thumbnail service is available on the iRODS
 	 * server. If it is not available, the mid-tier fallback can be used
 	 * <code>createThumbnailLocally()</code>.
-	 * <p/>
+	 * <p>
 	 * Note that it is not efficient to call this method repeatedly, rather, a
 	 * client service should call once for an iRODS server and cache the result.
 	 * 

@@ -16,13 +16,13 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
  * Factory to produce IRODS access objects. This is the key object which can be
  * used to create components that can interact directly with iRODS to query
  * metadata attributes, update the catalog, and move data.
- * <p/>
+ * <p>
  * Access objects are styled after traditional DAO's, in that they deal with a
  * particular domain or service, and have methods to query for data about things
  * in iRODS, and methods to update things in iRODS. The access objects use
  * 'POJO' domain objects for input and output parameters, giving some nice,
  * simple abstractions of the iRODS metadata catalog.
- * <p/>
+ * <p>
  * Access objects are connected to iRODS at the time they are created. The
  * connection is determined by the
  * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when
@@ -37,13 +37,13 @@ import org.irods.jargon.core.transfer.TransferControlBlock;
  * used to close connections in that thread. This factory has hooks to also
  * close those connections, and this can be used in cases where this factory is
  * injected itself into another service.
- * <p/>
+ * <p>
  * Be aware that there should only be one reference to an
  * <code>IRODSFileSystem</code>. This object should not be created for every
  * operation, rather, it should be created and placed in a shared context,
  * passed as a reference, or wrapped in a singleton. Looking at the JUnit code
  * for usage can be somewhat misleading in this respect.
- * <p/>
+ * <p>
  *
  * For example, if using the 'shortcut' <code>IRODSFileSystem</code>. object,
  * you may see a pattern of use like this:
@@ -461,13 +461,13 @@ public interface IRODSAccessObjectFactory {
 	/**
 	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
 	 * <code>AuthResponse</code> augmented with information about the principal.
-	 * <p/>
+	 * <p>
 	 * Note that the account information is actually cached in a thread local by
 	 * the <code>IRODSSession</code>, so this method will preemptively destroy
 	 * any connection that may have been cached and start a new agent. For web
 	 * applications and other 'session per request' forms, this is the
 	 * recommended approach.
-	 * <p/>
+	 * <p>
 	 * Some API uses may cause more than one call to the authenticate method in
 	 * the course of handling a request (usually dictated by the style of the
 	 * API calling Jargon), and this method will avoid any preemptive shutdown
@@ -493,7 +493,7 @@ public interface IRODSAccessObjectFactory {
 	/**
 	 * Cause an <code>IRODSAccount</code> to be authenticated, and return and
 	 * <code>AuthResponse</code> augmented with information about the principal.
-	 * <p/>
+	 * <p>
 	 * Note that the account information is actually cached in a thread local by
 	 * the <code>IRODSSession</code>, so this method will return the cached
 	 * response if already authenticated. If not cached, this method causes an
@@ -533,7 +533,7 @@ public interface IRODSAccessObjectFactory {
 	 * with the server. This is especially useful for operations that may or may
 	 * not be configured, such that repeated failed attempts at an operation are
 	 * not made.
-	 * <p/>
+	 * <p>
 	 * A good example would be if required specific queries, rules,
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.

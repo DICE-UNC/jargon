@@ -11,7 +11,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 /**
  * Interface for an access object that helps with copying streams or byte arrays
  * to and from iRODS files.
- * <p/>
+ * <p>
  * This is a new service, so methods will fill in as they are identified.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -34,7 +34,7 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * Stream the file contents to a byte array. Note that this method is
 	 * suitable for small data sizes, but since it uses memory, large files may
 	 * cause memory problems.
-	 * <p/>
+	 * <p>
 	 * This particular method is used internally for object de-serialization
 	 * when stored as iRODS files.
 	 *
@@ -64,14 +64,14 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	 * Transfer the contents of a stream to a given file. Note that this method
 	 * will detect if the target file is an <code>IRODSFile</code>, and in that
 	 * case, it will properly handle the transfer via iRODS.
-	 * <p/>
+	 * <p>
 	 * Transfers are done in this method by doing a normal copy between java.io
 	 * streams.
-	 * <p/>
+	 * <p>
 	 * This method will close the input and output streams as part of normal
 	 * operations, and will attempt to do connection re-routing for iRODS files
 	 * if so specified in the jargon properties.
-	 * <p/>
+	 * <p>
 	 * Note that the <code>inputStream</code> will be buffered if it is not
 	 * passed in as a buffered stream, using the characteristics described in
 	 * jargon.properties.
@@ -115,10 +115,10 @@ public interface Stream2StreamAO extends IRODSAccessObject {
 	/**
 	 * Copy an input stream to an output stream as guided by the
 	 * jargon.properties settings.
-	 * <p/>
+	 * <p>
 	 * Note that this method will buffer the streams provided in the call if
 	 * they are not buffered, controlled by the jargon.properties.
-	 * <p/>
+	 * <p>
 	 * This method will close the streams and do a final flush of the output
 	 * stream, so no further processing is necessary.
 	 *

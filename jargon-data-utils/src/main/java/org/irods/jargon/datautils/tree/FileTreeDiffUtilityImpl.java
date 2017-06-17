@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to create a diff between two file trees. These trees may be either
  * local or iRODS.
- * <p/>
+ * <p>
  * Note that this method will be passed an <code>IRODSAccessObjectFactory</code>
  * , and this class assumes that the underlying iRODS connection will be closed
  * outside of the scope of this object.

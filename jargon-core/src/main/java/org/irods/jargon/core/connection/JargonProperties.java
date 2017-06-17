@@ -9,7 +9,7 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 /**
  * Represents a source of configuration metadata that will effect the behavior
  * of Jargon through a properties file or other configuration source.
- * <p/>
+ * <p>
  * Note that many of these properties may be overridden in a particular
  * operation during invocation. For example, many properties here control the
  * behavior of transfers, and can be overridden by setting
@@ -287,7 +287,7 @@ public interface JargonProperties {
 	 * useful statistics for optimization and tuning, but will introduce a
 	 * certain amount of overhead, so this is typically unsuitable for
 	 * production deployment.
-	 * <p/>
+	 * <p>
 	 * Note that actual instrumentation will be an ongoing process, and will be
 	 * done as certain operations are tuned. Initially, this will represent the
 	 * infrastructure for such tuning information.
@@ -305,7 +305,7 @@ public interface JargonProperties {
 	 * prevent the viewing of directories that a user is actually enabled to see
 	 * because the higher level collections do not have the ACL's that enable
 	 * this.
-	 * <p/>
+	 * <p>
 	 * This property allows a behavior to support the convention that a path
 	 * underneath the root, specifically /zonename/home/public might exist, and
 	 * the various entry listing methods will attempt to find this path, even
@@ -546,7 +546,7 @@ public interface JargonProperties {
 	/**
 	 * Indicates whether SSL cert checks need to be bypassed. This is not
 	 * recommended for production deployments.
-	 * <p/>
+	 * <p>
 	 * /** <code>boolean</code> that indicates whether ssl cert checks should be
 	 * bypassed. <code>false</code> is the default, meaning checks will be done,
 	 * and is the recommended production setting. This is used on initial load

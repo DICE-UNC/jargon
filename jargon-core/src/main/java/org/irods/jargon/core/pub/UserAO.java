@@ -43,11 +43,11 @@ public interface UserAO extends IRODSAccessObject {
 	 * Query users and return the <code>User</code> object with the given user
 	 * name. Note that user names may be given in user#zone format, and that
 	 * federated user registered on the current zone will be returned.
-	 * <p/>
+	 * <p>
 	 * For example, if I have zone1 and zone2, and zone1 has registered
 	 * user1#zone2 as a user in zone1, then this method will get the information
 	 * that zone1 has on the user name user#zone2.
-	 * <p/>
+	 * <p>
 	 * This is distinct from going to zone2, and asking for information on the
 	 * user user1#zone2.
 	 *
@@ -78,7 +78,7 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Query users by the unique id assigned by iRODS (database unique key) in a
 	 * zone.
-	 * <p/>
+	 * <p>
 	 * This will, if the given zone is not the same as the current zone,
 	 * initiate a cross-zone query and retrieve the information from the given
 	 * zone name.
@@ -261,7 +261,7 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Generate a temporary password for another user. Password validity times
 	 * and number of connections will be set by the iRODS server.
-	 * <p/>
+	 * <p>
 	 * This is a rodsadmin only function, and was added post iRODS 3.0.
 	 *
 	 * @param targetUserName
@@ -278,7 +278,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * Note that the various list methods do not retrieve the DN by default, as
 	 * it causes unnecessary GenQueries to be issued per user. This method can
 	 * retrieve that data as needed.
-	 * <p/>
+	 * <p>
 	 * The methods that retrieve an individual user do retrieve the DN by
 	 * default.
 	 *

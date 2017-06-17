@@ -87,12 +87,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Access Object provides 'DAO' operations on IRODS Data Objects (files).
- * <p/>
+ * <p>
  * Note that traditional file io per the java.io.* interfaces is handled through
  * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
  * class represents operations that are outside of the contracts one would
  * expect from an <code>java.io.File</code> object or the various streams.
- * <p/>
+ * <p>
  * Note that the operations are tuned using parameters set in the
  * <code>JargonProperties</code> object kept in <code>IRODSession</code>. Unless
  * specifically indicated in the method signatures or comments, the defaults
@@ -355,15 +355,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 
 	/**
 	 * Transfer a file or directory from the local file system to iRODS.
-	 * <p/>
+	 * <p>
 	 * Note that re-routing of connections to resources is not done from methods
 	 * in this class, but can be handled by using the methods in
 	 * {@link DataTransferOperations}.
-	 * <p/>
+	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
@@ -423,7 +423,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * operation is for a single data object, not for recursive transfers of
 	 * collections. See {@link DataTransferOperations} for recursive data
 	 * transfers.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the tranfer
@@ -468,15 +468,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Transfer a file or directory from the local file system to iRODS as
 	 * invoked by a client-side rule operation. This is used only for special
 	 * cases during rule invocation.
-	 * <p/>
+	 * <p>
 	 * Note that re-routing of connections to resources is not done from methods
 	 * in this class, but can be handled by using the methods in
 	 * {@link DataTransferOperations}.
-	 * <p/>
+	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
@@ -778,13 +778,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * This put will be handled as a parallel transfer. iRODS may have a no
 	 * parallel transfers policy, in which case, the transfer will fall back to
 	 * direct streaming of data
-	 * <p/>
+	 * <p>
 	 * A note on error handling here. <code>DataTransferOperationsImpl</code>
 	 * can wrap transfer operations and trap any exceptions that are thrown, it
 	 * will, if a callback listener is configured, quash the exception and
 	 * return that exception as a callback. The method here will simply pass on
 	 * any thrown exceptions, and there are no such wrapping semantics here.
-	 * <p/>
+	 * <p>
 	 * If we are in the realm of a parallel transfer, this method will, if
 	 * configured, autonomously process restarts of long transfers in the case
 	 * of failure up to a threshold value.
@@ -1015,11 +1015,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Get operation for a single data object. This method allows the the
 	 * definition of a <code>TransferControlBlock</code> object as well as a
 	 * <code>TransferStatusCallbackListener</code>.
-	 * <p/>
+	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
-	 * <p/>
+	 * <p>
 	 * If the <code>TransferOptions</code> specified in the
 	 * <code>TransferControlBlock</code> indicates no force, then an attempted
 	 * overwrite will throw the <code>OverwriteException</code>. If the transfer
@@ -1416,7 +1416,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * processing the get. An occasion where this has been problematic has been
 	 * the processing of client-side get actions as the result of rule
 	 * execution.
-	 * <p/>
+	 * <p>
 	 * Note that an iRODS file length is passed here. This avoids any query from
 	 * an <code>IRODSFile.length()</code> operation. The length is passed in, as
 	 * there are some occasions where the multi-step protocol can show a zero
@@ -2624,11 +2624,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements
 	 * Note that the <code>transferControlBlock</code> and
 	 * <code>TransferStatusCallbackListener</code> objects are optional and may
 	 * be set to <code>null</code> if not required.
-	 * <p/>
+	 * <p>
 	 * Note that this operation is for a single data object, not for recursive
 	 * transfers of collections. See {@link DataTransferOperations} for
 	 * recursive data transfers.
-	 * <p/>
+	 * <p>
 	 *
 	 *
 	 * @param irodsSourceFile

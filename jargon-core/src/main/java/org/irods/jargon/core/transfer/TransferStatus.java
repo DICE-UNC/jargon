@@ -47,7 +47,7 @@ public class TransferStatus {
 	 * reflects the number of files skipped in the total. Subtract this number
 	 * for the total transferred so far to get the actual files transferred in
 	 * this transfer attempt.
-	 * <p/>
+	 * <p>
 	 * This is done so that any progress bar for a restarted transfer hides the
 	 * skipping process and just appears to proceed normally, while apps that
 	 * have more sophisticated accounting can do the delta to get a breakout

@@ -10,7 +10,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 
 /**
  * Access object to query and view audit trail information for data objects.
- * <p/>
+ * <p>
  * For insight into the audit information, you can refer to the iRODS wiki at
  * https://irods.sdsc.edu/index.php/Audit_Records
  *

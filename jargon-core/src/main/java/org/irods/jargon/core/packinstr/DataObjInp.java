@@ -137,7 +137,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Optional checksum value used for operations where a checksum validation
 	 * is requested. This will be the computed checksum of the file in question.
-	 * <p/>
+	 * <p>
 	 * Can be set to <code>null</code> if no checksum is specified
 	 */
 	private ChecksumValue fileChecksumValue = null;

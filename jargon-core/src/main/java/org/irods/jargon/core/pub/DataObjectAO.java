@@ -30,7 +30,7 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
  * <code>java.io.File</code> object. For normal read and other familier
  * <code>java.io.*</code> operations, see
  * {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * <p/>
+ * <p>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
@@ -39,10 +39,10 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
  * associated with data objects (files), as well as performing common query
  * operations. This class also supports various iRODS file operations that are
  * not included in the standard <code>java.io.*</code> libraries.
- * <p/>
+ * <p>
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
- * <p/>
+ * <p>
  * <h2>Notes</h2>
  * For soft links, AVU metadata always attaches to the canonical path. There is
  * some inconsistency with the operation of the imeta command, where AVU
@@ -63,7 +63,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Query method will return the first data object found with the given
 	 * collectionPath and dataName.
-	 * <p/>
+	 * <p>
 	 * Note that this method will return 'null' if the object is not found.
 	 *
 	 * @param collectionPath
@@ -85,7 +85,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * data object. If the data exists, and is not a File, this method will
 	 * throw an exception. If the given file does not exist, then a File will be
 	 * returned.
-	 * <p/>
+	 * <p>
 	 * The given path may be a soft-linked path, and it will behave as normal.
 	 *
 	 * @param fileAbsolutePath
@@ -98,7 +98,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add AVU metadata for this data object
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -128,7 +128,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -157,12 +157,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
-	 * <p/>
+	 * <p>
 	 * This version of the method will compare AVU values using case-insensitive
 	 * queries
 	 *
@@ -191,7 +191,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -217,7 +217,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * identifying information about the data object itself. Other methods are
 	 * available for this object to refine to query to include an AVU metadata
 	 * query. This method will get all of the metadata for a data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -276,7 +276,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the data objects that answer the given AVU metadata query with the
 	 * ability to page through a partial start index.
-	 * <p/>
+	 * <p>
 	 * This version supports case-insensitive metadata queries
 	 *
 	 * @param avuQuery
@@ -337,7 +337,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Given a set of metadata query parameters, return a list of IRODS Data
 	 * Objects that match the metadata query. This query method allows a partial
 	 * start as an offset into the result set to get paging behaviors.
-	 * <p/>
+	 * <p>
 	 * This method allows the specification of case-insensitive queries on the
 	 * AVU values. This is an iRODS3.2+ capability
 	 *
@@ -365,7 +365,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * {@link org.irods.jargon.core.pub.DataTransferOperations} access object
 	 * has more comprehensive methods for replication, including recursive
 	 * replication with the ability to process callbacks.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFileAbsolutePath
@@ -382,7 +382,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Get a list of <code>Resource</code> objects that contain this data
 	 * object.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param dataObjectPath
@@ -400,7 +400,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Compute a checksum on a File, iRODS uses MD5 by default.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFile
@@ -416,11 +416,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Replicate the data object given as an absolute path to all of the
 	 * resources defined in the <code>irodsResourceGroupName</code>. This is
 	 * equivilant to an irepl -a command.
-	 * <p/>
+	 * <p>
 	 * The {@link org.irods.jargon.core.pub.DataTransferOperations} access
 	 * object has more comprehensive methods for replication, including
 	 * recursive replication with the ability to process callbacks.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFileAbsolutePath
@@ -437,7 +437,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -458,7 +458,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Find the object representing the data object (file) in iRODS.
-	 * <p/>
+	 * <p>
 	 * This method will handle soft-linked paths and return the data object
 	 * representing the data at the given soft linked location.
 	 *
@@ -475,7 +475,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to read for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -495,7 +495,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to write for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -515,7 +515,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to own for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -535,7 +535,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Removes the permissions on a data object to own for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -555,7 +555,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get the file permission pertaining to the given data object
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -577,7 +577,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -594,7 +594,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -612,7 +612,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -640,7 +640,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * value. The method will find the unique attribute by name and unit, and
 	 * overwrite the existing value with the value given in the
 	 * <code>AvuData</code> parameter.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -660,7 +660,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object, as well as the current and desired AVU data.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -686,7 +686,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object parent collection, and the data object file name, as well
 	 * as the current and desired AVU data.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -712,7 +712,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add the AVU Metadata for the given irods parent collection/data name
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -738,7 +738,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -760,7 +760,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the user permissions for the given iRODS data object for a given
 	 * user. Note that <code>null</code> will be returned if no permissions are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -784,7 +784,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the user permissions for the given iRODS data object for a given
 	 * user. Note that <code>null</code> will be returned if no permissions are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -805,7 +805,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to read for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -827,7 +827,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to write for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -849,7 +849,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -871,7 +871,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Remove the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
@@ -891,7 +891,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the resources that have a copy of the given iRODS file
-	 * <p/>
+	 * <p>
 	 * Note that this method will follow a soft link and list the resources
 	 * based on the canonical path.
 	 *
@@ -925,12 +925,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Method to set access permission to the desired state, this variant makes
 	 * it less necessary to stack 'if' tests in permission setting code.
-	 * <p/>
+	 * <p>
 	 * Note that <code>FilePermissionEnum</code> has more permission states
 	 * defined then are currently supported by this method. This may require
 	 * more iRODS core server updates to make this range of permissions
 	 * meaningful.
-	 * <p/>
+	 * <p>
 	 * For the current variant of this method, only READ, WRITE, and OWN are
 	 * supported, Other permission values will cause a
 	 * <code>JargonException</code>. This may be relaxed in the future. Also

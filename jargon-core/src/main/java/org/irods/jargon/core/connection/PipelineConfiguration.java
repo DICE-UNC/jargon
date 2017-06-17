@@ -10,7 +10,7 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
  * Immutable object represents the options controlling the behavior of the io
  * pipeline. Typically, these options are built based on the current state of
  * the {@link JargonProperties} at the time a connection is created.
- * <p/>
+ * <p>
  * Note that this object does not have synchronization. Through typical usage,
  * this configuration is initialized at connection startup, and a connection is
  * confined to one thread, so this should be just fine.

@@ -14,7 +14,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Create a ticket for access to iRODS
-	 * <p/>
+	 * <p>
 	 * This operation may be done on files or collections. Note that, for
 	 * collections, the inheritance bit will be set, so that the ticket creator
 	 * may have permissions on any files that grantees create in the collection.
@@ -393,7 +393,7 @@ public interface TicketAdminService {
 	 * and the simultaneous setting of the various limits. This convenience
 	 * method removes the need to put this somewhat complicated sequence of code
 	 * into applications.
-	 * <p/>
+	 * <p>
 	 * It must be noted that iRODS protocol clients cannot frame this sort of
 	 * operation in a transaction, so there is a very small chance that the
 	 * operaton will not happen a atomically. This is not something that the
@@ -409,7 +409,7 @@ public interface TicketAdminService {
 	 *            update process. For example, if you set a write byte limit in
 	 *            the provided ticket, a call will be made to establish that
 	 *            value.
-	 *            <p/>
+	 *            <p>
 	 *            Note that the <code>ticketString</code> in the
 	 *            <code>Ticket</code> may either be specified, or it may be left
 	 *            blank. If left blank, a ticket id will be randomly generated.
@@ -430,11 +430,11 @@ public interface TicketAdminService {
 	 * compares this ticket, reflecting the desired values, and the current
 	 * data. The delta between the two, for fields that may be updated, is used
 	 * to call appropriate update methods.
-	 * <p/>
+	 * <p>
 	 * Note that this is not transactional, so there is some small chance that
 	 * not all changes will occur, this method will return a <code>Ticket</code>
 	 * object that reflects the final state of the data in iRODS.
-	 * <p/>
+	 * <p>
 	 * The current update-able fields are the various access and write limits,
 	 * as well as the expiration data, other fields will be ignored.
 	 * 
@@ -456,11 +456,11 @@ public interface TicketAdminService {
 	 * and the simultaneous setting of the various limits. This convenience
 	 * method removes the need to put this somewhat complicated sequence of code
 	 * into applications.
-	 * <p/>
+	 * <p>
 	 * This variant uses a delegation technique so that a rodsAdmin can create a
 	 * ticket that another user will own. This is important in scenarios where a
 	 * proxy user may be interacting with iRODS on behalf of a user.
-	 * <p/>
+	 * <p>
 	 * It must be noted that iRODS protocol clients cannot frame this sort of
 	 * operation in a transaction, so there is a very small chance that the
 	 * operaton will not happen a atomically. This is not something that the
@@ -476,7 +476,7 @@ public interface TicketAdminService {
 	 *            update process. For example, if you set a write byte limit in
 	 *            the provided ticket, a call will be made to establish that
 	 *            value.
-	 *            <p/>
+	 *            <p>
 	 *            Note that the <code>ticketString</code> in the
 	 *            <code>Ticket</code> may either be specified, or it may be left
 	 *            blank. If left blank, a ticket id will be randomly generated.

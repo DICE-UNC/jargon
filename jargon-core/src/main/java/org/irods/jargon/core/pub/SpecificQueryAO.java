@@ -78,7 +78,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * out, instead, it supports paging by the specification of the
 	 * <code>continueIndex</code> that may have been returned in a previous
 	 * query paging call.
-	 * <p/>
+	 * <p>
 	 * Note that a <code>DataNotFoundException</code> will occur if the query
 	 * alias is not found.
 	 *
@@ -110,11 +110,11 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 * out, instead, it supports paging by the specification of the
 	 * <code>continueIndex</code> that may have been returned in a previous
 	 * query paging call.
-	 * <p/>
+	 * <p>
 	 * Note that a <code>DataNotFoundException</code> will occur if the query
 	 * alias is not found.
 	 *
-	 * <p/>
+	 * <p>
 	 *
 	 * This variant supports a common user practice with specific query, where
 	 * the provided SQL has parameterized options for offset and result set
@@ -312,7 +312,7 @@ public interface SpecificQueryAO extends IRODSAccessObject {
 	 *         know that the jargon specific query support is not configured.
 	 *         This can be used to determine whether it is worth bothering to
 	 *         issue such requests.
-	 *         <p/>
+	 *         <p>
 	 *         Currently, this still needs to be wired into the specific query
 	 *         support, so consider this experimental
 	 */

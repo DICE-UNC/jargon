@@ -16,12 +16,12 @@ public interface AuthenticationFactory {
 	 * This is an abstract factory, so implementations need to use an arbitrary
 	 * <code>String</code> to determine the proper <code>AuthMechanism</code>
 	 * implementation to return.
-	 * <p/>
+	 * <p>
 	 * In the default representation, the mechanism is the {@link IRODSAccount}
 	 * enum value contained in the <code>IRODSAccount</code> as returned by the
 	 * <code>getName()</code> method. Custom implementations of this factory may
 	 * use other schemes.
-	 * <p/>
+	 * <p>
 	 * Note that this factory will defaut to a standard iRODS auth when the
 	 * public (anonymous) account is supplied.
 	 *

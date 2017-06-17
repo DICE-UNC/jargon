@@ -8,7 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Translation of a FileReadInp_PI operation into XML protocol format. Object is
  * immutable and thread-safe.
- * <p/>
+ * <p>
  * This packing instruction is used to read an input stream using the
  * rcStreamRead function in iRODS.
  *

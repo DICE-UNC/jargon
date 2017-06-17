@@ -31,7 +31,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	/**
 	 * List the available remote commands. This is an experimental method
 	 * subject to API change.
-	 * <p/>
+	 * <p>
 	 * Note that this command requires the cmd-scripts/listCommands.sh to be
 	 * installed in the target iRODS server/cmd/bin directory, otherwise, a
 	 * DataNotFoundException will be thrown.
@@ -47,7 +47,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 
 	/**
 	 * Generate a list of the available microservices on the target server.
-	 * <p/>
+	 * <p>
 	 * Note that the result will be in the format microservice name:module
 	 *
 	 * This method will operate on iRODS servers version 3.0 and up.
@@ -60,10 +60,10 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 
 	/**
 	 * Check (by version) whether this server can run specific (SQL) query
-	 * <p/>
+	 * <p>
 	 * Note that there is some difficulty with using this method from eIRODS
 	 * 3.0. See [#1663] iRODS environment shows 'rods3.0' as version
-	 * <p/>
+	 * <p>
 	 * For EIRODS3.0, it is recommended to use the
 	 * SpecificQueryAO.isSupportsSpecificQuery method
 	 *

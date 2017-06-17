@@ -660,7 +660,7 @@ SpecificQueryAO {
 	/**
 	 * Close the result set associated with the given specific query. This will
 	 * ignore calls if no continuation was in the result set.
-	 * <p/>
+	 * <p>
 	 * Note that this is currently private, and invoked for each request. This
 	 * is to match the predominant usage pattern in clients where a page is
 	 * viewed for a good deal of user think time, and we want to avoid leaving

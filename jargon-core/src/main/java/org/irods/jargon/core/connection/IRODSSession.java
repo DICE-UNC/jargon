@@ -43,12 +43,12 @@ import org.slf4j.LoggerFactory;
  * used internally to keep connections to iRODS on a per-thread basis. A
  * <code>Map</code> is kept in a ThreadLocal cache with the
  * <code>IRODSAccount</code> as the key.
- * <p/>
+ * <p>
  * Connections are returned to the particular <code>IRODSProtocolManager</code>
  * for disposal or return to cache or pool. See the comments for
  * {@link IRODSMidLevelProtocol} for details on connection creation and
  * disposal.
- * <p/>
+ * <p>
  * <code>IRODSSession</code> is also the place where shared, expensive objects
  * are kept. Note that IRODSSession is not coded as a singleton. It is up to the
  * developer to place the <code>IRODSSession</code> in a context where it can be
@@ -57,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * <code>IRODSSession</code> is meant to be created once, either directly, or
  * wrapped in the shared <code>IRODSFileSystem</code>. If desired, the developer
  * can wrap these objects as singletons, but that is not imposed by Jargon.
- * <p/>
+ * <p>
  * The <code>IRODSAccount</code> presented by the user is the key to the session
  * cache. The actual operative account is stored within the iRODS protocol. For
  * example, a PAM login may create a temp irods user under the covers, so a user
@@ -148,7 +148,7 @@ public class IRODSSession {
 	 * with the server. This is especially useful for operations that may or may
 	 * not be configured, such that repeated failed attempts at an operation are
 	 * not made.
-	 * <p/>
+	 * <p>
 	 * A good example would be if required specific queries, rules,
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.
@@ -714,7 +714,7 @@ public class IRODSSession {
 	 * with the server. This is especially useful for operations that may or may
 	 * not be configured, such that repeated failed attempts at an operation are
 	 * not made.
-	 * <p/>
+	 * <p>
 	 * A good example would be if required specific queries, rules,
 	 * micro-services, or remote command scripts are not available to do an
 	 * operation.

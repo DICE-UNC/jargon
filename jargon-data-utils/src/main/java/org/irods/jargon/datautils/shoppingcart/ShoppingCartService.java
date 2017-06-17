@@ -77,7 +77,7 @@ public interface ShoppingCartService extends DataUtilsService {
 	 * directory and return a temporary password for that specified user that
 	 * may be passed to iDrop lite as the password parameter, or used in another
 	 * client.
-	 * <p/>
+	 * <p>
 	 * This method may only be called by a rodsadmin user, as it needs to
 	 * generate a temporary password. This functionality was added after iRODS
 	 * 3.0, and will cause an error if used on a prior iRODS version.
