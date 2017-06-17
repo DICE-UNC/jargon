@@ -391,7 +391,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAdminAccountFromTestProperties(
@@ -422,7 +422,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromTestPropertiesForRemoteResource(
@@ -453,7 +453,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromTestProperties(
@@ -484,7 +484,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildAnonymousIRODSAccountFromTestProperties(
@@ -506,7 +506,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount} for anonymous access
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildPamIrodsAccountFromTestProperties(
@@ -532,7 +532,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountForFederatedZoneFromTestProperties(
@@ -601,7 +601,7 @@ public class TestingPropertiesHelper {
 	 * @param password
 	 *            {@code String} with the password to be used for the
 	 *            account.
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
@@ -631,7 +631,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromSecondaryTestProperties(
@@ -663,7 +663,7 @@ public class TestingPropertiesHelper {
 	 *            {@code Properties} file with the standard names defined
 	 *            in
 	 *            {@link org.TestingPropertiesHelper.jargon.test.utils.TestingPropertiesLoader}
-	 * @return @link{ edu.sdsc.grid.io.irods.IRODSAccount}
+	 * @return {@link edu.sdsc.grid.io.irods.IRODSAccount}
 	 * @throws URISyntaxException
 	 */
 	public IRODSAccount buildIRODSAccountFromTertiaryTestProperties(
