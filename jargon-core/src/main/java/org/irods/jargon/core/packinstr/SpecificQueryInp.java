@@ -81,7 +81,7 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	 *            provided, or an error will result. This may be set to
 	 *            {@code null} if no parameters are passed in
 	 * @param queryOrAlias
-	 *            <cod>String</code> with either the query alias, or a query
+	 *            {@code String} with either the query alias, or a query
 	 *            that matches exactly to a query stored on the grid via the
 	 *            rods administrator.
 	 * @param maxRows

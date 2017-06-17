@@ -109,7 +109,7 @@ public interface FileIOOperations extends IRODSAccessObject {
 	 * @param whence
 	 *            {@code int} that specifies the postion to compute the
 	 *            offset from
-	 * @return <code>long</code with the new offset.
+	 * @return {@code long} with the new offset.
 	 * @throws IOException
 	 */
 	public long seek(int fd, long seek, SeekWhenceType whence)

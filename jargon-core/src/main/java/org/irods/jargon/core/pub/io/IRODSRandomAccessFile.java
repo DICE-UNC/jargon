@@ -49,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * <P>
  * <B>Note:</B> This class offers features that extend those found in
  * java.io.RandomAccessFile. However, it <I>is not</I> a subclass, due to the
- * unfortunate use of final methods in java.io.RandomAccessFile. </DIV>
+ * unfortunate use of final methods in java.io.RandomAccessFile.
  * <P>
  *
  * @author Mike Conway - DICE (www.irods.org) adopted from original Jargon

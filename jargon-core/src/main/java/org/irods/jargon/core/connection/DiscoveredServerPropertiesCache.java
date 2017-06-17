@@ -69,7 +69,7 @@ public class DiscoveredServerPropertiesCache {
 	 * @param zoneName
 	 *            {@code String} with the name of the iRODS zone this
 	 *            applies to
-	 * @return {@link IRODSServerProperties} or <ocde>null</code> if not cached
+	 * @return {@link IRODSServerProperties} or {@code null} if not cached
 	 */
 	public IRODSServerProperties retrieveIRODSServerProperties(
 			final String host, final String zoneName) {

@@ -21,7 +21,7 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 
 	/**
 	 * Constructor is called from the appropriate method in
-	 * <code>org.irods.jargon.core.pub.io.IRODSFileFactory}.
+	 * {@code org.irods.jargon.core.pub.io.IRODSFileFactory}.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that underlies the stream
@@ -41,7 +41,7 @@ public class SessionClosingIRODSFileOutputStream extends IRODSFileOutputStream {
 
 	/**
 	 * Constructor is called from the appropriate method in
-	 * <code>org.irods.jargon.core.pub.io.IRODSFileFactory}.
+	 * {@code org.irods.jargon.core.pub.io.IRODSFileFactory}.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that underlies the stream

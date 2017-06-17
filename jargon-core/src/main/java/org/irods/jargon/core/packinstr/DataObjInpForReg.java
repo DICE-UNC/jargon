@@ -40,7 +40,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the absolute path to the physical
 	 *            file to be registered
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</coce> with the absolute path to the iRODS file to be registered
+	 *            {@code String} with the absolute path to the iRODS file to be registered
 	 * @param resourceGroup
 	 *            {@code String}specifies the resource group of the
 	 *            resource. This must be input together with the

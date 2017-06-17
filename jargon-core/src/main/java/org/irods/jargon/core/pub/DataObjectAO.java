@@ -139,9 +139,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
+	 *            {@code String} with the name of the dataObject of interest.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
@@ -171,9 +171,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
+	 *            {@code String} with the name of the dataObject of interest.
 	 * @param caseInsensitive
 	 *            {@code boolean} where {@code true} indicates to
 	 *            treat avu queries as case-insensitive
@@ -224,9 +224,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * path.
 	 *
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
+	 *            {@code String} with the name of the dataObject of interest.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException

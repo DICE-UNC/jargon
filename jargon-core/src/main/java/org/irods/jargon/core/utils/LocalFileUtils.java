@@ -368,7 +368,7 @@ public class LocalFileUtils {
 
 	/**
 	 * Given a checksum digest as a {@code byte[]}, return a
-	 * <code>String</value> as used in iRODS packing instructions
+	 * {@code String} as used in iRODS packing instructions
 	 *
 	 * @param digestAsByteArray
 	 *            {@code byte[]} which is a checksum value

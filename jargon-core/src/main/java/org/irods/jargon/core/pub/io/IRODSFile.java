@@ -226,7 +226,7 @@ public interface IRODSFile {
 	 *
 	 * @return {@code int} with the irods file descriptor.
 	 * @throws JargonException
-	 * @deprecated use the <code>open(OpenFlags)</code method
+	 * @deprecated use the @{code open(OpenFlags)} method
 	 */
 	@Deprecated
 	int openReadOnly() throws JargonException;

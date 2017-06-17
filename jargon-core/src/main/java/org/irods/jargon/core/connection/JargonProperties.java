@@ -96,7 +96,7 @@ public interface JargonProperties {
 
 	/**
 	 * Should puts/gets redirect to the resource server that holds the data?
-	 * (equivalent to the -I in iput/iget>
+	 * (equivalent to the -I in iput/iget)
 	 *
 	 * @return the allowPutGetResourceRedirects {@code boolean} that will
 	 *         be {@code true} if redirecting is desired

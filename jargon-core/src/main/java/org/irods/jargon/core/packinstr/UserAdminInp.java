@@ -5,10 +5,12 @@ import org.irods.jargon.core.exception.JargonException;
 public class UserAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
+	 * {@code
 	 * $packlets=array('arg0' => 'userpw', 'arg1' => $user, 'arg2' =>
 	 * 'password', 'arg3' => $pwdBuf, 'arg4' => '', 'arg5' => '', 'arg6' => '',
 	 * 'arg7' => '', "arg8" => '', 'arg9' => '' );
 	 * parent::__construct("userAdminInp_PI",$packlets);
+	 * }
 	 */
 
 	public static final String PI_TAG = "userAdminInp_PI";

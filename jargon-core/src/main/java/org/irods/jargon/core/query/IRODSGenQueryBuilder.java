@@ -469,7 +469,7 @@ public class IRODSGenQueryBuilder {
 	 * service
 	 *
 	 * @param numberOfResultsDesired
-	 *            {@code int} that is >= 1 indicating the number of desired
+	 *            {@code int} that is &gt;= 1 indicating the number of desired
 	 *            results
 	 * @return {@link IRODSGenQueryFromBuilder} that can be executed by the
 	 *         general query executor service

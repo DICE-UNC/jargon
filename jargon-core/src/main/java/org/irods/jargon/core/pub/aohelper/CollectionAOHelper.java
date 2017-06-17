@@ -163,7 +163,7 @@ public class CollectionAOHelper extends AOHelper {
 	 * add to a query
 	 *
 	 * @param queryElement
-	 *            <codeStringBuilder</code> with the given AVU query in iquest
+	 *            {@code StringBuilder} with the given AVU query in iquest
 	 *            query form.
 	 */
 	public static StringBuilder buildConditionPart(

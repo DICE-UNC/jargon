@@ -238,7 +238,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@code List} of {@link AVUQueryElement} that defines the
 	 *            metadata query
 	 * @param collectionAbsolutePath
-	 *            <code>String with the absolute path of the collection of interest.  If this path
+	 *            {@code String} with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
@@ -269,7 +269,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@code List} of {@link AVUQueryElement} that defines the
 	 *            metadata query
 	 * @param collectionAbsolutePath
-	 *            <code>String with the absolute path of the collection of interest.  If this path
+	 *            {@code String} with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
 	 * @param partialStartIndex
 	 *            {@code int} with the partial start index start point
@@ -388,7 +388,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@code List} of {@link AVUQueryElement} that defines the
 	 *            metadata query
 	 * @param collectionAbsolutePath
-	 *            <code>String with the absolute path of the collection of interest.  If this path
+	 *            {@code String} with the absolute path of the collection of interest.  If this path
 	 * is left blank, then the query will not add absolute path to the 'where' clause.
 	 * @return {@code List} of {@link MetaDataAndDomainData}
 	 * @throws JargonQueryException
