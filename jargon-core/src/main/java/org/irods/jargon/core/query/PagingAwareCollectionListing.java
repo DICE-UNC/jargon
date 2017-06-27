@@ -25,21 +25,21 @@ public class PagingAwareCollectionListing {
 		NONE, CONTINUOUS, SPLIT_COLLECTIONS_AND_FILES
 	}
 
-	private PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor;
+	private PagingAwareCollectionListingDescriptor pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
 
 	/**
 	 * List from the query, will contain a set of collections and data objects
 	 * with a paging status reflected in this object.
 	 */
 
-	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+	private List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();
 
 	/**
 	 * Default (no-values) constructor for simple value object
 	 */
 	public PagingAwareCollectionListing() {
 		this.pagingAwareCollectionListingDescriptor = new PagingAwareCollectionListingDescriptor();
-		this.collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		this.collectionAndDataObjectListingEntries = new ArrayList<>();
 	}
 
 	public List<CollectionAndDataObjectListingEntry> getCollectionAndDataObjectListingEntries() {
@@ -73,8 +73,7 @@ public class PagingAwareCollectionListing {
 		if (collectionAndDataObjectListingEntries != null) {
 			builder.append("collectionAndDataObjectListingEntries=");
 			builder.append(collectionAndDataObjectListingEntries.subList(0,
-					Math.min(collectionAndDataObjectListingEntries.size(),
-							maxLen)));
+					Math.min(collectionAndDataObjectListingEntries.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();

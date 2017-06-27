@@ -658,4 +658,16 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 */
 	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException;
 
+	/**
+	 * Return a count of the number of data objects under the path represented
+	 * by the objStat
+	 * 
+	 * @param objStat
+	 *            {@link ObjStat} for the target collection
+	 * @return <code>int</code> with the data object count
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	int countDataObjectsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException;
+
 }
