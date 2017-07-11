@@ -42,19 +42,19 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * the file as an administrator.
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name to set
+	 *            {@code String} with the iRODS user name to set
 	 *            permissions for.
 	 * @param permission
-	 *            <code>String</code> of value read, write, or own to describe
+	 *            {@code String} of value read, write, or own to describe
 	 *            the permission.
 	 * @return {@link ModAccessControlInp}
 	 */
@@ -71,19 +71,19 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * the file. This is equivalent to the -M icommand option for ichmod.
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name to set
+	 *            {@code String} with the iRODS user name to set
 	 *            permissions for.
 	 * @param permission
-	 *            <code>String</code> of value read, write, or own to describe
+	 *            {@code String} of value read, write, or own to describe
 	 *            the permission.
 	 * @return {@link ModAccessControlInp}
 	 */
@@ -99,13 +99,13 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of packing instruction to set a collection to inherit.
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @return {@link ModAccessControlInp}
 	 */
@@ -121,13 +121,13 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * With admin mode
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @return {@link ModAccessControlInp}
 	 */
@@ -143,13 +143,13 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * inherit.
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @return {@link ModAccessControlInp}
 	 */
@@ -165,13 +165,13 @@ public class ModAccessControlInp extends AbstractIRODSPackingInstruction {
 	 * inherit. In admin mode.
 	 *
 	 * @param recursive
-	 *            <code>boolean</code> that indicates whether this is a
+	 *            {@code boolean} that indicates whether this is a
 	 *            recursive operation
 	 * @param zone
-	 *            <code>String</code> that gives an optional zone id. Leave
+	 *            {@code String} that gives an optional zone id. Leave
 	 *            blank if not used.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection.
 	 * @return {@link ModAccessControlInp}
 	 */

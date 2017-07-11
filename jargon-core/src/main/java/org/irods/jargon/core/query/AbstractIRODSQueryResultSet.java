@@ -9,10 +9,10 @@ import org.irods.jargon.core.exception.DataNotFoundException;
  * Abstract superclass for a simple set of results from some type of iRODS
  * query, such as GenQuery or SimpleQuery. This result set will contain
  * rows/columns, as well as column names. This ResultSet is somewhat like a
- * <code>java.sql.ResultSet</code>, but is greatly simplified.
- * <p/>
+ * {@code java.sql.ResultSet}, but is greatly simplified.
+ * <p>
  * Jargon may contain, in the future, an actual implementation of
- * <code>java.sql.ResultSet</code>, and that implementation would wrap this
+ * {@code java.sql.ResultSet}, and that implementation would wrap this
  * simple result set based on rows and columns, and delegate operations to this
  * simpler implementation.
  *

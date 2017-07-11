@@ -4,7 +4,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.service.AbstractJargonService;
 
 /**
- * Utility class for validation of <code>UserProfile</code>
+ * Utility class for validation of {@code UserProfile}
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

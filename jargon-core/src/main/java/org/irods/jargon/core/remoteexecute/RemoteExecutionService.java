@@ -22,7 +22,7 @@ public interface RemoteExecutionService {
 	 * this class that indicate to iRODS that the behavior of streaming very
 	 * large results from remote execution of scripts is desired.
 	 *
-	 * @return <code>InputStream</code> containing the results of the remote
+	 * @return {@code InputStream} containing the results of the remote
 	 *         script invocation
 	 * @throws JargonException
 	 */
@@ -35,7 +35,7 @@ public interface RemoteExecutionService {
 	 * a different protocol, and will fail if invoked against a server that does
 	 * not support this method of streaming.
 	 *
-	 * @return <code>InputStream</code> containing the results of the remote
+	 * @return {@code InputStream} containing the results of the remote
 	 *         script invocation
 	 * @throws JargonException
 	 *             for an exception, including invocation against a server that

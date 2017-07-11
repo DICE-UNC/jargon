@@ -26,11 +26,11 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	 * Create an auth request for PAM
 	 *
 	 * @param userName
-	 *            <code>String</code> with the userName
+	 *            {@code String} with the userName
 	 * @param password
-	 *            <code>String</code> with the password
+	 *            {@code String} with the password
 	 * @param timeToLive
-	 *            <code>int</code> with time to live for password
+	 *            {@code int} with time to live for password
 	 * @return {@link AuthReqPluginRequestInp}
 	 */
 	public static AuthReqPluginRequestInp instancePam(final String userName,

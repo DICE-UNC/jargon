@@ -24,18 +24,18 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 public class GSIUtilities {
 
 	/**
-	 * Create the <code>GSIIRODSAccount</code> with the certificate that exists
+	 * Create the {@code GSIIRODSAccount} with the certificate that exists
 	 * in the given file
 	 *
 	 * @param host
-	 *            <code>String</code> with the iRODS host name
+	 *            {@code String} with the iRODS host name
 	 * @param port
-	 *            <code>int</code> with the iRODS server port
+	 *            {@code int} with the iRODS server port
 	 * @param credentialFile
 	 *            {@link File} for the user certificate (a GSI proxy
 	 *            certificate)
 	 * @param defaultStorageResource
-	 *            <code>String</code> with an optional (blank if not specified)
+	 *            {@code String} with an optional (blank if not specified)
 	 *            default storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
@@ -64,18 +64,18 @@ public class GSIUtilities {
 	}
 
 	/**
-	 * Create the <code>GSIIRODSAccount</code> with the certificate based on the
-	 * contents of the given <code>String</code>
+	 * Create the {@code GSIIRODSAccount} with the certificate based on the
+	 * contents of the given {@code String}
 	 *
 	 * @param host
-	 *            <code>String</code> with the iRODS host name
+	 *            {@code String} with the iRODS host name
 	 * @param port
-	 *            <code>int</code> with the iRODS server port
+	 *            {@code int} with the iRODS server port
 	 * @param certificate
-	 *            <code>String</code> with the GSI proxy certificate in
-	 *            <code>String</code> form
+	 *            {@code String} with the GSI proxy certificate in
+	 *            {@code String} form
 	 * @param defaultStorageResource
-	 *            <code>String</code> with an optional (blank if not specified)
+	 *            {@code String} with an optional (blank if not specified)
 	 *            default storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
@@ -101,17 +101,17 @@ public class GSIUtilities {
 	}
 
 	/**
-	 * Create the <code>GSIIRODSAccount</code> with the certificate based on the
-	 * contents of the given <code>byte[]</code>
+	 * Create the {@code GSIIRODSAccount} with the certificate based on the
+	 * contents of the given {@code byte[]}
 	 *
 	 * @param host
-	 *            <code>String</code> with the iRODS host name
+	 *            {@code String} with the iRODS host name
 	 * @param port
-	 *            <code>int</code> with the iRODS server port
+	 *            {@code int} with the iRODS server port
 	 * @param certificate
-	 *            GSI proxy certificate in the form of a <code>byte</code> array
+	 *            GSI proxy certificate in the form of a {@code byte} array
 	 * @param defaultStorageResource
-	 *            <code>String</code> with an optional (blank if not specified)
+	 *            {@code String} with an optional (blank if not specified)
 	 *            default storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
@@ -149,7 +149,7 @@ public class GSIUtilities {
 	 * Derive the user distinguished name from the provided cert.
 	 *
 	 * @param account
-	 * @return <code>String</code> with DN
+	 * @return {@code String} with DN
 	 * @throws JargonException
 	 */
 	public static String getDN(final GSIIRODSAccount account)

@@ -30,7 +30,7 @@ class RuleParsingUtils {
 	 * that typically mark interactive variables
 	 *
 	 * @param parameter
-	 *            <code>String<code> which should reflect an individual rule parameter in *parmName=parmValue format
+	 *            {@code String} which should reflect an individual rule parameter in *parmName=parmValue format
 	 * @return {@link RuleInputParameter}
 	 */
 	static RuleInputParameter parseInputParameterForNameAndValue(

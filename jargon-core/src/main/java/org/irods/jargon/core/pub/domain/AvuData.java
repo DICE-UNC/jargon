@@ -21,17 +21,17 @@ public final class AvuData extends IRODSDomainObject {
 	private String unit = "";
 
 	/**
-	 * Static initializer returns an <code>AvuData</code>. Note that unused
-	 * values should be set to 'blank' rather then <code>null</code>. An
-	 * <code>IllegalArgumentException</code> will be thrown if something is
+	 * Static initializer returns an {@code AvuData}. Note that unused
+	 * values should be set to 'blank' rather then {@code null}. An
+	 * {@code IllegalArgumentException} will be thrown if something is
 	 * null.
 	 *
 	 * @param attribute
-	 *            <code>String</code> with the AVU attribute.
+	 *            {@code String} with the AVU attribute.
 	 * @param value
-	 *            <code>String</code> with the AVU value.
+	 *            {@code String} with the AVU value.
 	 * @param unit
-	 *            <code>String</code> with AVU unit.
+	 *            {@code String} with AVU unit.
 	 * @throws JargonException
 	 */
 	public static AvuData instance(final String attribute, final String value,
@@ -47,11 +47,11 @@ public final class AvuData extends IRODSDomainObject {
 	 * Constructor for AVU that takes the attribute, value, unit
 	 *
 	 * @param attribute
-	 *            <code>String</code> with the AVU attribute.
+	 *            {@code String} with the AVU attribute.
 	 * @param value
-	 *            <code>String</code> with the AVU value.
+	 *            {@code String} with the AVU value.
 	 * @param unit
-	 *            <code>String</code> with AVU unit.
+	 *            {@code String} with AVU unit.
 	 * @throws JargonException
 	 */
 	public AvuData(final String attribute, final String value, final String unit)

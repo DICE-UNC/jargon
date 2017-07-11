@@ -8,16 +8,16 @@ import org.irods.jargon.core.query.SimpleQuery;
  * Packing instruction to execute a simple query on iRODS. Simple query is a
  * dedicated facility to run certain authorized sql statements. This is
  * configured on the iRODS server itself.
- * <p/>
+ * <p>
  * This object is immutable and thread-safe.
- * <p/>
+ * <p>
  * This is used in cases where it is easier to do a straight-forward SQL query
  * rather than go thru the generalQuery interface. This is used in the iadmin.c
  * interface as it was easier to work in SQL for admin type ops.
- * <p/>
+ * <p>
  * For improved security, this is available only to admin users and the code
  * checks that the input sql is one of the allowed forms.
- * <p/>
+ * <p>
  * input: sql, up to for optional arguments (bind variables), and requested
  * format, max text to return (maxOutBuf) output: text (outBuf) or error return
  * input/output: control: on input if 0 request is starting, returned non-zero
@@ -25,7 +25,7 @@ import org.irods.jargon.core.query.SimpleQuery;
  * positive it is the statement number (+1) that is being continued. format 1:
  * column-name : column value, and with CR after each column format 2: column
  * headings CR, rows and col values with CR.
- * <p/>
+ * <p>
  * This implementation will default to format 2, as this is used to formulate a
  * result set.
  *
@@ -54,7 +54,7 @@ public class SimpleQueryInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param simpleQuery
 	 *            {@link SimpleQuery} that contains the query to send to iRODS.
-	 * @return <code>SimpleQueryInp</code> packing instruction.
+	 * @return {@code SimpleQueryInp} packing instruction.
 	 */
 	public static SimpleQueryInp instance(final AbstractAliasedQuery simpleQuery) {
 		return new SimpleQueryInp(SIMPLE_QUERY_API_NBR, simpleQuery);

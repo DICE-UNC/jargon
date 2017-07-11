@@ -60,7 +60,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	 * Run the given tests in the list, returning a result
 	 * 
 	 * @param testTypes
-	 *            <code>List</code> of type {
+	 *            {@code List} of type {
 	 * @TestType
 	 * @return {@link ConnectionTestResult}
 	 * @throws JargonException

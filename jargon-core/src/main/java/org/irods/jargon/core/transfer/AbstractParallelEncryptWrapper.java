@@ -25,7 +25,7 @@ public abstract class AbstractParallelEncryptWrapper extends
 	/**
 	 * Encrypt the given data using the preconfigured algo
 	 *
-	 * @return <code>byte[]</code> with the encrypted data;
+	 * @return {@code byte[]} with the encrypted data;
 	 */
 	abstract byte[] encrypt(final byte[] input) throws JargonException;
 

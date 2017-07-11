@@ -35,7 +35,7 @@ public class IRODSDomainObject {
 	 * operation. Many operations in Jargon produce a pageable result set, and
 	 * methods are available to requery at an offset or contine paging results.
 	 *
-	 * @return <code>boolean</code> that will be <code>true</code> if no more
+	 * @return {@code boolean} that will be {@code true} if no more
 	 *         results are available.
 	 */
 	public boolean isLastResult() {
@@ -46,7 +46,7 @@ public class IRODSDomainObject {
 	 * Sets whether this is the last result from a query or listing operation
 	 *
 	 * @param lastResult
-	 *            <code>boolean</code> that indicates that this is the last
+	 *            {@code boolean} that indicates that this is the last
 	 *            result for an operation
 	 */
 	public void setLastResult(final boolean lastResult) {
@@ -56,7 +56,7 @@ public class IRODSDomainObject {
 	/**
 	 * Get the sequence number in a set of results for this object.
 	 *
-	 * @return <code>int</code> with a record sequence number that can be used
+	 * @return {@code int} with a record sequence number that can be used
 	 *         for setting offsets on subsequent queries.
 	 */
 	public int getCount() {
@@ -69,7 +69,7 @@ public class IRODSDomainObject {
 	 * iRODS information.
 	 *
 	 * @param count
-	 *            <code>int</code> with a sequence number for this result within
+	 *            {@code int} with a sequence number for this result within
 	 *            a listing.
 	 */
 	public void setCount(final int count) {
@@ -80,7 +80,7 @@ public class IRODSDomainObject {
 	 * Total number of records for the given query. Note that this is not always
 	 * available, depending on the iCAT database
 	 *
-	 * @return <code>int</code> with the total number of records that match this
+	 * @return {@code int} with the total number of records that match this
 	 *         query, not always available and otherwise zero
 	 */
 	public int getTotalRecords() {
@@ -92,7 +92,7 @@ public class IRODSDomainObject {
 	 * available, depending on the iCAT database
 	 *
 	 * @param totalRecords
-	 *            <code>int</code> with the total number of records that match
+	 *            {@code int} with the total number of records that match
 	 *            this query, not always available and otherwise zero
 	 */
 	public void setTotalRecords(final int totalRecords) {

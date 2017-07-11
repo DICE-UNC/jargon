@@ -90,7 +90,7 @@ import org.junit.runners.Suite;
 	TrashOperationsTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
- * <p/>
+ * <p>
  * Note that 'Federated*' tests will run, but a check prevents the test from actually doing anything unless the federated zone
  * has been set up per the test-scripts/fedTestSetup.txt file
  */

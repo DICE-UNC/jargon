@@ -17,7 +17,7 @@ public class SSLStartInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * Static initializer creates SSL start request
 	 *
-	 * @return <code>SSLStartInp</code> packing instruction
+	 * @return {@code SSLStartInp} packing instruction
 	 */
 	public static final SSLStartInp instance() {
 		return new SSLStartInp();

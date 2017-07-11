@@ -46,7 +46,7 @@ public class TicketClientSupport {
 	 * prior to get/put operations that present a ticket
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> with the unique ticket id for the
+	 *            {@code String} with the unique ticket id for the
 	 *            interaction
 	 * @throws JargonException
 	 */

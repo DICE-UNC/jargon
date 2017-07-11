@@ -106,19 +106,19 @@ public final class EscapeTagChars {
 	 * Escape all ampersand characters in a URL.
 	 *
 	 * <P>
-	 * Replaces all <tt>'&'</tt> characters with <tt>'&amp;'</tt>.
+	 * Replaces all {@code '&'} characters with {@code '&amp;'}.
 	 *
 	 * <P>
 	 * An ampersand character may appear in the query string of a URL. The
 	 * ampersand character is indeed valid in a URL.
-	 * <em>However, URLs usually appear as an <tt>HREF</tt> attribute, and
+	 * <em>However, URLs usually appear as an {@code HREF} attribute, and
 	   such attributes have the additional constraint that ampersands
 	   must be escaped.</em>
 	 *
 	 * <P>
-	 * The JSTL <c:url> tag does indeed perform proper URL encoding of query
+	 * The JSTL {@code <c:url>} tag does indeed perform proper URL encoding of query
 	 * parameters. But it does not, in general, produce text which is valid as
-	 * an <tt>HREF</tt> attribute, simply because it does not escape the
+	 * an {@code HREF} attribute, simply because it does not escape the
 	 * ampersand character. This is a nuisance when multiple query parameters
 	 * appear in the URL, since it requires a little extra work.
 	 */
@@ -127,7 +127,7 @@ public final class EscapeTagChars {
 	}
 
 	/**
-	 * Synonym for <tt>URLEncoder.encode(String, "UTF-8")</tt>.
+	 * Synonym for {@code URLEncoder.encode(String, "UTF-8")}.
 	 *
 	 * <P>
 	 * Used to ensure that HTTP query strings are in proper form, by escaping
@@ -135,7 +135,7 @@ public final class EscapeTagChars {
 	 *
 	 * <P>
 	 * It is important to note that if a query string appears in an
-	 * <tt>HREF</tt> attribute, then there are two issues - ensuring the query
+	 * {@code HREF} attribute, then there are two issues - ensuring the query
 	 * string is valid HTTP (it is URL-encoded), and ensuring it is valid HTML
 	 * (ensuring the ampersand is escaped).
 	 */
@@ -156,21 +156,22 @@ public final class EscapeTagChars {
 	 * The following characters are replaced with corresponding character
 	 * entities :
 	 * <table border='1' cellpadding='3' cellspacing='0'>
+     * <caption>character replacements</caption>
 	 * <tr>
 	 * <th>Character</th>
 	 * <th>Encoding</th>
 	 * </tr>
 	 * <tr>
-	 * <td><</td>
 	 * <td>&lt;</td>
+	 * <td>&amp;lt;</td>
 	 * </tr>
 	 * <tr>
-	 * <td>></td>
 	 * <td>&gt;</td>
+	 * <td>&amp;gt;</td>
 	 * </tr>
 	 * <tr>
-	 * <td>&</td>
 	 * <td>&amp;</td>
+	 * <td>&amp;amp;</td>
 	 * </tr>
 	 * <tr>
 	 * <td>"</td>
@@ -222,6 +223,7 @@ public final class EscapeTagChars {
 	 * <P>
 	 * The following commonly used control characters are escaped :
 	 * <table border='1' cellpadding='3' cellspacing='0'>
+	 * <caption>escaped characters</caption>
 	 * <tr>
 	 * <th>Character</th>
 	 * <th>Escaped As</th>
@@ -296,7 +298,7 @@ public final class EscapeTagChars {
 	}
 
 /**
-	   Return <tt>aText</tt> with all <tt>'<'</tt> and <tt>'>'</tt> characters
+	   Return {@code aText} with all {@code '<'} and {@code '>'} characters
 	   replaced by their escaped equivalents.
 	 */
 	public static String toDisableTags(final String aText) {
@@ -329,7 +331,7 @@ public final class EscapeTagChars {
 	 * <li>.
 	 * <li>\
 	 * <li>?, * , and +
-	 * <li>&
+	 * <li>&amp;
 	 * <li>:
 	 * <li>{ and }
 	 * <li>[ and ]

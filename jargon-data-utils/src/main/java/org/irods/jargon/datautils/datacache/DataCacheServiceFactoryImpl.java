@@ -7,7 +7,7 @@ import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 
 /**
- * Factory for creating <code>DataCacheService</code> components.
+ * Factory for creating {@code DataCacheService} components.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

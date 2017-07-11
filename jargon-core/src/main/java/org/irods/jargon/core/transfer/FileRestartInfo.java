@@ -26,8 +26,8 @@ public class FileRestartInfo {
 	}
 
 	/**
-	 * String representation of <code>IRODAccount</code>, which is equivalent to
-	 * <code>IRODSAccount.toString()</code>. This URI format is easy to
+	 * String representation of {@code IRODAccount}, which is equivalent to
+	 * {@code IRODSAccount.toString()}. This URI format is easy to
 	 * serialize and avoids saving any actual iRODS credentials inadvertantly.
 	 */
 	private String irodsAccountIdentifier = "";
@@ -172,7 +172,7 @@ public class FileRestartInfo {
 	 * Get an estimate of the length returned so far, helpful for progress
 	 * indicators
 	 *
-	 * @return <code>long</code> with an estimate of the total transferred so
+	 * @return {@code long} with an estimate of the total transferred so
 	 *         far.
 	 */
 	public long estimateLengthSoFar() {

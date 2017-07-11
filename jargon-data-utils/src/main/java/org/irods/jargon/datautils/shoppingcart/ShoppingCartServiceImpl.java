@@ -29,7 +29,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 			.getLogger(ShoppingCartServiceImpl.class);
 
 	/**
-	 * Factory for <code>DataCacheService</code> creation, must be set via
+	 * Factory for {@code DataCacheService} creation, must be set via
 	 * constructor or injected via setter.
 	 */
 	private DataCacheServiceFactory dataCacheServiceFactory = null;
@@ -44,7 +44,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 	}
 
 	/**
-	 * Constructor creates a <code>ShoppingCartService</code> with necessary
+	 * Constructor creates a {@code ShoppingCartService} with necessary
 	 * dependencies
 	 * 
 	 * @param irodsAccessObjectFactory

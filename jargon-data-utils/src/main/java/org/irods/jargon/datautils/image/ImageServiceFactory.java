@@ -12,11 +12,11 @@ import org.irods.jargon.core.connection.IRODSAccount;
 public interface ImageServiceFactory {
 
 	/**
-	 * Retrieve an instance of <code>ImageServiceFactory</code> that supports
+	 * Retrieve an instance of {@code ImageServiceFactory} that supports
 	 * image processing for iRODS
 	 * 
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> describing the user and desired
+	 *            {@code IRODSAccount} describing the user and desired
 	 *            iRODS host
 	 * @return {@link ImageServiceFactory} implementation
 	 */

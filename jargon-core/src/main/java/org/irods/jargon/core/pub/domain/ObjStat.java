@@ -274,7 +274,7 @@ public class ObjStat {
 	 * Convenience methods determines if this is any type of collection, versus
 	 * a file or data object
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if this is any type of
+	 * @return {@code boolean} of {@code true} if this is any type of
 	 *         collection or directory;
 	 */
 	public boolean isSomeTypeOfCollection() {
@@ -282,7 +282,7 @@ public class ObjStat {
 	}
 
 	/**
-	 * @return the collectionPath <code>String</code> that indicates that actual
+	 * @return the collectionPath {@code String} that indicates that actual
 	 *         canonical path to the soft linked collection for soft linked data
 	 *         objects
 	 */
@@ -292,7 +292,7 @@ public class ObjStat {
 
 	/**
 	 * @param collectionPath
-	 *            the collectionPath to set <code>String</code> that indicates
+	 *            the collectionPath to set {@code String} that indicates
 	 *            that actual canonical path to the soft linked collection for
 	 *            soft linked data objects
 	 */
@@ -346,7 +346,7 @@ public class ObjStat {
 	}
 
 	/**
-	 * @return the objectPath <code>String</code> with either the physical path,
+	 * @return the objectPath {@code String} with either the physical path,
 	 *         for a normal file, or the canonical path for a soft linked
 	 *         collection
 	 */
@@ -356,7 +356,7 @@ public class ObjStat {
 
 	/**
 	 * @param objectPath
-	 *            the objectPath to set <code>String</code> with either the
+	 *            the objectPath to set {@code String} with either the
 	 *            physical path, for a normal file, or the canonical path for a
 	 *            soft linked collection
 	 */
@@ -369,7 +369,7 @@ public class ObjStat {
 	 * iRODS. This is meant to handle special collections, such as soft links,
 	 * where the iCAT data may be associated with the canonical path
 	 *
-	 * @return <code>String</code> with the canonical iRODS path
+	 * @return {@code String} with the canonical iRODS path
 	 */
 	public String determineAbsolutePathBasedOnCollTypeInObjectStat() {
 		String effectiveAbsolutePath = null;

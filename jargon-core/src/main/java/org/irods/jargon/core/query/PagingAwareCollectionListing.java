@@ -11,7 +11,7 @@ import java.util.List;
  * iRODS collection, specifically, that the sub-collections and data objects
  * underneath the given path are derived from two separate queries. Each of
  * these queries might have different paging statuses.
- * <p/>
+ * <p>
  * This object returns such a mixed listing from the multiple queries, along
  * with properties that can assist in comprehending the paging status so that
  * subsequent queries can be made.
@@ -55,14 +55,14 @@ public class PagingAwareCollectionListing {
 
 	/**
 	 * Indicates whether the set of collections is complete, or whether more
-	 * results exist. Will be <code>true</code> if complete OR if no collections
+	 * results exist. Will be {@code true} if complete OR if no collections
 	 * exist
 	 */
 	private boolean collectionsComplete = true;
 
 	/**
 	 * Indicates whether the set of data objects is complete, or whether more
-	 * results exist. Will be <code>true</code> if complete OR if no data
+	 * results exist. Will be {@code true} if complete OR if no data
 	 * objects exist
 	 */
 	private boolean dataObjectsComplete = true;

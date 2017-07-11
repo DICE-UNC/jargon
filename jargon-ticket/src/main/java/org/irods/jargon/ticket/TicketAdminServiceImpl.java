@@ -1275,11 +1275,11 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 
 	/**
 	 * Given a result row from a ticket query, put the values into the provided
-	 * <code>Ticket</code> common to tickets for collections and data objects
+	 * {@code Ticket} common to tickets for collections and data objects
 	 * 
 	 * @param ticket
 	 *            {@link Ticket} object that will be initialized with values
-	 *            from the query result row. The provided <code>Ticket</code> in
+	 *            from the query result row. The provided {@code Ticket} in
 	 *            the method parameter will be updated by this method.
 	 * @param row
 	 *            {@link IRODSQueryResultRow} from a query for the ticket as
@@ -1315,7 +1315,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 	/**
 	 * Build the select part of a query dealing with tickets for collections
 	 * 
-	 * @return <code>String</code> with a gen query select statemetn for values
+	 * @return {@code String} with a gen query select statemetn for values
 	 *         for collections
 	 */
 	private String buildQuerySelectForLSAllTicketsForCollections() {
@@ -1345,7 +1345,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 	}
 
 	/**
-	 * Given a <code>String</code> representation of an object type for the
+	 * Given a {@code String} representation of an object type for the
 	 * ticket in iRODS, return an emum equivalent value
 	 * 
 	 * @param objectTypeFromTicketData
@@ -1370,7 +1370,7 @@ public final class TicketAdminServiceImpl extends AbstractTicketService
 	 * Build the select portion of the gen query when querying for tickets
 	 * associated with data objects in iRODS (Files)
 	 * 
-	 * @return <code>String</code> with the iRODS gen query 'SELECT' statement
+	 * @return {@code String} with the iRODS gen query 'SELECT' statement
 	 *         without a WHERE keyword or clause. This can be augmented by the
 	 *         caller to produce an iRODS gen query with conditions.
 	 */

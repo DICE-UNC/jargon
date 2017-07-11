@@ -42,14 +42,14 @@ Callable<ParallelTransferResult> {
 	/**
 	 * Represents a thread used in a parallel file transfer. There will be
 	 * multiple threads controlled from the
-	 * <code>ParalellPutFileTransferStrategy</code>. This is an immutable object
-	 * , as is the <code>parallelFileTransferStrategy</code> that this object
+	 * {@code ParalellPutFileTransferStrategy}. This is an immutable object
+	 * , as is the {@code parallelFileTransferStrategy} that this object
 	 * holds a reference to.
 	 *
 	 * @param parallelPutFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelPutFileTransferStrategy}
 	 *            that controls the transfer threads.
-	 * @return <code>ParallelPutTransferThread</code>
+	 * @return {@code ParallelPutTransferThread}
 	 * @throws JargonException
 	 */
 	public static ParallelPutTransferThread instance(

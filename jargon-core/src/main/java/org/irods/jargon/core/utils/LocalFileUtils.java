@@ -48,8 +48,8 @@ public class LocalFileUtils {
 	 * as the file extension
 	 *
 	 * @param fileName
-	 *            <code>String</code> with the file name to parse out.
-	 * @return <code>String</code> with the file extension
+	 *            {@code String} with the file name to parse out.
+	 * @return {@code String} with the file extension
 	 */
 	public static String getFileExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
@@ -90,8 +90,8 @@ public class LocalFileUtils {
 	 * the file name
 	 *
 	 * @param fileName
-	 *            <code>String</code> with the file name to parse out.
-	 * @return <code>String</code> with the file name before the extension,
+	 *            {@code String} with the file name to parse out.
+	 * @return {@code String} with the file name before the extension,
 	 *         without the '.'
 	 */
 	public static String getFileNameUpToExtension(final String fileName) {
@@ -112,8 +112,8 @@ public class LocalFileUtils {
 	 * Interpose a time stamp between the file name and extension
 	 *
 	 * @param fileName
-	 *            <code>String</code> with the file name to parse out
-	 * @return <code>String</code> with the updated file name containing a time
+	 *            {@code String} with the file name to parse out
+	 * @return {@code String} with the updated file name containing a time
 	 *         stamp
 	 */
 	public static String getFileNameWithTimeStampInterposed(
@@ -133,8 +133,8 @@ public class LocalFileUtils {
 	 * Count files in a directory (including files in all subdirectories)
 	 *
 	 * @param directory
-	 *            <code>File</code> with the directory to start in
-	 * @return the total number of files as <code>int</code>
+	 *            {@code File} with the directory to start in
+	 * @return the total number of files as {@code int}
 	 */
 	public static int countFilesInDirectory(final File directory) {
 
@@ -193,9 +193,9 @@ public class LocalFileUtils {
 	 * Compute a CRC32 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            <code>String</code> with absolute local file path under
+	 *            {@code String} with absolute local file path under
 	 *            scratch (no leading '/')
-	 * @return <code>long</code> with the file's checksum value
+	 * @return {@code long} with the file's checksum value
 	 * @throws JargonException
 	 */
 	public static long computeCRC32FileCheckSumViaAbsolutePath(
@@ -234,9 +234,9 @@ public class LocalFileUtils {
 	 * Compute an SHA-256 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            <code>String</code> with absolute local file path under
+	 *            {@code String} with absolute local file path under
 	 *            scratch (no leading '/')
-	 * @return <code>byte[]</code> with the file's checksum value
+	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
 	public static byte[] computeSHA256FileCheckSumViaAbsolutePath(
@@ -297,9 +297,9 @@ public class LocalFileUtils {
 	 * Compute an MD5 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            <code>String</code> with absolute local file path under
+	 *            {@code String} with absolute local file path under
 	 *            scratch (no leading '/')
-	 * @return <code>byte[]</code> with the file's checksum value
+	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
 	public static byte[] computeMD5FileCheckSumViaAbsolutePath(
@@ -349,12 +349,12 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a <code>String</code> representing hex characters (e.g. b1f0a2),
+	 * Given a {@code String} representing hex characters (e.g. b1f0a2),
 	 * return the actual bytes represented by the hex value
 	 *
 	 * @param s
-	 *            <code>String</code> with the representation of the hex bytes
-	 * @return <code>byte[]</code> with the actual translation
+	 *            {@code String} with the representation of the hex bytes
+	 * @return {@code byte[]} with the actual translation
 	 */
 	public static byte[] hexStringToByteArray(final String s) {
 		int len = s.length();
@@ -367,12 +367,12 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a checksum digest as a <code>byte[]</code>, return a
-	 * <code>String</value> as used in iRODS packing instructions
+	 * Given a checksum digest as a {@code byte[]}, return a
+	 * {@code String} as used in iRODS packing instructions
 	 *
 	 * @param digestAsByteArray
-	 *            <code>byte[]</code> which is a checksum value
-	 * @return <code>String</code> in hex that represents this checkSum
+	 *            {@code byte[]} which is a checksum value
+	 * @return {@code String} in hex that represents this checkSum
 	 */
 	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
 
@@ -392,12 +392,12 @@ public class LocalFileUtils {
 
 	/**
 	 * Given a path to a classpath resoruce, return that resource as a
-	 * <code>File</code>
+	 * {@code File}
 	 *
 	 * @param resourcePath
-	 *            <code>String</code> with an absolute path to a resource in the
+	 *            {@code String} with an absolute path to a resource in the
 	 *            classpath
-	 * @return <code>File</code> representing the resource in the classpath
+	 * @return {@code File} representing the resource in the classpath
 	 * @throws JargonException
 	 */
 	public static File getClasspathResourceAsFile(final String resourcePath)
@@ -430,8 +430,8 @@ public class LocalFileUtils {
 	 * string
 	 *
 	 * @param resourcePath
-	 *            <code>String</code> for a classpath resource
-	 * @return <code>String</code> with the String value of that resource data
+	 *            {@code String} for a classpath resource
+	 * @return {@code String} with the String value of that resource data
 	 * @throws JargonException
 	 */
 	public static String getClasspathResourceFileAsString(

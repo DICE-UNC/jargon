@@ -33,7 +33,7 @@ ParallelCipherWrapper {
 	 *
 	 * @param input
 	 *            {@link EncryptionBuffer}
-	 * @return <code>byte[]</code> of plaintext data
+	 * @return {@code byte[]} of plaintext data
 	 * @throws EncryptionException
 	 */
 	public byte[] decrypt(final EncryptionBuffer input)
@@ -49,9 +49,9 @@ ParallelCipherWrapper {
 	 * dependent on the underlying algorithm.
 	 *
 	 * @param fullBuffer
-	 *            <code>byte[]</code> with the full buffer form iRODS, including
+	 *            {@code byte[]} with the full buffer form iRODS, including
 	 *            any encryption related payload
-	 * @return <code>byte[]</code> with decrypted data
+	 * @return {@code byte[]} with decrypted data
 	 * @throws EncryptionException
 	 */
 	public byte[] decrypt(final byte[] fullBuffer) throws EncryptionException {
@@ -66,7 +66,7 @@ ParallelCipherWrapper {
 	 * happen after any init is checked
 	 *
 	 * @param input
-	 *            <code>byte[]</code> of plaintext data
+	 *            {@code byte[]} of plaintext data
 	 * @return {@link EncryptionBuffer}
 	 * @throws EncryptionException
 	 */

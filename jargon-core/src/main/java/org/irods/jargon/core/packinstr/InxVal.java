@@ -20,12 +20,12 @@ public class InxVal {
 	 * return a new instance
 	 *
 	 * @param name
-	 *            <code>String</code> with the 'key' value for this protocol
+	 *            {@code String} with the 'key' value for this protocol
 	 *            element
 	 * @param value
-	 *            <code>String</code> with the value part for this protocol
+	 *            {@code String} with the value part for this protocol
 	 *            element
-	 * @return <code>InxVal</code> as an immutable data object.
+	 * @return {@code InxVal} as an immutable data object.
 	 * @throws JargonException
 	 */
 	public static InxVal instance(final Integer name, final String value)

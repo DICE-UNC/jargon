@@ -88,12 +88,12 @@ class CollectionListingUtils {
 	 * This is a compensating method used to deal with the top of the tree when
 	 * permissions do not allow listing 'into' the tree to get to things the
 	 * user actually has access to.
-	 * <p/>
+	 * <p>
 	 * Phase 1 - when path is / - obtain a listing of zones and display as
 	 * subdirectories
-	 * <p/>
+	 * <p>
 	 * Phase 2 when path is /zone - interpolate a 'home' directory
-	 * <p/>
+	 * <p>
 	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
 	 * user name, see if a public dir. For foreign zone, add a dir for
 	 * user#homeZone and see if a public dir
@@ -101,8 +101,8 @@ class CollectionListingUtils {
 	 *
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the current parent
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 *            {@code String} with the current parent
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 *         that has the children under the parent. These children may be
 	 *         simulated per the given rules
 	 * @throws JargonException
@@ -466,7 +466,7 @@ class CollectionListingUtils {
 
 	/**
 	 * List the collections underneath the given path
-	 * <p/>
+	 * <p>
 	 * Works with soft links
 	 *
 	 * @param objStat
@@ -785,7 +785,7 @@ class CollectionListingUtils {
 
 	/**
 	 * List the data objects underneath the given path given an already obtained
-	 * <code>ObjStat</code>
+	 * {@code ObjStat}
 	 *
 	 * @param objStat
 	 * @param partialStartIndex
@@ -890,16 +890,16 @@ class CollectionListingUtils {
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
-	 *            <code>String</code> with the path used to query, this will be
+	 *            {@code String} with the path used to query, this will be
 	 *            the canonical path for the parent collection, and should
 	 *            correspond to the absolute path information in the given
-	 *            <code>entry</code>.
+	 *            {@code entry}.
 	 * @param entry
 	 *            {@link CollectionAndDataObjectListingEntry} which is the raw
 	 *            data returned from querying the iCat based on the
-	 *            <code>effectiveAbsolutePath</code>. This information is from
+	 *            {@code effectiveAbsolutePath}. This information is from
 	 *            the perspective of the canonical path, and the given method
-	 *            will reframe the <code>entry</code> from the perspective of
+	 *            will reframe the {@code entry} from the perspective of
 	 *            the requested path This means that a query on children of a
 	 *            soft link carry the data from the perspective of the soft
 	 *            linked directory, even though the iCAT carries the information

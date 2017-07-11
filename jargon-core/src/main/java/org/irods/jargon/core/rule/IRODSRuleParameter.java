@@ -146,9 +146,9 @@ public class IRODSRuleParameter {
 
 	/**
 	 * Get the value part of the parameter as a
-	 * <code>String/code>.  Note that arrays are translated into Strings.
+	 * {@code String}.  Note that arrays are translated into Strings.
 	 *
-	 * @return <code>String</code> containing the value of the
+	 * @return {@code String} containing the value of the
 	 *         IRODSRuleParameter.
 	 */
 	public String getStringValue() {

@@ -421,7 +421,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a short
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0
+	 *             if {@code nBytes <= 0}
 	 */
 	public final void setShortSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -439,7 +439,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up an int
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0
+	 *             if {@code nBytes <= 0}
 	 */
 	public final void setIntSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -457,7 +457,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a long
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0
+	 *             if {@code nBytes <= 0}
 	 */
 	public final void setLongSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -480,7 +480,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a long long
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0
+	 *             if {@code nBytes <= 0}
 	 */
 	public final void setLongLongSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -502,7 +502,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a float
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0 or not 4, 8, or 16
+	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
 	public final void setFloatSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -527,7 +527,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a double
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0 or not 4, 8, or 16
+	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
 	public final void setDoubleSize(final int nBytes)
 			throws IllegalArgumentException {
@@ -557,7 +557,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nBytes
 	 *            the number of file bytes that make up a long double
 	 * @throws IllegalArgumentException
-	 *             if nBytes is <= 0 or not 4, 8, or 16
+	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
 	public final void setLongDoubleSize(final int nBytes)
 			throws IllegalArgumentException {

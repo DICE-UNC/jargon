@@ -32,12 +32,12 @@ import org.slf4j.LoggerFactory;
  * resources. Some of the methods in this object are implemented elsewhere, and
  * are delegated to in order to provide one class for typical data movement
  * operations.
- * <p/>
+ * <p>
  * Note that this object treats data objects and collections as objects, instead
- * of emulating <code>File</code> operations. There is a package that implements
- * iRODS data objects and collections as typical <code>java.io.*</code> objects
- * that can be found in the <code>org.irods.jargon.core.pub.io.*</code> package.
- * <p/>
+ * of emulating {@code File} operations. There is a package that implements
+ * iRODS data objects and collections as typical {@code java.io.*} objects
+ * that can be found in the {@code org.irods.jargon.core.pub.io.*} package.
+ * <p>
  * Note that there are objects that can be used to access and manipulate data
  * and metadata about data objects and collections, and to query about data
  * objects and collections. These can be found in the
@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * {@link org.irods.jargon.core.pub.CollectionAOImpl}. Those access objects can
  * retrieve domain objects that represent details about collections and data
  * objects.
- * <p/>
+ * <p>
  * Note that this object handles soft linked files and collections, and will
  * operate as expected whether a soft link or a canonical path is provided.
  *
@@ -674,13 +674,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the get.
 	 * @param targetLocalFile
-	 *            <code>File</code> on the local file system to which the files
+	 *            {@code File} on the local file system to which the files
 	 *            will be transferrred.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
@@ -846,12 +846,12 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * enabled.
 	 *
 	 * @param sourceFile
-	 *            <code>File</code> that will be the source
+	 *            {@code File} that will be the source
 	 * @param targetIrodsFile
 	 *            {@link IRODSFile} that will be the target
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener} with the optional
-	 *            listener for progress information. May be <code>null</code>
+	 *            listener for progress information. May be {@code null}
 	 * @param operativeTransferControlBlock
 	 *            {@link TransferControlBlock} that contains information to
 	 *            control and monitor the transfer. Required
@@ -1095,13 +1095,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
+	 *            may be set to {@code null} if those facilities are not
 	 *            needed.
 	 * @param je
 	 * @throws JargonException
@@ -1146,7 +1146,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 * the data will be moved.
 	 *
 	 * @param sourceFile
-	 *            <code>File</code> that is the source of the transfer.
+	 *            {@code File} that is the source of the transfer.
 	 * @param targetIrodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            target of the transfer.
@@ -1154,7 +1154,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be re-thrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
@@ -1863,13 +1863,13 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
+	 *            may be set to {@code null} if those facilities are not
 	 *            needed.
 	 * @throws JargonException
 	 */

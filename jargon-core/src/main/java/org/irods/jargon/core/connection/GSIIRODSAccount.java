@@ -40,13 +40,13 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * Static initializer method
 	 *
 	 * @param host
-	 *            <code>String</code> with the iRODS host name
+	 *            {@code String} with the iRODS host name
 	 * @param port
-	 *            <code>int</code> with the iRODS server port
+	 *            {@code int} with the iRODS server port
 	 * @param gssCredential
 	 *            {@link GSSCredential} for the user login
 	 * @param defaultStorageResource
-	 *            <code>String</code> with an optional (blank if not specified)
+	 *            {@code String} with an optional (blank if not specified)
 	 *            default storage resource
 	 * @return {@link GSIIRODSAccount} for GSS login
 	 * @throws JargonException
@@ -61,12 +61,12 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/**
 	 * Private constructor for GSI login to iRODS, automatically setting the
-	 * <code>AuthScheme</code> to GSI.
+	 * {@code AuthScheme} to GSI.
 	 *
 	 * @param host
-	 *            <code>String</code> with the iRODS host name
+	 *            {@code String} with the iRODS host name
 	 * @param port
-	 *            <code>int</code> with the iRODS server port
+	 *            {@code int} with the iRODS server port
 	 * @param gssCredential
 	 *            {@link GSSCredential} for the user login
 	 * @throws JargonException
@@ -187,7 +187,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * Returns a string representation of this file system object. The string is
 	 * formated according to the iRODS URI model. Note: the user password will
 	 * not be included in the URI.
-	 * <p/>
+	 * <p>
 	 * This version using the user DN as the user name. This may change in the
 	 * future.
 	 */

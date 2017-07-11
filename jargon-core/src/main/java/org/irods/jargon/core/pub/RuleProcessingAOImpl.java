@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Access object that an execute iRODS rules, useful in services as a
  * stand-alone object, and a component used in other Access Objects.
- * <p/>
+ * <p>
  * NB: for information on changes to the rule engine, please consult:
  * https://www.irods.org/index.php/
  * Changes_and_Improvements_to_the_Rule_Language_and_the_Rule_Engine
@@ -725,21 +725,21 @@ RuleProcessingAO {
 	 *             retained note on this method... should check intInfo if ==
 	 *             SYS_SVR_TO_CLI_MSI_REQUEST 99999995
 	 *             /*lib/core/include/rodsDef.h
-	 *             <p/>
+	 *             <p>
 	 *             this is the return value for the rcExecMyRule call indicating
 	 *             theserver is requesting the client to client to perform
 	 *             certain task
-	 *             <p/>
+	 *             <p>
 	 *             #define SYS_SVR_TO_CLI_MSI_REQUEST 99999995
-	 *             <p/>
+	 *             <p>
 	 *             #define SYS_SVR_TO_CLI_COLL_STAT 99999996
-	 *             <p/>
+	 *             <p>
 	 *             #define SYS_CLI_TO_SVR_COLL_STAT_REPLY 99999997
-	 *             <p/>
+	 *             <p>
 	 *             definition for iRods server to client action request from a
 	 *             microservice. These definitions are put in the "label" field
 	 *             of MsParam
-	 *             <p/>
+	 *             <p>
 	 *             #define CL_PUT_ACTION "CL_PUT_ACTION" #define CL_GET_ACTION
 	 *             "CL_GET_ACTION" #define CL_ZONE_OPR_INX "CL_ZONE_OPR_INX"
 	 */

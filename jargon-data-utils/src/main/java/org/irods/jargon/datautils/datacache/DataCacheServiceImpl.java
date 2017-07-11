@@ -319,9 +319,9 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	 * configured in teh CacheDirConfig
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the name of the user for whom the
+	 *            {@code String} with the name of the user for whom the
 	 *            home cache dir will be computed
-	 * @return <code>StringBuilder</code> with computed part of the abs path
+	 * @return {@code StringBuilder} with computed part of the abs path
 	 */
 	private StringBuilder computeCacheDirPathFromHomeDirFromUserAndZone(
 			final String userName) {

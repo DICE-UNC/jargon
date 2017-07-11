@@ -53,9 +53,9 @@ public class FileGenerator {
 
 	/**
 	 * Create a random file extension selected from the
-	 * <code>fileExtensions</code> options
+	 * {@code fileExtensions} options
 	 *
-	 * @return <code>String</code> containing a random, though valid, file
+	 * @return {@code String} containing a random, though valid, file
 	 *         extension prepended with a '.' character
 	 * @throws TestingUtilsException
 	 */
@@ -69,9 +69,9 @@ public class FileGenerator {
 	 * Generate a random string
 	 *
 	 * @param length
-	 *            <code>int</code> that determines the length of the
-	 *            <code>String</code> that is generated.
-	 * @return <code>String</code> of n length composed of random alphabetic
+	 *            {@code int} that determines the length of the
+	 *            {@code String} that is generated.
+	 * @return {@code String} of n length composed of random alphabetic
 	 *         characters
 	 */
 	public static String generateRandomString(final int length) {
@@ -96,9 +96,9 @@ public class FileGenerator {
 	 * Generate a random file name + extension
 	 *
 	 * @param length
-	 *            <code>int</code> that determines the length of the file name
+	 *            {@code int} that determines the length of the file name
 	 *            (not including the extension this will be appended)
-	 * @return <code>String</code> which is a random file name plus a random
+	 * @return {@code String} which is a random file name plus a random
 	 *         extension
 	 * @throws TestingUtilsException
 	 */
@@ -115,13 +115,13 @@ public class FileGenerator {
 	 * provided length.
 	 *
 	 * @param fileDirectory
-	 *            <code>String</code> containing a an absolute path to valid
+	 *            {@code String} containing a an absolute path to valid
 	 *            directory on the local file system. This absolute path must
 	 *            have a leading and trailing '/'.
 	 * @param length
-	 *            <code>long</code> containing the desired length of the file in
+	 *            {@code long} containing the desired length of the file in
 	 *            bytes
-	 * @return <code>String</code> containing the full path to the generated
+	 * @return {@code String} containing the full path to the generated
 	 *         file
 	 * @throws TestingUtilsException
 	 */

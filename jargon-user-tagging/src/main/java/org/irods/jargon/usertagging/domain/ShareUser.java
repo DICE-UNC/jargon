@@ -54,9 +54,9 @@ public class ShareUser extends IRODSDomainObject implements Serializable {
 	 * Constructor for an immutable share permission
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the userName to share with
+	 *            {@code String} with the userName to share with
 	 * @param zone
-	 *            <code>String</code> with the zone (can be blank to denote
+	 *            {@code String} with the zone (can be blank to denote
 	 *            current zone user)
 	 * @param filePermission
 	 *            {@link FilePermissionEnum with desired permission to set}

@@ -28,11 +28,11 @@ public class MediaHandlingUtils {
 	}
 
 	/**
-	 * Is the given <code>CollectionAndDataObjectListingEntry</code> an image.
+	 * Is the given {@code CollectionAndDataObjectListingEntry} an image.
 	 * 
 	 * @param collectionAndDataObjectListingEntry
 	 *            {@link CollectionAndDataObjectListingEntry}
-	 * @return <code>boolean</code> if the given object is an image.
+	 * @return {@code boolean} if the given object is an image.
 	 */
 	public static boolean isImageFile(
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry) {
@@ -47,12 +47,12 @@ public class MediaHandlingUtils {
 	}
 
 	/**
-	 * Is the given <code>CollectionAndDataObjectListingEntry</code> an image.
+	 * Is the given {@code CollectionAndDataObjectListingEntry} an image.
 	 * 
 	 * @param absolutePath
-	 *            <code>String</code> assumed to be a data object absolute path
+	 *            {@code String} assumed to be a data object absolute path
 	 * 
-	 * @return <code>boolean</code> if the given object is an image.
+	 * @return {@code boolean} if the given object is an image.
 	 */
 	public static boolean isImageFile(final String absolutePath) {
 		boolean isImage = false;
@@ -73,12 +73,12 @@ public class MediaHandlingUtils {
 	/**
 	 * Inspects the file extension and determines if the file is one that has an
 	 * associated media player. This version returns a simple
-	 * <code>boolean</code> value so that image brower applications know that a
+	 * {@code boolean} value so that image brower applications know that a
 	 * media player applies.
 	 * 
 	 * @param collectionAndDataObjectListingEntry
 	 *            {@link CollectionAndDataObjectListingEntry}
-	 * @return <code>boolean</code> if the given object is an object that should
+	 * @return {@code boolean} if the given object is an object that should
 	 *         utilize a media player.
 	 */
 	public static boolean isMediaFile(
@@ -97,13 +97,13 @@ public class MediaHandlingUtils {
 	/**
 	 * Inspects the file extension and determines if the file is one that has an
 	 * associated media player. This version returns a simple
-	 * <code>boolean</code> value so that image brower applications know that a
+	 * {@code boolean} value so that image brower applications know that a
 	 * media player applies.
 	 * 
 	 * @param absolutePath
-	 *            <code>String</code> that is assumed to be a data object
+	 *            {@code String} that is assumed to be a data object
 	 *            absolute path {@link CollectionAndDataObjectListingEntry}
-	 * @return <code>boolean</code> if the given object is an object that should
+	 * @return {@code boolean} if the given object is an object that should
 	 *         utilize a media player.
 	 */
 	public static boolean isMediaFile(final String absolutePath) {

@@ -29,7 +29,7 @@ public class AccessObjectQueryProcessingUtils {
 
 	/**
 	 * @param resultSet
-	 * @return <code>List</code> of {@link AvuData}
+	 * @return {@code List} of {@link AvuData}
 	 * @throws JargonException
 	 */
 	public static List<AvuData> buildAvuDataListFromResultSet(
@@ -59,7 +59,7 @@ public class AccessObjectQueryProcessingUtils {
 	/**
 	 * @param metaDataDomain
 	 * @param irodsQueryResultSet
-	 * @return <code>List</code> of {@link MetaDataAndDomainData}
+	 * @return {@code List} of {@link MetaDataAndDomainData}
 	 * @throws JargonException
 	 */
 	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(

@@ -7,7 +7,7 @@ import java.util.List;
  * Implements a simple result set view resulting from the execution of an iRODS
  * SimpleQuery. See {@link org.irods.jargon.core.pub.SimpleQueryExecutorAO} for
  * the public API to query iRODS via SimpleQuery and produce this result.
- * <p/>
+ * <p>
  * This class is immutable.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -26,12 +26,12 @@ public class IRODSSimpleQueryResultSet extends AbstractIRODSQueryResultSet {
 	 *            {@link org.irods.jargon.core.query.SimpleQuery} that created
 	 *            this result set.
 	 * @param results
-	 *            <code>List<List<String>></code> with the results in row/column
+	 *            {@code List<List<String>>} with the results in row/column
 	 *            format.
 	 * @param columnNames
-	 *            <code>List<String></code> with the headers for each column.
+	 *            {@code List<String>} with the headers for each column.
 	 * @param hasMoreRecords
-	 *            <code>boolean</code> that indicates whether there are more
+	 *            {@code boolean} that indicates whether there are more
 	 *            records to retrieve.
 	 * @return {@link IRODSSimpleQueryResultSet}
 	 */

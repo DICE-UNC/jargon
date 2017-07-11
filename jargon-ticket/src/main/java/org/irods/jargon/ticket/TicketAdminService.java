@@ -14,7 +14,7 @@ public interface TicketAdminService {
 
 	/**
 	 * Create a ticket for access to iRODS
-	 * <p/>
+	 * <p>
 	 * This operation may be done on files or collections. Note that, for
 	 * collections, the inheritance bit will be set, so that the ticket creator
 	 * may have permissions on any files that grantees create in the collection.
@@ -36,8 +36,8 @@ public interface TicketAdminService {
 	 * 
 	 * @param String
 	 *            ticketID used to specify ticket key to be deleted
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to delete. <code>false</code> means that the delete was
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to delete. {@code false} means that the delete was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -66,9 +66,9 @@ public interface TicketAdminService {
 	 * will be all tickets.
 	 * 
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of {@link Ticket} objects for data objects
+	 * @return {@code List} of {@link Ticket} objects for data objects
 	 * @throws JargonException
 	 */
 	List<Ticket> listAllTicketsForDataObjects(int partialStartIndex)
@@ -80,9 +80,9 @@ public interface TicketAdminService {
 	 * this will be all tickets.
 	 * 
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of {@link Ticket} objects for collections
+	 * @return {@code List} of {@link Ticket} objects for collections
 	 * @throws JargonException
 	 */
 	List<Ticket> listAllTicketsForCollections(int partialStartIndex)
@@ -94,9 +94,9 @@ public interface TicketAdminService {
 	 * this will not return associated collections or data objects
 	 * 
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of {@link Ticket} objects for collections
+	 * @return {@code List} of {@link Ticket} objects for collections
 	 * @throws JargonException
 	 */
 	List<Ticket> listAllTickets(int partialStartIndex) throws JargonException;
@@ -105,12 +105,12 @@ public interface TicketAdminService {
 	 * Modify the uses limit of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param usesLimit
-	 *            <code>int</code> value >= 0 which specifies the uses limit for
+	 *            {@code int} value >= 0 which specifies the uses limit for
 	 *            the specified ticket
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -123,12 +123,12 @@ public interface TicketAdminService {
 	 * Modify the file write limit of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param fileWriteLimit
-	 *            <code>int</code> value >= 0 which specifies the file write
+	 *            {@code int} value >= 0 which specifies the file write
 	 *            limit for the specified ticket
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -141,12 +141,12 @@ public interface TicketAdminService {
 	 * Modify the byte write of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param byteWriteLimit
-	 *            <code>int</code> value >= 0 which specifies the byte write
+	 *            {@code int} value >= 0 which specifies the byte write
 	 *            limit for the specified ticket
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -159,12 +159,12 @@ public interface TicketAdminService {
 	 * Modify the expire time of a ticket for access to iRODS
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param expirationTime
-	 *            <code>Date</code> java.util.Date set to a valid date/time used
+	 *            {@code Date} java.util.Date set to a valid date/time used
 	 *            to specify expiration time of ticket
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -175,16 +175,16 @@ public interface TicketAdminService {
 
 	/**
 	 * Generate a list of all iRODS users that can use this ticket. Passing a
-	 * <code>null<code> expiration will cause
+	 * {@code null} expiration will cause
 	 * the expiration to be removed altogether.
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to use for
+	 *            {@code String} used to specify ticket key to use for
 	 *            retrieval of user restrictions
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of iRODS user ids
+	 * @return {@code List} of iRODS user ids
 	 * @throws JargonException
 	 */
 	List<String> listAllUserRestrictionsForSpecifiedTicket(String ticketId,
@@ -194,12 +194,12 @@ public interface TicketAdminService {
 	 * Generate a list of all iRODS groups that can use this ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to use for
+	 *            {@code String} used to specify ticket key to use for
 	 *            retrieval of group restrictions
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of iRODS group ids
+	 * @return {@code List} of iRODS group ids
 	 * @throws JargonException
 	 */
 	List<String> listAllGroupRestrictionsForSpecifiedTicket(String ticketId,
@@ -209,12 +209,12 @@ public interface TicketAdminService {
 	 * Generate a list of all hosts that can use this ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to use for
+	 *            {@code String} used to specify ticket key to use for
 	 *            retrieval of host restrictions
 	 * @param partialStartIndex
-	 *            <code>int</code> value >= 0 which provides an offset into
+	 *            {@code int} value >= 0 which provides an offset into
 	 *            results for paging
-	 * @return <code>List</code> of hosts
+	 * @return {@code List} of hosts
 	 * @throws JargonException
 	 */
 	List<String> listAllHostRestrictionsForSpecifiedTicket(String ticketId,
@@ -224,11 +224,11 @@ public interface TicketAdminService {
 	 * Modify the user access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param userId
-	 *            <code>String</code> that identifies a valid iRODS user
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid iRODS user
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -242,11 +242,11 @@ public interface TicketAdminService {
 	 * Modify the user access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param userId
-	 *            <code>String</code> that identifies a valid iRODS user
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid iRODS user
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -260,11 +260,11 @@ public interface TicketAdminService {
 	 * Modify the group access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param groupId
-	 *            <code>String</code> that identifies a valid iRODS group
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid iRODS group
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -278,11 +278,11 @@ public interface TicketAdminService {
 	 * Modify the group access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param groupId
-	 *            <code>String</code> that identifies a valid iRODS group
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid iRODS group
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -296,11 +296,11 @@ public interface TicketAdminService {
 	 * Modify the host access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param host
-	 *            <code>String</code> that identifies a valid host
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid host
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -314,11 +314,11 @@ public interface TicketAdminService {
 	 * Modify the host access for an IRODS ticket
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> used to specify ticket key to be modified
+	 *            {@code String} used to specify ticket key to be modified
 	 * @param host
-	 *            <code>String</code> that identifies a valid host
-	 * @return <code>boolean</code> that will be <code>true</code> if the ticket
-	 *         was found to modify. <code>false</code> means that the modify was
+	 *            {@code String} that identifies a valid host
+	 * @return {@code boolean} that will be {@code true} if the ticket
+	 *         was found to modify. {@code false} means that the modify was
 	 *         not successful, due to the ticket not being found. This can be
 	 *         ignored.
 	 * @throws JargonException
@@ -331,8 +331,8 @@ public interface TicketAdminService {
 	/**
 	 * delete all IRODS access tickets for this user
 	 * 
-	 * @return <code>boolean</code> that will be <code>true</code> if the delete
-	 *         ticket operation was successful. <code>false</code> means that
+	 * @return {@code boolean} that will be {@code true} if the delete
+	 *         ticket operation was successful. {@code false} means that
 	 *         the delete was not successful, due to no tickets found. This can
 	 *         be ignored. NOTE: Use EXTREME caution with this method - for a
 	 *         regular user (rodsuser), this will delete tickets just for that
@@ -347,8 +347,8 @@ public interface TicketAdminService {
 	 * Is the given ticket string already in use?
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> which is the generated key for the ticket
-	 * @return <code>boolean</code> of <code>true</code> if the ticket is in use
+	 *            {@code String} which is the generated key for the ticket
+	 * @return {@code boolean} of {@code true} if the ticket is in use
 	 * @throws JargonException
 	 */
 	boolean isTicketInUse(final String ticketString) throws JargonException;
@@ -358,12 +358,12 @@ public interface TicketAdminService {
 	 * iRODS absolute path
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path for a
+	 *            {@code String} with an iRODS absolute path for a
 	 *            collection
 	 * @param partialStartIndex
-	 *            <code>int</code> that can be set to 0 if starting at the
+	 *            {@code int} that can be set to 0 if starting at the
 	 *            beginning. This specifies
-	 * @return <code>List</code> of {@link Ticket} objects for the collection at
+	 * @return {@code List} of {@link Ticket} objects for the collection at
 	 *         the given absolute path
 	 * @throws JargonException
 	 */
@@ -375,12 +375,12 @@ public interface TicketAdminService {
 	 * an iRODS absolute path
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path for a
+	 *            {@code String} with an iRODS absolute path for a
 	 *            collection
 	 * @param partialStartIndex
-	 *            <code>int</code> that can be set to 0 if starting at the
+	 *            {@code int} that can be set to 0 if starting at the
 	 *            beginning. This specifies
-	 * @return <code>List</code> of {@link Ticket} objects for the collection at
+	 * @return {@code List} of {@link Ticket} objects for the collection at
 	 *         the given absolute path
 	 * @throws JargonException
 	 */
@@ -393,7 +393,7 @@ public interface TicketAdminService {
 	 * and the simultaneous setting of the various limits. This convenience
 	 * method removes the need to put this somewhat complicated sequence of code
 	 * into applications.
-	 * <p/>
+	 * <p>
 	 * It must be noted that iRODS protocol clients cannot frame this sort of
 	 * operation in a transaction, so there is a very small chance that the
 	 * operaton will not happen a atomically. This is not something that the
@@ -402,21 +402,21 @@ public interface TicketAdminService {
 	 * 
 	 * @param ticket
 	 *            {@link Ticket} to be added. Note that the only data that
-	 *            really needs to be in the <code>Ticket</code> is the
+	 *            really needs to be in the {@code Ticket} is the
 	 *            (optional) ticket string, the ticket type (READ or WRITE), and
 	 *            the absolute path. The rest of the data can either be left
 	 *            alone, or it can be specified, and this will be handled by the
 	 *            update process. For example, if you set a write byte limit in
 	 *            the provided ticket, a call will be made to establish that
 	 *            value.
-	 *            <p/>
-	 *            Note that the <code>ticketString</code> in the
-	 *            <code>Ticket</code> may either be specified, or it may be left
+	 *            <p>
+	 *            Note that the {@code ticketString} in the
+	 *            {@code Ticket} may either be specified, or it may be left
 	 *            blank. If left blank, a ticket id will be randomly generated.
-	 *            The <code>Ticket</code> object returned from this method will
+	 *            The {@code Ticket} object returned from this method will
 	 *            carry all of the values properly initialized.
 	 * @throws DuplicateDataException
-	 *             if the <code>Ticket.ticketString</code> is already in use
+	 *             if the {@code Ticket.ticketString} is already in use
 	 * @throws DataNotFoundException
 	 *             if the iRODS file does not exist
 	 * @throws JargonException
@@ -430,11 +430,11 @@ public interface TicketAdminService {
 	 * compares this ticket, reflecting the desired values, and the current
 	 * data. The delta between the two, for fields that may be updated, is used
 	 * to call appropriate update methods.
-	 * <p/>
+	 * <p>
 	 * Note that this is not transactional, so there is some small chance that
-	 * not all changes will occur, this method will return a <code>Ticket</code>
+	 * not all changes will occur, this method will return a {@code Ticket}
 	 * object that reflects the final state of the data in iRODS.
-	 * <p/>
+	 * <p>
 	 * The current update-able fields are the various access and write limits,
 	 * as well as the expiration data, other fields will be ignored.
 	 * 
@@ -456,11 +456,11 @@ public interface TicketAdminService {
 	 * and the simultaneous setting of the various limits. This convenience
 	 * method removes the need to put this somewhat complicated sequence of code
 	 * into applications.
-	 * <p/>
+	 * <p>
 	 * This variant uses a delegation technique so that a rodsAdmin can create a
 	 * ticket that another user will own. This is important in scenarios where a
 	 * proxy user may be interacting with iRODS on behalf of a user.
-	 * <p/>
+	 * <p>
 	 * It must be noted that iRODS protocol clients cannot frame this sort of
 	 * operation in a transaction, so there is a very small chance that the
 	 * operaton will not happen a atomically. This is not something that the
@@ -469,23 +469,23 @@ public interface TicketAdminService {
 	 * 
 	 * @param ticket
 	 *            {@link Ticket} to be added. Note that the only data that
-	 *            really needs to be in the <code>Ticket</code> is the
+	 *            really needs to be in the {@code Ticket} is the
 	 *            (optional) ticket string, the ticket type (READ or WRITE), and
 	 *            the absolute path. The rest of the data can either be left
 	 *            alone, or it can be specified, and this will be handled by the
 	 *            update process. For example, if you set a write byte limit in
 	 *            the provided ticket, a call will be made to establish that
 	 *            value.
-	 *            <p/>
-	 *            Note that the <code>ticketString</code> in the
-	 *            <code>Ticket</code> may either be specified, or it may be left
+	 *            <p>
+	 *            Note that the {@code ticketString} in the
+	 *            {@code Ticket} may either be specified, or it may be left
 	 *            blank. If left blank, a ticket id will be randomly generated.
-	 *            The <code>Ticket</code> object returned from this method will
+	 *            The {@code Ticket} object returned from this method will
 	 *            carry all of the values properly initialized.
 	 * @param userName
-	 *            <code>String</code>
+	 *            {@code String}
 	 * @throws DuplicateDataException
-	 *             if the <code>Ticket.ticketString</code> is already in use
+	 *             if the {@code Ticket.ticketString} is already in use
 	 * @throws DataNotFoundException
 	 *             if the iRODS file does not exist
 	 * @throws JargonException

@@ -49,9 +49,9 @@ import org.slf4j.LoggerFactory;
 /**
  * This is a backing object for IRODSFileImpl, handling all IRODS interactions.
  * This class is usable as API, but methods are more properly called from
- * IRODSFile, which wraps these operations with the <code>java.io.File</code>
+ * IRODSFile, which wraps these operations with the {@code java.io.File}
  * methods. Methods that back operations not defined in
- * <code>java.io.File</code> are not implemented in this particular access
+ * {@code java.io.File} are not implemented in this particular access
  * object.
  *
  *
@@ -152,7 +152,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * Do a query on the given file to see if it has an executable bit set
 	 *
 	 * @param irodsFile
-	 * @return <code>boolean</code> of <code>true</code> if file is data object,
+	 * @return {@code boolean} of {@code true} if file is data object,
 	 *         exists, and is executable
 	 * @throws JargonException
 	 */
@@ -1336,7 +1336,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * Respond to client status messages for an operation until exhausted.
 	 *
 	 * @param reply
-	 *            <code>Tag</code> containing status messages from IRODS
+	 *            {@code Tag} containing status messages from IRODS
 	 * @throws IOException
 	 */
 	private void processClientStatusMessages(final Tag reply) throws JargonException {

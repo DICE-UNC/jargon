@@ -22,7 +22,7 @@ BulkFileOperationsAO {
 			.getLogger(BulkFileOperationsAOImpl.class);
 
 	/**
-	 * Constructor as called by the <code>IRODSAccessObjectFactory</code>, which
+	 * Constructor as called by the {@code IRODSAccessObjectFactory}, which
 	 * is properly used to construct this access object.
 	 *
 	 * @param irodsSession

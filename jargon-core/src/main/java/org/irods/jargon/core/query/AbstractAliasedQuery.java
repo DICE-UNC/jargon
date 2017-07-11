@@ -14,13 +14,13 @@ public class AbstractAliasedQuery {
 	 * Base constructor
 	 *
 	 * @param queryString
-	 *            <code>String</code> query string or alias, required
+	 *            {@code String} query string or alias, required
 	 * @param arguments
-	 *            <code>List<String></code> of arguments, may be set to
-	 *            <code>null</code> if no args. If arguments are specified, they
+	 *            {@code List<String>} of arguments, may be set to
+	 *            {@code null} if no args. If arguments are specified, they
 	 *            are wrapped in an unmodifiable list
 	 * @param continuationValue
-	 *            <code>int</code> with a continuation value as returned from a
+	 *            {@code int} with a continuation value as returned from a
 	 *            previous query result. Used for paging, set to zero if no
 	 *            paging is done, or is initial query
 	 */

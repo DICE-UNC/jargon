@@ -15,19 +15,19 @@ import org.slf4j.LoggerFactory;
  * are discovered as a result of calling a function in Jargon. Instead of trying
  * and failing to get a certain service from iRODS over and over again, a result
  * can be cached here to check.
- * <p/>
+ * <p>
  * This is a map of maps, the cache is by concatenated host + zone name. For
- * each host+zone, it will contain a map of plain <code>String</code> name/value
+ * each host+zone, it will contain a map of plain {@code String} name/value
  * pairs.
- * <p/>
+ * <p>
  * Note that we'll this using a modest {@link ConcurrentHashMap} implementation,
  * so that synch overhead is minimized. Note that the worst case side effect
  * would be asking iRODS for something (e.g. trying to run a specific query)
  * more than once, so I'm trying to minimize synchronization. We can allow some
  * 'fuzziness' here. The point is to minimize such redundant calls.
- * <p/>
+ * <p>
  * This class also includes other cacheable data, such as the
- * <code>IRODSServerProperties</code> that is otherwise repeatedly obtained from
+ * {@code IRODSServerProperties} that is otherwise repeatedly obtained from
  * iRODS on connection
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -60,16 +60,16 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 *
-	 * If an <code>IRODSServerProperties</code> was already cached, then just
+	 * If an {@code IRODSServerProperties} was already cached, then just
 	 * return it, if not cached, this method will return null
 	 *
 	 * @param host
-	 *            <code>String</code> with the name of the iRODS host this
+	 *            {@code String} with the name of the iRODS host this
 	 *            applies to
 	 * @param zoneName
-	 *            <code>String</code> with the name of the iRODS zone this
+	 *            {@code String} with the name of the iRODS zone this
 	 *            applies to
-	 * @return {@link IRODSServerProperties} or <ocde>null</code> if not cached
+	 * @return {@link IRODSServerProperties} or {@code null} if not cached
 	 */
 	public IRODSServerProperties retrieveIRODSServerProperties(
 			final String host, final String zoneName) {
@@ -90,7 +90,7 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Gets the cached <code>IRODSServerProperties</code> or <code>null</code>
+	 * Gets the cached {@code IRODSServerProperties} or {@code null}
 	 *
 	 * @param host
 	 * @param zoneName
@@ -116,18 +116,18 @@ public class DiscoveredServerPropertiesCache {
 	/**
 	 * Get the value cached for this host and zone. Note that if the zone does
 	 * not exist in the cache, or if the property does not exist in the zone
-	 * cache, a <code>null</code> will be returned.
+	 * cache, a {@code null} will be returned.
 	 *
 	 * @param host
-	 *            <code>String</code> with the name of the iRODS host this
+	 *            {@code String} with the name of the iRODS host this
 	 *            applies to
 	 * @param zoneName
-	 *            <code>String</code> with the name of the iRODS zone this
+	 *            {@code String} with the name of the iRODS zone this
 	 *            applies to
 	 * @param propertyName
-	 *            <code>String</code> with the property value to be retrieved
-	 * @return <code>String</code> with the value for the given property, or
-	 *         <code>null</code> if no such value exists
+	 *            {@code String} with the property value to be retrieved
+	 * @return {@code String} with the value for the given property, or
+	 *         {@code null} if no such value exists
 	 */
 	public String retrieveValue(final String host, final String zoneName,
 			final String propertyName) {
@@ -157,7 +157,7 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the <code>IRODSServerProperties</code> If the zone has no cache,
+	 * Delete the {@code IRODSServerProperties} If the zone has no cache,
 	 * silently ignore
 	 *
 	 * @param host
@@ -238,13 +238,13 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Add an <code>IRODSServerProperties</code> to the cache
+	 * Add an {@code IRODSServerProperties} to the cache
 	 *
 	 * @param host
-	 *            <code>String</code> with the name of the iRODS host this
+	 *            {@code String} with the name of the iRODS host this
 	 *            applies to
 	 * @param zoneName
-	 *            <code>String</code> with the name of the iRODS zone this
+	 *            {@code String} with the name of the iRODS zone this
 	 *            applies to
 	 * @param irodsServerProperties
 	 *            {@link IRODSServerProperties} to cache
@@ -275,15 +275,15 @@ public class DiscoveredServerPropertiesCache {
 	 * Cache a property for the given host and zone.
 	 *
 	 * @param host
-	 *            <code>String</code> with the name of the iRODS host this
+	 *            {@code String} with the name of the iRODS host this
 	 *            applies to
 	 * @param zoneName
-	 *            <code>String</code> with the name of the iRODS zone this
+	 *            {@code String} with the name of the iRODS zone this
 	 *            applies to
 	 * @param propertyName
-	 *            <code>String</code> with the property to set
+	 *            {@code String} with the property to set
 	 * @param value
-	 *            <code>String</code> with a non-null value to set. For
+	 *            {@code String} with a non-null value to set. For
 	 *            consistency, set to blank if a property has no value.
 	 */
 	public void cacheAProperty(final String host, final String zoneName,

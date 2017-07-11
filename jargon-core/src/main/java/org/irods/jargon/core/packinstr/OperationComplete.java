@@ -25,7 +25,7 @@ public class OperationComplete extends AbstractIRODSPackingInstruction {
 	 * Private constructor
 	 *
 	 * @param status
-	 *            <code>int</code> >= 0 that is the status to send with the
+	 *            {@code int} >= 0 that is the status to send with the
 	 *            operation complete message
 	 */
 	private OperationComplete(final int status) {

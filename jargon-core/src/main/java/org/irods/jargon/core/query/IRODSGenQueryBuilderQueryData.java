@@ -33,17 +33,17 @@ class IRODSGenQueryBuilderQueryData {
 	 *            the query, of which there must be at least one
 	 * @param conditions
 	 *            {@link GenQueryBuilderCondition} that describes optional
-	 *            conditions for the query, may be set to <code>null</code>
+	 *            conditions for the query, may be set to {@code null}
 	 * @param orderByFields
 	 *            {@link GenQueryOrderByField} that describes optional order by
-	 *            values for the query, may be set to <code>null</code>
+	 *            values for the query, may be set to {@code null}
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the query is a
+	 *            {@code boolean} that indicates whether the query is a
 	 *            select distinct
 	 * @param upperCase
-	 *            <code>boolean</code> indicates whether the query uses
+	 *            {@code boolean} indicates whether the query uses
 	 *            case-insensitive conditions
-	 * @return immutable instance of <code>IRODSGenBuilderQuery</code>
+	 * @return immutable instance of {@code IRODSGenBuilderQuery}
 	 */
 	public static IRODSGenQueryBuilderQueryData instance(
 			final List<GenQuerySelectField> selectFields,
@@ -63,17 +63,17 @@ class IRODSGenQueryBuilderQueryData {
 	 *            the query, of which there must be at least one
 	 * @param conditions
 	 *            {@link GenQueryBuilderCondition} that describes optional
-	 *            conditions for the query, may be set to <code>null</code>
+	 *            conditions for the query, may be set to {@code null}
 	 * @param orderByFields
 	 *            {@link GenQueryOrderByField} that describes optional order by
-	 *            values for the query, may be set to <code>null</code>
+	 *            values for the query, may be set to {@code null}
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the query is a
+	 *            {@code boolean} that indicates whether the query is a
 	 *            select distinct
 	 * @param upperCase
-	 *            <code>boolean</code> indicates whether the query uses
+	 *            {@code boolean} indicates whether the query uses
 	 *            case-insensitive conditions
-	 * @return immutable instance of <code>IRODSGenBuilderQuery</code>
+	 * @return immutable instance of {@code IRODSGenBuilderQuery}
 	 */
 	public static IRODSGenQueryBuilderQueryData instance(
 			final List<GenQuerySelectField> selectFields,
@@ -92,20 +92,20 @@ class IRODSGenQueryBuilderQueryData {
 	 *            the query, of which there must be at least one
 	 * @param conditions
 	 *            {@link GenQueryBuilderCondition} that describes optional
-	 *            conditions for the query, may be set to <code>null</code>
+	 *            conditions for the query, may be set to {@code null}
 	 * @param orderByFields
 	 *            {@link GenQueryOrderByField} that describes optional order by
-	 *            values for the query, may be set to <code>null</code>
+	 *            values for the query, may be set to {@code null}
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the query is a
+	 *            {@code boolean} that indicates whether the query is a
 	 *            select distinct
 	 * @param upperCase
-	 *            <code>boolean</code> indicates whether the query uses
+	 *            {@code boolean} indicates whether the query uses
 	 *            case-insensitive conditions
 	 * @param computeTotalRowCount
-	 *            <code>boolean</code> that indicates that the total row count
+	 *            {@code boolean} that indicates that the total row count
 	 *            should be returned, this might carry a performance penalty. If
-	 *            this is <code>true</code> the eventual result set will contain
+	 *            this is {@code true} the eventual result set will contain
 	 *            the iRODS response from the query with the total rows to be
 	 *            returned
 	 */
@@ -168,7 +168,7 @@ class IRODSGenQueryBuilderQueryData {
 	 * there's at least one field selected. Other edits may be added as this is
 	 * fully implemented
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if the query is
+	 * @return {@code boolean} of {@code true} if the query is
 	 *         correctly defined to process
 	 */
 	public boolean isQueryValid() {
@@ -180,7 +180,7 @@ class IRODSGenQueryBuilderQueryData {
 	}
 
 	/**
-	 * @return distinct <code>boolean</code> indicates whether the query
+	 * @return distinct {@code boolean} indicates whether the query
 	 *         specifies distinct
 	 */
 	public boolean isDistinct() {
@@ -188,7 +188,7 @@ class IRODSGenQueryBuilderQueryData {
 	}
 
 	/**
-	 * @return the upperCase <code>boolean</code> indicates whether the query
+	 * @return the upperCase {@code boolean} indicates whether the query
 	 *         uses case-insensitive conditions
 	 */
 	public boolean isUpperCase() {

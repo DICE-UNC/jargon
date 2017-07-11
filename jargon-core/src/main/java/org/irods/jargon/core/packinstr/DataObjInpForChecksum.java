@@ -32,8 +32,8 @@ public class DataObjInpForChecksum extends AbstractIRODSPackingInstruction {
 	/**
 	 * Optional checksum value used for operations where a checksum validation
 	 * is requested. This will be the computed checksum of the file in question.
-	 * <p/>
-	 * Can be set to <code>null</code> if no checksum is specified
+	 * <p>
+	 * Can be set to {@code null} if no checksum is specified
 	 */
 	private final ChecksumOptions checksumOptions;
 	private final String resourceName;

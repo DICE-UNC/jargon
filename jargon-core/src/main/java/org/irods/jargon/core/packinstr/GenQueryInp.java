@@ -11,7 +11,7 @@ import org.irods.jargon.core.utils.IRODSConstants;
 
 /**
  * Wrap a query to IRODS, note that the only shared object is
- * <code>IRODSQuery</code> which is immutable, so this class should be
+ * {@code IRODSQuery} which is immutable, so this class should be
  * thread-safe.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -50,12 +50,12 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 *
 	 * @param translatedIRODSQuery
 	 * @param continueIndex
-	 *            <code>int</code> with a 0 or 1 to indicate continuation of a
+	 *            {@code int} with a 0 or 1 to indicate continuation of a
 	 *            previous query that had more results
 	 * @param zoneName
-	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            {@code String} ({@code null} or blank if not used)
 	 *            that indicates an optional zone for the query
-	 * @return <code>GenQueryInp</code> instance
+	 * @return {@code GenQueryInp} instance
 	 * @throws JargonException
 	 */
 	public static GenQueryInp instance(
@@ -70,7 +70,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * the query down.
 	 *
 	 * @param continueIndex
-	 *            <code>int</code> with value passed back from iRODS with the
+	 *            {@code int} with value passed back from iRODS with the
 	 *            last query result.
 	 * @return {@link GenQueryInp}
 	 */
@@ -86,9 +86,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 *
 	 * @param translatedIRODSQuery
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset within the result set to
+	 *            {@code int} with the offset within the result set to
 	 *            start returning rows from
-	 * @return <code>GenQueryInp</code> instance
+	 * @return {@code GenQueryInp} instance
 	 * @throws JargonException
 	 */
 	public static GenQueryInp instanceWithPartialStart(
@@ -104,7 +104,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	 * close of a result set that had been continued.
 	 *
 	 * @param continueIndex
-	 *            <code>int</code> with value passed back from iRODS with the
+	 *            {@code int} with value passed back from iRODS with the
 	 *            last query result.
 	 * @return {@link GenQueryInp}
 	 */
@@ -155,7 +155,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements
 	}
 
 	/**
-	 * @return <code>int</code> with the offset requested into the result set
+	 * @return {@code int} with the offset requested into the result set
 	 */
 	public int getContinueIndex() {
 		return continueIndex;

@@ -39,12 +39,12 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 	 * Specify a delete with the force option enabled
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with the absolute path to the file/data
+	 *            {@code String} with the absolute path to the file/data
 	 *            object to be deleted.
 	 * @param force
-	 *            <code>boolean</code> that indicates whether a force option
+	 *            {@code boolean} that indicates whether a force option
 	 *            should be used
-	 * @return <code>DataObjInp</code> containing the necessary packing
+	 * @return {@code DataObjInp} containing the necessary packing
 	 *         instruction
 	 * @throws JargonException
 	 */

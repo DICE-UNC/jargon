@@ -18,10 +18,10 @@ public abstract class AbstractIRODSTaggingService {
 	 * that interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 */
 	protected AbstractIRODSTaggingService(

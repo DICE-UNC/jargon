@@ -22,19 +22,19 @@ public final class IRODSRule {
 	private final String ruleBody;
 
 	/**
-	 * Return an immutable instance of an <code>IRODSRule</code>
+	 * Return an immutable instance of an {@code IRODSRule}
 	 *
 	 * @param ruleAsOriginalText
-	 *            <code>String</code> with the plain text version of the rule
+	 *            {@code String} with the plain text version of the rule
 	 * @param irodsRuleInputParameters
-	 *            <code>List<IRODSRuleParameter></code> containing the
+	 *            {@code List<IRODSRuleParameter>} containing the
 	 *            translated rule input parameters
 	 * @param irodsRuleOutputParameters
-	 *            <code>List<IRODSRuleParameter></code> containing the
+	 *            {@code List<IRODSRuleParameter>} containing the
 	 *            translated rule output parameters
 	 * @param ruleBody
-	 *            <code>String</code> containing the body of the rule
-	 * @return <code>IRODSRule</code> containing an object model of the rule.
+	 *            {@code String} containing the body of the rule
+	 * @return {@code IRODSRule} containing an object model of the rule.
 	 * @throws JargonException
 	 */
 	public static IRODSRule instance(final String ruleAsOriginalText,

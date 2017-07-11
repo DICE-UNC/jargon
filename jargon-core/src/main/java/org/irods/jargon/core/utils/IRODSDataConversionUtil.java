@@ -29,10 +29,10 @@ public class IRODSDataConversionUtil {
 
 	/**
 	 * For a given string that should contain an integer value, return either
-	 * the <code>int</code> value or a zero if empty.
+	 * the {@code int} value or a zero if empty.
 	 *
 	 * @param irodsValue
-	 * @return <code>int</code> equivilent of irods value
+	 * @return {@code int} equivilent of irods value
 	 */
 	public static int getIntOrZeroFromIRODSValue(final String irodsValue) {
 
@@ -59,10 +59,10 @@ public class IRODSDataConversionUtil {
 
 	/**
 	 * For a given string that should contain an long value, return either the
-	 * <code>long</code> value or a zero if empty.
+	 * {@code long} value or a zero if empty.
 	 *
 	 * @param irodsValue
-	 * @return <code>long</code> equivilent of irods value
+	 * @return {@code long} equivilent of irods value
 	 */
 	public static long getLongOrZeroFromIRODSValue(final String irodsValue) {
 
@@ -88,13 +88,13 @@ public class IRODSDataConversionUtil {
 	}
 
 	/**
-	 * Utility to return an irods date value as a <code>java.util.Date</code>
+	 * Utility to return an irods date value as a {@code java.util.Date}
 	 *
 	 * @param irodsValue
-	 *            <code>String</code> containing an IRODS date value as returned
+	 *            {@code String} containing an IRODS date value as returned
 	 *            from a query to ICAT
-	 * @return <code>java.util.Date</code> reflecting the IRODS time, or
-	 *         <code>null</code> if no date in the data
+	 * @return {@code java.util.Date} reflecting the IRODS time, or
+	 *         {@code null} if no date in the data
 	 */
 	public static Date getDateFromIRODSValue(final String irodsValue) {
 
@@ -132,7 +132,7 @@ public class IRODSDataConversionUtil {
 	 * Null and empty values are mapped to the normal type.
 	 *
 	 * @param irodsValue
-	 *            <code>String</code> containing an IRODS collection type value
+	 *            {@code String} containing an IRODS collection type value
 	 *            as returned from a query to ICAT. May be null.
 	 *
 	 * @return the collection type
