@@ -7,7 +7,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * A factory for producing connection factories.
- * <p/>
+ * <p>
  * In this implementation, this factory will create connection factory based on
  * the provided jargon properties. This will create the factory object that
  * initializes the low level networking connection code used by Jargon. This
@@ -27,7 +27,7 @@ public class IRODSConnectionFactoryProducingFactory {
 	}
 
 	/**
-	 * Given the <code>JargonProperties</code>, return the factory that will
+	 * Given the {@code JargonProperties}, return the factory that will
 	 * create the networking layer
 	 *
 	 * @param jargonProperties

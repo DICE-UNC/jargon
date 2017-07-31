@@ -7,7 +7,7 @@ import java.io.FileFilter;
  * Filter to discriminate between files and dirs for matching. This is necessary
  * because Data Objects and Collections may be returned in differing orders
  * between iRODS and the local file system.
- * <p/>
+ * <p>
  * iRODS will return all the files, then all the directories. Local file systems
  * typically will have them mixed together.
  * 

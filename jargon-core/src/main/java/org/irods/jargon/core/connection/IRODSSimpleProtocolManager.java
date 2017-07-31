@@ -8,12 +8,12 @@ import org.slf4j.LoggerFactory;
 /**
  * This connection manager simply returns a stand-alone connection to IRODS.
  * based on the information in the IRODSAccount.
- * <p/>
+ * <p>
  * This particular implementation has no shared data between connections that
  * are created, and as such does not need to be thread-safe. A pooled connection
  * manager will need to process getting and returning connections from multiple
  * threads.
- * <p/>
+ * <p>
  * NOTE: this is somewhat transitional in the way it creates the mid level
  * protocol manager and initializes itself, this will probably remain for
  * backwards compatability and another implementation may be created that allows

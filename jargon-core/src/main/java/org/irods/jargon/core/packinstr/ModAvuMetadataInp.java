@@ -48,7 +48,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * collection.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -63,7 +63,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * a collection.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -85,7 +85,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * collection.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -100,7 +100,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * data object.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -115,7 +115,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * a data object.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -137,7 +137,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * data object.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -153,7 +153,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * resource.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -168,7 +168,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * resource.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -183,7 +183,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * a resource.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -205,7 +205,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * from a resource .
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -220,7 +220,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * user.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -235,7 +235,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * a user.
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
@@ -256,7 +256,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * from a user .
 	 *
 	 * @param targetIdentifier
-	 *            <code>String</code> with the path or unique name of the object
+	 *            {@code String} with the path or unique name of the object
 	 *            to which the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */

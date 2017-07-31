@@ -27,17 +27,17 @@ public final class UserTagCloudView implements Serializable {
 	 * Static initializer creates an instance.
 	 * 
 	 * @param metadataDomain
-	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
 	 *            that describes the iRODS domain object being tagged (e.g.
 	 *            collection, data object)
 	 * @param userName
-	 *            <code>String</code> with the name of the user who owns the tag
+	 *            {@code String} with the name of the user who owns the tag
 	 *            cloud.
 	 * @param tagCloudEntries
-	 *            <code>Map</code> of
+	 *            {@code Map} of
 	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
 	 *            the summary for the various tags.
-	 * @return instance of <code>UserTagCloudView</code>
+	 * @return instance of {@code UserTagCloudView}
 	 * @throws JargonException
 	 */
 	public static UserTagCloudView instance(final String userName,
@@ -51,14 +51,14 @@ public final class UserTagCloudView implements Serializable {
 	 * objects that will be put together in a union with counts for each.
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the name of the user who owns the tag
+	 *            {@code String} with the name of the user who owns the tag
 	 *            cloud.
 	 * @param fileTagCloudEntries
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
 	 *            the summary for data objects.
 	 * @param collectionTagCloudEntries
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
 	 *            the summary for collections.
 	 * @return {@link UserTagCloudView}
@@ -109,14 +109,14 @@ public final class UserTagCloudView implements Serializable {
 	 * Private constructor
 	 * 
 	 * @param metadataDomain
-	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
 	 *            that describes the iRODS domain object being tagged (e.g.
 	 *            collection, data object)
 	 * @param userName
-	 *            <code>String</code> with the name of the user who owns the tag
+	 *            {@code String} with the name of the user who owns the tag
 	 *            cloud.
 	 * @param tagCloudEntries
-	 *            <code>Map</code> of
+	 *            {@code Map} of
 	 *            {@link orgirods.jargon.usertagging.domain.TagCloudEntry} with
 	 *            the summary for the various tags.
 	 * @throws JargonException

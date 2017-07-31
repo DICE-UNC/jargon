@@ -15,8 +15,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Mike Conway - DICE (www.irods.org) Creates an
- *         <code>ExtensibleMetaDataMapping</code> using a
- *         <code>Properties</code> file that will be on the classpath.
+ *         {@code ExtensibleMetaDataMapping} using a
+ *         {@code Properties} file that will be on the classpath.
  */
 public class ExtensibleMetadataPropertiesSource implements
 ExtensibleMetaDataSource {
@@ -47,8 +47,8 @@ ExtensibleMetaDataSource {
 	 * desired extensible metadata mappings.
 	 *
 	 * @param propertiesFileName
-	 *            <code>String</code> containing a valid
-	 *            <code>.properties</code> file that exists on the classpath.
+	 *            {@code String} containing a valid
+	 *            {@code .properties} file that exists on the classpath.
 	 * @throws JargonException
 	 */
 	public ExtensibleMetadataPropertiesSource(final String propertiesFileName)

@@ -45,7 +45,7 @@ import org.slf4j.LoggerFactory;
  * response, and to detect and throw appropriate Exceptions based on the status
  * of the iRODS response. Specifically, this object detects iRODS error codes in
  * the 'intInfo' part of the response, and maps them to Jargon exceptions.
- * <p/>
+ * <p>
  * Note that this is an early implementation, and a fuller error hierarchy will
  * develop over time.
  *
@@ -62,11 +62,11 @@ public class IRODSErrorScanner {
 	 * that might expand the error
 	 *
 	 * @param infoValue
-	 *            <code>int</code> with the iRODS info value from a packing
+	 *            {@code int} with the iRODS info value from a packing
 	 *            instruction response header
 	 * @param message
-	 *            <code>String</code> with any additional error information
-	 *            coming from the response in the <code>msg</code> field of the
+	 *            {@code String} with any additional error information
+	 *            coming from the response in the {@code msg} field of the
 	 *            header
 	 * @throws JargonException
 	 */
@@ -129,7 +129,7 @@ public class IRODSErrorScanner {
 	 * @param message
 	 * @param errorEnum
 	 * @throws JargonException
-	 *             or specific child exception of <code>JargonException</code>
+	 *             or specific child exception of {@code JargonException}
 	 */
 	private static void checkSpecificCodesAndThrowIfExceptionLocated(
 			final int infoValue, final String message, final ErrorEnum errorEnum)
@@ -334,7 +334,7 @@ public class IRODSErrorScanner {
 	}
 
 	/**
-	 * Inspect the <code>info</code> value from an iRODS packing instruction
+	 * Inspect the {@code info} value from an iRODS packing instruction
 	 * response header and throw an exception if an error was detected
 	 *
 	 * @param infoValue

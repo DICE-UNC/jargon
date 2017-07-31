@@ -14,12 +14,12 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * listing of collections and data objects, suitable for developing tree
  * depictions of an iRODS file system, and searching that file system on file
  * and collection names.
- * <p/>
+ * <p>
  * This access object is being designed to support basic interface functionality
  * for both Swing and web GUI tree models, and basic search boxes for file or
  * collection names. More advanced searching based on metadata or other criteria
  * are available elsewhere in the API.
- * <p/>
+ * <p>
  * <b>NOTE:</b> Within iRODS, Collections (directories) and Data Objects (files)
  * are different parts of the iCAT. For this reason, the listings are generated
  * separately, with the convention of collections first, and data objects
@@ -35,7 +35,7 @@ import org.irods.jargon.core.query.PagingAwareCollectionListing;
  * access whether there are more entries, and at what sequence in a result
  * collection the 'has more' entry occurs, so that offset is available for
  * re-query.
- * <p/>
+ * <p>
  * Note that this access object supports iRODS special collections ,note the
  * comments on individual methods for details. The Information returned is meant
  * to reflect the object or collection at the requested path, so if it is
@@ -63,24 +63,24 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * contains information about paging for each object. Clients of this method
 	 * can inspect the returned results to determine the position of each result
 	 * and whether there are more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not recursive, it only lists the collections under the
 	 * given parent. The parent is an absolute path, this particular method does
 	 * not 'search', rather it just lists.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset from which to start returning
+	 *            {@code int} with the offset from which to start returning
 	 *            results.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws FileNotFoundException
 	 *             if the absolutePathToParent does not exist
@@ -97,23 +97,23 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * that contains information about paging for each object. Clients of this
 	 * method can inspect the returned results to determine the position of each
 	 * result and whether there are more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not a search method, it simply lists the directories that
 	 * are direct children of the given path.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset from which to start returning
+	 *            {@code int} with the offset from which to start returning
 	 *            results.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws FileNotFoundException
 	 *             if the absolutePathToParent does not exist
@@ -129,31 +129,31 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method will
 	 * list objects that are direct children underneath the given parent.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
 	 * 'isLastEntry' values for each type, discriminated by the
-	 * <code>CollectionAndDataObjectListingEntry.objectType</code>. In usage,
+	 * {@code CollectionAndDataObjectListingEntry.objectType}. In usage,
 	 * this method would be called for the parent directory under which the
 	 * subdirectories and files should be listed. The response will include the
 	 * sum of both files and subdirectories, and each type may have more
 	 * results. Once this result is returned, the
-	 * <code>listDataObjectsUnderPath</code> and
-	 * <code>listCollectionsUnderPath</code> methods may be called separately
+	 * {@code listDataObjectsUnderPath} and
+	 * {@code listCollectionsUnderPath} methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing both files and collections
 	 * @throws FileNotFoundException
@@ -170,33 +170,33 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method will
 	 * list objects that are direct children underneath the given parent.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
 	 * 'isLastEntry' values for each type, discriminated by the
-	 * <code>CollectionAndDataObjectListingEntry.objectType</code>. In usage,
+	 * {@code CollectionAndDataObjectListingEntry.objectType}. In usage,
 	 * this method would be called for the parent directory under which the
 	 * subdirectories and files should be listed. The response will include the
 	 * sum of both files and subdirectories, and each type may have more
 	 * results. Once this result is returned, the
-	 * <code>listDataObjectsUnderPath</code> and
-	 * <code>listCollectionsUnderPath</code> methods may be called separately
+	 * {@code listDataObjectsUnderPath} and
+	 * {@code listCollectionsUnderPath} methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the request parent collection of a given file or data
 	 * object, and internally will hold the canonical directory that is the
 	 * parent, and reflect that it is a special collection.
-	 * <p/>
+	 * <p>
 	 * This variant of the files and collections listing entries wraps the
-	 * resulting listing in a <code>PagingAwareCollectionListing</code> that
+	 * resulting listing in a {@code PagingAwareCollectionListing} that
 	 * contains information about the paging status of the separate collection
 	 * and data object listings.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
 	 * @return {@link PagingAwareCollectionListing} that contains both
@@ -216,15 +216,15 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * support listing and paging of collections. This method returns a simple
 	 * count of the children (data objects and collections) underneath this
 	 * directory, and includes all children.
-	 * <p/>
+	 * <p>
 	 * Soft links are supported with this method. The listing entry returned
 	 * will indicate the count by inspecting the canonical directory that is the
 	 * parent.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. The
+	 *            {@code String} with the absolute path to the parent. The
 	 *            parent must be a collection or an error is thrown
-	 * @return <code>int</code> with a count of the files that are children of
+	 * @return {@code int} with a count of the files that are children of
 	 *         the parent.
 	 * @throws FileNotFoundException
 	 *             if the given absolutePathToParent does not exist
@@ -238,7 +238,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any collections that have a
 	 * match on the search term. The typical case would be a search box on a
 	 * form to find all collections that have the given string.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
 	 *
 	 * <pre>
@@ -246,10 +246,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * </pre>
 	 *
 	 * @param searchTerm
-	 *            <code>String</code> that is the path search term, note that
+	 *            {@code String} that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing collections that match the search term * @throws
 	 *         JargonException
@@ -261,23 +261,23 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any collections that have a
 	 * match on the search term. The typical case would be a search box on a
 	 * form to find all collections that have the given string.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
 	 * </pre>
 	 *
 	 * @param searchTerm
-	 *            <code>String</code> that is the path search term, note that
+	 *            {@code String} that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
 	 * @param partialStartIndex
-	 *            <code>int</code> with a partial start index of 0 or greater
+	 *            {@code int} with a partial start index of 0 or greater
 	 *            that indicates the offset into the returned results, suitable
 	 *            for paging.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing collections that match the search term * @throws
 	 *         JargonException
@@ -289,21 +289,21 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any data objects that have a
 	 * match on the given search term. The typical case would be a search box on
 	 * a form to find all data objects that have the given string in the name.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
 	 * @param searchTerm
-	 *            <code>String</code> that is the path search term, note that
+	 *            {@code String} that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
 	 * @param partialStartIndex
-	 *            <code>int</code> with an offset into the results.
-	 * @return <code>List</code> of
+	 *            {@code int} with an offset into the results.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
@@ -315,19 +315,19 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Provides a search capability to search for any data objects that have a
 	 * match on the given search term. The typical case would be a search box on
 	 * a form to find all data objects that have the given string in the name.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
 	 * @param searchTerm
-	 *            <code>String</code> that is the path search term, note that
+	 *            {@code String} that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
@@ -346,22 +346,22 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * inspected using the methods defined in
 	 * {@link org.irods.jargon.core.pub.domain.IRODSDomainObject} to see if more
 	 * results are available.
-	 * <p/>
+	 * <p>
 	 * Note that this will do a genquery like:
-	 * <p/>
+	 * <p>
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
-	 * <p/>
+	 * <p>
 	 * Note that this method will compensate if strict ACL's are in place
 	 *
 	 * @param searchTerm
-	 *            <code>String</code> that is the path search term, note that
+	 *            {@code String} that is the path search term, note that
 	 *            the "%" is added in the method and should not be provided as a
 	 *            parameter.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
@@ -376,10 +376,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * 'info' about a given path.
 	 *
 	 * @param objectAbsolutePath
-	 *            <code>String</code> with the absolute path to the given data
+	 *            {@code String} with the absolute path to the given data
 	 *            object or collection.
-	 * @return <code>Object</code> that will be either a <code>DataObject</code>
-	 *         or <code>Collection</code> object based on the object at the
+	 * @return {@code Object} that will be either a {@code DataObject}
+	 *         or {@code Collection} object based on the object at the
 	 *         given absolute path in iRODS.
 	 * @throws FileNotFoundException
 	 *             , if no data object or collection found for the given path.
@@ -395,18 +395,18 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * Retrieve a list of collections (not data objects) underneath a given
 	 * parent path, with the user ACL permissions displayed. This is equivalent
 	 * to the ls -la results. The returned
-	 * <code>CollectionAndDataObjectListingEntry</code> objects will have a
-	 * collection of <code>UserFilePermission</code> objects that detail the
+	 * {@code CollectionAndDataObjectListingEntry} objects will have a
+	 * collection of {@code UserFilePermission} objects that detail the
 	 * permissions.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset from which to start returning
+	 *            {@code int} with the offset from which to start returning
 	 *            results.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         including file permissions
 	 * @throws FileNotFoundException
@@ -425,17 +425,17 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * paging for each object. Clients of this method can inspect the returned
 	 * results to determine the position of each result and whether there are
 	 * more records to display.
-	 * <p/>
+	 * <p>
 	 * This method is not a search method, it simply lists.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset from which to start returning
+	 *            {@code int} with the offset from which to start returning
 	 *            results.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         with included per-user ACL information
 	 * @throws FileNotFound
@@ -452,38 +452,38 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * value object that contains information about paging for each object, such
 	 * as record count, and whether this is the last record. This method adds
 	 * the user ACL information, which is derived from an extended query.
-	 * <p/>
+	 * <p>
 	 * Note that there is an issue with GenQuery that makes it impossible to
 	 * derive user zone in this query. This is something that may be addressed
 	 * by converting the GenQuery to 'specific SQL query' at a later time. If
 	 * zone information is desired, it is recommended that the
-	 * <code>listPermissionsForDataObject()</code> in {@link DataObjectAO} and
-	 * <code>listPermissionsForCollection</code> in {@link CollectionAO} be
+	 * {@code listPermissionsForDataObject()} in {@link DataObjectAO} and
+	 * {@code listPermissionsForCollection} in {@link CollectionAO} be
 	 * consulted.
-	 * <p/>
+	 * <p>
 	 * This method is meant for listings, or building trees. As such, it does
 	 * not show any information about replicas, rather, it groups the data by
 	 * data object path for all replicas.
-	 * <p/>
+	 * <p>
 	 * Note that this collection is composed of a collection of objects for
 	 * child collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and
 	 * 'isLastEntry' values for each type, discriminated by the
-	 * <code>CollectionAndDataObjectListingEntry.objectType</code>. In usage,
+	 * {@code CollectionAndDataObjectListingEntry.objectType}. In usage,
 	 * this method would be called for the parent directory under which the
 	 * subdirectories and files should be listed. The response will include the
 	 * sum of both files and subdirectories, and each type may have more
 	 * results. Once this result is returned, the
-	 * <code>listDataObjectsUnderPath</code> and
-	 * <code>listCollectionsUnderPath</code> methods may be called separately
+	 * {@code listDataObjectsUnderPath} and
+	 * {@code listCollectionsUnderPath} methods may be called separately
 	 * with a partial start index value as appropriate. It is up to the caller
 	 * to determine which types need paging.
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to the parent. If
+	 *            {@code String} with the absolute path to the parent. If
 	 *            blank, the root is used. If the path is really a file, the
 	 *            method will list from the parent of the file.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing both files and collections
 	 * @throws FileNotFoundException
@@ -495,16 +495,16 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 			JargonException;
 
 	/**
-	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
+	 * Retrieve the {@code ObjStat} for a collection or data object at the
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
-	 * Note that a <code>FileNotFoundException</code> results if the objStat
+	 * Note that a {@code FileNotFoundException} results if the objStat
 	 * cannot be determined. This can occur based on issues with ACL's.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection or data object.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 *         {@code FileNotFoundException} will occur if the objStat cannot
 	 * be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found
@@ -514,13 +514,13 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 			throws FileNotFoundException, JargonException;
 
 	/**
-	 * Return the <code>CollectionAndDataObjectListingEntry</code> that is
+	 * Return the {@code CollectionAndDataObjectListingEntry} that is
 	 * associated with the given iRODS absolute path. This is equivalent to
 	 * doing an 'objStat' on the given path, and in fact, this is how the data
 	 * is retrieved from iRODS.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection or data object.
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing information on the given file or directory at the
@@ -532,19 +532,19 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 			String absolutePath) throws FileNotFoundException, JargonException;
 
 	/**
-	 * Retrieve the <code>ObjStat</code> for a collection or data object at the
+	 * Retrieve the {@code ObjStat} for a collection or data object at the
 	 * given absolute path in iRODS. This is the result of a call to rsObjStat.
-	 * Note that a <code>FileNotFoundException</code> results if the objStat
+	 * Note that a {@code FileNotFoundException} results if the objStat
 	 * cannot be determined. This can occur based on issues with ACL's.
 	 *
 	 * @param parentPath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection
 	 * @param fileName
-	 *            <code>String</code> with the data object name for which the
-	 *            <code>ObjStat</code> will be returned.
+	 *            {@code String} with the data object name for which the
+	 *            {@code ObjStat} will be returned.
 	 * @return {@link ObjStat} with object data. Note that a
-	 *         <code>FileNotFoundException<code> will occur if the objStat cannot
+	 *         {@code FileNotFoundException} will occur if the objStat cannot
 	 * be found
 	 * @throws FileNotFoundException
 	 *             if the file is not found
@@ -558,9 +558,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * does not account for data objects
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection
-	 * @return <code>int</code> with the count of collections under the given
+	 * @return {@code int} with the count of collections under the given
 	 *         path
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -573,9 +573,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 	 * not account for collections
 	 *
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection
-	 * @return <code>int</code> with the count of data objects under the given
+	 * @return {@code int} with the count of data objects under the given
 	 *         path
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -598,17 +598,17 @@ public interface CollectionAndDataObjectListAndSearchAO extends
 			ObjStat objStat) throws FileNotFoundException, JargonException;
 
 	/**
-	 * Retrieve an <code>ObjStat</code> for a given path. This version of
+	 * Retrieve an {@code ObjStat} for a given path. This version of
 	 * ObjStat will avoid some file not found exceptions when strict acls
 	 * preclude obtaining an objStat. Path guessing will return fake
-	 * <code>ObjStat</code> for root, zone, and /zone/home directories if asked,
+	 * {@code ObjStat} for root, zone, and /zone/home directories if asked,
 	 * and if jargon properties allow this.
-	 * <p/>
-	 * Note that the returned <code>ObjStat</code> has an indicator if a
+	 * <p>
+	 * Note that the returned {@code ObjStat} has an indicator if a
 	 * 'stand-in' objStat was returned.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path.
+	 *            {@code String} with the absolute path.
 	 * @return {@link ObjStat} associated witha path
 	 * @throws FileNotFoundException
 	 * @throws JargonException

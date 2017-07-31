@@ -13,35 +13,35 @@ public interface FileTreeDiffUtility {
 	 * iRODS file system on the right hand side. This diff tree will depict the
 	 * common directory structure and indicate places where files or collections
 	 * differ from the perspective of the 'left hand side' file.
-	 * <p/>
-	 * The <code>FileTreeDiffEntry</code> will indicate the type of difference
+	 * <p>
+	 * The {@code FileTreeDiffEntry} will indicate the type of difference
 	 * found. This is the user data object that is kept in a
-	 * <code>FileTreeNode</code> in the resulting <code>FileTreeModel</code>.
-	 * <p/>
+	 * {@code FileTreeNode} in the resulting {@code FileTreeModel}.
+	 * <p>
 	 * This utility will compare file-to-file for data objects. Since local and
 	 * iRODS time stamps are not a good indicator for direct comparison, the
 	 * utility compares two file (data objects) based on length. Optionally, the
 	 * iRODS timestamp can be compared to a provided timestamp value to treat
 	 * files modified after the given cut-off as 'changed'.
-	 * <p/>
+	 * <p>
 	 * Note that setting either the left hand or right hand side timestamp to
-	 * <code>NO_TIMESTAMP_CHECKS</code> will turn of timestamp checking. This is
+	 * {@code NO_TIMESTAMP_CHECKS} will turn of timestamp checking. This is
 	 * appropriate for an initial synch operation.
 	 * 
 	 * @param localFileRoot
-	 *            <code>File</code> that is the left hand side of the comparison
+	 *            {@code File} that is the left hand side of the comparison
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> that is the root directory that will be
-	 *            compared to the <code>localFileRoot</code> The file and
+	 *            {@code String} that is the root directory that will be
+	 *            compared to the {@code localFileRoot} The file and
 	 *            collection names will be compared relative to the respective
 	 *            left hand and right hand root absolute paths
 	 * @param timestampForLastSynchLeftHandSide
-	 *            <code>long</code> with the timestamp that, if before the last
+	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given left hand files, indicates that the
 	 *            file has changed. Leave as zero to turn off this check.
 	 * @param timestampForLastSynchRightHandSide
-	 *            <code>long</code> with the timestamp that, if before the last
+	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given right hand files, indicates that
 	 *            the file has changed. Leave as zero to turn off this check.
 	 * @return {@link FileTreeModel} with the common directory structure and any
@@ -61,22 +61,22 @@ public interface FileTreeDiffUtility {
 	 * there are no differences
 	 * 
 	 * @param localFileRoot
-	 *            <code>File</code> that is the left hand side of the comparison
+	 *            {@code File} that is the left hand side of the comparison
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> that is the root directory that will be
-	 *            compared to the <code>localFileRoot</code> The file and
+	 *            {@code String} that is the root directory that will be
+	 *            compared to the {@code localFileRoot} The file and
 	 *            collection names will be compared relative to the respective
 	 *            left hand and right hand root absolute paths
 	 * @param timestampForLastSynchLeftHandSide
-	 *            <code>long</code> with the timestamp that, if before the last
+	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given left hand files, indicates that the
 	 *            file has changed. Leave as zero to turn off this check.
 	 * @param timestampForLastSynchRightHandSide
-	 *            <code>long</code> with the timestamp that, if before the last
+	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given right hand files, indicates that
 	 *            the file has changed. Leave as zero to turn off this check.
-	 * @return <code>boolean</code> that will be <code>true</code> if no
+	 * @return {@code boolean} that will be {@code true} if no
 	 *         differences exist
 	 * @throws JargonException
 	 */

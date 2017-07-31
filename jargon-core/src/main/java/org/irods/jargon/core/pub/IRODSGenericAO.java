@@ -43,7 +43,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @param irodsAccount
 	 *            (@link org.irods.jargon.core.connection.IRODSAccount} that
 	 *            contains the connection information used to get a connection
-	 *            from the <code>irodsSession</code>
+	 *            from the {@code irodsSession}
 	 * @throws JargonException
 	 */
 	public IRODSGenericAO(final IRODSSession irodsSession,

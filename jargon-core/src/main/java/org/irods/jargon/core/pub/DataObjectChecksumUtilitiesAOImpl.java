@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Introduced as checksum operations became more complicated in
- * <code>DataObjectAO</code>, this class provides a convenient set of methods to
+ * {@code DataObjectAO}, this class provides a convenient set of methods to
  * obtain and compare various types of checksums, including utilities to verify
  * checksums between local files and iRODS files.
  *

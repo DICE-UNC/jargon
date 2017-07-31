@@ -56,8 +56,8 @@ package org.irods.jargon.core.utils;
  * <P>
  * <B>Attributes</B><BR>
  * <BLOCKQUOTE> <B>Byte order</B><BR>
- * For all data types requiring more than one byte (i.e., sizeof(type)>1), the
- * processor stores the value as a sequence of bytes. That sequence may place
+ * For all data types requiring more than one byte (i.e., {@code sizeof(type)>1)},
+ * the processor stores the value as a sequence of bytes. That sequence may place
  * the highest-order bytes first or last:
  * <P>
  * <UL>

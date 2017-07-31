@@ -46,7 +46,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Default (no-values) constructor. The account and
-	 * <code>IRODSFileSystem</code> need to be initialized va the setter
+	 * {@code IRODSFileSystem} need to be initialized va the setter
 	 * methods.
 	 */
 	public SynchPropertiesServiceImpl() {
@@ -58,10 +58,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * the default constructor.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            access objects to interact with iRODS
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the user and server
+	 *            {@code IRODSAccount} that describes the user and server
 	 *            to connect to
 	 */
 	public SynchPropertiesServiceImpl(
@@ -214,7 +214,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Parse the synch directory AVU value for component values to build a
-	 * <code>UserSynchTarget</code> description.
+	 * {@code UserSynchTarget} description.
 	 * 
 	 * @param metaDataAndDomainData
 	 *            {@link MetaDataAndDomainData} from an AVU query

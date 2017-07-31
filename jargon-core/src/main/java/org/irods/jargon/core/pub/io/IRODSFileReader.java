@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * iRODS-specific implementation of the <code>java.io.Reader</code>.
+ * iRODS-specific implementation of the {@code java.io.Reader}.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -26,7 +26,7 @@ public class IRODSFileReader extends Reader {
 	private final String connectionEncoding;
 
 	/**
-	 * iRODS-specific implementation of the <code>java.io.FileReader</code>.
+	 * iRODS-specific implementation of the {@code java.io.FileReader}.
 	 * Notably this class will do character conversions to the given encoding
 	 * from the binary stream data.
 	 *
@@ -34,7 +34,7 @@ public class IRODSFileReader extends Reader {
 	 *            {@link IRODSFile} that will be the source of the stream
 	 * @param irodsFileFactory
 	 *            {@link IRODSFileFactory} that can be used to create various
-	 *            Jargon implementations of <code>java.io.*</code> classes.
+	 *            Jargon implementations of {@code java.io.*} classes.
 	 * @throws IOException
 	 */
 	public IRODSFileReader(final IRODSFile irodsFile,

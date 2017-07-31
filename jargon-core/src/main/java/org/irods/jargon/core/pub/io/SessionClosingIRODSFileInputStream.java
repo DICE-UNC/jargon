@@ -9,8 +9,8 @@ import java.io.IOException;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * This is a special version of a <code>IRODSFileInputStream</code> that add the
- * capability to close the underlying <code>IRODSSession</code> when the stream
+ * This is a special version of a {@code IRODSFileInputStream} that add the
+ * capability to close the underlying {@code IRODSSession} when the stream
  * is closed. This is used in situations where a stream is created and returned
  * from a method, and the caller is not aware of the need to close the iRODS
  * connection. *
@@ -22,7 +22,7 @@ public class SessionClosingIRODSFileInputStream extends IRODSFileInputStream {
 
 	/**
 	 * Constructor is called from the appropriate method in
-	 * <code>org.irods.jargon.core.pub.io.IRODSFileFactory}.
+	 * {@code org.irods.jargon.core.pub.io.IRODSFileFactory}.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that underlies the stream

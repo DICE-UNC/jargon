@@ -15,14 +15,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wraps a connection to the iRODS server described by the given IRODSAccount.
- * <p/>
- * Jargon services do not directly access the <code>IRODSConnection</code>,
+ * <p>
+ * Jargon services do not directly access the {@code IRODSConnection},
  * rather, they use the {@link IRODSMidLevelProtocol IRODSProtocol} interface.
- * <p/>
+ * <p>
  * The connection is confined to one thread, and as such the various methods do
  * not need to be synchronized. All operations pass through the
- * <code>IRODScommands</code> object wrapping this connection, and
- * <code>IRODSCommands</code> does maintain synchronized access to operations
+ * {@code IRODScommands} object wrapping this connection, and
+ * {@code IRODSCommands} does maintain synchronized access to operations
  * that read and write to this connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -33,7 +33,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	/**
 	 * Default constructor that gives the account and pipeline setup
 	 * information.
-	 * <p/>
+	 * <p>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
 	 *
@@ -64,7 +64,7 @@ class IRODSBasicTCPConnection extends AbstractConnection {
 	 * Socket opened to iRODS, and you want to wrap that socket with the low
 	 * level iRODS semantics. An example use case is when you need to to PAM
 	 * authentication and wrap an existing iRODS connection with an SSL socket.
-	 * <p/>
+	 * <p>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
 	 *

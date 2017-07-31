@@ -15,7 +15,7 @@ import org.irods.jargon.core.packinstr.Tag;
 public interface ProtocolExtensionPoint {
 
 	/**
-	 * Execute an iRODS packing instruction and return the <code>Tag</code> data
+	 * Execute an iRODS packing instruction and return the {@code Tag} data
 	 * encapsulating the iRODS response.
 	 *
 	 * @param irodsPI

@@ -19,7 +19,7 @@ public abstract class AbstractChecksumComputeStrategy {
 	/**
 	 *
 	 * @param localFileAbsolutePath
-	 *            <code>String</code> with the absolute path to a local file
+	 *            {@code String} with the absolute path to a local file
 	 * @return {@link ChecksumValue} with a checksum in digest (string) form.
 	 * @throws FileNotFoundException
 	 * @throws JargonException

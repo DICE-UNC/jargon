@@ -31,7 +31,7 @@ public abstract class ParallelEncryptionCipherWrapper extends
 
 	/**
 	 * Client method that will invoke the implementation-specific encrypt()
-	 * method after checking for proper initialization <code>byte[]</code> of
+	 * method after checking for proper initialization {@code byte[]} of
 	 * plaintext data
 	 *
 	 * @return {@link EncryptionBuffer}
@@ -47,7 +47,7 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	 * Encrypt the given data
 	 *
 	 * @param input
-	 *            <code>byte[]</code> of plaintext data
+	 *            {@code byte[]} of plaintext data
 	 * @return {@link EncryptionBuffer}
 	 * @throws EncryptionException
 	 */

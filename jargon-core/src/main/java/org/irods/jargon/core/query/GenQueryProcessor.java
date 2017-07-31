@@ -48,7 +48,7 @@ public class GenQueryProcessor {
 	 * @param partialStartIndex
 	 * @param queryCloseBehavior
 	 * @param zoneName
-	 *            <code>String</code> (<code>null</code> or blank if not used)
+	 *            {@code String} ({@code null} or blank if not used)
 	 *            that indicates an optional zone for the query
 	 * @return {@link IRODSQueryResultSet}
 	 * @throws JargonException

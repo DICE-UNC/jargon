@@ -14,7 +14,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  * Value object that holds information on data objects and collections. This
  * object includes info to distinguish between data object and collection, to
  * identify it by path, and also information that can be used for paging.
- * <p/>
+ * <p>
  * This object is meant to be used for use cases such as iRODS file tree
  * browsing, and as such it is meant to be returned in collections. The behavior
  * of these objects in the collection is such that objects for collections and
@@ -52,7 +52,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return the absolute path the the parent of the file or collection.
 	 *
-	 * @return <code>String</code> with the absolute path to the parent of the
+	 * @return {@code String} with the absolute path to the parent of the
 	 *         file or collection.
 	 */
 	public String getParentPath() {
@@ -66,7 +66,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return the absolute path of the file or collection under the parent
 	 *
-	 * @return <code>String</code> with the absolute path to the file or
+	 * @return {@code String} with the absolute path to the file or
 	 *         collection under the parent.
 	 */
 	public String getPathOrName() {
@@ -80,7 +80,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return an enum that differentiates between collection and data object
 	 *
-	 * @return <code>ObjectType</code> enum value
+	 * @return {@code ObjectType} enum value
 	 */
 	public ObjectType getObjectType() {
 		return objectType;
@@ -115,10 +115,10 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
+	 * Handy method gets a displayable {@code String} with a unit (e.g. MB,
 	 * GB) appropriate to the file length
 	 *
-	 * @return <code>String</code> with displayable file size
+	 * @return {@code String} with displayable file size
 	 */
 	public String getDisplayDataSize() {
 		// return FileUtils.byteCountToDisplaySize(dataSize);
@@ -168,7 +168,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * give the intended result if used to query the iCAT for information about
 	 * the file or collection.
 	 *
-	 * @return <code>String</code> with the formatted path
+	 * @return {@code String} with the formatted path
 	 */
 	public String getFormattedAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
@@ -190,7 +190,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * method will eat any errors and make a best effort to return something
 	 * meaningful.
 	 *
-	 * @return <code>String</code> with a value suitable for a node name in a
+	 * @return {@code String} with a value suitable for a node name in a
 	 *         tree.
 	 */
 	public String getNodeLabelDisplayValue() {
@@ -227,7 +227,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 * within Jargon, so make sure that a method that adds user permissions is
 	 * called. In other cases, this collection will be empty.
 	 *
-	 * @return <code>List</code> of {@link UserFilePermission} with the per-user
+	 * @return {@code List} of {@link UserFilePermission} with the per-user
 	 *         ACL information, included if explicity requested from Jargon,
 	 *         otherwise, empty
 	 */
@@ -279,7 +279,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * @return the specialObjectPath <code>String</code> with the underlyng
+	 * @return the specialObjectPath {@code String} with the underlyng
 	 *         special object path. If this is a soft link, this reflects the
 	 *         canonical iRODS path.
 	 */
@@ -289,7 +289,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * @param specialObjectPath
-	 *            the specialObjectPath to set <code>String</code> with the
+	 *            the specialObjectPath to set {@code String} with the
 	 *            underlyng special object path.
 	 */
 	public void setSpecialObjectPath(final String specialObjectPath) {

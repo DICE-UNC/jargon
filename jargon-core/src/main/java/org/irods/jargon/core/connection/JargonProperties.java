@@ -9,11 +9,11 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
 /**
  * Represents a source of configuration metadata that will effect the behavior
  * of Jargon through a properties file or other configuration source.
- * <p/>
+ * <p>
  * Note that many of these properties may be overridden in a particular
  * operation during invocation. For example, many properties here control the
  * behavior of transfers, and can be overridden by setting
- * <code>TransferOptions</code>.
+ * {@code TransferOptions}.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -31,14 +31,14 @@ public interface JargonProperties {
 	/**
 	 * Get the character set encoding used by Jargon
 	 *
-	 * @return <code>String</code>
+	 * @return {@code String}
 	 */
 	String getEncoding();
 
 	/**
 	 * Do I want parallel transfers at all?
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isUseParallelTransfer();
 
@@ -46,7 +46,7 @@ public interface JargonProperties {
 	 * If doing parallel transfers, what is the maximum number of threads I
 	 * should specify?
 	 *
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 */
 	int getMaxParallelThreads();
 
@@ -56,7 +56,7 @@ public interface JargonProperties {
 	 * iRODS will default to parallel processing if any nonzero number is sent
 	 * in numThreads.
 	 *
-	 * @return <code>long</code> in megabytes for the size above which a
+	 * @return {@code long} in megabytes for the size above which a
 	 *         non-zero numThreads of value maxParallelThreads will be sent.
 	 * @throws JargonException
 	 *             long getParallelThreadsLengthThreshold();
@@ -64,7 +64,7 @@ public interface JargonProperties {
 	 *             /** Sets a default number of results to ask for when
 	 *             executing GenQuery for listing files and collections.
 	 *
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 */
 	int getMaxFilesAndDirsQueryMax();
 
@@ -76,9 +76,9 @@ public interface JargonProperties {
 	/**
 	 * Minimum number of transfers supported by the transfer thread executor
 	 * pool. This is stored in the {@link IRODSSession} object if the
-	 * <code>isUseTranfsferThreadsPool()</code> value is true;
+	 * {@code isUseTranfsferThreadsPool()} value is true;
 	 *
-	 * @return <code>int</code> with the desired number of simultaneous
+	 * @return {@code int} with the desired number of simultaneous
 	 *         transfers. The number of transfer threads will be computed based
 	 *         on this number * the maximum parallel transfer threads
 	 */
@@ -87,19 +87,19 @@ public interface JargonProperties {
 	/**
 	 * Timeout for keeping threads in the transfer threads executor pool above
 	 * the core size. This is stored in the {@link IRODSSession} object if the
-	 * <code>isUseTranfsferThreadsPool()</code> value is true;
+	 * {@code isUseTranfsferThreadsPool()} value is true;
 	 *
-	 * @return <code>int</code> with the desired transfer thread pool max size
+	 * @return {@code int} with the desired transfer thread pool max size
 	 * @throws JargonException
 	 */
 	int getTransferThreadPoolTimeoutMillis();
 
 	/**
 	 * Should puts/gets redirect to the resource server that holds the data?
-	 * (equivalent to the -I in iput/iget>
+	 * (equivalent to the -I in iput/iget)
 	 *
-	 * @return the allowPutGetResourceRedirects <code>boolean</code> that will
-	 *         be <code>true</code> if redirecting is desired
+	 * @return the allowPutGetResourceRedirects {@code boolean} that will
+	 *         be {@code true} if redirecting is desired
 	 */
 	boolean isAllowPutGetResourceRedirects();
 
@@ -113,7 +113,7 @@ public interface JargonProperties {
 
 	/**
 	 * Should checksums be computed, and a verify done, after a transfer, with a
-	 * <code>FileIntegrityException</code> thrown in case of failure?
+	 * {@code FileIntegrityException} thrown in case of failure?
 	 *
 	 * @return the computeAndVerifyChecksumAfterTransfer
 	 */
@@ -121,7 +121,7 @@ public interface JargonProperties {
 
 	/**
 	 * Gets whether intra-file status call-backs are enabled for transfers. If
-	 * <code>true</code>, and a call-back listener is provided, these allow
+	 * {@code true}, and a call-back listener is provided, these allow
 	 * monitoring of progress of an individual file.
 	 *
 	 * @return the intraFileStatusCallbacks
@@ -133,7 +133,7 @@ public interface JargonProperties {
 	 * status callback listener. No matter how many bytes have been sent, after
 	 * the minimum number of calls, the callback will be made to the listener.
 	 *
-	 * @return <code>int</code> with the number of callbacks.
+	 * @return {@code int} with the number of callbacks.
 	 */
 	int getIntraFileStatusCallbacksNumberCallsInterval();
 
@@ -143,7 +143,7 @@ public interface JargonProperties {
 	 * called, after the minimum number of bytes, the callback will be made to
 	 * the listener.
 	 *
-	 * @return <code>long</code> with the number of bytes between a callback
+	 * @return {@code long} with the number of bytes between a callback
 	 */
 	long getIntraFileStatusCallbacksTotalBytesInterval();
 
@@ -151,14 +151,14 @@ public interface JargonProperties {
 	 * Get the time-out, in seconds, for the main iRODS socket. Will be zero or
 	 * less if not specified
 	 *
-	 * @return <code>int</code> with socket timeout
+	 * @return {@code int} with socket timeout
 	 */
 	int getIRODSSocketTimeout();
 
 	/**
 	 * Get the internal buffer size used for the input stream between Jargon and
 	 * iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return <code>int</code> with the buffer size for the
+	 * NormalIOArrangement return {@code int} with the buffer size for the
 	 * input stream buffer. (0 = use defaults, -1 = do not wrap with buffered
 	 * input stream) jargon.io.internal.input.stream.buffer.size
 	 */
@@ -167,7 +167,7 @@ public interface JargonProperties {
 	/**
 	 * Get the internal buffer size used for the output stream between Jargon
 	 * and iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return <code>int</code> with the buffer size for the
+	 * NormalIOArrangement return {@code int} with the buffer size for the
 	 * output stream buffer. (0 = use defaults, -1 = do not wrap with buffered
 	 * input stream) jargon.io.internal.output.stream.buffer.size
 	 */
@@ -177,30 +177,30 @@ public interface JargonProperties {
 	 * Get the size of the internal buffer cache . See
 	 * https://code.renci.org/gf/
 	 * project/jargon/wiki/?pagename=NormalIOArrangement. Jargon has an internal
-	 * buffer where the various <code>send()</code> methods in
+	 * buffer where the various {@code send()} methods in
 	 * {@link IRODSBasicTCPConnection} write data to iRODS. In these methods,
 	 * Jargon uses an internal cache buffer for the sends. This has been done
 	 * historically, but the benefits of this cache have not yet been measured.
 	 * Setting this as a parameter to turn off will assist in testing the use of
 	 * the buffer, and the option of eliminating the buffer altogether. return
-	 * <code>int</code> with the size of the internal cache (0 = do not utilize
+	 * {@code int} with the size of the internal cache (0 = do not utilize
 	 * the cache buffer) jargon.io.internal.cache.buffer.size
 	 */
 	int getInternalCacheBufferSize();
 
 	/**
 	 * Get the buffer size used for the input stream between Jargon and iRODS
-	 * passed to the <code>send()</code> method of
+	 * passed to the {@code send()} method of
 	 * {@link IRODSBasicTCPConnection}. This input stream would typically be
 	 * from a local file that was being sent to iRODS, or other such source. The
 	 * {@link IRODSMidLevelProtocol} object, using the
-	 * <code>irodsFunction</code> method with the <code>InputStream</code>
+	 * {@code irodsFunction} method with the {@code InputStream}
 	 * parameter, will wrap the given input stream in a
-	 * <code>BufferedInputStream</code> based on the setting of this parameter.
+	 * {@code BufferedInputStream} based on the setting of this parameter.
 	 *
 	 * See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return <code>int</code> with the buffer size for the
-	 * buffered stream that will wrap an <code>InputStream</code> to be sent to
+	 * NormalIOArrangement return {@code int} with the buffer size for the
+	 * buffered stream that will wrap an {@code InputStream} to be sent to
 	 * iRODS. (0 = use defaults, -1 = do not wrap with buffered input stream)
 	 * jargon.io.send.input.stream.buffer.size
 	 */
@@ -209,32 +209,32 @@ public interface JargonProperties {
 	/**
 	 * Get the size of the buffer used in read/write operations to copy data
 	 * from an input stream to output stream in the
-	 * {@link IRODSBasicTCPConnection} class <code>send()</code> methods.
+	 * {@link IRODSBasicTCPConnection} class {@code send()} methods.
 	 *
-	 * @return <code>int</code> with the size of the read/write loop buffer
+	 * @return {@code int} with the size of the read/write loop buffer
 	 *         jargon.io.input.to.output.copy.byte.buffer.size
 	 */
 	int getInputToOutputCopyBufferByteSize();
 
 	/**
-	 * Get the size of the buffer used in a <code>BufferedOutputStream</code>
+	 * Get the size of the buffer used in a {@code BufferedOutputStream}
 	 * that wraps the output stream for the local file. This is used in
 	 * processing get operations where the iRODS data is being saved to the
 	 * local file system. (0 = use defaults, -1 = do not wrap with buffered
 	 * output stream) jargon.io.local.output.stream.buffer.size
 	 *
-	 * @return <code>int</code> with the buffer size
+	 * @return {@code int} with the buffer size
 	 */
 	int getLocalFileOutputStreamBufferSize();
 
 	/**
-	 * Get the size of the buffer used in a <code>BufferedInputStream</code>
+	 * Get the size of the buffer used in a {@code BufferedInputStream}
 	 * that wraps the intput stream for the local file. This is used in
 	 * processing operations where the data is being read from the local file
 	 * system. (0 = use defaults, -1 = do not wrap with buffered output stream)
 	 * jargon.io.local.input.stream.buffer.size
 	 *
-	 * @return <code>int</code> with the buffer size
+	 * @return {@code int} with the buffer size
 	 */
 	int getLocalFileInputStreamBufferSize();
 
@@ -242,7 +242,7 @@ public interface JargonProperties {
 	 * Get the time-out, in seconds, for the parallel transfer sockets. Will be
 	 * zero or less if not specified
 	 *
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 */
 	int getIRODSParallelTransferSocketTimeout();
 
@@ -250,7 +250,7 @@ public interface JargonProperties {
 	 * Get the size of the file segment for each successive call in normal put
 	 * operations.
 	 *
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 */
 	int getPutBufferSize();
 
@@ -258,41 +258,41 @@ public interface JargonProperties {
 	 * Get the size of the file segment for each successive call in normal get
 	 * operations.
 	 *
-	 * @return <code>int</code> with buffer size
+	 * @return {@code int} with buffer size
 	 */
 	int getGetBufferSize();
 
 	/**
-	 * <code>boolean</code> that indicates whether the connection should be
+	 * {@code boolean} that indicates whether the connection should be
 	 * renewed every 10 minutes to get around certain firewall issues. This is
 	 * equvalent to the -T option in the iput and iget iCommands.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isReconnect();
 
 	/**
 	 * Get the reconnect time expressed in milliseconds, used by the reconnect
-	 * thread that will be launched if the <code>isReconnect()</code> method
+	 * thread that will be launched if the {@code isReconnect()} method
 	 * returns true. This value has no meaning if the reconnect option is not
 	 * selected.
 	 *
-	 * @return <code>long</code> with the reconnect time in milliseconds.
+	 * @return {@code long} with the reconnect time in milliseconds.
 	 */
 	long getReconnectTimeInMillis();
 
 	/**
-	 * <code>boolean</code> that indicates whether certain performance
+	 * {@code boolean} that indicates whether certain performance
 	 * statistics are gathered and reported to the DEBUG log. This will turn on
 	 * useful statistics for optimization and tuning, but will introduce a
 	 * certain amount of overhead, so this is typically unsuitable for
 	 * production deployment.
-	 * <p/>
+	 * <p>
 	 * Note that actual instrumentation will be an ongoing process, and will be
 	 * done as certain operations are tuned. Initially, this will represent the
 	 * infrastructure for such tuning information.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isInstrument();
 
@@ -305,13 +305,13 @@ public interface JargonProperties {
 	 * prevent the viewing of directories that a user is actually enabled to see
 	 * because the higher level collections do not have the ACL's that enable
 	 * this.
-	 * <p/>
+	 * <p>
 	 * This property allows a behavior to support the convention that a path
 	 * underneath the root, specifically /zonename/home/public might exist, and
 	 * the various entry listing methods will attempt to find this path, even
 	 * when listing is not possible by calling iRODS.
 	 *
-	 * @return <code>boolean</code> that will indicate whether to display the
+	 * @return {@code boolean} that will indicate whether to display the
 	 *         home directory, and the public directory underneath the home
 	 *         directory.
 	 */
@@ -324,7 +324,7 @@ public interface JargonProperties {
 	 * of trying and failing to get a certain service from iRODS over and over
 	 * again, a result can be cached here to check.
 	 *
-	 * @return <code>boolean</code> that is used to determine whether various
+	 * @return {@code boolean} that is used to determine whether various
 	 *         jargon operations will cache and consult the discovered server
 	 *         properties that are available under {@link IRODSSession}
 	 */
@@ -336,7 +336,7 @@ public interface JargonProperties {
 	 * check to see if the server is capable of using specific query and will
 	 * fall back if it cannot.
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if jargon should
+	 * @return {@code boolean} of {@code true} if jargon should
 	 *         attempt to use specific query for permissions listings before
 	 *         falling back to genquery
 	 */
@@ -346,18 +346,18 @@ public interface JargonProperties {
 	 * Indicates whether a specific query (listUserACLForDataObjViaGroup) is
 	 * available and can be used to check the user access rights for a user who
 	 * has access via a group. This is so methods like
-	 * <code>IRODSFile.canRead()</code> will work even though a user does not
+	 * {@code IRODSFile.canRead()} will work even though a user does not
 	 * have explicit permissions, and is a member of a group that has access
 	 * instead.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup();
 
 	/**
 	 * Get the time to live (in seconds) for PAM generated passwords
 	 *
-	 * @return <code>int</code> with the PAM time to live, in secords
+	 * @return {@code int} with the PAM time to live, in secords
 	 */
 	int getPAMTimeToLive();
 
@@ -366,14 +366,14 @@ public interface JargonProperties {
 	 * turned off because it introduces performance overhead. It is useful when
 	 * using PAM prior to iRODS 3.3.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isForcePamFlush();
 
 	/**
 	 * Is TCP keep alive set for the primary (1247) irods Socket?
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isParallelTcpKeepAlive();
 
@@ -382,7 +382,7 @@ public interface JargonProperties {
 	 * 1024. Set to 0 if no window size set. This is for parallel transfer
 	 * sockets.
 	 *
-	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 * @return {@code int} that will be multiplied by 1024 and set as the
 	 *         send window size
 	 */
 	int getParallelTcpSendWindowSize();
@@ -392,7 +392,7 @@ public interface JargonProperties {
 	 * by 1024. Set to 0 if no window size set. This is for the parallel socket
 	 *
 	 *
-	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 * @return {@code int} that will be multiplied by 1024 and set as the
 	 *         receive window size
 	 */
 	int getParallelTcpReceiveWindowSize();
@@ -401,7 +401,7 @@ public interface JargonProperties {
 	 * parallel TCP preference for connection time for parallel TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for conn time
+	 * @return {@code int} with preference for conn time
 	 */
 	int getParallelTcpPerformancePrefsConnectionTime();
 
@@ -409,7 +409,7 @@ public interface JargonProperties {
 	 * parallel TCP preference for latency for TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for conn time
+	 * @return {@code int} with preference for conn time
 	 */
 	int getParallelTcpPerformancePrefsLatency();
 
@@ -417,7 +417,7 @@ public interface JargonProperties {
 	 * parallel TCP preference for latency for TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for bandwidth
+	 * @return {@code int} with preference for bandwidth
 	 */
 	int getParallelTcpPerformancePrefsBandwidth();
 
@@ -425,14 +425,14 @@ public interface JargonProperties {
 	 * Get the size of the buffer used in reads and writes to iRODS for parallel
 	 * transfer threads, in bytes
 	 *
-	 * @return <code>int</code> with the buffer size for parallel transfer
+	 * @return {@code int} with the buffer size for parallel transfer
 	 */
 	int getParallelCopyBufferSize();
 
 	/**
 	 * Is TCP keep alive set for the primary irods Socket?
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	boolean isPrimaryTcpKeepAlive();
 
@@ -441,7 +441,7 @@ public interface JargonProperties {
 	 * 1024. Set to 0 if no window size set. This is for the primary socket
 	 * (1247)
 	 *
-	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 * @return {@code int} that will be multiplied by 1024 and set as the
 	 *         send window size
 	 */
 	int getPrimaryTcpSendWindowSize();
@@ -451,7 +451,7 @@ public interface JargonProperties {
 	 * by 1024. Set to 0 if no window size set. This is for the primary socket
 	 * (1247)
 	 *
-	 * @return <code>int</code> that will be multiplied by 1024 and set as the
+	 * @return {@code int} that will be multiplied by 1024 and set as the
 	 *         receive window size
 	 */
 	int getPrimaryTcpReceiveWindowSize();
@@ -460,7 +460,7 @@ public interface JargonProperties {
 	 * Primary TCP preference for connection time for TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for conn time
+	 * @return {@code int} with preference for conn time
 	 */
 	int getPrimaryTcpPerformancePrefsConnectionTime();
 
@@ -468,7 +468,7 @@ public interface JargonProperties {
 	 * Primary TCP preference for latency for TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for conn time
+	 * @return {@code int} with preference for conn time
 	 */
 	int getPrimaryTcpPerformancePrefsLatency();
 
@@ -476,7 +476,7 @@ public interface JargonProperties {
 	 * Primary TCP preference for latency for TCP sockets
 	 * (socket.setPerformancePreferences())
 	 *
-	 * @return <code>int</code> with preference for bandwidth
+	 * @return {@code int} with preference for bandwidth
 	 */
 	int getPrimaryTcpPerformancePrefsBandwidth();
 
@@ -485,7 +485,7 @@ public interface JargonProperties {
 	 * connections to iRODS (currently the values are limited to 'tcp'). If no
 	 * property is found, then 'tcp' will be defaulted.
 	 *
-	 * @return <code>String</code>
+	 * @return {@code String}
 	 */
 	String getConnectionFactory();
 
@@ -500,7 +500,7 @@ public interface JargonProperties {
 	/**
 	 * Indicates whether long file transfer retarts should be done.
 	 *
-	 * @return <code>boolean<code> of <code>true</code> if long file restarts
+	 * @return {@code boolean} of {@code true} if long file restarts
 	 *         should be done
 	 */
 	boolean isLongTransferRestart();
@@ -523,7 +523,7 @@ public interface JargonProperties {
 	 * Return the key size for encryption algo for parallel transfers when SSL
 	 * is enabled.
 	 *
-	 * @return <code>int</code> with an encryption key size
+	 * @return {@code int} with an encryption key size
 	 */
 	int getEncryptionKeySize();
 
@@ -531,7 +531,7 @@ public interface JargonProperties {
 	 * Return the salt size for encryption algo for parallel transfers when SSL
 	 * is enabled.
 	 *
-	 * @return <code>int</code> with an encryption salt size
+	 * @return {@code int} with an encryption salt size
 	 */
 	int getEncryptionSaltSize();
 
@@ -539,23 +539,23 @@ public interface JargonProperties {
 	 * Return the number of hash rounds for encryption algo for parallel
 	 * transfers when SSL is enabled.
 	 *
-	 * @return <code>int</code> with number of hash rounds
+	 * @return {@code int} with number of hash rounds
 	 */
 	int getEncryptionNumberHashRounds();
 
 	/**
 	 * Indicates whether SSL cert checks need to be bypassed. This is not
 	 * recommended for production deployments.
-	 * <p/>
-	 * /** <code>boolean</code> that indicates whether ssl cert checks should be
-	 * bypassed. <code>false</code> is the default, meaning checks will be done,
+	 * <p>
+	 * /** {@code boolean} that indicates whether ssl cert checks should be
+	 * bypassed. {@code false} is the default, meaning checks will be done,
 	 * and is the recommended production setting. This is used on initial load
 	 * of the {@link IRODSSession}. Note that a custom trust manager can also be
-	 * injected by a setter method in <code>IRODSSession</code> after that
-	 * <code>IRODSSession</code> is constructed, replacing any trust manager
+	 * injected by a setter method in {@code IRODSSession} after that
+	 * {@code IRODSSession} is constructed, replacing any trust manager
 	 * instantiated by looking at Jargon properties.
 	 *
-	 * @return <code>true</code> if SSL checks should be bypassed
+	 * @return {@code true} if SSL checks should be bypassed
 	 */
 	boolean isBypassSslCertChecks();
 

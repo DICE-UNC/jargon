@@ -89,7 +89,7 @@ public class TicketDistribution {
 	}
 
 	/**
-	 * @return the ticketURLWithLandingPage <code>URL</code> with parameters
+	 * @return the ticketURLWithLandingPage {@code URL} with parameters
 	 *         that denote that invoking that URL will return an intermediate
 	 *         web page appropriate to the given ticket
 	 */
@@ -99,7 +99,7 @@ public class TicketDistribution {
 
 	/**
 	 * @param ticketURLWithLandingPage
-	 *            <code>URL</code> with parameters that denote that invoking
+	 *            {@code URL} with parameters that denote that invoking
 	 *            that URL will return an intermediate web page appropriate to
 	 *            the given ticket
 	 */

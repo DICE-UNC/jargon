@@ -18,7 +18,7 @@ import org.irods.jargon.datautils.visitor.NoMoreItemsException;
 /**
  * Invoker that will iterate over every file in a given parent directory
  * (recursively), calling the provided visitor for each file.
- * <p/>
+ * <p>
  * This iterator is based on Apache FileUtils iterator methods and works for
  * both local and iRODS files
  * 
@@ -36,7 +36,7 @@ public class FileTreeIteratorVisitorInvoker extends
 	 * directory, calling the provided visitor class at each file. Note that the
 	 * semantics of this framework are iRODS oriented so you have to provide the
 	 * iRODS values no matter what.
-	 * <p/>
+	 * <p>
 	 * Sorry...you can write your own version without the iRODS semantics...I'm
 	 * in a hurry
 	 * 

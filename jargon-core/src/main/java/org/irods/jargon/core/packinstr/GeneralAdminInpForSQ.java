@@ -84,7 +84,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 * (iadmin rsq)
 	 *
 	 * @param alias
-	 *            <code>String</code> with the Specific Query alias identifier.
+	 *            {@code String} with the Specific Query alias identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
 	 *
@@ -110,7 +110,7 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 * strings match the one provided
 	 *
 	 * @param query
-	 *            <code>String</code> with the Specific Query SQL query
+	 *            {@code String} with the Specific Query SQL query
 	 *            identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException

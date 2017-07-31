@@ -45,12 +45,12 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 * Static initializer used to create instances of the service.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
-	 * @return instance of the <code>IRODSTaggingServiceImpl</code>
+	 * @return instance of the {@code IRODSTaggingServiceImpl}
 	 */
 	public static UserTagCloudService instance(
 			final IRODSAccessObjectFactory irodsAccessObjectFactory,
@@ -64,10 +64,10 @@ public final class UserTagCloudServiceImpl extends AbstractIRODSTaggingService
 	 * that interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            iRODS Access Objects.
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the target server and
+	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 */
 	private UserTagCloudServiceImpl(

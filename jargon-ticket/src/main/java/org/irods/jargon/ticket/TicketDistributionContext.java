@@ -8,7 +8,7 @@ import java.util.Map;
  * Essentially, this describes a web accessible handler that can redeem tickets.
  * This context would describe the typical host/port information such that a
  * redeemed ticket can go to the right place.
- * <p/>
+ * <p>
  * This object is utilized by the {@link TicketDistributionService} to ask for
  * usable Ticket URL links and other information.
  * 

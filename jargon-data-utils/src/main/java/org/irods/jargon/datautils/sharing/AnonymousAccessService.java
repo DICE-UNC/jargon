@@ -19,8 +19,8 @@ public interface AnonymousAccessService {
 	 * absolute path. This can be either a file or a collection.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String<code> with an absolute path to an iRODS file or collection
-	 * @return <code>boolean<code> if anonymous has at least read access
+	 *            {@code String} with an absolute path to an iRODS file or collection
+	 * @return {@code boolean} if anonymous has at least read access
 	 * @throws FileNotFoundException
 	 *             if the given path does not exist
 	 * @throws JargonException
@@ -50,11 +50,11 @@ public interface AnonymousAccessService {
 	 * user to be able to at least list the collection contents. If the given
 	 * path represents a file (data object) set the permissions on the file and
 	 * set the containing collection's access to at least read. If the
-	 * <code>optionalFilePermissionForParentCollection</code> is specified, that
+	 * {@code optionalFilePermissionForParentCollection} is specified, that
 	 * permission will be used for the parent collection.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection or data object for which the permissions will be
 	 *            set
 	 * @param filePermissionForTargetPath
@@ -62,7 +62,7 @@ public interface AnonymousAccessService {
 	 *            the anonymous account for the given iRODS path
 	 * @param optionalFilePermissionForParentCollection
 	 *            {@link FilePermissionEnum} that can be set to
-	 *            <code>null</code>. If this is set, and the target of the path
+	 *            {@code null}. If this is set, and the target of the path
 	 *            is a data object, the parent collection will be set to this
 	 *            value. If no such permission is provided, and the target is a
 	 *            data object, the parent collection will have read permissions

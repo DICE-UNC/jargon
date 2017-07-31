@@ -11,9 +11,9 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
  * Interface defines an enhanced service for dealing with rules. Specifically,
  * this service provides hooks suitable for developing intefaces used to compose
  * and execute rules.
- * <p/>
+ * <p>
  * Note that this service class refines and extends the jargon-core
- * <code>RuleProcessingAO</code> services, which represents basic rule
+ * {@code RuleProcessingAO} services, which represents basic rule
  * execution.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -22,12 +22,12 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 public interface RuleCompositionService {
 
 	/**
-	 * Given a <code>String</code> that represents an iRODS rule as would be
+	 * Given a {@code String} that represents an iRODS rule as would be
 	 * executable by the iRODS irule command, parse that rule into the rule
 	 * body, as well as input and output parameters.
 	 * 
 	 * @param inputRuleAsString
-	 *            <code>String</code> with a valid iRODS rule
+	 *            {@code String} with a valid iRODS rule
 	 * @return {@link Rule} that represents that parsed rule string.
 	 * @throws JargonException
 	 */
@@ -37,7 +37,7 @@ public interface RuleCompositionService {
 	 * Load a rule from iRODS
 	 * 
 	 * @param absolutePathToRuleFile
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @return {@link Rule} that represents the parsed iRODS rule
 	 * @throws FileNotFoundException
@@ -55,17 +55,17 @@ public interface RuleCompositionService {
 	 * iRODS file. This will handle overwrites.
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @param ruleBody
-	 *            <code>String</code> with a valid iRODS rule body (without the
+	 *            {@code String} with a valid iRODS rule body (without the
 	 *            input or output sections)
 	 * @param inputParameters
-	 *            <code>List<String></code> with the input parameters of the
+	 *            {@code List<String>} with the input parameters of the
 	 *            rule in simple string name=value format, without wrapping
 	 *            quotes
 	 * @param outputParameters
-	 *            <code>List<String></code> with the output parameters of the
+	 *            {@code List<String>} with the output parameters of the
 	 *            rule in simple string format
 	 * @return {@link Rule} which is the parsed version of the given rule
 	 * @throws JargonException
@@ -78,7 +78,7 @@ public interface RuleCompositionService {
 	 * Given a rule in {@link Rule} format, serialize and store in iRODS
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @param rule
 	 *            {@link Rule} to serialize and store
@@ -92,10 +92,10 @@ public interface RuleCompositionService {
 	 * delete it from the rule input parameter list and store back in iRODS.
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @param parameterToDelete
-	 *            <code>String</code> with the name of the parameter, with the
+	 *            {@code String} with the name of the parameter, with the
 	 *            leading * character (e.g. *Flags), this input parameter will
 	 *            be deleted from the rule. If the parameter is missing, then no
 	 *            action will be taken.
@@ -112,10 +112,10 @@ public interface RuleCompositionService {
 	 * delete it from the rule output parameter list and store back in iRODS.
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file appropriate for 'new format' rules in iRODS.
 	 * @param parameterToDelete
-	 *            <code>String</code> with the name of the output parameter,
+	 *            {@code String} with the name of the output parameter,
 	 *            with the leading * character (e.g. *Flags), this input
 	 *            parameter will be deleted from the rule. If the parameter is
 	 *            missing, then no action will be taken.
@@ -131,14 +131,14 @@ public interface RuleCompositionService {
 	 * Given a rule in primative string values, execute the rule in iRODS.
 	 * 
 	 * @param ruleBody
-	 *            <code>String</code> with a valid iRODS rule body (without the
+	 *            {@code String} with a valid iRODS rule body (without the
 	 *            input or output sections)
 	 * @param inputParameters
-	 *            <code>List<String></code> with the input parameters of the
+	 *            {@code List<String>} with the input parameters of the
 	 *            rule in simple string name=value format, without wrapping
 	 *            quotes
 	 * @param outputParameters
-	 *            <code>List<String></code> with the output parameters of the
+	 *            {@code List<String>} with the output parameters of the
 	 *            rule in simple string format
 	 * @return {@link IRODSRuleExecResult} with the output parameters from the
 	 *         rule execution
@@ -152,12 +152,12 @@ public interface RuleCompositionService {
 	 * Add the given input parameter to the iRODS rule.
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file to which the parameter will be added
 	 * @param parameterName
-	 *            <code>String</code> with the name of the new parameter
+	 *            {@code String} with the name of the new parameter
 	 * @param parameterValue
-	 *            <code>String</code> with the value for the new parameter
+	 *            {@code String} with the value for the new parameter
 	 * @return {@link Rule} as updated
 	 * @throws FileNotFoundException
 	 *             if the iRODS rule file is missing
@@ -173,10 +173,10 @@ public interface RuleCompositionService {
 	 * Add the given output parameter to the iRODS rule.
 	 * 
 	 * @param ruleAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path to a rules
+	 *            {@code String} with an iRODS absolute path to a rules
 	 *            file to which the parameter will be added
 	 * @param parameterName
-	 *            <code>String</code> with the name of the new parameter
+	 *            {@code String} with the name of the new parameter
 	 * @return {@link Rule} as updated
 	 * @throws FileNotFoundException
 	 *             if the iRODS rule file is missing

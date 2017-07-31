@@ -10,10 +10,12 @@ package org.irods.jargon.core.connection;
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
+ * {@code
  *         <Version_PI> <status>0</status> <relVersion>rods3.1</relVersion>
  *         <apiVersion>d</apiVersion> <reconnPort>63610</reconnPort>
  *         <reconnAddr>192.168.43.202</reconnAddr> <cookie>1575067662</cookie>
  *         </Version_PI>
+ * }
  */
 public class StartupResponseData {
 

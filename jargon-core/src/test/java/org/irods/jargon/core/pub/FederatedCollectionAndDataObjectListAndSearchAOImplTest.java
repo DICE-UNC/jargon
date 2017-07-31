@@ -24,7 +24,7 @@ import org.junit.Test;
 
 /**
  * Test collection list and search operations between federated zones
- * <p/>
+ * <p>
  * Note that the test properties and server config must be set up per the
  * test-scripts/fedTestSetup.txt file. By default, the tests will be skipped.
  *

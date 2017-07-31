@@ -34,10 +34,10 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * (not a collection, there is a different initializer for that).
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file.
+	 *            {@code String} with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file.
-	 * @return <code>DataObjCopyInp</code>
+	 *            {@code String} with the absolute path to the target file.
+	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
 	 */
 	public static final DataObjCopyInp instanceForRenameFile(
@@ -55,16 +55,16 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * using 4.1+ iRODS protocol
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file
+	 *            {@code String} with the absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file
+	 *            {@code String} with the absolute path to the target file
 	 * @param copyToResource
-	 *            <code>String</code> with an optional resource for the target
+	 *            {@code String} with an optional resource for the target
 	 *            file
 	 * @param sourceFileLength
-	 *            <code>long</code> with the length of the source file
+	 *            {@code long} with the length of the source file
 	 * @param force
-	 *            <code>boolean</code> that indicates whether force option
+	 *            {@code boolean} that indicates whether force option
 	 *            should be set
 	 * @return {@link DataObjCopyInp}
 	 * @throws JargonException
@@ -85,16 +85,16 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance that will do a file copy between two iRODS directories
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file
+	 *            {@code String} with the absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file
+	 *            {@code String} with the absolute path to the target file
 	 * @param copyToResource
-	 *            <code>String</code> with an optional resource for the target
+	 *            {@code String} with an optional resource for the target
 	 *            file
 	 * @param sourceFileLength
-	 *            <code>long</code> with the length of the source file
+	 *            {@code long} with the length of the source file
 	 * @param force
-	 *            <code>boolean</code> that indicates whether force option
+	 *            {@code boolean} that indicates whether force option
 	 *            should be set
 	 * @return {@link DataObjCopyInp}
 	 * @throws JargonException
@@ -116,10 +116,10 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * (not a data object, there is a different initializer for that).
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file
+	 *            {@code String} with the absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file
-	 * @return <code>DataObjCopyInp</code>
+	 *            {@code String} with the absolute path to the target file
+	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
 	 */
 	public static final DataObjCopyInp instanceForRenameCollection(
@@ -136,13 +136,13 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the packing instruction for a copy of a collection.
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file.
+	 *            {@code String} with the absolute path to the source file.
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file.
+	 *            {@code String} with the absolute path to the target file.
 	 * @param targetResourceName
-	 *            <code>String</code> with optional resource name for target.
+	 *            {@code String} with optional resource name for target.
 	 *            Blank if not used
-	 * @return <code>DataObjCopyInp</code>
+	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
 	 */
 	public static final DataObjCopyInp instanceForCopyCollection(

@@ -123,7 +123,7 @@ public class IRODSTestSetupUtilities {
 	 * a name assigned per Junit test class
 	 *
 	 * @param testingDirectory
-	 *            <code>String</code> with a directory to go underneath scratch,
+	 *            {@code String} with a directory to go underneath scratch,
 	 *            do not supply leading '/'
 	 * @throws TestConfigurationException
 	 */

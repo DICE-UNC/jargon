@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Translate an IRODSQuery posed as a <code>String</code> query statement (as in
+ * Translate an IRODSQuery posed as a {@code String} query statement (as in
  * iquery) into a format that IRODS understands see
  * lib/core/include/rodsGenQueryNames.h
  *
@@ -33,11 +33,11 @@ public class IRODSGenQueryTranslator {
 	private static final String GROUP_BY = "GROUP BY";
 
 	/**
-	 * Public constructor takes a <code>IRODSServerProperties</code> object that
+	 * Public constructor takes a {@code IRODSServerProperties} object that
 	 * describes the current iRODS server.
 	 *
 	 * @param irodsServerProperties
-	 *            <code>IRODSServerProperties</code> that describes the iRODS
+	 *            {@code IRODSServerProperties} that describes the iRODS
 	 *            server.
 	 * @throws JargonException
 	 */
@@ -56,7 +56,7 @@ public class IRODSGenQueryTranslator {
 	 * meta-data values.
 	 *
 	 * @param irodsServerProperties
-	 *            <code>IRODSServerProperties</code> that describes the iRODS
+	 *            {@code IRODSServerProperties} that describes the iRODS
 	 *            server.
 	 * @param extensibleMetaDataMapping
 	 *            (@link org.irods.jargon.core.query.ExtensibleMetaDataMapping}
@@ -74,7 +74,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * Given a query (as in iquest) that has been formatted into an
-	 * <code>IRODSQuery</code> object, translate the query such that selects and
+	 * {@code IRODSQuery} object, translate the query such that selects and
 	 * conditions are formated such that iRODS can understand the fields.
 	 *
 	 * @param irodsQuery
@@ -155,7 +155,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * @param irodsQuery
-	 * @return <code>List</code> of {@link TranslatedGenQueryCondition}
+	 * @return {@code List} of {@link TranslatedGenQueryCondition}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
@@ -237,7 +237,7 @@ public class IRODSGenQueryTranslator {
 
 	/**
 	 * @param selects
-	 * @return <code>List</code> of {@link GenQuerySelectField}
+	 * @return {@code List} of {@link GenQuerySelectField}
 	 * @throws JargonException
 	 * @throws JargonQueryException
 	 */
@@ -280,7 +280,7 @@ public class IRODSGenQueryTranslator {
 	 * sum(field). Warning: this method returns null if lookup is unsuccessful.
 	 *
 	 * @param originalSelectField
-	 *            <code>String</code> with query field
+	 *            {@code String} with query field
 	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
 	 *         translation, or null if not found.
 	 * @throws JargonQueryException
@@ -324,7 +324,7 @@ public class IRODSGenQueryTranslator {
 	 * TODO:verify that extensible metadata fields support aggregations
 	 *
 	 * @param originalSelectField
-	 *            <code>String</code> with query field
+	 *            {@code String} with query field
 	 * @return {@link org.irods.jargon.core.query.GenQuerySelectField} with the
 	 *         translation, or null if not found.
 	 * @throws JargonQueryException
@@ -433,7 +433,7 @@ public class IRODSGenQueryTranslator {
 	 * Make a list of strings that are each considered a select field
 	 *
 	 * @param query
-	 * @return <code>List<String></code>
+	 * @return {@code List<String>}
 	 * @throws JargonQueryException
 	 */
 	protected List<String> parseSelectsIntoListOfNames(final String query)
@@ -504,7 +504,7 @@ public class IRODSGenQueryTranslator {
 	 * Create a list where each entry is one condition from the raw query.
 	 *
 	 * @param query
-	 * @return <code>List</code> of {@link GenQueryCondition}
+	 * @return {@code List} of {@link GenQueryCondition}
 	 * @throws JargonQueryException
 	 */
 	protected List<GenQueryCondition> parseConditionsIntoList(final String query)
@@ -571,8 +571,8 @@ public class IRODSGenQueryTranslator {
 	 * Note this is experimental, and is not integrated in GenQuery as of yet
 	 *
 	 * @param query
-	 *            <code>String</code> with the genquery
-	 * @return <code>List<String></code> with the fields as a list
+	 *            {@code String} with the genquery
+	 * @return {@code List<String>} with the fields as a list
 	 * @throws JargonQueryException
 	 */
 	protected List<String> parseOrderByFieldsIntoList(final String query)

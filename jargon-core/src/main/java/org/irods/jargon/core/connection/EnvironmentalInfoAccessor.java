@@ -36,7 +36,7 @@ public class EnvironmentalInfoAccessor {
 	}
 
 	/**
-	 * Class to access underlying <code>IRODSServerProperties</code>. Note that
+	 * Class to access underlying {@code IRODSServerProperties}. Note that
 	 * this uses a caching optimization.
 	 *
 	 * @return {@link IRODSServerProperties}

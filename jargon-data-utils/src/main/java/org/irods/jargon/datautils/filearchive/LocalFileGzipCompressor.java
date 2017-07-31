@@ -37,7 +37,7 @@ public class LocalFileGzipCompressor {
 	 * added
 	 * 
 	 * @param inputFileAbsolutePath
-	 *            <code>String</code> with an absolute path to a file that is
+	 *            {@code String} with an absolute path to a file that is
 	 *            gzip compressed
 	 * @return {@link File} with the compressed gzip
 	 * @throws FileNotFoundException
@@ -97,13 +97,13 @@ public class LocalFileGzipCompressor {
 
 	/**
 	 * Given a file, unzip it.
-	 * <p/>
+	 * <p>
 	 * Note the result file will either be the same name with the .gzip removed,
 	 * leaving the original extension. If a .gzip extension is not found it will
 	 * make it a .tar file by default
 	 * 
 	 * @param inputFileAbsolutePath
-	 *            <code>String</code> with the absolute path to a .gzip file
+	 *            {@code String} with the absolute path to a .gzip file
 	 * @return {@link File} that is unzipped and has the .gzip removed to give
 	 *         the original extension, or if it can't figure it out it makes a
 	 *         tar

@@ -6,15 +6,15 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 
 /**
- * Implementation of the <code>JargonProperties</code> interface that is
- * suitable for user-definition and injection into the <code>IRODSession</code>.
+ * Implementation of the {@code JargonProperties} interface that is
+ * suitable for user-definition and injection into the {@code IRODSession}.
  * Typically, properties that control Jargon are pulled from a default
  * jargon.properties file. This class would allow, for example, the wiring of
  * property options via Spring through various setters.
- * <p/>
+ * <p>
  * Some of these properties serve as defaults that may be overridden in the
  * various methods by the setting of parameters, such as
- * <code>TransferOptions</code>
+ * {@code TransferOptions}
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -109,15 +109,15 @@ public class SettableJargonProperties implements JargonProperties {
 	private int encryptionNumberHashRounds = 16;
 
 	/**
-	 * <code>boolean</code> that indicates whether ssl cert checks should be
-	 * bypassed. <code>false</code> is the default, meaning checks will be done,
+	 * {@code boolean} that indicates whether ssl cert checks should be
+	 * bypassed. {@code false} is the default, meaning checks will be done,
 	 * and is the recommended production setting.
 	 */
 	private boolean bypassSslCertChecks;
 
 	/**
 	 * Construct a default properties set based on the provided initial set of
-	 * <code>JargonProperties</code>. This can be used to wire in properties via
+	 * {@code JargonProperties}. This can be used to wire in properties via
 	 * configuration, as in Spring.
 	 *
 	 * @param jargonProperties
@@ -130,7 +130,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/**
 	 * Construct a default properties set based on the
-	 * <code>jargon.properties</code> in jargon, these can then be overridden.
+	 * {@code jargon.properties} in jargon, these can then be overridden.
 	 *
 	 * @throws JargonException
 	 *             if properties cannot be loaded
@@ -245,7 +245,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Utilize parallel transfer algorithm for files above the transfer size
 	 *
 	 * @param useParallelTransfer
-	 *            <code>boolean</code> of <code>true</code> if parallel
+	 *            {@code boolean} of {@code true} if parallel
 	 *            transfers are allowed
 	 */
 	public synchronized void setUseParallelTransfer(
@@ -258,7 +258,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * use iRODS limit.
 	 *
 	 * @param maxParallelThreads
-	 *            <code>int</code> with the maximum number of threads to use in
+	 *            {@code int} with the maximum number of threads to use in
 	 *            a parallel transfer, with 0 meaning use the iRODS default set
 	 *            in rules.
 	 */
@@ -341,8 +341,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Allow resource redirects to occur
 	 *
 	 * @param allowPutGetResourceRedirects
-	 *            <code>boolean</code> which allows resource redirects if
-	 *            <code>true</code>
+	 *            {@code boolean} which allows resource redirects if
+	 *            {@code true}
 	 * @throws JargonException
 	 */
 	public synchronized void setAllowPutGetResourceRedirects(
@@ -365,8 +365,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Compute (but do not verify) a checksum after a transfer.
 	 *
 	 * @param computeChecksumAfterTransfer
-	 *            <code>boolean</code> that will cause a checksum to be computed
-	 *            by default if <code>true</code>
+	 *            {@code boolean} that will cause a checksum to be computed
+	 *            by default if {@code true}
 	 * @throws JargonException
 	 */
 	public synchronized void setComputeChecksumAfterTransfer(
@@ -389,8 +389,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Compute and verify the file checksum after a put/get transfer
 	 *
 	 * @param computeAndVerifyChecksumAfterTransfer
-	 *            <code>boolean</code> that causes a checksum validation if set
-	 *            to <code>true</code>
+	 *            {@code boolean} that causes a checksum validation if set
+	 *            to {@code true}
 	 */
 	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
@@ -680,7 +680,7 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @return <code>boolean</code> that indicates whether a reconnect of long
+	 * @return {@code boolean} that indicates whether a reconnect of long
 	 *         running connections is done. This is equvalent to the -T icommand
 	 *         option
 	 */
@@ -690,14 +690,14 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Return <code>boolean</code> that indicates whether detailed performance
+	 * Return {@code boolean} that indicates whether detailed performance
 	 * information is gathered and reported to the DEBUG log. This may introduce
 	 * overhead to operations.
-	 * <p/>
+	 * <p>
 	 * Note that the implementation of such instrumentation will be an ongoing
 	 * process.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	@Override
 	public synchronized boolean isInstrument() {
@@ -758,9 +758,9 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @return the reconnectTimeInMillis <code>long</code> indicating the time
+	 * @return the reconnectTimeInMillis {@code long} indicating the time
 	 *         to wait for reconnect. This is only used if
-	 *         <code>isReconnect()</code> is <code>true</code>
+	 *         {@code isReconnect()} is {@code true}
 	 */
 	@Override
 	public synchronized long getReconnectTimeInMillis() {
@@ -831,7 +831,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Set the pam time to live (in seconds)
 	 *
 	 * @param pamTimeToLive
-	 *            <code>int</code> with the time to live for pam passwords
+	 *            {@code int} with the time to live for pam passwords
 	 */
 	public synchronized void setPAMTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
@@ -1251,7 +1251,7 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Sets the default negotiation policy for SSL, cannot be <code>null</code>
+	 * Sets the default negotiation policy for SSL, cannot be {@code null}
 	 *
 	 * @param negotiationPolicy
 	 *            {@link SslNegotiationPolicy}

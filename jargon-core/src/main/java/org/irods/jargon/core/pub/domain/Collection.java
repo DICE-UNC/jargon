@@ -7,14 +7,14 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 /**
  * Represents a Collection in IRODS. This object represents the ICAT domain
  * object, and is distinct from considering a collection as a type of
- * <code>java.io.File</code>. For these types of operations, the
+ * {@code java.io.File}. For these types of operations, the
  * {@link org.irods.jargon.core.pub.io.IRODSFileImpl} object is available.
  *
  * Note that the {@link org.irods.jargon.core.pub.CollectionAO} access object
- * can work with an IRODS collection as both an <code>IRODSFileImpl</code> for
- * typical <code>FIle</code> operations, as well as a <code>Collection</code>
- * domain object. <code>IRODSFileImpl</code> is useful when you want to treat
- * IRODS as a file system, while the <code>CollectionAO</code> is a view of the
+ * can work with an IRODS collection as both an {@code IRODSFileImpl} for
+ * typical {@code FIle} operations, as well as a {@code Collection}
+ * domain object. {@code IRODSFileImpl} is useful when you want to treat
+ * IRODS as a file system, while the {@code CollectionAO} is a view of the
  * collection as an IRODS entity, with IRODS specific functionality.
  *
  * Note that this class is not immutable. It is meant to be a data value object
@@ -83,7 +83,7 @@ public class Collection extends IRODSDomainObject {
 	/**
 	 * Handy method to grab the last part of the path.
 	 *
-	 * @return <code>String</code>
+	 * @return {@code String}
 	 */
 	public String getCollectionLastPathComponent() {
 		int lastSlash = collectionName.lastIndexOf('/');
@@ -97,7 +97,7 @@ public class Collection extends IRODSDomainObject {
 	 * This will be the absolute path to the parent collection of this
 	 * collection
 	 *
-	 * @return <code>String</code>
+	 * @return {@code String}
 	 */
 	public String getCollectionParentName() {
 		return collectionParentName;
@@ -105,9 +105,9 @@ public class Collection extends IRODSDomainObject {
 
 	/**
 	 * Returns the absolute path for a collection, this is synonymous with the
-	 * <code>getCollectionName()</code>.
+	 * {@code getCollectionName()}.
 	 *
-	 * @return <code>String</code>
+	 * @return {@code String}
 	 */
 	public String getAbsolutePath() {
 		return getCollectionName();
@@ -231,7 +231,7 @@ public class Collection extends IRODSDomainObject {
 	}
 
 	/**
-	 * @return the objectPath <code>String</code> that will normally be blank,
+	 * @return the objectPath {@code String} that will normally be blank,
 	 *         but if this is a soft link, this will reflect the canonical path
 	 *         to this collection
 	 */
@@ -241,7 +241,7 @@ public class Collection extends IRODSDomainObject {
 
 	/**
 	 * @param objectPath
-	 *            the objectPath to set <code>String</code> that will normally
+	 *            the objectPath to set {@code String} that will normally
 	 *            be blank, but if this is a soft link, this will reflect the
 	 *            canonical path to this collection
 	 */

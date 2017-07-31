@@ -5,10 +5,12 @@ import org.irods.jargon.core.exception.JargonException;
 public class UserAdminInp extends AbstractIRODSPackingInstruction {
 
 	/**
+	 * {@code
 	 * $packlets=array('arg0' => 'userpw', 'arg1' => $user, 'arg2' =>
 	 * 'password', 'arg3' => $pwdBuf, 'arg4' => '', 'arg5' => '', 'arg6' => '',
 	 * 'arg7' => '', "arg8" => '', 'arg9' => '' );
 	 * parent::__construct("userAdminInp_PI",$packlets);
+	 * }
 	 */
 
 	public static final String PI_TAG = "userAdminInp_PI";
@@ -45,13 +47,13 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 * user password.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name that will have the
+	 *            {@code String} with the user name that will have the
 	 *            password changed.
 	 * @param obfuscatedPassword
-	 *            <code>String</code> with the properly obfuscated password. See
+	 *            {@code String} with the properly obfuscated password. See
 	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities}
 	 *            for obfuscation routines.
-	 * @return instance of <code>userAdminInp</code> packing instruction to
+	 * @return instance of {@code userAdminInp} packing instruction to
 	 *         change the password.
 	 * @throws JargonException
 	 */

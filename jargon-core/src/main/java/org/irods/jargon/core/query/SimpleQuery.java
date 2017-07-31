@@ -10,7 +10,7 @@ import java.util.List;
  * Represents an sql statement as a 'simple query', which is an iRODS facility
  * that allows certain SQL statements to be executed. These statements are
  * configured within iRODS.
- * <p/>
+ * <p>
  * This class is immutable and thread-safe.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -19,17 +19,17 @@ import java.util.List;
 public class SimpleQuery extends AbstractAliasedQuery {
 
 	/**
-	 * Creates a new instance of a <code>SimpleQuery</code> object.
+	 * Creates a new instance of a {@code SimpleQuery} object.
 	 *
 	 * @param queryString
-	 *            <code>String</code> with the sql query to execute.
+	 *            {@code String} with the sql query to execute.
 	 * @param arguments
-	 *            <code>List<String></code> with arguments to the query. This
+	 *            {@code List<String>} with arguments to the query. This
 	 *            may be set to null if no arguments desired.
 	 * @param continuationValue
-	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            {@code int} with the offset into the results., 0 if no
 	 *            offset.
-	 * @return <code>SimpleQuery</code>
+	 * @return {@code SimpleQuery}
 	 */
 	public static SimpleQuery instance(final String queryString,
 			final List<String> arguments, final int continuationValue) {
@@ -40,9 +40,9 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	 * Creates an instance that has no arguments.
 	 *
 	 * @param queryString
-	 *            <code>String</code> with the sql query to execute.
+	 *            {@code String} with the sql query to execute.
 	 * @param continuationValue
-	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            {@code int} with the offset into the results., 0 if no
 	 *            offset.
 	 * @return {@link SimpleQuery}
 	 */
@@ -53,16 +53,16 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	}
 
 	/**
-	 * Creates an instance of a <code>SimpleQuery</code> object giving one
+	 * Creates an instance of a {@code SimpleQuery} object giving one
 	 * argument.
 	 *
 	 * @param queryString
-	 *            <code>String</code> with the sql query to execute.
+	 *            {@code String} with the sql query to execute.
 	 * @param arg
-	 *            <code>String</code> with the arugment for the query. Set to
+	 *            {@code String} with the arugment for the query. Set to
 	 *            blank if unused.
 	 * @param continuationValue
-	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            {@code int} with the offset into the results., 0 if no
 	 *            offset.
 	 * @return {@link SimpleQuery}
 	 */
@@ -82,17 +82,17 @@ public class SimpleQuery extends AbstractAliasedQuery {
 	}
 
 	/**
-	 * Creates an instance of a <code>SimpleQuery</code> object giving two
+	 * Creates an instance of a {@code SimpleQuery} object giving two
 	 * arguments.
 	 *
 	 * @param queryString
-	 *            <code>String</code> with the sql query to execute.
+	 *            {@code String} with the sql query to execute.
 	 * @param arg1
-	 *            <code>String</code> with the argument for the query.
+	 *            {@code String} with the argument for the query.
 	 * @param arg2
-	 *            <code>String</code> with the second argument for the query.
+	 *            {@code String} with the second argument for the query.
 	 * @param continuationValue
-	 *            <code>int</code> with the offset into the results., 0 if no
+	 *            {@code int} with the offset into the results., 0 if no
 	 *            offset.
 	 * @return {@link SimpleQuery}
 	 */

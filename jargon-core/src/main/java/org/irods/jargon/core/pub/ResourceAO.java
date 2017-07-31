@@ -16,7 +16,7 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 public interface ResourceAO extends IRODSAccessObject {
 
 	/**
-	 * Get the first <code>Resource</code> associated with an iRODS file. There
+	 * Get the first {@code Resource} associated with an iRODS file. There
 	 * may be other iRODS resources associated with the given file
 	 *
 	 * @param irodsFile
@@ -31,9 +31,9 @@ public interface ResourceAO extends IRODSAccessObject {
 
 	/**
 	 * Find all resources on the connected zone and return as a list of
-	 * <code>Resource</code> objects.
+	 * {@code Resource} objects.
 	 *
-	 * @return a <code>List</code> of
+	 * @return a {@code List} of
 	 *         {@link org.irods.jargon.core.pub.domain.Resource};
 	 * @throws JargonException
 	 */
@@ -43,7 +43,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Find a resource given its name
 	 *
 	 * @param resourceName
-	 *            <code>String</code> with the name of the resource to be looked
+	 *            {@code String} with the name of the resource to be looked
 	 *            up
 	 * @return {@link org.irods.jargon.core.pub.domain.Resource}
 	 * @throws JargonException
@@ -57,7 +57,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Find a resource by its id
 	 *
 	 * @param resourceId
-	 *            <code>String</code> with the unique id of the resource
+	 *            {@code String} with the unique id of the resource
 	 * @return {@link org.irods.jargon.core.pub.domain.Resource} with the
 	 *         matching id
 	 * @throws JargonException
@@ -71,10 +71,10 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * associated with that metadata, based on a metadata query.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -87,38 +87,38 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * List all AVU metadata associated with the resource
 	 *
 	 * @param resourceName
-	 *            <code>String</code> containing the resource name
-	 * @return <code>List</code> of {@link AvuData} for this resource
+	 *            {@code String} containing the resource name
+	 * @return {@code List} of {@link AvuData} for this resource
 	 * @throws JargonException
 	 */
 	List<AvuData> listResourceMetadata(String resourceName)
 			throws JargonException;
 
 	/**
-	 * Retrieve a list of plain <code>String</code> with the resource names in
+	 * Retrieve a list of plain {@code String} with the resource names in
 	 * the zone. These are sorted ascending.
-	 * <p/>
+	 * <p>
 	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
 	 * it will only list resources that have no parent, appropriate for
 	 * addressing the top of a composable resource tree where the children
 	 * should not be directly accessed.
 	 *
-	 * @return <code>List<String></code> of resource names in the zone
+	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
 	 */
 	List<String> listResourceNames() throws JargonException;
 
 	/**
-	 * Retrieve a list of plain <code>String</code> with the resource names in
+	 * Retrieve a list of plain {@code String} with the resource names in
 	 * the zone, followed by resourceGroupNames in the zone. These are sorted
 	 * ascending.
-	 * <p/>
+	 * <p>
 	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
 	 * it will only list resources that have no parent, appropriate for
 	 * addressing the top of a composable resource tree where the children
 	 * should not be directly accessed.
 	 *
-	 * @return <code>List<String></code> of resource names in the zone
+	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
 	 */
 	List<String> listResourceAndResourceGroupNames() throws JargonException;
@@ -127,7 +127,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Add AVU metadata for this resource
 	 *
 	 * @param resourceName
-	 *            <code>String</code> with the name of the resource
+	 *            {@code String} with the name of the resource
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
@@ -148,7 +148,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * existing ones)
 	 * 
 	 * @param resourceName
-	 *            <code>String</code> with the name of the resource
+	 *            {@code String} with the name of the resource
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
@@ -162,7 +162,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Remove Resource AVU data, silently ignore if metadata is not found.
 	 *
 	 * @param resourceName
-	 *            <code>String</code> with the name of the resource
+	 *            {@code String} with the name of the resource
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
@@ -201,11 +201,11 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Add the child resource to the parent resource
 	 *
 	 * @param parent
-	 *            <code>String</code> with the parent resource
+	 *            {@code String} with the parent resource
 	 * @param child
-	 *            <code>String</code> with the child resource
+	 *            {@code String} with the child resource
 	 * @param optionalContext
-	 *            <code>String</code> that is blank if not used, with an
+	 *            {@code String} that is blank if not used, with an
 	 *            optional context string
 	 * @throws JargonException
 	 */
@@ -216,9 +216,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Remove the given child from the resource
 	 *
 	 * @param parent
-	 *            <code>String</code> with the parent resource name
+	 *            {@code String} with the parent resource name
 	 * @param child
-	 *            <code>String</code> with the child resource name to be removed
+	 *            {@code String} with the child resource name to be removed
 	 * @throws InvalidResourceException
 	 * @throws JargonException
 	 */

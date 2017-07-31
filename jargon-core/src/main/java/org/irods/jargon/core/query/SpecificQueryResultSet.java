@@ -22,15 +22,15 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param results
-	 *            <code>List</code> of {@link IRODSQueryResultRow} with each row
+	 *            {@code List} of {@link IRODSQueryResultRow} with each row
 	 *            of the query results
 	 * @param columnNames
-	 *            <code>List<String></code> of columns in the results
+	 *            {@code List<String>} of columns in the results
 	 * @param hasMoreRecords
-	 *            <code>boolean</code> indicating whether more records are
+	 *            {@code boolean} indicating whether more records are
 	 *            available
 	 * @param continuationIndex
-	 *            <code>int</code> with a continuation index, this can be used
+	 *            {@code int} with a continuation index, this can be used
 	 *            in subsequent queries to re-query for more result pages
 	 */
 	public SpecificQueryResultSet(final SpecificQuery specificQuery,
@@ -50,7 +50,7 @@ public class SpecificQueryResultSet extends AbstractIRODSQueryResultSet {
 	 * @param specificQuery
 	 *            {@link SpecificQuery} that was used to generate the result set
 	 * @param columnNames
-	 *            <code>List<String></code> of columns in the results
+	 *            {@code List<String>} of columns in the results
 	 */
 	public SpecificQueryResultSet(final SpecificQuery specificQuery,
 			final List<String> columnNames) {

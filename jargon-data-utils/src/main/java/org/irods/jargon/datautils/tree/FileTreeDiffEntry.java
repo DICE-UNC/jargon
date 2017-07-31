@@ -36,7 +36,7 @@ public class FileTreeDiffEntry {
 	 * Classify this as a diff (an actual difference was noted), or as a
 	 * non-diff entry that simply describes the tree
 	 * 
-	 * @return <code>true</code> if this is an actual diff
+	 * @return {@code true} if this is an actual diff
 	 */
 	public boolean isCountAsDiff() {
 		boolean isDiff = true;
@@ -56,7 +56,7 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            <code>String</code> with the absolute path to the opposite
+	 *            {@code String} with the absolute path to the opposite
 	 *            file, this would, for example, be the parent collection where
 	 *            the file is 'missing' from
 	 * @return
@@ -79,14 +79,14 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            <code>String</code> with the absolute path to the opposite
+	 *            {@code String} with the absolute path to the opposite
 	 *            file, this would, for example, be the parent collection where
 	 *            the file is 'missing' from
 	 * @param lengthRhsFile
-	 *            <code>long</code> with the length of the right hand side file,
+	 *            {@code long} with the length of the right hand side file,
 	 *            or 0
 	 * @param timestampRhsFile
-	 *            <code>long</code> with the timestamp of the right hand side
+	 *            {@code long} with the timestamp of the right hand side
 	 *            file, or 0
 	 * @return
 	 */
@@ -109,19 +109,19 @@ public class FileTreeDiffEntry {
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            <code>String</code> with the absolute path to the opposite
+	 *            {@code String} with the absolute path to the opposite
 	 *            file, this would, for example, be the parent collection where
 	 *            the file is 'missing' from
 	 * @param lengthRhsFile
-	 *            <code>long</code> with the length of the right hand side file,
+	 *            {@code long} with the length of the right hand side file,
 	 *            or 0
 	 * @param checksumThisFile
-	 *            <code>String</code> with the checksum of the current file
+	 *            {@code String} with the checksum of the current file
 	 * @param checksumOppositeFile
-	 *            <code>String</code> with the checksum of the corresponding
+	 *            {@code String} with the checksum of the corresponding
 	 *            file
 	 * @param timestampRhsFile
-	 *            <code>long</code> with the timestamp of the right hand side
+	 *            {@code long} with the timestamp of the right hand side
 	 *            file, or 0
 	 * @return
 	 */

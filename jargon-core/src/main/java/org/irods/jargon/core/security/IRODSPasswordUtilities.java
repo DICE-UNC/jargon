@@ -63,13 +63,13 @@ public class IRODSPasswordUtilities {
 	 * analogous to the obfEncodeByKeyV2 method in lib/core/src/obf.c
 	 *
 	 * @param newPassword
-	 *            <code>String</code> with the password value to set
+	 *            {@code String} with the password value to set
 	 * @param adminPassword
-	 *            <code>String</code> with the password of the administrator
+	 *            {@code String} with the password of the administrator
 	 * @param challengeValue
-	 *            <code>String</code> with the challenge value used during the
+	 *            {@code String} with the challenge value used during the
 	 *            login process for the administrator making this change
-	 * @return <code>String</code> with an obfuscated value for the password
+	 * @return {@code String} with an obfuscated value for the password
 	 * @throws JargonException
 	 */
 	public static String obfuscateIRODSPasswordForAdminPasswordChange(
@@ -121,9 +121,9 @@ public class IRODSPasswordUtilities {
 	 * value and creates the same representation.
 	 *
 	 * @param challengeValue
-	 *            <code>String</code> with the raw iRODS challenge value from
+	 *            {@code String} with the raw iRODS challenge value from
 	 *            the login process
-	 * @return <code>String</code> with a hex represnetation of a subset of the
+	 * @return {@code String} with a hex represnetation of a subset of the
 	 *         challenge, as in clientLogin.c
 	 */
 	public static String deriveHexSubsetOfChallenge(final String challengeValue) {
@@ -149,13 +149,13 @@ public class IRODSPasswordUtilities {
 	 * Obfuscate a given value using a key, suitable to change a user password.
 	 *
 	 * @param sourceData
-	 *            <code>String</code> with the desired value to encrypt
+	 *            {@code String} with the desired value to encrypt
 	 * @param key
-	 *            <code>String</code> with the encrtyption key
+	 *            {@code String} with the encrtyption key
 	 * @param pad
-	 *            <code>boolean</code> indicating whether value source value
+	 *            {@code boolean} indicating whether value source value
 	 *            should be padded
-	 * @return <code>String</code> with the obfuscated password to send to iRODS
+	 * @return {@code String} with the obfuscated password to send to iRODS
 	 *         via the iRODS admin protocol.
 	 * @throws JargonException
 	 */
@@ -504,7 +504,7 @@ public class IRODSPasswordUtilities {
 
 	/**
 	 * @param newPassword
-	 * @return <code>String</code> with padded password
+	 * @return {@code String} with padded password
 	 */
 	public static String padPasswordWithRandomStringData(
 			final String newPassword) {
@@ -525,9 +525,9 @@ public class IRODSPasswordUtilities {
 	 * debugging obfuscation routines.
 	 *
 	 * @param b
-	 *            <code>btye[]</code> to be converted into a hex representation
+	 *            {@code btye[]} to be converted into a hex representation
 	 *            for logging.
-	 * @return <code>String</code> with a hex representation.
+	 * @return {@code String} with a hex representation.
 	 */
 	public static String getHexString(final byte[] b) {
 		StringBuilder result = new StringBuilder();
@@ -552,9 +552,9 @@ public class IRODSPasswordUtilities {
 	 * Drop the sign bits in a byte for conversion to an int.
 	 *
 	 * @param b
-	 *            <code>byte</code> to be converted to an int.
-	 * @return <code>int</code> which is the equivilant of the unsigned version
-	 *         of the <code>byte</code> param.
+	 *            {@code byte} to be converted to an int.
+	 * @return {@code int} which is the equivilant of the unsigned version
+	 *         of the {@code byte} param.
 	 */
 	public static int unsignedByteToInt(final byte b) {
 		return b & 0xFF;
@@ -588,13 +588,13 @@ public class IRODSPasswordUtilities {
 	 * Pad a given string to a given length with the given pad character
 	 *
 	 * @param str
-	 *            <code>String</code> to be padded
+	 *            {@code String} to be padded
 	 * @param size
-	 *            <code>int</code> with the length of the final padded String
+	 *            {@code int} with the length of the final padded String
 	 *            value
 	 * @param padChar
-	 *            <code>char</code> that will pad the given string
-	 * @return <code>String</code> that is padded out to the given length
+	 *            {@code char} that will pad the given string
+	 * @return {@code String} that is padded out to the given length
 	 */
 	public static String pad(String str, final int size, final char padChar) {
 		if (str.length() < size) {

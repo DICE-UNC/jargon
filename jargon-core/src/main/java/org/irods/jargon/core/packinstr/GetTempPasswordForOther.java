@@ -19,9 +19,9 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	 * Instance method creates a request to generate a temporary password.
 	 *
 	 * @param targetUserName
-	 *            <code>String</code> (required) with the user name for which a
+	 *            {@code String} (required) with the user name for which a
 	 *            temporary password will be generated.
-	 * @return <code>GetTempPasswordIn</code> instance
+	 * @return {@code GetTempPasswordIn} instance
 	 */
 	public static GetTempPasswordForOther instance(final String targetUserName) {
 		return new GetTempPasswordForOther(targetUserName);
@@ -31,7 +31,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	 * Private constructor
 	 *
 	 * @param targetUserName
-	 *            <code>String</code> (required) with the user name for which a
+	 *            {@code String} (required) with the user name for which a
 	 *            temporary password will be generated.
 	 */
 	private GetTempPasswordForOther(final String targetUserName) {
@@ -62,7 +62,7 @@ public class GetTempPasswordForOther extends AbstractIRODSPackingInstruction {
 	/**
 	 * Get the user name for whom the temporary password will be generated.
 	 *
-	 * @return <code>String</code> with the user name for which the temporary
+	 * @return {@code String} with the user name for which the temporary
 	 *         password will be issued.
 	 */
 	public String getTargetUserName() {

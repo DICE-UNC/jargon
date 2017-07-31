@@ -32,17 +32,17 @@ public final class IRODSTagGrouping extends UserAnnotatedCatalogItem implements
 	 * tags, and describes the user and object that is being tagged.
 	 * 
 	 * @param metadataDomain
-	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
 	 *            that identifies the domain object type that is tagged (e.g.
 	 *            DataObject, Collection)
 	 * @param domainUniqueName
-	 *            <code>String</code> with the unque name for the tagged data
+	 *            {@code String} with the unque name for the tagged data
 	 *            object (e.g. iRODS absolute path for a data object or
 	 *            collection).
 	 * @param spaceDelimitedTagsForDomain
-	 *            <code>String</code> with a space-delimited list of tags.
+	 *            {@code String} with a space-delimited list of tags.
 	 * @param userName
-	 *            <code>String</code> with the user name who is associated with
+	 *            {@code String} with the user name who is associated with
 	 *            the tags.
 	 * @throws JargonException
 	 */

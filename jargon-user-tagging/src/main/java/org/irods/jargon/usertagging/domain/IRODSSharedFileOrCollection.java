@@ -15,7 +15,7 @@ import org.irods.jargon.core.query.UserAnnotatedCatalogItem;
  * Represents a first class shared file or folder. If this is a collection, only
  * the top level is marked as a share, and child data will be part of this named
  * share.
- * <p/>
+ * <p>
  * All fields are final and immutable.
  * 
  * @author Mike Conway - DICE (www.irods.org)
@@ -70,26 +70,26 @@ public class IRODSSharedFileOrCollection extends UserAnnotatedCatalogItem
 	 * being starred, and providing a description.
 	 * 
 	 * @param metadataDomain
-	 *            <code>MetaDataAndDomainData.MetadataDomain</code> enum value
+	 *            {@code MetaDataAndDomainData.MetadataDomain} enum value
 	 *            that identifies the domain object type that is tagged (e.g.
 	 *            DataObject, Collection)
 	 * @param domainUniqueName
-	 *            <code>String</code> with the unque name for the tagged data
+	 *            {@code String} with the unque name for the tagged data
 	 *            object (e.g. iRODS absolute path for a data object or
 	 *            collection).
 	 * @param shareName
-	 *            <code>String</code> with an alias, or name for the share
+	 *            {@code String} with an alias, or name for the share
 	 * @param shareOwner
-	 *            <code>String</code> with the user name who owns the shared
+	 *            {@code String} with the user name who owns the shared
 	 *            file or collection
 	 * @param shareOwnerZone
-	 *            <code>String</code> with zone for the user name who owns the
+	 *            {@code String} with zone for the user name who owns the
 	 *            shared file or collection. May be set blank to denote current
 	 *            zone
 	 * @param shareUser
 	 *            {@link ShareUser} with the user names and permissions
 	 * @param shareOwner
-	 *            <code>String</code> with the owner of the share, in name#zone
+	 *            {@code String} with the owner of the share, in name#zone
 	 *            format
 	 * 
 	 * @throws JargonException

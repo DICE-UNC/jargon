@@ -229,8 +229,8 @@ public class Tag implements Cloneable {
 	}
 
 	/**
-	 * Get the <code>index</code>-th sub-tag, from the first level down, with
-	 * the name of <code>tagName</code>. Index count starts at zero.
+	 * Get the {@code index}-th sub-tag, from the first level down, with
+	 * the name of {@code tagName}. Index count starts at zero.
 	 *
 	 * So if tagname = taggy, and index = 2, get the 3rd subtag with the name of
 	 * 'taggy'.
@@ -295,9 +295,9 @@ public class Tag implements Cloneable {
 	 * Convenience method to add a tag with an int value
 	 *
 	 * @param name
-	 *            <code>String</code> with the tag name
+	 *            {@code String} with the tag name
 	 * @param val
-	 *            <code>int</code> with the tag value
+	 *            {@code int} with the tag value
 	 */
 	public void addTag(final String name, final int val) {
 		addTag(new Tag(name, val));

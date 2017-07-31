@@ -33,14 +33,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Describes a file or collection on the IRODS data grid. Note that
- * <code>IRODSFileImpl</code> is a variant of an
+ * {@code IRODSFileImpl} is a variant of an
  * {@link org.irods.jargon.core.pub.IRODSAccessObject IRODSAccessObject}, and
  * internally holds a connection to IRODS.
- * <p/>
+ * <p>
  * This object is not thread-safe, and cannot be shared between threads. This
  * File object has a connection associated with the thread which created it.
  * There are methods in {@link org.irods.jargon.core.pub.io.IRODSFileFactory
- * IRODSFileFactory} that allow an <code>IRODSFileImpl</code> to be attached to
+ * IRODSFileFactory} that allow an {@code IRODSFileImpl} to be attached to
  * another Thread and connection.
  *
  * @author Mike Conway - DICE (www.irods.org)
