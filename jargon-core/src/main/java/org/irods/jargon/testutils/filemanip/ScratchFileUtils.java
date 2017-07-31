@@ -14,7 +14,7 @@ import java.util.Properties;
 import java.util.zip.CRC32;
 import java.util.zip.CheckedInputStream;
 
-import org.irods.jargon.testutils.TestingUtilsException;
+import org.irods.jargon.testutils.TestConfigurationException;
 
 /**
  * @author Mike Conway, DICE (www.irods.org)
@@ -26,7 +26,7 @@ public class ScratchFileUtils {
 	private Properties testingProperties = new Properties();
 
 	public ScratchFileUtils(final Properties testingProperties)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		this.testingProperties = testingProperties;
 		checkTrailingSlash(testingProperties
 				.getProperty(GENERATED_FILE_DIRECTORY_KEY));
@@ -143,10 +143,10 @@ public class ScratchFileUtils {
 	 *            <code>String</code> with relative file path under scratch (no
 	 *            leading '/')
 	 * @return <code>long</code> with the file's checksum value
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public byte[] computeFileCheckSum(final String pathUnderScratch)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 
 		StringBuilder pathBuilder = new StringBuilder();
 		pathBuilder.append(testingProperties
@@ -172,15 +172,15 @@ public class ScratchFileUtils {
 			StringBuilder message = new StringBuilder();
 			message.append("could not find file to checksum at:");
 			message.append(pathBuilder);
-			throw new TestingUtilsException(message.toString(), fnfe);
+			throw new TestConfigurationException(message.toString(), fnfe);
 		} catch (NoSuchAlgorithmException nsae) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"could not MD5 algorithim for checksum", nsae);
 		} catch (IOException ioe) {
 			StringBuilder message = new StringBuilder();
 			message.append("io exception generating checksum for file:");
 			message.append(pathBuilder);
-			throw new TestingUtilsException(message.toString(), ioe);
+			throw new TestConfigurationException(message.toString(), ioe);
 		} finally {
 			try {
 				fis.close();
@@ -198,16 +198,16 @@ public class ScratchFileUtils {
 	 *            <code>String</code> with absolute local file path under
 	 *            scratch (no leading '/')
 	 * @return <code>long</code> with the file's checksum value
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public long computeFileCheckSumViaAbsolutePath(
-			final String absolutePathToLocalFile) throws TestingUtilsException {
+			final String absolutePathToLocalFile) throws TestConfigurationException {
 
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
 		} catch (FileNotFoundException e1) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"error computing checksum, file not found:"
 							+ absolutePathToLocalFile, e1);
 
@@ -218,7 +218,7 @@ public class ScratchFileUtils {
 			while (in.read() != -1) {
 			}
 		} catch (IOException e) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"error computing checksum for file:"
 							+ absolutePathToLocalFile, e);
 		} finally {
@@ -234,12 +234,12 @@ public class ScratchFileUtils {
 	}
 
 	private void checkTrailingSlash(final String path)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		String trimmedPath = path.trim();
 		String lastChar = trimmedPath.substring(trimmedPath.length() - 1);
 		if (lastChar.equals("/") || lastChar.equals("\\")) {
 		} else {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"please set the test.data.directory property in testing.properties to have a trailing / char ");
 		}
 	}

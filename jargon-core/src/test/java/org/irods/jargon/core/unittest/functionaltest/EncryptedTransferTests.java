@@ -20,7 +20,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.testutils.IRODSTestAssertionException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.TestingUtilsException;
+import org.irods.jargon.testutils.TestConfigurationException;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -84,7 +84,7 @@ public class EncryptedTransferTests {
 
 	@Test
 	public void testParallelTransferWithAesEncryptionSet()
-			throws JargonException, TestingUtilsException,
+			throws JargonException, TestConfigurationException,
 			IRODSTestAssertionException {
 
 		/*
@@ -136,7 +136,7 @@ public class EncryptedTransferTests {
 
 	@Test
 	public void testParallelTransferRoundTripWithAesEncryptionSet()
-			throws JargonException, TestingUtilsException,
+			throws JargonException, TestConfigurationException,
 			IRODSTestAssertionException {
 
 		/*
@@ -206,7 +206,7 @@ public class EncryptedTransferTests {
 	@Ignore
 	// localized test will save for now
 	public void testParallelTransferWithAesEncryptionSetAllAs()
-			throws JargonException, TestingUtilsException,
+			throws JargonException, TestConfigurationException,
 			IRODSTestAssertionException {
 
 		/*
@@ -250,12 +250,12 @@ public class EncryptedTransferTests {
 	 * Test for https://github.com/DICE-UNC/jargon/issues/228
 	 * 
 	 * @throws JargonException
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws IRODSTestAssertionException
 	 */
 	@Test
 	public void testParallelTransferSetNoNegotiationBug228()
-			throws JargonException, TestingUtilsException,
+			throws JargonException, TestConfigurationException,
 			IRODSTestAssertionException {
 
 		/*
@@ -324,7 +324,7 @@ public class EncryptedTransferTests {
 
 	@Test
 	public void testNormalTransferWithAesEncryptionSet()
-			throws JargonException, TestingUtilsException,
+			throws JargonException, TestConfigurationException,
 			IRODSTestAssertionException {
 
 		/*

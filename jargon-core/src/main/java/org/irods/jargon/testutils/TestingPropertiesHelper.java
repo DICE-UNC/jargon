@@ -73,14 +73,14 @@ public class TestingPropertiesHelper {
 	 * @param testingProperties
 	 * @param key
 	 * @return
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public int getPropertyValueAsInt(final Properties testingProperties,
-			final String key) throws TestingUtilsException {
+			final String key) throws TestConfigurationException {
 		String propVal = (String) testingProperties.get(key);
 
 		if (propVal == null || propVal.length() == 0) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"missing or invalid value in testing.properties");
 		}
 
@@ -89,7 +89,7 @@ public class TestingPropertiesHelper {
 		try {
 			retVal = Integer.parseInt(propVal);
 		} catch (NumberFormatException nfe) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"port is in valid format to convert to int:" + propVal, nfe);
 		}
 
@@ -101,10 +101,10 @@ public class TestingPropertiesHelper {
 	 *
 	 * @param testingProperties
 	 * @return
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public int getPortAsInt(final Properties testingProperties)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		return getPropertyValueAsInt(testingProperties,
 				TestingPropertiesHelper.IRODS_PORT_KEY);
 	}
@@ -114,9 +114,9 @@ public class TestingPropertiesHelper {
 	 * testing.properties file on the code path
 	 *
 	 * @return <code>Properties</code> class with the test values
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
-	public Properties getTestProperties() throws TestingUtilsException {
+	public Properties getTestProperties() throws TestConfigurationException {
 		ClassLoader loader = this.getClass().getClassLoader();
 		InputStream in = loader.getResourceAsStream("testing.properties");
 		Properties properties = new Properties();
@@ -124,7 +124,7 @@ public class TestingPropertiesHelper {
 		try {
 			properties.load(in);
 		} catch (IOException ioe) {
-			throw new TestingUtilsException("error loading test properties",
+			throw new TestConfigurationException("error loading test properties",
 					ioe);
 		} finally {
 			try {
@@ -701,16 +701,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -738,16 +738,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromTestPropertiesForRods(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -775,16 +775,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -813,16 +813,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneHomeDirTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -849,16 +849,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -885,16 +885,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromPamTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
@@ -1204,16 +1204,16 @@ public class TestingPropertiesHelper {
 	 *            desired path underneath the IRODS scratch directory
 	 * @return <code>String</code> with trailing '/' that gives the absolute
 	 *         path for an IRODS collection
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws URISyntaxException
 	 */
 	public String buildIRODSCollectionAbsolutePathFromFederatedZoneWriteTestProperties(
 			final Properties testingProperties,
 			final String collectionPathBelowScratch)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		if (testingProperties.get(IRODS_SCRATCH_DIR_KEY) == null) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"scratch path not provided in testing.properties");
 		}
 
