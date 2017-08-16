@@ -26,15 +26,15 @@ public class IRODSQueryResultSet extends AbstractIRODSQueryResultSet {
 	 *            {@link TranslatedIRODSGenQuery} that had been sent to get
 	 *            these results.
 	 * @param results
-	 *            <code>List</code> of {@link IRODSQueryResultRow} with the raw
+	 *            {@code List} of {@link IRODSQueryResultRow} with the raw
 	 *            results.
 	 * @param continuationIndex
-	 *            <code>int</code> that indicates the continuation sent by
+	 *            {@code int} that indicates the continuation sent by
 	 *            iRODS. This indicates more data available, and the
 	 *            continuation index will be sent with the request to get more
 	 *            results.
 	 * @param totalRecords
-	 *            <code>int</code> with the total records, corresponding to
+	 *            {@code int} with the total records, corresponding to
 	 *            totalRowCount in the genQueryOut_t structure
 	 * @return {@link IRODSQueryResultSet}
 	 * @throws JargonException

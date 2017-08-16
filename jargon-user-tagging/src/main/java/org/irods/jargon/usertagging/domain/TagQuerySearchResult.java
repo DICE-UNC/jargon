@@ -25,12 +25,12 @@ public class TagQuerySearchResult {
 	 * Static initializer.
 	 * 
 	 * @param searchTags
-	 *            <code>String</code> with the free tags used to search.
+	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
-	 *            <code>List</code> of
-	 *            <code>CollectionAndDataObjectListingEntry</code> that has the
+	 *            {@code List} of
+	 *            {@code CollectionAndDataObjectListingEntry} that has the
 	 *            query results.
-	 * @return instance of <code>TagQuerySearchResult</code>
+	 * @return instance of {@code TagQuerySearchResult}
 	 * @throws JargonException
 	 */
 	public static TagQuerySearchResult instance(final String searchTags,
@@ -43,10 +43,10 @@ public class TagQuerySearchResult {
 	 * Private constructor.
 	 * 
 	 * @param searchTags
-	 *            <code>String</code> with the free tags used to search.
+	 *            {@code String} with the free tags used to search.
 	 * @param queryResultEntries
-	 *            <code>List</code> of
-	 *            <code>CollectionAndDataObjectListingEntry</code> that has the
+	 *            {@code List} of
+	 *            {@code CollectionAndDataObjectListingEntry} that has the
 	 *            query results.
 	 * @throws JargonException
 	 */
@@ -72,7 +72,7 @@ public class TagQuerySearchResult {
 	/**
 	 * Get the tags used to generate the search.
 	 * 
-	 * @return <code>String</code> with the free-form set of tags used to search
+	 * @return {@code String} with the free-form set of tags used to search
 	 */
 	public String getSearchTags() {
 		return searchTags;
@@ -81,8 +81,8 @@ public class TagQuerySearchResult {
 	/**
 	 * Get the objects that are in response to the query.
 	 * 
-	 * @return <code>List</code> of
-	 *         <code>CollectionAndDataObjectListingEntry</code>
+	 * @return {@code List} of
+	 *         {@code CollectionAndDataObjectListingEntry}
 	 */
 	public List<CollectionAndDataObjectListingEntry> getQueryResultEntries() {
 		return queryResultEntries;

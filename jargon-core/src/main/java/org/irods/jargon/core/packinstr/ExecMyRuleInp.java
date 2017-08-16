@@ -58,13 +58,13 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
 	 * @param host
-	 *            <code>String</code> with the host name. Leave as blank if this
+	 *            {@code String} with the host name. Leave as blank if this
 	 *            is not a remote rule
 	 * @param port
-	 *            <code>int</code> giving the port of the remote host. Set to 0
+	 *            {@code int} giving the port of the remote host. Set to 0
 	 *            if unused
 	 * @param zone
-	 *            <code>String</code> giving the zone the rule should execute
+	 *            {@code String} giving the zone the rule should execute
 	 *            on.
 	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException

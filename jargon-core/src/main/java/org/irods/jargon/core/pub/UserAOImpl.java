@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Class to access underlying user information in IRODS.
- * <p/>
+ * <p>
  * Note that, currently, user DN information requires an additional GenQuery
  * call per retrieved user, so this is off by default for list methods, and on
  * by default when retrieving an individual user. There is a method to retrieve

@@ -30,10 +30,10 @@ public class IRODSQueryResultRow {
 	 * Build a result row from a column of results produced by an IRODS GenQuery
 	 *
 	 * @param queryResultColumns
-	 *            <code>List</code> of query result columns
+	 *            {@code List} of query result columns
 	 * @param columnNames
-	 *            <code>List<String></code> containing the column names.
-	 * @return <code>IRODSQueryResultRow</code> with the data for this row.
+	 *            {@code List<String>} containing the column names.
+	 * @return {@code IRODSQueryResultRow} with the data for this row.
 	 * @throws JargonException
 	 */
 	public static IRODSQueryResultRow instance(
@@ -49,14 +49,14 @@ public class IRODSQueryResultRow {
 	 * record to assist in re-query operations
 	 *
 	 * @param queryResultColumns
-	 *            <code>List<String</code> with the values for each column of
+	 *            {@code List<String} with the values for each column of
 	 *            the query
 	 * @param columnNames
-	 *            <code>List<String</code> with the values for each column name
+	 *            {@code List<String} with the values for each column name
 	 * @param recordCount
-	 *            <code>int</code> with the index of the current record
+	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            {@code boolean} of {@code true} if there are more
 	 *            records to page
 	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
@@ -75,17 +75,17 @@ public class IRODSQueryResultRow {
 	 * record to assist in re-query operations
 	 *
 	 * @param queryResultColumns
-	 *            <code>List<String</code> with the values for each column of
+	 *            {@code List<String} with the values for each column of
 	 *            the query
 	 * @param columnNames
-	 *            <code>List<String</code> with the values for each column name
+	 *            {@code List<String} with the values for each column name
 	 * @param recordCount
-	 *            <code>int</code> with the index of the current record
+	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            {@code boolean} of {@code true} if there are more
 	 *            records to page
 	 * @param totalRecords
-	 *            <code>int</code> with the total records that will be returned
+	 *            {@code int} with the total records that will be returned
 	 * @return {@link IRODSQueryResultRow}
 	 * @throws JargonException
 	 */
@@ -102,14 +102,14 @@ public class IRODSQueryResultRow {
 	 * Private constructor
 	 *
 	 * @param queryResultColumns
-	 *            <code>List<String</code> with the values for each column of
+	 *            {@code List<String} with the values for each column of
 	 *            the query
 	 * @param translatedIRODSQuery
 	 *            {@link TranslatedIRODSQuery} that produced this result
 	 * @param recordCount
-	 *            <code>int</code> with the index of the current record
+	 *            {@code int} with the index of the current record
 	 * @param lastResult
-	 *            <code>boolean</code> of <code>true</code> if there are more
+	 *            {@code boolean} of {@code true} if there are more
 	 *            records to page
 	 * @throws JargonException
 	 */
@@ -136,8 +136,8 @@ public class IRODSQueryResultRow {
 	 * Given a columnNumber, return the value of the column in the result set.
 	 *
 	 * @param columnNumber
-	 *            <code>int</code> with the location of the desired field.
-	 * @return <code>String</code> containing the value of the column. It is up
+	 *            {@code int} with the location of the desired field.
+	 * @return {@code String} containing the value of the column. It is up
 	 *         to the caller to cast to the appropriate type.
 	 * @throws JargonException
 	 *             Indicates that the column could not be located in the
@@ -154,9 +154,9 @@ public class IRODSQueryResultRow {
 	 * Given a columnName, return the value of the column in the result set.
 	 *
 	 * @param columnName
-	 *            <code>String</code> with the name of the desired field. The
+	 *            {@code String} with the name of the desired field. The
 	 *            search is case-insensitive.
-	 * @return <code>String</code> containing the value of the column. It is up
+	 * @return {@code String} containing the value of the column. It is up
 	 *         to the caller to cast to the appropriate type.
 	 * @throws JargonException
 	 *             Indicates that the column could not be located in the
@@ -179,11 +179,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * Get the given column as a {@code Date}, or as {@code null}
 	 *
 	 * @param column
-	 *            <code>int</code> as column position
-	 * @return <code>Data</code> {@link Date} or <code>null</code>
+	 *            {@code int} as column position
+	 * @return {@code Data} {@link Date} or {@code null}
 	 * @throws JargonException
 	 */
 	public Date getColumnAsDateOrNull(final int column) throws JargonException {
@@ -191,11 +191,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * Get the given column as a {@code Date}, or as {@code null}
 	 *
 	 * @param columnName
-	 *            <code>String</code> as column name
-	 * @return <code>Data</code> {@link Date} or <code>null</code>
+	 *            {@code String} as column name
+	 * @return {@code Data} {@link Date} or {@code null}
 	 * @throws JargonException
 	 */
 	public Date getColumnAsDateOrNull(final String columnName)
@@ -205,11 +205,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>int</code>, or as <code>0</code>
+	 * Get the given column as a {@code int}, or as {@code 0}
 	 *
 	 * @param column
-	 *            <code>int</code> as column position
-	 * @return <code>int</code> or 0 if null
+	 *            {@code int} as column position
+	 * @return {@code int} or 0 if null
 	 * @throws JargonException
 	 */
 	public int getColumnAsIntOrZero(final int column) throws JargonException {
@@ -218,11 +218,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>Date</code>, or as <code>null</code>
+	 * Get the given column as a {@code Date}, or as {@code null}
 	 *
 	 * @param columnName
-	 *            <code>String</code> as column name
-	 * @return <code>int</code> or 0 if null
+	 *            {@code String} as column name
+	 * @return {@code int} or 0 if null
 	 * @throws JargonException
 	 */
 	public int getColumnAsIntOrZero(final String columnName)
@@ -232,11 +232,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>long</code>, or as <code>0</code>
+	 * Get the given column as a {@code long}, or as {@code 0}
 	 *
 	 * @param column
-	 *            <code>int</code> as column position
-	 * @return <code>long</code> or 0 if null
+	 *            {@code int} as column position
+	 * @return {@code long} or 0 if null
 	 * @throws JargonException
 	 */
 	public long getColumnAsLongOrZero(final int column) throws JargonException {
@@ -245,11 +245,11 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Get the given column as a <code>long</code>, or as <code>null</code>
+	 * Get the given column as a {@code long}, or as {@code null}
 	 *
 	 * @param columnName
-	 *            <code>String</code> as column name
-	 * @return <code>long</code> or 0 if null
+	 *            {@code String} as column name
+	 * @return {@code long} or 0 if null
 	 * @throws JargonException
 	 */
 	public long getColumnAsLongOrZero(final String columnName)
@@ -263,7 +263,7 @@ public class IRODSQueryResultRow {
 	 * The match is case-insensitive;
 	 *
 	 * @param columnName
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 */
 	protected int getColumnNamePosition(final String columnName) {
 		int colPos = -1;
@@ -280,10 +280,10 @@ public class IRODSQueryResultRow {
 	}
 
 	/**
-	 * Handy method to just get the results as a <code>List</code> for use in
+	 * Handy method to just get the results as a {@code List} for use in
 	 * forEach and other constructs
 	 *
-	 * @return <code>List<String></code> containing the columns for this row.
+	 * @return {@code List<String>} containing the columns for this row.
 	 */
 	public List<String> getColumnsAsList() {
 		return queryResultColumns;

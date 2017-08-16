@@ -25,12 +25,12 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 * Instance method creates a PAM auth request given a user name and password
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name for PAM
+	 *            {@code String} with the user name for PAM
 	 * @param password
-	 *            <code>String</code> with the PAM password
+	 *            {@code String} with the PAM password
 	 * @param pamTimeToLive
-	 *            <code>int</code> with the pam time to live in seconds
-	 * @return <code>PamAuthRequestInp</code>
+	 *            {@code int} with the pam time to live in seconds
+	 * @return {@code PamAuthRequestInp}
 	 */
 	public static PamAuthRequestInp instance(final String userName,
 			final String password, final int pamTimeToLive) {
@@ -41,11 +41,11 @@ public class PamAuthRequestInp extends AbstractIRODSPackingInstruction {
 	 * Private constructor (use instance method)
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name for PAM
+	 *            {@code String} with the user name for PAM
 	 * @param password
-	 *            <code>String</code> with the PAM password
+	 *            {@code String} with the PAM password
 	 * @param pamTimeToLive
-	 *            <code>int</code> with the pam time to live in seconds
+	 *            {@code int} with the pam time to live in seconds
 	 */
 	private PamAuthRequestInp(final String userName, final String password,
 			final int pamTimeToLive) {

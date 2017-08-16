@@ -38,7 +38,7 @@ public class MiscIRODSUtils {
 	 * Given an iRODS path to a file, and an iRODS account, get a default
 	 * storage resource name from the iRODS account if that path is in the same
 	 * zone as an iRODS account, otherwise, return an empty resource.
-	 * <p/>
+	 * <p>
 	 * This is used in places in Jargon so that a default storage resource in an
 	 * iRODS account is not propagated to the wrong zone.
 	 *
@@ -73,15 +73,15 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Determine if the given iRODS absolute path is in the zone of the given
-	 * <code>IRODSAccount</code>. This is done by inspecting the path for first
+	 * {@code IRODSAccount}. This is done by inspecting the path for first
 	 * zone part, and doing a string comparison with the zone in the
-	 * <code>IRODSAccount</code>.
+	 * {@code IRODSAccount}.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path.
+	 *            {@code String} with an iRODS absolute path.
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the zone in question.
-	 * @return <code>true</code> if the file path is in the given zone. This
+	 * @return {@code true} if the file path is in the given zone. This
 	 *         does not determine if the path actually exists.
 	 */
 	public static boolean isFileInThisZone(final String irodsAbsolutePath,
@@ -109,9 +109,9 @@ public class MiscIRODSUtils {
 	 * Get the zone name from the provided iRODS absolute path
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS file or
+	 *            {@code String} with the absolute path to an iRODS file or
 	 *            collection
-	 * @return <code>String</code> with the zone name, or blank if the zone name
+	 * @return {@code String} with the zone name, or blank if the zone name
 	 *         is not in the path (e.g. if the path is just '/')
 	 */
 	public static String getZoneInPath(final String irodsAbsolutePath) {
@@ -154,8 +154,8 @@ public class MiscIRODSUtils {
 	 * directories.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path.
-	 * @return <code>List<String></code> with the component path elements (the /
+	 *            {@code String} with an iRODS absolute path.
+	 * @return {@code List<String>} with the component path elements (the /
 	 *         path separator will be removed).
 	 */
 	public static List<String> breakIRODSPathIntoComponents(
@@ -173,17 +173,17 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a list of path components, as produced by the
-	 * <code>breakIRODSPathIntoComponents</code>, re-create an iRODS absolute
+	 * {@code breakIRODSPathIntoComponents}, re-create an iRODS absolute
 	 * path by simply stringing together the path components with the iRODS '/'
 	 * delimiter.
 	 *
 	 * @param pathComponents
-	 *            <code>List<String></code> with the iRODS path components.
+	 *            {@code List<String>} with the iRODS path components.
 	 * @param lastIndex
-	 *            <code>int</code>, set to -1 if there is no limit, that
+	 *            {@code int}, set to -1 if there is no limit, that
 	 *            indicates the index of the last component to string together
 	 *            into the path
-	 * @return <code>String</code> with an iRODS absolute path built from the
+	 * @return {@code String} with an iRODS absolute path built from the
 	 *         given components.
 	 */
 	public static String buildPathFromComponentsUpToIndex(
@@ -260,12 +260,12 @@ public class MiscIRODSUtils {
 	 * there's a complementary method to just get the zone part.
 	 *
 	 * @param userName
-	 *            <code>String</code> with a user name that can be just a name,
+	 *            {@code String} with a user name that can be just a name,
 	 *            or a user name in user#zone format.
-	 *            <p/>
+	 *            <p>
 	 *            This will give you back the user name in any case, and will
 	 *            return blank if given blank or null.
-	 * @return <code>String</code> with the userName, with any zone info trimmed
+	 * @return {@code String} with the userName, with any zone info trimmed
 	 */
 	public static String getUserInUserName(final String userName) {
 
@@ -287,12 +287,12 @@ public class MiscIRODSUtils {
 	 * there's a complementary method to just get the user part.
 	 *
 	 * @param userName
-	 *            <code>String</code> with a user name that can be just a name,
+	 *            {@code String} with a user name that can be just a name,
 	 *            or a user name in user#zone format.
-	 *            <p/>
+	 *            <p>
 	 *            This will give you back the zone name in any case, and will
 	 *            return blank if given blank or null.
-	 * @return <code>String</code> with the zone, with any user info trimmed
+	 * @return {@code String} with the zone, with any user info trimmed
 	 */
 	public static String getZoneInUserName(final String userName) {
 
@@ -329,9 +329,9 @@ public class MiscIRODSUtils {
 	 * Create an MD5 Hash of a string value
 	 *
 	 * @param input
-	 *            <code>String</code> with the value to be converted to an MD5
+	 *            {@code String} with the value to be converted to an MD5
 	 *            Hash
-	 * @return <code>String<code> which is the MD5 has of the string.
+	 * @return {@code String} which is the MD5 has of the string.
 	 */
 
 	public static String computeMD5HashOfAStringValue(final String input)
@@ -355,11 +355,11 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Compute a home directory path in /zone/home/username format given an
-	 * <code>IRODSAccount</code>
+	 * {@code IRODSAccount}
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
-	 * @return <code>String</code> with a computed home directory path
+	 * @return {@code String} with a computed home directory path
 	 */
 	public static String computeHomeDirectoryForIRODSAccount(
 			final IRODSAccount irodsAccount) {
@@ -382,8 +382,8 @@ public class MiscIRODSUtils {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @param zone
-	 *            <code>String</code> federated zone name
-	 * @return <code>String</code> in /federatedZone/home/user#homeZone format
+	 *            {@code String} federated zone name
+	 * @return {@code String} in /federatedZone/home/user#homeZone format
 	 */
 	public static String computeHomeDirectoryForIRODSAccountInFederatedZone(
 			final IRODSAccount irodsAccount, final String zone) {
@@ -403,15 +403,15 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Compute a home directory path in /zone/home/username format given an
-	 * <code>IRODSAccount</code> that describes the zone, and a user name for
+	 * {@code IRODSAccount} that describes the zone, and a user name for
 	 * the target user.
-	 * <p/>
+	 * <p>
 	 * This variant is meant to allow the computation of a home directory for an
 	 * arbitrary user based on the zone I'm logged into.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
-	 * @return <code>String</code> with a computed home directory path
+	 * @return {@code String} with a computed home directory path
 	 */
 	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
 			final IRODSAccount irodsAccount, final String irodsUserName) {
@@ -440,7 +440,7 @@ public class MiscIRODSUtils {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the logged in user (probably
 	 *            anonymous)
-	 * @return <code>String</code> in '/zone/home/public' format
+	 * @return {@code String} in '/zone/home/public' format
 	 */
 	public static String computePublicDirectory(final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
@@ -457,7 +457,7 @@ public class MiscIRODSUtils {
 	/**
 	 * Utility method to get the last part of the given absolute path
 	 *
-	 * @return <code>String</code> with the last component of the absolute path
+	 * @return {@code String} with the last component of the absolute path
 	 */
 	public static String getLastPathComponentForGivenAbsolutePath(
 			final String collectionPath) {
@@ -504,10 +504,10 @@ public class MiscIRODSUtils {
 	 * collection path.
 	 *
 	 * @param collectionPath
-	 *            <code>String</code> with path of the parent collection
+	 *            {@code String} with path of the parent collection
 	 * @param dataName
-	 *            <code>String</code> with file or collection child name
-	 * @return <code>String</code> with a properly concatenated file path
+	 *            {@code String} with file or collection child name
+	 * @return {@code String} with a properly concatenated file path
 	 */
 	public static String buildAbsolutePathFromCollectionParentAndFileName(
 			final String collectionPath, final String dataName) {
@@ -543,7 +543,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} with information on the given iRODS object
-	 * @return <code>String</code> with the canonical iRODS path
+	 * @return {@code String} with the canonical iRODS path
 	 */
 	public static String determineAbsolutePathBasedOnCollTypeInObjectStat(
 			final ObjStat objStat) {
@@ -568,7 +568,7 @@ public class MiscIRODSUtils {
 	 * Given an absolue path, split it into a parent name and a child name
 	 *
 	 * @param filePath
-	 *            <code>String</code> with an absolute iRODS path to a
+	 *            {@code String} with an absolute iRODS path to a
 	 *            collection or data object
 	 * @return {@link CollectionAndPath} value object
 	 */
@@ -606,12 +606,12 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Get a <code>List</code> based on the values of the provided enum. Handy
+	 * Get a {@code List} based on the values of the provided enum. Handy
 	 * for creating lists in interfaces and for other purposes
 	 *
 	 * @param enumClass
-	 *            java <code>enum</code>
-	 * @return <code>List<String></code> of enum values
+	 *            java {@code enum}
+	 * @return {@code List<String>} of enum values
 	 * @throws JargonException
 	 */
 	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(
@@ -635,10 +635,10 @@ public class MiscIRODSUtils {
 	 * Count occurrances of a character in a string
 	 *
 	 * @param stringToCountOccurrancesIn
-	 *            <code>String</code> to count occurrances in
+	 *            {@code String} to count occurrances in
 	 * @param characterToCount
-	 *            <code>char</code> whose occurrances will be counted
-	 * @return <code>int</code> with the count of the given character
+	 *            {@code char} whose occurrances will be counted
+	 * @return {@code int} with the count of the given character
 	 */
 	public static int countCharsInString(
 			final String stringToCountOccurrancesIn, final char characterToCount) {
@@ -661,10 +661,10 @@ public class MiscIRODSUtils {
 	 * Pad a given string to the right with spaces to a given length
 	 *
 	 * @param s
-	 *            <code>String</code> to pad
+	 *            {@code String} to pad
 	 * @param n
-	 *            <code>int</code> with the amount to pad
-	 * @return <code>String</code> padded to specification
+	 *            {@code int} with the amount to pad
+	 * @return {@code String} padded to specification
 	 */
 	public static String padRight(final String s, final int n) {
 		return String.format("%1$-" + n + "s", s);
@@ -674,10 +674,10 @@ public class MiscIRODSUtils {
 	 * Pad a given string to the left with spaces to a given length
 	 *
 	 * @param s
-	 *            <code>String</code> to pad
+	 *            {@code String} to pad
 	 * @param n
-	 *            <code>int</code> with the amount to pad
-	 * @return <code>String</code> padded to specification
+	 *            {@code int} with the amount to pad
+	 * @return {@code String} padded to specification
 	 */
 	public static String padLeft(final String s, final int n) {
 		return String.format("%1$" + n + "s", s);
@@ -688,8 +688,8 @@ public class MiscIRODSUtils {
 	 * a trailing slash
 	 *
 	 * @param path
-	 *            <code>String</code> with an iRODS path to check
-	 * @return <code>String</code> with the path, possibly with the trailing
+	 *            {@code String} with an iRODS path to check
+	 * @return {@code String} with the path, possibly with the trailing
 	 *         slashes truncated
 	 * @throws PathTooLongException
 	 *             thrown if the path is too long
@@ -725,7 +725,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAcocunt} for the given user
-	 * @return <code>String</code> with the iRODS user home directory path
+	 * @return {@code String} with the iRODS user home directory path
 	 */
 	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(
 			final IRODSAccount irodsAccount) {
@@ -746,9 +746,9 @@ public class MiscIRODSUtils {
 	 * Checks the given parent and child path for a length violation
 	 *
 	 * @param parentPath
-	 *            <code>String</code> with a parent path
+	 *            {@code String} with a parent path
 	 * @param childPath
-	 *            <code>String</code> with a child path
+	 *            {@code String} with a child path
 	 * @throws PathTooLongException
 	 *             if the combined path is too long
 	 */
@@ -814,13 +814,13 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Handy method to lop off the first part of a path based on a prefix.
-	 * <p/>
+	 * <p>
 	 * Does a verification if the first part of the path is not the prefix
 	 *
 	 * @param prefix
-	 *            <code>String</code> with the prefix to remove
+	 *            {@code String} with the prefix to remove
 	 * @param path
-	 *            <code>String</code> with the path for which the prefix is
+	 *            {@code String} with the path for which the prefix is
 	 *            trimmed
 	 * @return
 	 * @throws JargonException

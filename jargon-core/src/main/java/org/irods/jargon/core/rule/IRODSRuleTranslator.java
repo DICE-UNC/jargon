@@ -35,7 +35,7 @@ public class IRODSRuleTranslator {
 	 * to iRODS.
 	 *
 	 * @param ruleAsPlainText
-	 *            <code>String</code> with the rule body and input and output
+	 *            {@code String} with the rule body and input and output
 	 *            parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
@@ -54,7 +54,7 @@ public class IRODSRuleTranslator {
 	 * to iRODS.
 	 *
 	 * @param ruleAsPlainText
-	 *            <code>String</code> with the rule body and input and output
+	 *            {@code String} with the rule body and input and output
 	 *            parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
@@ -157,13 +157,13 @@ public class IRODSRuleTranslator {
 	 * body), and a set of overrides, arrive at the combined set.
 	 *
 	 * @param overrideInputParameters
-	 *            <code>List</code> of {@link IRODSRuleParameter} which contains
+	 *            {@code List} of {@link IRODSRuleParameter} which contains
 	 *            the supplied set of input parameters that should override
 	 *            those derived from the rule body.
 	 * @param inputParameters
-	 *            <code>List</code> of {@link IRODSRuleParameter} which contains
+	 *            {@code List} of {@link IRODSRuleParameter} which contains
 	 *            the input parameters as derived from the iRODS rule body
-	 * @return <code>List</code> of {@link IRODSRuleParameter} with the collated
+	 * @return {@code List} of {@link IRODSRuleParameter} with the collated
 	 *         rule input parameters, including overrides
 	 */
 	protected List<IRODSRuleParameter> collateOverridesIntoInputParameters(
@@ -299,7 +299,7 @@ public class IRODSRuleTranslator {
 
 	/**
 	 * Break the line containing rule output parameters into a
-	 * <code>List<IRODSRuleParameter></code>
+	 * {@code List<IRODSRuleParameter>}
 	 *
 	 * @param tokens
 	 * @return
@@ -371,7 +371,7 @@ public class IRODSRuleTranslator {
 
 	/**
 	 * Break the line containing rule input parameters into a
-	 * <code>List<IRODSRuleParameter></code>
+	 * {@code List<IRODSRuleParameter>}
 	 *
 	 * @param inputAttributesLine
 	 * @return
@@ -496,8 +496,8 @@ public class IRODSRuleTranslator {
 	 * given rule uses the 'new' rule syntax.
 	 *
 	 * @param ruleText
-	 *            <code>String</code> with the rule body
-	 * @return <code>boolean</code> that will be <code>true</code> if the rule
+	 *            {@code String} with the rule body
+	 * @return {@code boolean} that will be {@code true} if the rule
 	 *         is using the new syntax
 	 */
 	public static final boolean isUsingNewRuleSyntax(final String ruleText) {

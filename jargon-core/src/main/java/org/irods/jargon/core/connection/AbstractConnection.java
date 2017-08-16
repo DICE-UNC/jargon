@@ -12,13 +12,14 @@ import java.nio.channels.ClosedChannelException;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.Host;
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
  * Abstract connection to iRODS, representing the network layer of communication
  * between Jargon and iRODS.
- * <p/>
+ * <p>
  * This abstraction will eventually be able to handle TCP as well as NIO, with
  * indicators to determine which techniques are available depending on the lower
  * level implementation. This will evolve over time but will not change the
@@ -70,7 +71,7 @@ public abstract class AbstractConnection {
 	/**
 	 * @return the operativeClientServerNegotiationPolicy, meaning it has
 	 *         consulted the default jargon properties as well as any override
-	 *         in the <code>IRODSAccount</code>
+	 *         in the {@code IRODSAccount}
 	 */
 	ClientServerNegotiationPolicy getOperativeClientServerNegotiationPolicy() {
 		return operativeClientServerNegotiationPolicy;
@@ -82,10 +83,10 @@ public abstract class AbstractConnection {
 	 * Socket opened to iRODS, and you want to wrap that socket with the low
 	 * level iRODS semantics. An example use case is when you need to to PAM
 	 * authentication and wrap an existing iRODS connection with an SSL socket.
-	 * <p/>
+	 * <p>
 	 * This may be updated a bit later when we implement SSL negotiation for
 	 * iRODS 4+.
-	 * <p/>
+	 * <p>
 	 * Note that this method does not set up the socket streams, this is the
 	 * responsibility of the subclass. This is all kind of a mess with the
 	 * introduction of negotiation and seems a bit too involved for its own
@@ -256,9 +257,9 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Do an initial (first) connection to iRODS based on account and
-	 * properties. This is differentiated from the <code>reconnect()</code>
+	 * properties. This is differentiated from the {@code reconnect()}
 	 * method which is used to periodically renew a socket
-	 * <p/>
+	 * <p>
 	 * At the successful completion of this method, the networking is created,
 	 * though the handshake and authentication steps remain
 	 *
@@ -403,7 +404,27 @@ public abstract class AbstractConnection {
 		byte bytes[] = new byte[INT_LENGTH];
 
 		Host.copyInt(value, bytes);
+		log.debug("send bytes:{}", LocalFileUtils.digestByteArrayToString(bytes));
 		send(bytes);
+	}
+
+	/**
+	 * Writes an int to the output stream as four bytes, network order (high
+	 * byte first). This will optionally add a flush()
+	 *
+	 * @param value
+	 *            value to be sent
+	 * @param flush
+	 *            {@code boolean} that will add a flush() if
+	 *            {@code true}
+	 * @throws IOException
+	 *             If an IOException occurs
+	 */
+	protected void sendInNetworkOrder(final int value, boolean flush) throws IOException {
+		sendInNetworkOrder(value);
+		if (flush) {
+			flush();
+		}
 	}
 
 	/**
@@ -411,13 +432,13 @@ public abstract class AbstractConnection {
 	 * agent
 	 *
 	 * @param source
-	 *            <code>InputStream</code> to the data to be written. This
+	 *            {@code InputStream} to the data to be written. This
 	 *            stream will have been buffered by the caller, no buffering is
 	 *            done here.
 	 * @param length
-	 *            <code>long</code> with the length of data to send
+	 *            {@code long} with the length of data to send
 	 * @param connectionProgressStatusListener
-	 *            {link ConnectionProgressStatusListener} or <code>null</code>
+	 *            {link ConnectionProgressStatusListener} or {@code null}
 	 *            if no listener desired. This listener can then receive
 	 *            call-backs of instantaneous byte counts.
 	 * @throws IOException
@@ -517,7 +538,7 @@ public abstract class AbstractConnection {
 	 * Reads an int from the server
 	 *
 	 * @param value
-	 * @return <code>int</code>
+	 * @return {@code int}
 	 * @throws JargonException
 	 */
 	protected int read(final byte[] value) throws IOException {
@@ -535,18 +556,18 @@ public abstract class AbstractConnection {
 
 	/**
 	 * Read from the iRODS connection for a given length, and write what is read
-	 * from iRODS to the given <code>OutputStream</code>.
+	 * from iRODS to the given {@code OutputStream}.
 	 *
 	 * @param destination
-	 *            <code>OutputStream</code> to which data will be streamed from
+	 *            {@code OutputStream} to which data will be streamed from
 	 *            iRODS. Note that this method will wrap the output stream with
 	 *            a buffered stream for you.
 	 * @param length
-	 *            <code>long</code> with the length of data to be read from
+	 *            {@code long} with the length of data to be read from
 	 *            iRODS and pushed to the stream.
 	 * @param intraFileStatusListener
 	 *            {@link ConnectionProgressStatusListener} that will receive
-	 *            progress on the streaming, or <code>null</code> for no such
+	 *            progress on the streaming, or {@code null} for no such
 	 *            call-backs.
 	 */
 	public void read(final OutputStream destination, long length,
@@ -607,7 +628,7 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * Reads a byte array from the server. Blocks until <code>length</code>
+	 * Reads a byte array from the server. Blocks until {@code length}
 	 * number of bytes are read.
 	 *
 	 * @param length
@@ -760,8 +781,8 @@ public abstract class AbstractConnection {
 	 * Set the status to disconnected. This is only used in special
 	 * circumstances, such as when wrapping a socket in an SSL connection when
 	 * doing PAM authentication. These are special occasions where an
-	 * <code>IRODSConnection</code> is created outside of the normal factory.
-	 * <p/>
+	 * {@code IRODSConnection} is created outside of the normal factory.
+	 * <p>
 	 * For general usage, this method should not called.
 	 *
 	 * @param connected

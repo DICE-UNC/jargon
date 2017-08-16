@@ -7,7 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 
 /**
- * IRODS specific implementation of standard <code>java.io.FilenameFilter</code>
+ * IRODS specific implementation of standard {@code java.io.FilenameFilter}
  * . This default filter simply accepts all files.
  *
  * @author Mike Conway - DICE (www.irods.org)

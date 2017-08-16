@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
  * be used to define and manipulate mounted collections. Note that mounted
  * collections are then accessed using the normal iRODS operations found
  * elsewhere in the API (e.g. get, put list operations)
- * <p/>
+ * <p>
  * This access object implements various operations that are accomplished using
  * the imcoll icommand: https://www.irods.org/index.php/imcoll
- * <p/>
+ * <p>
  * See also: https://www.irods.org/index.php/Mounted_iRODS_Collection
  *
  * @author Mike Conway - DICE (www.irods.org)

@@ -1067,6 +1067,77 @@ public class IRODSFileImplTest {
 		boolean result = irodsFile.deleteWithForceOption();
 		Assert.assertTrue("did not get a true result from the file delete", result);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile.getAbsolutePath(),
+
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+	}
+
+	/**
+	 * See https://github.com/DICE-UNC/jargon/issues/216
+	 * 
+	 * @throws Exception
+	 */
+	@Ignore // FIXME: revisit before release
+	public final void testDeleteCollWithForceBug216() throws Exception {
+		String testCollectionName = "testDeleteCollWithForceBug216";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(absPath, "testdir", 3, 3, 1,
+				"testFile", ".txt", 4, 4, 1, 2);
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		File localFile = new File(absPath);
+
+		dataTransferOperationsAO.putOperation(localFile, targetIRODSColl, null, null);
+
+		boolean result = targetIRODSColl.deleteWithForceOption();
+		Assert.assertTrue("did not get a true result from the file delete", result);
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(targetIRODSColl.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+	}
+
+	/**
+	 * See https://github.com/DICE-UNC/jargon/issues/216
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testDeleteCollNoForceBug216() throws Exception {
+		String testCollectionName = "testDeleteCollNoForceBug216";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(absPath, "testdir", 3, 3, 1,
+				"testFile", ".txt", 4, 4, 1, 2);
+
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		File localFile = new File(absPath);
+
+		dataTransferOperationsAO.putOperation(localFile, targetIRODSColl, null, null);
+
+		boolean result = targetIRODSColl.delete();
+		Assert.assertTrue("did not get a true result from the file delete", result);
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(targetIRODSColl.getAbsolutePath(),
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 

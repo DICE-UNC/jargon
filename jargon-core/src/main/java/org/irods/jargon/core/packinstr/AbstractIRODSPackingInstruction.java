@@ -42,9 +42,9 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 * internally by many packing instructions.
 	 *
 	 * @param kvps
-	 *            <code>List<KeyValuePair></code> with the data to be formatted
+	 *            {@code List<KeyValuePair>} with the data to be formatted
 	 *            as key value pair tags.
-	 * @return <code>Tag</code> containing key value pairs.
+	 * @return {@code Tag} containing key value pairs.
 	 * @throws JargonException
 	 */
 	protected Tag createKeyValueTag(final List<KeyValuePair> kvps)
@@ -139,9 +139,9 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 * instructions.
 	 *
 	 * @param ivps
-	 *            <code>List<InxVal></code> of data to be formatted as InxVal
+	 *            {@code List<InxVal>} of data to be formatted as InxVal
 	 *            tags.
-	 * @return <code>Tag</code> with the InxVal formatted data.
+	 * @return {@code Tag} with the InxVal formatted data.
 	 * @throws JargonException
 	 */
 	protected Tag createInxValueTag(final List<InxVal> ivps)
@@ -207,7 +207,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	}
 
 	/**
-	 * Abstract method returns the <code>Tag</code> structure for the given
+	 * Abstract method returns the {@code Tag} structure for the given
 	 * packing instruction. Implemented by the specific subclass.
 	 *
 	 * @return {@link Tag} with the packing instruction as a nested array of tag

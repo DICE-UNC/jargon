@@ -30,7 +30,7 @@ public class StandardIRODSAuth extends AuthMechanism {
 	 *
 	 * @param irodsAccount
 	 * @param irodsCommands
-	 * @return <code>String</code> with the iRODS challenge value, which will be
+	 * @return {@code String} with the iRODS challenge value, which will be
 	 *         returned in the Auth response
 	 * @throws JargonException
 	 */

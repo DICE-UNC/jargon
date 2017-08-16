@@ -18,10 +18,10 @@ public interface QuotaAO extends IRODSAccessObject {
 	/**
 	 * List the quota for all users and groups by resource. This differs from
 	 * the global quota information returned from the
-	 * <code>listAllGlobalQuota()</code> method and may return multiple entries
+	 * {@code listAllGlobalQuota()} method and may return multiple entries
 	 * per user for each resource.
 	 *
-	 * @return <code>List</code> of {@link Quota} with information from the
+	 * @return {@code List} of {@link Quota} with information from the
 	 *         catalog. The list will be empty if no results found.
 	 * @throws JargonException
 	 */
@@ -30,9 +30,9 @@ public interface QuotaAO extends IRODSAccessObject {
 	/**
 	 * List the total or 'global' quota across resources for all users and
 	 * groups. This differs from the per-resource quota from the
-	 * <code>listAllQuota()</code> method
+	 * {@code listAllQuota()} method
 	 *
-	 * @return <code>List</code> of {@link Quota} with information from the
+	 * @return {@code List} of {@link Quota} with information from the
 	 *         catalog. The list will be empty if no results found.
 	 * @throws JargonException
 	 */
@@ -43,8 +43,8 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * rodsAdmin
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name
-	 * @return <code>List</code> of {@link Quota} data, which may have multiple
+	 *            {@code String} with the user name
+	 * @return {@code List} of {@link Quota} data, which may have multiple
 	 *         (per resource) quota values.
 	 * @throws JargonException
 	 */
@@ -55,9 +55,9 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * rodsadmin.
 	 *
 	 * @param userName
-	 *            <code>String</code> for which the quota will be set
+	 *            {@code String} for which the quota will be set
 	 * @param quotaValue
-	 *            <code>long</code> with the number of bytes total across
+	 *            {@code long} with the number of bytes total across
 	 *            resources in the zone.
 	 * @throws JargonException
 	 */
@@ -69,10 +69,10 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * rodsadmin
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> for the user group for which the quota
+	 *            {@code String} for the user group for which the quota
 	 *            will be set
 	 * @param quotaValue
-	 *            quotaValue <code>long</code> with the number of bytes total
+	 *            quotaValue {@code long} with the number of bytes total
 	 *            across resources in the zone.
 	 * @throws JargonException
 	 */
@@ -84,12 +84,12 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * rodsadmin
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name
+	 *            {@code String} with the user name
 	 * @param resourceName
-	 *            <code>String</code> with the resource name to which the quota
+	 *            {@code String} with the resource name to which the quota
 	 *            applies
 	 * @param quotaValue
-	 *            <code>long</code> with the number of bytes total for the
+	 *            {@code long} with the number of bytes total for the
 	 *            resource in this zone
 	 * @throws JargonException
 	 */
@@ -101,12 +101,12 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * rodsadmin.
 	 *
 	 * @param userGroupName
-	 *            <code>String</code> with the user group name
+	 *            {@code String} with the user group name
 	 * @param resourceName
-	 *            <code>String</code> with the resource name to which the quota
+	 *            {@code String} with the resource name to which the quota
 	 *            applies
 	 * @param quotaValue
-	 *            <code>long</code> with the number of bytes total for the
+	 *            {@code long} with the number of bytes total for the
 	 *            resource in this zone
 	 * @throws JargonException
 	 */
@@ -118,9 +118,9 @@ public interface QuotaAO extends IRODSAccessObject {
 	 * to be invoked by a rodsadmin.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name
+	 *            {@code String} with the user name
 	 * @return {@link Quota} with 'total' in the resourceName and a value for
-	 *         the total quota, or <code>null</code> if no such quota exists
+	 *         the total quota, or {@code null} if no such quota exists
 	 * @throws JargonException
 	 */
 	Quota getGlobalQuotaForAUser(String userName) throws JargonException;

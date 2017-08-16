@@ -13,7 +13,6 @@
 	<name>Jargon</name>
 	<description>Core Java API and related libraries for iRODS</description>
 	<url>https://github.com/DICE-UNC/jargon</url>
-
 	<issueManagement>
 		<system>gForge</system>
 		<url>https://code.renci.org/gf/project/jargon/tracker/</url>
@@ -40,6 +39,7 @@
 			</roles>
 		</developer>
 	</developers>
+
 	<reporting>
 		<plugins>
 			<plugin>

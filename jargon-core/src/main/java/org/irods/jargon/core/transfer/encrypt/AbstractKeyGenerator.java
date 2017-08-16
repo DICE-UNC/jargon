@@ -48,8 +48,8 @@ public abstract class AbstractKeyGenerator {
 
 	/**
 	 * Generate an {@link SecretKey} based on the pipeline configuration. Note
-	 * that this method should NOT update the <code>SecretKey</code> in the
-	 * <code>NegotiatedClientServerConfiguration</code>
+	 * that this method should NOT update the {@code SecretKey} in the
+	 * {@code NegotiatedClientServerConfiguration}
 	 *
 	 * @return {@link SecretKey} for the algo and settings in the pipeline and
 	 *         negotiated configuration

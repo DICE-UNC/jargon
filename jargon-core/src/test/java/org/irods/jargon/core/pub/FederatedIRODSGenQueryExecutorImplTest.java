@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * Testing for gen query across zones, requires a two-zone setup per the
  * fedTestSetup.txt file in the test-scripts directory.
- * <p/>
+ * <p>
  * If the testing property for federated zone testing is not configured, these
  * tests will be bypassed
  *

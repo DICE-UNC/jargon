@@ -33,26 +33,26 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * List all users.
 	 *
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.pub.domain.User}
 	 * @throws JargonException
 	 */
 	List<User> findAll() throws JargonException;
 
 	/**
-	 * Query users and return the <code>User</code> object with the given user
+	 * Query users and return the {@code User} object with the given user
 	 * name. Note that user names may be given in user#zone format, and that
 	 * federated user registered on the current zone will be returned.
-	 * <p/>
+	 * <p>
 	 * For example, if I have zone1 and zone2, and zone1 has registered
 	 * user1#zone2 as a user in zone1, then this method will get the information
 	 * that zone1 has on the user name user#zone2.
-	 * <p/>
+	 * <p>
 	 * This is distinct from going to zone2, and asking for information on the
 	 * user user1#zone2.
 	 *
 	 * @param name
-	 *            <code>String</code> with the name of the user to query.
+	 *            {@code String} with the name of the user to query.
 	 * @return {@link org.irods.jargon.core.pub.domain.User} that is the result
 	 *         of the query
 	 * @throws JargonException
@@ -66,7 +66,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * This will default to searching the current zone
 	 *
 	 * @param userId
-	 *            <code>String</code> with the unique database key for the user.
+	 *            {@code String} with the unique database key for the user.
 	 * @return {@link org.irods.jargon.core.pub.domain.User}
 	 * @throws JargonException
 	 * @throws DataNotFoundException
@@ -78,13 +78,13 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Query users by the unique id assigned by iRODS (database unique key) in a
 	 * zone.
-	 * <p/>
+	 * <p>
 	 * This will, if the given zone is not the same as the current zone,
 	 * initiate a cross-zone query and retrieve the information from the given
 	 * zone name.
 	 *
 	 * @param userId
-	 *            <code>String</code> with the unique database key for the user.
+	 *            {@code String} with the unique database key for the user.
 	 * @return {@link org.irods.jargon.core.pub.domain.User}
 	 * @throws JargonException
 	 * @throws DataNotFoundException
@@ -97,8 +97,8 @@ public interface UserAO extends IRODSAccessObject {
 	 * Query the AVU metadata associated with the given user by Id.
 	 *
 	 * @param userId
-	 *            <code>String</code> with the unique database key for the user.
-	 * @return <code>List</code> of
+	 *            {@code String} with the unique database key for the user.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.pub.domain.AvuData} with query
 	 *         results.
 	 * @throws JargonException
@@ -110,8 +110,8 @@ public interface UserAO extends IRODSAccessObject {
 	 * Query the AVU metadata associated with the given user by user name.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name for the user.
-	 * @return <code>List</code> of
+	 *            {@code String} with the user name for the user.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.pub.domain.AvuData} with query
 	 *         results.
 	 * @throws JargonException
@@ -123,7 +123,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * Remove the user from iRODS.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name to be removed.
+	 *            {@code String} with the iRODS user name to be removed.
 	 * @throws InvalidUserException
 	 *             if the user is not in iRODS
 	 * @throws JargonException
@@ -149,9 +149,9 @@ public interface UserAO extends IRODSAccessObject {
 	 * Select user objects given an arbitrary 'where' clause.
 	 *
 	 * @param whereStatement
-	 *            <code>String</code> containing iquest syntax for a where
-	 *            statement, does not include the actual <code>Where</code>
-	 * @return <code>List<User></code> containing users that match the given
+	 *            {@code String} containing iquest syntax for a where
+	 *            statement, does not include the actual {@code Where}
+	 * @return {@code List<User>} containing users that match the given
 	 *         query
 	 * @throws JargonException
 	 */
@@ -163,11 +163,11 @@ public interface UserAO extends IRODSAccessObject {
 	 * send the new password to iRODS.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the name of the user.
+	 *            {@code String} with the name of the user.
 	 * @param currentPassword
-	 *            <code>String</code> with the password that currently exists.
+	 *            {@code String} with the password that currently exists.
 	 * @param newPassword
-	 *            <code>String</code> with the new password value.
+	 *            {@code String} with the new password value.
 	 * @throws JargonException
 	 */
 	void changeAUserPasswordByThatUser(String userName, String currentPassword,
@@ -176,14 +176,14 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Change the password for a given user. This method is used by an admin
 	 * setting the password for an arbitrary user. For a user changing their own
-	 * password, use the <code>changeAPasswordByThatUser(String, String)</code>
+	 * password, use the {@code changeAPasswordByThatUser(String, String)}
 	 * method
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name whose password will
+	 *            {@code String} with the user name whose password will
 	 *            change.
 	 * @param newPassword
-	 *            <code>String</code> with the password to set for the given
+	 *            {@code String} with the password to set for the given
 	 *            user.
 	 * @throws JargonException
 	 */
@@ -195,7 +195,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * rods admin.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name to whom the AVU
+	 *            {@code String} with the user name to whom the AVU
 	 *            metadata will be added
 	 * @param avuData
 	 *            {@link AvuData} to be added for the user
@@ -209,7 +209,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * rods admin.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name from whom the AVU
+	 *            {@code String} with the user name from whom the AVU
 	 *            metadata will be removed
 	 * @param avuData
 	 *            {@link AvuData} to be removed from the user
@@ -224,7 +224,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * rods admin.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name from whom the AVU
+	 *            {@code String} with the user name from whom the AVU
 	 *            metadata will be removed
 	 * @param avuData
 	 *            {@link AvuData} to be modified
@@ -237,13 +237,13 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * For a given partial user name, return the user names that are like that
 	 * one. This is handy for creating auto-complete data entry components that
-	 * need to do quick user name lookups. If actual <code>User</code> domain
-	 * objects are needed, the <code>findWhere()</code> method provides an easy
+	 * need to do quick user name lookups. If actual {@code User} domain
+	 * objects are needed, the {@code findWhere()} method provides an easy
 	 * shortcut for obtaining extended user data. This method will do a 'LIKE'
 	 * query and add a '%' wild card to the provided term
 	 *
 	 * @param userName
-	 * @return <code>List<String></code> that are the user names that match the
+	 * @return {@code List<String>} that are the user names that match the
 	 *         partial query
 	 * @throws JargonException
 	 */
@@ -253,7 +253,7 @@ public interface UserAO extends IRODSAccessObject {
 	 * Generate a temporary password for the connected user. Password validity
 	 * times and number of connections will be set by the iRODS server.
 	 *
-	 * @return <code>String</code> with the temporary password
+	 * @return {@code String} with the temporary password
 	 * @throws JargonException
 	 */
 	String getTemporaryPasswordForConnectedUser() throws JargonException;
@@ -261,13 +261,13 @@ public interface UserAO extends IRODSAccessObject {
 	/**
 	 * Generate a temporary password for another user. Password validity times
 	 * and number of connections will be set by the iRODS server.
-	 * <p/>
+	 * <p>
 	 * This is a rodsadmin only function, and was added post iRODS 3.0.
 	 *
 	 * @param targetUserName
-	 *            <code>String</code> (required) with the user name for which
+	 *            {@code String} (required) with the user name for which
 	 *            the temporary password will be issued
-	 * @return <code>String</code> with the temporary password
+	 * @return {@code String} with the temporary password
 	 * @throws JargonException
 	 */
 	String getTemporaryPasswordForASpecifiedUser(String targetUserName)
@@ -278,13 +278,13 @@ public interface UserAO extends IRODSAccessObject {
 	 * Note that the various list methods do not retrieve the DN by default, as
 	 * it causes unnecessary GenQueries to be issued per user. This method can
 	 * retrieve that data as needed.
-	 * <p/>
+	 * <p>
 	 * The methods that retrieve an individual user do retrieve the DN by
 	 * default.
 	 *
 	 * @param userId
-	 *            <code>String</code> with the iRODS user id (not name)
-	 * @return <code>String</code> with the user DN, or <code>null</code> if the
+	 *            {@code String} with the iRODS user id (not name)
+	 * @return {@code String} with the user DN, or {@code null} if the
 	 *         DN does not exist for the user
 	 * @throws JargonException
 	 */
@@ -294,10 +294,10 @@ public interface UserAO extends IRODSAccessObject {
 	 * Update the user info field for the user as a discrete operation.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the name of the user
+	 *            {@code String} with the name of the user
 	 * @param userInfo
-	 *            <code>String</code> with the info to set, it can be blank, but
-	 *            not <code>null</code>
+	 *            {@code String} with the info to set, it can be blank, but
+	 *            not {@code null}
 	 * @throws DataNotFoundException
 	 *             if the user is not found
 	 * @throws JargonException
@@ -309,9 +309,9 @@ public interface UserAO extends IRODSAccessObject {
 	 * Update the DN for the given user
 	 *
 	 * @param userName
-	 *            userName <code>String</code> with the name of the user
+	 *            userName {@code String} with the name of the user
 	 * @param userDN
-	 *            <code>DN</code> to add to the user
+	 *            {@code DN} to add to the user
 	 * @throws InvalidUserException
 	 *             if the user does not exist
 	 * @throws JargonException
@@ -324,9 +324,9 @@ public interface UserAO extends IRODSAccessObject {
 	 * will silently ignore the command
 	 *
 	 * @param userName
-	 *            userName <code>String</code> with the name of the user
+	 *            userName {@code String} with the name of the user
 	 * @param userDN
-	 *            <code>DN</code> to remove from the user
+	 *            {@code DN} to remove from the user
 	 * @throws JargonException
 	 */
 	void removeUserDN(String userName, String userDN) throws JargonException;

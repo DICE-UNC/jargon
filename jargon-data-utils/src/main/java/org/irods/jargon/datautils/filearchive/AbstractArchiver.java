@@ -32,9 +32,9 @@ public abstract class AbstractArchiver {
 	 * target path of the archive
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with an absolute path to the source file
+	 *            {@code String} with an absolute path to the source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the target file
+	 *            {@code String} with the absolute path to the target file
 	 */
 	public AbstractArchiver(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) {

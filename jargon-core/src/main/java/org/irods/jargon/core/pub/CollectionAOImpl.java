@@ -53,11 +53,11 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Access object handles various operations for an IRODS Collection.
- * <p/>
+ * <p>
  * Note that traditional file io per the java.io.* interfaces is handled through
- * the objects in the <code>org.irods.jargon.core.pub.io</code> package. This
+ * the objects in the {@code org.irods.jargon.core.pub.io} package. This
  * class represents operations that are outside of the contracts one would
- * expect from an <code>java.io.File</code> object or the various streams.
+ * expect from an {@code java.io.File} object or the various streams.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *

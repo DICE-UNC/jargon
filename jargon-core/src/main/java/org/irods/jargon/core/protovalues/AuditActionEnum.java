@@ -138,8 +138,8 @@ public enum AuditActionEnum {
 	 * Based on the audit type code in the ICAT, return the enumeration type
 	 *
 	 * @param i
-	 *            <code>int</code> with the icat value
-	 * @return <code>AuditActionEnum</code> value that corresponds
+	 *            {@code int} with the icat value
+	 * @return {@code AuditActionEnum} value that corresponds
 	 */
 	public static AuditActionEnum valueOf(final int i) {
 
@@ -250,7 +250,7 @@ public enum AuditActionEnum {
 	}
 
 	/**
-	 * @return the meaning, a <code>String</code> with a textual description of
+	 * @return the meaning, a {@code String} with a textual description of
 	 *         the meaning of the action
 	 */
 	public String getMeaning() {
@@ -266,7 +266,7 @@ public enum AuditActionEnum {
 	}
 
 	/**
-	 * @return the meaningCode <code>String</code> with a message code suitable
+	 * @return the meaningCode {@code String} with a message code suitable
 	 *         for i18n
 	 */
 	public String getMeaningCode() {
@@ -282,8 +282,8 @@ public enum AuditActionEnum {
 	}
 
 	/**
-	 * @return the commentContent <code>String</code> with the meaning of the
-	 *         <code>r_comment</code> entry in the ICAT. The content of the
+	 * @return the commentContent {@code String} with the meaning of the
+	 *         {@code r_comment} entry in the ICAT. The content of the
 	 *         comment changes based on the type of action
 	 */
 	public String getCommentContent() {

@@ -29,7 +29,7 @@ public class ByteCountingCallbackInputStreamWrapper extends InputStream {
 	 *            {@link ConnectionProgressStatusListener} that can handle
 	 *            callbacks as the stream is read. This is required.
 	 * @param inputStream
-	 *            <code>InputStream</code> to be wrapped
+	 *            {@code InputStream} to be wrapped
 	 */
 	public ByteCountingCallbackInputStreamWrapper(
 			final ConnectionProgressStatusListener connectionProgressStatusListener,

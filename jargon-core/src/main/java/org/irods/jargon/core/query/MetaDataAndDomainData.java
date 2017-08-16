@@ -44,23 +44,23 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * Create an immutable instance
 	 *
 	 * @param metadataDomain
-	 *            <code>MetadataDomain</code> enum value that indicates the
+	 *            {@code MetadataDomain} enum value that indicates the
 	 *            domain (RESOURCE, USER, etc) that this metadata applies to
 	 * @param domainObjectId
-	 *            <code>String</code> represents the unique id value for this
+	 *            {@code String} represents the unique id value for this
 	 *            domain object in ICAT
 	 * @param domainObjectUniqueName
-	 *            <code>String</code> with the unique name in ICAT, such as
+	 *            {@code String} with the unique name in ICAT, such as
 	 *            absolute path or resource name
 	 * @param avuId
-	 *            <code>int</code> with the AVU id
+	 *            {@code int} with the AVU id
 	 * @param avuAttribute
-	 *            <code>String</code> with the AVU attribute
+	 *            {@code String} with the AVU attribute
 	 * @param avuValue
-	 *            <code>String</code> with the AVU value
+	 *            {@code String} with the AVU value
 	 * @param avuUnit
-	 *            <code>String</code> with the AVU units
-	 * @return <code>MetaDataAndDomainData</code> representing an AVU for the
+	 *            {@code String} with the AVU units
+	 * @return {@code MetaDataAndDomainData} representing an AVU for the
 	 *         given domain
 	 * @throws JargonException
 	 */
@@ -78,29 +78,29 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * Create an immutable instance
 	 *
 	 * @param metadataDomain
-	 *            <code>MetadataDomain</code> enum value that indicates the
+	 *            {@code MetadataDomain} enum value that indicates the
 	 *            domain (RESOURCE, USER, etc) that this metadata applies to
 	 * @param domainObjectId
-	 *            <code>String</code> represents the unique id value for this
+	 *            {@code String} represents the unique id value for this
 	 *            domain object in ICAT
 	 * @param domainObjectUniqueName
-	 *            <code>String</code> with the unique name in ICAT, such as
+	 *            {@code String} with the unique name in ICAT, such as
 	 *            absolute path or resource name
 	 * @param size
-	 *            <code>long</code> with an optional data size
+	 *            {@code long} with an optional data size
 	 * @param createdAt
-	 *            <code>Date</code> created at, can be <code>null</code>
+	 *            {@code Date} created at, can be {@code null}
 	 * @param modifiedAt
-	 *            <code>Date</code> modified, can be <code>null</code>
+	 *            {@code Date} modified, can be {@code null}
 	 * @param avuId
-	 *            <code>int</code> with the AVU id
+	 *            {@code int} with the AVU id
 	 * @param avuAttribute
-	 *            <code>String</code> with the AVU attribute
+	 *            {@code String} with the AVU attribute
 	 * @param avuValue
-	 *            <code>String</code> with the AVU value
+	 *            {@code String} with the AVU value
 	 * @param avuUnit
-	 *            <code>String</code> with the AVU units
-	 * @return <code>MetaDataAndDomainData</code> representing an AVU for the
+	 *            {@code String} with the AVU units
+	 * @return {@code MetaDataAndDomainData} representing an AVU for the
 	 *         given domain
 	 * @throws JargonException
 	 */

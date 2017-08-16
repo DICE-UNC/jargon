@@ -10,7 +10,7 @@ import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
  * Immutable object represents the options controlling the behavior of the io
  * pipeline. Typically, these options are built based on the current state of
  * the {@link JargonProperties} at the time a connection is created.
- * <p/>
+ * <p>
  * Note that this object does not have synchronization. Through typical usage,
  * this configuration is initialized at connection startup, and a connection is
  * confined to one thread, so this should be just fine.
@@ -72,8 +72,8 @@ public class PipelineConfiguration {
 
 	/**
 	 * Static initializer method will derive an immutable
-	 * <code>PipelineConfiguration</code> based on the prevailing
-	 * <code>JargonProperties</code> at the time the connection is created.
+	 * {@code PipelineConfiguration} based on the prevailing
+	 * {@code JargonProperties} at the time the connection is created.
 	 *
 	 * @param jargonProperties
 	 * @return {@link PipelineConfiguration}
@@ -215,7 +215,7 @@ public class PipelineConfiguration {
 	}
 
 	/**
-	 * @return <code>boolean</code> indicates whether to reconnect to avoid some
+	 * @return {@code boolean} indicates whether to reconnect to avoid some
 	 *         firewall issues. This is equivalent to the -T option on the
 	 *         put/get operations in iCommands
 	 */
@@ -224,7 +224,7 @@ public class PipelineConfiguration {
 	}
 
 	/**
-	 * @return <code>boolean</code> indicates whether to incorporate detailed
+	 * @return {@code boolean} indicates whether to incorporate detailed
 	 *         statistics in the DEBUG log regarding performance metrics, useful
 	 *         for tuning and optimization, with the potential to add overhead,
 	 *         so typically not suitable for production

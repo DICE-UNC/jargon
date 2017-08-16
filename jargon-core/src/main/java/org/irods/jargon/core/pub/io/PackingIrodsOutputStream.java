@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 /**
  * A stream that presents the normal api, but accumulates bytes written until at
  * an optimal buffer size before sending to iRODS
- * <p/>
+ * <p>
  * Specifically, this wrapper around the iRODS output stream presents the normal
  * write methods, but will cache them up the the size of the putBufferSize
  * specified in jargon properties.
- * <p/>
+ * <p>
  * Flush and close are used and behave as expected, and will properly handle the
  * close of the underlying iRODS File and stream.
  *

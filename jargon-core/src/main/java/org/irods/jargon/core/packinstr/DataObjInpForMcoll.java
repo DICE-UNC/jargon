@@ -31,11 +31,11 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to mount a MSSO (microservice object)
 	 *
 	 * @param microServiceSourceFile
-	 *            <code>String</code> with the microservice source file
+	 *            {@code String} with the microservice source file
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> target path for the mounted collection
+	 *            {@code String} target path for the mounted collection
 	 * @param destRescName
-	 *            <code>String</code>, blank if unused, that describes the
+	 *            {@code String}, blank if unused, that describes the
 	 *            destination resource name
 	 * @return {@link DataObjInpForMcoll}
 	 */
@@ -51,11 +51,11 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * Create a dataObjInp for a mounted filesystem
 	 *
 	 * @param localFileSystemAbsolutePath
-	 *            <code>String</code> with a local filesystem absolute path
+	 *            {@code String} with a local filesystem absolute path
 	 * @param irodsMountedCollectionAbsolutePath
-	 *            <code>String</code> with the irods collection to be mounted
+	 *            {@code String} with the irods collection to be mounted
 	 * @param destRescName
-	 *            <code>String</code> with the storage resource
+	 *            {@code String} with the storage resource
 	 * @return {@link DataObjInpForMcoll}
 	 */
 	public static DataObjInpForMcoll instanceForFileSystemMount(
@@ -72,12 +72,12 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to mount a soft link
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the source path for the mounted
+	 *            {@code String} with the source path for the mounted
 	 *            collection
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> target path for the mounted collection
+	 *            {@code String} target path for the mounted collection
 	 * @param destRescName
-	 *            <code>String</code>, blank if unused, that describes the
+	 *            {@code String}, blank if unused, that describes the
 	 *            destination resource name
 	 * @return {@link DataObjInpForMcoll}
 	 */
@@ -94,15 +94,15 @@ public class DataObjInpForMcoll extends AbstractIRODSPackingInstruction {
 	 * instance.
 	 *
 	 * @param sourceFileAbsolutePath
-	 *            <code>String</code> with the source path for the mounted
+	 *            {@code String} with the source path for the mounted
 	 *            collection
 	 * @param targetFileAbsolutePath
-	 *            <code>String</code> target path for the mounted collection
+	 *            {@code String} target path for the mounted collection
 	 * @param collectionType
-	 *            <code>String</code> with a collection type, as understood by
+	 *            {@code String} with a collection type, as understood by
 	 *            the iRODS imcoll protocol
 	 * @param destRescName
-	 *            <code>String</code>, blank if unused, that describes the
+	 *            {@code String}, blank if unused, that describes the
 	 *            destination resource name
 	 */
 	private DataObjInpForMcoll(final String sourceFileAbsolutePath,

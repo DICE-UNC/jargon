@@ -12,13 +12,13 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * specified to store the new bundle. This version is no-force.
 	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
-	 *            <code>String</code> with the absolute path to a file on iRODS
+	 *            {@code String} with the absolute path to a file on iRODS
 	 *            that will store the created bundle.
 	 * @param absolutePathToIrodsCollectionToBeBundled
-	 *            <code>String</code> with the absolute path to a collection on
+	 *            {@code String} with the absolute path to a collection on
 	 *            iRODS that will be the source of the bundle.
 	 * @param resourceNameWhereBundleWillBeStored
-	 *            <code>String</code> with the optional (leave blank if not
+	 *            {@code String} with the optional (leave blank if not
 	 *            used, not null) iRODS resource where the bundle will be
 	 *            stored.
 	 * @throws JargonException
@@ -36,13 +36,13 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * overwrite the tar file if it already exists.
 	 *
 	 * @param absolutePathToBundleFileToBeCreatedOnIrods
-	 *            <code>String</code> with the absolute path to a file on iRODS
+	 *            {@code String} with the absolute path to a file on iRODS
 	 *            that will store the created bundle.
 	 * @param absolutePathToIrodsCollectionToBeBundled
-	 *            <code>String</code> with the absolute path to a collection on
+	 *            {@code String} with the absolute path to a collection on
 	 *            iRODS that will be the source of the bundle.
 	 * @param resourceNameWhereBundleWillBeStored
-	 *            <code>String</code> with the optional (leave blank if not
+	 *            {@code String} with the optional (leave blank if not
 	 *            used, not null) iRODS resource where the bundle will be
 	 *            stored.
 	 * @throws JargonException
@@ -57,14 +57,14 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * target directory. This is a no-force, no-bulk operation.
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            <code>String</code> with the absolute path to the tar file in
+	 *            {@code String} with the absolute path to the tar file in
 	 *            iRODS to be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            <code>String</code> with the absolute path to the collection
+	 *            {@code String} with the absolute path to the collection
 	 *            that will be the target of the extraction. The collection does
 	 *            not have to exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            <code>String</code> with the target resource for the
+	 *            {@code String} with the target resource for the
 	 *            extraction. This is optional and should be set to blank if not
 	 *            used (not null).
 	 * @throws JargonException
@@ -81,14 +81,14 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * previously extracted files
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            <code>String</code> with the absolute path to the tar file in
+	 *            {@code String} with the absolute path to the tar file in
 	 *            iRODS to be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            <code>String</code> with the absolute path to the collection
+	 *            {@code String} with the absolute path to the collection
 	 *            that will be the target of the extraction. The collection does
 	 *            not have to exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            <code>String</code> with the target resource for the
+	 *            {@code String} with the target resource for the
 	 *            extraction. This is optional and should be set to blank if not
 	 *            used (not null).
 	 * @throws JargonException
@@ -105,14 +105,14 @@ public interface BulkFileOperationsAO extends IRODSAccessObject {
 	 * registration optimization.
 	 *
 	 * @param absolutePathToBundleFileInIrodsToBeExtracted
-	 *            <code>String</code> with the absolute path to the tar file in
+	 *            {@code String} with the absolute path to the tar file in
 	 *            iRODS to be extracted.
 	 * @param absolutePathToIrodsCollectionToHoldExtractedFiles
-	 *            <code>String</code> with the absolute path to the collection
+	 *            {@code String} with the absolute path to the collection
 	 *            that will be the target of the extraction. The collection does
 	 *            not have to exist.
 	 * @param resourceNameWhereBundleWillBeExtracted
-	 *            <code>String</code> with the target resource for the
+	 *            {@code String} with the target resource for the
 	 *            extraction. This is optional and should be set to blank if not
 	 *            used (not null).
 	 * @throws JargonException

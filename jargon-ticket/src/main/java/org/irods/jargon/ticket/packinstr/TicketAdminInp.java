@@ -185,12 +185,12 @@ public class TicketAdminInp extends TicketInp {
 
 	/**
 	 * Create a packing instruction to modify the expiration date. Setting the
-	 * date to <code>null</code> removes the expiration
+	 * date to {@code null} removes the expiration
 	 * 
 	 * @param ticketId
-	 *            <code>String</code> with the unique ticket string
+	 *            {@code String} with the unique ticket string
 	 * @param expirationDate
-	 *            <code>Date</code> or <code>null</code> to remove
+	 *            {@code Date} or {@code null} to remove
 	 * @return
 	 */
 	public static TicketAdminInp instanceForModifyExpiration(

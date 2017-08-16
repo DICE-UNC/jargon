@@ -29,10 +29,10 @@ public final class TagCloudEntry implements Serializable {
 	 *            {@link org.irods.jargon.usertagging.IRODSTagValue} with
 	 *            information on the tag
 	 * @param countOfFiles
-	 *            <code>int</code> with a count of the number of occurrences of
+	 *            {@code int} with a count of the number of occurrences of
 	 *            the tag for the given domain in files
 	 * @param countOfCollections
-	 *            <code>int</code> with a count of the number of occurrences of
+	 *            {@code int} with a count of the number of occurrences of
 	 *            the tag for the given domain in collections
 	 * @throws JargonException
 	 */

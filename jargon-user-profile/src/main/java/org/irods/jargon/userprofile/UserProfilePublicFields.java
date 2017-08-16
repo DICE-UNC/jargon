@@ -4,7 +4,7 @@ package org.irods.jargon.userprofile;
  * Represents standard conventions for user demographic and application
  * configuration data. This object represents public data that should be visible
  * to all through querying via the user profile service.
- * <p/>
+ * <p>
  * Note that some of the base attributes are based on the RFC for eduPerson at:
  * http://middleware.internet2.edu/eduperson/docs/internet2-mace-dir-eduperson-
  * 200806.html And going forward more attributes may be added.
@@ -55,7 +55,7 @@ public class UserProfilePublicFields {
 	/**
 	 * Follow X.500(2001): "The postal code attribute type specifies the postal
 	 * code of the named object. If this attribute
-	 * <p/>
+	 * <p>
 	 * value is present, it will be part of the object's postal address." Zip
 	 * code in USA, postal code for other countries.
 	 */
@@ -81,7 +81,7 @@ public class UserProfilePublicFields {
 
 	/**
 	 * IRODS URI or URL to a publicly available photo in String form
-	 * <p/>
+	 * <p>
 	 * Follow inetOrgPerson definition of RFC 2798:
 	 * "Used to store one or more images of a person using the JPEG File Interchange Format [JFIF]."
 	 * 
@@ -96,11 +96,11 @@ public class UserProfilePublicFields {
 
 	/**
 	 * Abbreviation for state or province name.
-	 * <p/>
+	 * <p>
 	 * Format: The values should be coordinated on a national level. If
 	 * well-known shortcuts exist, like the two-letter state abbreviations in
 	 * the US, these abbreviations are preferred over longer full names.
-	 * <p/>
+	 * <p>
 	 * From RFC 4519:
 	 * "The 'st' ('stateOrProvinceName' in X.500) attribute type contains the full names of states or provinces. Each name is one value of this multi-valued attribute."
 	 */

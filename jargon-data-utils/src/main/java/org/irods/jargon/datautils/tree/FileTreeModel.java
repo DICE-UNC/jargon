@@ -20,7 +20,7 @@ public class FileTreeModel extends DefaultTreeModel {
 	 * @param root
 	 *            {@link FileTreeNode} that is the root of the file tree
 	 * @param asksAllowsChildren
-	 *            <code>boolean</code>, false if any node can have children,
+	 *            {@code boolean}, false if any node can have children,
 	 *            true if each node is asked to see if it can have children
 	 */
 	public FileTreeModel(final FileTreeNode root,

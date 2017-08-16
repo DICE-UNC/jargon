@@ -11,10 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * IRODS specific implementation of the <code>java.io.FileInputStream</code>.
- * This object is created by the {@link IRODSFileFactory}, and once created can
- * be treated as usual. *
- * <p/>
+ * IRODS specific implementation of the {@code java.io.FileInputStream}. This
+ * object is created by the {@link IRODSFileFactory}, and once created can be
+ * treated as usual. *
+ * <p>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
  *
@@ -31,23 +31,14 @@ public class IRODSFileInputStream extends InputStream {
 	private transient long filePointer = 0;
 
 	/**
-	 * Default constructor of limited utility but allowing mocking
-	 */
-	public IRODSFileInputStream() {
-		this.irodsFile = null;
-		this.fileIOOperations = null;
-	}
-
-	/**
-	 * Creates a <code>FileInputStream</code> by opening a connection to an
-	 * actual file, the file named by the path name <code>name</code> in the
-	 * file system.
-	 * <p/>
+	 * Creates a {@code FileInputStream} by opening a connection to an actual
+	 * file, the file named by the path name {@code name} in the file system.
+	 * <p>
 	 * First, the security is checked to verify the file can be written.
-	 * <p/>
+	 * <p>
 	 * If the named file does not exist, is a directory rather than a regular
 	 * file, or for some other reason cannot be opened for reading then a
-	 * <code>FileNotFoundException</code> is thrown.
+	 * {@code FileNotFoundException} is thrown.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} with the file that will be the basis of the
@@ -58,8 +49,7 @@ public class IRODSFileInputStream extends InputStream {
 	 *                regular file, or for some other reason cannot be opened
 	 *                for reading.
 	 */
-	protected IRODSFileInputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations)
+	protected IRODSFileInputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
 			throws FileNotFoundException {
 
 		super();
@@ -69,15 +59,13 @@ public class IRODSFileInputStream extends InputStream {
 		}
 
 		if (!irodsFile.exists()) {
-			final String msg = "file does not exist:"
-					+ irodsFile.getAbsolutePath();
+			final String msg = "file does not exist:" + irodsFile.getAbsolutePath();
 			log.error(msg);
 			throw new FileNotFoundException(msg);
 		}
 
 		if (!irodsFile.isFile()) {
-			final String msg = "this is not a file, it is a directory:"
-					+ irodsFile.getAbsolutePath();
+			final String msg = "this is not a file, it is a directory:" + irodsFile.getAbsolutePath();
 			log.error(msg);
 			throw new FileNotFoundException(msg);
 		}
@@ -126,16 +114,15 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	/**
-	 * Create an <code>IRODSFileInputStream</code> providing an already-opened
-	 * file handle.
+	 * Create an {@code IRODSFileInputStream} providing an already-opened file
+	 * handle.
 	 *
 	 * @param irodsFile
 	 * @param fileIOOperations
 	 * @param fd
 	 * @throws FileNotFoundException
 	 */
-	protected IRODSFileInputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations, final int fd)
+	protected IRODSFileInputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations, final int fd)
 			throws FileNotFoundException {
 
 		super();
@@ -159,8 +146,7 @@ public class IRODSFileInputStream extends InputStream {
 	 * @param file
 	 * @throws JargonRuntimeException
 	 */
-	private void checkFileParameter(final IRODSFile file)
-			throws JargonRuntimeException {
+	private void checkFileParameter(final IRODSFile file) throws JargonRuntimeException {
 		if (file == null) {
 			final String msg = "file is null";
 			log.error(msg);
@@ -172,8 +158,7 @@ public class IRODSFileInputStream extends InputStream {
 	private int openIRODSFile() throws JargonException {
 		log.info("openIRODSFile()");
 		if (!irodsFile.exists()) {
-			log.warn("opening non-existant file for read: {}",
-					irodsFile.getAbsolutePath());
+			log.warn("opening non-existant file for read: {}", irodsFile.getAbsolutePath());
 			throw new JargonException("file does not exist, cannot read");
 		}
 
@@ -190,16 +175,15 @@ public class IRODSFileInputStream extends InputStream {
 	 * Note: Use of this method is inadvisable due to the long delays that can
 	 * occur with network communcations. Reading even a few bytes in this manner
 	 * could cause noticeable slowdowns.
-	 * <p/>
+	 * <p>
 	 * Reads the next byte of data from the input stream. The value byte is
-	 * returned as an <code>int</code> in the range <code>0</code> to
-	 * <code>255</code>. If no byte is available because the end of the stream
-	 * has been reached, the value <code>-1</code> is returned. This method
-	 * blocks until input data is available, the end of the stream is detected,
-	 * or an exception is thrown.
+	 * returned as an {@code int} in the range {@code 0} to {@code 255}. If no
+	 * byte is available because the end of the stream has been reached, the
+	 * value {@code -1} is returned. This method blocks until input data is
+	 * available, the end of the stream is detected, or an exception is thrown.
 	 *
-	 * @return the next byte of data, or <code>-1</code> if the end of the
-	 *         stream is reached.
+	 * @return the next byte of data, or {@code -1} if the end of the stream is
+	 *         reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 */
@@ -217,98 +201,88 @@ public class IRODSFileInputStream extends InputStream {
 			return (buffer[0] & 0xFF);
 
 		} catch (JargonException e) {
-			log.error(
-					"JargonException in read is converted to IOException for method contract",
-					e);
+			log.error("JargonException in read is converted to IOException for method contract", e);
 			throw new IOException(e);
 		}
 	}
 
 	/**
-	 * Reads up to <code>len</code> bytes of data from the input stream into an
-	 * array of bytes. An attempt is made to read as many as <code>len</code>
-	 * bytes, but a smaller number may be read, possibly zero. The number of
-	 * bytes actually read is returned as an integer.
+	 * Reads up to {@code len} bytes of data from the input stream into an array
+	 * of bytes. An attempt is made to read as many as {@code len} bytes, but a
+	 * smaller number may be read, possibly zero. The number of bytes actually
+	 * read is returned as an integer.
 	 *
-	 * <p/>
+	 * <p>
 	 * This method blocks until input data is available, end of file is
 	 * detected, or an exception is thrown.
 	 *
-	 * <p/>
-	 * If <code>b</code> is <code>null</code>, a
-	 * <code>JargonRuntimeException</code> is thrown.
+	 * <p>
+	 * If {@code b} is {@code null}, a {@code JargonRuntimeException} is thrown.
 	 *
-	 * <p/>
-	 * If <code>off</code> is negative, or <code>len</code> is negative, or
-	 * <code>off+len</code> is greater than the length of the array
-	 * <code>b</code>, then an <code>IndexOutOfBoundsException</code> is thrown.
+	 * <p>
+	 * If {@code off} is negative, or {@code len} is negative, or
+	 * {@code off+len} is greater than the length of the array {@code b}, then
+	 * an {@code IndexOutOfBoundsException} is thrown.
 	 *
-	 * <p/>
-	 * If <code>len</code> is zero, then no bytes are read and <code>0</code> is
-	 * returned; otherwise, there is an attempt to read at least one byte. If no
-	 * byte is available because the stream is at end of file, the value
-	 * <code>-1</code> is returned; otherwise, at least one byte is read and
-	 * stored into <code>b</code>.
+	 * <p>
+	 * If {@code len} is zero, then no bytes are read and {@code 0} is returned;
+	 * otherwise, there is an attempt to read at least one byte. If no byte is
+	 * available because the stream is at end of file, the value {@code -1} is
+	 * returned; otherwise, at least one byte is read and stored into {@code b}.
 	 *
-	 * <p/>
-	 * The first byte read is stored into element <code>b[off]</code>, the next
-	 * one into <code>b[off+1]</code>, and so on. The number of bytes read is,
-	 * at most, equal to <code>len</code>. Let <i>k</i> be the number of bytes
-	 * actually read; these bytes will be stored in elements <code>b[off]</code>
-	 * through <code>b[off+</code><i>k</i><code>-1]</code>, leaving elements
-	 * <code>b[off+</code><i>k</i><code>]</code> through
-	 * <code>b[off+len-1]</code> unaffected.
+	 * <p>
+	 * The first byte read is stored into element {@code b[off]}, the next one
+	 * into {@code b[off+1]}, and so on. The number of bytes read is, at most,
+	 * equal to {@code len}. Let <i>k</i> be the number of bytes actually read;
+	 * these bytes will be stored in elements {@code b[off]} through
+	 * {@code b[off+}<i>k</i>{@code -1]}, leaving elements
+	 * {@code b[off+}<i>k</i>{@code ]} through {@code b[off+len-1]} unaffected.
 	 *
-	 * <p/>
-	 * In every case, elements <code>b[0]</code> through <code>b[off]</code> and
-	 * elements <code>b[off+len]</code> through <code>b[b.length-1]</code> are
-	 * unaffected.
+	 * <p>
+	 * In every case, elements {@code b[0]} through {@code b[off]} and elements
+	 * {@code b[off+len]} through {@code b[b.length-1]} are unaffected.
 	 *
-	 * <p/>
+	 * <p>
 	 * If the first byte cannot be read for any reason other than end of file,
-	 * then an <code>IOException</code> is thrown. In particular, an
-	 * <code>IOException</code> is thrown if the input stream has been closed.
+	 * then an {@code IOException} is thrown. In particular, an
+	 * {@code IOException} is thrown if the input stream has been closed.
 	 *
-	 * <p/>
-	 * The <code>read(b,</code> <code>off,</code> <code>len)</code> method for
-	 * class <code>InputStream</code> simply calls the method
-	 * <code>read()</code> repeatedly. If the first such call results in an
-	 * <code>IOException</code>, that exception is returned from the call to the
-	 * <code>read(b,</code> <code>off,</code> <code>len)</code> method. If any
-	 * subsequent call to <code>read()</code> results in a
-	 * <code>IOException</code>, the exception is caught and treated as if it
-	 * were end of file; the bytes read up to that point are stored into
-	 * <code>b</code> and the number of bytes read before the exception occurred
-	 * is returned. Subclasses are encouraged to provide a more efficient
-	 * implementation of this method.
+	 * <p>
+	 * The {@code read(b,} {@code off,} {@code len)} method for class
+	 * {@code InputStream} simply calls the method {@code read()} repeatedly. If
+	 * the first such call results in an {@code IOException}, that exception is
+	 * returned from the call to the {@code read(b,} {@code off,} {@code len)}
+	 * method. If any subsequent call to {@code read()} results in a
+	 * {@code IOException}, the exception is caught and treated as if it were
+	 * end of file; the bytes read up to that point are stored into {@code b}
+	 * and the number of bytes read before the exception occurred is returned.
+	 * Subclasses are encouraged to provide a more efficient implementation of
+	 * this method.
 	 *
 	 * @param b
 	 *            the buffer into which the data is read.
 	 * @param off
-	 *            the start offset in array <code>b</code> at which the data is
+	 *            the start offset in array {@code b} at which the data is
 	 *            written.
 	 * @param len
 	 *            the maximum number of bytes to read.
-	 * @return the total number of bytes read into the buffer, or
-	 *         <code>-1</code> if there is no more data because the end of the
-	 *         stream has been reached.
+	 * @return the total number of bytes read into the buffer, or {@code -1} if
+	 *         there is no more data because the end of the stream has been
+	 *         reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 * @exception NullPointerException
-	 *                if <code>b</code> is <code>null</code>.
+	 *                if {@code b} is {@code null}.
 	 * @see java.io.InputStream#read()
 	 */
 	@Override
-	public int read(final byte b[], final int off, final int len)
-			throws IOException {
+	public int read(final byte b[], final int off, final int len) throws IOException {
 
 		int temp;
 		try {
 			temp = fileIOOperations.fileRead(fd, b, off, len);
 		} catch (JargonException e) {
-			log.error(
-					"JargonException in read is converted to IOException for method contract",
-					e);
+			log.error("JargonException in read is converted to IOException for method contract", e);
 			throw new IOException(e);
 		}
 		if (temp > 0) {
@@ -319,50 +293,48 @@ public class IRODSFileInputStream extends InputStream {
 
 	/**
 	 * Reads some number of bytes from the input stream and stores them into the
-	 * buffer array <code>b</code>. The number of bytes actually read is
-	 * returned as an integer. This method blocks until input data is available,
-	 * end of file is detected, or an exception is thrown.
+	 * buffer array {@code b}. The number of bytes actually read is returned as
+	 * an integer. This method blocks until input data is available, end of file
+	 * is detected, or an exception is thrown.
 	 *
-	 * <p/>
-	 * If <code>b</code> is <code>null</code>, a
-	 * <code>JargonRuntimeException</code> is thrown. If the length of
-	 * <code>b</code> is zero, then no bytes are read and <code>0</code> is
-	 * returned; otherwise, there is an attempt to read at least one byte. If no
-	 * byte is available because the stream is at end of file, the value
-	 * <code>-1</code> is returned; otherwise, at least one byte is read and
-	 * stored into <code>b</code>.
+	 * <p>
+	 * If {@code b} is {@code null}, a {@code JargonRuntimeException} is thrown.
+	 * If the length of {@code b} is zero, then no bytes are read and {@code 0}
+	 * is returned; otherwise, there is an attempt to read at least one byte. If
+	 * no byte is available because the stream is at end of file, the value
+	 * {@code -1} is returned; otherwise, at least one byte is read and stored
+	 * into {@code b}.
 	 *
-	 * <p/>
-	 * The first byte read is stored into element <code>b[0]</code>, the next
-	 * one into <code>b[1]</code>, and so on. The number of bytes read is, at
-	 * most, equal to the length of <code>b</code>. Let <i>k</i> be the number
-	 * of bytes actually read; these bytes will be stored in elements
-	 * <code>b[0]</code> through <code>b[</code><i>k</i><code>-1]</code>,
-	 * leaving elements <code>b[</code><i>k</i><code>]</code> through
-	 * <code>b[b.length-1]</code> unaffected.
+	 * <p>
+	 * The first byte read is stored into element {@code b[0]}, the next one
+	 * into {@code b[1]}, and so on. The number of bytes read is, at most, equal
+	 * to the length of {@code b}. Let <i>k</i> be the number of bytes actually
+	 * read; these bytes will be stored in elements {@code b[0]} through
+	 * {@code b[}<i>k</i>{@code -1]}, leaving elements
+	 * {@code b[}<i>k</i>{@code ]} through {@code b[b.length-1]} unaffected.
 	 *
-	 * <p/>
+	 * <p>
 	 * If the first byte cannot be read for any reason other than end of file,
-	 * then an <code>IOException</code> is thrown. In particular, an
-	 * <code>IOException</code> is thrown if the input stream has been closed.
+	 * then an {@code IOException} is thrown. In particular, an
+	 * {@code IOException} is thrown if the input stream has been closed.
 	 *
-	 * <p/>
-	 * The <code>read(b)</code> method for class <code>InputStream</code> has
-	 * the same effect as:
+	 * <p>
+	 * The {@code read(b)} method for class {@code InputStream} has the same
+	 * effect as:
 	 *
 	 * <pre>
-	 * <code> read(b, 0, b.length) </code>
+	 * {@code  read(b, 0, b.length) }
 	 * </pre>
 	 *
 	 * @param b
 	 *            the buffer into which the data is read.
-	 * @return the total number of bytes read into the buffer, or
-	 *         <code>-1</code> is there is no more data because the end of the
-	 *         stream has been reached.
+	 * @return the total number of bytes read into the buffer, or {@code -1} is
+	 *         there is no more data because the end of the stream has been
+	 *         reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 * @exception JargonRuntimeException
-	 *                if <code>b</code> is <code>null</code>.
+	 *                if {@code b} is {@code null}.
 	 * @see java.io.InputStream#read(byte[], int, int)
 	 */
 	@Override
@@ -371,10 +343,10 @@ public class IRODSFileInputStream extends InputStream {
 	}
 
 	/**
-	 * Skips over and discards <code>n</code> bytes of data from the input
-	 * stream. The <code>skip</code> method may, for a variety of reasons, end
-	 * up skipping over some smaller number of bytes, possibly <code>0</code>.
-	 * The actual number of bytes skipped is returned.
+	 * Skips over and discards {@code n} bytes of data from the input stream.
+	 * The {@code skip} method may, for a variety of reasons, end up skipping
+	 * over some smaller number of bytes, possibly {@code 0}. The actual number
+	 * of bytes skipped is returned.
 	 *
 	 * @param numberOfBytesToSkip
 	 *            the number of bytes to be skipped.
@@ -394,21 +366,17 @@ public class IRODSFileInputStream extends InputStream {
 			openFile();
 			if ((filePointer + numberOfBytesToSkip) < length) {
 
-				fileIOOperations.seek(fd, numberOfBytesToSkip,
-						FileIOOperations.SeekWhenceType.SEEK_CURRENT);
+				fileIOOperations.seek(fd, numberOfBytesToSkip, FileIOOperations.SeekWhenceType.SEEK_CURRENT);
 
 				filePointer += numberOfBytesToSkip;
 				return numberOfBytesToSkip;
 			} else {
-				fileIOOperations.seek(fd, length,
-						FileIOOperations.SeekWhenceType.SEEK_CURRENT);
+				fileIOOperations.seek(fd, length, FileIOOperations.SeekWhenceType.SEEK_CURRENT);
 				filePointer += length;
 				return length;
 			}
 		} catch (JargonException e) {
-			log.error(
-					"JargonException in operation, rethrown as IOException for contract",
-					e);
+			log.error("JargonException in operation, rethrown as IOException for contract", e);
 			throw new IOException(e);
 		}
 	}
@@ -455,7 +423,7 @@ public class IRODSFileInputStream extends InputStream {
 	/**
 	 * Closes this file input stream and releases any system resources
 	 * associated with the stream.
-	 * <p/>
+	 * <p>
 	 * If this stream has an associated channel then the channel is closed as
 	 * well.
 	 *
@@ -468,9 +436,7 @@ public class IRODSFileInputStream extends InputStream {
 		try {
 			irodsFile.close();
 		} catch (JargonException e) {
-			log.error(
-					"JargonException in operation, rethrown as IOException for contract",
-					e);
+			log.error("JargonException in operation, rethrown as IOException for contract", e);
 			throw new IOException(e);
 		}
 		filePointer = 0L;

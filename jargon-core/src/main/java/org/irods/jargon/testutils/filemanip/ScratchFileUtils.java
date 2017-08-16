@@ -34,7 +34,7 @@ public class ScratchFileUtils {
 
 	/**
 	 * Create the scratch dir as described in testing.properties if it does not
-	 * already exist. * @param pathUnderScratch <code>String</code> giving the
+	 * already exist. * @param pathUnderScratch {@code String} giving the
 	 * relative path of the file/directory underneath the scratch area (no
 	 * leading / delim is necessary
 	 */
@@ -55,7 +55,7 @@ public class ScratchFileUtils {
 	 * empty scratch directory at test initialization or tear-down.
 	 *
 	 * @param pathUnderScratch
-	 *            <code>String</code> containing a relative path (no leading
+	 *            {@code String} containing a relative path (no leading
 	 *            '/') under the configured scratch directory pointing to the
 	 *            directory to initialize
 	 */
@@ -97,7 +97,7 @@ public class ScratchFileUtils {
 	 * Check if the given file exists in the scratch area
 	 *
 	 * @param pathUnderScratch
-	 *            <code>String</code> giving the relative path of the
+	 *            {@code String} giving the relative path of the
 	 *            file/directory underneath the scratch area (no leading / delim
 	 *            is necessary
 	 * @return
@@ -120,9 +120,9 @@ public class ScratchFileUtils {
 	 * Convenience method to tack the relative path and file name to the known
 	 * scratch path, while creating any necessary intermediate directories
 	 *
-	 * @parampath <code>String</code> giving relative path (no leading '/') to
+	 * @parampath {@code String} giving relative path (no leading '/') to
 	 *            the desired new subdirectory file name. No leading '/' used
-	 * @return <code>String</code> absolute path to the file name, up to the
+	 * @return {@code String} absolute path to the file name, up to the
 	 *         last subdirectory, with a trailing '/'
 	 */
 	public String createAndReturnAbsoluteScratchPath(final String path) {
@@ -140,9 +140,9 @@ public class ScratchFileUtils {
 
 	/**
 	 * @param pathUnderScratch
-	 *            <code>String</code> with relative file path under scratch (no
+	 *            {@code String} with relative file path under scratch (no
 	 *            leading '/')
-	 * @return <code>long</code> with the file's checksum value
+	 * @return {@code long} with the file's checksum value
 	 * @throws TestingUtilsException
 	 */
 	public byte[] computeFileCheckSum(final String pathUnderScratch)
@@ -195,9 +195,9 @@ public class ScratchFileUtils {
 
 	/**
 	 * @param absolutePathToLocalFile
-	 *            <code>String</code> with absolute local file path under
+	 *            {@code String} with absolute local file path under
 	 *            scratch (no leading '/')
-	 * @return <code>long</code> with the file's checksum value
+	 * @return {@code long} with the file's checksum value
 	 * @throws TestingUtilsException
 	 */
 	public long computeFileCheckSumViaAbsolutePath(

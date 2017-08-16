@@ -27,10 +27,10 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
 /**
  * This is an access object that can be used to manipulate iRODS data objects
  * (files). This object treats the IRODSFile as an object, not as a
- * <code>java.io.File</code> object. For normal read and other familier
- * <code>java.io.*</code> operations, see
+ * {@code java.io.File} object. For normal read and other familier
+ * {@code java.io.*} operations, see
  * {@link org.irods.jargon.core.pub.io.IRODSFile}.
- * <p/>
+ * <p>
  * This interface has a default implementation within Jargon. The access object
  * should be obtained using a factory, either by creating from
  * {@link org.irods.jargon.core.pub.IRODSFileSystem}, or from an
@@ -38,11 +38,11 @@ import org.irods.jargon.core.transfer.FileRestartManagementException;
  * This class is handy for retrieving and manipulating system and user metadata
  * associated with data objects (files), as well as performing common query
  * operations. This class also supports various iRODS file operations that are
- * not included in the standard <code>java.io.*</code> libraries.
- * <p/>
+ * not included in the standard {@code java.io.*} libraries.
+ * <p>
  * For general data movement operations, also see
  * {@link org.irods.jargon.core.pub.DataTransferOperations}.
- * <p/>
+ * <p>
  * <h2>Notes</h2>
  * For soft links, AVU metadata always attaches to the canonical path. There is
  * some inconsistency with the operation of the imeta command, where AVU
@@ -63,13 +63,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Query method will return the first data object found with the given
 	 * collectionPath and dataName.
-	 * <p/>
+	 * <p>
 	 * Note that this method will return 'null' if the object is not found.
 	 *
 	 * @param collectionPath
-	 *            <code>String</code> with the absolute path to the collection
+	 *            {@code String} with the absolute path to the collection
 	 * @param dataName
-	 *            <code>String</code> with the data Object name
+	 *            {@code String} with the data Object name
 	 * @return {@link DataObject}
 	 * @throws DataNotFoundException
 	 *             is thrown if the data object does not exist
@@ -81,15 +81,15 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			FileNotFoundException;
 
 	/**
-	 * For a given absolute path, get an <code>IRODSFileImpl</code> that is a
+	 * For a given absolute path, get an {@code IRODSFileImpl} that is a
 	 * data object. If the data exists, and is not a File, this method will
 	 * throw an exception. If the given file does not exist, then a File will be
 	 * returned.
-	 * <p/>
+	 * <p>
 	 * The given path may be a soft-linked path, and it will behave as normal.
 	 *
 	 * @param fileAbsolutePath
-	 *            <code>String</code> with absolute path to the collection
+	 *            {@code String} with absolute path to the collection
 	 * @return {@link IRODSFileImpl}
 	 * @throws JargonException
 	 */
@@ -98,14 +98,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add AVU metadata for this data object
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the target
+	 *            {@code String} with the absolute path to the target
 	 *            collection
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
@@ -128,21 +128,21 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
-	 * @return <code>List</code> of
+	 *            {@code String} with the name of the dataObject of interest.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -157,27 +157,27 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
-	 * <p/>
+	 * <p>
 	 * This version of the method will compare AVU values using case-insensitive
 	 * queries
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
+	 *            {@code String} with the name of the dataObject of interest.
 	 * @param caseInsensitive
-	 *            <code>boolean</code> where <code>true</code> indicates to
+	 *            {@code boolean} where {@code true} indicates to
 	 *            treat avu queries as case-insensitive
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -191,19 +191,19 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the AVU metadata for a particular data object, as well as
 	 * identifying information about the data object itself, based on a metadata
 	 * query.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param dataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path of the data object
-	 * @return <code>List</code> of
+	 *            {@code String} with the absolute path of the data object
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -217,17 +217,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * identifying information about the data object itself. Other methods are
 	 * available for this object to refine to query to include an AVU metadata
 	 * query. This method will get all of the metadata for a data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param dataObjectCollectionAbsPath
-	 *            <code>String with the absolute path of the collection for the dataObject of interest.
+	 *            {@code String} with the absolute path of the collection for the dataObject of interest.
 	 * @param dataObjectFileName
-	 *            <code>String with the name of the dataObject of interest.
-	 * @return <code>List</code> of
+	 *            {@code String} with the name of the dataObject of interest.
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -242,10 +242,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the data objects that answer the given AVU metadata query.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -259,12 +259,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * ability to page through a partial start index.
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param partialStartIndex
-	 *            <code>int</code> with a partial start value for paging
-	 * @return <code>List</code> of
+	 *            {@code int} with a partial start value for paging
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -276,19 +276,19 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * List the data objects that answer the given AVU metadata query with the
 	 * ability to page through a partial start index.
-	 * <p/>
+	 * <p>
 	 * This version supports case-insensitive metadata queries
 	 *
 	 * @param avuQuery
-	 *            <code>List</code> of
+	 *            {@code List} of
 	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
 	 *            defines the metadata query
 	 * @param partialStartIndex
-	 *            <code>int</code> with a partial start value for paging
+	 *            {@code int} with a partial start value for paging
 	 * @param caseInsensitive
-	 *            <code>boolean</code> indicates that the queries should be
+	 *            {@code boolean} indicates that the queries should be
 	 *            case-insensitive
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}\
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -303,7 +303,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Objects that match the metadata query
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            {@code List} of {@link AVUQueryElement} with the query
 	 *            specification
 	 * @return List of {@link DataObject}
 	 * @throws JargonQueryException
@@ -319,10 +319,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * start as an offset into the result set to get paging behaviors.
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            {@code List} of {@link AVUQueryElement} with the query
 	 *            specification
 	 * @param partialStartIndex
-	 *            <code>int</code> that has the partial start offset into the
+	 *            {@code int} that has the partial start offset into the
 	 *            result set
 	 * @return {@link DataObject}
 	 * @throws JargonQueryException
@@ -337,18 +337,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Given a set of metadata query parameters, return a list of IRODS Data
 	 * Objects that match the metadata query. This query method allows a partial
 	 * start as an offset into the result set to get paging behaviors.
-	 * <p/>
+	 * <p>
 	 * This method allows the specification of case-insensitive queries on the
 	 * AVU values. This is an iRODS3.2+ capability
 	 *
 	 * @param avuQueryElements
-	 *            <code>List</code> of {@link AVUQueryElement} with the query
+	 *            {@code List} of {@link AVUQueryElement} with the query
 	 *            specification
 	 * @param partialStartIndex
-	 *            <code>int</code> that has the partial start offset into the
+	 *            {@code int} that has the partial start offset into the
 	 *            result set
 	 * @param caseInsensitive
-	 *            <code>boolean</code> that indicates that the AVU query should
+	 *            {@code boolean} that indicates that the AVU query should
 	 *            be processed as case-insensitive
 	 * @return List of {@link DataObject}
 	 * @throws JargonQueryException
@@ -365,14 +365,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * {@link org.irods.jargon.core.pub.DataTransferOperations} access object
 	 * has more comprehensive methods for replication, including recursive
 	 * replication with the ability to process callbacks.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</code> containing the absolute path to the target
+	 *            {@code String} containing the absolute path to the target
 	 *            iRODS file to replicate.
 	 * @param targetResource
-	 *            <code>String</code> containing the resource to which the
+	 *            {@code String} containing the resource to which the
 	 *            target file should be replicated.
 	 * @throws JargonException
 	 */
@@ -380,18 +380,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			final String targetResource) throws JargonException;
 
 	/**
-	 * Get a list of <code>Resource</code> objects that contain this data
+	 * Get a list of {@code Resource} objects that contain this data
 	 * object.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param dataObjectPath
-	 *            <code>String</code> containing the absolute path to the target
+	 *            {@code String} containing the absolute path to the target
 	 *            iRODS collection containing the file
 	 * @param dataObjectName
-	 *            <code>String</code> containing the name of the target iRODS
+	 *            {@code String} containing the name of the target iRODS
 	 *            file.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.pub.domain.Resource}
 	 * @throws JargonException
 	 */
@@ -400,13 +400,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Compute a checksum on a File, iRODS uses MD5 by default.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} upon which the
 	 *            checksum value will be calculated
-	 * @return <code>String</code> with the MD5 Checksum value
+	 * @return {@code String} with the MD5 Checksum value
 	 * @throws JargonException
 	 */
 	String computeMD5ChecksumOnDataObject(final IRODSFile irodsFile)
@@ -414,20 +414,20 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Replicate the data object given as an absolute path to all of the
-	 * resources defined in the <code>irodsResourceGroupName</code>. This is
+	 * resources defined in the {@code irodsResourceGroupName}. This is
 	 * equivilant to an irepl -a command.
-	 * <p/>
+	 * <p>
 	 * The {@link org.irods.jargon.core.pub.DataTransferOperations} access
 	 * object has more comprehensive methods for replication, including
 	 * recursive replication with the ability to process callbacks.
-	 * <p/>
+	 * <p>
 	 * This method will work if a soft linked name is provided as expected.
 	 *
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</code> containing the absolute path to the target
+	 *            {@code String} containing the absolute path to the target
 	 *            iRODS file to replicate.
 	 * @param irodsResourceGroupName
-	 *            <code>String<code> with the name of the resource group to which the file will be replicated.  The replication will be to
+	 *            {@code String} with the name of the resource group to which the file will be replicated.  The replication will be to
 	 * all members of the resource group.
 	 * @throws JargonException
 	 */
@@ -437,14 +437,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Delete the given AVU from the data object identified by absolute path.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with he absolute path to the data object
+	 *            {@code String} with he absolute path to the data object
 	 *            from which the AVU triple will be deleted.
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} to be
@@ -458,12 +458,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Find the object representing the data object (file) in iRODS.
-	 * <p/>
+	 * <p>
 	 * This method will handle soft-linked paths and return the data object
 	 * representing the data at the given soft linked location.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the full absolute path to the iRODS
+	 *            {@code String} with the full absolute path to the iRODS
 	 *            data object.
 	 * @return {@link org.irods.jargon.core.pub.domain.DataObject} with catalog
 	 *         information for the given data object
@@ -475,18 +475,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to read for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -495,18 +495,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to write for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -515,18 +515,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Set the permissions on a data object to own for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -535,18 +535,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Removes the permissions on a data object to own for the given user.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -555,18 +555,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Get the file permission pertaining to the given data object
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be checked.
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @return {@link FilePermissionEnum} value with the permissions for the
 	 *         file and user.
@@ -577,15 +577,15 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param irodsDataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            {@code String} with the absolute path to the iRODS data
 	 *            object.
-	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 * @return {@code List} of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
 	 */
@@ -594,7 +594,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -603,7 +603,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param irodsFile
 	 *            {@link IRODSFile} that points to the data object whose
 	 *            metadata will be retrieved
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonException
 	 */
@@ -612,16 +612,16 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the AVU metadata associated with this irods data object.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param dataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            {@code String} with the absolute path to the iRODS data
 	 *            object
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws FileNotFoundException
 	 *             if the data object is missing
@@ -639,8 +639,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * specification of an AVU with the known name and units, and an arbitrary
 	 * value. The method will find the unique attribute by name and unit, and
 	 * overwrite the existing value with the value given in the
-	 * <code>AvuData</code> parameter.
-	 * <p/>
+	 * {@code AvuData} parameter.
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
@@ -660,14 +660,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object, as well as the current and desired AVU data.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param dataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 * @param currentAvuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the existing Avu
@@ -686,16 +686,16 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Modify the AVU metadata for a data object, giving the absolute path to
 	 * the data object parent collection, and the data object file name, as well
 	 * as the current and desired AVU data.
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 * @param dataName
-	 *            <code>String</code> with the data object name
+	 *            {@code String} with the data object name
 	 * @param currentAvuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the existing Avu
@@ -712,17 +712,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Add the AVU Metadata for the given irods parent collection/data name
-	 * <p/>
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated
 	 * with the canonical file path, and AVU metadata associated with the
 	 * canonical file path will be reflected if querying the soft link target
 	 * path.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
 	 * @param dataName
-	 *            <code>String</code> with the file name
+	 *            {@code String} with the file name
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing
 	 *            the desired new AVU
 	 * @throws JargonException
@@ -738,17 +738,17 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            {@code String} with the absolute path to the iRODS data
 	 *            object parent collection
 	 * @param dataName
-	 *            <code>String</code> with the name of the iRODS data Object
-	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *            {@code String} with the name of the iRODS data Object
+	 * @return {@code List} of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
 	 */
@@ -758,21 +758,21 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object for a given
-	 * user. Note that <code>null</code> will be returned if no permissions are
+	 * user. Note that {@code null} will be returned if no permissions are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            {@code String} with the absolute path to the iRODS data
 	 *            object parent collection
 	 * @param dataName
-	 *            <code>String</code> with the name of the iRODS data Object
+	 *            {@code String} with the name of the iRODS data Object
 	 * @param userName
-	 *            <code>String</code> with the name of the iRODS User
-	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *            {@code String} with the name of the iRODS User
+	 * @return {@code List} of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
 	 */
@@ -782,19 +782,19 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the user permissions for the given iRODS data object for a given
-	 * user. Note that <code>null</code> will be returned if no permissions are
+	 * user. Note that {@code null} will be returned if no permissions are
 	 * available.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS data
+	 *            {@code String} with the absolute path to the iRODS data
 	 *            object
 	 * @param userName
-	 *            <code>String</code> with the name of the iRODS User
-	 * @return <code>List</code> of {@link UserFilePermission} with the ACL's
+	 *            {@code String} with the name of the iRODS User
+	 * @return {@code List} of {@link UserFilePermission} with the ACL's
 	 *         for the given file.
 	 * @throws JargonException
 	 */
@@ -805,18 +805,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to read for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -827,18 +827,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to write for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -849,18 +849,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Set the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -871,18 +871,18 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Remove the permissions on a data object to own for the given user as an
 	 * admin. This admin mode is equivalent to the -M switch of the ichmod
 	 * icommand.
-	 * <p/>
+	 * <p>
 	 * Note that permissions are kept by the canonical path name. This method
 	 * will find the canonical path if this is a soft link and operate on that
 	 * data object.
 	 *
 	 * @param zone
-	 *            <code>String</code> with an optional zone for the file. Leave
+	 *            {@code String} with an optional zone for the file. Leave
 	 *            blank if not used, it is not required.
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object.
+	 *            {@code String} with the absolute path to the data object.
 	 * @param userName
-	 *            <code>String</code> with the user name whose permissions will
+	 *            {@code String} with the user name whose permissions will
 	 *            be set.
 	 * @throws JargonException
 	 */
@@ -891,14 +891,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * List the resources that have a copy of the given iRODS file
-	 * <p/>
+	 * <p>
 	 * Note that this method will follow a soft link and list the resources
 	 * based on the canonical path.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            that represents a data object.
-	 * @return <code>List</code> of {@link Resource} that represent the
+	 * @return {@code List} of {@link Resource} that represent the
 	 *         resources in iRODS that have a copy of the file/
 	 * @throws JargonException
 	 */
@@ -906,9 +906,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * Given a <code>ObjStat</code>, return a DataObject reflecting the
+	 * Given a {@code ObjStat}, return a DataObject reflecting the
 	 * representation of that data object in the iRODS iCAT. this
-	 * <code>DataObject</code> takes special collection status into account, so
+	 * {@code DataObject} takes special collection status into account, so
 	 * that if this is a soft link, it will carry information about the
 	 * canoncial path.
 	 *
@@ -925,25 +925,25 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	/**
 	 * Method to set access permission to the desired state, this variant makes
 	 * it less necessary to stack 'if' tests in permission setting code.
-	 * <p/>
-	 * Note that <code>FilePermissionEnum</code> has more permission states
+	 * <p>
+	 * Note that {@code FilePermissionEnum} has more permission states
 	 * defined then are currently supported by this method. This may require
 	 * more iRODS core server updates to make this range of permissions
 	 * meaningful.
-	 * <p/>
+	 * <p>
 	 * For the current variant of this method, only READ, WRITE, and OWN are
 	 * supported, Other permission values will cause a
-	 * <code>JargonException</code>. This may be relaxed in the future. Also
+	 * {@code JargonException}. This may be relaxed in the future. Also
 	 * note that NONE is supported, and actually causes the access permission to
 	 * be removed.
 	 *
 	 * @param zone
-	 *            <code>String</code> with the zone for the user. This method
+	 *            {@code String} with the zone for the user. This method
 	 *            will work cross-zone if appropriate permissions are in place
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path for the data object
+	 *            {@code String} with the absolute path for the data object
 	 * @param userName
-	 *            <code>userName</code> (just the name, no name#zone format) for
+	 *            {@code userName} (just the name, no name#zone format) for
 	 *            the user
 	 * @param filePermission
 	 *            {@link FilePermissionEnum}
@@ -956,7 +956,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Find the data object (file) given it's unique id (the iCAT primary key)
 	 *
 	 * @param id
-	 *            <code>int</code> with the primary key for the data object in
+	 *            {@code int} with the primary key for the data object in
 	 *            the ICAT
 	 * @return {@link DataObject} corresponding to the given id
 	 * @throws FileNotFoundException
@@ -969,13 +969,13 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List the replicas of a file in a given resource gorup
 	 *
 	 * @param collectionAbsPath
-	 *            <code>String</code> with the absolute path for the irods
+	 *            {@code String} with the absolute path for the irods
 	 *            parent collection
 	 * @param fileName
-	 *            <code>String</code> with the data object file name
+	 *            {@code String} with the data object file name
 	 * @param resourceGroupName
-	 *            <code>String</code> with the resource group name
-	 * @return <code>List</code> of {@link DataObject} for replicas in the given
+	 *            {@code String} with the resource group name
+	 * @return {@code List} of {@link DataObject} for replicas in the given
 	 *         resource group
 	 * @throws JargonException
 	 */
@@ -987,11 +987,11 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Get the total number of replicas for the given data object
 	 *
 	 * @param collection
-	 *            <code>String</code> with the absolute path for the irods
+	 *            {@code String} with the absolute path for the irods
 	 *            parent collection
 	 * @param fileName
-	 *            <code>String</code> with the data object file name
-	 * @return <code>int</code> with total number of replicas
+	 *            {@code String} with the data object file name
+	 * @return {@code int} with total number of replicas
 	 * @throws JargonException
 	 */
 	int getTotalNumberOfReplsForDataObject(String collection, String fileName)
@@ -1002,10 +1002,10 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * resource group
 	 *
 	 * @param fileName
-	 *            <code>String</code> with the data object file name
+	 *            {@code String} with the data object file name
 	 * @param resourceGroupName
-	 *            <code>String</code> with the resource group name
-	 * @return <code>int</code> with the total number of replicas
+	 *            {@code String} with the resource group name
+	 * @return {@code int} with the total number of replicas
 	 * @throws JargonException
 	 */
 	int getTotalNumberOfReplsInResourceGroupForDataObject(
@@ -1017,22 +1017,22 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * the parameter notes carefully.
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
 	 * @param fileName
-	 *            <code>String</code> with the file name of the data object to
+	 *            {@code String} with the file name of the data object to
 	 *            be trimmed
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not specified)
+	 *            {@code String} with the optional (blank if not specified)
 	 *            replica resource to trim
 	 * @param numberOfCopiesToKeep
-	 *            <code>int</code> with the optional (leave -1 if not specified)
+	 *            {@code int} with the optional (leave -1 if not specified)
 	 *            number of copies to retain
 	 * @param replicaNumberToDelete
-	 *            <code>int</code> with a specific replica number to trim (leave
+	 *            {@code int} with a specific replica number to trim (leave
 	 *            as -1 if not specified)
 	 * @param asIRODSAdmin
-	 *            <code>boolean</code> to process the given action as the
+	 *            {@code boolean} to process the given action as the
 	 *            rodsAdmin
 	 * @throws DataNotFoundException
 	 *             if the data object is not found
@@ -1047,12 +1047,12 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * List all data object replicas
 	 *
 	 * @param collectionAbsPath
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
 	 * @param fileName
-	 *            <code>String</code> with the file name of the data object to
+	 *            {@code String} with the file name of the data object to
 	 *            be trimmed
-	 * @return <code>List</code> of {@link DataObject} for each replica
+	 * @return {@code List} of {@link DataObject} for each replica
 	 * @throws JargonException
 	 */
 	List<DataObject> listReplicationsForFile(String collectionAbsPath,
@@ -1062,16 +1062,16 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * Replicate the given data object using a delayed execution
 	 *
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection
 	 * @param fileName
-	 *            <code>String</code> with the file name of the data object to
+	 *            {@code String} with the file name of the data object to
 	 *            be trimmed
 	 * @param resourceName
-	 *            <code>String</code> with the optional (blank if not specified)
+	 *            {@code String} with the optional (blank if not specified)
 	 *            replica resource to trim
 	 * @param delayInMinutes
-	 *            <code>int</code> with the number of minutes to delay the
+	 *            {@code int} with the number of minutes to delay the
 	 *            replication, will put on the deferred rule execution queue
 	 * @throws JargonException
 	 */
@@ -1086,9 +1086,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * response versus a thrown exception.
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 * @param avuData
-	 *            <code>List</code> of {@link AvuData} for each AVU to be added.
+	 *            {@code List} of {@link AvuData} for each AVU to be added.
 	 * @return {@link BulkAVUOperationResponse} with details on the success or
 	 *         failure of the add of each AVU.
 	 * @throws FileNotFoundException
@@ -1105,9 +1105,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * a delete of a non-existent AVU will be silently ignored
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 * @param avuData
-	 *            <code>List</code> of {@link AvuData} for each AVU to be
+	 *            {@code List} of {@link AvuData} for each AVU to be
 	 *            deleted.
 	 * @return {@link BulkAVUOperationResponse} with details on the success or
 	 *         failure of the delete of each AVU.
@@ -1123,7 +1123,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * operation
 	 *
 	 * @param absolutePath
-	 *            <code>String</code> with the absolute path to the data object
+	 *            {@code String} with the absolute path to the data object
 	 * @throws DataNotFoundException
 	 *             if the data object is not found
 	 * @throws JargonException
@@ -1139,8 +1139,8 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * data has to be read to compute this value, and it can be expensive.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with an iRODS absolute path
-	 * @return <code>byte[]</code> with a SHA-1 checksum value
+	 *            {@code String} with an iRODS absolute path
+	 * @return {@code byte[]} with a SHA-1 checksum value
 	 * @throws DataNotFoundException
 	 * @throws JargonException
 	 */
@@ -1155,7 +1155,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * @param objStat
 	 *            {@link ObjStat} for the data object
 	 * @param id
-	 *            <code>int</code> with the unique key for the AVU attribute
+	 *            {@code int} with the unique key for the AVU attribute
 	 * @return {@link MetaDataAndDomainData} representing that AVU
 	 * @throws JargonException
 	 * @throws DataNotFoundException
@@ -1169,9 +1169,9 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * (the id key of the AVU)
 	 *
 	 * @param dataObjectAbsolutePath
-	 *            <code>String</code> with the absolute path for the data object
+	 *            {@code String} with the absolute path for the data object
 	 * @param id
-	 *            <code>int</code> with the unique key for the AVU attribute
+	 *            {@code int} with the unique key for the AVU attribute
 	 * @return {@link MetaDataAndDomainData} representing that AVU
 	 * @throws JargonException
 	 * @throws DataNotFoundException
@@ -1187,7 +1187,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	 * appropriate algorithm
 	 *
 	 * @param irodsFile
-	 *            <code>String</code> with the absolute path for the data object
+	 *            {@code String} with the absolute path for the data object
 	 * @return {@link ChecksumValue}
 	 * @throws JargonException
 	 */
@@ -1195,7 +1195,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			throws JargonException;
 
 	/**
-	 * Only retrieve a restart if it exists, <code>null</code> if it does not
+	 * Only retrieve a restart if it exists, {@code null} if it does not
 	 *
 	 * @param restartType
 	 * @param irodsAbsolutePath
@@ -1208,14 +1208,14 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 
 	/**
 	 * Convenience method to compare the checksum of a given local file and a
-	 * complementary iRODS file, returning a <code>boolean</code> indicating
+	 * complementary iRODS file, returning a {@code boolean} indicating
 	 * whether the files match
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} to checksum
 	 * @param localFile
 	 *            {@link File} to checksum
-	 * @return <code>boolean</code> indicating whether the checksums match
+	 * @return {@code boolean} indicating whether the checksums match
 	 * @throws FileNotFoundException
 	 *             if either file is missing
 	 * @throws JargonException

@@ -7,7 +7,7 @@ package org.irods.jargon.core.connection;
  * Defines an immutable callback of status of invocation of an iRODS function.
  * This includes the ability to provide progress on an underlying stream for get
  * and put operations.
- * <p/>
+ * <p>
  * This is new development, and can eventually include the ability to provide
  * callbacks on deletes and other operations.
  *
@@ -42,7 +42,7 @@ public class ConnectionProgressStatus {
 	 * Create an immutable callback for progress sending data (PUT)
 	 *
 	 * @param byteCount
-	 *            <code>long</code> with the number of bytes instantaneously
+	 *            {@code long} with the number of bytes instantaneously
 	 *            sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */
@@ -55,7 +55,7 @@ public class ConnectionProgressStatus {
 	 * Create an immutable callback for progress receiving data (GET)
 	 *
 	 * @param byteCount
-	 *            <code>long</code> with the number of bytes instantaneously
+	 *            {@code long} with the number of bytes instantaneously
 	 *            sent.
 	 * @return {@link ConnectionProgressStatus}
 	 */

@@ -15,7 +15,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 * is query only.
 	 *
 	 * @param irodsDataObjectAbsolutePath
-	 *            <code>String</code> with the absolute iRODS path to a data
+	 *            {@code String} with the absolute iRODS path to a data
 	 *            object
 	 * @return {@link ChecksumValue} with checksum and algo information
 	 * @throws FileNotFoundException
@@ -30,7 +30,7 @@ public interface DataObjectChecksumUtilitiesAO {
 	 * {@link ObjStat}, and parse it out into algo and checksum value
 	 *
 	 * @param irodsValue
-	 *            <code>String</code>, typically in algo:string value format.
+	 *            {@code String}, typically in algo:string value format.
 	 * @return {@link ChecksumValue}, parsed out
 	 * @throws JargonException
 	 */
@@ -55,9 +55,9 @@ public interface DataObjectChecksumUtilitiesAO {
 	 * the checksums do not match
 	 *
 	 * @param localAbsolutePath
-	 *            <code>String</code> with the local file absolute path
+	 *            {@code String} with the local file absolute path
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the irods file absolute path
+	 *            {@code String} with the irods file absolute path
 	 * @return {@link ChecksumValue} for a validated checksum
 	 * @throws FileNotFoundException
 	 *             if either file is missing

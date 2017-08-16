@@ -5,7 +5,7 @@ package org.irods.jargon.datautils.synchproperties;
  * directory on iRODS that relates to a corresponding directory on the local
  * file system of the target device. This synch information is applicable to one
  * iRODS zone.
- * <p/>
+ * <p>
  * iRODS stores information about this synch folder, including the last
  * synchronization time stamps from the perspective of both the device, and
  * iRODS, so that differences can be noted.

@@ -172,7 +172,7 @@ public class AuditedAction extends IRODSDomainObject {
 	 * The time stamp (createdDate) in iRODS format in the database. This can be
 	 * used to query for an individual audit event
 	 *
-	 * @return the timeStampInIRODSFormat <code>String</code> with the time
+	 * @return the timeStampInIRODSFormat {@code String} with the time
 	 *         stamp of the audit event, used to create a 'key' thtat can find
 	 *         an audit event
 	 */

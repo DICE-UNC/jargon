@@ -17,14 +17,14 @@ public interface IRODSStarringService {
 
 	/**
 	 * Find (if it exists) the starred or favorite status and description for a
-	 * file or folder. <code>null</code> will be returned if the given absolute
+	 * file or folder. {@code null} will be returned if the given absolute
 	 * path is not 'starred' in iRODS.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection
 	 * @return {@link IRODSStarredFileOrCollection} with information for this
-	 *         user (bsed on the logged in user, or <code>null</code> if no
+	 *         user (bsed on the logged in user, or {@code null} if no
 	 *         starring is found
 	 * @throws FileNotFoundException
 	 *             if no file or collection is at the absolute path
@@ -38,14 +38,14 @@ public interface IRODSStarringService {
 	 * Annotate a file or collection as 'starred' or a favorite folder. This is
 	 * implemented as an iRODS AVU. The AVU is owned by the user who is logged
 	 * in, and includes a free text description.
-	 * <p/>
+	 * <p>
 	 * Note that this method will either add or update, based on previous data.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection
 	 * @param description
-	 *            <code>String</code> with an optional free text description.
+	 *            {@code String} with an optional free text description.
 	 *            Note that this should be set to blank if not used.
 	 * @throws FileNotFoundException
 	 *             if the irods file or collection at the absolute path does not
@@ -61,7 +61,7 @@ public interface IRODSStarringService {
 	 * is not starred, it treats it as successful.
 	 * 
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection
 	 * @throws FileNotFoundException
 	 *             if no file or collection is at the absolute path
@@ -72,14 +72,14 @@ public interface IRODSStarringService {
 
 /**
 	 * List those collections marked as 'starred'.  Note that this method allows paging by providing an offset.
-	 * <p/>
-	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
+	 * <p>
+	 * Note that the returned {@code IRODSStarredFileOrCollection} objects are subclasses of {@link IRODSDomainObject</code> and
 	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
 	 * results.
 	 *
-	 * @param pagingOffset <code>int</code> with an offset into the result sets, for paging purposes.  To start at the beginning 
+	 * @param pagingOffset {@code int} with an offset into the result sets, for paging purposes.  To start at the beginning
 	 * provide a value of 0
-	 * @return <code>List</code> of {@link IRODSStarredFileOrCollection} 
+	 * @return {@code List} of {@link IRODSStarredFileOrCollection}
 	 * @throws JargonException
 	 */
 	List<IRODSStarredFileOrCollection> listStarredCollections(
@@ -87,14 +87,14 @@ public interface IRODSStarringService {
 
 /**
 	 * List those data objects marked as 'starred'.  Note that this method allows paging by providing an offset.
-	 * <p/>
-	 * Note that the returned <code>IRODSStarredFileOrCollection</code> objects are subclasses of {@link IRODSDomainObject</code> and
+	 * <p>
+	 * Note that the returned {@code IRODSStarredFileOrCollection} objects are subclasses of {@link IRODSDomainObject</code> and
 	 * as such they contain count and 'last record' information to assist clients of this API that need to do paging for subsequent
 	 * results.
 	 *
-	 * @param pagingOffset <code>int</code> with an offset into the result sets, for paging purposes.  To start at the beginning 
+	 * @param pagingOffset {@code int} with an offset into the result sets, for paging purposes.  To start at the beginning
 	 * provide a value of 0
-	 * @return <code>List</code> of {@link IRODSStarredFileOrCollection} 
+	 * @return {@code List} of {@link IRODSStarredFileOrCollection}
 	 * @throws JargonException
 	 */
 	List<IRODSStarredFileOrCollection> listStarredDataObjects(

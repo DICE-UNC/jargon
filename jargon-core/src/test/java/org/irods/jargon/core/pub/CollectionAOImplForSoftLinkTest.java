@@ -19,7 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Tests handling of soft links in <code>CollectionAOImpl</code>
+ * Tests handling of soft links in {@code CollectionAOImpl}
  *
  * @author Mike Conway - DICE (www.irods.org)
  *

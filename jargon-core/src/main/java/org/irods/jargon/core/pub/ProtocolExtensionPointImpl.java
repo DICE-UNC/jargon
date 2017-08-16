@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory;
  * special sets of operations (e.g. the Ticket administration system, extended
  * iRODS administrative functions) that may be encapsulated in other libraries
  * outside of the core jargon API.
- * <p/>
+ * <p>
  * The primary motivation is to create a plug-in point such that Jargon core can
  * remain focused on basic functionality.
  *

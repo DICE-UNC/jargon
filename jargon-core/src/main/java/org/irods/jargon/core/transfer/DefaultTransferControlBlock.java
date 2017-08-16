@@ -12,10 +12,10 @@ import org.slf4j.LoggerFactory;
  * doing operations such as a put or a get, there is a need to handle restarts,
  * and this object contains a method that can be overridden to filter which
  * files need to be transferred.
- * <p/>
+ * <p>
  * This class also contains a shared value that can be used to set a cancel in a
  * recursive transfer operation.
- * <p/>
+ * <p>
  * This implementation will cancel a transfer if the current errors exceeds the
  * maximum error threshold.
  *
@@ -66,13 +66,13 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * null.
 	 *
 	 * @param restartAbsolutePath
-	 *            <code>String</code> with a restart path. This may be set to
+	 *            {@code String} with a restart path. This may be set to
 	 *            blank or null if restarts are not desired.
 	 * @param maxErrorsBeforeCancelling
-	 *            <code>int</code> with the maximum errors to tolerate before
+	 *            {@code int} with the maximum errors to tolerate before
 	 *            transfer is canceled. A value of -1 indicates that errors will
 	 *            be ignored.
-	 * @return instance of <code>DefaultTransferControlBlock</code>
+	 * @return instance of {@code DefaultTransferControlBlock}
 	 * @throws JargonException
 	 */
 	public final static TransferControlBlock instance(final String restartAbsolutePath,
@@ -85,9 +85,9 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * The restart path will be ignored if blank or null.
 	 *
 	 * @param restartAbsolutePath
-	 *            <code>String</code> with a restart path. This may be set to
+	 *            {@code String} with a restart path. This may be set to
 	 *            blank or null if restarts are not desired.
-	 * @return instance of <code>DefaultTransferControlBlock</code>
+	 * @return instance of {@code DefaultTransferControlBlock}
 	 * @throws JargonException
 	 */
 	public final static TransferControlBlock instance(final String restartAbsolutePath) throws JargonException {

@@ -54,7 +54,7 @@ public interface UserTagCloudService {
 	 * 'LIKE %searchTerm%'.
 	 * 
 	 * @param tagSearchTerm
-	 *            <code>String</code> that will be searched for. Note that the
+	 *            {@code String} that will be searched for. Note that the
 	 *            method will wrap the term in the '%' wildcards, and these
 	 *            should not be supplied.
 	 * @return {@link org.irods.jargon.usertagging.domain.UserTagCloudView} with

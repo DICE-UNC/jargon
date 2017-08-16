@@ -36,9 +36,9 @@ final class TransferOperationsHelper {
 	 * Initializer creates an instance of this class.
 	 *
 	 * @param irodsSession
-	 *            <code>IRODSSession</code> that can connect to iRODS
+	 *            {@code IRODSSession} that can connect to iRODS
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> for this connection.
+	 *            {@code IRODSAccount} for this connection.
 	 * @return
 	 * @throws JargonException
 	 */
@@ -68,7 +68,7 @@ final class TransferOperationsHelper {
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
 	 *            the file or collection to retrieve.
 	 * @param targetLocalFile
-	 *            <code>File</code> that will hold the retrieved data.
+	 *            {@code File} that will hold the retrieved data.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks indicating the
@@ -205,13 +205,13 @@ final class TransferOperationsHelper {
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the
 	 *            source of the get.
 	 * @param targetLocalFile
-	 *            <code>File</code> on the local file system to which the files
+	 *            {@code File} on the local file system to which the files
 	 *            will be transferrred.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
@@ -410,10 +410,10 @@ final class TransferOperationsHelper {
 	 * cancellation, and can also provide callbacks to a process.
 	 *
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS file
+	 *            {@code String} with the absolute path to an iRODS file
 	 *            that should be replicated.
 	 * @param targetResource
-	 *            <code>String</code> with the resource to which the file should
+	 *            {@code String} with the resource to which the file should
 	 *            be replicated.
 	 * @param transferStatusCallbackListener
 	 *            an optional
@@ -675,10 +675,10 @@ final class TransferOperationsHelper {
 	 * a cancellation, and can also provide callbacks to a process.
 	 *
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS file
+	 *            {@code String} with the absolute path to an iRODS file
 	 *            that should be replicated.
 	 * @param targetResource
-	 *            <code>String</code> with the resource to which the file should
+	 *            {@code String} with the resource to which the file should
 	 *            be replicated.
 	 * @param transferStatusCallbackListener
 	 *            an optional
@@ -838,7 +838,7 @@ final class TransferOperationsHelper {
 	 * Put a single file to iRODS.
 	 *
 	 * @param sourceFile
-	 *            <code>File</code> on the local file system that will be the
+	 *            {@code File} on the local file system that will be the
 	 *            source of the put.
 	 * @param targetIrodsFile
 	 *            {@link org.irods.jargon.core.pub.io.File} that is the remote
@@ -847,7 +847,7 @@ final class TransferOperationsHelper {
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
@@ -1032,13 +1032,13 @@ final class TransferOperationsHelper {
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
+	 *            may be set to {@code null} if those facilities are not
 	 *            needed.
 	 * @throws JargonException
 	 */
@@ -1238,25 +1238,25 @@ final class TransferOperationsHelper {
 	 * iRODS to iRODS copy.
 	 *
 	 * @param irodsSourceFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the source file,
+	 *            {@code String} with the absolute path to the source file,
 	 *            which is an iRODS data object, not a collection
 	 * @param targetResource
-	 *            <code>String</code> with the optional (blank if not specified)
+	 *            {@code String} with the optional (blank if not specified)
 	 *            resource to which the file wil be copied
 	 * @param irodsTargetFileAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS target
+	 *            {@code String} with the absolute path to the iRODS target
 	 *            file or collection to which the single file will be copied.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure
 	 *            of each individual file transfer. This may be set to
-	 *            <code>null</code>, in which case, exceptions that are thrown
+	 *            {@code null}, in which case, exceptions that are thrown
 	 *            will be rethrown by this method to the caller.
 	 * @param transferControlBlock
 	 *            {@link org.irods.jargon.core.transfer.TransferControlBlock}
 	 *            implementation that is the communications mechanism between
 	 *            the initiator of the transfer and the transfer process. This
-	 *            may be set to <code>null</code> if those facilities are not
+	 *            may be set to {@code null} if those facilities are not
 	 *            needed.
 	 * @throws JargonException
 	 */

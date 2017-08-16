@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * tables, one that gives file length buckets to get a basic 'histogram' of the
  * relative frequency of each size, and a table that gives counts by file
  * extension.
- * <p/>
+ * <p>
  * This service handles both local and iRODS directories
  *
  * @author Mike Conway - DICE

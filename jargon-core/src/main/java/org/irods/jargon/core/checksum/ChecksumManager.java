@@ -25,13 +25,13 @@ public interface ChecksumManager {
 	/**
 	 * Using a value from iRODS describing a checksum on a file, determine the
 	 * type of encoding used. Note that if no checksum is present,
-	 * <code>null</code> will be returned
+	 * {@code null} will be returned
 	 *
 	 * @param irodsChecksumValue
-	 *            <code>String</code> with the checksum value from iRODS,
+	 *            {@code String} with the checksum value from iRODS,
 	 *            potentially including a prefix
 	 * @return {@link ChecksumValue} indicating the hashing algorithm used to
-	 *         determine the checksum and the actual value or <code>null</code>
+	 *         determine the checksum and the actual value or {@code null}
 	 *         if no checksum available
 	 * @throws ChecksumMethodUnavailableException
 	 */

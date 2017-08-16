@@ -19,12 +19,12 @@ public interface SynchPropertiesService {
 	 * and a local file system for a given user and device.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name for the synch
+	 *            {@code String} with the iRODS user name for the synch
 	 * @param deviceName
-	 *            <code>String</code> with the given name for the device
+	 *            {@code String} with the given name for the device
 	 *            (laptop, desktop, etc)
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection that is the root of the synchronization
 	 * @return {@link UserSynchTarget} describing the synchronization status for
 	 *         the user/target name/iRODS absolute path
@@ -41,20 +41,20 @@ public interface SynchPropertiesService {
 	 * device on iRODS.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name that will synch for the
+	 *            {@code String} with the user name that will synch for the
 	 *            given device
 	 * @param deviceName
-	 *            <code>String</code> with a device name that represents the
+	 *            {@code String} with a device name that represents the
 	 *            local file system that will synchronize to iRODS
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection that will be synchronized with the given local
 	 *            collection
 	 * @param localAbsolutePath
-	 *            <code>String</code> with the absolute path to the local file
+	 *            {@code String} with the absolute path to the local file
 	 *            system directory that will be synched to iRODS
 	 * @throws DuplicateDataException
-	 *             <code>String</code> that indicates that this synch has
+	 *             {@code String} that indicates that this synch has
 	 *             already been configured
 	 * @throws JargonException
 	 */
@@ -111,13 +111,13 @@ public interface SynchPropertiesService {
 	 * and on iRODS as the last synch time
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name that will synch for the
+	 *            {@code String} with the user name that will synch for the
 	 *            given device
 	 * @param deviceName
-	 *            <code>String</code> with a device name that represents the
+	 *            {@code String} with a device name that represents the
 	 *            local file system that will synchronize to iRODS
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to an iRODS
+	 *            {@code String} with the absolute path to an iRODS
 	 *            collection that will be synchronized with the given local
 	 *            collection
 	 * @throws JargonException
@@ -130,8 +130,8 @@ public interface SynchPropertiesService {
 	 * connected iRODS server.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name.
-	 * @return <code>List</code> of {@link UserSynchTarget} giving the
+	 *            {@code String} with the iRODS user name.
+	 * @return {@code List} of {@link UserSynchTarget} giving the
 	 *         configured synch directories and devices on this iRODS server for
 	 *         this user
 	 * @throws DataNotFoundException

@@ -6,7 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Variant of normal <code>InputStream</code> that will clean up the underlying
+ * Variant of normal {@code InputStream} that will clean up the underlying
  * file when the stream is closed, otherwise, just a normal stream.
  * 
  * @author Mike Conway - DICE (www.irods.org)

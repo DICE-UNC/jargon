@@ -28,10 +28,10 @@ import java.util.Map;
 
 /**
  * <b>Experimental!</b>
- * <p/>
- * This is an implementation of the standard <code>java.sql.ResultSet</code> as
+ * <p>
+ * This is an implementation of the standard {@code java.sql.ResultSet} as
  * an abstract superclass that represents various types of iRODS query results.
- * <p/>
+ * <p>
  * The primary purpose of this abstract class is to define a subset that can be
  * implemented by the various query types (special query, simple query, gen
  * query), and indicate unsupported operations for the rest.

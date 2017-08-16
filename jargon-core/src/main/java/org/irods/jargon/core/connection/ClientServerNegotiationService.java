@@ -90,7 +90,7 @@ class ClientServerNegotiationService {
 	 * Using the configured connection and account information, go through the
 	 * iRODS client/server negotiation that occurs after the start-up pack has
 	 * been processed.
-	 * <p/>
+	 * <p>
 	 * This is triggered after the neg_pi has been sent from the server, see
 	 * irods_client_negotiation.cpp ~ line 412
 	 *
@@ -148,7 +148,7 @@ class ClientServerNegotiationService {
 	/**
 	 * After negotiation, notify the server. If the connection uses SSL, this is
 	 * the point where the connection is manipulated to wrap the socket in ssl
-	 * <p/>
+	 * <p>
 	 * This should be processed in irods_client_negotiation.cpp line 463 -
 	 * read_client_server_negotiation_message
 	 *

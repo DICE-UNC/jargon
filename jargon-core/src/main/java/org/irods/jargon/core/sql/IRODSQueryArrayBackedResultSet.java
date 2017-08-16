@@ -21,14 +21,14 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * Version of a <code>java.sql.ResultSet</code> based on the results of an iRODS
- * query using one of the various query techniques. The <code>ResultSet</code>
- * is based on data parsed into an array of <code>String</code> data, and
+ * Version of a {@code java.sql.ResultSet} based on the results of an iRODS
+ * query using one of the various query techniques. The {@code ResultSet}
+ * is based on data parsed into an array of {@code String} data, and
  * includes other information about the generating query, and the capability to
  * page the results.
- * <p/>
+ * <p>
  * Notes:
- * <p/>
+ * <p>
  * This might need to be abstract with subclasses for the various query types,
  * need to consider whether this is stateful (page results) or stateless (use
  * offsets).

@@ -9,7 +9,7 @@ import java.util.List;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
- * Exception in the validation of the <code>UserProfile</code>
+ * Exception in the validation of the {@code UserProfile}
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 

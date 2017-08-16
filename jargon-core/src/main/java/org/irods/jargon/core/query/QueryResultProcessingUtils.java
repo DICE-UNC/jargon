@@ -29,18 +29,18 @@ public class QueryResultProcessingUtils {
 	 * for easier processing.
 	 *
 	 * @param queryResponse
-	 *            <code>Tag</code> set with the raw GenQuery response from
+	 *            {@code Tag} set with the raw GenQuery response from
 	 *            iRODS.
 	 * @param columnNames
-	 *            <code>List<String></code> with the column names
+	 *            {@code List<String>} with the column names
 	 * @param continuation
-	 *            <code>int</code>
+	 *            {@code int}
 	 * @param partialStartIndex
-	 *            <code>int</code> with the offset into the query results for
+	 *            {@code int} with the offset into the query results for
 	 *            the query generating this response, this is so the record
 	 *            count begins at the point in the overall results where the
 	 *            offset points to.
-	 * @return <code>List</code> of
+	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.IRODSQueryResultRow} for each
 	 *         row in the GenQuery result
 	 * @throws JargonException
@@ -98,7 +98,7 @@ public class QueryResultProcessingUtils {
 	 *
 	 * @param response
 	 *            {@link Tag} from a gen or specific query
-	 * @return <code>int</code> with the continuation value
+	 * @return {@code int} with the continuation value
 	 * @throws JargonException
 	 */
 	public static int getContinuationValue(final Tag response)

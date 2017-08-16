@@ -46,16 +46,16 @@ public final class ParallelGetTransferThread extends
 	/**
 	 * Represents a thread used in a parallel file transfer. There will be
 	 * multiple threads controlled from the
-	 * <code>ParalellFileTransferStrategy</code>. This is an immutable object ,
-	 * as is the <code>parallelFileTransferStrategy</code> that this object
+	 * {@code ParalellFileTransferStrategy}. This is an immutable object ,
+	 * as is the {@code parallelFileTransferStrategy} that this object
 	 * holds a reference to.
 	 *
 	 * @param parallelGetFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy}
 	 *            that controls the transfer threads.
 	 * @param threadNumber
-	 *            <code>int</code> with the thread number
-	 * @return <code>ParallelGetTransferThread</code>
+	 *            {@code int} with the thread number
+	 * @return {@code ParallelGetTransferThread}
 	 * @throws JargonException
 	 */
 	public static ParallelGetTransferThread instance(

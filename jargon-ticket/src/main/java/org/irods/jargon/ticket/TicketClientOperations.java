@@ -15,18 +15,18 @@ public interface TicketClientOperations {
 
 	/**
 	 * Wraps a put operation with ticket semantics.
-	 * <p/>
+	 * <p>
 	 * Put a file or collection to iRODS. Note that 'force' is not supported
 	 * with tickets at this time, so overwrites will return an
-	 * <code>OverwriteException</code>
+	 * {@code OverwriteException}
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> with the unique ticket string
+	 *            {@code String} with the unique ticket string
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
 	 *            the file or collection to retrieve.
 	 * @param targetLocalFile
-	 *            <code>File</code> that will hold the retrieved data.
+	 *            {@code File} that will hold the retrieved data.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks indicating the
@@ -58,19 +58,19 @@ public interface TicketClientOperations {
 
 	/**
 	 * Wraps a get operation with ticket semantics.
-	 * <p/>
+	 * <p>
 	 * Get a file or collection from iRODS to the local file system. This method
 	 * will detect whether this is a get of a single file, or of a collection.
 	 * If this is a get of a collection, the method will recursively obtain the
 	 * data from iRODS.
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> with the unique ticket string
+	 *            {@code String} with the unique ticket string
 	 * @param irodsSourceFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that points to
 	 *            the file or collection to retrieve.
 	 * @param targetLocalFile
-	 *            <code>File</code> that will hold the retrieved data.
+	 *            {@code File} that will hold the retrieved data.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks indicating the
@@ -102,15 +102,15 @@ public interface TicketClientOperations {
 
 	/**
 	 * Given an iRODS ticket for a data object, return an object that has an
-	 * <code>InputStream</code> for that file, as well as the length of data to
+	 * {@code InputStream} for that file, as well as the length of data to
 	 * be streamed. This method is oriented towards applications that need to
 	 * represent the data from iRODS as a stream.
-	 * <p/>
+	 * <p>
 	 * Note that currently only 'get' and 'put' are supported via tickets, so
 	 * mid-tier applications that wish to stream data back to the client need to
 	 * do an intermediate get to the mid-tier platform and then stream from this
 	 * location.
-	 * <p/>
+	 * <p>
 	 * Tickets are limited in what they can access, so various operations that
 	 * refer to the iCAT, such as obtaining the length, or differentiating
 	 * between a file and a collection, cannot be done in the typical way. As a
@@ -118,7 +118,7 @@ public interface TicketClientOperations {
 	 * may be sent in browser responses.
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> with the unique string that represents the
+	 *            {@code String} with the unique string that represents the
 	 *            ticket
 	 * @param irodsSourceFile
 	 *            {@link IRODSFile} that represents the data to be streamed back
@@ -142,33 +142,33 @@ public interface TicketClientOperations {
 
 	/**
 	 * This method specifically addresses 'upload' scenarios, where data is
-	 * supplied via an <code>InputStream</code>, representing the contents that
-	 * should be placed in a target file with a given <code>fileName</code>
+	 * supplied via an {@code InputStream}, representing the contents that
+	 * should be placed in a target file with a given {@code fileName}
 	 * underneath a given target iRODS collection path in
-	 * <code>irodsCollectionAbsolutePath</code>. This method will take the
+	 * {@code irodsCollectionAbsolutePath}. This method will take the
 	 * contents of the input stream, store in a temporary cache location as
-	 * described by the <code>intermediateCacheRootDirectory</code>, then put
+	 * described by the {@code intermediateCacheRootDirectory}, then put
 	 * that file to iRODS. Once the operation is complete, the temporary file
 	 * will be removed. This removal is done in a finally block, so that if the
 	 * put operation fails, it should minimize leakage of old files.
-	 * <p/>
+	 * <p>
 	 * The primary use case for this method is in mid-tier applications where a
 	 * file is being uploaded from a browser. Since the iRODS ticket system does
 	 * not support input or output streams, the upload needs to be wrapped to
 	 * emulate a direct streaming via a ticket.
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> with the unique ticket id, which must have
+	 *            {@code String} with the unique ticket id, which must have
 	 *            write privilages
 	 * @param irodsCollectionAbsolutePath
-	 *            <code>String</code> with the target iRODS parent collection
+	 *            {@code String} with the target iRODS parent collection
 	 *            absolute path. The file will be placed under this collection
-	 *            using the given <code>fileName</code>
+	 *            using the given {@code fileName}
 	 * @param fileName
-	 *            <code>String</code> with the name of the file being uploaded
+	 *            {@code String} with the name of the file being uploaded
 	 *            to iRODS
 	 * @param inputStreamForFileData
-	 *            <code>InputStream</code> which should be properly buffered by
+	 *            {@code InputStream} which should be properly buffered by
 	 *            the caller. This could be the input stream resulting from an
 	 *            http upload operation
 	 * @param temporaryCacheDirectoryLocation
