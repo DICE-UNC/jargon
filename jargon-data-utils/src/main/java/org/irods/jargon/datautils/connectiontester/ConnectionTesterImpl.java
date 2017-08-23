@@ -20,7 +20,7 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.datautils.connectiontester.TestResultEntry.OperationType;
-import org.irods.jargon.testutils.TestingUtilsException;
+import org.irods.jargon.testutils.TestConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,13 +28,11 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  * 
  */
-public class ConnectionTesterImpl extends AbstractJargonService implements
-		ConnectionTester {
+public class ConnectionTesterImpl extends AbstractJargonService implements ConnectionTester {
 
 	private static final Random RANDOM = new Random();
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ConnectionTesterImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(ConnectionTesterImpl.class);
 
 	private final ConnectionTesterConfiguration connectionTesterConfiguration;
 
@@ -42,15 +40,12 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public ConnectionTesterImpl(
-			IRODSAccessObjectFactory irodsAccessObjectFactory,
-			IRODSAccount irodsAccount,
+	public ConnectionTesterImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount,
 			ConnectionTesterConfiguration connectionTesterConfiguration) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (connectionTesterConfiguration == null) {
-			throw new IllegalArgumentException(
-					"null connectionTesterConfiguration");
+			throw new IllegalArgumentException("null connectionTesterConfiguration");
 		}
 
 		this.connectionTesterConfiguration = connectionTesterConfiguration;
@@ -66,8 +61,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	 * @throws JargonException
 	 */
 	@Override
-	public ConnectionTestResult runTests(final List<TestType> testTypes)
-			throws JargonException {
+	public ConnectionTestResult runTests(final List<TestType> testTypes) throws JargonException {
 
 		log.info("runTests{}");
 
@@ -97,11 +91,10 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 	 * @return
 	 * @throws JargonException
 	 */
-	private List<TestResultEntry> processTest(TestType testType)
-			throws JargonException {
+	private List<TestResultEntry> processTest(TestType testType) throws JargonException {
 
 		log.info("processTest:{}", testType);
-		List<TestResultEntry> entries = new ArrayList<TestResultEntry>();
+		List<TestResultEntry> entries = new ArrayList<>();
 
 		log.info("processTest() for type:{}", testType);
 		TestResultEntry result = new TestResultEntry();
@@ -141,27 +134,18 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 		File localGetFile = null;
 
 		try {
-			localFile = new File(
-					connectionTesterConfiguration
-							.getLocalSourceParentDirectory(),
-					testFileSourceName);
-			log.info("delete previous files and generate a local file for:{}",
-					localFile);
+			localFile = new File(connectionTesterConfiguration.getLocalSourceParentDirectory(), testFileSourceName);
+			log.info("delete previous files and generate a local file for:{}", localFile);
 			localFile.delete();
 
-			File parentFile = new File(
-					connectionTesterConfiguration
-							.getLocalSourceParentDirectory());
+			File parentFile = new File(connectionTesterConfiguration.getLocalSourceParentDirectory());
 			parentFile.mkdirs();
 
 			log.info("using configuration:{}", connectionTesterConfiguration);
-			DataTransferOperations dataTransferOperations = this
-					.getIrodsAccessObjectFactory().getDataTransferOperations(
-							getIrodsAccount());
+			DataTransferOperations dataTransferOperations = this.getIrodsAccessObjectFactory()
+					.getDataTransferOperations(getIrodsAccount());
 
-			generateFileOfFixedLengthGivenName(
-					connectionTesterConfiguration
-							.getLocalSourceParentDirectory(),
+			generateFileOfFixedLengthGivenName(connectionTesterConfiguration.getLocalSourceParentDirectory(),
 					testFileSourceName, dataSize);
 			log.info("test file generated at:{}", testFileSourceName);
 			sb = new StringBuilder();
@@ -172,23 +156,16 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			localGetFile.delete();
 			long startTime = System.currentTimeMillis();
 
-			irodsFile = this
-					.getIrodsAccessObjectFactory()
-					.getIRODSFileFactory(getIrodsAccount())
-					.instanceIRODSFile(
-							connectionTesterConfiguration
-									.getIrodsParentDirectory(),
-							testFileSourceName);
+			irodsFile = this.getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+					.instanceIRODSFile(connectionTesterConfiguration.getIrodsParentDirectory(), testFileSourceName);
 			log.info("delete old irods file:{}", irodsFile);
 			irodsFile.deleteWithForceOption();
 
-			log.info("initiating put operation to:{}",
-					connectionTesterConfiguration.getIrodsParentDirectory());
+			log.info("initiating put operation to:{}", connectionTesterConfiguration.getIrodsParentDirectory());
 
 			result.setOperationType(OperationType.PUT);
 
-			dataTransferOperations.putOperation(localFile, irodsFile, null,
-					null);
+			dataTransferOperations.putOperation(localFile, irodsFile, null, null);
 
 			long endTime = System.currentTimeMillis();
 			result.setTotalMilliseconds(endTime - startTime);
@@ -220,8 +197,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			startTime = System.currentTimeMillis();
 
 			try {
-				dataTransferOperations.getOperation(irodsFile, localGetFile,
-						null, null);
+				dataTransferOperations.getOperation(irodsFile, localGetFile, null, null);
 			} catch (Exception e) {
 				log.error("exception in transfer reported back in status", e);
 				result.setException(e);
@@ -243,7 +219,7 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			entries.add(result);
 			return entries;
 
-		} catch (TestingUtilsException e) {
+		} catch (TestConfigurationException e) {
 			log.error("error generating local file", e);
 			putSucceeded = false;
 			result.setException(e);
@@ -289,9 +265,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 
 	}
 
-	public static String generateFileOfFixedLengthGivenName(
-			final String fileDirectory, final String fileName, final long length)
-			throws TestingUtilsException {
+	public static String generateFileOfFixedLengthGivenName(final String fileDirectory, final String fileName,
+			final long length) throws TestConfigurationException {
 
 		// 1023 bytes of random stuff should be plenty, then just repeat it as
 		// needed, this is odd number to prevent lining up on even number buffer
@@ -346,9 +321,8 @@ public class ConnectionTesterImpl extends AbstractJargonService implements
 			}
 
 		} catch (IOException ioe) {
-			throw new TestingUtilsException(
-					"error generating random file with dir:" + fileDirectory
-							+ " and generated name:" + fileName, ioe);
+			throw new TestConfigurationException(
+					"error generating random file with dir:" + fileDirectory + " and generated name:" + fileName, ioe);
 		} finally {
 			if (outStream != null) {
 				try {

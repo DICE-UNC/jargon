@@ -2,8 +2,6 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
@@ -14,6 +12,8 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class PAMAuthTest {
 
@@ -28,10 +28,8 @@ public class PAMAuthTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		irodsFileSystem = IRODSFileSystem.instance();
-		settableJargonProperties = new SettableJargonProperties(
-				irodsFileSystem.getJargonProperties());
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		settableJargonProperties = new SettableJargonProperties(irodsFileSystem.getJargonProperties());
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 	}
 
 	@AfterClass
@@ -42,8 +40,7 @@ public class PAMAuthTest {
 	@Before
 	public void before() throws Exception {
 
-		irodsFileSystem.getIrodsSession().setJargonProperties(
-				settableJargonProperties);
+		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 	}
 
 	@Test
@@ -52,11 +49,9 @@ public class PAMAuthTest {
 				.buildAnonymousIRODSAccountFromTestProperties(testingProperties);
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
 		AuthenticationFactory authFactory = new AuthenticationFactoryImpl();
-		AuthMechanism authMechanism = authFactory
-				.instanceAuthMechanism(irodsAccount);
+		AuthMechanism authMechanism = authFactory.instanceAuthMechanism(irodsAccount);
 		boolean isStd = authMechanism instanceof StandardIRODSAuth;
-		Assert.assertTrue("did not revert to standard auth for anonymous",
-				isStd);
+		Assert.assertTrue("did not revert to standard auth for anonymous", isStd);
 	}
 
 	@Test
@@ -65,37 +60,26 @@ public class PAMAuthTest {
 			return;
 		}
 
-		String pamUser = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-		String pamPassword = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+		String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerCurrentTime();
 
-		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-				.getAuthResponse();
-		Assert.assertNotNull("no authenticating account",
-				authResponse.getAuthenticatingIRODSAccount());
-		Assert.assertEquals("did not set authenticating account to PAM type",
-				AuthScheme.PAM, authResponse
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+		Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
-		Assert.assertNotNull("no authenticated account",
-				authResponse.getAuthenticatedIRODSAccount());
-		Assert.assertEquals("did not set authenticated account to std type",
-				AuthScheme.STANDARD, authResponse
-						.getAuthenticatedIRODSAccount()
-						.getAuthenticationScheme());
-		Assert.assertNotNull("did not set auth startup response",
-				authResponse.getStartupResponse());
+		Assert.assertNotNull("no authenticated account", authResponse.getAuthenticatedIRODSAccount());
+		Assert.assertEquals("did not set authenticated account to std type", AuthScheme.STANDARD,
+				authResponse.getAuthenticatedIRODSAccount().getAuthenticationScheme());
+		Assert.assertNotNull("did not set auth startup response", authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 		// now try something that uses tha
@@ -117,42 +101,30 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(
-				settableJargonProperties);
+		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
-		String pamUser = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-		String pamPassword = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+		String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerCurrentTime();
 
-		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-				.getAuthResponse();
-		Assert.assertNotNull("no authenticating account",
-				authResponse.getAuthenticatingIRODSAccount());
-		Assert.assertEquals("did not set authenticating account to PAM type",
-				AuthScheme.PAM, authResponse
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+		Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
-		Assert.assertNotNull("no authenticated account",
-				authResponse.getAuthenticatedIRODSAccount());
-		Assert.assertEquals("did not set authenticated account to std type",
-				AuthScheme.STANDARD, authResponse
-						.getAuthenticatedIRODSAccount()
-						.getAuthenticationScheme());
-		Assert.assertNotNull("did not set auth startup response",
-				authResponse.getStartupResponse());
+		Assert.assertNotNull("no authenticated account", authResponse.getAuthenticatedIRODSAccount());
+		Assert.assertEquals("did not set authenticated account to std type", AuthScheme.STANDARD,
+				authResponse.getAuthenticatedIRODSAccount().getAuthenticationScheme());
+		Assert.assertNotNull("did not set auth startup response", authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 		// now try something that uses tha
@@ -174,42 +146,30 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(
-				settableJargonProperties);
+		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
-		String pamUser = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-		String pamPassword = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+		String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerCurrentTime();
 
-		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-				.getAuthResponse();
-		Assert.assertNotNull("no authenticating account",
-				authResponse.getAuthenticatingIRODSAccount());
-		Assert.assertEquals("did not set authenticating account to PAM type",
-				AuthScheme.PAM, authResponse
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+		Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
-		Assert.assertNotNull("no authenticated account",
-				authResponse.getAuthenticatedIRODSAccount());
-		Assert.assertEquals("did not set authenticated account to std type",
-				AuthScheme.STANDARD, authResponse
-						.getAuthenticatedIRODSAccount()
-						.getAuthenticationScheme());
-		Assert.assertNotNull("did not set auth startup response",
-				authResponse.getStartupResponse());
+		Assert.assertNotNull("no authenticated account", authResponse.getAuthenticatedIRODSAccount());
+		Assert.assertEquals("did not set authenticated account to std type", AuthScheme.STANDARD,
+				authResponse.getAuthenticatedIRODSAccount().getAuthenticationScheme());
+		Assert.assertNotNull("did not set auth startup response", authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 		// now try something that uses tha
@@ -231,42 +191,30 @@ public class PAMAuthTest {
 			return;
 		}
 
-		SettableJargonProperties testProps = new SettableJargonProperties(
-				settableJargonProperties);
+		SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
 		testProps.setNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
-		String pamUser = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-		String pamPassword = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+		String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+		String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerCurrentTime();
 
-		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-				.getAuthResponse();
-		Assert.assertNotNull("no authenticating account",
-				authResponse.getAuthenticatingIRODSAccount());
-		Assert.assertEquals("did not set authenticating account to PAM type",
-				AuthScheme.PAM, authResponse
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+		Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
-		Assert.assertNotNull("no authenticated account",
-				authResponse.getAuthenticatedIRODSAccount());
-		Assert.assertEquals("did not set authenticated account to std type",
-				AuthScheme.STANDARD, authResponse
-						.getAuthenticatedIRODSAccount()
-						.getAuthenticationScheme());
-		Assert.assertNotNull("did not set auth startup response",
-				authResponse.getStartupResponse());
+		Assert.assertNotNull("no authenticated account", authResponse.getAuthenticatedIRODSAccount());
+		Assert.assertEquals("did not set authenticated account to std type", AuthScheme.STANDARD,
+				authResponse.getAuthenticatedIRODSAccount().getAuthenticationScheme());
+		Assert.assertNotNull("did not set auth startup response", authResponse.getStartupResponse());
 		Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 		// now try something that uses tha
@@ -292,46 +240,32 @@ public class PAMAuthTest {
 
 		for (int i = 0; i < times; i++) {
 
-			SettableJargonProperties testProps = new SettableJargonProperties(
-					settableJargonProperties);
+			SettableJargonProperties testProps = new SettableJargonProperties(settableJargonProperties);
 			testProps.setNegotiationPolicy(SslNegotiationPolicy.NO_NEGOTIATION);
 			irodsFileSystem.getIrodsSession().setJargonProperties(testProps);
 
-			String pamUser = testingProperties
-					.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
-			String pamPassword = testingProperties
-					.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
+			String pamUser = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_USER_KEY);
+			String pamPassword = testingProperties.getProperty(TestingPropertiesHelper.IRODS_PAM_PASSWORD_KEY);
 
 			IRODSAccount irodsAccount = testingPropertiesHelper
-					.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-							testingProperties, pamUser, pamPassword);
+					.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser,
+							pamPassword);
 
 			irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-			EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-					.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-							irodsAccount);
+			EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+					.getEnvironmentalInfoAO(irodsAccount);
 			environmentalInfoAO.getIRODSServerCurrentTime();
 
-			AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-					.getAuthResponse();
-			Assert.assertNotNull("no authenticating account",
-					authResponse.getAuthenticatingIRODSAccount());
-			Assert.assertEquals(
-					"did not set authenticating account to PAM type",
-					AuthScheme.PAM, authResponse
+			AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+			Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+			Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 					.getAuthenticatingIRODSAccount().getAuthenticationScheme());
-			Assert.assertNotNull("no authenticated account",
-					authResponse.getAuthenticatedIRODSAccount());
-			Assert.assertEquals(
-					"did not set authenticated account to std type",
-					AuthScheme.STANDARD, authResponse
-							.getAuthenticatedIRODSAccount()
-							.getAuthenticationScheme());
-			Assert.assertNotNull("did not set auth startup response",
-					authResponse.getStartupResponse());
-			Assert.assertTrue("did not show success",
-					authResponse.isSuccessful());
+			Assert.assertNotNull("no authenticated account", authResponse.getAuthenticatedIRODSAccount());
+			Assert.assertEquals("did not set authenticated account to std type", AuthScheme.STANDARD,
+					authResponse.getAuthenticatedIRODSAccount().getAuthenticationScheme());
+			Assert.assertNotNull("did not set auth startup response", authResponse.getStartupResponse());
+			Assert.assertTrue("did not show success", authResponse.isSuccessful());
 
 			// now try something that uses tha
 
@@ -350,28 +284,23 @@ public class PAMAuthTest {
 	@Test(expected = AuthenticationException.class)
 	public final void testPAMAuthSemicolonBug195() throws Exception {
 		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
-			return;
+			throw new AuthenticationException("thrown to preserve contract");
 		}
 
 		String pamUser = "someuserBug195";
 		String pamPassword = "howAbout;Here";
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, pamUser, pamPassword);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, pamUser, pamPassword);
 
 		irodsAccount.setAuthenticationScheme(AuthScheme.PAM);
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem
-				.getIRODSAccessObjectFactory().getEnvironmentalInfoAO(
-						irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
 		environmentalInfoAO.getIRODSServerCurrentTime();
 
-		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol()
-				.getAuthResponse();
-		Assert.assertNotNull("no authenticating account",
-				authResponse.getAuthenticatingIRODSAccount());
-		Assert.assertEquals("did not set authenticating account to PAM type",
-				AuthScheme.PAM, authResponse
+		AuthResponse authResponse = environmentalInfoAO.getIRODSProtocol().getAuthResponse();
+		Assert.assertNotNull("no authenticating account", authResponse.getAuthenticatingIRODSAccount());
+		Assert.assertEquals("did not set authenticating account to PAM type", AuthScheme.PAM, authResponse
 
 				.getAuthenticatingIRODSAccount().getAuthenticationScheme());
 
