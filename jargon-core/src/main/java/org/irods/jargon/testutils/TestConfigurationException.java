@@ -10,7 +10,7 @@ package org.irods.jargon.testutils;
  * @since 10/16/2009
  *
  */
-public class TestingUtilsException extends Exception {
+public class TestConfigurationException extends Exception {
 
 	/**
 	 *
@@ -20,14 +20,14 @@ public class TestingUtilsException extends Exception {
 	/**
 	 *
 	 */
-	public TestingUtilsException() {
+	public TestConfigurationException() {
 		super();
 	}
 
 	/**
 	 * @param arg0
 	 */
-	public TestingUtilsException(final String arg0) {
+	public TestConfigurationException(final String arg0) {
 		super(arg0);
 
 	}
@@ -35,7 +35,7 @@ public class TestingUtilsException extends Exception {
 	/**
 	 * @param arg0
 	 */
-	public TestingUtilsException(final Throwable arg0) {
+	public TestConfigurationException(final Throwable arg0) {
 		super(arg0);
 
 	}
@@ -44,7 +44,7 @@ public class TestingUtilsException extends Exception {
 	 * @param arg0
 	 * @param arg1
 	 */
-	public TestingUtilsException(final String arg0, final Throwable arg1) {
+	public TestConfigurationException(final String arg0, final Throwable arg1) {
 		super(arg0, arg1);
 
 	}

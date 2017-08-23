@@ -39,7 +39,7 @@ public class AssertionHelper {
 	private static final String ASSERTION_ERROR_MESSAGE = "assertion failed -- ";
 	private static final String FILE_DOES_NOT_EXIST_ERROR = "requested file does not exist!";
 
-	public AssertionHelper() throws TestingUtilsException {
+	public AssertionHelper() throws TestConfigurationException {
 		testingProperties = testingPropertiesHelper.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 	}
@@ -153,7 +153,7 @@ public class AssertionHelper {
 				throw new IRODSTestAssertionException(errorMessage.toString());
 
 			}
-		} catch (TestingUtilsException e) {
+		} catch (TestConfigurationException e) {
 			StringBuilder message = new StringBuilder();
 			message.append("error when computing checksum on file:");
 			message.append(filePathRelativeToScratch);

@@ -16,7 +16,7 @@ import java.util.Random;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
-import org.irods.jargon.testutils.TestingUtilsException;
+import org.irods.jargon.testutils.TestConfigurationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +46,7 @@ public class FileGenerator {
 		fileExtensions.add(".avi");
 		try {
 			testingProperties = testingPropertiesHelper.getTestProperties();
-		} catch (TestingUtilsException e) {
+		} catch (TestConfigurationException e) {
 			throw new IllegalStateException("cannot find testing properties", e);
 		}
 	}
@@ -57,10 +57,10 @@ public class FileGenerator {
 	 *
 	 * @return {@code String} containing a random, though valid, file
 	 *         extension prepended with a '.' character
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	protected static String generateRandomExtension()
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		return fileExtensions
 				.get(generateRandomNumber(0, fileExtensions.size()));
 	}
@@ -100,10 +100,10 @@ public class FileGenerator {
 	 *            (not including the extension this will be appended)
 	 * @return {@code String} which is a random file name plus a random
 	 *         extension
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	protected static String generateRandomFileName(final int length)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		StringBuilder fileName = new StringBuilder();
 		fileName.append(generateRandomString(length));
 		fileName.append(generateRandomExtension());
@@ -123,11 +123,11 @@ public class FileGenerator {
 	 *            bytes
 	 * @return {@code String} containing the full path to the generated
 	 *         file
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public static String generateFileOfFixedLengthGivenName(
 			final String fileDirectory, final String fileName, final long length)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		// 1023 bytes of random stuff should be plenty, then just repeat it as
 		// needed, this is odd number to prevent lining up on even number buffer
@@ -182,7 +182,7 @@ public class FileGenerator {
 			}
 
 		} catch (IOException ioe) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"error generating random file with dir:" + fileDirectory
 					+ " and generated name:" + fileName, ioe);
 		} finally {
@@ -205,9 +205,9 @@ public class FileGenerator {
 	}
 
 	public static int generateRandomNumber(final int min, final int max)
-			throws TestingUtilsException {
+			throws TestConfigurationException {
 		if (max < min) {
-			throw new TestingUtilsException(
+			throw new TestConfigurationException(
 					"max length must be > or = min length");
 		}
 
@@ -237,7 +237,7 @@ public class FileGenerator {
 	 * @param minNumberOfFiles
 	 * @param fileLengthMin
 	 * @param fileLengthMax
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 * @throws JargonException
 	 */
 	public static void generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(
@@ -247,7 +247,7 @@ public class FileGenerator {
 			final String filePrefix, final String fileSuffix,
 			final int maxNumberOfFiles, final int minNumberOfFiles,
 			final int fileLengthMin, final int fileLengthMax)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 
 		int numberThisParent;
 		if (numberOfCollectionsMin == numberOfCollectionsMax) {
@@ -314,7 +314,7 @@ public class FileGenerator {
 			final String absolutePathToLocalCollection,
 			final String filePrefix, final String fileSuffix,
 			final int numberOfFiles, final int fileLengthMin,
-			final int fileLengthMax) throws TestingUtilsException {
+			final int fileLengthMax) throws TestConfigurationException {
 
 		String genFileName = "";
 		for (int i = 0; i < numberOfFiles; i++) {
@@ -332,7 +332,7 @@ public class FileGenerator {
 			final String relativePathUnderScratch, final String filePrefix,
 			final String fileSuffix, final int numberOfFiles,
 			final int fileLengthMin, final int fileLengthMax)
-					throws TestingUtilsException {
+					throws TestConfigurationException {
 		// n number of random files in the source directory, with a random
 		// length between the min and max
 
