@@ -410,7 +410,7 @@ public class DataTransferOperationsImplTest {
 		String testFileName = "testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				103 * 1024 * 1024);
+				1003 * 1024 * 1024);
 
 		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
 				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
