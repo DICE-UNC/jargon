@@ -400,8 +400,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
-	public void testPutOneFileIntraFileCallbacksStestPutOneFileIntraFileCallbactestPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfrksSpecifiedJargonPropsAndVerifiedParallelTxfrpecifiedJargonPropsAndVerifiedParallelTxfr()
-			throws Exception {
+	public void testPutOneFileIntraFileCallbacksTestPutOneFileIntraFileCallbacksSpecified() throws Exception {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
