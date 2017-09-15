@@ -5,13 +5,13 @@ import java.util.List;
 
 /**
  * Possible header values for irods user type
- *
+ * 
  * @author Mike Conway - DICE (www.irods.org)
  */
 public enum UserTypeEnum {
 
-	RODS_USER("rodsuser"), RODS_ADMIN("rodsadmin"), RODS_GROUP("rodsgroup"), RODS_UNKNOWN(
-			"unknown");
+	RODS_USER("rodsuser"), GROUP_ADMIN("groupadmin"), RODS_ADMIN("rodsadmin"), RODS_GROUP(
+			"rodsgroup"), RODS_UNKNOWN("unknown");
 
 	private String textValue;
 
