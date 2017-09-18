@@ -233,6 +233,59 @@ public class UserGroupAOImplTest {
 
 	}
 
+	@Test
+	public final void testAddUserToGroupAsGroupAdminBug255() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		String testUserGroup = "testAddUserToGroupAsGroupAdminBug255";
+		String testUser = "bug255user2";
+		String testGroupAdminUser = "bug255GroupAdmin2";
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		UserGroupAO userGroupAO = accessObjectFactory.getUserGroupAO(irodsAccount);
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		UserGroup userGroup = new UserGroup();
+		userGroup.setUserGroupName(testUserGroup);
+		userGroup.setZone(irodsAccount.getZone());
+
+		userGroupAO.removeUserGroup(userGroup);
+		userGroupAO.addUserGroup(userGroup);
+
+		User groupAdminUser = new User();
+		groupAdminUser.setName(testGroupAdminUser);
+		groupAdminUser.setUserType(UserTypeEnum.GROUP_ADMIN);
+		userAO.deleteUser(testGroupAdminUser);
+		userAO.addUser(groupAdminUser);
+		userAO.changeAUserPasswordByAnAdmin(testGroupAdminUser, testGroupAdminUser);
+
+		User userToAdd = new User();
+		userToAdd.setName(testUser);
+		userToAdd.setUserType(UserTypeEnum.RODS_USER);
+		userAO.deleteUser(testUser);
+		userAO.addUser(userToAdd);
+		userAO.changeAUserPasswordByAnAdmin(testUser, testUser);
+
+		IRODSAccount groupAdminAccount = testingPropertiesHelper
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testGroupAdminUser,
+						testGroupAdminUser);
+
+		UserGroupAO groupAdminUserGroupAO = accessObjectFactory.getUserGroupAO(groupAdminAccount);
+		groupAdminUserGroupAO.addUserToGroupAsGroupAdmin(testUserGroup, testUser, irodsAccount.getZone());
+
+		// list group members and check
+
+		List<User> users = userGroupAO.listUserGroupMembers(testUserGroup);
+		boolean found = false;
+		for (User foundUser : users) {
+			if (foundUser.getName().equals(testUser)) {
+				found = true;
+				break;
+			}
+		}
+		Assert.assertTrue("did not add user to group", found);
+	}
+
 	/**
 	 * Add the current iRODS user to a new group and see if it lists
 	 * 

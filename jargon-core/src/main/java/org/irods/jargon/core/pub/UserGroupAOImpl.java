@@ -592,6 +592,36 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 		getIRODSProtocol().irodsFunction(adminPI);
 	}
 
+	@Override
+	public void addUserToGroupAsGroupAdmin(final String userGroupName, final String userName, final String zoneName)
+			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
+
+		log.info("addUserToGroupAsGroupAdmin()");
+
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or emtpy userGroupName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or emtpy userName");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("userGroupName:{}", userGroupName);
+
+		if (zoneName != null) {
+			log.info("zoneName:{}", zoneName);
+		}
+
+		// call the iadmin iRODS service
+
+		UserAdminInp adminPI = UserAdminInp.instanceForAddUserToGroup(userGroupName, userName, zoneName);
+
+		log.debug("executing admin PI");
+
+		getIRODSProtocol().irodsFunction(adminPI);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *

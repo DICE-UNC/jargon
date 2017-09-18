@@ -43,3 +43,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 #### Failures against 4.1.9 with neg require on server executing file.deleteWithForceOption in unit tests. #216
 
 Fixes to flush behavior (related to #224) remaining after a switch to the SSL negotiation communication regime, corrections to behavior of flush() in client status operation send/receive in recursive delete operations
+
+#### User lacks privileges to invoke the given API" when adding groups / users to groups #255
+
+Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups as a user type groupadmin. A few needed functions are added, with plans to add more in coming updates

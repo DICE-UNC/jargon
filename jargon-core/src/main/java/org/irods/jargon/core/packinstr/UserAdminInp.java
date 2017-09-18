@@ -90,6 +90,36 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 				BLANK, BLANK, BLANK, BLANK, USER_ADMIN_INP_API_NBR);
 	}
 
+	/**
+	 * Create the packing instruction to add a user to a group
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with userGroupName
+	 * @param userName
+	 *            <code>String</code> with the userName to add
+	 * @param zoneName
+	 *            <code>String</code> with the zoneName to add
+	 * @return {@link UserAdminInp}
+	 * @throws JargonException
+	 */
+	public static UserAdminInp instanceForAddUserToGroup(String userGroupName, String userName, String zoneName)
+			throws JargonException {
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null userGroupName");
+		}
+
+		if (userName == null | userName.isEmpty()) {
+			throw new IllegalArgumentException("null UserName");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty zoneName");
+		}
+
+		return new UserAdminInp("modify", "group", userGroupName, "add", userName, zoneName, BLANK, BLANK, BLANK, BLANK,
+				USER_ADMIN_INP_API_NBR);
+	}
+
 	private UserAdminInp(final String arg0, final String arg1, final String arg2, final String arg3, final String arg4,
 			final String arg5, final String arg6, final String arg7, final String arg8, final String arg9,
 			final int apiNumber) throws JargonException {

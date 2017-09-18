@@ -176,7 +176,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	void removeUserGroup(String userGroupName) throws JargonException;
 
 	/**
-	 * Add a user group as a user with groupadmin priviliges
+	 * Add a user group as a user with groupadmin privilages
 	 * 
 	 * @param userGroup
 	 *            {@link UserGroup} to add
@@ -184,5 +184,24 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 */
 	void addUserGroupAsGroupAdmin(final UserGroup userGroup) throws DuplicateDataException, JargonException;
+
+	/**
+	 * Add the given user to the group as a user with groupadmin privilages
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> of the group to which the user will be
+	 *            added
+	 * @param userName
+	 *            <code>String</code> with the user name
+	 * @param zoneName
+	 *            <code>String</code> with the zone to which the user will be
+	 *            added
+	 * @throws DuplicateDataException
+	 * @throws InvalidGroupException
+	 * @throws InvalidUserException
+	 * @throws JargonException
+	 */
+	void addUserToGroupAsGroupAdmin(String userGroupName, String userName, String zoneName)
+			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException;
 
 }
