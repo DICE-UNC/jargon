@@ -27,11 +27,11 @@ public final class IRODSRule {
 	 * @param ruleAsOriginalText
 	 *            {@code String} with the plain text version of the rule
 	 * @param irodsRuleInputParameters
-	 *            {@code List<IRODSRuleParameter>} containing the
-	 *            translated rule input parameters
+	 *            {@code List<IRODSRuleParameter>} containing the translated rule
+	 *            input parameters
 	 * @param irodsRuleOutputParameters
-	 *            {@code List<IRODSRuleParameter>} containing the
-	 *            translated rule output parameters
+	 *            {@code List<IRODSRuleParameter>} containing the translated rule
+	 *            output parameters
 	 * @param ruleBody
 	 *            {@code String} containing the body of the rule
 	 * @return {@code IRODSRule} containing an object model of the rule.
@@ -39,16 +39,12 @@ public final class IRODSRule {
 	 */
 	public static IRODSRule instance(final String ruleAsOriginalText,
 			final List<IRODSRuleParameter> irodsRuleInputParameters,
-			final List<IRODSRuleParameter> irodsRuleOutputParameters,
-			final String ruleBody) throws JargonException {
-		return new IRODSRule(ruleAsOriginalText, irodsRuleInputParameters,
-				irodsRuleOutputParameters, ruleBody);
+			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody) throws JargonException {
+		return new IRODSRule(ruleAsOriginalText, irodsRuleInputParameters, irodsRuleOutputParameters, ruleBody);
 	}
 
-	private IRODSRule(final String ruleAsOriginalText,
-			final List<IRODSRuleParameter> irodsRuleInputParameters,
-			final List<IRODSRuleParameter> irodsRuleOutputParameters,
-			final String ruleBody) throws JargonException {
+	private IRODSRule(final String ruleAsOriginalText, final List<IRODSRuleParameter> irodsRuleInputParameters,
+			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody) throws JargonException {
 		if (ruleAsOriginalText == null || ruleAsOriginalText.isEmpty()) {
 			throw new JargonException("null or empty ruleAsOriginalText");
 		}
@@ -66,10 +62,8 @@ public final class IRODSRule {
 		}
 
 		this.ruleAsOriginalText = ruleAsOriginalText;
-		this.irodsRuleInputParameters = Collections
-				.unmodifiableList(irodsRuleInputParameters);
-		this.irodsRuleOutputParameters = Collections
-				.unmodifiableList(irodsRuleOutputParameters);
+		this.irodsRuleInputParameters = Collections.unmodifiableList(irodsRuleInputParameters);
+		this.irodsRuleOutputParameters = Collections.unmodifiableList(irodsRuleOutputParameters);
 		this.ruleBody = ruleBody;
 
 	}
