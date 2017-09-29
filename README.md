@@ -47,3 +47,8 @@ Fixes to flush behavior (related to #224) remaining after a switch to the SSL ne
 #### User lacks privileges to invoke the given API" when adding groups / users to groups #255
 
 Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups as a user type groupadmin. A few needed functions are added, with plans to add more in coming updates
+
+#### add enum to indicate rule executing on chosen rule engine #259
+
+Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file
+

@@ -13,6 +13,7 @@ import org.ietf.jgss.GSSException;
 import org.irods.jargon.core.connection.auth.AuthResponse;
 import org.irods.jargon.core.exception.AuthenticationException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.protovalues.RequestTypes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,19 +30,18 @@ class GSIAuth extends AuthMechanism {
 	private static final int GSI_AUTH_REQUEST_AN = 711;
 
 	/**
-	 * Sends the GSI auth request to iRODS and obtains the server DN. The server
-	 * DN is augmented in the irodsAccount
+	 * Sends the GSI auth request to iRODS and obtains the server DN. The server DN
+	 * is augmented in the irodsAccount
 	 *
 	 * @param irodsAccount
-	 *            {@link GSIIRODSAccount} that will be used to log in to iRODS.
-	 *            Note that this account information will be augmented during
-	 *            the authentication process
+	 *            {@link GSIIRODSAccount} that will be used to log in to iRODS. Note
+	 *            that this account information will be augmented during the
+	 *            authentication process
 	 * @param irodsCommands
 	 * @throws JargonException
 	 */
-	void sendGSIPassword(final GSIIRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws JargonException {
+	void sendGSIPassword(final GSIIRODSAccount irodsAccount, final AbstractIRODSMidLevelProtocol irodsCommands)
+			throws JargonException {
 
 		log.info("sendGSIPassword()");
 
@@ -58,8 +58,7 @@ class GSIAuth extends AuthMechanism {
 		try {
 			irodsCommands.sendHeader(
 
-			RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0,
-					GSI_AUTH_REQUEST_AN);
+					RequestTypes.RODS_API_REQ.getRequestType(), 0, 0, 0, GSI_AUTH_REQUEST_AN);
 			irodsCommands.getIrodsConnection().flush();
 		} catch (ClosedChannelException e) {
 			log.error("closed channel", e);
@@ -77,8 +76,7 @@ class GSIAuth extends AuthMechanism {
 
 		log.debug("reading iRODS response to gsi auth request, extracting server DN...");
 
-		String serverDn = irodsCommands.readMessage(false).getTag("ServerDN")
-				.getStringValue();
+		String serverDn = irodsCommands.readMessage(false).getTag("ServerDN").getStringValue();
 
 		log.debug("serverDN:{}", serverDn);
 		irodsAccount.setServerDistinguishedName(serverDn);
@@ -86,10 +84,8 @@ class GSIAuth extends AuthMechanism {
 	}
 
 	@SuppressWarnings("resource")
-	AbstractIRODSMidLevelProtocol sendGSIAuth(
-			final GSIIRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands)
-					throws AuthenticationException, JargonException {
+	AbstractIRODSMidLevelProtocol sendGSIAuth(final GSIIRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands) throws AuthenticationException, JargonException {
 
 		log.info("sendGSIAuth()");
 
@@ -116,8 +112,7 @@ class GSIAuth extends AuthMechanism {
 
 		String caLocations = irodsAccount.getCertificateAuthority();
 
-		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
-				.getInstance();
+		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager.getInstance();
 
 		GSIGssOutputStream gssout = null;
 		GSIGssInputStream gssin = null;
@@ -128,19 +123,19 @@ class GSIAuth extends AuthMechanism {
 				cog = CoGProperties.getDefault();
 				defaultCA = cog.getCaCertLocations();
 				cog.setCaCertLocations(caLocations);
+			} else {
+				log.error("Unable to set cog value");
+				throw new JargonRuntimeException("unable to set cog value");
 			}
 
-			GSSContext context = manager.createContext(null, null,
-					irodsAccount.getGSSCredential(),
+			GSSContext context = manager.createContext(null, null, irodsAccount.getGSSCredential(),
 					GSSContext.DEFAULT_LIFETIME);
 
 			context.requestCredDeleg(false);
 			context.requestMutualAuth(true);
 
-			gssout = new GSIGssOutputStream(irodsCommands.getIrodsConnection()
-					.getIrodsOutputStream(), context);
-			gssin = new GSIGssInputStream(irodsCommands.getIrodsConnection()
-					.getIrodsInputStream(), context);
+			gssout = new GSIGssOutputStream(irodsCommands.getIrodsConnection().getIrodsOutputStream(), context);
+			gssin = new GSIGssInputStream(irodsCommands.getIrodsConnection().getIrodsInputStream(), context);
 
 			byte[] inToken = new byte[0];
 			byte[] outToken = null;
@@ -167,27 +162,30 @@ class GSIAuth extends AuthMechanism {
 			AuthenticationException gsiException = null;
 			String message = e.getMessage();
 			if (message.indexOf("Invalid buffer") >= 0) {
-				gsiException = new AuthenticationException(
-						"GSI Authentication Failed - Invalid Proxy File");
+				gsiException = new AuthenticationException("GSI Authentication Failed - Invalid Proxy File");
 				gsiException.initCause(e);
 			} else if (message.indexOf("Unknown CA") >= 0) {
 				gsiException = new AuthenticationException(
 						"GSI Authentication Failed - Cannot find Certificate Authority (CA)");
 				gsiException.initCause(e);
 			} else {
-				gsiException = new AuthenticationException(
-						"GSI Authentication Failed");
+				gsiException = new AuthenticationException("GSI Authentication Failed");
 				gsiException.initCause(e);
 			}
 			throw gsiException;
 		} catch (Throwable e) {
-			SecurityException exception = new SecurityException(
-					"GSI Authentication Failed");
+			SecurityException exception = new SecurityException("GSI Authentication Failed");
 			exception.initCause(e);
 			throw exception;
 		} finally {
+			// TODO: This setting in a finally is a code smell - mcc
 			if (defaultCA != null) {
-				cog.setCaCertLocations(defaultCA);
+				if (cog == null) {
+					log.error("Unable to set cog value");
+					throw new JargonRuntimeException("unable to set cog value");
+				} else {
+					cog.setCaCertLocations(defaultCA);
+				}
 			}
 		}
 	}
@@ -202,11 +200,9 @@ class GSIAuth extends AuthMechanism {
 	 * org.irods.jargon.core.connection.StartupResponseData)
 	 */
 	@Override
-	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(
-			final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands,
-			final StartupResponseData startupResponseData)
-					throws AuthenticationException, JargonException {
+	protected AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands, final StartupResponseData startupResponseData)
+			throws AuthenticationException, JargonException {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -219,8 +215,7 @@ class GSIAuth extends AuthMechanism {
 		if (irodsAccount instanceof GSIIRODSAccount) {
 			gsiIRODSAccount = (GSIIRODSAccount) irodsAccount;
 		} else {
-			throw new IllegalArgumentException(
-					"irodsAccount should be an instance of GSIIRODSAccount");
+			throw new IllegalArgumentException("irodsAccount should be an instance of GSIIRODSAccount");
 		}
 
 		log.info("have credential, check if valid...");

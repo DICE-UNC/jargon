@@ -29,8 +29,8 @@ import java.util.Map;
 /**
  * <b>Experimental!</b>
  * <p>
- * This is an implementation of the standard {@code java.sql.ResultSet} as
- * an abstract superclass that represents various types of iRODS query results.
+ * This is an implementation of the standard {@code java.sql.ResultSet} as an
+ * abstract superclass that represents various types of iRODS query results.
  * <p>
  * The primary purpose of this abstract class is to define a subset that can be
  * implemented by the various query types (special query, simple query, gen
@@ -190,24 +190,6 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#getBigDecimal(int, int)
-	 */
-	@Override
-	public abstract BigDecimal getBigDecimal(int arg0, int arg1)
-			throws SQLException;
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.sql.ResultSet#getBigDecimal(java.lang.String, int)
-	 */
-	@Override
-	public abstract BigDecimal getBigDecimal(String arg0, int arg1)
-			throws SQLException;
-
-	/*
-	 * (non-Javadoc)
-	 *
 	 * @see java.sql.ResultSet#getBinaryStream(int)
 	 */
 	@Override
@@ -219,8 +201,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getBinaryStream(java.lang.String)
 	 */
 	@Override
-	public abstract InputStream getBinaryStream(String arg0)
-			throws SQLException;
+	public abstract InputStream getBinaryStream(String arg0) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -319,8 +300,8 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	public abstract Clob getClob(String arg0) throws SQLException;
 
 	/**
-	 * Gets the concurrency mode for the result set. In this case, the
-	 * concurrency defaults to read-only.
+	 * Gets the concurrency mode for the result set. In this case, the concurrency
+	 * defaults to read-only.
 	 */
 	@Override
 	public int getConcurrency() throws SQLException {
@@ -359,8 +340,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getDate(int, java.util.Calendar)
 	 */
 	@Override
-	public abstract Date getDate(final int arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Date getDate(final int arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -368,8 +348,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getDate(java.lang.String, java.util.Calendar)
 	 */
 	@Override
-	public abstract Date getDate(final String arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Date getDate(final String arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -481,8 +460,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getNCharacterStream(int)
 	 */
 	@Override
-	public abstract Reader getNCharacterStream(final int arg0)
-			throws SQLException;
+	public abstract Reader getNCharacterStream(final int arg0) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -490,8 +468,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getNCharacterStream(java.lang.String)
 	 */
 	@Override
-	public abstract Reader getNCharacterStream(final String arg0)
-			throws SQLException;
+	public abstract Reader getNCharacterStream(final String arg0) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -547,8 +524,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getObject(int, java.util.Map)
 	 */
 	@Override
-	public abstract Object getObject(final int arg0,
-			final Map<String, Class<?>> arg1) throws SQLException;
+	public abstract Object getObject(final int arg0, final Map<String, Class<?>> arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -556,8 +532,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getObject(java.lang.String, java.util.Map)
 	 */
 	@Override
-	public abstract Object getObject(final String arg0,
-			final Map<String, Class<?>> arg1) throws SQLException;
+	public abstract Object getObject(final String arg0, final Map<String, Class<?>> arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -685,8 +660,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getTime(int, java.util.Calendar)
 	 */
 	@Override
-	public abstract Time getTime(final int arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Time getTime(final int arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -694,8 +668,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getTime(java.lang.String, java.util.Calendar)
 	 */
 	@Override
-	public abstract Time getTime(final String arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Time getTime(final String arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -711,8 +684,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getTimestamp(java.lang.String)
 	 */
 	@Override
-	public abstract Timestamp getTimestamp(final String arg0)
-			throws SQLException;
+	public abstract Timestamp getTimestamp(final String arg0) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -720,18 +692,15 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#getTimestamp(int, java.util.Calendar)
 	 */
 	@Override
-	public abstract Timestamp getTimestamp(final int arg0, final Calendar arg1)
-			throws SQLException;
+	public abstract Timestamp getTimestamp(final int arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#getTimestamp(java.lang.String,
-	 * java.util.Calendar)
+	 * @see java.sql.ResultSet#getTimestamp(java.lang.String, java.util.Calendar)
 	 */
 	@Override
-	public abstract Timestamp getTimestamp(final String arg0,
-			final Calendar arg1) throws SQLException;
+	public abstract Timestamp getTimestamp(final String arg0, final Calendar arg1) throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -758,24 +727,6 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 */
 	@Override
 	public abstract URL getURL(final String arg0) throws SQLException;
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.sql.ResultSet#getUnicodeStream(int)
-	 */
-	@Override
-	public abstract InputStream getUnicodeStream(final int arg0)
-			throws SQLException;
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.sql.ResultSet#getUnicodeStream(java.lang.String)
-	 */
-	@Override
-	public abstract InputStream getUnicodeStream(final String arg0)
-			throws SQLException;
 
 	/*
 	 * (non-Javadoc)
@@ -959,8 +910,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateArray(int, java.sql.Array)
 	 */
 	@Override
-	public void updateArray(final int arg0, final Array arg1)
-			throws SQLException {
+	public void updateArray(final int arg0, final Array arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -971,8 +921,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateArray(java.lang.String, java.sql.Array)
 	 */
 	@Override
-	public void updateArray(final String arg0, final Array arg1)
-			throws SQLException {
+	public void updateArray(final String arg0, final Array arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -983,8 +932,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream)
 	 */
 	@Override
-	public void updateAsciiStream(final int arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateAsciiStream(final int arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -996,8 +944,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream)
 	 */
 	@Override
-	public void updateAsciiStream(final String arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateAsciiStream(final String arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1008,8 +955,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream, int)
 	 */
 	@Override
-	public void updateAsciiStream(final int arg0, final InputStream arg1,
-			final int arg2) throws SQLException {
+	public void updateAsciiStream(final int arg0, final InputStream arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1021,8 +967,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream, int)
 	 */
 	@Override
-	public void updateAsciiStream(final String arg0, final InputStream arg1,
-			final int arg2) throws SQLException {
+	public void updateAsciiStream(final String arg0, final InputStream arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1033,8 +978,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateAsciiStream(int, java.io.InputStream, long)
 	 */
 	@Override
-	public void updateAsciiStream(final int arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateAsciiStream(final int arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1046,8 +990,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream, long)
 	 */
 	@Override
-	public void updateAsciiStream(final String arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateAsciiStream(final String arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1058,8 +1001,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBigDecimal(int, java.math.BigDecimal)
 	 */
 	@Override
-	public void updateBigDecimal(final int arg0, final BigDecimal arg1)
-			throws SQLException {
+	public void updateBigDecimal(final int arg0, final BigDecimal arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1071,8 +1013,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.math.BigDecimal)
 	 */
 	@Override
-	public void updateBigDecimal(final String arg0, final BigDecimal arg1)
-			throws SQLException {
+	public void updateBigDecimal(final String arg0, final BigDecimal arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1083,8 +1024,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream)
 	 */
 	@Override
-	public void updateBinaryStream(final int arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateBinaryStream(final int arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1096,8 +1036,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream)
 	 */
 	@Override
-	public void updateBinaryStream(final String arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateBinaryStream(final String arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1108,8 +1047,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream, int)
 	 */
 	@Override
-	public void updateBinaryStream(final int arg0, final InputStream arg1,
-			final int arg2) throws SQLException {
+	public void updateBinaryStream(final int arg0, final InputStream arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1121,8 +1059,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream, int)
 	 */
 	@Override
-	public void updateBinaryStream(final String arg0, final InputStream arg1,
-			final int arg2) throws SQLException {
+	public void updateBinaryStream(final String arg0, final InputStream arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1130,12 +1067,10 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream,
-	 * long)
+	 * @see java.sql.ResultSet#updateBinaryStream(int, java.io.InputStream, long)
 	 */
 	@Override
-	public void updateBinaryStream(final int arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateBinaryStream(final int arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1147,8 +1082,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.InputStream, long)
 	 */
 	@Override
-	public void updateBinaryStream(final String arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateBinaryStream(final String arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1170,8 +1104,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBlob(java.lang.String, java.sql.Blob)
 	 */
 	@Override
-	public void updateBlob(final String arg0, final Blob arg1)
-			throws SQLException {
+	public void updateBlob(final String arg0, final Blob arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1182,8 +1115,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBlob(int, java.io.InputStream)
 	 */
 	@Override
-	public void updateBlob(final int arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateBlob(final int arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 	}
 
@@ -1193,8 +1125,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBlob(java.lang.String, java.io.InputStream)
 	 */
 	@Override
-	public void updateBlob(final String arg0, final InputStream arg1)
-			throws SQLException {
+	public void updateBlob(final String arg0, final InputStream arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1205,8 +1136,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBlob(int, java.io.InputStream, long)
 	 */
 	@Override
-	public void updateBlob(final int arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateBlob(final int arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1218,8 +1148,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * long)
 	 */
 	@Override
-	public void updateBlob(final String arg0, final InputStream arg1,
-			final long arg2) throws SQLException {
+	public void updateBlob(final String arg0, final InputStream arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1230,8 +1159,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBoolean(int, boolean)
 	 */
 	@Override
-	public void updateBoolean(final int arg0, final boolean arg1)
-			throws SQLException {
+	public void updateBoolean(final int arg0, final boolean arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1242,8 +1170,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBoolean(java.lang.String, boolean)
 	 */
 	@Override
-	public void updateBoolean(final String arg0, final boolean arg1)
-			throws SQLException {
+	public void updateBoolean(final String arg0, final boolean arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1265,8 +1192,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateByte(java.lang.String, byte)
 	 */
 	@Override
-	public void updateByte(final String arg0, final byte arg1)
-			throws SQLException {
+	public void updateByte(final String arg0, final byte arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1277,8 +1203,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBytes(int, byte[])
 	 */
 	@Override
-	public void updateBytes(final int arg0, final byte[] arg1)
-			throws SQLException {
+	public void updateBytes(final int arg0, final byte[] arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1289,8 +1214,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateBytes(java.lang.String, byte[])
 	 */
 	@Override
-	public void updateBytes(final String arg0, final byte[] arg1)
-			throws SQLException {
+	public void updateBytes(final String arg0, final byte[] arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1301,8 +1225,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader)
 	 */
 	@Override
-	public void updateCharacterStream(final int arg0, final Reader arg1)
-			throws SQLException {
+	public void updateCharacterStream(final int arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1314,8 +1237,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.Reader)
 	 */
 	@Override
-	public void updateCharacterStream(final String arg0, final Reader arg1)
-			throws SQLException {
+	public void updateCharacterStream(final String arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1326,8 +1248,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader, int)
 	 */
 	@Override
-	public void updateCharacterStream(final int arg0, final Reader arg1,
-			final int arg2) throws SQLException {
+	public void updateCharacterStream(final int arg0, final Reader arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1339,8 +1260,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.Reader, int)
 	 */
 	@Override
-	public void updateCharacterStream(final String arg0, final Reader arg1,
-			final int arg2) throws SQLException {
+	public void updateCharacterStream(final String arg0, final Reader arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1351,8 +1271,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateCharacterStream(int, java.io.Reader, long)
 	 */
 	@Override
-	public void updateCharacterStream(final int arg0, final Reader arg1,
-			final long arg2) throws SQLException {
+	public void updateCharacterStream(final int arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1364,8 +1283,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.Reader, long)
 	 */
 	@Override
-	public void updateCharacterStream(final String arg0, final Reader arg1,
-			final long arg2) throws SQLException {
+	public void updateCharacterStream(final String arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1387,8 +1305,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateClob(java.lang.String, java.sql.Clob)
 	 */
 	@Override
-	public void updateClob(final String arg0, final Clob arg1)
-			throws SQLException {
+	public void updateClob(final String arg0, final Clob arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1399,8 +1316,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateClob(int, java.io.Reader)
 	 */
 	@Override
-	public void updateClob(final int arg0, final Reader arg1)
-			throws SQLException {
+	public void updateClob(final int arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1411,8 +1327,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateClob(java.lang.String, java.io.Reader)
 	 */
 	@Override
-	public void updateClob(final String arg0, final Reader arg1)
-			throws SQLException {
+	public void updateClob(final String arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1423,8 +1338,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateClob(int, java.io.Reader, long)
 	 */
 	@Override
-	public void updateClob(final int arg0, final Reader arg1, final long arg2)
-			throws SQLException {
+	public void updateClob(final int arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1432,12 +1346,10 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#updateClob(java.lang.String, java.io.Reader,
-	 * long)
+	 * @see java.sql.ResultSet#updateClob(java.lang.String, java.io.Reader, long)
 	 */
 	@Override
-	public void updateClob(final String arg0, final Reader arg1, final long arg2)
-			throws SQLException {
+	public void updateClob(final String arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1459,8 +1371,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateDate(java.lang.String, java.sql.Date)
 	 */
 	@Override
-	public void updateDate(final String arg0, final Date arg1)
-			throws SQLException {
+	public void updateDate(final String arg0, final Date arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1471,8 +1382,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateDouble(int, double)
 	 */
 	@Override
-	public void updateDouble(final int arg0, final double arg1)
-			throws SQLException {
+	public void updateDouble(final int arg0, final double arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1483,8 +1393,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateDouble(java.lang.String, double)
 	 */
 	@Override
-	public void updateDouble(final String arg0, final double arg1)
-			throws SQLException {
+	public void updateDouble(final String arg0, final double arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1495,8 +1404,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateFloat(int, float)
 	 */
 	@Override
-	public void updateFloat(final int arg0, final float arg1)
-			throws SQLException {
+	public void updateFloat(final int arg0, final float arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1507,8 +1415,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateFloat(java.lang.String, float)
 	 */
 	@Override
-	public void updateFloat(final String arg0, final float arg1)
-			throws SQLException {
+	public void updateFloat(final String arg0, final float arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1530,8 +1437,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateInt(java.lang.String, int)
 	 */
 	@Override
-	public void updateInt(final String arg0, final int arg1)
-			throws SQLException {
+	public void updateInt(final String arg0, final int arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1553,8 +1459,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateLong(java.lang.String, long)
 	 */
 	@Override
-	public void updateLong(final String arg0, final long arg1)
-			throws SQLException {
+	public void updateLong(final String arg0, final long arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1565,8 +1470,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNCharacterStream(int, java.io.Reader)
 	 */
 	@Override
-	public void updateNCharacterStream(final int arg0, final Reader arg1)
-			throws SQLException {
+	public void updateNCharacterStream(final int arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1578,8 +1482,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.Reader)
 	 */
 	@Override
-	public void updateNCharacterStream(final String arg0, final Reader arg1)
-			throws SQLException {
+	public void updateNCharacterStream(final String arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1590,8 +1493,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNCharacterStream(int, java.io.Reader, long)
 	 */
 	@Override
-	public void updateNCharacterStream(final int arg0, final Reader arg1,
-			final long arg2) throws SQLException {
+	public void updateNCharacterStream(final int arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1603,8 +1505,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * java.io.Reader, long)
 	 */
 	@Override
-	public void updateNCharacterStream(final String arg0, final Reader arg1,
-			final long arg2) throws SQLException {
+	public void updateNCharacterStream(final String arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1615,8 +1516,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNClob(int, java.sql.NClob)
 	 */
 	@Override
-	public void updateNClob(final int arg0, final NClob arg1)
-			throws SQLException {
+	public void updateNClob(final int arg0, final NClob arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1627,8 +1527,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNClob(java.lang.String, java.sql.NClob)
 	 */
 	@Override
-	public void updateNClob(final String arg0, final NClob arg1)
-			throws SQLException {
+	public void updateNClob(final String arg0, final NClob arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1639,8 +1538,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNClob(int, java.io.Reader)
 	 */
 	@Override
-	public void updateNClob(final int arg0, final Reader arg1)
-			throws SQLException {
+	public void updateNClob(final int arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1651,8 +1549,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNClob(java.lang.String, java.io.Reader)
 	 */
 	@Override
-	public void updateNClob(final String arg0, final Reader arg1)
-			throws SQLException {
+	public void updateNClob(final String arg0, final Reader arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1663,8 +1560,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNClob(int, java.io.Reader, long)
 	 */
 	@Override
-	public void updateNClob(final int arg0, final Reader arg1, final long arg2)
-			throws SQLException {
+	public void updateNClob(final int arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1672,12 +1568,10 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#updateNClob(java.lang.String, java.io.Reader,
-	 * long)
+	 * @see java.sql.ResultSet#updateNClob(java.lang.String, java.io.Reader, long)
 	 */
 	@Override
-	public void updateNClob(final String arg0, final Reader arg1,
-			final long arg2) throws SQLException {
+	public void updateNClob(final String arg0, final Reader arg1, final long arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1688,8 +1582,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNString(int, java.lang.String)
 	 */
 	@Override
-	public void updateNString(final int arg0, final String arg1)
-			throws SQLException {
+	public void updateNString(final int arg0, final String arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1700,8 +1593,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateNString(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateNString(final String arg0, final String arg1)
-			throws SQLException {
+	public void updateNString(final String arg0, final String arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1734,8 +1626,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateObject(int, java.lang.Object)
 	 */
 	@Override
-	public void updateObject(final int arg0, final Object arg1)
-			throws SQLException {
+	public void updateObject(final int arg0, final Object arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1746,8 +1637,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void updateObject(final String arg0, final Object arg1)
-			throws SQLException {
+	public void updateObject(final String arg0, final Object arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1758,8 +1648,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateObject(int, java.lang.Object, int)
 	 */
 	@Override
-	public void updateObject(final int arg0, final Object arg1, final int arg2)
-			throws SQLException {
+	public void updateObject(final int arg0, final Object arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1767,12 +1656,10 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object,
-	 * int)
+	 * @see java.sql.ResultSet#updateObject(java.lang.String, java.lang.Object, int)
 	 */
 	@Override
-	public void updateObject(final String arg0, final Object arg1,
-			final int arg2) throws SQLException {
+	public void updateObject(final String arg0, final Object arg1, final int arg2) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1794,8 +1681,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateRef(java.lang.String, java.sql.Ref)
 	 */
 	@Override
-	public void updateRef(final String arg0, final Ref arg1)
-			throws SQLException {
+	public void updateRef(final String arg0, final Ref arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1817,8 +1703,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateRowId(int, java.sql.RowId)
 	 */
 	@Override
-	public void updateRowId(final int arg0, final RowId arg1)
-			throws SQLException {
+	public void updateRowId(final int arg0, final RowId arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1829,8 +1714,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateRowId(java.lang.String, java.sql.RowId)
 	 */
 	@Override
-	public void updateRowId(final String arg0, final RowId arg1)
-			throws SQLException {
+	public void updateRowId(final String arg0, final RowId arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1841,8 +1725,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateSQLXML(int, java.sql.SQLXML)
 	 */
 	@Override
-	public void updateSQLXML(final int arg0, final SQLXML arg1)
-			throws SQLException {
+	public void updateSQLXML(final int arg0, final SQLXML arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1853,8 +1736,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateSQLXML(java.lang.String, java.sql.SQLXML)
 	 */
 	@Override
-	public void updateSQLXML(final String arg0, final SQLXML arg1)
-			throws SQLException {
+	public void updateSQLXML(final String arg0, final SQLXML arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1865,8 +1747,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateShort(int, short)
 	 */
 	@Override
-	public void updateShort(final int arg0, final short arg1)
-			throws SQLException {
+	public void updateShort(final int arg0, final short arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1877,8 +1758,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateShort(java.lang.String, short)
 	 */
 	@Override
-	public void updateShort(final String arg0, final short arg1)
-			throws SQLException {
+	public void updateShort(final String arg0, final short arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1889,8 +1769,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateString(int, java.lang.String)
 	 */
 	@Override
-	public void updateString(final int arg0, final String arg1)
-			throws SQLException {
+	public void updateString(final int arg0, final String arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1901,8 +1780,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateString(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void updateString(final String arg0, final String arg1)
-			throws SQLException {
+	public void updateString(final String arg0, final String arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1924,8 +1802,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateTime(java.lang.String, java.sql.Time)
 	 */
 	@Override
-	public void updateTime(final String arg0, final Time arg1)
-			throws SQLException {
+	public void updateTime(final String arg0, final Time arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1936,8 +1813,7 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	 * @see java.sql.ResultSet#updateTimestamp(int, java.sql.Timestamp)
 	 */
 	@Override
-	public void updateTimestamp(final int arg0, final Timestamp arg1)
-			throws SQLException {
+	public void updateTimestamp(final int arg0, final Timestamp arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}
@@ -1945,12 +1821,10 @@ public abstract class AbstractIRODSSqlResultSet implements ResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see java.sql.ResultSet#updateTimestamp(java.lang.String,
-	 * java.sql.Timestamp)
+	 * @see java.sql.ResultSet#updateTimestamp(java.lang.String, java.sql.Timestamp)
 	 */
 	@Override
-	public void updateTimestamp(final String arg0, final Timestamp arg1)
-			throws SQLException {
+	public void updateTimestamp(final String arg0, final Timestamp arg1) throws SQLException {
 		throw new SQLFeatureNotSupportedException();
 
 	}

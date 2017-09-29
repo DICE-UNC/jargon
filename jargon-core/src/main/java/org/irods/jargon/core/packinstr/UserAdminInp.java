@@ -44,18 +44,18 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	private String arg9 = "";
 
 	/**
-	 * Static initializer for a user admin packing instruction used to change a
-	 * user password.
+	 * Static initializer for a user admin packing instruction used to change a user
+	 * password.
 	 *
 	 * @param userName
 	 *            {@code String} with the user name that will have the password
 	 *            changed.
 	 * @param obfuscatedPassword
 	 *            {@code String} with the properly obfuscated password. See
-	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities}
-	 *            for obfuscation routines.
-	 * @return instance of {@code userAdminInp} packing instruction to change
-	 *         the password.
+	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities} for
+	 *            obfuscation routines.
+	 * @return instance of {@code userAdminInp} packing instruction to change the
+	 *         password.
 	 * @throws JargonException
 	 */
 	public static UserAdminInp instanceForChangeUserPassword(final String userName, final String obfuscatedPassword)
@@ -74,8 +74,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create a packing instruction to add the given iRODS user group to the
-	 * zone
+	 * Create a packing instruction to add the given iRODS user group to the zone
 	 *
 	 * @param userGroup
 	 *            {@link UserGroup} to add
@@ -108,7 +107,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 			throw new IllegalArgumentException("null userGroupName");
 		}
 
-		if (userName == null | userName.isEmpty()) {
+		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null UserName");
 		}
 

@@ -2,8 +2,6 @@ package org.irods.jargon.core.connection;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -13,6 +11,8 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class IRODSSimpleConnectionTest {
 	private static Properties testingProperties = new Properties();
@@ -33,33 +33,25 @@ public class IRODSSimpleConnectionTest {
 
 	@Test
 	public void testOpenAndCloseSimpleConnection() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		AbstractIRODSMidLevelProtocol connection = irodsFileSystem
-				.getIrodsSession().currentConnection(irodsAccount);
+		AbstractIRODSMidLevelProtocol connection = irodsFileSystem.getIrodsSession().currentConnection(irodsAccount);
 		connection.disconnect();
 
-		Assert.assertFalse("connection should not be connected",
-				connection.isConnected());
+		Assert.assertFalse("connection should not be connected", connection.isConnected());
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testOpenAndCloseSimpleConnectionNullSession() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		irodsFileSystem.getIrodsProtocolManager().getIRODSProtocol(
-				irodsAccount,
-				irodsFileSystem.getIrodsSession()
-						.buildPipelineConfigurationBasedOnJargonProperties(),
-				null);
+		irodsFileSystem.getIrodsProtocolManager().getIRODSProtocol(irodsAccount,
+				irodsFileSystem.getIrodsSession().buildPipelineConfigurationBasedOnJargonProperties(), null);
 
 	}
 
 	@Test
-	public void testLoginWithLinuxSpecialCharsInPasswordBug202()
-			throws Exception {
+	public void testLoginWithLinuxSpecialCharsInPasswordBug202() throws Exception {
 
 		String testUser = "testLoginWithLinuxSpecialChars";
 		String password1 = "te=st";
@@ -74,13 +66,11 @@ public class IRODSSimpleConnectionTest {
 		user.setInfo("info");
 		user.setName(testUser);
 		user.setUserType(UserTypeEnum.RODS_USER);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
 		irodsFileSystem.getIRODSAccessObjectFactory();
 
-		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(irodsAccount);
+		UserAO adminUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(irodsAccount);
 
 		// pre-clean, remove testing user if there
 		adminUserAO.deleteUser(testUser);
@@ -92,54 +82,39 @@ public class IRODSSimpleConnectionTest {
 		adminUserAO.changeAUserPasswordByAnAdmin(testUser, password1);
 
 		IRODSAccount testAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password1);
-		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(
-				testAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password1);
+		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(testAccount);
 
 		// get an account as the given user, change password, re-log in several
 		// iterations
 
 		IRODSAccount userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password1);
-		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getUserAO(userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password1);
+		UserAO myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password1, password2);
 
 		testAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password2);
-		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(
-				testAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password2);
+		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(testAccount);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password2);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password2);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password2, password3);
 		testAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password3);
-		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(
-				testAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password3);
+		irodsFileSystem.getIRODSAccessObjectFactory().authenticateIRODSAccount(testAccount);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password3);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password3);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 		myUserAO.changeAUserPasswordByThatUser(testUser, password3, password4);
 		testAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password4);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password4);
 
 		userAccount = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(
-						testingProperties, testUser, password4);
-		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(
-				userAccount);
+				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties, testUser, password4);
+		myUserAO = irodsFileSystem.getIRODSAccessObjectFactory().getUserAO(userAccount);
 
 		// now clean up as an admin
 
@@ -151,8 +126,7 @@ public class IRODSSimpleConnectionTest {
 	 * refers to Connections left open in 4.1.10.0-RC1 #222
 	 */
 	@Test
-	public void testConnAndFinalizationViaIrodsFileSystemBug222()
-			throws Exception {
+	public void testConnAndFinalizationViaIrodsFileSystemBug222() throws Exception {
 
 		int times = 50;
 
@@ -177,8 +151,8 @@ public class IRODSSimpleConnectionTest {
 				System.runFinalization();
 			}
 
-			Assert.assertTrue("should be no conns in map", fs.getIrodsSession()
-					.getIRODSCommandsMap() == null);
+			Assert.assertNotNull("null fs", fs);
+			Assert.assertTrue("should be no conns in map", fs.getIrodsSession().getIRODSCommandsMap() == null);
 		}
 
 	}

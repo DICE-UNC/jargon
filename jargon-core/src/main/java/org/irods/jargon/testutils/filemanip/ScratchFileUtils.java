@@ -32,9 +32,9 @@ public class ScratchFileUtils {
 
 	/**
 	 * Create the scratch dir as described in testing.properties if it does not
-	 * already exist. * @param pathUnderScratch {@code String} giving the
-	 * relative path of the file/directory underneath the scratch area (no
-	 * leading / delim is necessary
+	 * already exist. * @param pathUnderScratch {@code String} giving the relative
+	 * path of the file/directory underneath the scratch area (no leading / delim is
+	 * necessary
 	 */
 	public void createScratchDirIfNotExists(final String pathUnderScratch) {
 		File scratchDir = new File(testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY) + pathUnderScratch);
@@ -51,9 +51,9 @@ public class ScratchFileUtils {
 	 * empty scratch directory at test initialization or tear-down.
 	 *
 	 * @param pathUnderScratch
-	 *            {@code String} containing a relative path (no leading '/')
-	 *            under the configured scratch directory pointing to the
-	 *            directory to initialize
+	 *            {@code String} containing a relative path (no leading '/') under
+	 *            the configured scratch directory pointing to the directory to
+	 *            initialize
 	 */
 	public void clearAndReinitializeScratchDirectory(final String pathUnderScratch) {
 		File scratchDir = new File(testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY) + pathUnderScratch);
@@ -129,8 +129,8 @@ public class ScratchFileUtils {
 
 	/**
 	 * @param pathUnderScratch
-	 *            {@code String} with relative file path under scratch (no
-	 *            leading '/')
+	 *            {@code String} with relative file path under scratch (no leading
+	 *            '/')
 	 * @return <code>long</code> with the file's checksum value
 	 * @throws TestConfigurationException
 	 */
@@ -169,7 +169,9 @@ public class ScratchFileUtils {
 			throw new TestConfigurationException(message.toString(), ioe);
 		} finally {
 			try {
-				fis.close();
+				if (fis != null) {
+					fis.close();
+				}
 			} catch (Exception e) {
 				// ignore
 			}
