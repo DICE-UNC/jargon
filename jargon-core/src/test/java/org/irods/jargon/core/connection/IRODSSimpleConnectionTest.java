@@ -128,6 +128,10 @@ public class IRODSSimpleConnectionTest {
 	@Test
 	public void testConnAndFinalizationViaIrodsFileSystemBug222() throws Exception {
 
+		if (!testingPropertiesHelper.isTestPAM(testingProperties)) {
+			return;
+		}
+
 		int times = 50;
 
 		IRODSFileSystem fs = null;
