@@ -83,8 +83,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#isUseTransferThreadsPool
-	 * ()
+	 * org.irods.jargon.core.connection.JargonProperties#isUseTransferThreadsPool ()
 	 */
 	@Override
 	public boolean isUseTransferThreadsPool() {
@@ -103,8 +102,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	}
 
 	private String verifyPropExistsAndGetAsString(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsString(jargonProperties,
-				propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsString(jargonProperties, propKey);
 	}
 
 	/**
@@ -113,19 +111,16 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * @throws JargonException
 	 */
 	private int verifyPropExistsAndGetAsInt(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsInt(jargonProperties,
-				propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsInt(jargonProperties, propKey);
 
 	}
 
 	private boolean verifyPropExistsAndGetAsBoolean(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties,
-				propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsBoolean(jargonProperties, propKey);
 	}
 
 	private long verifyPropExistsAndGetAsLong(final String propKey) {
-		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties,
-				propKey);
+		return PropertyUtils.verifyPropExistsAndGetAsLong(jargonProperties, propKey);
 	}
 
 	/*
@@ -354,8 +349,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getReconnectTimeInMillis
-	 * ()
+	 * org.irods.jargon.core.connection.JargonProperties#getReconnectTimeInMillis ()
 	 */
 	@Override
 	public long getReconnectTimeInMillis() {
@@ -419,8 +413,7 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getConnectionFactory()
+	 * @see org.irods.jargon.core.connection.JargonProperties#getConnectionFactory()
 	 */
 	@Override
 	public String getConnectionFactory() {
@@ -435,13 +428,11 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
+	 * @see org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
 	@Override
 	public ChecksumEncodingEnum getChecksumEncoding() {
-		String propVal = ((String) jargonProperties
-				.get("transfer.checksum.algorithm"));
+		String propVal = ((String) jargonProperties.get("transfer.checksum.algorithm"));
 
 		if (propVal == null || propVal.isEmpty()) {
 			return ChecksumEncodingEnum.DEFAULT;
@@ -546,17 +537,14 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 
 		if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE.name())) {
 			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
-				.name())) {
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE.name())) {
 			return SslNegotiationPolicy.CS_NEG_REFUSE;
 		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.name())) {
 			return SslNegotiationPolicy.CS_NEG_REQUIRE;
-		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
-				.name())) {
+		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION.name())) {
 			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
-			throw new UnsupportedOperationException(
-					"unknown negotiation policy");
+			throw new UnsupportedOperationException("unknown negotiation policy");
 		}
 
 	}
@@ -598,5 +586,20 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	public boolean isBypassSslCertChecks() {
 		return verifyPropExistsAndGetAsBoolean("bypass.ssl.cert.checks");
 
+	}
+
+	@Override
+	public String getDefaultIrodsRuleEngineIdentifier() {
+		return verifyPropExistsAndGetAsString("default.irods.rule.engine.identifier");
+	}
+
+	@Override
+	public String getDefaultPythonRuleEngineIdentifier() {
+		return verifyPropExistsAndGetAsString("default.python.rule.engine.identifier");
+	}
+
+	@Override
+	public String getDefaultCppRuleEngineIdentifier() {
+		return verifyPropExistsAndGetAsString("default.cpp.rule.engine.identifier");
 	}
 }

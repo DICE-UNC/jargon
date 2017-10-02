@@ -45,6 +45,14 @@ public class RuleTypeDetectorTest {
 	}
 
 	@Test
+	public void testDetectTypeFromTextWithPythonAnnotation() throws Exception {
+		RuleTypeDetector detector = new RuleTypeDetector();
+		String ruleText = "# @RuleEngine=\"PYTHON\"";
+		IrodsRuleEngineTypeEnum actual = detector.detectTypeFromRuleText(ruleText);
+		Assert.assertEquals(IrodsRuleEngineTypeEnum.PYTHON, actual);
+	}
+
+	@Test
 	public void testDetectTypeFromTextWithIrodsSpacey() throws Exception {
 		RuleTypeDetector detector = new RuleTypeDetector();
 		String ruleText = "# @RuleEngine=\"   IRODS   \"     ";

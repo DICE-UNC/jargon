@@ -6,15 +6,14 @@ import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 
 /**
- * Implementation of the {@code JargonProperties} interface that is
- * suitable for user-definition and injection into the {@code IRODSession}.
- * Typically, properties that control Jargon are pulled from a default
- * jargon.properties file. This class would allow, for example, the wiring of
- * property options via Spring through various setters.
+ * Implementation of the {@code JargonProperties} interface that is suitable for
+ * user-definition and injection into the {@code IRODSession}. Typically,
+ * properties that control Jargon are pulled from a default jargon.properties
+ * file. This class would allow, for example, the wiring of property options via
+ * Spring through various setters.
  * <p>
  * Some of these properties serve as defaults that may be overridden in the
- * various methods by the setting of parameters, such as
- * {@code TransferOptions}
+ * various methods by the setting of parameters, such as {@code TransferOptions}
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -69,19 +68,23 @@ public class SettableJargonProperties implements JargonProperties {
 	private int primaryTcpPerformancePrefsBandwidth;
 	private int socketRenewalIntervalInSeconds;
 	private boolean longTransferRestart = true;
+	private String defaultIrodsRuleEngineIdentifier = "irods_rule_engine_plugin-irods_rule_language-instance";
+	private String defaultPythonRuleEngineIdentifier = "irods_rule_engine_plugin-cpp_default_policy-instance";
+	private String defaultCppRuleEngineIdentifier = "irods_rule_engine_plugin-cpp_default_policy-instance";
+
 	/**
 	 * Size (in bytes) of the buffer used to copy between input and output for
 	 * parallel transfers
 	 */
 	private int parallelCopyBufferSize;
 	/**
-	 * Number of callbacks before an intra file callback listener will be
-	 * notified, no matter how many bytes passed
+	 * Number of callbacks before an intra file callback listener will be notified,
+	 * no matter how many bytes passed
 	 */
 	private int intraFileStatusCallbacksNumberCallsInterval = 5;
 	/**
-	 * Number of bytes in a callback before in intra file callback listener will
-	 * be notified, no matter how many calls have been made
+	 * Number of bytes in a callback before in intra file callback listener will be
+	 * notified, no matter how many calls have been made
 	 */
 	private long intraFileStatusCallbacksTotalBytesInterval = 4194304;
 	/**
@@ -109,9 +112,9 @@ public class SettableJargonProperties implements JargonProperties {
 	private int encryptionNumberHashRounds = 16;
 
 	/**
-	 * {@code boolean} that indicates whether ssl cert checks should be
-	 * bypassed. {@code false} is the default, meaning checks will be done,
-	 * and is the recommended production setting.
+	 * {@code boolean} that indicates whether ssl cert checks should be bypassed.
+	 * {@code false} is the default, meaning checks will be done, and is the
+	 * recommended production setting.
 	 */
 	private boolean bypassSslCertChecks;
 
@@ -121,16 +124,15 @@ public class SettableJargonProperties implements JargonProperties {
 	 * configuration, as in Spring.
 	 *
 	 * @param jargonProperties
-	 *            {@link JargonProperties} that has the initial set of
-	 *            properties.
+	 *            {@link JargonProperties} that has the initial set of properties.
 	 */
 	public SettableJargonProperties(final JargonProperties jargonProperties) {
 		initialize(jargonProperties);
 	}
 
 	/**
-	 * Construct a default properties set based on the
-	 * {@code jargon.properties} in jargon, these can then be overridden.
+	 * Construct a default properties set based on the {@code jargon.properties} in
+	 * jargon, these can then be overridden.
 	 *
 	 * @throws JargonException
 	 *             if properties cannot be loaded
@@ -148,91 +150,66 @@ public class SettableJargonProperties implements JargonProperties {
 
 		useParallelTransfer = jargonProperties.isUseParallelTransfer();
 		maxFilesAndDirsQueryMax = jargonProperties.getMaxFilesAndDirsQueryMax();
-		allowPutGetResourceRedirects = jargonProperties
-				.isAllowPutGetResourceRedirects();
-		computeAndVerifyChecksumAfterTransfer = jargonProperties
-				.isComputeAndVerifyChecksumAfterTransfer();
-		computeChecksumAfterTransfer = jargonProperties
-				.isComputeChecksumAfterTransfer();
-		intraFileStatusCallbacks = jargonProperties
-				.isIntraFileStatusCallbacks();
-		irodsParallelSocketTimeout = jargonProperties
-				.getIRODSParallelTransferSocketTimeout();
+		allowPutGetResourceRedirects = jargonProperties.isAllowPutGetResourceRedirects();
+		computeAndVerifyChecksumAfterTransfer = jargonProperties.isComputeAndVerifyChecksumAfterTransfer();
+		computeChecksumAfterTransfer = jargonProperties.isComputeChecksumAfterTransfer();
+		intraFileStatusCallbacks = jargonProperties.isIntraFileStatusCallbacks();
+		irodsParallelSocketTimeout = jargonProperties.getIRODSParallelTransferSocketTimeout();
 		irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
 		maxParallelThreads = jargonProperties.getMaxParallelThreads();
-		transferThreadPoolTimeoutMillis = jargonProperties
-				.getTransferThreadPoolTimeoutMillis();
-		transferThreadPoolMaxSimultaneousTransfers = jargonProperties
-				.getTransferThreadPoolMaxSimultaneousTransfers();
-		internalInputStreamBufferSize = jargonProperties
-				.getInternalInputStreamBufferSize();
-		internalOutputStreamBufferSize = jargonProperties
-				.getInternalOutputStreamBufferSize();
+		transferThreadPoolTimeoutMillis = jargonProperties.getTransferThreadPoolTimeoutMillis();
+		transferThreadPoolMaxSimultaneousTransfers = jargonProperties.getTransferThreadPoolMaxSimultaneousTransfers();
+		internalInputStreamBufferSize = jargonProperties.getInternalInputStreamBufferSize();
+		internalOutputStreamBufferSize = jargonProperties.getInternalOutputStreamBufferSize();
 		internalCacheBufferSize = jargonProperties.getInternalCacheBufferSize();
-		sendInputStreamBufferSize = jargonProperties
-				.getSendInputStreamBufferSize();
-		localFileOutputStreamBufferSize = jargonProperties
-				.getLocalFileOutputStreamBufferSize();
-		localFileInputStreamBufferSize = jargonProperties
-				.getLocalFileInputStreamBufferSize();
+		sendInputStreamBufferSize = jargonProperties.getSendInputStreamBufferSize();
+		localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
+		localFileInputStreamBufferSize = jargonProperties.getLocalFileInputStreamBufferSize();
 		putBufferSize = jargonProperties.getPutBufferSize();
 		getBufferSize = jargonProperties.getGetBufferSize();
 		encoding = jargonProperties.getEncoding();
-		inputToOutputCopyBufferByteSize = jargonProperties
-				.getInputToOutputCopyBufferByteSize();
+		inputToOutputCopyBufferByteSize = jargonProperties.getInputToOutputCopyBufferByteSize();
 		setInstrument(jargonProperties.isInstrument());
 		setReconnect(jargonProperties.isReconnect());
-		setDefaultToPublicIfNothingUnderRootWhenListing(jargonProperties
-				.isDefaultToPublicIfNothingUnderRootWhenListing());
-		setUsingSpecQueryForDataObjPermissionsForUserInGroup(jargonProperties
-				.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
+		setDefaultToPublicIfNothingUnderRootWhenListing(
+				jargonProperties.isDefaultToPublicIfNothingUnderRootWhenListing());
+		setUsingSpecQueryForDataObjPermissionsForUserInGroup(
+				jargonProperties.isUsingSpecQueryForDataObjPermissionsForUserInGroup());
 		setForcePamFlush(jargonProperties.isForcePamFlush());
 		connectionFactory = jargonProperties.getConnectionFactory();
 		checksumEncoding = jargonProperties.getChecksumEncoding();
 
 		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
-		parallelTcpPerformancePrefsBandwidth = jargonProperties
-				.getParallelTcpPerformancePrefsBandwidth();
-		parallelTcpPerformancePrefsConnectionTime = jargonProperties
-				.getParallelTcpPerformancePrefsConnectionTime();
-		parallelTcpPerformancePrefsLatency = jargonProperties
-				.getParallelTcpPerformancePrefsLatency();
-		parallelTcpReceiveWindowSize = jargonProperties
-				.getParallelTcpReceiveWindowSize();
-		parallelTcpSendWindowSize = jargonProperties
-				.getParallelTcpSendWindowSize();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties.getParallelTcpPerformancePrefsBandwidth();
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties.getParallelTcpPerformancePrefsConnectionTime();
+		parallelTcpPerformancePrefsLatency = jargonProperties.getParallelTcpPerformancePrefsLatency();
+		parallelTcpReceiveWindowSize = jargonProperties.getParallelTcpReceiveWindowSize();
+		parallelTcpSendWindowSize = jargonProperties.getParallelTcpSendWindowSize();
 		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
-		primaryTcpPerformancePrefsBandwidth = jargonProperties
-				.getPrimaryTcpPerformancePrefsBandwidth();
-		primaryTcpPerformancePrefsConnectionTime = jargonProperties
-				.getPrimaryTcpPerformancePrefsConnectionTime();
-		primaryTcpPerformancePrefsLatency = jargonProperties
-				.getPrimaryTcpPerformancePrefsLatency();
-		primaryTcpReceiveWindowSize = jargonProperties
-				.getPrimaryTcpReceiveWindowSize();
-		primaryTcpSendWindowSize = jargonProperties
-				.getPrimaryTcpSendWindowSize();
-		socketRenewalIntervalInSeconds = jargonProperties
-				.getSocketRenewalIntervalInSeconds();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties.getPrimaryTcpPerformancePrefsBandwidth();
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties.getPrimaryTcpPerformancePrefsConnectionTime();
+		primaryTcpPerformancePrefsLatency = jargonProperties.getPrimaryTcpPerformancePrefsLatency();
+		primaryTcpReceiveWindowSize = jargonProperties.getPrimaryTcpReceiveWindowSize();
+		primaryTcpSendWindowSize = jargonProperties.getPrimaryTcpSendWindowSize();
+		socketRenewalIntervalInSeconds = jargonProperties.getSocketRenewalIntervalInSeconds();
 		longTransferRestart = jargonProperties.isLongTransferRestart();
 		parallelCopyBufferSize = jargonProperties.getParallelCopyBufferSize();
-		intraFileStatusCallbacksNumberCallsInterval = jargonProperties
-				.getIntraFileStatusCallbacksNumberCallsInterval();
-		intraFileStatusCallbacksTotalBytesInterval = jargonProperties
-				.getIntraFileStatusCallbacksTotalBytesInterval();
+		intraFileStatusCallbacksNumberCallsInterval = jargonProperties.getIntraFileStatusCallbacksNumberCallsInterval();
+		intraFileStatusCallbacksTotalBytesInterval = jargonProperties.getIntraFileStatusCallbacksTotalBytesInterval();
 		negotiationPolicy = jargonProperties.getNegotiationPolicy();
 		encryptionAlgorithmEnum = jargonProperties.getEncryptionAlgorithmEnum();
 		encryptionKeySize = jargonProperties.getEncryptionKeySize();
-		encryptionNumberHashRounds = jargonProperties
-				.getEncryptionNumberHashRounds();
+		encryptionNumberHashRounds = jargonProperties.getEncryptionNumberHashRounds();
 		encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
 		bypassSslCertChecks = jargonProperties.isBypassSslCertChecks();
-
+		defaultIrodsRuleEngineIdentifier = jargonProperties.getDefaultIrodsRuleEngineIdentifier();
+		defaultPythonRuleEngineIdentifier = jargonProperties.getDefaultPythonRuleEngineIdentifier();
+		defaultCppRuleEngineIdentifier = jargonProperties.getDefaultCppRuleEngineIdentifier();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
 	 */
@@ -245,22 +222,20 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Utilize parallel transfer algorithm for files above the transfer size
 	 *
 	 * @param useParallelTransfer
-	 *            {@code boolean} of {@code true} if parallel
-	 *            transfers are allowed
+	 *            {@code boolean} of {@code true} if parallel transfers are allowed
 	 */
-	public synchronized void setUseParallelTransfer(
-			final boolean useParallelTransfer) {
+	public synchronized void setUseParallelTransfer(final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
 	/**
-	 * Set the maximum number of threads allowed for parallel transfers. 0 means
-	 * use iRODS limit.
+	 * Set the maximum number of threads allowed for parallel transfers. 0 means use
+	 * iRODS limit.
 	 *
 	 * @param maxParallelThreads
-	 *            {@code int} with the maximum number of threads to use in
-	 *            a parallel transfer, with 0 meaning use the iRODS default set
-	 *            in rules.
+	 *            {@code int} with the maximum number of threads to use in a
+	 *            parallel transfer, with 0 meaning use the iRODS default set in
+	 *            rules.
 	 */
 	public synchronized void setMaxParallelThreads(final int maxParallelThreads) {
 		this.maxParallelThreads = maxParallelThreads;
@@ -268,7 +243,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
 	 */
@@ -279,7 +254,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax
 	 * ()
@@ -303,8 +278,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param maxFilesAndDirsQueryMax
 	 *            the maxFilesAndDirsQueryMax to set
 	 */
-	public synchronized void setMaxFilesAndDirsQueryMax(
-			final int maxFilesAndDirsQueryMax) {
+	public synchronized void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
@@ -312,8 +286,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param useTransferThreadsPool
 	 *            the useTransferThreadsPool to set
 	 */
-	public synchronized void setUseTransferThreadsPool(
-			final boolean useTransferThreadsPool) {
+	public synchronized void setUseTransferThreadsPool(final boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
 	}
 
@@ -321,14 +294,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param transferThreadPoolTimeoutMillis
 	 *            the transferThreadPoolTimeoutMillis to set
 	 */
-	public synchronized void setTransferThreadPoolTimeoutMillis(
-			final int transferThreadPoolTimeoutMillis) {
+	public synchronized void setTransferThreadPoolTimeoutMillis(final int transferThreadPoolTimeoutMillis) {
 		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isAllowPutGetResourceRedirects()
 	 */
@@ -341,18 +313,16 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Allow resource redirects to occur
 	 *
 	 * @param allowPutGetResourceRedirects
-	 *            {@code boolean} which allows resource redirects if
-	 *            {@code true}
+	 *            {@code boolean} which allows resource redirects if {@code true}
 	 * @throws JargonException
 	 */
-	public synchronized void setAllowPutGetResourceRedirects(
-			final boolean allowPutGetResourceRedirects) {
+	public synchronized void setAllowPutGetResourceRedirects(final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeChecksumAfterTransfer()
 	 */
@@ -365,18 +335,17 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Compute (but do not verify) a checksum after a transfer.
 	 *
 	 * @param computeChecksumAfterTransfer
-	 *            {@code boolean} that will cause a checksum to be computed
-	 *            by default if {@code true}
+	 *            {@code boolean} that will cause a checksum to be computed by
+	 *            default if {@code true}
 	 * @throws JargonException
 	 */
-	public synchronized void setComputeChecksumAfterTransfer(
-			final boolean computeChecksumAfterTransfer) {
+	public synchronized void setComputeChecksumAfterTransfer(final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isComputeAndVerifyChecksumAfterTransfer()
 	 */
@@ -389,8 +358,8 @@ public class SettableJargonProperties implements JargonProperties {
 	 * Compute and verify the file checksum after a put/get transfer
 	 *
 	 * @param computeAndVerifyChecksumAfterTransfer
-	 *            {@code boolean} that causes a checksum validation if set
-	 *            to {@code true}
+	 *            {@code boolean} that causes a checksum validation if set to
+	 *            {@code true}
 	 */
 	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
@@ -398,21 +367,20 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Set whether intra-file status call-backs for file transfers are enabled.
-	 * This will give progress of bytes within transfers, with a slight
-	 * performance penalty.
+	 * Set whether intra-file status call-backs for file transfers are enabled. This
+	 * will give progress of bytes within transfers, with a slight performance
+	 * penalty.
 	 *
 	 * @param intraFileStatusCallbacks
 	 *            the intraFileStatusCallbacks to set
 	 */
-	public synchronized void setIntraFileStatusCallbacks(
-			final boolean intraFileStatusCallbacks) {
+	public synchronized void setIntraFileStatusCallbacks(final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
 	 * ()
@@ -424,7 +392,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
 	 */
@@ -439,7 +407,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getIRODSParallelTransferSocketTimeout()
 	 */
@@ -448,14 +416,13 @@ public class SettableJargonProperties implements JargonProperties {
 		return irodsParallelSocketTimeout;
 	}
 
-	public synchronized void setIRODSParallelTransferSocketTimeout(
-			final int irodsParallelSocketTimeout) {
+	public synchronized void setIRODSParallelTransferSocketTimeout(final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getTransferThreadPoolMaxSimultaneousTransfers()
 	 */
@@ -466,7 +433,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalInputStreamBufferSize()
 	 */
@@ -477,7 +444,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInternalOutputStreamBufferSize()
 	 */
@@ -488,7 +455,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
 	 * ()
@@ -500,7 +467,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSendInputStreamBufferSize()
 	 */
@@ -511,7 +478,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getInputToOutputCopyBufferByteSize()
 	 */
@@ -522,7 +489,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getLocalFileOutputStreamBufferSize()
 	 */
@@ -549,8 +516,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param internalInputStreamBufferSize
 	 *            the internalInputStreamBufferSize to set
 	 */
-	public synchronized void setInternalInputStreamBufferSize(
-			final int internalInputStreamBufferSize) {
+	public synchronized void setInternalInputStreamBufferSize(final int internalInputStreamBufferSize) {
 		this.internalInputStreamBufferSize = internalInputStreamBufferSize;
 	}
 
@@ -558,8 +524,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param internalOutputStreamBufferSize
 	 *            the internalOutputStreamBufferSize to set
 	 */
-	public synchronized void setInternalOutputStreamBufferSize(
-			final int internalOutputStreamBufferSize) {
+	public synchronized void setInternalOutputStreamBufferSize(final int internalOutputStreamBufferSize) {
 		this.internalOutputStreamBufferSize = internalOutputStreamBufferSize;
 	}
 
@@ -567,8 +532,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param internalCacheBufferSize
 	 *            the internalCacheBufferSize to set
 	 */
-	public synchronized void setInternalCacheBufferSize(
-			final int internalCacheBufferSize) {
+	public synchronized void setInternalCacheBufferSize(final int internalCacheBufferSize) {
 		this.internalCacheBufferSize = internalCacheBufferSize;
 	}
 
@@ -576,8 +540,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param sendInputStreamBufferSize
 	 *            the sendInputStreamBufferSize to set
 	 */
-	public synchronized void setSendInputStreamBufferSize(
-			final int sendInputStreamBufferSize) {
+	public synchronized void setSendInputStreamBufferSize(final int sendInputStreamBufferSize) {
 		this.sendInputStreamBufferSize = sendInputStreamBufferSize;
 	}
 
@@ -585,8 +548,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param localFileOutputStreamBufferSize
 	 *            the localFileOutputStreamBufferSize to set
 	 */
-	public synchronized void setLocalFileOutputStreamBufferSize(
-			final int localFileOutputStreamBufferSize) {
+	public synchronized void setLocalFileOutputStreamBufferSize(final int localFileOutputStreamBufferSize) {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
@@ -594,8 +556,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param localFileInputStreamBufferSize
 	 *            the localFileInputStreamBufferSize to set
 	 */
-	public synchronized void setLocalFileInputStreamBufferSize(
-			final int localFileInputStreamBufferSize) {
+	public synchronized void setLocalFileInputStreamBufferSize(final int localFileInputStreamBufferSize) {
 		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
@@ -611,14 +572,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param irodsParallelSocketTimeout
 	 *            the irodsParallelSocketTimeout to set
 	 */
-	public synchronized void setIrodsParallelSocketTimeout(
-			final int irodsParallelSocketTimeout) {
+	public synchronized void setIrodsParallelSocketTimeout(final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
 	 */
 	@Override
@@ -628,7 +588,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
 	 */
 	@Override
@@ -656,14 +616,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param inputToOutputCopyBufferByteSize
 	 *            the inputToOutputCopyBufferByteSize to set
 	 */
-	public synchronized void setInputToOutputCopyBufferByteSize(
-			final int inputToOutputCopyBufferByteSize) {
+	public synchronized void setInputToOutputCopyBufferByteSize(final int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
 	 */
 	@Override
@@ -680,9 +639,8 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @return {@code boolean} that indicates whether a reconnect of long
-	 *         running connections is done. This is equvalent to the -T icommand
-	 *         option
+	 * @return {@code boolean} that indicates whether a reconnect of long running
+	 *         connections is done. This is equvalent to the -T icommand option
 	 */
 	@Override
 	public synchronized boolean isReconnect() {
@@ -736,7 +694,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isDefaultToPublicIfNothingUnderRootWhenListing()
 	 */
@@ -758,9 +716,9 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * @return the reconnectTimeInMillis {@code long} indicating the time
-	 *         to wait for reconnect. This is only used if
-	 *         {@code isReconnect()} is {@code true}
+	 * @return the reconnectTimeInMillis {@code long} indicating the time to wait
+	 *         for reconnect. This is only used if {@code isReconnect()} is
+	 *         {@code true}
 	 */
 	@Override
 	public synchronized long getReconnectTimeInMillis() {
@@ -771,14 +729,13 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param reconnectTimeInMillis
 	 *            the reconnectTimeInMillis to set
 	 */
-	public synchronized void setReconnectTimeInMillis(
-			final long reconnectTimeInMillis) {
+	public synchronized void setReconnectTimeInMillis(final long reconnectTimeInMillis) {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingDiscoveredServerPropertiesCache()
 	 */
@@ -792,14 +749,13 @@ public class SettableJargonProperties implements JargonProperties {
 		return usingSpecificQueryForCollectionListingsWithPermissions;
 	}
 
-	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(
-			final boolean useSpecificQuery) {
+	public synchronized void setUsingSpecificQueryForCollectionListingWithPermissions(final boolean useSpecificQuery) {
 		usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
 	 */
@@ -819,7 +775,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
 	 */
 	@Override
@@ -839,7 +795,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
 	 */
 	@Override
@@ -880,9 +836,8 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
+	 *
+	 * @see org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
 	 */
 	@Override
 	public synchronized ChecksumEncodingEnum getChecksumEncoding() {
@@ -894,8 +849,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *
 	 * @param checksumEncoding
 	 */
-	public synchronized void setChecksumEncoding(
-			final ChecksumEncodingEnum checksumEncoding) {
+	public synchronized void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
 		}
@@ -909,8 +863,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpKeepAlive;
 	}
 
-	public synchronized void setParallelTcpKeepAlive(
-			final boolean parallelTcpKeepAlive) {
+	public synchronized void setParallelTcpKeepAlive(final boolean parallelTcpKeepAlive) {
 		this.parallelTcpKeepAlive = parallelTcpKeepAlive;
 	}
 
@@ -919,8 +872,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpSendWindowSize;
 	}
 
-	public synchronized void setParallelTcpSendWindowSize(
-			final int parallelTcpSendWindowSize) {
+	public synchronized void setParallelTcpSendWindowSize(final int parallelTcpSendWindowSize) {
 		this.parallelTcpSendWindowSize = parallelTcpSendWindowSize;
 	}
 
@@ -929,8 +881,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpReceiveWindowSize;
 	}
 
-	public synchronized void setParallelTcpReceiveWindowSize(
-			final int parallelTcpReceiveWindowSize) {
+	public synchronized void setParallelTcpReceiveWindowSize(final int parallelTcpReceiveWindowSize) {
 		this.parallelTcpReceiveWindowSize = parallelTcpReceiveWindowSize;
 	}
 
@@ -949,8 +900,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpPerformancePrefsLatency;
 	}
 
-	public synchronized void setParallelTcpPerformancePrefsLatency(
-			final int parallelTcpPerformancePrefsLatency) {
+	public synchronized void setParallelTcpPerformancePrefsLatency(final int parallelTcpPerformancePrefsLatency) {
 		this.parallelTcpPerformancePrefsLatency = parallelTcpPerformancePrefsLatency;
 	}
 
@@ -959,8 +909,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelTcpPerformancePrefsBandwidth;
 	}
 
-	public synchronized void setParallelTcpPerformancePrefsBandwidth(
-			final int parallelTcpPerformancePrefsBandwidth) {
+	public synchronized void setParallelTcpPerformancePrefsBandwidth(final int parallelTcpPerformancePrefsBandwidth) {
 		this.parallelTcpPerformancePrefsBandwidth = parallelTcpPerformancePrefsBandwidth;
 	}
 
@@ -969,8 +918,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpKeepAlive;
 	}
 
-	public synchronized void setPrimaryTcpKeepAlive(
-			final boolean primaryTcpKeepAlive) {
+	public synchronized void setPrimaryTcpKeepAlive(final boolean primaryTcpKeepAlive) {
 		this.primaryTcpKeepAlive = primaryTcpKeepAlive;
 	}
 
@@ -979,8 +927,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpSendWindowSize;
 	}
 
-	public synchronized void setPrimaryTcpSendWindowSize(
-			final int primaryTcpSendWindowSize) {
+	public synchronized void setPrimaryTcpSendWindowSize(final int primaryTcpSendWindowSize) {
 		this.primaryTcpSendWindowSize = primaryTcpSendWindowSize;
 	}
 
@@ -989,8 +936,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpReceiveWindowSize;
 	}
 
-	public synchronized void setPrimaryTcpReceiveWindowSize(
-			final int primaryTcpReceiveWindowSize) {
+	public synchronized void setPrimaryTcpReceiveWindowSize(final int primaryTcpReceiveWindowSize) {
 		this.primaryTcpReceiveWindowSize = primaryTcpReceiveWindowSize;
 	}
 
@@ -1009,8 +955,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpPerformancePrefsLatency;
 	}
 
-	public synchronized void setPrimaryTcpPerformancePrefsLatency(
-			final int primaryTcpPerformancePrefsLatency) {
+	public synchronized void setPrimaryTcpPerformancePrefsLatency(final int primaryTcpPerformancePrefsLatency) {
 		this.primaryTcpPerformancePrefsLatency = primaryTcpPerformancePrefsLatency;
 	}
 
@@ -1019,8 +964,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return primaryTcpPerformancePrefsBandwidth;
 	}
 
-	public synchronized void setPrimaryTcpPerformancePrefsBandwidth(
-			final int primaryTcpPerformancePrefsBandwidth) {
+	public synchronized void setPrimaryTcpPerformancePrefsBandwidth(final int primaryTcpPerformancePrefsBandwidth) {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
 
@@ -1030,145 +974,89 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
-	public synchronized String toString() {
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("SettableJargonProperties [useParallelTransfer=");
-		builder.append(useParallelTransfer);
-		builder.append(", useNIOForParallelTransfers=");
-		builder.append(useNIOForParallelTransfers);
-		builder.append(", maxParallelThreads=");
-		builder.append(maxParallelThreads);
-		builder.append(", maxFilesAndDirsQueryMax=");
-		builder.append(maxFilesAndDirsQueryMax);
-		builder.append(", useTransferThreadsPool=");
-		builder.append(useTransferThreadsPool);
-		builder.append(", transferThreadPoolMaxSimultaneousTransfers=");
-		builder.append(transferThreadPoolMaxSimultaneousTransfers);
-		builder.append(", transferThreadPoolTimeoutMillis=");
-		builder.append(transferThreadPoolTimeoutMillis);
-		builder.append(", allowPutGetResourceRedirects=");
-		builder.append(allowPutGetResourceRedirects);
-		builder.append(", computeChecksumAfterTransfer=");
-		builder.append(computeChecksumAfterTransfer);
-		builder.append(", computeAndVerifyChecksumAfterTransfer=");
-		builder.append(computeAndVerifyChecksumAfterTransfer);
-		builder.append(", intraFileStatusCallbacks=");
-		builder.append(intraFileStatusCallbacks);
-		builder.append(", irodsSocketTimeout=");
-		builder.append(irodsSocketTimeout);
-		builder.append(", irodsParallelSocketTimeout=");
-		builder.append(irodsParallelSocketTimeout);
-		builder.append(", internalInputStreamBufferSize=");
-		builder.append(internalInputStreamBufferSize);
-		builder.append(", internalOutputStreamBufferSize=");
-		builder.append(internalOutputStreamBufferSize);
-		builder.append(", internalCacheBufferSize=");
-		builder.append(internalCacheBufferSize);
-		builder.append(", sendInputStreamBufferSize=");
-		builder.append(sendInputStreamBufferSize);
-		builder.append(", localFileOutputStreamBufferSize=");
-		builder.append(localFileOutputStreamBufferSize);
-		builder.append(", localFileInputStreamBufferSize=");
-		builder.append(localFileInputStreamBufferSize);
-		builder.append(", putBufferSize=");
-		builder.append(putBufferSize);
-		builder.append(", getBufferSize=");
-		builder.append(getBufferSize);
-		builder.append(", inputToOutputCopyBufferByteSize=");
-		builder.append(inputToOutputCopyBufferByteSize);
-		builder.append(", ");
+		builder.append("SettableJargonProperties [useParallelTransfer=").append(useParallelTransfer)
+				.append(", useNIOForParallelTransfers=").append(useNIOForParallelTransfers)
+				.append(", maxParallelThreads=").append(maxParallelThreads).append(", maxFilesAndDirsQueryMax=")
+				.append(maxFilesAndDirsQueryMax).append(", useTransferThreadsPool=").append(useTransferThreadsPool)
+				.append(", transferThreadPoolMaxSimultaneousTransfers=")
+				.append(transferThreadPoolMaxSimultaneousTransfers).append(", transferThreadPoolTimeoutMillis=")
+				.append(transferThreadPoolTimeoutMillis).append(", allowPutGetResourceRedirects=")
+				.append(allowPutGetResourceRedirects).append(", computeChecksumAfterTransfer=")
+				.append(computeChecksumAfterTransfer).append(", computeAndVerifyChecksumAfterTransfer=")
+				.append(computeAndVerifyChecksumAfterTransfer).append(", intraFileStatusCallbacks=")
+				.append(intraFileStatusCallbacks).append(", irodsSocketTimeout=").append(irodsSocketTimeout)
+				.append(", irodsParallelSocketTimeout=").append(irodsParallelSocketTimeout)
+				.append(", internalInputStreamBufferSize=").append(internalInputStreamBufferSize)
+				.append(", internalOutputStreamBufferSize=").append(internalOutputStreamBufferSize)
+				.append(", internalCacheBufferSize=").append(internalCacheBufferSize)
+				.append(", sendInputStreamBufferSize=").append(sendInputStreamBufferSize)
+				.append(", localFileOutputStreamBufferSize=").append(localFileOutputStreamBufferSize)
+				.append(", localFileInputStreamBufferSize=").append(localFileInputStreamBufferSize)
+				.append(", putBufferSize=").append(putBufferSize).append(", getBufferSize=").append(getBufferSize)
+				.append(", inputToOutputCopyBufferByteSize=").append(inputToOutputCopyBufferByteSize).append(", ");
 		if (encoding != null) {
-			builder.append("encoding=");
-			builder.append(encoding);
-			builder.append(", ");
+			builder.append("encoding=").append(encoding).append(", ");
 		}
-		builder.append("instrument=");
-		builder.append(instrument);
-		builder.append(", reconnect=");
-		builder.append(reconnect);
-		builder.append(", defaultToPublicIfNothingUnderRootWhenListing=");
-		builder.append(defaultToPublicIfNothingUnderRootWhenListing);
-		builder.append(", reconnectTimeInMillis=");
-		builder.append(reconnectTimeInMillis);
-		builder.append(", usingDiscoveredServerPropertiesCache=");
-		builder.append(usingDiscoveredServerPropertiesCache);
-		builder.append(", usingSpecificQueryForCollectionListingsWithPermissions=");
-		builder.append(usingSpecificQueryForCollectionListingsWithPermissions);
-		builder.append(", usingSpecQueryForDataObjPermissionsForUserInGroup=");
-		builder.append(usingSpecQueryForDataObjPermissionsForUserInGroup);
-		builder.append(", pamTimeToLive=");
-		builder.append(pamTimeToLive);
-		builder.append(", forcePamFlush=");
-		builder.append(forcePamFlush);
-		builder.append(", ");
+		builder.append("instrument=").append(instrument).append(", reconnect=").append(reconnect)
+				.append(", defaultToPublicIfNothingUnderRootWhenListing=")
+				.append(defaultToPublicIfNothingUnderRootWhenListing).append(", reconnectTimeInMillis=")
+				.append(reconnectTimeInMillis).append(", usingDiscoveredServerPropertiesCache=")
+				.append(usingDiscoveredServerPropertiesCache)
+				.append(", usingSpecificQueryForCollectionListingsWithPermissions=")
+				.append(usingSpecificQueryForCollectionListingsWithPermissions)
+				.append(", usingSpecQueryForDataObjPermissionsForUserInGroup=")
+				.append(usingSpecQueryForDataObjPermissionsForUserInGroup).append(", pamTimeToLive=")
+				.append(pamTimeToLive).append(", forcePamFlush=").append(forcePamFlush).append(", ");
 		if (connectionFactory != null) {
-			builder.append("connectionFactory=");
-			builder.append(connectionFactory);
-			builder.append(", ");
+			builder.append("connectionFactory=").append(connectionFactory).append(", ");
 		}
 		if (checksumEncoding != null) {
-			builder.append("checksumEncoding=");
-			builder.append(checksumEncoding);
-			builder.append(", ");
+			builder.append("checksumEncoding=").append(checksumEncoding).append(", ");
 		}
-		builder.append("parallelTcpKeepAlive=");
-		builder.append(parallelTcpKeepAlive);
-		builder.append(", parallelTcpSendWindowSize=");
-		builder.append(parallelTcpSendWindowSize);
-		builder.append(", parallelTcpReceiveWindowSize=");
-		builder.append(parallelTcpReceiveWindowSize);
-		builder.append(", parallelTcpPerformancePrefsConnectionTime=");
-		builder.append(parallelTcpPerformancePrefsConnectionTime);
-		builder.append(", parallelTcpPerformancePrefsLatency=");
-		builder.append(parallelTcpPerformancePrefsLatency);
-		builder.append(", parallelTcpPerformancePrefsBandwidth=");
-		builder.append(parallelTcpPerformancePrefsBandwidth);
-		builder.append(", primaryTcpKeepAlive=");
-		builder.append(primaryTcpKeepAlive);
-		builder.append(", primaryTcpSendWindowSize=");
-		builder.append(primaryTcpSendWindowSize);
-		builder.append(", primaryTcpReceiveWindowSize=");
-		builder.append(primaryTcpReceiveWindowSize);
-		builder.append(", primaryTcpPerformancePrefsConnectionTime=");
-		builder.append(primaryTcpPerformancePrefsConnectionTime);
-		builder.append(", primaryTcpPerformancePrefsLatency=");
-		builder.append(primaryTcpPerformancePrefsLatency);
-		builder.append(", primaryTcpPerformancePrefsBandwidth=");
-		builder.append(primaryTcpPerformancePrefsBandwidth);
-		builder.append(", socketRenewalIntervalInSeconds=");
-		builder.append(socketRenewalIntervalInSeconds);
-		builder.append(", longTransferRestart=");
-		builder.append(longTransferRestart);
-		builder.append(", parallelCopyBufferSize=");
-		builder.append(parallelCopyBufferSize);
-		builder.append(", intraFileStatusCallbacksNumberCallsInterval=");
-		builder.append(intraFileStatusCallbacksNumberCallsInterval);
-		builder.append(", intraFileStatusCallbacksTotalBytesInterval=");
-		builder.append(intraFileStatusCallbacksTotalBytesInterval);
-		builder.append(", ");
+		builder.append("parallelTcpKeepAlive=").append(parallelTcpKeepAlive).append(", parallelTcpSendWindowSize=")
+				.append(parallelTcpSendWindowSize).append(", parallelTcpReceiveWindowSize=")
+				.append(parallelTcpReceiveWindowSize).append(", parallelTcpPerformancePrefsConnectionTime=")
+				.append(parallelTcpPerformancePrefsConnectionTime).append(", parallelTcpPerformancePrefsLatency=")
+				.append(parallelTcpPerformancePrefsLatency).append(", parallelTcpPerformancePrefsBandwidth=")
+				.append(parallelTcpPerformancePrefsBandwidth).append(", primaryTcpKeepAlive=")
+				.append(primaryTcpKeepAlive).append(", primaryTcpSendWindowSize=").append(primaryTcpSendWindowSize)
+				.append(", primaryTcpReceiveWindowSize=").append(primaryTcpReceiveWindowSize)
+				.append(", primaryTcpPerformancePrefsConnectionTime=").append(primaryTcpPerformancePrefsConnectionTime)
+				.append(", primaryTcpPerformancePrefsLatency=").append(primaryTcpPerformancePrefsLatency)
+				.append(", primaryTcpPerformancePrefsBandwidth=").append(primaryTcpPerformancePrefsBandwidth)
+				.append(", socketRenewalIntervalInSeconds=").append(socketRenewalIntervalInSeconds)
+				.append(", longTransferRestart=").append(longTransferRestart).append(", ");
+		if (defaultIrodsRuleEngineIdentifier != null) {
+			builder.append("defaultIrodsRuleEngineIdentifier=").append(defaultIrodsRuleEngineIdentifier).append(", ");
+		}
+		if (defaultPythonRuleEngineIdentifier != null) {
+			builder.append("defaultPythonRuleEngineIdentifier=").append(defaultPythonRuleEngineIdentifier).append(", ");
+		}
+		if (defaultCppRuleEngineIdentifier != null) {
+			builder.append("defaultCppRuleEngineIdentifier=").append(defaultCppRuleEngineIdentifier).append(", ");
+		}
+		builder.append("parallelCopyBufferSize=").append(parallelCopyBufferSize)
+				.append(", intraFileStatusCallbacksNumberCallsInterval=")
+				.append(intraFileStatusCallbacksNumberCallsInterval)
+				.append(", intraFileStatusCallbacksTotalBytesInterval=")
+				.append(intraFileStatusCallbacksTotalBytesInterval).append(", ");
 		if (negotiationPolicy != null) {
-			builder.append("negotiationPolicy=");
-			builder.append(negotiationPolicy);
-			builder.append(", ");
+			builder.append("negotiationPolicy=").append(negotiationPolicy).append(", ");
 		}
 		if (encryptionAlgorithmEnum != null) {
-			builder.append("encryptionAlgorithmEnum=");
-			builder.append(encryptionAlgorithmEnum);
-			builder.append(", ");
+			builder.append("encryptionAlgorithmEnum=").append(encryptionAlgorithmEnum).append(", ");
 		}
-		builder.append("encryptionKeySize=");
-		builder.append(encryptionKeySize);
-		builder.append(", encryptionSaltSize=");
-		builder.append(encryptionSaltSize);
-		builder.append(", encryptionNumberHashRounds=");
-		builder.append(encryptionNumberHashRounds);
-		builder.append("]");
+		builder.append("encryptionKeySize=").append(encryptionKeySize).append(", encryptionSaltSize=")
+				.append(encryptionSaltSize).append(", encryptionNumberHashRounds=").append(encryptionNumberHashRounds)
+				.append(", bypassSslCertChecks=").append(bypassSslCertChecks).append("]");
 		return builder.toString();
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getSocketRenewalIntervalInSeconds()
 	 */
@@ -1178,13 +1066,12 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Set the interval in seconds to renew a socket during long transfers. Set
-	 * to 0 to turn this behavior off.
+	 * Set the interval in seconds to renew a socket during long transfers. Set to 0
+	 * to turn this behavior off.
 	 *
 	 * @param socketRenewalIntervalInSeconds
 	 */
-	public synchronized void setSocketRenewalIntervalInSeconds(
-			final int socketRenewalIntervalInSeconds) {
+	public synchronized void setSocketRenewalIntervalInSeconds(final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
 	}
 
@@ -1198,8 +1085,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 *
 	 * @param longFileTransferRestart
 	 */
-	public synchronized void setLongTransferRestart(
-			final boolean longFileTransferRestart) {
+	public synchronized void setLongTransferRestart(final boolean longFileTransferRestart) {
 		longTransferRestart = longFileTransferRestart;
 	}
 
@@ -1209,13 +1095,12 @@ public class SettableJargonProperties implements JargonProperties {
 	}
 
 	/**
-	 * Set the size (in bytes) of the copy buffer used between streams in
-	 * parallel transfer
+	 * Set the size (in bytes) of the copy buffer used between streams in parallel
+	 * transfer
 	 *
 	 * @param parallelCopyBufferSize
 	 */
-	public synchronized void setParallelCopyBufferSize(
-			final int parallelCopyBufferSize) {
+	public synchronized void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
 		this.parallelCopyBufferSize = parallelCopyBufferSize;
 	}
 
@@ -1241,9 +1126,8 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
+	 *
+	 * @see org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
 	 */
 	@Override
 	public synchronized SslNegotiationPolicy getNegotiationPolicy() {
@@ -1256,8 +1140,7 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param negotiationPolicy
 	 *            {@link SslNegotiationPolicy}
 	 */
-	public synchronized void setNegotiationPolicy(
-			final SslNegotiationPolicy negotiationPolicy) {
+	public synchronized void setNegotiationPolicy(final SslNegotiationPolicy negotiationPolicy) {
 		if (negotiationPolicy == null) {
 			throw new IllegalArgumentException("null negotiationPolicy");
 		}
@@ -1266,8 +1149,8 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * 
+	 *
+	 *
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
 	 * ()
@@ -1277,16 +1160,14 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionAlgorithmEnum;
 	}
 
-	public synchronized void setEncryptionAlgorithmEnum(
-			final EncryptionAlgorithmEnum encryptionAlgorithmEnum) {
+	public synchronized void setEncryptionAlgorithmEnum(final EncryptionAlgorithmEnum encryptionAlgorithmEnum) {
 		this.encryptionAlgorithmEnum = encryptionAlgorithmEnum;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionKeySize()
+	 *
+	 * @see org.irods.jargon.core.connection.JargonProperties#getEncryptionKeySize()
 	 */
 	@Override
 	public synchronized int getEncryptionKeySize() {
@@ -1299,8 +1180,6 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
-	 * ======= >>>>>>> master
 	 * 
 	 * @see
 	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionSaltSize()
@@ -1316,7 +1195,7 @@ public class SettableJargonProperties implements JargonProperties {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.core.connection.JargonProperties#
 	 * getEncryptionNumberHashRounds()
 	 */
@@ -1325,8 +1204,7 @@ public class SettableJargonProperties implements JargonProperties {
 		return encryptionNumberHashRounds;
 	}
 
-	public synchronized void setEncryptionNumberHashRounds(
-			final int encryptionNumberHashRounds) {
+	public synchronized void setEncryptionNumberHashRounds(final int encryptionNumberHashRounds) {
 		this.encryptionNumberHashRounds = encryptionNumberHashRounds;
 	}
 
@@ -1344,9 +1222,56 @@ public class SettableJargonProperties implements JargonProperties {
 	 *
 	 * @param bypassSslCertChecks
 	 */
-	public synchronized void setBypassSslCertChecks(
-			final boolean bypassSslCertChecks) {
+	public synchronized void setBypassSslCertChecks(final boolean bypassSslCertChecks) {
 		this.bypassSslCertChecks = bypassSslCertChecks;
+	}
+
+	/**
+	 * @return the defaultIrodsRuleEngineIdentifier
+	 */
+	@Override
+	public String getDefaultIrodsRuleEngineIdentifier() {
+		return defaultIrodsRuleEngineIdentifier;
+	}
+
+	/**
+	 * @param defaultIrodsRuleEngineIdentifier
+	 *            the defaultIrodsRuleEngineIdentifier to set
+	 */
+	public void setDefaultIrodsRuleEngineIdentifier(final String defaultIrodsRuleEngineIdentifier) {
+		this.defaultIrodsRuleEngineIdentifier = defaultIrodsRuleEngineIdentifier;
+	}
+
+	/**
+	 * @return the defaultPythonRuleEngineIdentifier
+	 */
+	@Override
+	public String getDefaultPythonRuleEngineIdentifier() {
+		return defaultPythonRuleEngineIdentifier;
+	}
+
+	/**
+	 * @param defaultPythonRuleEngineIdentifier
+	 *            the defaultPythonRuleEngineIdentifier to set
+	 */
+	public void setDefaultPythonRuleEngineIdentifier(final String defaultPythonRuleEngineIdentifier) {
+		this.defaultPythonRuleEngineIdentifier = defaultPythonRuleEngineIdentifier;
+	}
+
+	/**
+	 * @return the useNIOForParallelTransfers
+	 */
+	public boolean isUseNIOForParallelTransfers() {
+		return useNIOForParallelTransfers;
+	}
+
+	@Override
+	public String getDefaultCppRuleEngineIdentifier() {
+		return defaultCppRuleEngineIdentifier;
+	}
+
+	public void setDefaultCppRuleEngineIdentifier(final String defaultCppRuleEngineIdentifier) {
+		this.defaultCppRuleEngineIdentifier = defaultCppRuleEngineIdentifier;
 	}
 
 }
