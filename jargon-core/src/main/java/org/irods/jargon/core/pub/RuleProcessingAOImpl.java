@@ -42,6 +42,7 @@ import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
 import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.JargonRuleException;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -189,19 +190,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		 * rules
 		 */
 
-		boolean newFormatRule = IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString);
+		String myRuleString = preprocessIrodsFormatRuleString(irodsRuleAsString);
 
-		log.info("is new format rule:{}", newFormatRule);
-
-		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0") && newFormatRule) {
-
-			log.debug("adding @external to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
-			bodyWithExtern.append(irodsRuleAsString);
-			irodsRuleAsString = bodyWithExtern.toString();
-		}
-
-		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
+		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(myRuleString);
 		log.debug("translated rule: {}", irodsRule);
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
@@ -211,6 +202,56 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		log.debug("processing end of rule execution by reading message");
 
 		return irodsRuleExecResult;
+	}
+
+	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {
+
+		log.info("executeRule()");
+		if (irodsRuleAsString == null || irodsRuleAsString.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsRuleAsString");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration()");
+		}
+
+		log.info("executing rule: {}", irodsRuleAsString);
+		log.info("with configuration:{}", ruleInvocationConfiguration);
+		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties());
+
+		String myRuleString = preprocessIrodsFormatRuleString(irodsRuleAsString);
+
+		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(myRuleString);
+		log.debug("translated rule: {}", irodsRule);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
+		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
+		log.debug("response from rule exec: {}", response.parseTag());
+
+		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response, irodsRule);
+		log.debug("processing end of rule execution by reading message");
+
+		return irodsRuleExecResult;
+	}
+
+	private String preprocessIrodsFormatRuleString(final String irodsRuleAsString) throws JargonException {
+
+		String myString = irodsRuleAsString;
+
+		boolean newFormatRule = IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString);
+
+		log.info("is new format rule:{}", newFormatRule);
+		/*
+		 * assumes is an iRODS rule!
+		 */
+		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0") && newFormatRule) {
+
+			log.debug("adding @external to the rule body");
+			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
+			bodyWithExtern.append(irodsRuleAsString);
+			myString = bodyWithExtern.toString();
+		}
+		return myString;
 	}
 
 	@Override

@@ -560,8 +560,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
-	 * an exception
+	 * Bug [#1139] Spaces at the begin or end of a data object name will cause an
+	 * exception
 	 *
 	 * @throws Exception
 	 */
@@ -819,8 +819,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * test for transfer get of file with parens and spaces in name gives file
-	 * not found #1
+	 * test for transfer get of file with parens and spaces in name gives file not
+	 * found #1
 	 * 
 	 * @throws Exception
 	 */
@@ -941,8 +941,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get when the local file aready exists, ask the callback listener,
-	 * and get a no for this file. This should not be in error
+	 * Do a get when the local file aready exists, ask the callback listener, and
+	 * get a no for this file. This should not be in error
 	 *
 	 * @throws Exception
 	 */
@@ -1001,8 +1001,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get with an overwrite situation, callback listener set to be asked,
-	 * but no callback listener provided (this is an error state)
+	 * Do a get with an overwrite situation, callback listener set to be asked, but
+	 * no callback listener provided (this is an error state)
 	 *
 	 * @throws Exception
 	 */
@@ -1054,9 +1054,9 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get when the local file aready exists, ask the callback listener,
-	 * and get a no all for this file. This should not be in error, and should
-	 * update the transfer options
+	 * Do a get when the local file aready exists, ask the callback listener, and
+	 * get a no all for this file. This should not be in error, and should update
+	 * the transfer options
 	 *
 	 * @throws Exception
 	 */
@@ -1258,8 +1258,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Get a data object where the source name and the target name are
-	 * different. It should be retrieved as the target name.
+	 * Get a data object where the source name and the target name are different. It
+	 * should be retrieved as the target name.
 	 *
 	 * @throws Exception
 	 */
@@ -2001,8 +2001,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Add 2 avu's that are the same except the attrib value is upper case in
-	 * the second. A case insensiitive query should return both
+	 * Add 2 avu's that are the same except the attrib value is upper case in the
+	 * second. A case insensiitive query should return both
 	 *
 	 * @throws Exception
 	 */
@@ -2221,8 +2221,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb to noforce option, should just copy the
-	 * file
+	 * Normal copy operation with tcb to noforce option, should just copy the file
 	 *
 	 * @throws Exception
 	 */
@@ -2372,8 +2371,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb to noforce option, should just copy the
-	 * file
+	 * Normal copy operation with tcb to noforce option, should just copy the file
 	 *
 	 * @throws Exception
 	 */
@@ -2970,13 +2968,10 @@ public class DataObjectAOImplTest {
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
 
 		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
+		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
 
-		rodsDataObjectAO.setAccessPermissionReadInAdminMode("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// if (props.isConsortiumVersion()) {
-		// return;
-		// }
+		rodsCollectionAO.setAccessPermissionReadAsAdmin("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3010,10 +3005,10 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
 
-		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
+		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
 
-		rodsDataObjectAO.setAccessPermissionWriteInAdminMode("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		rodsCollectionAO.setAccessPermissionWriteAsAdmin("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// if (props.isConsortiumVersion()) {
 		// return;
@@ -3025,226 +3020,6 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
 		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
-
-	}
-
-	@Test
-	public final void testSetOwnAsAdmin() throws Exception {
-		// generate a local scratch file
-
-		String testFileName = "testSetOwnAsAdmin.doc";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccountRods = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
-						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
-						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
-
-		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
-
-		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
-		rodsCollectionAO.setAccessPermissionReadAsAdmin(irodsAccount.getZone(), targetIrodsCollection,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
-
-		rodsDataObjectAO.setAccessPermissionOwnInAdminMode("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// log in as the secondary user and test read access
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
-				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		DataObjectAO dataObjectAOSecondaryUser = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(secondaryAccount);
-		UserFilePermission userFilePermission = dataObjectAOSecondaryUser.getPermissionForDataObjectForUserName(
-				irodsFileForSecondaryUser.getAbsolutePath(), secondaryAccount.getUserName());
-		Assert.assertTrue("user should have own permission",
-				userFilePermission.getFilePermissionEnum() == FilePermissionEnum.OWN);
-
-	}
-
-	/**
-	 * Added to test appending path in dataObjectAOImpl causes duplicate file
-	 * name #73
-	 *
-	 * https://github.com/DICE-UNC/jargon/issues/73
-	 *
-	 * @throws Exception
-	 */
-	@Test
-	public final void testRemoveAccessPermissionsAsAdminForUser() throws Exception {
-		// generate a local scratch file
-
-		String testFileName = "testRemoveAccessPermissionsAsAdminForUser.doc";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccountRods = testingPropertiesHelper
-				.buildIRODSAccountForIRODSUserFromTestPropertiesForGivenUser(testingProperties,
-						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_USER_KEY),
-						testingProperties.getProperty(TestingPropertiesHelper.IRODS_ADMIN_PASSWORD_KEY));
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
-
-		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
-
-		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
-		rodsCollectionAO.setAccessPermissionReadAsAdmin(irodsAccount.getZone(), targetIrodsCollection,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
-
-		rodsDataObjectAO.setAccessPermissionOwnInAdminMode("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// log in as the secondary user and test read access
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
-				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		DataObjectAO dataObjectAOSecondaryUser = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(secondaryAccount);
-		UserFilePermission userFilePermission = dataObjectAOSecondaryUser.getPermissionForDataObjectForUserName(
-				irodsFileForSecondaryUser.getAbsolutePath(), secondaryAccount.getUserName());
-		Assert.assertTrue("user should have own permission",
-				userFilePermission.getFilePermissionEnum() == FilePermissionEnum.OWN);
-
-		// now remove in admin mode
-
-		rodsDataObjectAO.removeAccessPermissionsForUserInAdminMode(irodsAccount.getZone(),
-				targetIrodsCollection + "/" + testFileName, secondaryAccount.getUserName());
-
-		userFilePermission = dataObjectAO.getPermissionForDataObjectForUserName(
-				irodsFileForSecondaryUser.getAbsolutePath(), secondaryAccount.getUserName());
-		Assert.assertTrue("user should not have own permission", userFilePermission == null);
-
-	}
-
-	@Test
-	public final void testSetWrite() throws Exception {
-		// generate a local scratch file
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-		/*
-		 * if (props.isConsortiumVersion()) { return; }
-		 */
-
-		String testFileName = "testSetWrite.txt";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
-
-		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// log in as the secondary user and test read access
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
-				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		Assert.assertTrue(irodsFileForSecondaryUser.canWrite());
-
-	}
-
-	@Test
-	public final void testSetOwn() throws Exception {
-		// generate a local scratch file
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccount secondaryAccount = testingPropertiesHelper
-				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
-
-		/*
-		 * if (props.isConsortiumVersion()) { return; }
-		 */
-
-		String testFileName = "testSetOwn.txt";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
-		collectionAO.setAccessPermissionRead("", targetIrodsCollection, secondaryAccount.getUserName(), false);
-
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
-
-		dataObjectAO.setAccessPermissionOwn("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
-
-		// log in as the secondary user and test read access
-
-		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
-				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-
-		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileSystemAO(secondaryAccount);
-		int permissions = irodsFileSystemAO.getFilePermissions(irodsFileForSecondaryUser);
-
-		Assert.assertTrue(permissions >= IRODSFile.OWN_PERMISSIONS);
-
-	}
-
-	@Test
-	public final void testSetPublicWrite() throws Exception {
-		// generate a local scratch file
-
-		String testFileName = "testSetPublicRead.txt";
-		String testUserName = "public";
-		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
-
-		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-		DataObjectAOImpl dataObjectAO = (DataObjectAOImpl) irodsFileSystem.getIRODSAccessObjectFactory()
-				.getDataObjectAO(irodsAccount);
-		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
-				.instanceIRODSFile(targetIrodsCollection);
-		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, true);
-
-		dataObjectAO.setAccessPermissionWrite("", targetIrodsCollection + "/" + testFileName, testUserName);
-
-		IRODSFileSystemAO irodsFileSystemAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getIRODSFileSystemAO(irodsAccount);
-		irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount).instanceIRODSFile(targetIrodsCollection,
-				testFileName);
-		int permissions = irodsFileSystemAO.getFilePermissionsForGivenUser(irodsFile, testUserName);
-
-		Assert.assertTrue(permissions >= IRODSFile.WRITE_PERMISSIONS);
 
 	}
 
@@ -3270,9 +3045,9 @@ public class DataObjectAOImplTest {
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, true);
-
-		dataObjectAO.setAccessPermissionOwn("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionOwn("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3438,9 +3213,10 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, true);
 
-		dataObjectAO.setAccessPermission("", targetIrodsCollection + "/" + testFileName,
-				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
-				FilePermissionEnum.WRITE);
+		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+
+		rodsCollectionAO.setAccessPermissionWrite("", targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		/*
 		 * if (props.isConsortiumVersion()) { return; }
@@ -3496,8 +3272,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * [#1575] jargon-core permissions issue Add a user to a group, add that
-	 * group to file permissions, and list the group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that group
+	 * to file permissions, and list the group
 	 *
 	 * @throws Exception
 	 */
@@ -3557,8 +3333,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * [#1575] jargon-core permissions issue Add a user to a group, add that
-	 * group to file permissions, and list the group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that group
+	 * to file permissions, and list the group
 	 *
 	 * @throws Exception
 	 */
@@ -4157,8 +3933,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug 629-malloc/resource error in irods when doing
-	 * findDomainByMetadataQuery
+	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
 	 */
 	@Test
 	public void testFindDataObjectDomainDataByAVUQueryForBug629() throws Exception {
@@ -4223,8 +3998,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug 629-malloc/resource error in irods when doing
-	 * findDomainByMetadataQuery
+	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements() throws Exception {
