@@ -6,6 +6,8 @@ import java.util.StringTokenizer;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
+import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -16,54 +18,37 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class IRODSRuleTranslator {
+public class IRODSRuleTranslator extends AbstractRuleTranslator {
 
-	private static final String SPLAT = "*";
-	private Logger log = LoggerFactory.getLogger(this.getClass());
-	private final IRODSServerProperties irodsServerProperties;
+	Logger log = LoggerFactory.getLogger(this.getClass());
 
-	public IRODSRuleTranslator(final IRODSServerProperties irodsServerProperties) {
-		if (irodsServerProperties == null) {
-			throw new IllegalArgumentException("null irodsServerProperties");
-		}
-		this.irodsServerProperties = irodsServerProperties;
+	/**
+	 * Default constructor with required dependencies
+	 * 
+	 * @param irodsServerProperties
+	 *            {@link IRODSServerProperties} of the connected grid
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} with configuration regarding
+	 *            the type of rule and type of rule processing to be done
+	 */
+	public IRODSRuleTranslator(IRODSServerProperties irodsServerProperties,
+			RuleInvocationConfiguration ruleInvocationConfiguration) {
+		super(irodsServerProperties, ruleInvocationConfiguration);
 	}
 
 	/**
-	 * Given a string representing an iRODS rule (including the rule body, as
-	 * well as input and output lines, produce a translated rule object to send
-	 * to iRODS.
+	 * Given a string representing an iRODS rule (including the rule body, as well
+	 * as input and output lines, produce a translated rule object to send to iRODS.
 	 *
 	 * @param ruleAsPlainText
-	 *            {@code String} with the rule body and input and output
-	 *            parameters
+	 *            {@code String} with the rule body and input and output parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
 	 * @throws JargonException
 	 */
-	public IRODSRule translatePlainTextRuleIntoIRODSRule(
-			final String ruleAsPlainText) throws JargonRuleException,
-			JargonException {
-
-		return translatePlainTextRuleIntoIRODSRule(ruleAsPlainText, null);
-	}
-
-	/**
-	 * Given a string representing an iRODS rule (including the rule body, as
-	 * well as input and output lines, produce a translated rule object to send
-	 * to iRODS.
-	 *
-	 * @param ruleAsPlainText
-	 *            {@code String} with the rule body and input and output
-	 *            parameters
-	 * @return {@link IRODSRule}
-	 * @throws JargonRuleException
-	 * @throws JargonException
-	 */
-	public IRODSRule translatePlainTextRuleIntoIRODSRule(
-			final String ruleAsPlainText,
-			final List<IRODSRuleParameter> overrideInputParameters)
-					throws JargonRuleException, JargonException {
+	@Override
+	public IRODSRule translatePlainTextRuleIntoRule(final String ruleAsPlainText,
+			final List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException {
 
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty rule text");
@@ -73,8 +58,7 @@ public class IRODSRuleTranslator {
 
 		String trimmedRule = ruleAsPlainText.trim();
 
-		boolean newFormatRule = IRODSRuleTranslator
-				.isUsingNewRuleSyntax(trimmedRule);
+		boolean newFormatRule = isUsingNewRuleSyntax(trimmedRule);
 		StringTokenizer tokens = new StringTokenizer(trimmedRule, "\n");
 		List<String> tokenLines = new ArrayList<String>();
 
@@ -99,53 +83,48 @@ public class IRODSRuleTranslator {
 			// process the rule attributes, as they exist
 
 			if (ruleCharacteristics.getInputLineIndex() != -1) {
-				inputParameters = processRuleInputAttributesLine(tokenLines
-						.get(ruleCharacteristics.getInputLineIndex()));
+				inputParameters = processRuleInputAttributesLine(
+						tokenLines.get(ruleCharacteristics.getInputLineIndex()));
 			} else {
 				inputParameters = new ArrayList<IRODSRuleParameter>();
 			}
 
 			if (overrideInputParameters != null) {
 				log.info("will override parameters");
-				inputParameters = collateOverridesIntoInputParameters(
-						overrideInputParameters, inputParameters);
+				inputParameters = collateOverridesIntoInputParameters(overrideInputParameters, inputParameters);
 			}
 
 			if (ruleCharacteristics.getInputLineIndex() != -1) {
 
-				outputParameters = processRuleOutputAttributesLine(tokenLines
-						.get(ruleCharacteristics.getOutputLineIndex()));
+				outputParameters = processRuleOutputAttributesLine(
+						tokenLines.get(ruleCharacteristics.getOutputLineIndex()));
 			} else {
 				outputParameters = new ArrayList<IRODSRuleParameter>();
 			}
 
-			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
-					outputParameters, ruleCharacteristics.getRuleBody());
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
+					ruleCharacteristics.getRuleBody());
 		} else {
 			log.info("parsing in old format");
 			if (tokenLines.size() < 3) {
 				log.error(
 						"unable to find the required lines (rule body, input parameters, output parameters) in rule body:{}",
 						trimmedRule);
-				throw new JargonRuleException(
-						"Rule requires at least 3 lines for body, input, and output parameters");
+				throw new JargonRuleException("Rule requires at least 3 lines for body, input, and output parameters");
 			}
 
 			// process the rule attributes, line above last
-			inputParameters = processRuleInputAttributesLine(tokenLines
-					.get(tokenLines.size() - 2));
+			inputParameters = processRuleInputAttributesLine(tokenLines.get(tokenLines.size() - 2));
 
 			if (overrideInputParameters != null) {
 				log.info("will override parameters");
-				inputParameters = collateOverridesIntoInputParameters(
-						overrideInputParameters, inputParameters);
+				inputParameters = collateOverridesIntoInputParameters(overrideInputParameters, inputParameters);
 			}
 
-			outputParameters = processRuleOutputAttributesLine(tokenLines
-					.get(tokenLines.size() - 1));
+			outputParameters = processRuleOutputAttributesLine(tokenLines.get(tokenLines.size() - 1));
 
-			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters,
-					outputParameters, processRuleBodyOldFormat(tokenLines));
+			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
+					processRuleBodyOldFormat(tokenLines));
 
 		}
 
@@ -153,86 +132,14 @@ public class IRODSRuleTranslator {
 	}
 
 	/**
-	 * Given a set of derived input parameters (coming from the supplied rule
-	 * body), and a set of overrides, arrive at the combined set.
-	 *
-	 * @param overrideInputParameters
-	 *            {@code List} of {@link IRODSRuleParameter} which contains
-	 *            the supplied set of input parameters that should override
-	 *            those derived from the rule body.
-	 * @param inputParameters
-	 *            {@code List} of {@link IRODSRuleParameter} which contains
-	 *            the input parameters as derived from the iRODS rule body
-	 * @return {@code List} of {@link IRODSRuleParameter} with the collated
-	 *         rule input parameters, including overrides
-	 */
-	protected List<IRODSRuleParameter> collateOverridesIntoInputParameters(
-			final List<IRODSRuleParameter> overrideInputParameters,
-			List<IRODSRuleParameter> inputParameters) {
-
-		if (overrideInputParameters == null) {
-			throw new IllegalArgumentException("null overrideInputParameters");
-		}
-
-		if (inputParameters == null) {
-			throw new IllegalArgumentException("null inputParameters");
-		}
-
-		List<IRODSRuleParameter> overriddenParms = new ArrayList<IRODSRuleParameter>();
-
-		/*
-		 * Look at current params, if they have an override, then save the
-		 * override, otherwise, propogate the current value
-		 */
-		for (IRODSRuleParameter current : inputParameters) {
-			boolean found = false;
-			for (IRODSRuleParameter override : overrideInputParameters) {
-				// try to find an overriding
-				if (current.getUniqueName().equals(override.getUniqueName())) {
-					overriddenParms.add(override);
-					found = true;
-				}
-			}
-
-			if (!found) {
-				// no override found, propogate current over
-				overriddenParms.add(current);
-			}
-		}
-
-		// I may have overrides that are not in current, propagate those over
-		// too
-
-		for (IRODSRuleParameter override : overrideInputParameters) {
-			boolean found = false;
-			for (IRODSRuleParameter current : overriddenParms) {
-				// try to find the corresponding current
-				if (current.getUniqueName().equals(override.getUniqueName())) {
-					found = true;
-				}
-			}
-
-			if (!found) {
-				// no current found, propogate current over
-				overriddenParms.add(override);
-			}
-
-			log.info("replacing original parms with overridden parms:{}",
-					overriddenParms);
-			inputParameters = overriddenParms;
-
-		}
-		return inputParameters;
-	}
-
-	/**
 	 * @param tokens
 	 * @return
+	 * @throws OperationNotSupportedByThisServerException
 	 */
-	static RuleCharacteristics processRuleBodyNewFormat(
-			final List<String> tokenLines) {
+	private RuleCharacteristics processRuleBodyNewFormat(final List<String> tokenLines)
+			throws OperationNotSupportedByThisServerException {
 
-		// work backword to find input and output lines
+		// work backward to find input and output lines
 
 		if (tokenLines.size() == 0) {
 			return null;
@@ -263,13 +170,41 @@ public class IRODSRuleTranslator {
 			total.append("\n");
 		}
 
+		/*
+		 * if iRODS 3.0+, add the @external parameter to the rule body for new style
+		 * rules
+		 */
+
+		if (getIrodsServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
+				&& isUsingNewRuleSyntax(total.toString())) {
+
+			// ok
+			log.debug("verified as new format");
+		} else {
+			log.error("new format rules not supported by iRODS version:{}", this.getIrodsServerProperties());
+			throw new OperationNotSupportedByThisServerException("new rule format not supported in this irods version");
+		}
+
+		String parsedRule;
+		if (this.getRuleInvocationConfiguration().getRuleProcessingType() == RuleProcessingType.INTERNAL) {
+			log.debug("adding @internal to the rule body");
+			StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
+			bodyWithExtern.append(total);
+			parsedRule = bodyWithExtern.toString();
+		} else {
+			log.debug("adding @external to the rule body");
+			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
+			bodyWithExtern.append(total);
+			parsedRule = bodyWithExtern.toString();
+		}
+
 		// find the rule
 
 		RuleCharacteristics ruleCharacteristics = new RuleCharacteristics();
 		ruleCharacteristics.setInputLineIndex(tokenInput);
 		ruleCharacteristics.setOutputLineIndex(tokenOutput);
 		ruleCharacteristics.setLastLineOfBody(lastRowOfRule);
-		ruleCharacteristics.setRuleBody(total.toString());
+		ruleCharacteristics.setRuleBody(parsedRule);
 
 		return ruleCharacteristics;
 	}
@@ -278,7 +213,7 @@ public class IRODSRuleTranslator {
 	 * @param tokens
 	 * @return
 	 */
-	static String processRuleBodyOldFormat(final List<String> tokenLines) {
+	private String processRuleBodyOldFormat(final List<String> tokenLines) {
 		StringBuilder total = new StringBuilder();
 		// if formatting error, such as only one line, below breaks
 		int ctr = 0;
@@ -298,209 +233,15 @@ public class IRODSRuleTranslator {
 	}
 
 	/**
-	 * Break the line containing rule output parameters into a
-	 * {@code List<IRODSRuleParameter>}
-	 *
-	 * @param tokens
-	 * @return
-	 * @throws JargonException
-	 */
-	List<IRODSRuleParameter> processRuleOutputAttributesLine(
-			String outputAttributesLine) throws JargonRuleException,
-			JargonException {
-
-		if (outputAttributesLine == null) {
-			throw new JargonRuleException(
-					"null passed to output attributes parser");
-		}
-
-		outputAttributesLine = outputAttributesLine.trim();
-		if (outputAttributesLine.isEmpty()) {
-			throw new JargonRuleException("outputAttributes line is blank");
-		}
-
-		int idxInput = outputAttributesLine.indexOf("OUTPUT");
-
-		if (idxInput > -1) {
-			outputAttributesLine = outputAttributesLine.substring(idxInput + 6);
-		}
-
-		if (outputAttributesLine.indexOf("**") > -1) {
-			throw new JargonRuleException(
-					"blank attribute in output attributes line indicated by duplicate '*' delimiters with no data");
-		}
-
-		if (outputAttributesLine.indexOf("%%") > -1) {
-			throw new JargonRuleException(
-					"blank attribute in output attributes line indicated by duplicate '%' delimiters with no data");
-		}
-
-		List<IRODSRuleParameter> outputAttributes = new ArrayList<IRODSRuleParameter>();
-
-		StringTokenizer outputParmsTokenizer = null;
-
-		outputParmsTokenizer = new StringTokenizer(
-				outputAttributesLine.replaceAll(",", "%"), "%");
-
-		while (outputParmsTokenizer.hasMoreTokens()) {
-			outputAttributes.add(processOutputParmsToken(outputParmsTokenizer
-					.nextToken().trim()));
-		}
-
-		return outputAttributes;
-
-	}
-
-	private IRODSRuleParameter processOutputParmsToken(final String nextToken)
-			throws JargonException, JargonRuleException {
-
-		if (nextToken == null) {
-			throw new JargonException("null nextToken");
-		}
-
-		if (nextToken.isEmpty()) {
-			throw new JargonRuleException("output parms token is empty");
-		}
-
-		String parmName = nextToken;
-
-		log.debug("returning outputParm: {}", parmName);
-
-		return new IRODSRuleParameter(parmName, "");
-	}
-
-	/**
-	 * Break the line containing rule input parameters into a
-	 * {@code List<IRODSRuleParameter>}
-	 *
-	 * @param inputAttributesLine
-	 * @return
-	 * @throws JargonRuleException
-	 * @throws JargonException
-	 */
-	List<IRODSRuleParameter> processRuleInputAttributesLine(
-			String inputAttributesLine) throws JargonRuleException,
-			JargonException {
-
-		if (inputAttributesLine == null) {
-			throw new JargonRuleException(
-					"null tokens passed to input attributes parser");
-		}
-
-		inputAttributesLine = inputAttributesLine.trim();
-
-		if (inputAttributesLine.isEmpty()) {
-			throw new JargonRuleException("inputAttributesLine is empty");
-		}
-
-		int idxInput = inputAttributesLine.indexOf("INPUT");
-
-		if (idxInput > -1) {
-			inputAttributesLine = inputAttributesLine.substring(idxInput + 5)
-					.trim();
-		}
-
-		List<IRODSRuleParameter> inputAttributes = new ArrayList<IRODSRuleParameter>();
-
-		if (inputAttributesLine.equals("null")) {
-			if (irodsServerProperties
-					.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
-					&& idxInput > -1) {
-				log.info("no null prop for new format irods rules");
-			} else {
-				log.info("adding null param for old style rule");
-				inputAttributes.add(new IRODSRuleParameter());
-			}
-			return inputAttributes;
-		}
-
-		// split into tokens on % delim
-
-		if (inputAttributesLine.indexOf("%%") > -1) {
-			throw new JargonRuleException(
-					"blank attribute in input attributes line indicated by duplicate '%' delimiters with no data");
-		}
-
-		// TODO: eventually replace with tokenizer that respects commas and %
-		// embedded in quotes
-		StringTokenizer inputParmsTokenizer = null;
-
-		if (idxInput > -1) {
-			// new rule format, delim by comma
-			inputParmsTokenizer = new StringTokenizer(inputAttributesLine, ",");
-		} else {
-			inputParmsTokenizer = new StringTokenizer(inputAttributesLine, "%");
-		}
-
-		while (inputParmsTokenizer.hasMoreTokens()) {
-
-			IRODSRuleParameter param = processInputParmsToken(inputParmsTokenizer
-					.nextToken());
-
-			if (param != null) {
-				inputAttributes.add(param);
-
-			}
-
-		}
-		return inputAttributes;
-	}
-
-	private IRODSRuleParameter processInputParmsToken(String nextToken)
-			throws JargonRuleException, JargonException {
-		if (nextToken == null) {
-			throw new JargonException("null nextToken");
-		}
-
-		if (nextToken.isEmpty()) {
-			throw new JargonRuleException("input parms token is empty");
-		}
-
-		nextToken = nextToken.trim();
-
-		if (nextToken.equals("null")) {
-			throw new JargonRuleException(
-					"embedded 'null' in input attributes, must be the only value if null");
-		}
-
-		RuleInputParameter param = RuleParsingUtils
-				.parseInputParameterForNameAndValue(nextToken);
-
-		if (param == null) {
-			return null;
-		}
-
-		if (param.getParamName().indexOf(SPLAT) == -1) {
-			throw new JargonRuleException(
-					"missing * in first character of input parameter:"
-							+ param.getParamName());
-		} else if (param.getParamName().indexOf(SPLAT) > 0) {
-			throw new JargonRuleException(
-					"* must be the first character of input parameter:"
-							+ param.getParamName());
-		}
-
-		if (param.getParamName().indexOf(SPLAT, 1) > -1) {
-			throw new JargonRuleException("duplicate '*' character in parm:"
-					+ param.getParamName());
-		}
-
-		log.debug("returning inputParm: {}", param);
-
-		return new IRODSRuleParameter(param.getParamName(),
-				param.getParamValue());
-	}
-
-	/**
 	 * Convenience method that uses a simple heuristic to determine whether the
 	 * given rule uses the 'new' rule syntax.
 	 *
 	 * @param ruleText
 	 *            {@code String} with the rule body
-	 * @return {@code boolean} that will be {@code true} if the rule
-	 *         is using the new syntax
+	 * @return {@code boolean} that will be {@code true} if the rule is using the
+	 *         new syntax
 	 */
-	public static final boolean isUsingNewRuleSyntax(final String ruleText) {
+	private boolean isUsingNewRuleSyntax(final String ruleText) {
 		if (ruleText == null || ruleText.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ruleText");
 		}

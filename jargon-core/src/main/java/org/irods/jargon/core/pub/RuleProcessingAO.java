@@ -7,13 +7,20 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.domain.DelayedRuleExecution;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
-import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.JargonRuleException;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 
 public interface RuleProcessingAO extends IRODSAccessObject {
 
+	/**
+	 * Type of rule invocation, primarily involving special handlng of iRODS old
+	 * style rules. For other rule languages DEFAULT is the usual setting.
+	 * 
+	 * @author conwaymc
+	 *
+	 */
 	public enum RuleProcessingType {
-		INTERNAL, EXTERNAL, CLASSIC
+		INTERNAL, EXTERNAL, CLASSIC, DEFAULT
 	}
 
 	/**
@@ -50,7 +57,6 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	IRODSRuleExecResult executeRule(final String irodsRuleAsString) throws JargonRuleException, JargonException;
 
 	/**
-	 * TODO: work in progress Purge all rules from the delayed exec queue.
 	 * <p>
 	 * <b>Note: this method purges ALL rules in the queue</b>
 	 *
@@ -61,7 +67,6 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	int purgeAllDelayedExecQueue() throws JargonException;
 
 	/**
-	 * TODO: work in progress
 	 *
 	 * @param partialStartIndex
 	 * @return List of {@code DelayedRuleExecution}
@@ -169,7 +174,12 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *             if an exception occurred in rule translation.
 	 * @throws JargonException
 	 *             if iRODS processing resulted in an error.
+	 * @deprecated use the method signature that adds
+	 *             {@link RuleInvocationConfiguration} instead. This change can
+	 *             accommodate other rule engine plugins and associated additional
+	 *             data for each
 	 */
+	@Deprecated
 	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
 			RuleProcessingType ruleProcessingType) throws JargonRuleException, JargonException;
 
@@ -190,8 +200,8 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            {@link RuleProcessingAO.RuleProcessingType} enum value. Note that
 	 *            it should be set to {@code CLASSIC} for classic rules, and
 	 *            {@code EXTERNAL} or {@code INTERNAL} for new format rules.
-	 * @param ruleInvocationType
-	 *            {@link IrodsRuleInvocationTypeEnum} that represents the type of
+	 * @param ruleInvocationConfiguration
+	 *            {@link ruleInvocationConfiguration} that represents the type of
 	 *            rule engine the user wishes this rule to be run on. With multiple
 	 *            rule engines iRODS needs this information to properly process the
 	 *            rule. If set to AUTO_DETECT Jargon will try and guess (but may not
@@ -204,7 +214,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *             if iRODS processing resulted in an error.
 	 */
 	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
-			RuleProcessingType ruleProcessingType, IrodsRuleInvocationTypeEnum ruleInvocationType)
+			RuleProcessingType ruleProcessingType, final RuleInvocationConfiguration ruleInvocationConfiguration)
 			throws JargonRuleException, JargonException;
 
 	/**

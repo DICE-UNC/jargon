@@ -34,6 +34,7 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
+import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
@@ -183,16 +184,20 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	public IRODSRuleExecResult executeRule(String irodsRuleAsString) throws JargonRuleException, JargonException {
 
 		log.info("executing rule: {}", irodsRuleAsString);
-		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties());
+		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
+
+		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
+				RuleInvocationConfiguration.instanceWithDefaultAutoSettings()); // FIXME:
+		// get
+		// from
+		// factory
 
 		/*
 		 * if iRODS 3.0+, add the @external parameter to the rule body for new style
 		 * rules
 		 */
 
-		String myRuleString = preprocessIrodsFormatRuleString(irodsRuleAsString);
-
-		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(myRuleString);
+		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
 		log.debug("translated rule: {}", irodsRule);
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
@@ -218,11 +223,13 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
-		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties());
+		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
+				ruleInvocationConfiguration); // FIXME:
+		// get
+		// from
+		// factory
 
-		String myRuleString = preprocessIrodsFormatRuleString(irodsRuleAsString);
-
-		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(myRuleString);
+		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
 		log.debug("translated rule: {}", irodsRule);
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
@@ -234,29 +241,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		return irodsRuleExecResult;
 	}
 
-	private String preprocessIrodsFormatRuleString(final String irodsRuleAsString) throws JargonException {
-
-		String myString = irodsRuleAsString;
-
-		boolean newFormatRule = IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString);
-
-		log.info("is new format rule:{}", newFormatRule);
-		/*
-		 * assumes is an iRODS rule!
-		 */
-		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0") && newFormatRule) {
-
-			log.debug("adding @external to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
-			bodyWithExtern.append(irodsRuleAsString);
-			myString = bodyWithExtern.toString();
-		}
-		return myString;
-	}
-
 	@Override
 	public IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
-			RuleProcessingType ruleProcessingType, IrodsRuleInvocationTypeEnum ruleInvocationType)
+			RuleProcessingType ruleProcessingType, final RuleInvocationConfiguration ruleInvocationConfiguration)
 			throws JargonRuleException, JargonException {
 		log.info("executeRule()");
 		if (irodsRuleAsString == null || irodsRuleAsString.isEmpty()) {
@@ -267,50 +254,17 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			throw new IllegalArgumentException("null ruleProcessingType");
 		}
 
-		if (ruleInvocationType == null) {
-			throw new IllegalArgumentException("null ruleInvocationType");
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
 		}
 
 		// tolerate null inputParameterOverrides
 
 		log.info("executing rule: {}", irodsRuleAsString);
-		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties());
+		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
+				ruleInvocationConfiguration);
 
-		/*
-		 * if iRODS 3.0+, add the @external parameter to the rule body for new style
-		 * rules
-		 */
-
-		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")
-				&& IRODSRuleTranslator.isUsingNewRuleSyntax(irodsRuleAsString)) {
-
-			if (ruleProcessingType == RuleProcessingType.CLASSIC) {
-				throw new JargonRuleException("cannot run new format rule as CLASSIC");
-			}
-
-			// ok
-			log.info("verified as new format");
-		} else {
-			if (ruleProcessingType != RuleProcessingType.CLASSIC) {
-				throw new JargonRuleException("must run old format rule as CLASSIC");
-			}
-		}
-
-		if (ruleProcessingType == RuleProcessingType.CLASSIC) {
-			log.debug("classic, do not add external or internal");
-		} else if (ruleProcessingType == RuleProcessingType.INTERNAL) {
-			log.debug("adding @internal to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
-			bodyWithExtern.append(irodsRuleAsString);
-			irodsRuleAsString = bodyWithExtern.toString();
-		} else {
-			log.debug("adding @external to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
-			bodyWithExtern.append(irodsRuleAsString);
-			irodsRuleAsString = bodyWithExtern.toString();
-		}
-
-		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString,
+		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoRule(irodsRuleAsString,
 				inputParameterOverrides);
 		log.debug("translated rule: {}", irodsRule);
 		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
@@ -337,8 +291,9 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			throws JargonRuleException, JargonException {
 
 		log.info("executeRule() with a default of AUTO_DETECT");
-		return executeRule(irodsRuleAsString, inputParameterOverrides, ruleProcessingType,
-				IrodsRuleInvocationTypeEnum.AUTO_DETECT);
+		RuleInvocationConfiguration ruleInvocationConfiguration = new RuleInvocationConfiguration();
+		ruleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
+		return executeRule(irodsRuleAsString, inputParameterOverrides, ruleProcessingType, ruleInvocationConfiguration);
 
 	}
 

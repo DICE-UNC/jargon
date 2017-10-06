@@ -19,10 +19,12 @@ import org.irods.jargon.core.pub.Stream2StreamAO;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileReader;
+import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
 import org.irods.jargon.core.rule.IRODSRuleTranslator;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,24 +35,19 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class RuleCompositionServiceImpl extends AbstractJargonService implements
-		RuleCompositionService {
+public class RuleCompositionServiceImpl extends AbstractJargonService implements RuleCompositionService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(RuleCompositionServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(RuleCompositionServiceImpl.class);
 
 	/*
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.ruleservice.composition.RuleCompositionService#
-	 * addInputParameterToRule(java.lang.String, java.lang.String,
-	 * java.lang.String)
+	 * addInputParameterToRule(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rule addInputParameterToRule(final String ruleAbsolutePath,
-			final String parameterName, final String parameterValue)
-			throws FileNotFoundException, DuplicateDataException,
-			JargonException {
+	public Rule addInputParameterToRule(final String ruleAbsolutePath, final String parameterName,
+			final String parameterValue) throws FileNotFoundException, DuplicateDataException, JargonException {
 
 		log.info("addInputParameterToRule()");
 
@@ -72,8 +69,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		List<IRODSRuleParameter> newParms = new ArrayList<IRODSRuleParameter>();
 
 		for (int i = 0; i < currentRule.getInputParameters().size(); i++) {
-			if (currentRule.getInputParameters().get(i).getUniqueName()
-					.equals(parameterName)) {
+			if (currentRule.getInputParameters().get(i).getUniqueName().equals(parameterName)) {
 				log.error("duplicate input parameter");
 				throw new DuplicateDataException("duplicate input parameter");
 			} else {
@@ -81,8 +77,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			}
 		}
 
-		IRODSRuleParameter newParam = new IRODSRuleParameter(parameterName,
-				parameterValue);
+		IRODSRuleParameter newParam = new IRODSRuleParameter(parameterName, parameterValue);
 
 		newParms.add(newParam);
 
@@ -102,9 +97,8 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * addOutputParameterToRule(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rule addOutputParameterToRule(final String ruleAbsolutePath,
-			final String parameterName) throws FileNotFoundException,
-			DuplicateDataException, JargonException {
+	public Rule addOutputParameterToRule(final String ruleAbsolutePath, final String parameterName)
+			throws FileNotFoundException, DuplicateDataException, JargonException {
 
 		log.info("addOutputParameterToRule()");
 
@@ -122,8 +116,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		List<IRODSRuleParameter> newParms = new ArrayList<IRODSRuleParameter>();
 
 		for (int i = 0; i < currentRule.getOutputParameters().size(); i++) {
-			if (currentRule.getOutputParameters().get(i).getUniqueName()
-					.equals(parameterName)) {
+			if (currentRule.getOutputParameters().get(i).getUniqueName().equals(parameterName)) {
 				log.error("duplicate output parameter");
 				throw new DuplicateDataException("duplicate output parameter");
 			} else {
@@ -151,23 +144,20 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * parseStringIntoRule(java.lang.String)
 	 */
 	@Override
-	public Rule parseStringIntoRule(final String inputRuleAsString)
-			throws JargonException {
+	public Rule parseStringIntoRule(final String inputRuleAsString) throws JargonException {
 		log.info("parseStringIntoRule()");
 
 		if (inputRuleAsString == null || inputRuleAsString.isEmpty()) {
-			throw new IllegalArgumentException(
-					"inputRuleAsString is null or empty");
+			throw new IllegalArgumentException("inputRuleAsString is null or empty");
 		}
 
 		log.info("inputRuleAsString:{}", inputRuleAsString);
 
-		final IRODSRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
-				getIrodsAccessObjectFactory().getIRODSServerProperties(
-						getIrodsAccount()));
+		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
+				getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()),
+				RuleInvocationConfiguration.instanceWithDefaultAutoSettings());
 
-		IRODSRule irodsRule = irodsRuleTranslator
-				.translatePlainTextRuleIntoIRODSRule(inputRuleAsString);
+		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(inputRuleAsString);
 
 		log.info("got irodsRule:{}", irodsRule);
 
@@ -188,28 +178,23 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 */
 	@Override
 	public Rule loadRuleFromIrods(final String absolutePathToRuleFile)
-			throws FileNotFoundException, MissingOrInvalidRuleException,
-			JargonException {
+			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException {
 
 		log.info("loadRuleFromIrods()");
 
 		if (absolutePathToRuleFile == null || absolutePathToRuleFile.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty absolutepPathToRuleFile");
+			throw new IllegalArgumentException("null or empty absolutepPathToRuleFile");
 		}
 
-		IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount());
+		IRODSFileFactory irodsFileFactory = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount());
 
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(absolutePathToRuleFile);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(absolutePathToRuleFile);
 		if (!irodsFile.exists()) {
 			log.error("did not find rule file");
 			throw new FileNotFoundException("rule file not found");
 		}
 
-		IRODSFileReader irodsFileReader = irodsFileFactory
-				.instanceIRODSFileReader(absolutePathToRuleFile);
+		IRODSFileReader irodsFileReader = irodsFileFactory.instanceIRODSFileReader(absolutePathToRuleFile);
 
 		StringWriter writer = null;
 		String ruleString = null;
@@ -255,8 +240,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * (java.lang.String, org.irods.jargon.ruleservice.composition.Rule)
 	 */
 	@Override
-	public Rule storeRule(final String ruleAbsolutePath, final Rule rule)
-			throws JargonException {
+	public Rule storeRule(final String ruleAbsolutePath, final Rule rule) throws JargonException {
 
 		log.info("storeRule()");
 		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
@@ -287,8 +271,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			outputParameters.add(parm.getUniqueName());
 		}
 
-		return storeRuleFromParts(ruleAbsolutePath, rule.getRuleBody(),
-				inputParameters, outputParameters);
+		return storeRuleFromParts(ruleAbsolutePath, rule.getRuleBody(), inputParameters, outputParameters);
 
 	}
 
@@ -300,9 +283,8 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * java.util.List)
 	 */
 	@Override
-	public Rule storeRuleFromParts(final String ruleAbsolutePath,
-			final String ruleBody, final List<String> inputParameters,
-			final List<String> outputParameters) throws JargonException {
+	public Rule storeRuleFromParts(final String ruleAbsolutePath, final String ruleBody,
+			final List<String> inputParameters, final List<String> outputParameters) throws JargonException {
 		log.info("storeRuleFromParts()");
 
 		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
@@ -325,18 +307,15 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		log.info("inputParameters:{}", inputParameters);
 		log.info("outputParameters:{}", outputParameters);
 
-		String ruleAsString = buildRuleStringFromParts(ruleBody,
-				inputParameters, outputParameters);
-		IRODSFile irodsFile = getIrodsAccessObjectFactory()
-				.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(
-						ruleAbsolutePath);
+		String ruleAsString = buildRuleStringFromParts(ruleBody, inputParameters, outputParameters);
+		IRODSFile irodsFile = getIrodsAccessObjectFactory().getIRODSFileFactory(getIrodsAccount())
+				.instanceIRODSFile(ruleAbsolutePath);
 
-		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory()
-				.getStream2StreamAO(getIrodsAccount());
+		Stream2StreamAO stream2StreamAO = getIrodsAccessObjectFactory().getStream2StreamAO(getIrodsAccount());
 		try {
-			stream2StreamAO.streamBytesToIRODSFile(ruleAsString
-					.getBytes(getIrodsAccessObjectFactory()
-							.getJargonProperties().getEncoding()), irodsFile);
+			stream2StreamAO.streamBytesToIRODSFile(
+					ruleAsString.getBytes(getIrodsAccessObjectFactory().getJargonProperties().getEncoding()),
+					irodsFile);
 		} catch (UnsupportedEncodingException e) {
 			log.error("unsupported encoding streaming to file", e);
 			throw new JargonException("error writing rule file", e);
@@ -348,8 +327,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	}
 
-	private String buildRuleStringFromParts(final String ruleBody,
-			final List<String> inputParameters,
+	private String buildRuleStringFromParts(final String ruleBody, final List<String> inputParameters,
 			final List<String> outputParameters) {
 
 		StringBuilder sb = new StringBuilder();
@@ -397,8 +375,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * executeRuleFromParts(java.lang.String, java.util.List, java.util.List)
 	 */
 	@Override
-	public IRODSRuleExecResult executeRuleFromParts(final String ruleBody,
-			final List<String> inputParameters,
+	public IRODSRuleExecResult executeRuleFromParts(final String ruleBody, final List<String> inputParameters,
 			final List<String> outputParameters) throws JargonException {
 
 		if (ruleBody == null || ruleBody.isEmpty()) {
@@ -417,11 +394,9 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		log.info("inputParameters:{}", inputParameters);
 		log.info("outputParameters:{}", outputParameters);
 
-		String ruleAsString = buildRuleStringFromParts(ruleBody,
-				inputParameters, outputParameters);
+		String ruleAsString = buildRuleStringFromParts(ruleBody, inputParameters, outputParameters);
 
-		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory
-				.getRuleProcessingAO(getIrodsAccount());
+		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory.getRuleProcessingAO(getIrodsAccount());
 
 		log.info("getting ready to submit rule:{}", ruleAsString);
 		return ruleProcessingAO.executeRule(ruleAsString);
@@ -435,9 +410,8 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * deleteInputParameterFromRule(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rule deleteInputParameterFromRule(final String ruleAbsolutePath,
-			final String parameterToDelete) throws FileNotFoundException,
-			JargonException {
+	public Rule deleteInputParameterFromRule(final String ruleAbsolutePath, final String parameterToDelete)
+			throws FileNotFoundException, JargonException {
 		log.info("deleteInputParameterFromRule()");
 
 		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
@@ -445,8 +419,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		}
 
 		if (parameterToDelete == null || parameterToDelete.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty parameterToDelete");
+			throw new IllegalArgumentException("null or empty parameterToDelete");
 		}
 
 		Rule currentRule = loadRuleFromIrods(ruleAbsolutePath);
@@ -456,8 +429,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		boolean updated = false;
 		for (int i = 0; i < currentRule.getInputParameters().size(); i++) {
-			if (currentRule.getInputParameters().get(i).getUniqueName()
-					.equals(parameterToDelete)) {
+			if (currentRule.getInputParameters().get(i).getUniqueName().equals(parameterToDelete)) {
 				log.info("found parameter, deleting");
 				updated = true;
 			} else {
@@ -470,9 +442,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 			currentRule.setInputParameters(newParms);
 			return storeRule(ruleAbsolutePath, currentRule);
 		} else {
-			log.info(
-					"no update necessary, just return the current rule info:{}",
-					currentRule);
+			log.info("no update necessary, just return the current rule info:{}", currentRule);
 			return currentRule;
 		}
 
@@ -485,9 +455,8 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 	 * deleteOutputParameterFromRule(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public Rule deleteOutputParameterFromRule(final String ruleAbsolutePath,
-			final String parameterToDelete) throws FileNotFoundException,
-			JargonException {
+	public Rule deleteOutputParameterFromRule(final String ruleAbsolutePath, final String parameterToDelete)
+			throws FileNotFoundException, JargonException {
 		log.info("deleteOutputParameterFromRule()");
 
 		if (ruleAbsolutePath == null || ruleAbsolutePath.isEmpty()) {
@@ -495,8 +464,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		}
 
 		if (parameterToDelete == null || parameterToDelete.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty parameterToDelete");
+			throw new IllegalArgumentException("null or empty parameterToDelete");
 		}
 
 		Rule currentRule = loadRuleFromIrods(ruleAbsolutePath);
@@ -506,8 +474,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		boolean updated = false;
 		for (int i = 0; i < currentRule.getOutputParameters().size(); i++) {
-			if (currentRule.getOutputParameters().get(i).getUniqueName()
-					.equals(parameterToDelete)) {
+			if (currentRule.getOutputParameters().get(i).getUniqueName().equals(parameterToDelete)) {
 				log.info("found parameter, deleting");
 				updated = true;
 			} else {
@@ -516,14 +483,11 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		}
 
 		if (updated) {
-			log.info("updated rule with deleted output param is:{}",
-					currentRule);
+			log.info("updated rule with deleted output param is:{}", currentRule);
 			currentRule.setOutputParameters(newParms);
 			return storeRule(ruleAbsolutePath, currentRule);
 		} else {
-			log.info(
-					"no update necessary, just return the current rule info:{}",
-					currentRule);
+			log.info("no update necessary, just return the current rule info:{}", currentRule);
 			return currentRule;
 		}
 
@@ -533,8 +497,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		super();
 	}
 
-	public RuleCompositionServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public RuleCompositionServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
