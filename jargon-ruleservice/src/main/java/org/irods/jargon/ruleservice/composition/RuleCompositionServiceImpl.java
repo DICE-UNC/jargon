@@ -155,7 +155,8 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
 				getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()),
-				RuleInvocationConfiguration.instanceWithDefaultAutoSettings());
+				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(),
+				this.getIrodsAccessObjectFactory().getJargonProperties());
 
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(inputRuleAsString);
 

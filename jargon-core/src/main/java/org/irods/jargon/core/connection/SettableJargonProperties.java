@@ -68,6 +68,7 @@ public class SettableJargonProperties implements JargonProperties {
 	private int primaryTcpPerformancePrefsBandwidth;
 	private int socketRenewalIntervalInSeconds;
 	private boolean longTransferRestart = true;
+	private boolean rulesSetDestinationWhenAuto = true;
 	private String defaultIrodsRuleEngineIdentifier = "irods_rule_engine_plugin-irods_rule_language-instance";
 	private String defaultPythonRuleEngineIdentifier = "irods_rule_engine_plugin-cpp_default_policy-instance";
 	private String defaultCppRuleEngineIdentifier = "irods_rule_engine_plugin-cpp_default_policy-instance";
@@ -205,6 +206,7 @@ public class SettableJargonProperties implements JargonProperties {
 		defaultIrodsRuleEngineIdentifier = jargonProperties.getDefaultIrodsRuleEngineIdentifier();
 		defaultPythonRuleEngineIdentifier = jargonProperties.getDefaultPythonRuleEngineIdentifier();
 		defaultCppRuleEngineIdentifier = jargonProperties.getDefaultCppRuleEngineIdentifier();
+		this.rulesSetDestinationWhenAuto = jargonProperties.isRulesSetDestinationWhenAuto();
 	}
 
 	/*
@@ -968,11 +970,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.primaryTcpPerformancePrefsBandwidth = primaryTcpPerformancePrefsBandwidth;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -1027,7 +1024,8 @@ public class SettableJargonProperties implements JargonProperties {
 				.append(", primaryTcpPerformancePrefsLatency=").append(primaryTcpPerformancePrefsLatency)
 				.append(", primaryTcpPerformancePrefsBandwidth=").append(primaryTcpPerformancePrefsBandwidth)
 				.append(", socketRenewalIntervalInSeconds=").append(socketRenewalIntervalInSeconds)
-				.append(", longTransferRestart=").append(longTransferRestart).append(", ");
+				.append(", longTransferRestart=").append(longTransferRestart).append(", rulesSetDestinationWhenAuto=")
+				.append(rulesSetDestinationWhenAuto).append(", ");
 		if (defaultIrodsRuleEngineIdentifier != null) {
 			builder.append("defaultIrodsRuleEngineIdentifier=").append(defaultIrodsRuleEngineIdentifier).append(", ");
 		}
@@ -1272,6 +1270,23 @@ public class SettableJargonProperties implements JargonProperties {
 
 	public void setDefaultCppRuleEngineIdentifier(final String defaultCppRuleEngineIdentifier) {
 		this.defaultCppRuleEngineIdentifier = defaultCppRuleEngineIdentifier;
+	}
+
+	@Override
+	public boolean isRulesSetDestinationWhenAuto() {
+		return this.rulesSetDestinationWhenAuto;
+	}
+
+	/**
+	 * Set whether the rule processing submits rules with a rule engine default
+	 * 
+	 * @param rulesSetDestinationWhenAuto
+	 *            <code>boolean</code> indicating whether the rule engine to process
+	 *            the rule should be specified in the rule invocation protocol
+	 *            message
+	 */
+	public void setRulesSetDestinationWhenAuto(final boolean rulesSetDestinationWhenAuto) {
+		this.rulesSetDestinationWhenAuto = rulesSetDestinationWhenAuto;
 	}
 
 }

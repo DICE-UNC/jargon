@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
@@ -31,9 +32,9 @@ public class IRODSRuleTranslator extends AbstractRuleTranslator {
 	 *            {@link RuleInvocationConfiguration} with configuration regarding
 	 *            the type of rule and type of rule processing to be done
 	 */
-	public IRODSRuleTranslator(IRODSServerProperties irodsServerProperties,
-			RuleInvocationConfiguration ruleInvocationConfiguration) {
-		super(irodsServerProperties, ruleInvocationConfiguration);
+	public IRODSRuleTranslator(final IRODSServerProperties irodsServerProperties,
+			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {
+		super(irodsServerProperties, ruleInvocationConfiguration, jargonProperties);
 	}
 
 	/**
@@ -292,6 +293,18 @@ class RuleCharacteristics {
 
 	public void setOutputLineIndex(final int outputLineIndex) {
 		this.outputLineIndex = outputLineIndex;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("RuleCharacteristics [");
+		if (ruleBody != null) {
+			builder.append("ruleBody=").append(ruleBody).append(", ");
+		}
+		builder.append("lastLineOfBody=").append(lastLineOfBody).append(", inputLineIndex=").append(inputLineIndex)
+				.append(", outputLineIndex=").append(outputLineIndex).append("]");
+		return builder.toString();
 	}
 
 }

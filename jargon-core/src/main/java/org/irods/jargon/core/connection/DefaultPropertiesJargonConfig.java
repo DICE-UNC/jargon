@@ -602,4 +602,10 @@ public class DefaultPropertiesJargonConfig implements JargonProperties {
 	public String getDefaultCppRuleEngineIdentifier() {
 		return verifyPropExistsAndGetAsString("default.cpp.rule.engine.identifier");
 	}
+
+	@Override
+	public boolean isRulesSetDestinationWhenAuto() {
+		return verifyPropExistsAndGetAsBoolean("rule.engine.set.destination.when.auto");
+
+	}
 }

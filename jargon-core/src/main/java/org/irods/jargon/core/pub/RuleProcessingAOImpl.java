@@ -106,6 +106,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromResource(java
 	 * .lang.String, java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
+	 * 
+	 * TODO: deprecate and add context method
 	 */
 	@Override
 	public IRODSRuleExecResult executeRuleFromResource(final String resourcePath,
@@ -129,6 +131,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromIRODSFile(java
 	 * .lang.String, java.util.List)
+	 * 
+	 * TODO: deprecate and add context method
 	 */
 	@Override
 	public IRODSRuleExecResult executeRuleFromIRODSFile(final String ruleFileAbsolutePath,
@@ -179,15 +183,21 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * (non-Javadoc)
 	 *
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String)
+	 * 
+	 * TODO: deprecate and add context method
+	 * 
 	 */
 	@Override
 	public IRODSRuleExecResult executeRule(String irodsRuleAsString) throws JargonRuleException, JargonException {
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings();
 
 		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
-				RuleInvocationConfiguration.instanceWithDefaultAutoSettings()); // FIXME:
+				ruleInvocationConfiguration, this.getJargonProperties());
+
 		// get
 		// from
 		// factory
@@ -199,7 +209,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
 		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 
@@ -224,14 +234,14 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
 		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
-				ruleInvocationConfiguration); // FIXME:
+				ruleInvocationConfiguration, this.getJargonProperties()); // FIXME:
 		// get
 		// from
 		// factory
 
 		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(irodsRuleAsString);
 		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 
@@ -262,12 +272,12 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		log.info("executing rule: {}", irodsRuleAsString);
 		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(getIRODSServerProperties(),
-				ruleInvocationConfiguration);
+				ruleInvocationConfiguration, this.getJargonProperties());
 
 		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoRule(irodsRuleAsString,
 				inputParameterOverrides);
 		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 
@@ -284,6 +294,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRule(java.lang.String,
 	 * java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
+	 * 
+	 * TODO: deprecate and add rule context invocation
 	 */
 	@Override
 	public IRODSRuleExecResult executeRule(String irodsRuleAsString,

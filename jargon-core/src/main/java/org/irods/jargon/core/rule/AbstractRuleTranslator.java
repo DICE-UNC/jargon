@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.StringTokenizer;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +16,7 @@ public abstract class AbstractRuleTranslator {
 	private final IRODSServerProperties irodsServerProperties;
 	private final RuleInvocationConfiguration ruleInvocationConfiguration;
 	Logger log = LoggerFactory.getLogger(this.getClass());
+	private final JargonProperties jargonProperties;
 
 	/**
 	 * Given a string representing an iRODS rule (including the rule body, as well
@@ -301,8 +303,21 @@ public abstract class AbstractRuleTranslator {
 		return ruleInvocationConfiguration;
 	}
 
-	public AbstractRuleTranslator(IRODSServerProperties irodsServerProperties,
-			RuleInvocationConfiguration ruleInvocationConfiguration) {
+	/**
+	 * Constructor with required dependencies
+	 * 
+	 * @param irodsServerProperties
+	 *            {@link IRODSServerProperties} that characterizes the current iRODS
+	 *            server
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} with information about which
+	 *            rule engine the rule should be invoked on
+	 * @param jargonProperties
+	 *            {@link JargonProperties} with settings that indicate desired
+	 *            client behavior
+	 */
+	public AbstractRuleTranslator(final IRODSServerProperties irodsServerProperties,
+			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {
 
 		if (irodsServerProperties == null) {
 			throw new IllegalArgumentException("null irodsServerProperties");
@@ -312,8 +327,40 @@ public abstract class AbstractRuleTranslator {
 			throw new IllegalArgumentException("null ruleInvocationConfiguration");
 		}
 
+		if (jargonProperties == null) {
+			throw new IllegalArgumentException("null jargonProperties");
+		}
+
 		this.irodsServerProperties = irodsServerProperties;
 		this.ruleInvocationConfiguration = ruleInvocationConfiguration;
+		this.jargonProperties = jargonProperties;
+	}
+
+	/**
+	 * @return the jargonProperties
+	 */
+	public JargonProperties getJargonProperties() {
+		return jargonProperties;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("AbstractRuleTranslator [");
+		if (irodsServerProperties != null) {
+			builder.append("irodsServerProperties=").append(irodsServerProperties).append(", ");
+		}
+		if (ruleInvocationConfiguration != null) {
+			builder.append("ruleInvocationConfiguration=").append(ruleInvocationConfiguration).append(", ");
+		}
+		if (log != null) {
+			builder.append("log=").append(log).append(", ");
+		}
+		if (jargonProperties != null) {
+			builder.append("jargonProperties=").append(jargonProperties);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

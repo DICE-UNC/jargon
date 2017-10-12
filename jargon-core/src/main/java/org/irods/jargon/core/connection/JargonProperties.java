@@ -568,4 +568,15 @@ public interface JargonProperties {
 	 */
 	String getDefaultCppRuleEngineIdentifier();
 
+	/**
+	 * Modifies behavior of Jargon to always set the destination rule engine based
+	 * on the detected or set rule type. Without this setting an iRODS is assumed to
+	 * treat iRODS native rule language as the default rule engine, so that rules
+	 * Jargon guesses are iRODS rules are sent as equivalent to not setting
+	 * 
+	 * @return <code>boolean</code> if Jargon should set the rule destination when
+	 *         sending a rule to run on iRODS
+	 */
+	boolean isRulesSetDestinationWhenAuto();
+
 }
