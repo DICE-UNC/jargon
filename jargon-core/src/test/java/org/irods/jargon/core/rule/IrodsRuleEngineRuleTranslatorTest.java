@@ -12,7 +12,7 @@ import org.junit.Test;
 
 import junit.framework.Assert;
 
-public class IRODSRuleTranslatorTest {
+public class IrodsRuleEngineRuleTranslatorTest {
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -27,7 +27,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods2.5", "2", "zone");
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertNotNull("null translated rule returned", translatedRule);
@@ -38,7 +38,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods3.0", "2", "zone");
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertNotNull("null translated rule returned", translatedRule);
@@ -52,7 +52,7 @@ public class IRODSRuleTranslatorTest {
 
 		String ruleString = "HelloWorld { \n writeLine(\"stdout\", \"Hello, world!\");\n}\nINPUT null\nOUTPUT ruleExecOut\n";
 
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertNotNull("null translated rule returned", translatedRule);
@@ -66,7 +66,7 @@ public class IRODSRuleTranslatorTest {
 				"rods3.0", "2", "zone");
 
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\n*A=hello\n ruleExecOut";
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertEquals("no output parms found, expected one for ruleExecOut", 1,
@@ -88,7 +88,7 @@ public class IRODSRuleTranslatorTest {
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertEquals("translated parameters are not the same as the output parameter line", 5,
@@ -113,7 +113,7 @@ public class IRODSRuleTranslatorTest {
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
 		ruleBuilder.append("*Action%*Condition%%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 	}
@@ -130,7 +130,7 @@ public class IRODSRuleTranslatorTest {
 		ruleBuilder.append("null\n");
 		ruleBuilder.append("*Action%*Condition%*Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertEquals("input parm set to string 'null' should result in one dummy input parms", 1,
@@ -168,7 +168,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods3.0", "2", "zone");
 
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule translatedRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		Assert.assertEquals("did not parse the two input parameters", 2,
@@ -189,7 +189,7 @@ public class IRODSRuleTranslatorTest {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods2.5", "2", "zone");
 
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 
@@ -208,7 +208,7 @@ public class IRODSRuleTranslatorTest {
 		ruleBuilder.append("'%*Operation=ChksumAll\n");
 		ruleBuilder.append("*Action%*Condition%**Operation%*C%ruleExecOut");
 		String ruleString = ruleBuilder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 	}
@@ -217,7 +217,7 @@ public class IRODSRuleTranslatorTest {
 	public final void testTranslateNullRule() throws Exception {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods3.0", "2", "zone");
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(null);
 	}
@@ -226,14 +226,14 @@ public class IRODSRuleTranslatorTest {
 	public final void testTranslateBlankRule() throws Exception {
 		IRODSServerProperties irodsServerProperties = IRODSServerProperties.instance(IcatEnabled.ICAT_ENABLED, 1,
 				"rods3.0", "2", "zone");
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule("");
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testNullIrodsServerProperties() throws Exception {
-		new IRODSRuleTranslator(null, null, null);
+		new IrodsRuleEngineRuleTranslator(null, null, null);
 	}
 
 	@Test
@@ -247,7 +247,7 @@ public class IRODSRuleTranslatorTest {
 		List<IRODSRuleParameter> overrideParams = new ArrayList<IRODSRuleParameter>();
 		params.add(new IRODSRuleParameter(name1, "val"));
 		params.add(new IRODSRuleParameter(name2, "val"));
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		List<IRODSRuleParameter> collated = irodsRuleTranslator.collateOverridesIntoInputParameters(overrideParams,
 				params);
@@ -269,7 +269,7 @@ public class IRODSRuleTranslatorTest {
 		params.add(new IRODSRuleParameter(name1, "val"));
 		params.add(new IRODSRuleParameter(name2, "val"));
 		overrideParams.add(new IRODSRuleParameter(name2, "val2"));
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		List<IRODSRuleParameter> collated = irodsRuleTranslator.collateOverridesIntoInputParameters(overrideParams,
 				params);
@@ -294,7 +294,7 @@ public class IRODSRuleTranslatorTest {
 		params.add(new IRODSRuleParameter(name2, "val"));
 		overrideParams.add(new IRODSRuleParameter(name2, "val2"));
 		overrideParams.add(new IRODSRuleParameter(name3, "val2"));
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		List<IRODSRuleParameter> collated = irodsRuleTranslator.collateOverridesIntoInputParameters(overrideParams,
 				params);
@@ -315,7 +315,7 @@ public class IRODSRuleTranslatorTest {
 		List<IRODSRuleParameter> params = new ArrayList<IRODSRuleParameter>();
 		List<IRODSRuleParameter> overrideParams = null;
 
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		irodsRuleTranslator.collateOverridesIntoInputParameters(overrideParams, params);
 

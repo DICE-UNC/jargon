@@ -63,31 +63,6 @@ public final class IRODSRule {
 	 *            output parameters
 	 * @param ruleBody
 	 *            {@code String} containing the body of the rule
-	 * @return {@code IRODSRule} containing an object model of the rule.
-	 * @throws JargonException
-	 */
-	public static IRODSRule instance(final String ruleAsOriginalText,
-			final List<IRODSRuleParameter> irodsRuleInputParameters,
-			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody) throws JargonException {
-		RuleInvocationConfiguration ruleEngineConfiguration = new RuleInvocationConfiguration();
-		ruleEngineConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
-		return new IRODSRule(ruleAsOriginalText, irodsRuleInputParameters, irodsRuleOutputParameters, ruleBody,
-				ruleEngineConfiguration);
-	}
-
-	/**
-	 * Return an immutable instance of an {@code IRODSRule}
-	 *
-	 * @param ruleAsOriginalText
-	 *            {@code String} with the plain text version of the rule
-	 * @param irodsRuleInputParameters
-	 *            {@code List<IRODSRuleParameter>} containing the translated rule
-	 *            input parameters
-	 * @param irodsRuleOutputParameters
-	 *            {@code List<IRODSRuleParameter>} containing the translated rule
-	 *            output parameters
-	 * @param ruleBody
-	 *            {@code String} containing the body of the rule
 	 * @param ruleInvocationConfiguration
 	 *            {@link RuleInvocationConfiguration} with information about the
 	 *            type of rule (rule language) involved

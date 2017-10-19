@@ -1207,7 +1207,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 * org.irods.jargon.core.transfer.TransferStatusCallbackListener, boolean,
 	 * org.irods.jargon.core.transfer.TransferControlBlock)
 	 */
-	@SuppressWarnings("deprecation")
 	@Deprecated
 	@Override
 	public void copy(final String irodsSourceFileAbsolutePath, final String targetResource,

@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.rule;
 
+import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.pub.RuleProcessingAO;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 
@@ -22,8 +23,33 @@ import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 public class RuleInvocationConfiguration {
 
 	private IrodsRuleInvocationTypeEnum irodsRuleInvocationTypeEnum = IrodsRuleInvocationTypeEnum.AUTO_DETECT;
+	/**
+	 * {@link RuleProcessingAO.RuleProcessingType} enum value. Note that it should
+	 * be set to {@code CLASSIC} for classic rules, and {@code EXTERNAL} or
+	 * {@code INTERNAL} for new format rules. This applies to iRODS rules only
+	 */
 	private RuleProcessingType ruleProcessingType = RuleProcessingType.DEFAULT;
+
+	/**
+	 * This provides a direct hard-coded identifier for the target rule engine,
+	 * matching the rule engine id in the iRODS server side configuration. If left
+	 * blank, it uses the default names for the rule engine types as specified in
+	 * jargon properties
+	 */
 	private String ruleEngineSpecifier = "";
+
+	/**
+	 * Flag to signal whether Jargon should alter the ruleEngineSpecifier instance
+	 * name if it is blank. This will consult the jargon properties or other system
+	 * information to determine the appropriate instance according to the rule
+	 * language detected. Set to <code>true</code> to have Jargon guess the rule
+	 * engine instance name.
+	 * <p/>
+	 * Note that you can always just set the <code>ruleEngineSpecifier</code>
+	 * directly, and that is equivalent to setting the instance name via the irule
+	 * command.
+	 */
+	private boolean encodeRuleEngineInstance = false;
 
 	/**
 	 * Build a default instance that should work as a default with the method
@@ -70,6 +96,28 @@ public class RuleInvocationConfiguration {
 		this.ruleEngineSpecifier = ruleEngineSpecifier;
 	}
 
+	/**
+	 * Create a complete clone of the configuration
+	 * 
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} to copy
+	 * @return copied {@link RuleInvocationConfiguration}
+	 */
+	public RuleInvocationConfiguration copyRuleInvocationConfiguration(
+			final RuleInvocationConfiguration ruleInvocationConfiguration) {
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
+		}
+
+		RuleInvocationConfiguration copy = new RuleInvocationConfiguration();
+		copy.setIrodsRuleInvocationTypeEnum(ruleInvocationConfiguration.getIrodsRuleInvocationTypeEnum());
+		copy.setRuleEngineSpecifier(ruleInvocationConfiguration.getRuleEngineSpecifier());
+		copy.setRuleProcessingType(ruleInvocationConfiguration.getRuleProcessingType());
+		return copy;
+
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -81,9 +129,9 @@ public class RuleInvocationConfiguration {
 			builder.append("ruleProcessingType=").append(ruleProcessingType).append(", ");
 		}
 		if (ruleEngineSpecifier != null) {
-			builder.append("ruleEngineSpecifier=").append(ruleEngineSpecifier);
+			builder.append("ruleEngineSpecifier=").append(ruleEngineSpecifier).append(", ");
 		}
-		builder.append("]");
+		builder.append("encodeRuleEngineInstance=").append(encodeRuleEngineInstance).append("]");
 		return builder.toString();
 	}
 
@@ -93,6 +141,32 @@ public class RuleInvocationConfiguration {
 
 	public void setRuleProcessingType(RuleProcessingType ruleProcessingType) {
 		this.ruleProcessingType = ruleProcessingType;
+	}
+
+	public boolean isEncodeRuleEngineInstance() {
+		return encodeRuleEngineInstance;
+	}
+
+	public void setEncodeRuleEngineInstance(boolean encodeRuleEngineInstance) {
+		this.encodeRuleEngineInstance = encodeRuleEngineInstance;
+	}
+
+	/**
+	 * Create an instance based on any settings in jargon properties
+	 * 
+	 * @param jargonProperties
+	 *            {@link JargonProperties} that are binding
+	 * @return
+	 */
+	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings(JargonProperties jargonProperties) {
+		if (jargonProperties == null) {
+			throw new IllegalArgumentException("null jargonProperties");
+		}
+		RuleInvocationConfiguration ruleEngineConfiguration = new RuleInvocationConfiguration();
+		ruleEngineConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
+		ruleEngineConfiguration.setRuleProcessingType(RuleProcessingType.DEFAULT);
+		ruleEngineConfiguration.setEncodeRuleEngineInstance(jargonProperties.isRulesSetDestinationWhenAuto());
+		return ruleEngineConfiguration;
 	}
 
 }

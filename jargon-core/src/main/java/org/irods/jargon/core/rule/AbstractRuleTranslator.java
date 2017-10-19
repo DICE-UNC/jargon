@@ -30,7 +30,7 @@ public abstract class AbstractRuleTranslator {
 	 */
 	public IRODSRule translatePlainTextRuleIntoIRODSRule(final String ruleAsPlainText)
 			throws JargonRuleException, JargonException {
-		return translatePlainTextRuleIntoRule(ruleAsPlainText, null);
+		return translatePlainTextRuleIntoIrodsRule(ruleAsPlainText, null);
 	}
 
 	/**
@@ -43,7 +43,7 @@ public abstract class AbstractRuleTranslator {
 	 * @throws JargonRuleException
 	 * @throws JargonException
 	 */
-	public abstract IRODSRule translatePlainTextRuleIntoRule(final String ruleAsPlainText,
+	public abstract IRODSRule translatePlainTextRuleIntoIrodsRule(final String ruleAsPlainText,
 			final List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException;
 
 	/**

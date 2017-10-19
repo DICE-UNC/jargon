@@ -2730,7 +2730,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 	}
 
-	@SuppressWarnings("deprecation")
 	@Deprecated
 	@Override
 	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile) throws JargonException {

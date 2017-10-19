@@ -23,7 +23,7 @@ import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
-import org.irods.jargon.core.rule.IRODSRuleTranslator;
+import org.irods.jargon.core.rule.IrodsRuleEngineRuleTranslator;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.slf4j.Logger;
@@ -153,7 +153,7 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 		log.info("inputRuleAsString:{}", inputRuleAsString);
 
-		final AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(
+		final AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(
 				getIrodsAccessObjectFactory().getIRODSServerProperties(getIrodsAccount()),
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(),
 				this.getIrodsAccessObjectFactory().getJargonProperties());

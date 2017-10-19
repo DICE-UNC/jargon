@@ -17,13 +17,11 @@ public class KeyValuePair {
 	private final String key;
 	private final String value;
 
-	public static final KeyValuePair instance(final String key,
-			final String value) throws JargonException {
+	public static final KeyValuePair instance(final String key, final String value) throws JargonException {
 		return new KeyValuePair(key, value);
 	}
 
-	private KeyValuePair(final String key, final String value)
-			throws JargonException {
+	private KeyValuePair(final String key, final String value) throws JargonException {
 		if (key == null) {
 			throw new JargonException("key is null");
 		}
@@ -42,6 +40,20 @@ public class KeyValuePair {
 
 	public String getValue() {
 		return value;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("KeyValuePair [");
+		if (key != null) {
+			builder.append("key=").append(key).append(", ");
+		}
+		if (value != null) {
+			builder.append("value=").append(value);
+		}
+		builder.append("]");
+		return builder.toString();
 	}
 
 }

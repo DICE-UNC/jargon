@@ -19,7 +19,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class IRODSRuleTranslator extends AbstractRuleTranslator {
+public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 
 	Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -32,7 +32,7 @@ public class IRODSRuleTranslator extends AbstractRuleTranslator {
 	 *            {@link RuleInvocationConfiguration} with configuration regarding
 	 *            the type of rule and type of rule processing to be done
 	 */
-	public IRODSRuleTranslator(final IRODSServerProperties irodsServerProperties,
+	public IrodsRuleEngineRuleTranslator(final IRODSServerProperties irodsServerProperties,
 			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {
 		super(irodsServerProperties, ruleInvocationConfiguration, jargonProperties);
 	}
@@ -48,7 +48,7 @@ public class IRODSRuleTranslator extends AbstractRuleTranslator {
 	 * @throws JargonException
 	 */
 	@Override
-	public IRODSRule translatePlainTextRuleIntoRule(final String ruleAsPlainText,
+	public IRODSRule translatePlainTextRuleIntoIrodsRule(final String ruleAsPlainText,
 			final List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException {
 
 		if (ruleAsPlainText == null || ruleAsPlainText.isEmpty()) {
@@ -104,7 +104,7 @@ public class IRODSRuleTranslator extends AbstractRuleTranslator {
 			}
 
 			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
-					ruleCharacteristics.getRuleBody());
+					ruleCharacteristics.getRuleBody(), this.getRuleInvocationConfiguration());
 		} else {
 			log.info("parsing in old format");
 			if (tokenLines.size() < 3) {
@@ -125,7 +125,7 @@ public class IRODSRuleTranslator extends AbstractRuleTranslator {
 			outputParameters = processRuleOutputAttributesLine(tokenLines.get(tokenLines.size() - 1));
 
 			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
-					processRuleBodyOldFormat(tokenLines));
+					processRuleBodyOldFormat(tokenLines), this.getRuleInvocationConfiguration());
 
 		}
 

@@ -196,10 +196,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @param inputParameterOverrides
 	 *            {@code List} of {@link IRODSRuleParameter} that overrides the
 	 *            parameters derived from the rule bodies.
-	 * @param ruleProcessingType
-	 *            {@link RuleProcessingAO.RuleProcessingType} enum value. Note that
-	 *            it should be set to {@code CLASSIC} for classic rules, and
-	 *            {@code EXTERNAL} or {@code INTERNAL} for new format rules.
+	 * 
 	 * @param ruleInvocationConfiguration
 	 *            {@link ruleInvocationConfiguration} that represents the type of
 	 *            rule engine the user wishes this rule to be run on. With multiple
@@ -213,8 +210,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 *             if iRODS processing resulted in an error.
 	 */
-	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
-			RuleProcessingType ruleProcessingType, final RuleInvocationConfiguration ruleInvocationConfiguration)
+	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides, final RuleInvocationConfiguration ruleInvocationConfiguration)
 			throws JargonRuleException, JargonException;
 
 	/**

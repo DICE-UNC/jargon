@@ -158,6 +158,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
+		if (!ruleInvocationConfiguration.getRuleEngineSpecifier().isEmpty()) {
+			log.debug("adding rule engine instance:{}", ruleInvocationConfiguration.getRuleEngineSpecifier());
+			kvps.add(
+					KeyValuePair.instance(RULE_INSTANCE_NAME_KW, ruleInvocationConfiguration.getRuleEngineSpecifier()));
+		}
 
 		final Tag message = new Tag(PI_TAG,
 				new Tag[] {

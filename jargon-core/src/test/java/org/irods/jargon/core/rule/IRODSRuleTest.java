@@ -20,39 +20,56 @@ public class IRODSRuleTest {
 
 	@Test
 	public void testInstance() throws Exception {
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
 		IRODSRule irodsRule = IRODSRule.instance("x", new ArrayList<IRODSRuleParameter>(),
-				new ArrayList<IRODSRuleParameter>(), "yyy");
+				new ArrayList<IRODSRuleParameter>(), "yyy", irodsRuleInvocationConfiguration);
 		Assert.assertNotNull("no return from initializer", irodsRule);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullRuleOrigText() throws Exception {
-		IRODSRule.instance(null, new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "yyy");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance(null, new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "yyy",
+				irodsRuleInvocationConfiguration);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankRuleOrigText() throws Exception {
-		IRODSRule.instance("", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "yyy");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance("", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "yyy",
+				irodsRuleInvocationConfiguration);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullInputParams() throws Exception {
-		IRODSRule.instance("xxxx", null, new ArrayList<IRODSRuleParameter>(), "yyy");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance("xxxx", null, new ArrayList<IRODSRuleParameter>(), "yyy", irodsRuleInvocationConfiguration);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullOutputParams() throws Exception {
-		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), null, "yyy");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), null, "yyy", irodsRuleInvocationConfiguration);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceNullRuleBody() throws Exception {
-		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), null);
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), null,
+				irodsRuleInvocationConfiguration);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public void testInstanceBlankRuleBody() throws Exception {
-		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule.instance("xxxx", new ArrayList<IRODSRuleParameter>(), new ArrayList<IRODSRuleParameter>(), "",
+				irodsRuleInvocationConfiguration);
 	}
 
 }

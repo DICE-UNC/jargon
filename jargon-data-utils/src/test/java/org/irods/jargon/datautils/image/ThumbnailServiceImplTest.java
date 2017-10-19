@@ -10,8 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.apache.commons.codec.binary.Base64InputStream;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -27,6 +25,7 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter.OutputParamType;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
@@ -34,6 +33,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Matchers;
 import org.mockito.Mockito;
+
+import junit.framework.Assert;
 
 public class ThumbnailServiceImplTest {
 
@@ -50,14 +51,12 @@ public class ThumbnailServiceImplTest {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
-		scratchFileUtils
-				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+		scratchFileUtils.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 	}
 
 	@After
@@ -69,22 +68,18 @@ public class ThumbnailServiceImplTest {
 	public void testGenerateThumbnailForIRODSPath() throws Exception {
 
 		/*
-		 * Grab the test image, base64 encode as a string and emulate return
-		 * from iRODS.
+		 * Grab the test image, base64 encode as a string and emulate return from iRODS.
 		 */
 		String testDir = "testGenerateThumbnailForIRODSPathWorkingDir";
 		String sourceIRODSPath = "/source/irods/path/image.png";
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ "/" + testDir);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + testDir);
 		File workingDirAsFile = new File(absPath);
 
 		ClassLoader loader = this.getClass().getClassLoader();
 		InputStream sourceStream = loader.getResourceAsStream(IMAGE_FILE_NAME);
 
-		InputStreamReader testInput = new InputStreamReader(
-				new Base64InputStream(sourceStream, true));
+		InputStreamReader testInput = new InputStreamReader(new Base64InputStream(sourceStream, true));
 
 		// Base64 encoded stream dumped into string
 
@@ -113,124 +108,91 @@ public class ThumbnailServiceImplTest {
 		List<IRODSRuleParameter> outputParms = new ArrayList<IRODSRuleParameter>();
 		IRODSRuleParameter outputParm = new IRODSRuleParameter(fileParam);
 		outputParms.add(outputParm);
-		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms,
-				inputParms, "body");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
 
-		IRODSRuleExecResultOutputParameter outputResultParm = IRODSRuleExecResultOutputParameter
-				.instance(fileParam, OutputParamType.STRING, dataAsString);
+		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms, inputParms, "body",
+				irodsRuleInvocationConfiguration);
+
+		IRODSRuleExecResultOutputParameter outputResultParm = IRODSRuleExecResultOutputParameter.instance(fileParam,
+				OutputParamType.STRING, dataAsString);
 		Map<String, IRODSRuleExecResultOutputParameter> outputResultParms = new HashMap<String, IRODSRuleExecResultOutputParameter>();
 		outputResultParms.put(fileParam, outputResultParm);
 
-		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule,
-				outputResultParms);
+		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule, outputResultParms);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		RuleProcessingAO ruleProcessingAO = Mockito
-				.mock(RuleProcessingAO.class);
-		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class)))
-				.thenReturn(result);
-		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
-				.thenReturn(ruleProcessingAO);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		RuleProcessingAO ruleProcessingAO = Mockito.mock(RuleProcessingAO.class);
+		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class))).thenReturn(result);
+		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount)).thenReturn(ruleProcessingAO);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(sourceIRODSPath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 		objStat.setCollectionPath(sourceIRODSPath);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(sourceIRODSPath))
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sourceIRODSPath))
 				.thenReturn(objStat);
 
-		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(
-				workingDirAsFile, sourceIRODSPath);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(workingDirAsFile, sourceIRODSPath);
 		Assert.assertNotNull("null file returned", actual);
-		Assert.assertTrue("file does not exist as file", actual.exists()
-				&& actual.isFile());
+		Assert.assertTrue("file does not exist as file", actual.exists() && actual.isFile());
 
 	}
 
 	@Test
 	public void testIsIRODSThumbnailGeneratorAvailable() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		EnvironmentalInfoAO environmentalInfoAO = Mockito
-				.mock(EnvironmentalInfoAO.class);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		EnvironmentalInfoAO environmentalInfoAO = Mockito.mock(EnvironmentalInfoAO.class);
 		List<RemoteCommandInformation> scripts = new ArrayList<RemoteCommandInformation>();
 		RemoteCommandInformation info = new RemoteCommandInformation();
 		info.setCommand("makeThumbnail.py");
 		scripts.add(info);
-		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands())
-				.thenReturn(scripts);
-		Mockito.when(
-				irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount))
-				.thenReturn(environmentalInfoAO);
-		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		boolean isThumbnailGenerator = thumbnailService
-				.isIRODSThumbnailGeneratorAvailable();
-		Assert.assertTrue("should have said yes to thumbnail service",
-				isThumbnailGenerator);
+		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands()).thenReturn(scripts);
+		Mockito.when(irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount)).thenReturn(environmentalInfoAO);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
+		boolean isThumbnailGenerator = thumbnailService.isIRODSThumbnailGeneratorAvailable();
+		Assert.assertTrue("should have said yes to thumbnail service", isThumbnailGenerator);
 	}
 
 	@Test
 	public void testIsIRODSThumbnailGeneratorNotAvailable() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		EnvironmentalInfoAO environmentalInfoAO = Mockito
-				.mock(EnvironmentalInfoAO.class);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		EnvironmentalInfoAO environmentalInfoAO = Mockito.mock(EnvironmentalInfoAO.class);
 		List<RemoteCommandInformation> scripts = new ArrayList<RemoteCommandInformation>();
 		RemoteCommandInformation info = new RemoteCommandInformation();
 		info.setCommand("dontMakeThumbnail.py");
 		scripts.add(info);
-		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands())
-				.thenReturn(scripts);
-		Mockito.when(
-				irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount))
-				.thenReturn(environmentalInfoAO);
-		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		boolean isThumbnailGenerator = thumbnailService
-				.isIRODSThumbnailGeneratorAvailable();
-		Assert.assertFalse("should have said no to thumbnail service",
-				isThumbnailGenerator);
+		Mockito.when(environmentalInfoAO.listAvailableRemoteCommands()).thenReturn(scripts);
+		Mockito.when(irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount)).thenReturn(environmentalInfoAO);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
+		boolean isThumbnailGenerator = thumbnailService.isIRODSThumbnailGeneratorAvailable();
+		Assert.assertFalse("should have said no to thumbnail service", isThumbnailGenerator);
 	}
 
 	@Test
 	public void testGenerateThumbnailForIRODSPathTwice() throws Exception {
 
 		/*
-		 * Grab the test image, base64 encode as a string and emulate return
-		 * from iRODS.
+		 * Grab the test image, base64 encode as a string and emulate return from iRODS.
 		 */
 		String testDir = "testGenerateThumbnailForIRODSPathTwice";
 		String sourceIRODSPath = "/source/irods/path/image.png";
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ "/" + testDir);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + testDir);
 		File workingDirAsFile = new File(absPath);
 
 		ClassLoader loader = this.getClass().getClassLoader();
 		InputStream sourceStream = loader.getResourceAsStream(IMAGE_FILE_NAME);
 
-		InputStreamReader testInput = new InputStreamReader(
-				new Base64InputStream(sourceStream, true));
+		InputStreamReader testInput = new InputStreamReader(new Base64InputStream(sourceStream, true));
 
 		// Base64 encoded stream dumped into string
 
@@ -259,52 +221,40 @@ public class ThumbnailServiceImplTest {
 		List<IRODSRuleParameter> outputParms = new ArrayList<IRODSRuleParameter>();
 		IRODSRuleParameter outputParm = new IRODSRuleParameter(fileParam);
 		outputParms.add(outputParm);
-		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms,
-				inputParms, "body");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
 
-		IRODSRuleExecResultOutputParameter outputResultParm = IRODSRuleExecResultOutputParameter
-				.instance(fileParam, OutputParamType.STRING, dataAsString);
+		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms, inputParms, "body",
+				irodsRuleInvocationConfiguration);
+
+		IRODSRuleExecResultOutputParameter outputResultParm = IRODSRuleExecResultOutputParameter.instance(fileParam,
+				OutputParamType.STRING, dataAsString);
 		Map<String, IRODSRuleExecResultOutputParameter> outputResultParms = new HashMap<String, IRODSRuleExecResultOutputParameter>();
 		outputResultParms.put(fileParam, outputResultParm);
 
-		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule,
-				outputResultParms);
+		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule, outputResultParms);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		RuleProcessingAO ruleProcessingAO = Mockito
-				.mock(RuleProcessingAO.class);
-		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class)))
-				.thenReturn(result);
-		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
-				.thenReturn(ruleProcessingAO);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		RuleProcessingAO ruleProcessingAO = Mockito.mock(RuleProcessingAO.class);
+		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class))).thenReturn(result);
+		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount)).thenReturn(ruleProcessingAO);
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(sourceIRODSPath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 		objStat.setCollectionPath(sourceIRODSPath);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(sourceIRODSPath))
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sourceIRODSPath))
 				.thenReturn(objStat);
 
-		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(
-				workingDirAsFile, sourceIRODSPath);
-		actual = thumbnailService.generateThumbnailForIRODSPathViaRule(
-				workingDirAsFile, sourceIRODSPath);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(workingDirAsFile, sourceIRODSPath);
+		actual = thumbnailService.generateThumbnailForIRODSPathViaRule(workingDirAsFile, sourceIRODSPath);
 		Assert.assertNotNull("null file returned", actual);
-		Assert.assertTrue("file does not exist as file", actual.exists()
-				&& actual.isFile());
+		Assert.assertTrue("file does not exist as file", actual.exists() && actual.isFile());
 
 	}
 
@@ -312,22 +262,18 @@ public class ThumbnailServiceImplTest {
 	public void testGenerateThumbnailForIRODSPathNoService() throws Exception {
 
 		/*
-		 * Grab the test image, base64 encode as a string and emulate return
-		 * from iRODS.
+		 * Grab the test image, base64 encode as a string and emulate return from iRODS.
 		 */
 		String testDir = "testGenerateThumbnailForIRODSPathNoService";
 		String sourceIRODSPath = "/source/irods/path/image.png";
 
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH
-						+ "/" + testDir);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + "/" + testDir);
 		File workingDirAsFile = new File(absPath);
 
 		ClassLoader loader = this.getClass().getClassLoader();
 		InputStream sourceStream = loader.getResourceAsStream(IMAGE_FILE_NAME);
 
-		InputStreamReader testInput = new InputStreamReader(
-				new Base64InputStream(sourceStream, true));
+		InputStreamReader testInput = new InputStreamReader(new Base64InputStream(sourceStream, true));
 
 		// Base64 encoded stream dumped into string
 
@@ -354,48 +300,37 @@ public class ThumbnailServiceImplTest {
 		List<IRODSRuleParameter> outputParms = new ArrayList<IRODSRuleParameter>();
 		IRODSRuleParameter outputParm = new IRODSRuleParameter(fileParam);
 		outputParms.add(outputParm);
-		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms,
-				inputParms, "body");
+		RuleInvocationConfiguration irodsRuleInvocationConfiguration = new RuleInvocationConfiguration();
+
+		IRODSRule irodsRule = IRODSRule.instance(testRule, inputParms, inputParms, "body",
+				irodsRuleInvocationConfiguration);
 
 		Map<String, IRODSRuleExecResultOutputParameter> outputResultParms = new HashMap<String, IRODSRuleExecResultOutputParameter>();
 
-		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule,
-				outputResultParms);
+		IRODSRuleExecResult result = IRODSRuleExecResult.instance(irodsRule, outputResultParms);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		RuleProcessingAO ruleProcessingAO = Mockito
-				.mock(RuleProcessingAO.class);
-		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class)))
-				.thenReturn(result);
-		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount))
-				.thenReturn(ruleProcessingAO);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		RuleProcessingAO ruleProcessingAO = Mockito.mock(RuleProcessingAO.class);
+		Mockito.when(ruleProcessingAO.executeRule(Matchers.any(String.class))).thenReturn(result);
+		Mockito.when(irodsAccessObjectFactory.getRuleProcessingAO(irodsAccount)).thenReturn(ruleProcessingAO);
 
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = Mockito
 				.mock(CollectionAndDataObjectListAndSearchAO.class);
-		Mockito.when(
-				irodsAccessObjectFactory
-						.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
+		Mockito.when(irodsAccessObjectFactory.getCollectionAndDataObjectListAndSearchAO(irodsAccount))
 				.thenReturn(collectionAndDataObjectListAndSearchAO);
 
 		ObjStat objStat = new ObjStat();
 		objStat.setAbsolutePath(sourceIRODSPath);
 		objStat.setObjectType(ObjectType.DATA_OBJECT);
 		objStat.setCollectionPath(sourceIRODSPath);
-		Mockito.when(
-				collectionAndDataObjectListAndSearchAO
-						.retrieveObjectStatForPath(sourceIRODSPath))
+		Mockito.when(collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sourceIRODSPath))
 				.thenReturn(objStat);
 
-		ThumbnailService thumbnailService = new ThumbnailServiceImpl(
-				irodsAccessObjectFactory, irodsAccount);
-		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(
-				workingDirAsFile, sourceIRODSPath);
+		ThumbnailService thumbnailService = new ThumbnailServiceImpl(irodsAccessObjectFactory, irodsAccount);
+		File actual = thumbnailService.generateThumbnailForIRODSPathViaRule(workingDirAsFile, sourceIRODSPath);
 		Assert.assertNotNull("null file returned", actual);
-		Assert.assertTrue("file does not exist as file", actual.exists()
-				&& actual.isFile());
+		Assert.assertTrue("file does not exist as file", actual.exists() && actual.isFile());
 
 	}
 }

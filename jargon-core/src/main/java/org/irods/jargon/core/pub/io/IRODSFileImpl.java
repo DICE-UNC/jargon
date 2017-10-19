@@ -1259,7 +1259,6 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#openReadOnly()
 	 */
-	@SuppressWarnings("deprecation")
 	@Override
 	@Deprecated
 	public synchronized int openReadOnly() throws JargonException {

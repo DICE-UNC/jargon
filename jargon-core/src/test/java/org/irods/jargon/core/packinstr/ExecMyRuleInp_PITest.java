@@ -5,7 +5,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
-import org.irods.jargon.core.rule.IRODSRuleTranslator;
+import org.irods.jargon.core.rule.IrodsRuleEngineRuleTranslator;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -26,7 +26,7 @@ public class ExecMyRuleInp_PITest {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
 				.instanceWithDefaultAutoSettings();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				ruleInvocationConfiguration, new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
@@ -38,7 +38,7 @@ public class ExecMyRuleInp_PITest {
 	@Test
 	public void testGetParsedTags() throws Exception {
 		String ruleString = "List Available MS||msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \")|nop\nnull\n ruleExecOut";
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
@@ -93,7 +93,7 @@ public class ExecMyRuleInp_PITest {
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
 				.instanceWithDefaultAutoSettings();
 		String ruleString = ruleBuilder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				ruleInvocationConfiguration, new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 
@@ -144,7 +144,7 @@ public class ExecMyRuleInp_PITest {
 		builder.append("*Condition=RESC_NAME > 'a'\n");
 		builder.append("*GenQOut");
 		String ruleString = builder.toString();
-		AbstractRuleTranslator irodsRuleTranslator = new IRODSRuleTranslator(irodsServerProperties,
+		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
