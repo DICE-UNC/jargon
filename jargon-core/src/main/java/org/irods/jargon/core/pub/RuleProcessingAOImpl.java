@@ -46,6 +46,7 @@ import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.JargonRuleException;
 import org.irods.jargon.core.rule.RuleEngineInstanceChooser;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
+import org.irods.jargon.core.rule.RuleTypeEvaluator;
 import org.irods.jargon.core.transfer.TransferControlBlock;
 import org.irods.jargon.core.utils.Base64;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -109,8 +110,10 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * .lang.String, java.util.List,
 	 * org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType)
 	 * 
-	 * TODO: deprecate and add context method
+	 * @deprecated use method variant that allows specification of the {@link
+	 * RuleInvocationConfiguration}
 	 */
+	@Deprecated
 	@Override
 	public IRODSRuleExecResult executeRuleFromResource(final String resourcePath,
 			final List<IRODSRuleParameter> irodsRuleInputParameters, final RuleProcessingType ruleProcessingType)
@@ -120,11 +123,55 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
 
+		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
+
+		// rule is now a string, run it
+
+		return executeRuleFromResource(resourcePath, irodsRuleInputParameters, ruleInvocationConfiguration);
+
+	}
+
+	@Override
+	public IRODSRuleExecResult executeRuleFromResource(final String resourcePath,
+			final List<IRODSRuleParameter> irodsRuleInputParameters,
+			final RuleInvocationConfiguration ruleInvocationConfiguration)
+			throws DataNotFoundException, JargonException {
+
+		if (resourcePath == null || resourcePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty resourcePath");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
+		}
+
+		// local copy as I may alter the configuration
+
+		RuleInvocationConfiguration copiedRuleInvocationConfiguration = ruleInvocationConfiguration
+				.copyRuleInvocationConfiguration(ruleInvocationConfiguration);
+		if (copiedRuleInvocationConfiguration
+				.getIrodsRuleInvocationTypeEnum() == IrodsRuleInvocationTypeEnum.AUTO_DETECT) {
+			log.info("auto-detecting the rule type via the file path");
+			RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
+			IrodsRuleInvocationTypeEnum typeEnum = ruleTypeEvaluator.detectTypeFromExtension(resourcePath);
+			log.info("evaluated type to be:{}", typeEnum);
+			if (typeEnum != null) {
+				copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(typeEnum);
+			}
+			/*
+			 * if it didn't decide the type it can still try and evaluate by looking at the
+			 * rule text or annotation when it delegates to execute with the ruleString
+			 */
+		}
+
 		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(resourcePath);
 
 		// rule is now a string, run it
 
-		return executeRule(ruleString, irodsRuleInputParameters, ruleProcessingType);
+		return executeRule(ruleString, irodsRuleInputParameters, copiedRuleInvocationConfiguration);
 
 	}
 

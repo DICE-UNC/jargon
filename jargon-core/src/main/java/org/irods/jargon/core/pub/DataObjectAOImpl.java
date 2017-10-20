@@ -61,6 +61,7 @@ import org.irods.jargon.core.query.SpecificQuery;
 import org.irods.jargon.core.query.SpecificQueryResultSet;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.transfer.AbstractRestartManager;
 import org.irods.jargon.core.transfer.DefaultTransferControlBlock;
 import org.irods.jargon.core.transfer.FileRestartInfo;
@@ -2285,9 +2286,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		irodsRuleParameters
 				.add(new IRODSRuleParameter("*DelayInfo", RuleUtils.buildDelayParamForMinutes(delayInMinutes)));
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 
 		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiDataObjReplAsync.r",
-				irodsRuleParameters, RuleProcessingType.EXTERNAL);
+				irodsRuleParameters, ruleInvocationConfiguration);
 		log.info("result of action:{}", result.getRuleExecOut().trim());
 
 	}
@@ -3990,8 +3994,11 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		try {
+			RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+					.instanceWithDefaultAutoSettings(this.getJargonProperties());
+			ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 			IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/trimDataObject.r",
-					irodsRuleParameters, RuleProcessingType.EXTERNAL);
+					irodsRuleParameters, ruleInvocationConfiguration);
 			log.info("result of action:{}", result.getRuleExecOut().trim());
 		} catch (ResourceDoesNotExistException e) {
 			log.error("resource does not exist, rethrow as datanotfound for method contract post 4.1", e);

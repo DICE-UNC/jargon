@@ -103,6 +103,34 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 			RuleProcessingType ruleProcessingType) throws DataNotFoundException, JargonException;
 
 	/**
+	 * Given a rule file that exists as a resource at a given path visible to the
+	 * class loader. This will be a rule file that will be executed. The input
+	 * parameters passed in can be used to override parameters discovered in the
+	 * rule body.
+	 * <p>
+	 * The rule will be run based on the default values in the given rule,
+	 * overridden by any values passed in as an input parameter.
+	 *
+	 * @param resourcePath
+	 *            {@code String} that will be a path from which the resource will be
+	 *            loaded, using the rules associated with
+	 *            {@code Class.getResourceAsStream(String)}.
+	 * @param irodsRuleInputParameters
+	 *            {@code List} of {@link IRODSRuleParameter} with overrides to
+	 *            parameters defined in the rule file. This can be set to
+	 *            {@code null} if no overrides are needed.
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} that describes the rule type
+	 *            and processing parameters, including the rule engine instance it
+	 *            relates to
+	 * @return {@link IRODSRuleExecResult}
+	 * @throws DataNotFoundException
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleFromResource(String resourcePath, List<IRODSRuleParameter> irodsRuleInputParameters,
+			RuleInvocationConfiguration ruleInvocationConfiguration) throws DataNotFoundException, JargonException;
+
+	/**
 	 * Given a rule file that exists as an iRODS file. This will be a rule file that
 	 * will be executed. The input parameters passed in can be used to override
 	 * parameters discovered in the rule body.
@@ -210,8 +238,8 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 *             if iRODS processing resulted in an error.
 	 */
-	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides, final RuleInvocationConfiguration ruleInvocationConfiguration)
-			throws JargonRuleException, JargonException;
+	IRODSRuleExecResult executeRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException;
 
 	/**
 	 * Delete selected rule from the delayed execution queue.

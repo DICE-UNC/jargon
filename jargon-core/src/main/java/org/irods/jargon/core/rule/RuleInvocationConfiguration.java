@@ -114,6 +114,7 @@ public class RuleInvocationConfiguration {
 		copy.setIrodsRuleInvocationTypeEnum(ruleInvocationConfiguration.getIrodsRuleInvocationTypeEnum());
 		copy.setRuleEngineSpecifier(ruleInvocationConfiguration.getRuleEngineSpecifier());
 		copy.setRuleProcessingType(ruleInvocationConfiguration.getRuleProcessingType());
+		copy.setEncodeRuleEngineInstance(ruleInvocationConfiguration.encodeRuleEngineInstance);
 		return copy;
 
 	}
