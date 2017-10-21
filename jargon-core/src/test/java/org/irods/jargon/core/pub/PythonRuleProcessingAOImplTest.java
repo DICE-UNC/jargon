@@ -17,7 +17,6 @@ import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import junit.framework.Assert;
@@ -65,8 +64,13 @@ public class PythonRuleProcessingAOImplTest {
 
 	}
 
-	@Ignore // FIXME: get this to work
+	@Test
 	public void testPythonRuleAsStringWithPythonRuleInvocationSetDirectly() throws Exception {
+
+		if (!testingPropertiesHelper.isTestPythonRules(testingProperties)) {
+			return;
+		}
+
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 

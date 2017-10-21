@@ -57,6 +57,8 @@
 									test.mac.icommand.path=${jargon.test.mac.icommand.path}
 									test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecstream}
 									test.option.exercise.ticket=${jargon.test.option.exercise.ticket}
+									test.option.python=${test.option.python}
+									
 		</echo>
 							</tasks>
 						</configuration>

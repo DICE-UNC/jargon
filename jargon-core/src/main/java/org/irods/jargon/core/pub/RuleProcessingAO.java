@@ -145,6 +145,32 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            {@code List} of {@link IRODSRuleParameter} with overrides to
 	 *            parameters defined in the rule file. This can be set to
 	 *            {@code null} if no overrides are needed.
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} that describes the rule type
+	 *            and processing parameters, including the rule engine instance it
+	 *            relates to
+	 * @return {@link IRODSRuleExecResult}
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleFromIRODSFile(String ruleFileAbsolutePath,
+			List<IRODSRuleParameter> irodsRuleInputParameters, RuleInvocationConfiguration ruleInvocationConfiguration)
+			throws JargonException;
+
+	/**
+	 * Given a rule file that exists as an iRODS file. This will be a rule file that
+	 * will be executed. The input parameters passed in can be used to override
+	 * parameters discovered in the rule body.
+	 * <p>
+	 * The rule will be run based on the default values in the given rule,
+	 * overridden by any values passed in as an input parameter.
+	 *
+	 * @param ruleFileAbsolutePath
+	 *            {@code String} with the absolute path to a file in iRODS
+	 *            containing the rule
+	 * @param irodsRuleInputParameters
+	 *            {@code List} of {@link IRODSRuleParameter} with overrides to
+	 *            parameters defined in the rule file. This can be set to
+	 *            {@code null} if no overrides are needed.
 	 * @param ruleProcessingType
 	 *            {@link RuleProcessingAO.RuleProcessingType} that describes how
 	 *            parameters are resolved (@internal, @external, classic for rules

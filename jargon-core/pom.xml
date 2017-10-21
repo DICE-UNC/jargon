@@ -52,7 +52,6 @@
 								<property name="package.dir" value="org/irods/jargon/core/utils" />
 								<property name="package.name" value="org.irods.jargon.core.utils" />
 								<property name="buildtime" value="${maven.build.timestamp}" />
-
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" message="package ${package.name};${line.separator}" />
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="public final class JargonVersion {${line.separator}" />
 								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${project.version}&quot;;${line.separator}" />
@@ -122,6 +121,7 @@
 									test.option.gsi.user=${test.option.gsi.user}
 									test.option.gsi.file=${test.option.gsi.file}
 									test.option.mount.basedir=${test.option.mount.basedir}
+									test.option.python=${test.option.python}
 								</echo>
 							</tasks>
 						</configuration>

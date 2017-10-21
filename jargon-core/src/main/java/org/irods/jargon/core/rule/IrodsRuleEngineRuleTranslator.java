@@ -55,6 +55,8 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 			throw new IllegalArgumentException("null or empty rule text");
 		}
 
+		super.getRuleInvocationConfiguration().setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.IRODS);
+
 		log.info("translating rule: {}", ruleAsPlainText);
 
 		String trimmedRule = ruleAsPlainText.trim();

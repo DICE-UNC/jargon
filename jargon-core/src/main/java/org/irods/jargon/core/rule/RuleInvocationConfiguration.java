@@ -28,7 +28,7 @@ public class RuleInvocationConfiguration {
 	 * be set to {@code CLASSIC} for classic rules, and {@code EXTERNAL} or
 	 * {@code INTERNAL} for new format rules. This applies to iRODS rules only
 	 */
-	private RuleProcessingType ruleProcessingType = RuleProcessingType.DEFAULT;
+	private RuleProcessingType ruleProcessingType = RuleProcessingType.EXTERNAL;
 
 	/**
 	 * This provides a direct hard-coded identifier for the target rule engine,
@@ -62,7 +62,7 @@ public class RuleInvocationConfiguration {
 	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings() {
 		RuleInvocationConfiguration ruleEngineConfiguration = new RuleInvocationConfiguration();
 		ruleEngineConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
-		ruleEngineConfiguration.setRuleProcessingType(RuleProcessingType.DEFAULT);
+		ruleEngineConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 		return ruleEngineConfiguration;
 	}
 
@@ -165,7 +165,7 @@ public class RuleInvocationConfiguration {
 		}
 		RuleInvocationConfiguration ruleEngineConfiguration = new RuleInvocationConfiguration();
 		ruleEngineConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
-		ruleEngineConfiguration.setRuleProcessingType(RuleProcessingType.DEFAULT);
+		ruleEngineConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 		ruleEngineConfiguration.setEncodeRuleEngineInstance(jargonProperties.isRulesSetDestinationWhenAuto());
 		return ruleEngineConfiguration;
 	}

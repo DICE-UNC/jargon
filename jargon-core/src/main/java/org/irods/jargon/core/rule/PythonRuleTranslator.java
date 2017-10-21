@@ -38,6 +38,7 @@ public class PythonRuleTranslator extends AbstractRuleTranslator {
 		}
 
 		log.info("translating rule: {}", ruleAsPlainText);
+		super.getRuleInvocationConfiguration().setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.PYTHON);
 
 		String trimmedRule = ruleAsPlainText.trim();
 

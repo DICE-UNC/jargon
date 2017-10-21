@@ -128,8 +128,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 				.instanceWithDefaultAutoSettings(this.getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
 
-		// rule is now a string, run it
-
 		return executeRuleFromResource(resourcePath, irodsRuleInputParameters, ruleInvocationConfiguration);
 
 	}
@@ -181,15 +179,57 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 	 * @see org.irods.jargon.core.pub.RuleProcessingAO#executeRuleFromIRODSFile(java
 	 * .lang.String, java.util.List)
 	 * 
-	 * TODO: deprecate and add context method
+	 * @deprecated use method variant that allows specification of the {@link
+	 * RuleInvocationConfiguration}
 	 */
 	@Override
+	@Deprecated
 	public IRODSRuleExecResult executeRuleFromIRODSFile(final String ruleFileAbsolutePath,
 			final List<IRODSRuleParameter> irodsRuleInputParameters, final RuleProcessingType ruleProcessingType)
 			throws JargonException {
 
 		if (ruleFileAbsolutePath == null || ruleFileAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty ruleFileAbsolutePath");
+		}
+
+		log.warn("using default 'AUTO' ruleInvocationConfiguration - consider setting this explicitly");
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+		ruleInvocationConfiguration.setRuleProcessingType(ruleProcessingType);
+		return executeRuleFromIRODSFile(ruleFileAbsolutePath, irodsRuleInputParameters, ruleInvocationConfiguration);
+
+	}
+
+	@Override
+	public IRODSRuleExecResult executeRuleFromIRODSFile(final String ruleFileAbsolutePath,
+			final List<IRODSRuleParameter> irodsRuleInputParameters,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonException {
+
+		if (ruleFileAbsolutePath == null || ruleFileAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleFileAbsolutePath");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
+		}
+
+		// local copy as I may alter the configuration
+
+		RuleInvocationConfiguration copiedRuleInvocationConfiguration = ruleInvocationConfiguration
+				.copyRuleInvocationConfiguration(ruleInvocationConfiguration);
+		if (copiedRuleInvocationConfiguration
+				.getIrodsRuleInvocationTypeEnum() == IrodsRuleInvocationTypeEnum.AUTO_DETECT) {
+			log.info("auto-detecting the rule type via the file path");
+			RuleTypeEvaluator ruleTypeEvaluator = new RuleTypeEvaluator();
+			IrodsRuleInvocationTypeEnum typeEnum = ruleTypeEvaluator.detectTypeFromExtension(ruleFileAbsolutePath);
+			log.info("evaluated type to be:{}", typeEnum);
+			if (typeEnum != null) {
+				copiedRuleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(typeEnum);
+			}
+			/*
+			 * if it didn't decide the type it can still try and evaluate by looking at the
+			 * rule text or annotation when it delegates to execute with the ruleString
+			 */
 		}
 
 		IRODSFileReader irodsFileReader = getIRODSFileFactory().instanceIRODSFileReader(ruleFileAbsolutePath);
@@ -224,7 +264,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 
 		// rule is now a string, run it
 
-		return executeRule(ruleString, irodsRuleInputParameters, ruleProcessingType);
+		return executeRule(ruleString, irodsRuleInputParameters, copiedRuleInvocationConfiguration);
 
 	}
 

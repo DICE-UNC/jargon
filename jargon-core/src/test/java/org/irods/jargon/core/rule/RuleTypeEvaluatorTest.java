@@ -1,5 +1,6 @@
 package org.irods.jargon.core.rule;
 
+import org.irods.jargon.core.utils.LocalFileUtils;
 import org.junit.Test;
 
 import junit.framework.Assert;
@@ -80,6 +81,14 @@ public class RuleTypeEvaluatorTest {
 		RuleTypeEvaluator detector = new RuleTypeEvaluator();
 		String ruleText = "# @RuleEngine=\"   IRODS   \"     ";
 		IrodsRuleInvocationTypeEnum actual = detector.detectTypeFromRuleTextAnnotation(ruleText);
+		Assert.assertEquals(IrodsRuleInvocationTypeEnum.IRODS, actual);
+	}
+
+	@Test
+	public void testDetectIrodsNewFormatWithExternal() throws Exception {
+		RuleTypeEvaluator detector = new RuleTypeEvaluator();
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString("/rules/rulemsiGetIcatTimeWithExternal.r");
+		IrodsRuleInvocationTypeEnum actual = detector.guessRuleLanguageType(ruleString);
 		Assert.assertEquals(IrodsRuleInvocationTypeEnum.IRODS, actual);
 	}
 

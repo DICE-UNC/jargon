@@ -213,6 +213,7 @@ public class RuleCompositionServiceImplTest {
 		for (IRODSRuleParameter parm : rule.getOutputParameters()) {
 			outputParameters.add(parm.getUniqueName());
 		}
+
 		IRODSRuleExecResult execResult = ruleCompositionService.executeRuleFromParts(rule.getRuleBody(),
 				inputParameters, outputParameters);
 

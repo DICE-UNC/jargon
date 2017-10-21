@@ -398,9 +398,11 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 		String ruleAsString = buildRuleStringFromParts(ruleBody, inputParameters, outputParameters);
 
 		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory.getRuleProcessingAO(getIrodsAccount());
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(this.irodsAccessObjectFactory.getJargonProperties());
 
 		log.info("getting ready to submit rule:{}", ruleAsString);
-		return ruleProcessingAO.executeRule(ruleAsString);
+		return ruleProcessingAO.executeRule(ruleAsString, null, ruleInvocationConfiguration);
 
 	}
 
