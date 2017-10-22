@@ -268,6 +268,56 @@ public class RuleProcessingAOImplTest {
 	}
 
 	@Test
+	public void testExecuteRuleFromResourceWithExternalAnnotation() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			return;
+		}
+
+		String ruleFile = "/rules/rulemsiGetIcatTimeWithExternal.r";
+
+		// place a test file to checksum
+
+		String testFileName = "testExecuteRuleFromResourceWithExternalAnnotation2.txt";
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
+
+		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
+		File localFile = new File(localFileName);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(targetIrodsFile);
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+
+		// override the file name for *dataObject
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(irodsFileSystem.getJargonProperties());
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(ruleFile, inputOverrides,
+				ruleInvocationConfiguration);
+		String execOut = result.getOutputParameterResults().get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+		Assert.assertNotNull("null execOut", execOut);
+
+	}
+
+	@Test
 	public void testExecuteRuleFromResourceWithOverridesSpecifyIrods() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);

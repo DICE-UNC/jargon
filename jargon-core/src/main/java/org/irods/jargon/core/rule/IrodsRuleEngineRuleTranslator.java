@@ -25,7 +25,7 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 
 	/**
 	 * Default constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsServerProperties
 	 *            {@link IRODSServerProperties} of the connected grid
 	 * @param ruleInvocationConfiguration
@@ -106,7 +106,7 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 			}
 
 			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
-					ruleCharacteristics.getRuleBody(), this.getRuleInvocationConfiguration());
+					ruleCharacteristics.getRuleBody(), getRuleInvocationConfiguration());
 		} else {
 			log.info("parsing in old format");
 			if (tokenLines.size() < 3) {
@@ -127,7 +127,7 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 			outputParameters = processRuleOutputAttributesLine(tokenLines.get(tokenLines.size() - 1));
 
 			irodsRule = IRODSRule.instance(ruleAsPlainText, inputParameters, outputParameters,
-					processRuleBodyOldFormat(tokenLines), this.getRuleInvocationConfiguration());
+					processRuleBodyOldFormat(tokenLines), getRuleInvocationConfiguration());
 
 		}
 
@@ -184,21 +184,30 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 			// ok
 			log.debug("verified as new format");
 		} else {
-			log.error("new format rules not supported by iRODS version:{}", this.getIrodsServerProperties());
+			log.error("new format rules not supported by iRODS version:{}", getIrodsServerProperties());
 			throw new OperationNotSupportedByThisServerException("new rule format not supported in this irods version");
 		}
 
 		String parsedRule;
-		if (this.getRuleInvocationConfiguration().getRuleProcessingType() == RuleProcessingType.INTERNAL) {
-			log.debug("adding @internal to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
-			bodyWithExtern.append(total);
-			parsedRule = bodyWithExtern.toString();
+		if (getRuleInvocationConfiguration().getRuleProcessingType() == RuleProcessingType.INTERNAL) {
+			if (total.indexOf("@internal") == -1) {
+				log.debug("adding @internal to the rule body");
+				StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
+				bodyWithExtern.append(total);
+				parsedRule = bodyWithExtern.toString();
+			} else {
+				parsedRule = total.toString();
+			}
 		} else {
-			log.debug("adding @external to the rule body");
-			StringBuilder bodyWithExtern = new StringBuilder("@external\n");
-			bodyWithExtern.append(total);
-			parsedRule = bodyWithExtern.toString();
+			if (total.indexOf("@external") == -1) {
+
+				log.debug("adding @external to the rule body");
+				StringBuilder bodyWithExtern = new StringBuilder("@external\n");
+				bodyWithExtern.append(total);
+				parsedRule = bodyWithExtern.toString();
+			} else {
+				parsedRule = total.toString();
+			}
 		}
 
 		// find the rule

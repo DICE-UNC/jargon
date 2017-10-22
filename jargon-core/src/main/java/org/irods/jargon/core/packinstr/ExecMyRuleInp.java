@@ -9,7 +9,6 @@ import java.util.List;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
-import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,7 +52,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	private final String host;
 	private final int port;
 	private final String zone;
-	private final RuleInvocationConfiguration ruleInvocationConfiguration;
 
 	private static final Logger log = LoggerFactory.getLogger(ExecMyRuleInp.class);
 
@@ -69,15 +67,12 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *            {@code int} giving the port of the remote host. Set to 0 if unused
 	 * @param zone
 	 *            {@code String} giving the zone the rule should execute on.
-	 * @param ruleInvocationConfiguration
-	 *            {@link RuleInvocation
 	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
 	 */
 	public static final ExecMyRuleInp instanceWithRemoteAttributes(final IRODSRule irodsRule, final String host,
-			final int port, final String zone, final RuleInvocationConfiguration ruleInvocationConfiguration)
-			throws JargonException {
-		return new ExecMyRuleInp(irodsRule, host, port, zone, ruleInvocationConfiguration);
+			final int port, final String zone) throws JargonException {
+		return new ExecMyRuleInp(irodsRule, host, port, zone);
 	}
 
 	/**
@@ -85,14 +80,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param irodsRule
 	 *            {@link org.irods.jargon.core.rule.IRODSRule}
-	 * @param ruleInvocationConfiguration
-	 *            {@link RuleInvocation
 	 * @return {@link ExecMyRuleInp}
 	 * @throws JargonException
 	 */
-	public static final ExecMyRuleInp instance(final IRODSRule irodsRule,
-			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonException {
-		return new ExecMyRuleInp(irodsRule, "", 0, "", ruleInvocationConfiguration);
+	public static final ExecMyRuleInp instance(final IRODSRule irodsRule) throws JargonException {
+		return new ExecMyRuleInp(irodsRule, "", 0, "");
 	}
 
 	/**
@@ -107,24 +99,15 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	 *            <code>int</code> with an optional irods port for remote execution
 	 * @param zone
 	 *            <code>String</code> with an optional zone for remote execution
-	 * @param ruleInvocationConfiguration
-	 *            {@link RuleInvocationConfiguration} with information on the target
-	 *            rule engine
 	 */
-	private ExecMyRuleInp(final IRODSRule irodsRule, final String host, final int port, final String zone,
-			final RuleInvocationConfiguration ruleInvocationConfiguration) {
+	private ExecMyRuleInp(final IRODSRule irodsRule, final String host, final int port, final String zone) {
 		super();
 
 		if (irodsRule == null) {
 			throw new IllegalArgumentException("null IRODS rule");
 		}
 
-		if (ruleInvocationConfiguration == null) {
-			throw new IllegalArgumentException("null ruleInvocationConfiguration");
-		}
-
 		this.irodsRule = irodsRule;
-		this.ruleInvocationConfiguration = ruleInvocationConfiguration;
 
 		// see if this is a remote execution. If a host is supplied, then port
 		// and zone must be
@@ -158,10 +141,11 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 	public Tag getTagValue() throws JargonException {
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
-		if (!ruleInvocationConfiguration.getRuleEngineSpecifier().isEmpty()) {
-			log.debug("adding rule engine instance:{}", ruleInvocationConfiguration.getRuleEngineSpecifier());
-			kvps.add(
-					KeyValuePair.instance(RULE_INSTANCE_NAME_KW, ruleInvocationConfiguration.getRuleEngineSpecifier()));
+		if (!irodsRule.getRuleInvocationConfiguration().getRuleEngineSpecifier().isEmpty()) {
+			log.debug("adding rule engine instance:{}",
+					irodsRule.getRuleInvocationConfiguration().getRuleEngineSpecifier());
+			kvps.add(KeyValuePair.instance(RULE_INSTANCE_NAME_KW,
+					irodsRule.getRuleInvocationConfiguration().getRuleEngineSpecifier()));
 		}
 
 		final Tag message = new Tag(PI_TAG,
@@ -244,10 +228,6 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		return sb.toString();
 	}
 
-	public RuleInvocationConfiguration getRuleInvocationConfiguration() {
-		return ruleInvocationConfiguration;
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -262,9 +242,7 @@ public final class ExecMyRuleInp extends AbstractIRODSPackingInstruction {
 		if (zone != null) {
 			builder.append("zone=").append(zone).append(", ");
 		}
-		if (ruleInvocationConfiguration != null) {
-			builder.append("ruleInvocationConfiguration=").append(ruleInvocationConfiguration);
-		}
+
 		builder.append("]");
 		return builder.toString();
 	}

@@ -406,6 +406,40 @@ public class RuleCompositionServiceImpl extends AbstractJargonService implements
 
 	}
 
+	@Override
+	public IRODSRuleExecResult executeRuleFromParts(final String ruleBody, final List<String> inputParameters,
+			final List<String> outputParameters, final RuleInvocationConfiguration ruleInvocationConfiguration)
+			throws JargonException {
+
+		if (ruleBody == null || ruleBody.isEmpty()) {
+			throw new IllegalArgumentException("null or empty ruleBody");
+		}
+
+		if (inputParameters == null) {
+			throw new IllegalArgumentException("null inputParameters");
+		}
+
+		if (outputParameters == null) {
+			throw new IllegalArgumentException("null outputParameters");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
+		}
+
+		log.info("ruleBody:{}", ruleBody);
+		log.info("inputParameters:{}", inputParameters);
+		log.info("outputParameters:{}", outputParameters);
+
+		String ruleAsString = buildRuleStringFromParts(ruleBody, inputParameters, outputParameters);
+
+		RuleProcessingAO ruleProcessingAO = irodsAccessObjectFactory.getRuleProcessingAO(getIrodsAccount());
+
+		log.info("getting ready to submit rule:{}", ruleAsString);
+		return ruleProcessingAO.executeRule(ruleAsString, null, ruleInvocationConfiguration);
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 

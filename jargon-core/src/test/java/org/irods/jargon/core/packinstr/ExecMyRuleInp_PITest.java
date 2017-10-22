@@ -29,7 +29,7 @@ public class ExecMyRuleInp_PITest {
 		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				ruleInvocationConfiguration, new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
-		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		Assert.assertNotNull("basic check fails, null returned from PI initializer", rulePI);
 		Assert.assertEquals("api number not set", ExecMyRuleInp.RULE_API_NBR, rulePI.getApiNumber());
 
@@ -41,9 +41,8 @@ public class ExecMyRuleInp_PITest {
 		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
-		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings();
-		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+
+		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -97,7 +96,7 @@ public class ExecMyRuleInp_PITest {
 				ruleInvocationConfiguration, new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
 
-		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();
@@ -147,9 +146,7 @@ public class ExecMyRuleInp_PITest {
 		AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(irodsServerProperties,
 				RuleInvocationConfiguration.instanceWithDefaultAutoSettings(), new SettableJargonProperties());
 		IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIRODSRule(ruleString);
-		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-				.instanceWithDefaultAutoSettings();
-		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		ExecMyRuleInp rulePI = ExecMyRuleInp.instance(irodsRule);
 		String outputXML = rulePI.getParsedTags();
 
 		StringBuilder sb = new StringBuilder();

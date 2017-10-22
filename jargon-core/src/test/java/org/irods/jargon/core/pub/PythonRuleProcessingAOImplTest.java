@@ -60,8 +60,115 @@ public class PythonRuleProcessingAOImplTest {
 	}
 
 	@Test
-	public void dummy() {
+	public void testPythonRuleAsStringWithPythonRuleInvocationAuto() throws Exception {
 
+		if (!testingPropertiesHelper.isTestPythonRules(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2")) {
+			return;
+		}
+
+		String ruleFile = "/python-rules/pyfilecountNoExternal.py";
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(ruleFile);
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		RuleInvocationConfiguration ruleInvocationConfiguration = new RuleInvocationConfiguration();
+		ruleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
+		ruleInvocationConfiguration.setEncodeRuleEngineInstance(true);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString, inputOverrides,
+				ruleInvocationConfiguration);
+
+		String execOut = result.getOutputParameterResults().get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+		Assert.assertNotNull("null execOut", execOut);
+	}
+
+	@Test
+	public void testPythonRuleAsStringWithPythonRuleInvocationAutoByFileType() throws Exception {
+
+		if (!testingPropertiesHelper.isTestPythonRules(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2")) {
+			return;
+		}
+
+		String ruleFile = "/python-rules/pyfilecountNoExternal.py";
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		RuleInvocationConfiguration ruleInvocationConfiguration = new RuleInvocationConfiguration();
+		ruleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.AUTO_DETECT);
+		ruleInvocationConfiguration.setEncodeRuleEngineInstance(true);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(ruleFile, inputOverrides,
+				ruleInvocationConfiguration);
+
+		String execOut = result.getOutputParameterResults().get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+		Assert.assertNotNull("null execOut", execOut);
+	}
+
+	@Test
+	public void testPythonRuleAsStringWithPythonRuleInvocationSetDirectlyNoExternal() throws Exception {
+
+		if (!testingPropertiesHelper.isTestPythonRules(testingProperties)) {
+			return;
+		}
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2")) {
+			return;
+		}
+
+		String ruleFile = "/python-rules/pyfilecountNoExternal.py";
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String ruleString = LocalFileUtils.getClasspathResourceFileAsString(ruleFile);
+
+		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
+
+		List<IRODSRuleParameter> inputOverrides = new ArrayList<IRODSRuleParameter>();
+		inputOverrides.add(new IRODSRuleParameter("*Path", '\'' + targetIrodsCollection + '\''));
+		RuleInvocationConfiguration ruleInvocationConfiguration = new RuleInvocationConfiguration();
+		ruleInvocationConfiguration.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.PYTHON);
+		ruleInvocationConfiguration.setEncodeRuleEngineInstance(true);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString, inputOverrides,
+				ruleInvocationConfiguration);
+
+		String execOut = result.getOutputParameterResults().get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
+				.toString();
+		Assert.assertNotNull("null execOut", execOut);
 	}
 
 	@Test

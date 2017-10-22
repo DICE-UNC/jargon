@@ -34,13 +34,11 @@ import org.irods.jargon.core.query.IRODSQueryResultRow;
 import org.irods.jargon.core.query.IRODSQueryResultSetInterface;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.RodsGenQueryEnum;
-import org.irods.jargon.core.rule.AbstractRuleTranslator;
 import org.irods.jargon.core.rule.IRODSRule;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter;
 import org.irods.jargon.core.rule.IRODSRuleExecResultOutputParameter.OutputParamType;
 import org.irods.jargon.core.rule.IRODSRuleParameter;
-import org.irods.jargon.core.rule.IrodsRuleEngineRuleTranslator;
 import org.irods.jargon.core.rule.IrodsRuleFactory;
 import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.JargonRuleException;
@@ -289,7 +287,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 
@@ -310,7 +308,6 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		if (ruleInvocationConfiguration == null) {
 			throw new IllegalArgumentException("null ruleInvocationConfiguration()");
 		}
-
 		log.info("executing rule: {}", irodsRuleAsString);
 		log.info("with configuration:{}", ruleInvocationConfiguration);
 		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
@@ -318,7 +315,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
 				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 
@@ -343,11 +340,11 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		// tolerate null inputParameterOverrides
 
 		log.info("executing rule: {}", irodsRuleAsString);
-		final AbstractRuleTranslator irodsRuleTranslator = new IrodsRuleEngineRuleTranslator(getIRODSServerProperties(),
-				ruleInvocationConfiguration, this.getJargonProperties());
-
-		final IRODSRule irodsRule = irodsRuleTranslator.translatePlainTextRuleIntoIrodsRule(irodsRuleAsString,
-				inputParameterOverrides);
+		log.info("with configuration:{}", ruleInvocationConfiguration);
+		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
+				this.getIRODSAccount());
+		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, inputParameterOverrides,
+				ruleInvocationConfiguration);
 		log.debug("translated rule: {}", irodsRule);
 
 		log.debug("decorating the rule with the appropriate rule engine instance");
@@ -355,7 +352,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 				this.getIRODSServerProperties());
 		ruleEngineInstanceChooser.decorateRuleInvocationConfugurationWithRuleEngineInstance(irodsRule);
 
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule, ruleInvocationConfiguration);
+		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
 		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
 		log.debug("response from rule exec: {}", response.parseTag());
 

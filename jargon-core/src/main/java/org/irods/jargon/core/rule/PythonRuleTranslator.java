@@ -11,6 +11,7 @@ import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
+import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,11 +120,33 @@ public class PythonRuleTranslator extends AbstractRuleTranslator {
 			total.append("\n");
 		}
 
+		String parsedRule;
+		if (getRuleInvocationConfiguration().getRuleProcessingType() == RuleProcessingType.INTERNAL) {
+			if (total.indexOf("@internal") == -1) {
+				log.debug("adding @internal to the rule body");
+				StringBuilder bodyWithExtern = new StringBuilder("@internal\n");
+				bodyWithExtern.append(total);
+				parsedRule = bodyWithExtern.toString();
+			} else {
+				parsedRule = total.toString();
+			}
+		} else {
+			if (total.indexOf("@external") == -1) {
+
+				log.debug("adding @external to the rule body");
+				StringBuilder bodyWithExtern = new StringBuilder("@external\n");
+				bodyWithExtern.append(total);
+				parsedRule = bodyWithExtern.toString();
+			} else {
+				parsedRule = total.toString();
+			}
+		}
+
 		RuleCharacteristics ruleCharacteristics = new RuleCharacteristics();
 		ruleCharacteristics.setInputLineIndex(tokenInput);
 		ruleCharacteristics.setOutputLineIndex(tokenOutput);
 		ruleCharacteristics.setLastLineOfBody(lastRowOfRule);
-		ruleCharacteristics.setRuleBody(total.toString());
+		ruleCharacteristics.setRuleBody(parsedRule);
 
 		return ruleCharacteristics;
 	}
