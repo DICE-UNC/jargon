@@ -20,6 +20,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Protocol API identifier for gen admin operations
 	 */
 	public static final int GEN_ADMIN_INP_API_NBR = 701;
+	public static final int GROUP_ADMIN_INP_API_NBR = 714;
 
 	public static final String ARG0 = "arg0";
 	public static final String ARG1 = "arg1";
@@ -49,8 +50,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * iRODS.
 	 * <p>
 	 * Note that the user DN is not updated in this call, as there appears to be
-	 * bug where it gets truncated. The {@code UserAO} methods will instead
-	 * add a call to the equivalent of 'iadmin aua' to insert the user DN. See
+	 * bug where it gets truncated. The {@code UserAO} methods will instead add
+	 * a call to the equivalent of 'iadmin aua' to insert the user DN. See
 	 * comments for that class.
 	 *
 	 * @param user
@@ -58,8 +59,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            iRODS.
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForAddUser(final User user)
-			throws JargonException {
+	public static GeneralAdminInp instanceForAddUser(final User user) throws JargonException {
 
 		if (user == null) {
 			throw new JargonException("null user");
@@ -73,9 +73,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("unknown user type");
 		}
 
-		return new GeneralAdminInp("add", "user", user.getName(), user
-				.getUserType().getTextValue(), "", "", BLANK, BLANK, BLANK,
-				BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("add", "user", user.getName(), user.getUserType().getTextValue(), "", "", BLANK,
+				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -89,8 +88,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserComment(
-			final String userName, final String comment) throws JargonException {
+	public static GeneralAdminInp instanceForModifyUserComment(final String userName, final String comment)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("null or missing user name");
@@ -100,8 +99,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null comment");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "comment",
-				comment, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new GeneralAdminInp("modify", "user", userName, "comment", comment, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
 
@@ -116,8 +114,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserInfo(
-			final String userName, final String info) throws JargonException {
+	public static GeneralAdminInp instanceForModifyUserInfo(final String userName, final String info)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("null or missing user name");
@@ -127,8 +125,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null comment");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "info", info,
-				BLANK, BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("modify", "user", userName, "info", info, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -139,15 +137,14 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForDeleteUser(final String userName)
-			throws JargonException {
+	public static GeneralAdminInp instanceForDeleteUser(final String userName) throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
 		}
 
-		return new GeneralAdminInp("rm", "user", userName, BLANK, BLANK, BLANK,
-				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("rm", "user", userName, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -156,13 +153,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the user name
 	 * @param quotaValue
-	 *            {@code long} with the total (across resources) quota
-	 *            value
+	 *            {@code long} with the total (across resources) quota value
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForSetUserQuotaTotal(
-			final String userName, final long quotaValue)
+	public static GeneralAdminInp instanceForSetUserQuotaTotal(final String userName, final long quotaValue)
 			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
@@ -170,13 +165,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException(
-					"quota value is less than or equal to zero");
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
 		}
 
-		return new GeneralAdminInp("set-quota", "user", userName, "total",
-				String.valueOf(quotaValue), BLANK, BLANK, BLANK, BLANK, BLANK,
-				GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("set-quota", "user", userName, "total", String.valueOf(quotaValue), BLANK, BLANK,
+				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -189,8 +182,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(
-			final String userGroupName, final long quotaValue)
+	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(final String userGroupName, final long quotaValue)
 			throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
@@ -198,13 +190,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException(
-					"quota value is less than or equal to zero");
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
 		}
 
-		return new GeneralAdminInp("set-quota", "group", userGroupName,
-				"total", String.valueOf(quotaValue), BLANK, BLANK, BLANK,
-				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("set-quota", "group", userGroupName, "total", String.valueOf(quotaValue), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -218,8 +208,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForSetUserQuotaForResource(
-			final String userName, final String resourceName,
+	public static GeneralAdminInp instanceForSetUserQuotaForResource(final String userName, final String resourceName,
 			final long quotaValue) throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
@@ -231,13 +220,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException(
-					"quota value is less than or equal to zero");
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
 		}
 
-		return new GeneralAdminInp("set-quota", "user", userName, resourceName,
-				String.valueOf(quotaValue), BLANK, BLANK, BLANK, BLANK, BLANK,
-				GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("set-quota", "user", userName, resourceName, String.valueOf(quotaValue), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -252,9 +239,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForSetUserGroupQuotaForResource(
-			final String userGroupName, final String resourceName,
-			final long quotaValue) throws JargonException {
+	public static GeneralAdminInp instanceForSetUserGroupQuotaForResource(final String userGroupName,
+			final String resourceName, final long quotaValue) throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userGroupName");
@@ -265,13 +251,11 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (quotaValue <= 0) {
-			throw new IllegalArgumentException(
-					"quota value is less than or equal to zero");
+			throw new IllegalArgumentException("quota value is less than or equal to zero");
 		}
 
-		return new GeneralAdminInp("set-quota", "group", userGroupName,
-				resourceName, String.valueOf(quotaValue), BLANK, BLANK, BLANK,
-				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("set-quota", "group", userGroupName, resourceName, String.valueOf(quotaValue), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -280,10 +264,9 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForCalculateQuotaUsage()
-			throws JargonException {
-		return new GeneralAdminInp("calculate-usage", BLANK, BLANK, BLANK,
-				BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+	public static GeneralAdminInp instanceForCalculateQuotaUsage() throws JargonException {
+		return new GeneralAdminInp("calculate-usage", BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -297,8 +280,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserZone(
-			final String userName, final String zone) throws JargonException {
+	public static GeneralAdminInp instanceForModifyUserZone(final String userName, final String zone)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -308,8 +291,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("zone is null");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "zone", zone,
-				BLANK, BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("modify", "user", userName, "zone", zone, BLANK, BLANK, BLANK, BLANK, BLANK,
+				GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -323,8 +306,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserDN(
-			final String userName, final String userDN) throws JargonException {
+	public static GeneralAdminInp instanceForModifyUserDN(final String userName, final String userDN)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -334,8 +317,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("user dn is null or empty");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "addAuth",
-				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new GeneralAdminInp("modify", "user", userName, "addAuth", userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
 
@@ -350,8 +332,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForRemoveUserDN(
-			final String userName, final String userDN) throws JargonException {
+	public static GeneralAdminInp instanceForRemoveUserDN(final String userName, final String userDN)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -361,8 +343,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("user dn is null or empty");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "rmAuth",
-				userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new GeneralAdminInp("modify", "user", userName, "rmAuth", userDN, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
 
@@ -377,8 +358,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(
-			final String userName, final String password)
+	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(final String userName, final String password)
 			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
@@ -389,8 +369,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("password is null or empty");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "password",
-				password, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new GeneralAdminInp("modify", "user", userName, "password", password, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
 
@@ -405,8 +384,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserPassword(
-			final String userName, final String password)
+	public static GeneralAdminInp instanceForModifyUserPassword(final String userName, final String password)
 			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
@@ -417,8 +395,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("password is null or empty");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "password",
-				password, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new GeneralAdminInp("modify", "user", userName, "password", password, BLANK, BLANK, BLANK, BLANK, BLANK,
 				GEN_ADMIN_INP_API_NBR);
 	}
 
@@ -431,33 +408,29 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForAddUserGroup(
-			final UserGroup userGroup) throws JargonException {
+	public static GeneralAdminInp instanceForAddUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
 			throw new IllegalArgumentException("null userGroup");
 		}
-		return new GeneralAdminInp("add", "user", userGroup.getUserGroupName(),
-				"rodsgroup", userGroup.getZone(), BLANK, BLANK, BLANK, BLANK,
-				BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("add", "user", userGroup.getUserGroupName(), "rodsgroup", userGroup.getZone(), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
 	 * Create the packing instruction to add a user to a given iRODS user group
 	 *
 	 * @param userGroupName
-	 *            {@code String} with the user group name to which the user
-	 *            will be added
+	 *            {@code String} with the user group name to which the user will
+	 *            be added
 	 * @param userName
 	 *            {@code String} user name to add to the group
 	 * @param zoneName
-	 *            {@code String} that is optional (set to blank or
-	 *            {@code null} if not applicable, that sets the zone for
-	 *            the user
+	 *            {@code String} that is optional (set to blank or {@code null}
+	 *            if not applicable, that sets the zone for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForAddUserToGroup(
-			final String userGroupName, final String userName,
+	public static GeneralAdminInp instanceForAddUserToGroup(final String userGroupName, final String userName,
 			final String zoneName) throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
@@ -475,28 +448,25 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			userNameBuilder.append(zoneName.trim());
 		}
 
-		return new GeneralAdminInp("modify", "group", userGroupName.trim(),
-				"add", userNameBuilder.toString(), BLANK, BLANK, BLANK, BLANK,
-				BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("modify", "group", userGroupName.trim(), "add", userNameBuilder.toString(), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
 	 * Create the packing instruction to remove a user from a group
 	 *
 	 * @param userGroupName
-	 *            {@code String} with the user group name from which the
-	 *            user will be removed
+	 *            {@code String} with the user group name from which the user
+	 *            will be removed
 	 * @param userName
 	 *            {@code String} user name to remove
 	 * @param zoneName
-	 *            {@code String} that is optional (set to blank or
-	 *            {@code null} if not applicable, that sets the zone for
-	 *            the user
+	 *            {@code String} that is optional (set to blank or {@code null}
+	 *            if not applicable, that sets the zone for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForRemoveUserFromGroup(
-			final String userGroupName, final String userName,
+	public static GeneralAdminInp instanceForRemoveUserFromGroup(final String userGroupName, final String userName,
 			final String zoneName) throws JargonException {
 
 		if (userGroupName == null || userGroupName.isEmpty()) {
@@ -514,9 +484,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			userNameBuilder.append(zoneName.trim());
 		}
 
-		return new GeneralAdminInp("modify", "group", userGroupName.trim(),
-				"remove", userNameBuilder.toString(), BLANK, BLANK, BLANK,
-				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("modify", "group", userGroupName.trim(), "remove", userNameBuilder.toString(), BLANK,
+				BLANK, BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -527,14 +496,12 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForRemoveUserGroup(
-			final UserGroup userGroup) throws JargonException {
+	public static GeneralAdminInp instanceForRemoveUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
 			throw new IllegalArgumentException("null userGroup");
 		}
-		return new GeneralAdminInp("rm", "user", userGroup.getUserGroupName(),
-				userGroup.getZone(), BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
-				GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("rm", "user", userGroup.getUserGroupName(), userGroup.getZone(), BLANK, BLANK, BLANK,
+				BLANK, BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
 	/**
@@ -549,8 +516,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
 	 */
-	public static GeneralAdminInp instanceForModifyUserType(
-			final String userName, final UserTypeEnum userType)
+	public static GeneralAdminInp instanceForModifyUserType(final String userName, final UserTypeEnum userType)
 			throws JargonException {
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("user name is null or empty");
@@ -564,16 +530,13 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("user type is null");
 		}
 
-		return new GeneralAdminInp("modify", "user", userName, "type",
-				userType.getTextValue(), BLANK, BLANK, BLANK, BLANK, BLANK,
-				GEN_ADMIN_INP_API_NBR);
+		return new GeneralAdminInp("modify", "user", userName, "type", userType.getTextValue(), BLANK, BLANK, BLANK,
+				BLANK, BLANK, GEN_ADMIN_INP_API_NBR);
 	}
 
-	protected GeneralAdminInp(final String arg0, final String arg1,
-			final String arg2, final String arg3, final String arg4,
-			final String arg5, final String arg6, final String arg7,
-			final String arg8, final String arg9, final int apiNumber)
-			throws JargonException {
+	protected GeneralAdminInp(final String arg0, final String arg1, final String arg2, final String arg3,
+			final String arg4, final String arg5, final String arg6, final String arg7, final String arg8,
+			final String arg9, final int apiNumber) throws JargonException {
 		super();
 
 		if (apiNumber <= 0) {
@@ -687,19 +650,17 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#getTagValue
-	 * ()
+	 * @see org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction#
+	 * getTagValue ()
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG0, getArg0()),
-				new Tag(ARG1, getArg1()), new Tag(ARG2, getArg2()),
-				new Tag(ARG3, getArg3()), new Tag(ARG4, getArg4()),
-				new Tag(ARG5, getArg5()), new Tag(ARG6, getArg6()),
-				new Tag(ARG7, getArg7()), new Tag(ARG8, getArg8()),
-				new Tag(ARG9, getArg9()) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(ARG0, getArg0()), new Tag(ARG1, getArg1()), new Tag(ARG2, getArg2()),
+						new Tag(ARG3, getArg3()), new Tag(ARG4, getArg4()), new Tag(ARG5, getArg5()),
+						new Tag(ARG6, getArg6()), new Tag(ARG7, getArg7()), new Tag(ARG8, getArg8()),
+						new Tag(ARG9, getArg9()) });
 
 		return message;
 	}

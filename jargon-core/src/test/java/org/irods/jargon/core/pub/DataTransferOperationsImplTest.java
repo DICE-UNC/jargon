@@ -25,15 +25,15 @@ import org.irods.jargon.core.transfer.TransferStatus;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListener.CallbackResponse;
 import org.irods.jargon.core.transfer.TransferStatusCallbackListenerTestingImplementation;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DataTransferOperationsImplTest {
 
@@ -400,7 +400,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	@Test
-	public void testPutOneFileIntraFileCallbacksTestPutOneFileIntraFileCallbacksSpecified() throws Exception {
+	public void testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr() throws Exception {
 		SettableJargonProperties settableJargonProperties = new SettableJargonProperties(jargonOriginalProperties);
 		settableJargonProperties.setIntraFileStatusCallbacks(true);
 
@@ -572,8 +572,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Get one file, using rerouting of resources. This will only run if
-	 * configured in testing properites, and with a proper test configuration.
+	 * Get one file, using rerouting of resources. This will only run if configured
+	 * in testing properites, and with a proper test configuration.
 	 *
 	 * @throws Exception
 	 */
@@ -1193,8 +1193,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Get a collection to a target directory, one file will be an overwrite,
-	 * and the no force option will cause an exception
+	 * Get a collection to a target directory, one file will be an overwrite, and
+	 * the no force option will cause an exception
 	 *
 	 * @throws Exception
 	 */
@@ -1285,6 +1285,54 @@ public class DataTransferOperationsImplTest {
 
 		File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, returnedData);
+
+	}
+
+	/**
+	 * test of potential error putting to the home dir of a user #262
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void testPutMultipleCollectionsMultipleFilesUnderUserHomeBug262() throws Exception {
+
+		SettableJargonProperties jargonProperties = new SettableJargonProperties();
+		jargonProperties.setSocketRenewalIntervalInSeconds(0);
+		irodsFileSystem.getIrodsSession().setJargonProperties(jargonProperties);
+		String rootCollection = "MultipleFilesUnderUserHomeBug262";
+		String returnedCollection = "MultipleFilesUnderUserHomeBug262Returned";
+		String localCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + rootCollection);
+		String returnedCollectionAbsolutePath = scratchFileUtils
+				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH + '/' + returnedCollection);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		File returnedFile = new File(returnedCollectionAbsolutePath);
+		returnedFile.delete();
+		returnedFile.mkdirs();
+
+		String irodsCollectionRootAbsolutePath = (MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(irodsAccount) + '/'
+				+ rootCollection);
+
+		FileGenerator.generateManyFilesAndCollectionsInParentCollectionByAbsolutePath(localCollectionAbsolutePath,
+				"testPutCollectionWithTwoFiles", 1, 2, 3, "testFile", ".txt", 4, 3, 20, 30);
+
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory.instanceIRODSFile(irodsCollectionRootAbsolutePath);
+		destFile.deleteWithForceOption();
+		destFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		File localFile = new File(localCollectionAbsolutePath);
+
+		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+
+		dataTransferOperationsAO.getOperation(destFile.getAbsolutePath() + "/" + rootCollection,
+				returnedFile.getAbsolutePath(), "", null, null);
+
+		File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
+		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, returnedData);
 	}
 
 	@Test
@@ -1329,8 +1377,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/*
-	 * https://github.com/DICE-UNC/jargon/issues/1 transfer get of file with
-	 * parens and spaces in name gives file not found #1
+	 * https://github.com/DICE-UNC/jargon/issues/1 transfer get of file with parens
+	 * and spaces in name gives file not found #1
 	 */
 	@Test
 	public void testPutThenGetOneFileBug1() throws Exception {
@@ -1449,9 +1497,9 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Create a collection with a few files, then try and put a file that would
-	 * be an overwrite. Force is not specified, so it should be an overwrite
-	 * exception on the transfer
+	 * Create a collection with a few files, then try and put a file that would be
+	 * an overwrite. Force is not specified, so it should be an overwrite exception
+	 * on the transfer
 	 *
 	 * @throws Exception
 	 */
@@ -1507,9 +1555,9 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Create a collection with a few files, then try and put a file that would
-	 * be an overwrite. In this case the callback listener will be asked and
-	 * should answer 'no', causing a skip, not an exception.
+	 * Create a collection with a few files, then try and put a file that would be
+	 * an overwrite. In this case the callback listener will be asked and should
+	 * answer 'no', causing a skip, not an exception.
 	 *
 	 * @throws Exception
 	 */
@@ -1575,9 +1623,9 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Create a collection with a few files, then try and put a file that would
-	 * be an overwrite. In this case the callback listener will be asked and
-	 * should answer 'yes', causing it to force overwrite
+	 * Create a collection with a few files, then try and put a file that would be
+	 * an overwrite. In this case the callback listener will be asked and should
+	 * answer 'yes', causing it to force overwrite
 	 *
 	 * @throws Exception
 	 */
@@ -1643,9 +1691,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Create a collection with a few files, then try and put a file that would
-	 * be an overwrite. Force is specified, so it should be an overwrite the
-	 * file
+	 * Create a collection with a few files, then try and put a file that would be
+	 * an overwrite. Force is specified, so it should be an overwrite the file
 	 *
 	 * @throws Exception
 	 */
@@ -2926,8 +2973,8 @@ public class DataTransferOperationsImplTest {
 
 	/**
 	 * Normal test of consilidated 'copy()' method, this time with a collection,
-	 * using the string path sigs. This will do this twice, simulating an
-	 * overwrite, but I have force turned on
+	 * using the string path sigs. This will do this twice, simulating an overwrite,
+	 * but I have force turned on
 	 *
 	 * @throws Exception
 	 */
@@ -2977,8 +3024,7 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb to noforce option, should just copy the
-	 * file
+	 * Normal copy operation with tcb to noforce option, should just copy the file
 	 *
 	 * @throws Exception
 	 */
@@ -3052,8 +3098,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb, this uses the signature that takes
-	 * strings instead of files
+	 * Normal copy operation with tcb, this uses the signature that takes strings
+	 * instead of files
 	 *
 	 * @throws Exception
 	 */
@@ -3354,8 +3400,8 @@ public class DataTransferOperationsImplTest {
 	}
 
 	/**
-	 * Replication sequence for bug [#1044] Jargon allows the creating of
-	 * folders that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
+	 * Replication sequence for bug [#1044] Jargon allows the creating of folders
+	 * that exceed the USER_PATH_EXCEEDS_MAX and cannot delete them
 	 *
 	 * @throws Exception
 	 */

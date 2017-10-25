@@ -8,8 +8,7 @@
 ## News
 
 
-4.2.0 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/19
+https://github.com/DICE-UNC/jargon/milestone/13
 
 This version of Jargon is currently targeted at Cloud Browser and REST.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
@@ -62,7 +61,4 @@ Enhanced user group and user queries for cloud browser
 #### add col user type to genquery #235
 
 Add user type to LIKE queries to discriminate users from groups in find 'like' queries
-=======
-#### Failures against 4.1.9 with neg require on server executing file.deleteWithForceOption in unit tests. #216
 
-Fixes to flush behavior (related to #224) remaining after a switch to the SSL negotiation communication regime, corrections to behavior of flush() in client status operation send/receive in recursive delete operations

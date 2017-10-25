@@ -1,6 +1,6 @@
 package org.irods.jargon.core.transfer;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.transfer.TransferStatus.TransferState;

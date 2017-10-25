@@ -40,7 +40,6 @@
 		<dependency>
  				<groupId>com.claymoresystems</groupId>
  				<artifactId>puretls</artifactId>
- 				<version>1.1</version>
  				<scope>runtime</scope>
  				<type>jar</type>
  			</dependency>
@@ -62,18 +61,11 @@
 								<property name="package.name" value="org.irods.jargon.core.utils" />
 								<property name="buildtime" value="${maven.build.timestamp}" />
 
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									message="package ${package.name};${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true" message="public final class JargonVersion {${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true"
-									message=" public static String VERSION=&quot;${project.version}&quot;;${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true"
-									message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
-								<echo file="${src.dir}/${package.dir}/JargonVersion.java"
-									append="true" message="}${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" message="package ${package.name};${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="public final class JargonVersion {${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String VERSION=&quot;${project.version}&quot;;${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message=" public static String BUILD_TIME=&quot;${buildtime}&quot;;${line.separator}" />
+								<echo file="${src.dir}/${package.dir}/JargonVersion.java" append="true" message="}${line.separator}" />
 								<echo message="BUILD ${buildtime}" />
 							</tasks>
 						</configuration>
@@ -140,6 +132,7 @@
 									test.option.gsi.user=${test.option.gsi.user}
 									test.option.gsi.file=${test.option.gsi.file}
 									test.option.mount.basedir=${test.option.mount.basedir}
+									test.option.python=${test.option.python}
 								</echo>
 							</tasks>
 						</configuration>

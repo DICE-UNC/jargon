@@ -21,6 +21,8 @@ import org.irods.jargon.core.exception.RemoteScriptExecutionException;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,16 +32,14 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
-		EnvironmentalInfoAO {
+public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements EnvironmentalInfoAO {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(EnvironmentalInfoAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(EnvironmentalInfoAOImpl.class);
 
 	private final EnvironmentalInfoAccessor environmentalInfoAccessor;
 
-	protected EnvironmentalInfoAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected EnvironmentalInfoAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 		environmentalInfoAccessor = new EnvironmentalInfoAccessor(
 				getIRODSSession().currentConnection(getIRODSAccount()));
@@ -52,11 +52,9 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 * getIRODSServerProperties()
 	 */
 	@Override
-	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
-			throws JargonException {
+	public IRODSServerProperties getIRODSServerPropertiesFromIRODSServer() throws JargonException {
 
-		IRODSServerProperties props = environmentalInfoAccessor
-				.getIRODSServerProperties();
+		IRODSServerProperties props = environmentalInfoAccessor.getIRODSServerProperties();
 		return props;
 	}
 
@@ -73,16 +71,16 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 				"getIRODSServerCurrentTime||msiGetSystemTime(*Time,null)##writeLine(stdout, *Time)|nop\n");
 		sb.append("null\n");
 		sb.append("*Time%ruleExecOut");
-		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
-				.getRuleProcessingAO(getIRODSAccount());
-		IRODSRuleExecResult result = ruleProcessingAO
-				.executeRule(sb.toString());
-		String execOut = (String) result.getOutputParameterResults()
-				.get("*Time").getResultObject();
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
+		RuleInvocationConfiguration context = new RuleInvocationConfiguration();
+		context.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.IRODS);
+		context.setEncodeRuleEngineInstance(true);
+
+		IRODSRuleExecResult result = ruleProcessingAO.executeRule(sb.toString(), null, context);
+		String execOut = (String) result.getOutputParameterResults().get("*Time").getResultObject();
 
 		if (execOut == null) {
-			throw new JargonException(
-					"no time returned from time rule execution");
+			throw new JargonException("no time returned from time rule execution");
 		}
 
 		log.debug("rule result:{}", execOut);
@@ -91,9 +89,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		try {
 			timeVal = Long.parseLong(execOut) * 1000;
 		} catch (NumberFormatException nfe) {
-			log.error(
-					"error getting time val from *Time in rule results when results were:{}",
-					result);
+			log.error("error getting time val from *Time in rule results when results were:{}", result);
 			throw new JargonException("error getting time value", nfe);
 		}
 
@@ -104,14 +100,12 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
+	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#isAbleToRunSpecificQuery()
 	 */
 	@Override
 	public boolean isAbleToRunSpecificQuery() throws JargonException {
 
-		if (getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
+		if (getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
 			return true;
 		} else {
 			return false;
@@ -122,12 +116,10 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands
-	 * ()
+	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableRemoteCommands ()
 	 */
 	@Override
-	public List<RemoteCommandInformation> listAvailableRemoteCommands()
-			throws DataNotFoundException, JargonException {
+	public List<RemoteCommandInformation> listAvailableRemoteCommands() throws DataNotFoundException, JargonException {
 		log.info("listAvailableRemoteCommands()");
 		List<RemoteCommandInformation> remoteCommandInformation = new ArrayList<RemoteCommandInformation>();
 
@@ -139,13 +131,10 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 
 		try {
 
-			result = remoteExecutionAO
-					.executeARemoteCommandAndGetStreamGivingCommandNameAndArgs(
-							"listCommands.sh", "");
+			result = remoteExecutionAO.executeARemoteCommandAndGetStreamGivingCommandNameAndArgs("listCommands.sh", "");
 			IOUtils.copy(result, writer, getJargonProperties().getEncoding());
 		} catch (RemoteScriptExecutionException rse) {
-			throw new DataNotFoundException(
-					"no data can be found, listCommands.sh is not installed");
+			throw new DataNotFoundException("no data can be found, listCommands.sh is not installed");
 		} catch (IOException e) {
 			throw new JargonException("IOException processing data", e);
 		} finally {
@@ -178,8 +167,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 			remoteCommandInformationEntry = new RemoteCommandInformation();
 			remoteCommandInformationEntry.setRawData(token);
 			remoteCommandInformationEntry.setCommand(command);
-			remoteCommandInformationEntry.setHostName(getIRODSAccount()
-					.getHost());
+			remoteCommandInformationEntry.setHostName(getIRODSAccount().getHost());
 			remoteCommandInformationEntry.setZone(getIRODSAccount().getZone());
 			remoteCommandInformation.add(remoteCommandInformationEntry);
 		}
@@ -192,8 +180,7 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
+	 * @see org.irods.jargon.core.pub.EnvironmentalInfoAO#listAvailableMicroservices
 	 * ()
 	 */
 	@Override
@@ -201,17 +188,16 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements
 		log.info("listAvailableMicroservices()");
 		List<String> availableMicroservices = new ArrayList<String>();
 
-		if (!getIRODSServerProperties()
-				.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
-			throw new JargonException(
-					"service not available on servers prior to rods3.0");
+		if (!getIRODSServerProperties().isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
+			throw new JargonException("service not available on servers prior to rods3.0");
 		}
 
-		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory()
-				.getRuleProcessingAO(getIRODSAccount());
-		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource(
-				"/rules/rulemsiListEnabledMS.r", null,
-				RuleProcessingType.EXTERNAL);
+		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
+		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
+				.instanceWithDefaultAutoSettings(this.getJargonProperties());
+		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
+		IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/rulemsiListEnabledMS.r", null,
+				ruleInvocationConfiguration);
 		String resultBuff = result.getRuleExecOut().trim();
 		log.info("raw microservice list:{}", resultBuff);
 		StringTokenizer st = new StringTokenizer(resultBuff, "\n");

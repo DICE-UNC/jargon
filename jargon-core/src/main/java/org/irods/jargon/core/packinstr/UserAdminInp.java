@@ -1,6 +1,7 @@
 package org.irods.jargon.core.packinstr;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.UserGroup;
 
 public class UserAdminInp extends AbstractIRODSPackingInstruction {
 
@@ -43,23 +44,22 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	private String arg9 = "";
 
 	/**
-	 * Static initializer for a user admin packing instruction used to change a
-	 * user password.
+	 * Static initializer for a user admin packing instruction used to change a user
+	 * password.
 	 *
 	 * @param userName
-	 *            {@code String} with the user name that will have the
-	 *            password changed.
+	 *            {@code String} with the user name that will have the password
+	 *            changed.
 	 * @param obfuscatedPassword
 	 *            {@code String} with the properly obfuscated password. See
-	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities}
-	 *            for obfuscation routines.
-	 * @return instance of {@code userAdminInp} packing instruction to
-	 *         change the password.
+	 *            {@link org.irods.jargon.core.security.IRODSPasswordUtilities} for
+	 *            obfuscation routines.
+	 * @return instance of {@code userAdminInp} packing instruction to change the
+	 *         password.
 	 * @throws JargonException
 	 */
-	public static UserAdminInp instanceForChangeUserPassword(
-			final String userName, final String obfuscatedPassword)
-					throws JargonException {
+	public static UserAdminInp instanceForChangeUserPassword(final String userName, final String obfuscatedPassword)
+			throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new JargonException("userName is null or missing");
@@ -69,16 +69,59 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("obfuscatedPassword is null or missing");
 		}
 
-		return new UserAdminInp(USER_PW, userName, PASSWORD,
-				obfuscatedPassword, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
+		return new UserAdminInp(USER_PW, userName, PASSWORD, obfuscatedPassword, BLANK, BLANK, BLANK, BLANK, BLANK,
+				BLANK, USER_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create a packing instruction to add the given iRODS user group to the zone
+	 *
+	 * @param userGroup
+	 *            {@link UserGroup} to add
+	 * @return {@link UserAdminInp}
+	 * @throws JargonException
+	 */
+	public static UserAdminInp instanceForAddUserGroup(final UserGroup userGroup) throws JargonException {
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+		return new UserAdminInp("mkgroup", userGroup.getUserGroupName(), "rodsgroup", userGroup.getZone(), BLANK, BLANK,
+				BLANK, BLANK, BLANK, BLANK, USER_ADMIN_INP_API_NBR);
+	}
+
+	/**
+	 * Create the packing instruction to add a user to a group
+	 * 
+	 * @param userGroupName
+	 *            <code>String</code> with userGroupName
+	 * @param userName
+	 *            <code>String</code> with the userName to add
+	 * @param zoneName
+	 *            <code>String</code> with the zoneName to add
+	 * @return {@link UserAdminInp}
+	 * @throws JargonException
+	 */
+	public static UserAdminInp instanceForAddUserToGroup(String userGroupName, String userName, String zoneName)
+			throws JargonException {
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null userGroupName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null UserName");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty zoneName");
+		}
+
+		return new UserAdminInp("modify", "group", userGroupName, "add", userName, zoneName, BLANK, BLANK, BLANK, BLANK,
 				USER_ADMIN_INP_API_NBR);
 	}
 
-	private UserAdminInp(final String arg0, final String arg1,
-			final String arg2, final String arg3, final String arg4,
-			final String arg5, final String arg6, final String arg7,
-			final String arg8, final String arg9, final int apiNumber)
-					throws JargonException {
+	private UserAdminInp(final String arg0, final String arg1, final String arg2, final String arg3, final String arg4,
+			final String arg5, final String arg6, final String arg7, final String arg8, final String arg9,
+			final int apiNumber) throws JargonException {
 		super();
 
 		if (apiNumber <= 0) {
@@ -142,12 +185,11 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG0, getArg0()),
-				new Tag(ARG1, getArg1()), new Tag(ARG2, getArg2()),
-				new Tag(ARG3, getArg3()), new Tag(ARG4, getArg4()),
-				new Tag(ARG5, getArg5()), new Tag(ARG6, getArg6()),
-				new Tag(ARG7, getArg7()), new Tag(ARG8, getArg8()),
-				new Tag(ARG9, getArg9()) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(ARG0, getArg0()), new Tag(ARG1, getArg1()), new Tag(ARG2, getArg2()),
+						new Tag(ARG3, getArg3()), new Tag(ARG4, getArg4()), new Tag(ARG5, getArg5()),
+						new Tag(ARG6, getArg6()), new Tag(ARG7, getArg7()), new Tag(ARG8, getArg8()),
+						new Tag(ARG9, getArg9()) });
 
 		return message;
 	}

@@ -1,6 +1,6 @@
 package org.irods.jargon.ruleservice.formatting;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 

@@ -2,7 +2,7 @@ package org.irods.jargon.core.checksum;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.apache.commons.codec.binary.Base64;
 import org.irods.jargon.core.utils.LocalFileUtils;

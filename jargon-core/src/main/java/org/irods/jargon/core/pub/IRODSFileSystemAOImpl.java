@@ -84,8 +84,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileReadable(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileReadable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -119,8 +118,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#isFileExecutable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -151,8 +149,10 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * Do a query on the given file to see if it has an executable bit set
 	 *
 	 * @param irodsFile
-	 * @return {@code boolean} of {@code true} if file is data object, exists,
-	 *         and is executable
+	 *            {@link IRODSFile} to check
+	 * 
+	 * @return {@code boolean} of {@code true} if file is data object, exists, and
+	 *         is executable
 	 * @throws JargonException
 	 */
 	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile) throws JargonException {
@@ -198,8 +198,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileWriteable(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileWriteable(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -232,8 +231,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFilePermissions(org
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFilePermissions(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -285,8 +283,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getDirectoryPermissions
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getDirectoryPermissions
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -299,8 +296,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#
-	 * getDirectoryPermissionsForGivenUser
-	 * (org.irods.jargon.core.pub.io.IRODSFile, java.lang.String)
+	 * getDirectoryPermissionsForGivenUser (org.irods.jargon.core.pub.io.IRODSFile,
+	 * java.lang.String)
 	 */
 	@Override
 	public int getDirectoryPermissionsForGivenUser(final IRODSFile irodsFile, final String userName)
@@ -332,8 +329,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileExists(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#isFileExists(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -365,8 +361,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#isDirectory(org.irods.
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#isDirectory(org.irods.
 	 * jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -397,8 +392,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSFileSystemAO#isFile(org.irods.jargon.core
+	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#isFile(org.irods.jargon.core
 	 * .pub.io.IRODSFile)
 	 */
 	@Override
@@ -429,8 +423,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSFileSystemAO#getObjStat(java.lang.String)
+	 * @see org.irods.jargon.core.pub.IRODSFileSystemAO#getObjStat(java.lang.String)
 	 */
 	@Override
 	public ObjStat getObjStat(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
@@ -442,8 +435,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDir(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDir(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -489,8 +481,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFilter
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getListInDirWithFilter
 	 * (org.irods.jargon.core.pub.io.IRODSFile, java.io.FilenameFilter)
 	 */
 	@Override
@@ -772,8 +763,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFileDataType(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getFileDataType(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -824,10 +814,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
-	 * .core.pub.io.IRODSFile,
-	 * org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#openFile(org.irods.jargon
+	 * .core.pub.io.IRODSFile, org.irods.jargon.core.packinstr.DataObjInp.OpenFlags)
 	 */
 	@Override
 	public int openFile(final IRODSFile irodsFile, final DataObjInp.OpenFlags openFlags) throws JargonException {
@@ -930,8 +918,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#mkdir(org.irods.jargon
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#mkdir(org.irods.jargon
 	 * .core.pub.io.IRODSFile, boolean)
 	 */
 	@Override
@@ -995,8 +982,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteForce(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteForce(org.irods
 	 * .jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1029,8 +1015,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteNoForce(org.
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#fileDeleteNoForce(org.
 	 * irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1066,8 +1051,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteForce(org
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteForce(org
 	 * .irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1102,8 +1086,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteNoForce
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#directoryDeleteNoForce
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1161,8 +1144,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameDirectory(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#renameDirectory(org.irods
 	 * .jargon.core.pub.io.IRODSFile, org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1222,8 +1204,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#getResourceNameForFile
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#getResourceNameForFile
 	 * (org.irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
@@ -1261,8 +1242,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(org.irods
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(org.irods
 	 * .jargon.core.pub.io.IRODSFile, java.lang.String)
 	 */
 	@Override
@@ -1292,8 +1272,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(java.lang
+	 * @see org.irods.jargon.core.pub.io.IRODSFileSystemAO#physicalMove(java.lang
 	 * .String, java.lang.String)
 	 */
 	@Override
@@ -1353,7 +1332,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 					// the coll stat reply, otherwise, just ignore and
 					// don't send the reply.
 
-					Tag fileCountTag = ackResult.getTag("filesCnt");
 					// int fileCount = Integer.parseInt((String)
 					// fileCountTag.getValue());
 					Tag msgHeaderTag = ackResult.getTag("MsgHeader_PI");

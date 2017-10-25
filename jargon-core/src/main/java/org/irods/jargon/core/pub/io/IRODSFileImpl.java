@@ -65,12 +65,13 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
 	 */
+	@SuppressWarnings("deprecation")
+	@Deprecated
 	@Override
 	public void reset() {
 	}
 
-	protected IRODSFileImpl(final String pathName,
-			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	protected IRODSFileImpl(final String pathName, final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		this("", pathName, irodsFileSystemAO);
 		if (pathName.isEmpty()) {
 			throw new JargonException("path name is null or empty");
@@ -79,8 +80,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		MiscIRODSUtils.checkPathSizeForMax(pathName);
 	}
 
-	protected IRODSFileImpl(final String parent, final String child,
-			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	protected IRODSFileImpl(final String parent, final String child, final IRODSFileSystemAO irodsFileSystemAO)
+			throws JargonException {
 
 		super(parent, child);
 
@@ -93,8 +94,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		if (parent.isEmpty() && child.isEmpty()) {
-			throw new IllegalArgumentException(
-					"both parent and child names are empty");
+			throw new IllegalArgumentException("both parent and child names are empty");
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(parent, child);
@@ -105,8 +105,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		makePathCanonical(parent);
 	}
 
-	protected IRODSFileImpl(final File parent, final String child,
-			final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
+	protected IRODSFileImpl(final File parent, final String child, final IRODSFileSystemAO irodsFileSystemAO)
+			throws JargonException {
 
 		this(parent.getAbsolutePath(), child, irodsFileSystemAO);
 	}
@@ -126,15 +126,13 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		}
 
 		// In case this abstract path is supposed to be root
-		if ((fileName.equals(IRODS_ROOT) || fileName.equals(""))
-				&& dir.equals("")) {
+		if ((fileName.equals(IRODS_ROOT) || fileName.equals("")) && dir.equals("")) {
 			return;
 		}
 
 		// In case this abstract path is supposed to be the home directory
 		if (fileName.equals("") && dir.equals("")) {
-			String home = irodsFileSystemAO.getIRODSAccount()
-					.getHomeDirectory();
+			String home = irodsFileSystemAO.getIRODSAccount().getHomeDirectory();
 			int index = home.lastIndexOf(PATH_SEPARATOR);
 			setDirectory(home.substring(0, index));
 			setFileName(home.substring(index + 1));
@@ -157,8 +155,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			}
 		}
 		if (!absolutePath) {
-			String home = irodsFileSystemAO.getIRODSAccount()
-					.getHomeDirectory();
+			String home = irodsFileSystemAO.getIRODSAccount().getHomeDirectory();
 			int index = home.indexOf(PATH_SEPARATOR);
 			// allow the first index to = 0,
 			// because otherwise separator won't get added in front.
@@ -170,7 +167,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 					i++;
 				} while (index > 0);
 			}
-			if ((!home.equals("")) && (home != null)) {
+			if (!home.equals("")) {
 				directory.add(i, home);
 			}
 		}
@@ -234,8 +231,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		String localSeparator = System.getProperty("file.separator");
 		int index = dir.lastIndexOf(localSeparator);
 		if ((index >= 0) && ((dir.substring(index + 1).length()) > 0)) {
-			dir = dir.substring(0, index) + PATH_SEPARATOR_CHAR
-					+ dir.substring(index + 1);
+			dir = dir.substring(0, index) + PATH_SEPARATOR_CHAR + dir.substring(index + 1);
 			index = dir.lastIndexOf(localSeparator);
 		}
 
@@ -257,7 +253,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			} while (index >= 0);
 		}
 		// add the last path item
-		if ((!dir.equals("")) && (dir != null)) {
+		if (!dir.equals("")) {
 			directory.add(dir);
 		}
 	}
@@ -266,8 +262,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * Set the file name.
 	 *
 	 * @param filePath
-	 *            The file name or fileName plus some or all of the directory
-	 *            path.
+	 *            The file name or fileName plus some or all of the directory path.
 	 */
 	private void setFileName(String filePath) {
 
@@ -288,10 +283,8 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		// replace local separators with iRODS separators.
 		if (!localSeparator.equals(PATH_SEPARATOR)) {
 			index = filePath.lastIndexOf(localSeparator);
-			while ((index >= 0)
-					&& ((filePath.substring(index + 1).length()) > 0)) {
-				filePath = filePath.substring(0, index) + PATH_SEPARATOR_CHAR
-						+ filePath.substring(index + 1);
+			while ((index >= 0) && ((filePath.substring(index + 1).length()) > 0)) {
+				filePath = filePath.substring(0, index) + PATH_SEPARATOR_CHAR + filePath.substring(index + 1);
 				index = filePath.lastIndexOf(localSeparator);
 			}
 		}
@@ -367,19 +360,16 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized boolean createNewFile() throws IOException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(),
-					DataObjInp.OpenFlags.READ_WRITE,
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), DataObjInp.OpenFlags.READ_WRITE,
 					DataObjInp.DEFAULT_CREATE_MODE);
 
-			log.debug("file descriptor from new file create: {}",
-					fileDescriptor);
+			log.debug("file descriptor from new file create: {}", fileDescriptor);
 
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as IOException:"
-					+ e.getMessage();
+			String msg = "JargonException caught and rethrown as IOException:" + e.getMessage();
 			log.error(msg, e);
 			throw new IOException(e);
 		}
@@ -387,15 +377,12 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	@Override
-	public synchronized boolean createNewFileCheckNoResourceFound(
-			final OpenFlags openFlags) throws NoResourceDefinedException,
-			JargonException {
+	public synchronized boolean createNewFileCheckNoResourceFound(final OpenFlags openFlags)
+			throws NoResourceDefinedException, JargonException {
 		try {
-			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(),
-					openFlags, DataObjInp.DEFAULT_CREATE_MODE);
+			fileDescriptor = irodsFileSystemAO.createFile(getAbsolutePath(), openFlags, DataObjInp.DEFAULT_CREATE_MODE);
 
-			log.debug("file descriptor from new file create: {}",
-					fileDescriptor);
+			log.debug("file descriptor from new file create: {}", fileDescriptor);
 		} catch (JargonFileOrCollAlreadyExistsException e) {
 			return false;
 		}
@@ -432,8 +419,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 					log.error(
 							"irods error occurred on delete, this was not a data not found exception, rethrow as unchecked",
 							e);
-					throw new JargonRuntimeException(
-							"exception occurred on delete", e);
+					throw new JargonRuntimeException("exception occurred on delete", e);
 				}
 
 			}
@@ -461,8 +447,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			log.info("file not found, treat as unsuccessful");
 			successful = false;
 		} catch (JargonException e) {
-			String msg = "JargonException caught and logged on delete:"
-					+ e.getMessage();
+			String msg = "JargonException caught and logged on delete:" + e.getMessage();
 			log.error(msg, e);
 			throw new JargonRuntimeException(msg, e);
 		}
@@ -530,8 +515,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		try {
 			return new IRODSFileImpl(getAbsolutePath(), irodsFileSystemAO);
 		} catch (JargonException e) {
-			String msg = "JargonException caught and rethrown as JargonRuntimeException:"
-					+ e.getMessage();
+			String msg = "JargonException caught and rethrown as JargonRuntimeException:" + e.getMessage();
 			log.error(msg, e);
 			throw new JargonRuntimeException(e);
 		}
@@ -711,8 +695,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 			ObjStat objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 
-			if (objStat.getObjectType() == ObjectType.COLLECTION
-					|| objStat.getObjectType() == ObjectType.LOCAL_DIR) {
+			if (objStat.getObjectType() == ObjectType.COLLECTION || objStat.getObjectType() == ObjectType.LOCAL_DIR) {
 				isDir = true;
 			}
 		} catch (FileNotFoundException fnf) {
@@ -745,8 +728,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 				objStat = irodsFileSystemAO.getObjStat(getAbsolutePath());
 			}
 
-			if (objStat.getObjectType() == ObjectType.DATA_OBJECT
-					|| objStat.getObjectType() == ObjectType.LOCAL_FILE) {
+			if (objStat.getObjectType() == ObjectType.DATA_OBJECT || objStat.getObjectType() == ObjectType.LOCAL_FILE) {
 				isFile = true;
 			}
 		} catch (FileNotFoundException fnf) {
@@ -872,8 +854,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			for (String fileName : result) {
 				// result has just the subdir under this file, need to create
 				// the absolute path to create a file
-				irodsFile = new IRODSFileImpl(getAbsolutePath(), fileName,
-						irodsFileSystemAO);
+				irodsFile = new IRODSFileImpl(getAbsolutePath(), fileName, irodsFileSystemAO);
 				a[i++] = irodsFile;
 
 			}
@@ -895,8 +876,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	@Override
 	public synchronized File[] listFiles(final FileFilter filter) {
 		try {
-			List<File> result = irodsFileSystemAO.getListInDirWithFileFilter(
-					this, filter);
+			List<File> result = irodsFileSystemAO.getListInDirWithFileFilter(this, filter);
 			File[] resArray = new File[result.size()];
 			return result.toArray(resArray);
 		} catch (DataNotFoundException e) {
@@ -912,14 +892,12 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FilenameFilter)
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#listFiles(java.io.FilenameFilter)
 	 */
 	@Override
 	public synchronized File[] listFiles(final FilenameFilter filter) {
 		try {
-			List<String> result = irodsFileSystemAO.getListInDirWithFilter(
-					this, filter);
+			List<String> result = irodsFileSystemAO.getListInDirWithFilter(this, filter);
 			IRODSFileImpl[] a = new IRODSFileImpl[result.size()];
 			IRODSFileImpl irodsFile;
 			int i = 0;
@@ -1015,8 +993,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		IRODSFile destIRODSFile = dest;
 
 		if (log.isInfoEnabled()) {
-			log.info("renaming:" + getAbsolutePath() + " to:"
-					+ destIRODSFile.getAbsolutePath());
+			log.info("renaming:" + getAbsolutePath() + " to:" + destIRODSFile.getAbsolutePath());
 		}
 
 		// if the path is different
@@ -1028,8 +1005,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			// dest file
 			log.info("doing a physical move");
 			try {
-				irodsFileSystemAO.physicalMove(this,
-						destIRODSFile.getResource());
+				irodsFileSystemAO.physicalMove(this, destIRODSFile.getResource());
 				success = true;
 			} catch (JargonException e) {
 				log.error("jargon exception, rethrow as unchecked", e);
@@ -1043,8 +1019,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * @param destIRODSFile
 	 * @throws JargonRuntimeException
 	 */
-	void renameFileOrDirectory(final IRODSFile destIRODSFile)
-			throws JargonRuntimeException {
+	void renameFileOrDirectory(final IRODSFile destIRODSFile) throws JargonRuntimeException {
 		if (isDirectory()) {
 			log.info("paths different, and a directory is being renamed");
 			try {
@@ -1067,12 +1042,10 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see org.irods.jargon.core.pub.io.IRODSFile#setExecutable(boolean,
-	 * boolean)
+	 * @see org.irods.jargon.core.pub.io.IRODSFile#setExecutable(boolean, boolean)
 	 */
 	@Override
-	public boolean setExecutable(final boolean executable,
-			final boolean ownerOnly) {
+	public boolean setExecutable(final boolean executable, final boolean ownerOnly) {
 		throw new UnsupportedOperationException();
 
 	}
@@ -1183,15 +1156,13 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 		try {
 			if (isDirectory()) {
-				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount()
-						.getUserName(), irodsFileSystemAO.getIRODSAccount()
-						.getHost(), irodsFileSystemAO.getIRODSAccount()
-						.getPort(), getAbsolutePath(), null, null);
+				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount().getUserName(),
+						irodsFileSystemAO.getIRODSAccount().getHost(), irodsFileSystemAO.getIRODSAccount().getPort(),
+						getAbsolutePath(), null, null);
 			} else {
-				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount()
-						.getUserName(), irodsFileSystemAO.getIRODSAccount()
-						.getHost(), irodsFileSystemAO.getIRODSAccount()
-						.getPort(), getAbsolutePath(), null, null);
+				uri = new URI("irods", irodsFileSystemAO.getIRODSAccount().getUserName(),
+						irodsFileSystemAO.getIRODSAccount().getHost(), irodsFileSystemAO.getIRODSAccount().getPort(),
+						getAbsolutePath(), null, null);
 			}
 		} catch (URISyntaxException e) {
 			log.error("URISyntaxException, rethrow as unchecked", e);
@@ -1253,8 +1224,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	}
 
 	/**
-	 * Set the iRODS file descriptor value. This will be set internally by
-	 * Jargon.
+	 * Set the iRODS file descriptor value. This will be set internally by Jargon.
 	 *
 	 * @param fileDescriptor
 	 */
@@ -1262,8 +1232,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		this.fileDescriptor = fileDescriptor;
 	}
 
-	private int openWithMode(final DataObjInp.OpenFlags openFlags)
-			throws JargonException {
+	private int openWithMode(final DataObjInp.OpenFlags openFlags) throws JargonException {
 
 		if (log.isInfoEnabled()) {
 			log.info("opening irodsFile:" + getAbsolutePath());
@@ -1316,8 +1285,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * .DataObjInp.OpenFlags)
 	 */
 	@Override
-	public synchronized int open(final OpenFlags openFlags)
-			throws JargonException {
+	public synchronized int open(final OpenFlags openFlags) throws JargonException {
 		log.info("open()");
 		if (openFlags == null) {
 			throw new IllegalArgumentException("null openFlags");
@@ -1346,8 +1314,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			return;
 		}
 
-		if (openFlags == OpenFlags.WRITE
-				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
 				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
 			log.info("closing with putOpr");
 			irodsFileSystemAO.fileClose(getFileDescriptor(), true);
@@ -1366,8 +1333,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#closeGivenDescriptor(int)
 	 */
 	@Override
-	public synchronized void closeGivenDescriptor(final int fd)
-			throws JargonException {
+	public synchronized void closeGivenDescriptor(final int fd) throws JargonException {
 		if (log.isInfoEnabled()) {
 			log.info("closing irodsFile given descriptor:" + fd);
 		}

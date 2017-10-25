@@ -26,7 +26,7 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 /**
  * Functional tests of various permutations of ssl negotiation and auth methods.
@@ -63,7 +63,6 @@ public class EncryptedTransferTests {
 		irodsTestSetupUtilities.clearIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass

@@ -1,6 +1,6 @@
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSServerProperties.IcatEnabled;
 import org.junit.BeforeClass;

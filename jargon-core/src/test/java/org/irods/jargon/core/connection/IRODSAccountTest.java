@@ -2,7 +2,7 @@ package org.irods.jargon.core.connection;
 
 import java.net.URI;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.utils.IRODSUriUtils;
 import org.junit.Test;

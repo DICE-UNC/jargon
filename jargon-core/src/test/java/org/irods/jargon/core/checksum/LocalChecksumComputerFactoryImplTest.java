@@ -1,6 +1,6 @@
 package org.irods.jargon.core.checksum;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.junit.Test;

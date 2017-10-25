@@ -98,8 +98,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff after the last '.' character to treat
-	 * as the file extension
+	 * Parse a file name to get the stuff after the last '.' character to treat as
+	 * the file extension
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
@@ -140,13 +140,13 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff before last '.' character to treat as
-	 * the file name
+	 * Parse a file name to get the stuff before last '.' character to treat as the
+	 * file name
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
-	 * @return {@code String} with the file name before the extension,
-	 *         without the '.'
+	 * @return {@code String} with the file name before the extension, without the
+	 *         '.'
 	 */
 	public static String getFileNameUpToExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
@@ -167,8 +167,7 @@ public class LocalFileUtils {
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out
-	 * @return {@code String} with the updated file name containing a time
-	 *         stamp
+	 * @return {@code String} with the updated file name containing a time stamp
 	 */
 	public static String getFileNameWithTimeStampInterposed(final String fileName) {
 		final String namePart = getFileNameUpToExtension(fileName);
@@ -240,8 +239,8 @@ public class LocalFileUtils {
 	 * Compute a CRC32 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code long} with the file's checksum value
 	 * @throws JargonException
 	 */
@@ -278,8 +277,8 @@ public class LocalFileUtils {
 	 * Compute an SHA-256 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
@@ -337,8 +336,8 @@ public class LocalFileUtils {
 	 * Compute an MD5 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
@@ -387,8 +386,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a {@code String} representing hex characters (e.g. b1f0a2),
-	 * return the actual bytes represented by the hex value
+	 * Given a {@code String} representing hex characters (e.g. b1f0a2), return the
+	 * actual bytes represented by the hex value
 	 *
 	 * @param s
 	 *            {@code String} with the representation of the hex bytes
@@ -404,19 +403,13 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a checksum digest as a {@code byte[]}, return a
-	 * {@code String} as used in iRODS packing instructions
+	 * Given a checksum digest as a {@code byte[]}, return a {@code String} as used
+	 * in iRODS packing instructions
 	 *
-<<<<<<< HEAD
-	 * &#64;param digestAsByteArray
-	 *            <code>byte[]</code> which is a checksum value
 	 * 
-	 * @return <code>String</code> in hex that represents this checkSum
-=======
 	 * @param digestAsByteArray
 	 *            {@code byte[]} which is a checksum value
 	 * @return {@code String} in hex that represents this checkSum
->>>>>>> origin/master
 	 */
 	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
 
@@ -434,8 +427,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a path to a classpath resoruce, return that resource as a
-	 * {@code File}
+	 * Given a path to a classpath resoruce, return that resource as a {@code File}
 	 *
 	 * @param resourcePath
 	 *            {@code String} with an absolute path to a resource in the
@@ -468,8 +460,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a path to a classpath resource, return that resource data as a
-	 * string
+	 * Given a path to a classpath resource, return that resource data as a string
 	 *
 	 * @param resourcePath
 	 *            {@code String} for a classpath resource
@@ -516,8 +507,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Read the contents of a file into a byte array (be carefule not to read
-	 * big files!)
+	 * Read the contents of a file into a byte array (be carefule not to read big
+	 * files!)
 	 *
 	 * @param file
 	 * @return

@@ -6,6 +6,7 @@ import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
+import org.irods.jargon.core.rule.RuleInvocationConfiguration;
 
 /**
  * Interface defines an enhanced service for dealing with rules. Specifically,
@@ -21,9 +22,48 @@ import org.irods.jargon.core.rule.IRODSRuleExecResult;
 public interface RuleCompositionService {
 
 	/**
-	 * Given a {@code String} that represents an iRODS rule as would be
-	 * executable by the iRODS irule command, parse that rule into the rule
-	 * body, as well as input and output parameters.
+	 * Return a <code>String</code> which is the raw contents of an iRODS rule file
+	 * on iRODS
+	 * 
+	 * @param absolutePathToRuleFile
+	 *            <code>String</code> with an iRODS absolute path to a rules file
+	 * @return <code>String</code> with the raw rule contents
+	 * @throws FileNotFoundException
+	 * @throws MissingOrInvalidRuleException
+	 * @throws JargonException
+	 */
+	String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
+			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
+
+	/**
+	 * Store a rule presented as a raw String. This method will parse the String out
+	 * as a level of validation.
+	 * 
+	 * @param ruleAbsolutePath
+	 *            <code>String</code> with the iRODS absolute path where the rule
+	 *            will be stored
+	 * @param rule
+	 *            <code>String</code> with the raw rule text
+	 * @return {@Rule} that was the result of the parsing, as stored in iRODS
+	 * @throws JargonException
+	 */
+	Rule storeRule(String ruleAbsolutePath, String rule) throws JargonException;
+
+	/**
+	 * Run a rule based on an arbitrary raw string that holds the desired rule
+	 * 
+	 * @param rule
+	 *            <code>String</code> with the raw rule text
+	 * @return {@link IRODSRuleExecResult} with the output parameters and log from
+	 *         the rule
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleAsRawString(String rule) throws JargonException;
+
+	/**
+	 * Given a {@code String} that represents an iRODS rule as would be executable
+	 * by the iRODS irule command, parse that rule into the rule body, as well as
+	 * input and output parameters.
 	 * 
 	 * @param inputRuleAsString
 	 *            {@code String} with a valid iRODS rule
@@ -49,15 +89,15 @@ public interface RuleCompositionService {
 			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
 
 	/**
-	 * Given a rule in primative string values, store as a rule in the given
-	 * iRODS file. This will handle overwrites.
+	 * Given a rule in primative string values, store as a rule in the given iRODS
+	 * file. This will handle overwrites.
 	 * 
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
 	 * @param ruleBody
-	 *            {@code String} with a valid iRODS rule body (without the input
-	 *            or output sections)
+	 *            {@code String} with a valid iRODS rule body (without the input or
+	 *            output sections)
 	 * @param inputParameters
 	 *            {@code List<String>} with the input parameters of the rule in
 	 *            simple string name=value format, without wrapping quotes
@@ -84,17 +124,17 @@ public interface RuleCompositionService {
 	Rule storeRule(String ruleAbsolutePath, Rule rule) throws JargonException;
 
 	/**
-	 * Given the name of an input parameter (with the leading * included),
-	 * delete it from the rule input parameter list and store back in iRODS.
+	 * Given the name of an input parameter (with the leading * included), delete it
+	 * from the rule input parameter list and store back in iRODS.
 	 * 
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
 	 * @param parameterToDelete
-	 *            {@code String} with the name of the parameter, with the
-	 *            leading * character (e.g. *Flags), this input parameter will
-	 *            be deleted from the rule. If the parameter is missing, then no
-	 *            action will be taken.
+	 *            {@code String} with the name of the parameter, with the leading *
+	 *            character (e.g. *Flags), this input parameter will be deleted from
+	 *            the rule. If the parameter is missing, then no action will be
+	 *            taken.
 	 * @return {@link Rule} reflecting the state of the rule after any updates.
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -103,17 +143,17 @@ public interface RuleCompositionService {
 			throws FileNotFoundException, JargonException;
 
 	/**
-	 * Given the name of an output parameter (with the leading * included),
-	 * delete it from the rule output parameter list and store back in iRODS.
+	 * Given the name of an output parameter (with the leading * included), delete
+	 * it from the rule output parameter list and store back in iRODS.
 	 * 
 	 * @param ruleAbsolutePath
 	 *            {@code String} with an iRODS absolute path to a rules file
 	 *            appropriate for 'new format' rules in iRODS.
 	 * @param parameterToDelete
 	 *            {@code String} with the name of the output parameter, with the
-	 *            leading * character (e.g. *Flags), this input parameter will
-	 *            be deleted from the rule. If the parameter is missing, then no
-	 *            action will be taken.
+	 *            leading * character (e.g. *Flags), this input parameter will be
+	 *            deleted from the rule. If the parameter is missing, then no action
+	 *            will be taken.
 	 * @return {@link Rule} reflecting the state of the rule after any updates.
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -125,20 +165,44 @@ public interface RuleCompositionService {
 	 * Given a rule in primative string values, execute the rule in iRODS.
 	 * 
 	 * @param ruleBody
-	 *            {@code String} with a valid iRODS rule body (without the input
-	 *            or output sections)
+	 *            {@code String} with a valid iRODS rule body (without the input or
+	 *            output sections)
 	 * @param inputParameters
 	 *            {@code List<String>} with the input parameters of the rule in
 	 *            simple string name=value format, without wrapping quotes
 	 * @param outputParameters
 	 *            {@code List<String>} with the output parameters of the rule in
 	 *            simple string format
-	 * @return {@link IRODSRuleExecResult} with the output parameters from the
-	 *         rule execution
+	 * @return {@link IRODSRuleExecResult} with the output parameters from the rule
+	 *         execution
 	 * @throws JargonException
 	 */
 	IRODSRuleExecResult executeRuleFromParts(String ruleBody, List<String> inputParameters,
 			List<String> outputParameters) throws JargonException;
+
+	/**
+	 * Given a rule in primative string values, execute the rule in iRODS,
+	 * specifying rule type and language information.
+	 * 
+	 * @param ruleBody
+	 *            {@code String} with a valid iRODS rule body (without the input or
+	 *            output sections)
+	 * @param inputParameters
+	 *            {@code List<String>} with the input parameters of the rule in
+	 *            simple string name=value format, without wrapping quotes
+	 * @param outputParameters
+	 *            {@code List<String>} with the output parameters of the rule in
+	 *            simple string format
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} specifying rule language and
+	 *            instance information
+	 * @return {@link IRODSRuleExecResult} with the output parameters from the rule
+	 *         execution
+	 * @throws JargonException
+	 */
+	IRODSRuleExecResult executeRuleFromParts(String ruleBody, List<String> inputParameters,
+			List<String> outputParameters, RuleInvocationConfiguration ruleInvocationConfiguration)
+			throws JargonException;
 
 	/**
 	 * Add the given input parameter to the iRODS rule.
@@ -177,45 +241,5 @@ public interface RuleCompositionService {
 	 */
 	Rule addOutputParameterToRule(String ruleAbsolutePath, String parameterName)
 			throws FileNotFoundException, DuplicateDataException, JargonException;
-
-	/**
-	 * Return a <code>String</code> which is the raw contents of an iRODS rule
-	 * file on iRODS
-	 * 
-	 * @param absolutePathToRuleFile
-	 *            <code>String</code> with an iRODS absolute path to a rules
-	 *            file
-	 * @return <code>String</code> with the raw rule contents
-	 * @throws FileNotFoundException
-	 * @throws MissingOrInvalidRuleException
-	 * @throws JargonException
-	 */
-	String loadRuleFromIrodsAsString(final String absolutePathToRuleFile)
-			throws FileNotFoundException, MissingOrInvalidRuleException, JargonException;
-
-	/**
-	 * Store a rule presented as a raw String. This method will parse the String
-	 * out as a level of validation.
-	 * 
-	 * @param ruleAbsolutePath
-	 *            <code>String</code> with the iRODS absolute path where the
-	 *            rule will be stored
-	 * @param rule
-	 *            <code>String</code> with the raw rule text
-	 * @return {@Rule} that was the result of the parsing, as stored in iRODS
-	 * @throws JargonException
-	 */
-	Rule storeRule(String ruleAbsolutePath, String rule) throws JargonException;
-
-	/**
-	 * Run a rule based on an arbitrary raw string that holds the desired rule
-	 * 
-	 * @param rule
-	 *            <code>String</code> with the raw rule text
-	 * @return {@link IRODSRuleExecResult} with the output parameters and log
-	 *         from the rule
-	 * @throws JargonException
-	 */
-	IRODSRuleExecResult executeRuleAsRawString(String rule) throws JargonException;
 
 }

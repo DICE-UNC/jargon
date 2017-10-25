@@ -2,7 +2,7 @@ package org.irods.jargon.core.protovalues;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

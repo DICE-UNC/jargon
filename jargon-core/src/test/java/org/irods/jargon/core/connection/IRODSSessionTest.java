@@ -3,7 +3,7 @@ package org.irods.jargon.core.connection;
 import java.util.Properties;
 import java.util.concurrent.Executor;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.packinstr.TransferOptions;
 import org.irods.jargon.testutils.TestingPropertiesHelper;

@@ -1,6 +1,6 @@
 package org.irods.jargon.core.rule;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;

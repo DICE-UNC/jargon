@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.core.connection;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 
