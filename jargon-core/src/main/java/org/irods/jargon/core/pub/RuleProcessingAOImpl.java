@@ -282,19 +282,7 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
 				.instanceWithDefaultAutoSettings(this.getJargonProperties());
 
-		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
-				this.getIRODSAccount());
-		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
-				ruleInvocationConfiguration);
-		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
-		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
-		log.debug("response from rule exec: {}", response.parseTag());
-
-		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response, irodsRule);
-		log.debug("processing end of rule execution by reading message");
-
-		return irodsRuleExecResult;
+		return executeRule(irodsRuleAsString, ruleInvocationConfiguration);
 	}
 
 	public IRODSRuleExecResult executeRule(final String irodsRuleAsString,
@@ -308,21 +296,8 @@ public final class RuleProcessingAOImpl extends IRODSGenericAO implements RulePr
 		if (ruleInvocationConfiguration == null) {
 			throw new IllegalArgumentException("null ruleInvocationConfiguration()");
 		}
-		log.info("executing rule: {}", irodsRuleAsString);
-		log.info("with configuration:{}", ruleInvocationConfiguration);
-		IrodsRuleFactory irodsRuleFactory = new IrodsRuleFactory(this.getIRODSAccessObjectFactory(),
-				this.getIRODSAccount());
-		final IRODSRule irodsRule = irodsRuleFactory.instanceIrodsRule(irodsRuleAsString, null,
-				ruleInvocationConfiguration);
-		log.debug("translated rule: {}", irodsRule);
-		final ExecMyRuleInp execMyRuleInp = ExecMyRuleInp.instance(irodsRule);
-		final Tag response = getIRODSProtocol().irodsFunction(execMyRuleInp);
-		log.debug("response from rule exec: {}", response.parseTag());
 
-		IRODSRuleExecResult irodsRuleExecResult = processRuleResult(response, irodsRule);
-		log.debug("processing end of rule execution by reading message");
-
-		return irodsRuleExecResult;
+		return executeRule(irodsRuleAsString, null, ruleInvocationConfiguration);
 	}
 
 	@Override
