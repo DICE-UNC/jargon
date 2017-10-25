@@ -50,5 +50,4 @@ Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups 
 
 #### add enum to indicate rule executing on chosen rule engine #259
 
-Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file
-
+Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file. See the user guide for details on using the new rule capabilities
