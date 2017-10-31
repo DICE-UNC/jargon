@@ -2,6 +2,7 @@ package org.irods.jargon.datautils.datacache;
 
 import java.security.spec.AlgorithmParameterSpec;
 import java.security.spec.KeySpec;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -101,12 +102,11 @@ public class CacheEncryptor {
 	/**
 	 * Takes a single String as an argument and returns an Encrypted version of
 	 * that String.
-	 * 
+	 *
 	 * @param str
 	 *            String to be encrypted
 	 * @return {@code String} Encrypted version of the provided String
 	 */
-	@SuppressWarnings("restriction")
 	public String encrypt(final String str) throws JargonException {
 		try {
 			// Encode the string into bytes using utf-8
@@ -116,7 +116,7 @@ public class CacheEncryptor {
 			byte[] enc = ecipher.doFinal(utf8);
 
 			// Encode bytes to base64 to get a string
-			return new sun.misc.BASE64Encoder().encode(enc);
+			return Base64.getEncoder().encodeToString(enc);
 
 		} catch (Exception e) {
 			throw new JargonException(e);
@@ -127,18 +127,17 @@ public class CacheEncryptor {
 	/**
 	 * Takes a encrypted String as an argument, decrypts and returns the
 	 * decrypted String.
-	 * 
+	 *
 	 * @param str
 	 *            Encrypted String to be decrypted
 	 * @return {@code String} Decrypted version of the provided String
 	 */
-	@SuppressWarnings("restriction")
 	public String decrypt(final String str) throws JargonException {
 
 		try {
 
 			// Decode base64 to get bytes
-			byte[] dec = new sun.misc.BASE64Decoder().decodeBuffer(str);
+			byte[] dec = Base64.getDecoder().decode(str);
 
 			// Decrypt
 			byte[] utf8 = dcipher.doFinal(dec);

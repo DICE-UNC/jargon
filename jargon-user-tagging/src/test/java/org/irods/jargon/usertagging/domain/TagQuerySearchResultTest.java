@@ -3,7 +3,7 @@ package org.irods.jargon.usertagging.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;

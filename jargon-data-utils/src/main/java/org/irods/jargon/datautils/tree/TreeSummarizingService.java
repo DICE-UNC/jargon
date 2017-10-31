@@ -9,15 +9,15 @@ import org.irods.jargon.core.exception.JargonException;
  * tree, creating an overall summary that gives statistics about file sizes,
  * etc, via the {@link TreeSummary}. This service can work with both local and
  * iRODS files.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public interface TreeSummarizingService {
 
 	/**
 	 * Create a summary describing the contents of an iRODS file tree
-	 * 
+	 *
 	 * @param irodsFilePath
 	 *            {@code String} with an absolute path to an iRODS tree
 	 * @return {@link TreeSummary}
@@ -29,7 +29,7 @@ public interface TreeSummarizingService {
 
 	/**
 	 * Create a summary describing the contents of a local file tree
-	 * 
+	 *
 	 * @param irodsFilePath
 	 *            {@code String} with an absolute path to a local file
 	 *            system tree

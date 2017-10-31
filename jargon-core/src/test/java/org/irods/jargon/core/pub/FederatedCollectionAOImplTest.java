@@ -4,15 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -378,7 +378,7 @@ public class FederatedCollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,

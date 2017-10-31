@@ -6,17 +6,17 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSProtocolManager;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.connection.IRODSSimpleProtocolManager;
 import org.irods.jargon.core.exception.DataNotFoundException;
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -44,18 +44,12 @@ public class EnvironmentalInfoAOTest {
 
 	@Test
 	public void testGetEnvironmentalAO() throws Exception {
-		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager
-				.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSSession irodsSession = IRODSSession
-				.instance(irodsConnectionManager);
-		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl
-				.instance(irodsSession);
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties irodsServerProperties = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSSession irodsSession = IRODSSession.instance(irodsConnectionManager);
+		IRODSAccessObjectFactory accessObjectFactory = IRODSAccessObjectFactoryImpl.instance(irodsSession);
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+		IRODSServerProperties irodsServerProperties = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 		Assert.assertNotNull(irodsServerProperties);
 		irodsSession.closeSession();
 	}
@@ -63,81 +57,103 @@ public class EnvironmentalInfoAOTest {
 	@Test
 	public void testGetIRODSServerCurrentTime() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 		long timeVal = environmentalInfoAO.getIRODSServerCurrentTime();
 		Assert.assertTrue("time val was missing", timeVal > 0);
 	}
 
 	/**
-	 * Note that this test depends on cmd-scripts/listCommands.sh to be
-	 * installed in the target server/bin/cmd directory. If this is not the
-	 * case, the test will just silently ignore the error.
+	 * Note that this test depends on cmd-scripts/listCommands.sh to be installed in
+	 * the target server/bin/cmd directory. If this is not the case, the test will
+	 * just silently ignore the error.
 	 *
 	 * @throws Exception
 	 */
 	@Test
 	public void testListAvailableRemoteCommands() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 
 		if (environmentalInfoAO.getIRODSServerProperties().isAtLeastIrods410()) {
 			return;
 		}
 
 		try {
-			List<RemoteCommandInformation> remoteCommands = environmentalInfoAO
-					.listAvailableRemoteCommands();
-			Assert.assertTrue("did not find any commands",
-					remoteCommands.size() > 0);
+			List<RemoteCommandInformation> remoteCommands = environmentalInfoAO.listAvailableRemoteCommands();
+			Assert.assertTrue("did not find any commands", remoteCommands.size() > 0);
 			RemoteCommandInformation information = remoteCommands.get(0);
-			Assert.assertEquals("wrong host", irodsAccount.getHost(),
-					information.getHostName());
-			Assert.assertEquals("wrong zone", irodsAccount.getZone(),
-					information.getZone());
-			Assert.assertTrue("no command name", information.getCommand()
-					.length() > 0);
+			Assert.assertEquals("wrong host", irodsAccount.getHost(), information.getHostName());
+			Assert.assertEquals("wrong zone", irodsAccount.getZone(), information.getZone());
+			Assert.assertTrue("no command name", information.getCommand().length() > 0);
 		} catch (DataNotFoundException ex) {
-			System.out
-			.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
+			System.out.println("for now, ignoring error as listCommands.sh is unavailable in the remote commands dir");
 		}
+
+	}
+
+	@Test
+	public void testGetClientHints() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0")) {
+			return;
+		}
+
+		ClientHints hints = ((EnvironmentalInfoAOImpl) environmentalInfoAO).retrieveClientHints(true);
+		Assert.assertNotNull("null hints", hints);
+
+	}
+
+	@Test
+	public void testGetClientHintsAndThenAccessCache() throws Exception {
+		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
+
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
+
+		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0")) {
+			return;
+		}
+
+		ClientHints hints = environmentalInfoAO.retrieveClientHints(true);
+		ClientHints cachedHints = environmentalInfoAO.retrieveClientHints(false);
+		Assert.assertNotNull("null hints", hints);
+		Assert.assertNotNull("null cached hints", cachedHints);
 
 	}
 
 	@Test
 	public void testListAvailableMicroservices() throws Exception {
 		IRODSFileSystem irodsFileSystem = IRODSFileSystem.instance();
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		EnvironmentalInfoAO environmentalInfoAO = accessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 
-		IRODSServerProperties props = environmentalInfoAO
-				.getIRODSServerPropertiesFromIRODSServer();
+		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
 
 		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.0")) {
 			return;
 		}
 
-		List<String> microservices = environmentalInfoAO
-				.listAvailableMicroservices();
+		List<String> microservices = environmentalInfoAO.listAvailableMicroservices();
 
-		Assert.assertTrue("did not find any microservices",
-				microservices.size() > 0);
+		Assert.assertTrue("did not find any microservices", microservices.size() > 0);
 
 	}
 }

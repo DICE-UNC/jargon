@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
@@ -14,9 +14,9 @@ import org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker.VisitorDes
  * For each file provided by an iterator, calculate summary statistics that can
  * be obtained by calling {@code getTreeSummary()} after the iteration
  * process is complete.
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class TreeSummarizingVisitor extends AbstractIRODSVisitor<File> {
 
@@ -25,7 +25,7 @@ public class TreeSummarizingVisitor extends AbstractIRODSVisitor<File> {
 	@Override
 	public VisitorDesiredAction invoke(final File visited,
 			final AbstractIRODSVisitorInvoker<File> abstractIRODSVisitorInvoker)
-			throws JargonException {
+					throws JargonException {
 
 		treeSummary.processFileInfo(visited);
 		return VisitorDesiredAction.CONTINUE;

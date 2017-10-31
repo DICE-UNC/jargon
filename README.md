@@ -1,19 +1,21 @@
-
 # Project: Jargon-core API
-#### Date:  
-#### Release Version: 4.2.0.1-SNAPSHOT 
-#### git tag: 
-#### Developer: Mike Conway - DICE
+
+### Date:
+### Release Version: 4.2.1.0-SNAPSHOT
+### git tag: 
+
 
 ## News
 
-4.2.0 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/19
 
+https://github.com/DICE-UNC/jargon/milestone/13
 
-=======
+This version of Jargon is currently targeted at Cloud Browser and REST.  There are still some features that are considered early access and may not support a full range
+of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
+
+=======
 
 Jargon-core consists of the following libraries
 
@@ -40,14 +42,30 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-#### Failures against 4.1.9 with neg require on server executing file.deleteWithForceOption in unit tests. #216
+#### Remove old thumbnail code #165 
 
-Fixes to flush behavior (related to #224) remaining after a switch to the SSL negotiation communication regime, corrections to behavior of flush() in client status operation send/receive in recursive delete operations
+Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
 
-#### User lacks privileges to invoke the given API" when adding groups / users to groups #255
+####  Add file to string and vice versa to support cloud browser editor #166 
 
-Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups as a user type groupadmin. A few needed functions are added, with plans to add more in coming updates
+Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
 
-#### add enum to indicate rule executing on chosen rule engine #259
+#### File save via cloud browser is deleting metadata #232
 
-Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file. See the user guide for details on using the new rule capabilities
+Fix save of string to file (in Stream2StreamAO) to not delete a file when overwriting, so as to preserve metadata
+
+#### Add list user groups like x method #233
+
+Enhanced user group and user queries for cloud browser
+
+#### add col user type to genquery #235
+
+Add user type to LIKE queries to discriminate users from groups in find 'like' queries
+
+#### Implement client hints #268
+
+Implement the client hints api (initially to determine iCAT type for MetaLnx), returning information about the connected iRODS data grid. This
+is implemented as a new method in EnvironmentalInfoAO, and is supported with a refreshible cache behavior. Specifically the new ClientHints domain
+object includes an ability to interrogate the type of iCAT.
+
+

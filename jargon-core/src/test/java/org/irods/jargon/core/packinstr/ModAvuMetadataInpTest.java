@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.junit.After;
@@ -62,7 +62,7 @@ public class ModAvuMetadataInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ModAVUMetadataInp_PI><arg0>add</arg0>\n");
-		sb.append("<arg1>-c</arg1>\n");
+		sb.append("<arg1>-C</arg1>\n");
 		sb.append("<arg2>target</arg2>\n");
 		sb.append("<arg3>attrib</arg3>\n");
 		sb.append("<arg4>value</arg4>\n");
@@ -87,7 +87,7 @@ public class ModAvuMetadataInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ModAVUMetadataInp_PI><arg0>mod</arg0>\n");
-		sb.append("<arg1>-c</arg1>\n");
+		sb.append("<arg1>-C</arg1>\n");
 		sb.append("<arg2>target</arg2>\n");
 		sb.append("<arg3>attrib</arg3>\n");
 		sb.append("<arg4>value</arg4>\n");
@@ -113,7 +113,7 @@ public class ModAvuMetadataInpTest {
 
 		StringBuilder sb = new StringBuilder();
 		sb.append("<ModAVUMetadataInp_PI><arg0>mod</arg0>\n");
-		sb.append("<arg1>-c</arg1>\n");
+		sb.append("<arg1>-C</arg1>\n");
 		sb.append("<arg2>target</arg2>\n");
 		sb.append("<arg3>attrib</arg3>\n");
 		sb.append("<arg4>value</arg4>\n");

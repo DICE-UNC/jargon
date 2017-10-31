@@ -76,8 +76,7 @@ public class IRODSRuleParameter {
 		this(name, value, STR_PI);
 	}
 
-	public IRODSRuleParameter(final String name, final Object value,
-			final String type) {
+	public IRODSRuleParameter(final String name, final Object value, final String type) {
 		if (value == null) {
 			setNullValue();
 		} else {
@@ -103,7 +102,7 @@ public class IRODSRuleParameter {
 		sb.append("\n   type:");
 		sb.append(getType());
 		sb.append("\n   value:");
-		sb.append(getStringValue());
+		sb.append(retrieveStringValue());
 		return sb.toString();
 	}
 
@@ -135,7 +134,7 @@ public class IRODSRuleParameter {
 		return type;
 	}
 
-	public int getIntValue() {
+	public int retrieveIntValue() {
 		if (value instanceof Integer) {
 			return ((Integer) value).intValue();
 		} else {
@@ -151,7 +150,7 @@ public class IRODSRuleParameter {
 	 * @return {@code String} containing the value of the
 	 *         IRODSRuleParameter.
 	 */
-	public String getStringValue() {
+	public String retrieveStringValue() {
 		if (value.getClass().isArray() && type.equals(EXEC_CMD_OUT_PI)) {
 
 			StringBuilder stringValue = new StringBuilder();
@@ -174,7 +173,7 @@ public class IRODSRuleParameter {
 		}
 	}
 
-	public byte[] getByteValue() {
+	public byte[] retrieveByteValue() {
 		if (value instanceof byte[]) {
 			return (byte[]) value;
 		} else {
@@ -194,37 +193,42 @@ public class IRODSRuleParameter {
 	 * Return the value with leading and trailing quotes stripped out
 	 */
 	public String getValueAsStringWithQuotesStripped() {
-		int initQuote = getStringValue().indexOf('"');
-		int finalQuote = getStringValue().lastIndexOf('"');
+		int initQuote = retrieveStringValue().indexOf('"');
+		int finalQuote = retrieveStringValue().lastIndexOf('"');
 
 		if (initQuote > -1 && finalQuote > -1) {
-			return getStringValue().substring(initQuote + 1, finalQuote);
+			return retrieveStringValue().substring(initQuote + 1, finalQuote);
 		} else {
-			return getStringValue();
+			return retrieveStringValue();
 		}
 	}
 
 	public Tag createMsParamArray() {
 
-		Tag param = new Tag(IRODSConstants.MsParam_PI, new Tag[] {
-				new Tag(IRODSConstants.label, getUniqueName()),
-				new Tag(IRODSConstants.type, getType()), });
+		Tag param = new Tag(IRODSConstants.MsParam_PI,
+				new Tag[] { new Tag(IRODSConstants.label, getUniqueName()), new Tag(IRODSConstants.type, getType()), });
 
 		if (type.equals(INT_PI)) {
-			param.addTag(new Tag(INT_PI, new Tag[] {
-			// only one parameter, the int
-			new Tag(MY_INT, getIntValue()), }));
+			param.addTag(new Tag(INT_PI,
+					new Tag[] {
+							// only one parameter, the int
+							new Tag(MY_INT, retrieveIntValue()), }));
+
 		} else if (type.equals(BUF_LEN_PI)) {
-			param.addTag(new Tag(BUF_LEN_PI, new Tag[] {
-					// send a byte buffer
-					new Tag(BUFLEN, getByteValue().length),
-					// maybe convert to Base64?
-					new Tag(BUF, new String(getByteValue())), }));
+			param.addTag(new Tag(BUF_LEN_PI,
+					new Tag[] {
+							// send a byte buffer
+							new Tag(BUFLEN, retrieveByteValue().length),
+							// maybe convert to Base64?
+							new Tag(BUF, new String(retrieveByteValue())), }));
 		} else {// STR_PI or NULL_PI
-			param.addTag(new Tag(STR_PI, new Tag[] {
-			// only one parameter, the string
-			// if default, try sending the string value, might work...
-			new Tag(MY_STR, getStringValue()), }));
+			param.addTag(new Tag(STR_PI,
+					new Tag[] {
+							// only one parameter, the string
+							// if default, try sending the string value, might
+							// work...
+							new Tag(MY_STR, retrieveStringValue()), }));
+
 		}
 		return param;
 	}

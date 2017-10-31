@@ -2,7 +2,7 @@ package org.irods.jargon.datautils.connection;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.AbstractIRODSMidLevelProtocol;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -41,6 +41,7 @@ public class ConnectionCreatingPoolableObjectFactoryTest {
 		Assert.assertNotNull("null factory", factory);
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public void testConnectionCreatingPoolableObjectFactoryNullAccount() {
 		IRODSAccount irodsAccount = null;

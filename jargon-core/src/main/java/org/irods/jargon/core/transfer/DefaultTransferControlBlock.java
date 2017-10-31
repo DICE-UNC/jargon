@@ -24,8 +24,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultTransferControlBlock implements TransferControlBlock {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(DefaultTransferControlBlock.class);
+	private static final Logger log = LoggerFactory.getLogger(DefaultTransferControlBlock.class);
 
 	private String restartAbsolutePath = "";
 	private boolean cancelled = false;
@@ -41,7 +40,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * defaults will be used. Specifying here overrides the default settings for
 	 * this transfer
 	 */
-	private TransferOptions transferOptions = null;
+	private TransferOptions transferOptions = new TransferOptions();
 	private long totalBytesTransferredSoFar = 0L;
 	private long totalBytesToTransfer = 0L;
 
@@ -76,11 +75,9 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * @return instance of {@code DefaultTransferControlBlock}
 	 * @throws JargonException
 	 */
-	public final static TransferControlBlock instance(
-			final String restartAbsolutePath,
+	public final static TransferControlBlock instance(final String restartAbsolutePath,
 			final int maxErrorsBeforeCancelling) throws JargonException {
-		return new DefaultTransferControlBlock(restartAbsolutePath,
-				maxErrorsBeforeCancelling);
+		return new DefaultTransferControlBlock(restartAbsolutePath, maxErrorsBeforeCancelling);
 	}
 
 	/**
@@ -93,10 +90,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * @return instance of {@code DefaultTransferControlBlock}
 	 * @throws JargonException
 	 */
-	public final static TransferControlBlock instance(
-			final String restartAbsolutePath) throws JargonException {
-		return new DefaultTransferControlBlock(restartAbsolutePath,
-				MAX_ERROR_DEFAULT);
+	public final static TransferControlBlock instance(final String restartAbsolutePath) throws JargonException {
+		return new DefaultTransferControlBlock(restartAbsolutePath, MAX_ERROR_DEFAULT);
 	}
 
 	/**
@@ -109,12 +104,11 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 		return new DefaultTransferControlBlock(null, MAX_ERROR_DEFAULT);
 	}
 
-	private DefaultTransferControlBlock(final String restartAbsolutePath,
-			final int maximumErrorsBeforeCancelling) throws JargonException {
+	private DefaultTransferControlBlock(final String restartAbsolutePath, final int maximumErrorsBeforeCancelling)
+			throws JargonException {
 
 		if (maximumErrorsBeforeCancelling < -1) {
-			throw new JargonException(
-					"maximumErrorsBeforeCancelling must be >= -1");
+			throw new JargonException("maximumErrorsBeforeCancelling must be >= -1");
 		}
 		maximumErrorsBeforeCanceling = maximumErrorsBeforeCancelling;
 		this.restartAbsolutePath = restartAbsolutePath;
@@ -129,8 +123,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * String)
 	 */
 	@Override
-	public synchronized boolean filter(final String absolutePath)
-			throws JargonException {
+	public synchronized boolean filter(final String absolutePath) throws JargonException {
 
 		/*
 		 * this simple filter looks for a match on the restart value (last good
@@ -233,11 +226,9 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * setMaximumErrorsBeforeCanceling(int)
 	 */
 	@Override
-	public void setMaximumErrorsBeforeCanceling(
-			final int maximumErrorsBeforeCanceling) throws JargonException {
+	public void setMaximumErrorsBeforeCanceling(final int maximumErrorsBeforeCanceling) throws JargonException {
 		if (maximumErrorsBeforeCanceling < -1) {
-			throw new JargonException(
-					"maximumErrorsBeforeCancelling must be >= -1");
+			throw new JargonException("maximumErrorsBeforeCancelling must be >= -1");
 		}
 
 		synchronized (this) {
@@ -292,9 +283,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalFilesToTransfer
-	 * ()
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getTotalFilesToTransfer ()
 	 */
 	@Override
 	public int getTotalFilesToTransfer() {
@@ -310,9 +300,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalFilesToTransfer
-	 * (int)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * setTotalFilesToTransfer (int)
 	 */
 	@Override
 	public void setTotalFilesToTransfer(final int totalFilesToTransfer) {
@@ -380,8 +369,7 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * (org.irods.jargon.core.packinstr.TransferOptions)
 	 */
 	@Override
-	public synchronized void setTransferOptions(
-			final TransferOptions transferOptions) {
+	public synchronized void setTransferOptions(final TransferOptions transferOptions) {
 		this.transferOptions = transferOptions;
 	}
 
@@ -403,17 +391,15 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	 * incrementTotalBytesTransferredSoFar(long)
 	 */
 	@Override
-	public synchronized void incrementTotalBytesTransferredSoFar(
-			final long totalBytesTransferredSoFar) {
+	public synchronized void incrementTotalBytesTransferredSoFar(final long totalBytesTransferredSoFar) {
 		this.totalBytesTransferredSoFar += totalBytesTransferredSoFar;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalBytesToTransfer
-	 * ()
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getTotalBytesToTransfer ()
 	 */
 	@Override
 	public synchronized long getTotalBytesToTransfer() {
@@ -423,22 +409,19 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalBytesToTransfer
-	 * (long)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * setTotalBytesToTransfer (long)
 	 */
 	@Override
-	public synchronized void setTotalBytesToTransfer(
-			final long totalBytesToTransfer) {
+	public synchronized void setTotalBytesToTransfer(final long totalBytesToTransfer) {
 		this.totalBytesToTransfer = totalBytesToTransfer;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getRestartAbsolutePath
-	 * ()
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getRestartAbsolutePath ()
 	 */
 	@Override
 	public synchronized String getRestartAbsolutePath() {
@@ -448,15 +431,13 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setRestartAbsolutePath
-	 * (java.lang.String)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * setRestartAbsolutePath (java.lang.String)
 	 */
 	@Override
 	public void setRestartAbsolutePath(final String restartAbsolutePath) {
 		if (restartAbsolutePath == null) {
-			throw new IllegalArgumentException(
-					"null restartAbsolutePath, set to blank if not required");
+			throw new IllegalArgumentException("null restartAbsolutePath, set to blank if not required");
 		}
 		synchronized (this) {
 			this.restartAbsolutePath = restartAbsolutePath;
@@ -466,9 +447,8 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#getTotalFilesSkippedSoFar
-	 * ()
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * getTotalFilesSkippedSoFar ()
 	 */
 	@Override
 	public synchronized int getTotalFilesSkippedSoFar() {
@@ -478,13 +458,11 @@ public class DefaultTransferControlBlock implements TransferControlBlock {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.transfer.TransferControlBlock#setTotalFilesSkippedSoFar
-	 * (int)
+	 * @see org.irods.jargon.core.transfer.TransferControlBlock#
+	 * setTotalFilesSkippedSoFar (int)
 	 */
 	@Override
-	public synchronized void setTotalFilesSkippedSoFar(
-			final int totalFilesSkippedSoFar) {
+	public synchronized void setTotalFilesSkippedSoFar(final int totalFilesSkippedSoFar) {
 		this.totalFilesSkippedSoFar = totalFilesSkippedSoFar;
 	}
 

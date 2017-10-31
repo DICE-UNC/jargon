@@ -4,14 +4,14 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Error attempting to process or visit more items when none exist
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class NoMoreItemsException extends JargonException {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -5175804272699432666L;
 

@@ -3,7 +3,7 @@ package org.irods.jargon.core.pub;
 // FIXME: need to incorporate into tests when rerouting is done
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;

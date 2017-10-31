@@ -3,7 +3,7 @@ package org.irods.jargon.datautils.filearchive;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.SettableJargonProperties;
 import org.irods.jargon.core.pub.IRODSFileSystem;
@@ -40,7 +40,6 @@ public class LocalFileGzipCompressorTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@Test

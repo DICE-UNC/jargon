@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.connectiontester;
 
@@ -7,9 +7,9 @@ import org.irods.jargon.datautils.connectiontester.ConnectionTester.TestType;
 
 /**
  * Entry for a connection test result
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class TestResultEntry {
 
@@ -50,7 +50,7 @@ public class TestResultEntry {
 	private Throwable exception = null;
 
 	/**
-	 * 
+	 *
 	 */
 	public TestResultEntry() {
 	}
@@ -66,7 +66,7 @@ public class TestResultEntry {
 	 * @param testType
 	 *            the testType to set
 	 */
-	public void setTestType(TestType testType) {
+	public void setTestType(final TestType testType) {
 		this.testType = testType;
 	}
 
@@ -81,7 +81,7 @@ public class TestResultEntry {
 	 * @param totalMilliseconds
 	 *            the totalMilliseconds to set
 	 */
-	public void setTotalMilliseconds(long totalMilliseconds) {
+	public void setTotalMilliseconds(final long totalMilliseconds) {
 		this.totalMilliseconds = totalMilliseconds;
 	}
 
@@ -96,7 +96,8 @@ public class TestResultEntry {
 	 * @param transferRateBytesPerSecond
 	 *            the transferRateBytesPerSecond to set
 	 */
-	public void setTransferRateBytesPerSecond(int transferRateBytesPerSecond) {
+	public void setTransferRateBytesPerSecond(
+			final int transferRateBytesPerSecond) {
 		this.transferRateBytesPerSecond = transferRateBytesPerSecond;
 	}
 
@@ -111,7 +112,7 @@ public class TestResultEntry {
 	 * @param success
 	 *            the success to set
 	 */
-	public void setSuccess(boolean success) {
+	public void setSuccess(final boolean success) {
 		this.success = success;
 	}
 
@@ -126,13 +127,13 @@ public class TestResultEntry {
 	 * @param exception
 	 *            the exception to set
 	 */
-	public void setException(Throwable exception) {
+	public void setException(final Throwable exception) {
 		this.exception = exception;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
@@ -177,7 +178,7 @@ public class TestResultEntry {
 	 * @param totalBytes
 	 *            the totalBytes to set
 	 */
-	public void setTotalBytes(long totalBytes) {
+	public void setTotalBytes(final long totalBytes) {
 		this.totalBytes = totalBytes;
 	}
 
@@ -192,7 +193,7 @@ public class TestResultEntry {
 	 * @param operationType
 	 *            the operationType to set
 	 */
-	public void setOperationType(OperationType operationType) {
+	public void setOperationType(final OperationType operationType) {
 		this.operationType = operationType;
 	}
 

@@ -149,6 +149,8 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * Do a query on the given file to see if it has an executable bit set
 	 *
 	 * @param irodsFile
+	 *            {@link IRODSFile} to check
+	 * 
 	 * @return {@code boolean} of {@code true} if file is data object, exists, and
 	 *         is executable
 	 * @throws JargonException
@@ -455,7 +457,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 			entries = collectionAndDataObjectListAndSearchAO.listCollectionsUnderPath(irodsFile.getAbsolutePath(), ctr);
 
 			for (CollectionAndDataObjectListingEntry entry : entries) {
-				subdirs.add(MiscIRODSUtils.getLastPathComponentForGiveAbsolutePath(entry.getPathOrName()));
+				subdirs.add(MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(entry.getPathOrName()));
 				lastEntry = entry.isLastResult();
 				ctr = entry.getCount();
 			}

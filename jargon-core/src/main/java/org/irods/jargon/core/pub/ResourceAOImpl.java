@@ -772,15 +772,17 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					RodsGenQueryEnum.COL_META_RESC_ATTR_NAME,
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
-									.getOperator().getOperatorValue()),
-					queryElement.getValue());
+
+							.getOperator().getOperatorAsString()), queryElement
+							.getValue());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
 
 			builder.addConditionAsGenQueryField(
 					RodsGenQueryEnum.COL_META_RESC_ATTR_VALUE,
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
-									.getOperator().getOperatorValue()),
+									.getOperator().getOperatorAsString()),
+
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
@@ -789,7 +791,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 					RodsGenQueryEnum.COL_META_RESC_ATTR_UNITS,
 					QueryConditionOperators
 							.getOperatorFromStringValue(queryElement
-									.getOperator().getOperatorValue()),
+									.getOperator().getOperatorAsString()),
 					queryElement.getValue());
 
 		}

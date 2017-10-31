@@ -3,7 +3,7 @@ package org.irods.jargon.core.rule;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.junit.Test;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 public class RuleTypeEvaluatorTest {
 

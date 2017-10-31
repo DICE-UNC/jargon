@@ -2,7 +2,7 @@ package org.irods.jargon.datautils.shoppingcart;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -71,6 +71,7 @@ public class ShoppingCartServiceImplTest {
 
 	}
 
+	@SuppressWarnings("unused")
 	@Test(expected = IllegalArgumentException.class)
 	public final void testSerializeCartNoDataCacheService() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper

@@ -1003,7 +1003,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			String absolutePath, boolean recursive) throws JargonException;
 
 	/**
-	 * For a given iRODS collection, set he default to inherit access
+	 * For a given iRODS collection, set the default to inherit access
 	 * permissions, using admin mode.
 	 * <p>
 	 * Note that this method will work if a soft-linked collection name is

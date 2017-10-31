@@ -5,9 +5,9 @@ import javax.swing.tree.DefaultTreeModel;
 /**
  * Model of a hierarchical tree of nodes, useful for representing hierarchies of
  * collections and data objects.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileTreeModel extends DefaultTreeModel {
 
@@ -16,7 +16,7 @@ public class FileTreeModel extends DefaultTreeModel {
 	/**
 	 * Creates a tree specifying whether any node can have children, or whether
 	 * only certain nodes can have children.
-	 * 
+	 *
 	 * @param root
 	 *            {@link FileTreeNode} that is the root of the file tree
 	 * @param asksAllowsChildren
@@ -30,7 +30,7 @@ public class FileTreeModel extends DefaultTreeModel {
 
 	/**
 	 * Creates a tree in which any node can have children.
-	 * 
+	 *
 	 * @param root
 	 *            {@link FileTreeNode} that is the root of the file tree
 	 */

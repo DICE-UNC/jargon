@@ -12,9 +12,9 @@ import org.irods.jargon.datautils.visitor.AbstractIRODSVisitorInvoker.VisitorDes
  * <p>
  * E = type of data sent to the invoke method, R = return type from the complete
  * method back to the caller
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public abstract class AbstractIRODSVisitor<E> {
 
@@ -25,7 +25,7 @@ public abstract class AbstractIRODSVisitor<E> {
 	 * Invoke an action based on processing an individual element in a
 	 * collection. This is equivalent to iterating over a collection or query
 	 * result
-	 * 
+	 *
 	 * @param visited
 	 *            object of type <E> that is provided for a single instance of
 	 *            the given collection of data to be processed by the visitor
@@ -42,13 +42,13 @@ public abstract class AbstractIRODSVisitor<E> {
 	 */
 	public abstract VisitorDesiredAction invoke(final E visited,
 			final AbstractIRODSVisitorInvoker<E> abstractIRODSVisitorInvoker)
-			throws JargonException;
+					throws JargonException;
 
 	/**
 	 * Final call from invoker when all items have been processed, signalling a
 	 * successful (non cancelled) completion of processing for the given
 	 * collection of data
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public abstract void complete() throws JargonException;

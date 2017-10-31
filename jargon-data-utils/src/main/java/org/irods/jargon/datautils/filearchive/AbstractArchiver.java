@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.filearchive;
 
@@ -15,9 +15,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Superclass for a utility to create an archive from a directory (recursively)
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public abstract class AbstractArchiver {
 
@@ -30,7 +30,7 @@ public abstract class AbstractArchiver {
 	/**
 	 * Create an instance of an archiver with the source of the archive and the
 	 * target path of the archive
-	 * 
+	 *
 	 * @param sourceFileAbsolutePath
 	 *            {@code String} with an absolute path to the source file
 	 * @param targetFileAbsolutePath
@@ -54,10 +54,10 @@ public abstract class AbstractArchiver {
 
 	}
 
-/**
+	/**
 	 * Create an archive from the provided source file.  This may be a file or a collection
 	 * @return {@link
-	 * 
+	 *
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
@@ -88,7 +88,7 @@ public abstract class AbstractArchiver {
 	/**
 	 * Given a directory that is the source for an archive, bundle the files
 	 * contained
-	 * 
+	 *
 	 * @param sourceFile
 	 *            {@link File} that is the source for the archive, this will be
 	 *            a collection
@@ -115,9 +115,9 @@ public abstract class AbstractArchiver {
 	/**
 	 * Client should implement this method to signal the end of source files,
 	 * triggering the completion of the archive
-	 * 
+	 *
 	 * @return {@link File} that is the completed archive, ready to use
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract File completeArchiving() throws JargonException;
@@ -125,7 +125,7 @@ public abstract class AbstractArchiver {
 	/**
 	 * Client should implement this method to add the given source file to the
 	 * target archive
-	 * 
+	 *
 	 * @param file
 	 *            {@link File} that is the source for the archive
 	 * @throws JargonException
@@ -136,7 +136,7 @@ public abstract class AbstractArchiver {
 	/**
 	 * When the source is a single file, as opposed to a collection, this method
 	 * should handle it
-	 * 
+	 *
 	 * @param sourceFile
 	 *            {@link File} that is the source for the archive
 	 * @return {@link File} that is the completed bundle
@@ -154,7 +154,7 @@ public abstract class AbstractArchiver {
 	/**
 	 * Subclasses should create whatever instance level objects needed to
 	 * produce the archive
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract void initializeTargetArchive() throws JargonException;

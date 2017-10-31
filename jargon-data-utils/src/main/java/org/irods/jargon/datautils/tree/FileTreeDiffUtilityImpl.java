@@ -7,6 +7,8 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 
+import javax.swing.tree.TreeNode;
+
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -32,9 +34,9 @@ import org.slf4j.LoggerFactory;
  * Note that this method will be passed an {@code IRODSAccessObjectFactory}
  * , and this class assumes that the underlying iRODS connection will be closed
  * outside of the scope of this object.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 		implements FileTreeDiffUtility {
@@ -50,7 +52,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@code IRODSAccount} that is used to connect to the
 	 *            compared iRODS file system
@@ -68,7 +70,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Default constructor
-	 * 
+	 *
 	 * @param irodsAccount
 	 *            {@code IRODSAccount} that is used to connect to the
 	 *            compared iRODS file system
@@ -132,10 +134,9 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 		FileTreeNode childNode = null;
 		boolean noDiffs = true;
-		@SuppressWarnings("unchecked")
-		Enumeration<FileTreeNode> children = fileTreeNode.children();
+		Enumeration<TreeNode> children = fileTreeNode.children();
 		while (children.hasMoreElements()) {
-			childNode = children.nextElement();
+			childNode = (FileTreeNode) children.nextElement();
 			noDiffs = assertNoDiffsInTree(childNode);
 			if (noDiffs) {
 				break;
@@ -245,7 +246,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Given two relative paths, do the diff. This is the recursive call that
 	 * will descend into child directories and update a shared tree model.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -334,7 +335,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Two relative paths are matched. Decide if they are files or directories,
 	 * and diff appropriately.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -382,7 +383,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * I've matched two directories by relative path, proceed to diff them
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param leftHandSideRootPath
@@ -671,7 +672,7 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	 * I've matched two files by relative paths. Now inspect for changes and
 	 * generate any appropriate diff. If either the right or left timestamp is
 	 * set to no checks, then timestamps are not checked at all.
-	 * 
+	 *
 	 * @param currentFileTreeNode
 	 * @param leftHandSide
 	 * @param rightHandSide

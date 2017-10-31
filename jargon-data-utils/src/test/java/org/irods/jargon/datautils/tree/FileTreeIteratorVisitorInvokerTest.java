@@ -7,7 +7,7 @@ import java.io.File;
 import java.util.Properties;
 import java.util.concurrent.atomic.AtomicLong;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.JargonProperties;
@@ -60,7 +60,6 @@ public class FileTreeIteratorVisitorInvokerTest {
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
 				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
-		new org.irods.jargon.testutils.AssertionHelper();
 	}
 
 	@AfterClass

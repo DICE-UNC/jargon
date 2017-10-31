@@ -26,64 +26,142 @@ public enum QueryConditionOperators {
 		return operatorAsString;
 	}
 
+	public static QueryConditionOperators getOperatorFromEnumStringValue(
+			final String stringValue) {
+		if (stringValue == null || stringValue.isEmpty()) {
+			throw new IllegalArgumentException("null or empty stringValue");
+		}
+
+		if (stringValue.equalsIgnoreCase(NOT_EQUAL.toString())) {
+			return NOT_EQUAL;
+		}
+
+		if (stringValue.equalsIgnoreCase(LESS_THAN_OR_EQUAL_TO.toString())) {
+			return LESS_THAN_OR_EQUAL_TO;
+		}
+
+		if (stringValue.equalsIgnoreCase(GREATER_THAN_OR_EQUAL_TO.toString())) {
+			return GREATER_THAN_OR_EQUAL_TO;
+		}
+		if (stringValue.equalsIgnoreCase(NOT_LIKE.toString())) {
+			return NOT_LIKE;
+		}
+		if (stringValue.equalsIgnoreCase(SOUNDS_LIKE.toString())) {
+			return SOUNDS_LIKE;
+		}
+		if (stringValue.equalsIgnoreCase(SOUNDS_NOT_LIKE.toString())) {
+			return SOUNDS_NOT_LIKE;
+		}
+		if (stringValue.equalsIgnoreCase(TABLE.toString())) {
+			return TABLE;
+		}
+		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN.toString())) {
+			return NUMERIC_LESS_THAN;
+		}
+		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN_OR_EQUAL_TO
+				.toString())) {
+			return NUMERIC_LESS_THAN_OR_EQUAL_TO;
+		}
+		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN_OR_EQUAL_TO
+				.toString())) {
+			return NUMERIC_GREATER_THAN_OR_EQUAL_TO;
+		}
+		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN.toString())) {
+			return NUMERIC_GREATER_THAN;
+		}
+		if (stringValue.equalsIgnoreCase(NUMERIC_EQUAL.toString())) {
+			return NUMERIC_EQUAL;
+		}
+		if (stringValue.equalsIgnoreCase(EQUAL.toString())) {
+			return EQUAL;
+		}
+		if (stringValue.equalsIgnoreCase(LESS_THAN.toString())) {
+			return LESS_THAN;
+		}
+		if (stringValue.equalsIgnoreCase(GREATER_THAN.toString())) {
+			return GREATER_THAN;
+		}
+		if (stringValue.equalsIgnoreCase(IN.toString())) {
+			return IN;
+		}
+		if (stringValue.equalsIgnoreCase(BETWEEN.toString())) {
+			return BETWEEN;
+		}
+		if (stringValue.equals(LIKE.toString())) {
+			return LIKE;
+		}
+
+		return null;
+
+	}
+
+	/**
+	 * Get the query operator from the genQuery freindly string value
+	 * 
+	 * @param stringValue
+	 * @return
+	 */
 	public static QueryConditionOperators getOperatorFromStringValue(
 			final String stringValue) {
 		if (stringValue == null || stringValue.isEmpty()) {
 			throw new IllegalArgumentException("null or empty stringValue");
 		}
 
-		if (stringValue.equals(NOT_EQUAL.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(NOT_EQUAL.operatorAsString)) {
 			return NOT_EQUAL;
 		}
 
-		if (stringValue.equals(LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
+		if (stringValue
+				.equalsIgnoreCase(LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return LESS_THAN_OR_EQUAL_TO;
 		}
 
-		if (stringValue.equals(GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
+		if (stringValue
+				.equalsIgnoreCase(GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return GREATER_THAN_OR_EQUAL_TO;
 		}
-		if (stringValue.equals(NOT_LIKE.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(NOT_LIKE.operatorAsString)) {
 			return NOT_LIKE;
 		}
-		if (stringValue.equals(SOUNDS_LIKE.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(SOUNDS_LIKE.operatorAsString)) {
 			return SOUNDS_LIKE;
 		}
-		if (stringValue.equals(SOUNDS_NOT_LIKE.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(SOUNDS_NOT_LIKE.operatorAsString)) {
 			return SOUNDS_NOT_LIKE;
 		}
-		if (stringValue.equals(TABLE.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(TABLE.operatorAsString)) {
 			return TABLE;
 		}
-		if (stringValue.equals(NUMERIC_LESS_THAN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(NUMERIC_LESS_THAN.operatorAsString)) {
 			return NUMERIC_LESS_THAN;
 		}
-		if (stringValue.equals(NUMERIC_LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
+		if (stringValue
+				.equalsIgnoreCase(NUMERIC_LESS_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return NUMERIC_LESS_THAN_OR_EQUAL_TO;
 		}
 		if (stringValue
-				.equals(NUMERIC_GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
+				.equalsIgnoreCase(NUMERIC_GREATER_THAN_OR_EQUAL_TO.operatorAsString)) {
 			return NUMERIC_GREATER_THAN_OR_EQUAL_TO;
 		}
-		if (stringValue.equals(NUMERIC_GREATER_THAN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(NUMERIC_GREATER_THAN.operatorAsString)) {
 			return NUMERIC_GREATER_THAN;
 		}
-		if (stringValue.equals(NUMERIC_EQUAL.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(NUMERIC_EQUAL.operatorAsString)) {
 			return NUMERIC_EQUAL;
 		}
-		if (stringValue.equals(EQUAL.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(EQUAL.operatorAsString)) {
 			return EQUAL;
 		}
-		if (stringValue.equals(LESS_THAN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(LESS_THAN.operatorAsString)) {
 			return LESS_THAN;
 		}
-		if (stringValue.equals(GREATER_THAN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(GREATER_THAN.operatorAsString)) {
 			return GREATER_THAN;
 		}
-		if (stringValue.equals(IN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(IN.operatorAsString)) {
 			return IN;
 		}
-		if (stringValue.equals(BETWEEN.operatorAsString)) {
+		if (stringValue.equalsIgnoreCase(BETWEEN.operatorAsString)) {
 			return BETWEEN;
 		}
 		if (stringValue.equals(LIKE.operatorAsString)) {

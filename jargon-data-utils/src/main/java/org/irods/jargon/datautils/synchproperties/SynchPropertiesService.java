@@ -17,7 +17,7 @@ public interface SynchPropertiesService {
 	/**
 	 * Get the information regarding the state of synchronization between iRODS
 	 * and a local file system for a given user and device.
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name for the synch
 	 * @param deviceName
@@ -39,7 +39,7 @@ public interface SynchPropertiesService {
 	/**
 	 * Given the device name and other information, set up a synchronizing
 	 * device on iRODS.
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name that will synch for the
 	 *            given device
@@ -64,7 +64,7 @@ public interface SynchPropertiesService {
 			JargonException;
 
 	/**
-	 * 
+	 *
 	 * @param userName
 	 * @param deviceName
 	 * @param irodsAbsolutePath
@@ -74,7 +74,7 @@ public interface SynchPropertiesService {
 			final String irodsAbsolutePath) throws JargonException;
 
 	/**
-	 * 
+	 *
 	 * @param userName
 	 * @param deviceName
 	 * @param irodsAbsolutePath
@@ -84,7 +84,7 @@ public interface SynchPropertiesService {
 			final String irodsAbsolutePath) throws JargonException;
 
 	/**
-	 * 
+	 *
 	 * @param irodsAccount
 	 */
 	void setIrodsAccount(final IRODSAccount irodsAccount);
@@ -99,7 +99,7 @@ public interface SynchPropertiesService {
 	/**
 	 * Get the local and iRODS timetamps that reflect the current system time on
 	 * each
-	 * 
+	 *
 	 * @return {@link SynchTimestamps} value with the local and iRODS current
 	 *         time since epoch
 	 * @throws JargonException
@@ -109,7 +109,7 @@ public interface SynchPropertiesService {
 	/**
 	 * Update the iRODS metadata about this synch to record the now time locally
 	 * and on iRODS as the last synch time
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the user name that will synch for the
 	 *            given device
@@ -128,7 +128,7 @@ public interface SynchPropertiesService {
 	/**
 	 * For a given user name, return all of the synch targets configured on the
 	 * connected iRODS server.
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @return {@code List} of {@link UserSynchTarget} giving the

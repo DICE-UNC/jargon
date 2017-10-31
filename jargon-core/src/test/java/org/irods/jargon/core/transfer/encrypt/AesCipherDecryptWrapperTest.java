@@ -2,7 +2,7 @@ package org.irods.jargon.core.transfer.encrypt;
 
 import java.nio.charset.StandardCharsets;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.NegotiatedClientServerConfiguration;
 import org.irods.jargon.core.connection.PipelineConfiguration;

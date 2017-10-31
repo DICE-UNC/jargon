@@ -5,12 +5,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.protovalues.UserTypeEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.DataObject;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
@@ -18,8 +19,8 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -44,11 +45,11 @@ public class DataObjectAOImplForSoftLinkTest {
 		testingProperties = testingPropertiesLoader.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 		scratchFileUtils
-		.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
+				.clearAndReinitializeScratchDirectory(IRODS_TEST_SUBDIR_PATH);
 		irodsTestSetupUtilities = new IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
 		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+				.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
 
@@ -70,12 +71,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		// do an initial unmount
 		MountedCollectionAO mountedCollectionAO = irodsFileSystem
@@ -134,12 +135,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -231,12 +232,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -290,7 +291,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO
@@ -322,12 +323,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -377,7 +378,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<MetaDataAndDomainData> metadataFromSource = dataObjectAO
@@ -419,12 +420,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -474,7 +475,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<MetaDataAndDomainData> metadataFromSource = dataObjectAO
@@ -514,12 +515,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -560,10 +561,10 @@ public class DataObjectAOImplForSoftLinkTest {
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
 
 		dataObjectAO
-		.replicateIrodsDataObject(
-				targetIrodsCollection + '/' + testFileName,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
+				.replicateIrodsDataObject(
+						targetIrodsCollection + '/' + testFileName,
+						testingProperties
+								.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
 		List<Resource> resources = dataObjectAO
 				.listFileResources(targetIrodsCollection + "/" + testFileName);
@@ -593,12 +594,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -637,6 +638,12 @@ public class DataObjectAOImplForSoftLinkTest {
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
 		dataTransferOperationsAO.putOperation(localFile, destFile, null, null);
+		CollectionAndDataObjectListAndSearchAO listAndSearch = irodsFileSystem
+				.getIRODSAccessObjectFactory()
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = listAndSearch.retrieveObjectStatForPath(destFile
+				.getAbsolutePath());
+		Assert.assertNotNull("null objStat", objStat);
 		String computedChecksum = dataObjectAO
 				.computeMD5ChecksumOnDataObject(destFile);
 		Assert.assertTrue("did not return a checksum",
@@ -666,12 +673,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -758,12 +765,12 @@ public class DataObjectAOImplForSoftLinkTest {
 		String sourceIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ sourceCollectionName);
+								+ sourceCollectionName);
 
 		String targetIrodsCollection = testingPropertiesHelper
 				.buildIRODSCollectionAbsolutePathFromTestProperties(
 						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
-						+ targetCollectionName);
+								+ targetCollectionName);
 
 		IRODSAccount irodsAccount = testingPropertiesHelper
 				.buildIRODSAccountFromTestProperties(testingProperties);
@@ -802,7 +809,7 @@ public class DataObjectAOImplForSoftLinkTest {
 
 		IRODSFile newFileLocation = irodsFileSystem.getIRODSFileFactory(
 				irodsAccount).instanceIRODSFile(destFile.getParentFile(),
-						testNewFileName);
+				testNewFileName);
 
 		destFile.renameTo(newFileLocation);
 		Assert.assertTrue("new file should exist", newFileLocation.exists());

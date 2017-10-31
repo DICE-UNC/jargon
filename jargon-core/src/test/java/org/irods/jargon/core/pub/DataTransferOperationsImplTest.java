@@ -29,12 +29,11 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DataTransferOperationsImplTest {
 
@@ -54,6 +53,7 @@ public class DataTransferOperationsImplTest {
 				irodsFileSystem.getJargonProperties());
 		settableJargonProperties.setInternalCacheBufferSize(-1);
 		settableJargonProperties.setInternalOutputStreamBufferSize(65535);
+		settableJargonProperties.setIntraFileStatusCallbacks(true);
 		jargonOriginalProperties = settableJargonProperties;
 		irodsFileSystem.getIrodsSession().setJargonProperties(settableJargonProperties);
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
@@ -409,7 +409,7 @@ public class DataTransferOperationsImplTest {
 		String testFileName = "testPutOneFileIntraFileCallbacksSpecifiedJargonPropsAndVerifiedParallelTxfr.txt";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				33 * 1024 * 1024);
+				1003 * 1024 * 1024);
 
 		String targetIrodsFile = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
 				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testFileName);
@@ -1285,6 +1285,7 @@ public class DataTransferOperationsImplTest {
 
 		File returnedData = new File(returnedCollectionAbsolutePath + "/" + rootCollection);
 		assertionHelper.assertTwoFilesAreEqualByRecursiveTreeComparison(localFile, returnedData);
+
 	}
 
 	/**
@@ -3429,6 +3430,42 @@ public class DataTransferOperationsImplTest {
 				.instanceIRODSFile(targetIrodsCollection, dataObjecName);
 		dto.putOperation(localFile, filePutToIrods, null, null);
 
+	}
+
+	@Test
+	public final void testRenameToFileFile() throws Exception {
+		String testFileName = "testRenameFileToFile.txt";
+		String testRenamedFileName = "testRenamedFileToFile.txt";
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		StringBuilder fileNameAndPath = new StringBuilder();
+		fileNameAndPath.append(absPath);
+
+		fileNameAndPath.append(testFileName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		IRODSFile irodsRenameFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsCollection + '/' + testRenamedFileName);
+
+		dto.rename(irodsFile.getAbsolutePath(), irodsRenameFile.getAbsolutePath());
+		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
+		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile.getAbsolutePath(),
+				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 	}
 
 }

@@ -4,9 +4,9 @@ import java.util.Map;
 
 /**
  * Describes synch configuration for a given iRODS user.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserSynchProfile {
 

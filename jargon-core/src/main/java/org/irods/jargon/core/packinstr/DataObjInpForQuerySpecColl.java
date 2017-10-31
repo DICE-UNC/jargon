@@ -19,7 +19,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 	public static final int QUERY_SPEC_COLL_API_NBR = 645;
 
 	private String fileAbsolutePath = "";
-	private final long offset = 0L;
+	private long offset = 0L;
 	private final int operationType = 0;
 	private String selObjType = null;
 	private final SpecColInfo specColInfo;
@@ -42,7 +42,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 			final String fileAbsolutePath, final SpecColInfo specColInfo)
 					throws JargonException {
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
-				specColInfo, 0);
+				specColInfo, 0, 0L);
 	}
 
 	/**
@@ -67,7 +67,31 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 			final String fileAbsolutePath, final SpecColInfo specColInfo,
 			final int continueInx) throws JargonException {
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
-				specColInfo, continueInx);
+				specColInfo, continueInx, 0L);
+	}
+
+	/**
+	 * Create the DataObjInp packing instruction to query data objects in
+	 * special collections with an offset
+	 * 
+	 * @param fileAbsolutePath
+	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
+	 * 
+	 * @param offset
+	 *            <code>log</code> with the offset value to skip ahead
+	 * 
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * 
+	 * @throws JargonException
+	 */
+	public static final DataObjInpForQuerySpecColl instanceQueryDataObjWithOffset(
+			final String fileAbsolutePath, final SpecColInfo specColInfo,
+			final long offset) throws JargonException {
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "dataObj",
+				specColInfo, 0, offset);
 	}
 
 	/**
@@ -90,7 +114,7 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 		}
 
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
-				specColInfo, 0);
+				specColInfo, 0, 0L);
 	}
 
 	/**
@@ -116,12 +140,38 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 		}
 
 		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
-				specColInfo, continueInx);
+				specColInfo, continueInx, 0L);
+	}
+
+	/**
+	 * Create the DataObjInp packing instruction to query collections in special
+	 * collections with a paging offset
+	 * 
+	 * @param fileAbsolutePath
+	 *            <code>String</code> with the file absolute path.
+	 * @param specColInfo
+	 *            {@link SpecColInfo} with particulars about the query
+	 * @param offset
+	 *            <code>long</code> with the offset value from a previous
+	 *            request
+	 * @return <code>DataObjInp</code> containing the necessary packing
+	 *         instruction
+	 * @throws JargonException
+	 */
+	public static final DataObjInpForQuerySpecColl instanceQueryCollectionsWithOffset(
+			final String fileAbsolutePath, final SpecColInfo specColInfo,
+			final long offset) throws JargonException {
+		if (specColInfo == null) {
+			throw new IllegalArgumentException("null specColInfo");
+		}
+
+		return new DataObjInpForQuerySpecColl(fileAbsolutePath, "collection",
+				specColInfo, 0, 0L);
 	}
 
 	private DataObjInpForQuerySpecColl(final String fileAbsolutePath,
 			final String selObjType, final SpecColInfo specColInfo,
-			final int continueInx) throws JargonException {
+			final int continueInx, final long offset) throws JargonException {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
@@ -137,11 +187,16 @@ public class DataObjInpForQuerySpecColl extends AbstractIRODSPackingInstruction 
 			throw new IllegalArgumentException("continueInx < 0");
 		}
 
+		if (offset < 0) {
+			throw new IllegalArgumentException("offset < 0");
+		}
+
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.selObjType = selObjType;
 		this.specColInfo = specColInfo;
 		setApiNumber(QUERY_SPEC_COLL_API_NBR);
 		this.continueInx = continueInx;
+		this.offset = offset;
 	}
 
 	@Override

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.InvalidArgumentException;
@@ -15,7 +15,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -272,7 +272,7 @@ public class MountedFilesystemDataObjectAOImplTest {
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 
 		List<DataObject> dataObjects = dataObjectAO

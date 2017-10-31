@@ -6,9 +6,9 @@ import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
  * Entry that describes a collection or data object (local or in iRODS) that is
  * a difference between two trees. The object contains a description of the data
  * object or collection, and whether it is
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class FileTreeDiffEntry {
 
@@ -35,8 +35,8 @@ public class FileTreeDiffEntry {
 	/**
 	 * Classify this as a diff (an actual difference was noted), or as a
 	 * non-diff entry that simply describes the tree
-	 * 
-	 * @return {@code true} if this is an actual diff
+	 *
+	 * @return <code>true</code> if this is an actual diff
 	 */
 	public boolean isCountAsDiff() {
 		boolean isDiff = true;
@@ -49,108 +49,93 @@ public class FileTreeDiffEntry {
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite
-	 *            file, this would, for example, be the parent collection where
-	 *            the file is 'missing' from
+	 *            {@code String} with the absolute path to the opposite file,
+	 *            this would, for example, be the parent collection where the
+	 *            file is 'missing' from
 	 * @return
 	 */
-	public static FileTreeDiffEntry instance(
-			final DiffType diffType,
+	public static FileTreeDiffEntry instance(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
 			final String absolutePathOppositeFile) {
-		return new FileTreeDiffEntry(diffType,
-				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				0L, 0L, "", "");
+		return new FileTreeDiffEntry(diffType, collectionAndDataObjectListingEntry, absolutePathOppositeFile, 0L, 0L,
+				"", "");
 	}
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite
-	 *            file, this would, for example, be the parent collection where
-	 *            the file is 'missing' from
+	 *            {@code String} with the absolute path to the opposite file,
+	 *            this would, for example, be the parent collection where the
+	 *            file is 'missing' from
 	 * @param lengthRhsFile
-	 *            {@code long} with the length of the right hand side file,
-	 *            or 0
+	 *            {@code long} with the length of the right hand side file, or 0
 	 * @param timestampRhsFile
-	 *            {@code long} with the timestamp of the right hand side
-	 *            file, or 0
+	 *            {@code long} with the timestamp of the right hand side file,
+	 *            or 0
 	 * @return
 	 */
-	public static FileTreeDiffEntry instance(
-			final DiffType diffType,
+	public static FileTreeDiffEntry instance(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
-			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile) {
-		return new FileTreeDiffEntry(diffType,
-				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
+			final String absolutePathOppositeFile, final long lengthRhsFile, final long timestampRhsFile) {
+		return new FileTreeDiffEntry(diffType, collectionAndDataObjectListingEntry, absolutePathOppositeFile,
 				lengthRhsFile, timestampRhsFile, "", "");
 	}
 
 	/**
 	 * Static instance method creates a new immutable entry
-	 * 
+	 *
 	 * @param diffType
 	 *            {@link DiffType} enum value that describes the difference type
 	 * @param collectionAndDataObjectListingEntry
 	 *            {@link CollectionAndDataObjectListingEntry} that describes the
 	 *            file or collection in the diff
 	 * @param absolutePathOppositeFile
-	 *            {@code String} with the absolute path to the opposite
-	 *            file, this would, for example, be the parent collection where
-	 *            the file is 'missing' from
+	 *            {@code String} with the absolute path to the opposite file,
+	 *            this would, for example, be the parent collection where the
+	 *            file is 'missing' from
 	 * @param lengthRhsFile
-	 *            {@code long} with the length of the right hand side file,
-	 *            or 0
+	 *            {@code long} with the length of the right hand side file, or 0
 	 * @param checksumThisFile
 	 *            {@code String} with the checksum of the current file
 	 * @param checksumOppositeFile
-	 *            {@code String} with the checksum of the corresponding
-	 *            file
+	 *            {@code String} with the checksum of the corresponding file
 	 * @param timestampRhsFile
-	 *            {@code long} with the timestamp of the right hand side
-	 *            file, or 0
+	 *            {@code long} with the timestamp of the right hand side file,
+	 *            or 0
 	 * @return
 	 */
-	public static FileTreeDiffEntry instanceForFileDiff(
-			final DiffType diffType,
+	public static FileTreeDiffEntry instanceForFileDiff(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
-			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile, final String checksumThisFile,
-			final String checksumOppositeFile) {
-		return new FileTreeDiffEntry(diffType,
-				collectionAndDataObjectListingEntry, absolutePathOppositeFile,
-				lengthRhsFile, timestampRhsFile, checksumThisFile,
-				checksumOppositeFile);
+			final String absolutePathOppositeFile, final long lengthRhsFile, final long timestampRhsFile,
+			final String checksumThisFile, final String checksumOppositeFile) {
+		return new FileTreeDiffEntry(diffType, collectionAndDataObjectListingEntry, absolutePathOppositeFile,
+				lengthRhsFile, timestampRhsFile, checksumThisFile, checksumOppositeFile);
 	}
 
-	private FileTreeDiffEntry(
-			final DiffType diffType,
+	private FileTreeDiffEntry(final DiffType diffType,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry,
-			final String absolutePathOppositeFile, final long lengthRhsFile,
-			final long timestampRhsFile, final String checksumThisFile,
-			final String checksumOppositeFile) {
+			final String absolutePathOppositeFile, final long lengthRhsFile, final long timestampRhsFile,
+			final String checksumThisFile, final String checksumOppositeFile) {
 
 		if (diffType == null) {
 			throw new IllegalArgumentException("null diffType");
 		}
 
 		if (collectionAndDataObjectListingEntry == null) {
-			throw new IllegalArgumentException(
-					"null collectionAndDataObjectListingEntry");
+			throw new IllegalArgumentException("null collectionAndDataObjectListingEntry");
 		}
 
 		if (lengthRhsFile < 0) {

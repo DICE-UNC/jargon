@@ -1,15 +1,15 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.connectiontester;
 
 /**
- * 
+ *
  * configuration for the connection tester specifying details for the test
- * 
+ *
  * @author Mike Conway - DICE
- * 
- * 
+ *
+ *
  */
 public class ConnectionTesterConfiguration {
 
@@ -30,7 +30,7 @@ public class ConnectionTesterConfiguration {
 	private boolean cleanupOnCompletion = true;
 
 	/**
-	 * 
+	 *
 	 */
 	public ConnectionTesterConfiguration() {
 	}
@@ -46,7 +46,8 @@ public class ConnectionTesterConfiguration {
 	 * @param localSourceParentDirectory
 	 *            the localSourceParentDirectory to set
 	 */
-	public void setLocalSourceParentDirectory(String localSourceParentDirectory) {
+	public void setLocalSourceParentDirectory(
+			final String localSourceParentDirectory) {
 		this.localSourceParentDirectory = localSourceParentDirectory;
 	}
 
@@ -61,7 +62,7 @@ public class ConnectionTesterConfiguration {
 	 * @param irodsParentDirectory
 	 *            the irodsParentDirectory to set
 	 */
-	public void setIrodsParentDirectory(String irodsParentDirectory) {
+	public void setIrodsParentDirectory(final String irodsParentDirectory) {
 		this.irodsParentDirectory = irodsParentDirectory;
 	}
 
@@ -76,13 +77,13 @@ public class ConnectionTesterConfiguration {
 	 * @param cleanupOnCompletion
 	 *            the cleanupOnCompletion to set
 	 */
-	public void setCleanupOnCompletion(boolean cleanupOnCompletion) {
+	public void setCleanupOnCompletion(final boolean cleanupOnCompletion) {
 		this.cleanupOnCompletion = cleanupOnCompletion;
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see java.lang.Object#toString()
 	 */
 	@Override

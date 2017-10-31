@@ -5,9 +5,9 @@ import java.util.Map;
 /**
  * Describes the synchronization profile for a device (like a laptop,
  * workstation, or other device) for a user.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserSynchDeviceProfile {
 

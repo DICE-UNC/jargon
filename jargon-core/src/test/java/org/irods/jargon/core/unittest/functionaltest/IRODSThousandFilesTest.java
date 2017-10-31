@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.SettableJargonProperties;
@@ -22,9 +22,9 @@ import org.irods.jargon.core.pub.domain.User;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.IRODSTestSetupUtilities;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
@@ -182,10 +182,9 @@ public class IRODSThousandFilesTest {
 		DataObjectAO dataObjectAO = irodsFileSystem
 				.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
-		avuQueryElements
-				.add(AVUQueryElement.instanceForValueQuery(
-						AVUQueryPart.ATTRIBUTE, AVUQueryOperatorEnum.EQUAL,
-						avu1Attrib));
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
+				AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
+				avu1Attrib));
 
 		List<MetaDataAndDomainData> metadataElements = dataObjectAO
 				.findMetadataValuesByMetadataQuery(avuQueryElements);

@@ -1,9 +1,11 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.tree;
 
 import java.util.Enumeration;
+
+import javax.swing.tree.TreeNode;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +13,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Post-processor for a diff tree will roll up counts of diffs in children and
  * augment the diff tree
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DiffTreePostProcessor {
 
@@ -21,7 +23,7 @@ public class DiffTreePostProcessor {
 			.getLogger(DiffTreePostProcessor.class);
 
 	/**
-	 * 
+	 *
 	 */
 	public DiffTreePostProcessor() {
 
@@ -30,7 +32,7 @@ public class DiffTreePostProcessor {
 	/**
 	 * Given a completed diff tree, post process it to roll up the counts of
 	 * diffs in children. This is useful for display to users
-	 * 
+	 *
 	 * @param fileTreeModel
 	 *            {@link FileTreeModel} that represents the outcome of a diff
 	 *            process. This model will have the nodes in the tree updated
@@ -61,14 +63,14 @@ public class DiffTreePostProcessor {
 		log.info("processing node:{}", fileTreeNode);
 
 		@SuppressWarnings("unchecked")
-		Enumeration<FileTreeNode> nodeEnum = fileTreeNode.children();
+		Enumeration<TreeNode> nodeEnum = fileTreeNode.children();
 		int count = 0;
 
 		FileTreeNode childNode;
 		FileTreeDiffEntry childEntry;
 
 		while (nodeEnum.hasMoreElements()) {
-			childNode = nodeEnum.nextElement();
+			childNode = (FileTreeNode) nodeEnum.nextElement();
 			log.info("childNode:{}", childNode);
 			childEntry = (FileTreeDiffEntry) childNode.getUserObject();
 

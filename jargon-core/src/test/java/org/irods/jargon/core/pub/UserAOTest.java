@@ -6,7 +6,7 @@ package org.irods.jargon.core.pub;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.AuthScheme;
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -1156,6 +1156,21 @@ public class UserAOTest {
 		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
 
 		List<String> users = userAO.findUserNameLike("t");
+		Assert.assertTrue("no users returned", users.size() > 0);
+
+	}
+
+	@Test
+	public void testFindUsers() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		UserAO userAO = accessObjectFactory.getUserAO(irodsAccount);
+
+		List<User> users = userAO.findUsersLike("");
 		Assert.assertTrue("no users returned", users.size() > 0);
 
 	}

@@ -7,6 +7,7 @@ import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplForSo
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAOImplTest;
 import org.irods.jargon.core.pub.CollectionAuditAOImplTest;
 import org.irods.jargon.core.pub.CollectionListingUtilsTest;
+import org.irods.jargon.core.pub.CollectionPagerAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAOImplForSoftLinkTest;
 import org.irods.jargon.core.pub.DataObjectAOImplTest;
 import org.irods.jargon.core.pub.DataObjectAuditAOImplTest;
@@ -53,41 +54,43 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ IRODSGenQueryExecutorImplTest.class,
-	EnvironmentalInfoAOTest.class, ResourceAOTest.class, UserAOTest.class,
-	ZoneAOTest.class, UserGroupAOImplTest.class,
-	CollectionAOImplTest.class, DataObjectAOImplTest.class,
-	RuleProcessingAOImplTest.class, IRODSFileSystemTest.class,
-	DataTransferOperationsImplTest.class,
-	DataTransferOperationsImplTestNoInternalCache.class,
-	RemoteExecutionOfCommandsAOImplTest.class,
-	CollectionAndDataObjectListAndSearchAOImplTest.class,
-	IRODSAccessObjectFactoryImplTest.class,
-	BulkFileOperationsAOImplTest.class,
-	SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
-	QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
-	FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,
-	FederatedIRODSGenQueryExecutorImplTest.class,
-	FederatedDataTransferOperationsImplTest.class, UserAOHelperTest.class,
-	FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
-	ProtocolExtensionPointImplTest.class,
-	IRODSRegistrationOfFilesAOImplTest.class,
-	MountedCollectionAOImplTest.class,
-	CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
-	DataObjectAOImplForSoftLinkTest.class,
-	CollectionAOImplForSoftLinkTest.class,
-	DataTransferOperationsImplForSoftLinksTest.class,
-	ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
-	IRODSGenQueryExecutorImplBuilderQueriesTest.class,
-	CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
-	SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class,
-	FederatedSpecificQueryAOTest.class,
-	MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
-	MountedFilesystemsDataTransferOperationsImplTest.class,
-	MountedFilesystemCollectionAOImplTest.class,
-	IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
-	DataObjectChecksumUtilitiesAOImplTest.class,
-	CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class,
-	TrashOperationsTest.class })
+
+EnvironmentalInfoAOTest.class, ResourceAOTest.class, UserAOTest.class,
+		ZoneAOTest.class, UserGroupAOImplTest.class,
+		CollectionAOImplTest.class, DataObjectAOImplTest.class,
+		RuleProcessingAOImplTest.class, IRODSFileSystemTest.class,
+		DataTransferOperationsImplTest.class,
+		DataTransferOperationsImplTestNoInternalCache.class,
+		RemoteExecutionOfCommandsAOImplTest.class,
+		CollectionAndDataObjectListAndSearchAOImplTest.class,
+		IRODSAccessObjectFactoryImplTest.class,
+		BulkFileOperationsAOImplTest.class,
+		SimpleQueryExecutorAOImplTest.class, Stream2StreamAOImplTest.class,
+		QuotaAOImplTest.class, DataObjectAuditAOImplTest.class,
+		FederatedCollectionAndDataObjectListAndSearchAOImplTest.class,
+		FederatedIRODSGenQueryExecutorImplTest.class,
+		FederatedDataTransferOperationsImplTest.class, UserAOHelperTest.class,
+		FederatedUserAOTest.class, FederatedCollectionAOImplTest.class,
+		ProtocolExtensionPointImplTest.class,
+		IRODSRegistrationOfFilesAOImplTest.class,
+		MountedCollectionAOImplTest.class,
+		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
+		DataObjectAOImplForSoftLinkTest.class,
+		CollectionAOImplForSoftLinkTest.class,
+		DataTransferOperationsImplForSoftLinksTest.class,
+		ResourceGroupAOImplTest.class, CollectionAuditAOImplTest.class,
+		IRODSGenQueryExecutorImplBuilderQueriesTest.class,
+		CollectionAndDataObjectListAndSearchAOImplForSoftLinksTest.class,
+		SpecificQueryAOTest.class, MountedCollectionAOImplForMSSOTest.class,
+		FederatedSpecificQueryAOTest.class,
+		MountedFilesystemCollectionAndDataObjectListAndSearchAOImplTest.class,
+		MountedFilesystemsDataTransferOperationsImplTest.class,
+		MountedFilesystemCollectionAOImplTest.class,
+		IRODSFileSystemSingletonWrapperTest.class, ResourceAOHelperTest.class,
+		CollectionPagerAOImplTest.class,
+		DataObjectChecksumUtilitiesAOImplTest.class,
+		CollectionListingUtilsTest.class, FederatedDataObjectAOImplTest.class,
+		DataObjectChecksumUtilitiesAOImplTest.class, TrashOperationsTest.class })
 /**
  * Suite to run Access Object tests in org.irods.jargon.pub.*
  * <p>

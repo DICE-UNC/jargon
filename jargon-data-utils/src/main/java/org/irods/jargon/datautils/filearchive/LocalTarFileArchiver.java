@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.filearchive;
 
@@ -22,9 +22,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Archiver that will tar a given local collection
- * 
+ *
  * @author Mike Conway - DICE
- * 
+ *
  */
 public class LocalTarFileArchiver extends AbstractArchiver {
 
@@ -45,7 +45,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#completeArchiving
 	 * ()
@@ -67,7 +67,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.filearchive.AbstractArchiver#addFileToArchive
 	 * (java.io.File)
@@ -98,7 +98,7 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.filearchive.AbstractArchiver#
 	 * initializeTargetArchive()
 	 */
@@ -115,12 +115,16 @@ public class LocalTarFileArchiver extends AbstractArchiver {
 		log.info("creating tar archive stream from file");
 
 		try {
+			/*
+			 * Stream will be closed by client of this API
+			 */
+			@SuppressWarnings("resource")
 			FileOutputStream fos = new FileOutputStream(tarArchiveFile);
 
 			tarArchiveOutputStream = (TarArchiveOutputStream) new ArchiveStreamFactory()
-					.createArchiveOutputStream(ArchiveStreamFactory.TAR, fos);
+			.createArchiveOutputStream(ArchiveStreamFactory.TAR, fos);
 			tarArchiveOutputStream
-					.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
+			.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
 
 		} catch (FileNotFoundException e) {
 			log.error("fileNotFoundException initializing target archive", e);

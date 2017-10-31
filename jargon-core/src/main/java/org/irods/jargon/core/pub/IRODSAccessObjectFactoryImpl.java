@@ -408,6 +408,20 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	 * (non-Javadoc)
 	 * 
 	 * @see
+	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionPagerAO
+	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public CollectionPagerAO getCollectionPagerAO(
+			final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new CollectionPagerAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
 	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */

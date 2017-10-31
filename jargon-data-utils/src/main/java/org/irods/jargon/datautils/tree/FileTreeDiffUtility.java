@@ -14,9 +14,9 @@ public interface FileTreeDiffUtility {
 	 * common directory structure and indicate places where files or collections
 	 * differ from the perspective of the 'left hand side' file.
 	 * <p>
-	 * The {@code FileTreeDiffEntry} will indicate the type of difference
-	 * found. This is the user data object that is kept in a
-	 * {@code FileTreeNode} in the resulting {@code FileTreeModel}.
+	 * The {@code FileTreeDiffEntry} will indicate the type of difference found.
+	 * This is the user data object that is kept in a {@code FileTreeNode} in
+	 * the resulting {@code FileTreeModel}.
 	 * <p>
 	 * This utility will compare file-to-file for data objects. Since local and
 	 * iRODS time stamps are not a good indicator for direct comparison, the
@@ -27,15 +27,14 @@ public interface FileTreeDiffUtility {
 	 * Note that setting either the left hand or right hand side timestamp to
 	 * {@code NO_TIMESTAMP_CHECKS} will turn of timestamp checking. This is
 	 * appropriate for an initial synch operation.
-	 * 
+	 *
 	 * @param localFileRoot
-	 *            {@code File} that is the left hand side of the comparison
-	 * 
+	 *            <code>File</code> that is the left hand side of the comparison
 	 * @param irodsAbsolutePath
 	 *            {@code String} that is the root directory that will be
-	 *            compared to the {@code localFileRoot} The file and
-	 *            collection names will be compared relative to the respective
-	 *            left hand and right hand root absolute paths
+	 *            compared to the {@code localFileRoot} The file and collection
+	 *            names will be compared relative to the respective left hand
+	 *            and right hand root absolute paths
 	 * @param timestampForLastSynchLeftHandSide
 	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given left hand files, indicates that the
@@ -50,24 +49,21 @@ public interface FileTreeDiffUtility {
 	 *         object.
 	 * @throws JargonException
 	 */
-	public abstract FileTreeModel generateDiffLocalToIRODS(
-			final File localFileRoot, final String irodsAbsolutePath,
-			final long timestampForLastSynchLeftHandSide,
-			final long timestampForLastSynchRightHandSide)
+	public abstract FileTreeModel generateDiffLocalToIRODS(final File localFileRoot, final String irodsAbsolutePath,
+			final long timestampForLastSynchLeftHandSide, final long timestampForLastSynchRightHandSide)
 			throws JargonException;
 
 	/**
 	 * Handy method that checks a local and iRODS file trees and verifies that
 	 * there are no differences
-	 * 
+	 *
 	 * @param localFileRoot
-	 *            {@code File} that is the left hand side of the comparison
-	 * 
+	 *            <code>File</code> that is the left hand side of the comparison
 	 * @param irodsAbsolutePath
 	 *            {@code String} that is the root directory that will be
-	 *            compared to the {@code localFileRoot} The file and
-	 *            collection names will be compared relative to the respective
-	 *            left hand and right hand root absolute paths
+	 *            compared to the {@code localFileRoot} The file and collection
+	 *            names will be compared relative to the respective left hand
+	 *            and right hand root absolute paths
 	 * @param timestampForLastSynchLeftHandSide
 	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given left hand files, indicates that the
@@ -76,12 +72,10 @@ public interface FileTreeDiffUtility {
 	 *            {@code long} with the timestamp that, if before the last
 	 *            modified date of the given right hand files, indicates that
 	 *            the file has changed. Leave as zero to turn off this check.
-	 * @return {@code boolean} that will be {@code true} if no
-	 *         differences exist
+	 * @return {@code boolean} that will be {@code true} if no differences exist
 	 * @throws JargonException
 	 */
-	boolean verifyLocalAndIRODSTreesMatch(File localFileRoot,
-			String irodsAbsolutePath, long timestampForLastSynchLeftHandSide,
-			long timestampForLastSynchRightHandSide) throws JargonException;
+	boolean verifyLocalAndIRODSTreesMatch(File localFileRoot, String irodsAbsolutePath,
+			long timestampForLastSynchLeftHandSide, long timestampForLastSynchRightHandSide) throws JargonException;
 
 }

@@ -2,9 +2,9 @@ package org.irods.jargon.datautils.datacache;
 
 /**
  * Configuration value object for cache service
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class CacheServiceConfiguration {
 

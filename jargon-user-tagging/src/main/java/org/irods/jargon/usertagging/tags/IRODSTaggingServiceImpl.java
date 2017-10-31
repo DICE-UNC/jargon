@@ -18,10 +18,10 @@ import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.usertagging.AbstractIRODSTaggingService;
 import org.irods.jargon.usertagging.domain.IRODSTagValue;
 import org.slf4j.Logger;
@@ -39,37 +39,33 @@ import org.slf4j.LoggerFactory;
  * ensure that this is appropriately controlled. This service does not attempt
  * to do any edits of which user is updating which tag.
  * <p>
- * The {@code FreeTaggingService} is appropriate for end-user interfaces,
- * and does ensure that tag query/maintenance operations are done as the
- * logged-in user. Generally, the caller of this lower level service is
- * responsible for allowing or preventing updates on behalf of other users.
+ * The {@code FreeTaggingService} is appropriate for end-user interfaces, and
+ * does ensure that tag query/maintenance operations are done as the logged-in
+ * user. Generally, the caller of this lower level service is responsible for
+ * allowing or preventing updates on behalf of other users.
  * 
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
-		implements IRODSTaggingService {
+public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService implements IRODSTaggingService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(IRODSTaggingServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(IRODSTaggingServiceImpl.class);
 
 	/**
 	 * Static initializer used to create instances of the service.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            {@code IRODSAccessObjectFactory} that can create various
-	 *            iRODS Access Objects.
+	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
+	 *            Access Objects.
 	 * @param irodsAccount
 	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 * @return instance of the {@code IRODSTaggingServiceImpl}
 	 * @throws JargonException
 	 */
-	public static IRODSTaggingService instance(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public static IRODSTaggingService instance(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
-		return new IRODSTaggingServiceImpl(irodsAccessObjectFactory,
-				irodsAccount);
+		return new IRODSTaggingServiceImpl(irodsAccessObjectFactory, irodsAccount);
 	}
 
 	/**
@@ -77,15 +73,14 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * that interact with iRODS.
 	 * 
 	 * @param irodsAccessObjectFactory
-	 *            {@code IRODSAccessObjectFactory} that can create various
-	 *            iRODS Access Objects.
+	 *            {@code IRODSAccessObjectFactory} that can create various iRODS
+	 *            Access Objects.
 	 * @param irodsAccount
 	 *            {@code IRODSAccount} that describes the target server and
 	 *            credentials.
 	 * @throws JargonException
 	 */
-	private IRODSTaggingServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	private IRODSTaggingServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 
 		super(irodsAccessObjectFactory, irodsAccount);
@@ -100,13 +95,11 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * .lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void addTagToDataObject(final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws JargonException,
-			DuplicateDataException, DataNotFoundException {
+	public void addTagToDataObject(final String dataObjectAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws JargonException, DuplicateDataException, DataNotFoundException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty dataObjectAbsolutepath");
+			throw new IllegalArgumentException("null or empty dataObjectAbsolutepath");
 		}
 
 		if (irodsTagValue == null) {
@@ -116,16 +109,14 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("adding tag:{}", irodsTagValue);
 		log.info("to data object:{}", dataObjectAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(),
-				irodsTagValue.getTagUser(), UserTaggingConstants.TAG_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(), irodsTagValue.getTagUser(),
+				UserTaggingConstants.TAG_AVU_UNIT);
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 		try {
 			dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException(
-					"did not find data object in query", fnf);
+			throw new DataNotFoundException("did not find data object in query", fnf);
 		}
 		log.debug("tag added successfully");
 
@@ -139,16 +130,14 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void checkAndUpdateDescriptionOnDataObject(
-			final String dataObjectAbsolutePath,
+	public void checkAndUpdateDescriptionOnDataObject(final String dataObjectAbsolutePath,
 			final IRODSTagValue irodsDescriptionValue) throws JargonException {
 		IRODSTagValue currentIrodsDescriptionValue = getDescriptionOnDataObjectForLoggedInUser(dataObjectAbsolutePath);
 
 		if (currentIrodsDescriptionValue == null) {
 			log.info("no existing description, do an add");
 			if (!irodsDescriptionValue.getTagData().isEmpty()) {
-				addDescriptionToDataObject(dataObjectAbsolutePath,
-						irodsDescriptionValue);
+				addDescriptionToDataObject(dataObjectAbsolutePath, irodsDescriptionValue);
 			}
 			return;
 		}
@@ -158,16 +147,13 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		 * update
 		 */
 
-		if (irodsDescriptionValue == null
-				|| irodsDescriptionValue.getTagData().isEmpty()) {
+		if (irodsDescriptionValue == null || irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("description is being deleted:{}", irodsDescriptionValue);
-			deleteDescriptionFromDataObject(dataObjectAbsolutePath,
-					currentIrodsDescriptionValue);
+			deleteDescriptionFromDataObject(dataObjectAbsolutePath, currentIrodsDescriptionValue);
 			return;
 		}
 
-		if (irodsDescriptionValue.getTagData().equals(
-				currentIrodsDescriptionValue.getTagData())) {
+		if (irodsDescriptionValue.getTagData().equals(currentIrodsDescriptionValue.getTagData())) {
 			log.info("no change in description, no update");
 			return;
 		}
@@ -178,13 +164,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		try {
 
-			deleteDescriptionFromDataObject(dataObjectAbsolutePath,
-					currentIrodsDescriptionValue);
-			addDescriptionToDataObject(dataObjectAbsolutePath,
-					irodsDescriptionValue);
+			deleteDescriptionFromDataObject(dataObjectAbsolutePath, currentIrodsDescriptionValue);
+			addDescriptionToDataObject(dataObjectAbsolutePath, irodsDescriptionValue);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException(
-					"did not find data object in query", fnf);
+			throw new DataNotFoundException("did not find data object in query", fnf);
 		}
 		log.info("update done");
 
@@ -198,16 +181,14 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void checkAndUpdateDescriptionOnCollection(
-			final String collectionAbsolutePath,
+	public void checkAndUpdateDescriptionOnCollection(final String collectionAbsolutePath,
 			final IRODSTagValue irodsDescriptionValue) throws JargonException {
 		IRODSTagValue currentIrodsDescriptionValue = getDescriptionOnCollectionForLoggedInUser(collectionAbsolutePath);
 
 		if (currentIrodsDescriptionValue == null) {
 			log.info("no existing description, do an add");
 			if (!irodsDescriptionValue.getTagData().isEmpty()) {
-				addDescriptionToCollection(collectionAbsolutePath,
-						irodsDescriptionValue);
+				addDescriptionToCollection(collectionAbsolutePath, irodsDescriptionValue);
 			}
 			return;
 		}
@@ -217,16 +198,13 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		 * update
 		 */
 
-		if (irodsDescriptionValue == null
-				|| irodsDescriptionValue.getTagData().isEmpty()) {
+		if (irodsDescriptionValue == null || irodsDescriptionValue.getTagData().isEmpty()) {
 			log.info("description is being deleted:{}", irodsDescriptionValue);
-			deleteDescriptionFromCollection(collectionAbsolutePath,
-					currentIrodsDescriptionValue);
+			deleteDescriptionFromCollection(collectionAbsolutePath, currentIrodsDescriptionValue);
 			return;
 		}
 
-		if (irodsDescriptionValue.getTagData().equals(
-				currentIrodsDescriptionValue.getTagData())) {
+		if (irodsDescriptionValue.getTagData().equals(currentIrodsDescriptionValue.getTagData())) {
 			log.info("no change in description, no update");
 			return;
 		}
@@ -235,10 +213,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		 * Update metadata
 		 */
 
-		deleteDescriptionFromCollection(collectionAbsolutePath,
-				currentIrodsDescriptionValue);
-		addDescriptionToCollection(collectionAbsolutePath,
-				irodsDescriptionValue);
+		deleteDescriptionFromCollection(collectionAbsolutePath, currentIrodsDescriptionValue);
+		addDescriptionToCollection(collectionAbsolutePath, irodsDescriptionValue);
 		log.info("update done");
 
 	}
@@ -246,18 +222,16 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.IRODSTaggingService#addDescriptionToDataObject
-	 * (java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
+	 * @see org.irods.jargon.usertagging.IRODSTaggingService#
+	 * addDescriptionToDataObject (java.lang.String,
+	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
 	public void addDescriptionToDataObject(final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DataNotFoundException {
+			final IRODSTagValue irodsDescriptionValue) throws JargonException, DataNotFoundException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty dataObjectAbsolutepath");
+			throw new IllegalArgumentException("null or empty dataObjectAbsolutepath");
 		}
 
 		if (irodsDescriptionValue == null) {
@@ -276,15 +250,12 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		} else {
 			if (current == null) {
 				log.info("no previous description, just add");
-				doAddOfDescriptionToDataObject(dataObjectAbsolutePath,
-						irodsDescriptionValue);
-			} else if (!current.getTagData().equals(
-					irodsDescriptionValue.getTagData())) {
+				doAddOfDescriptionToDataObject(dataObjectAbsolutePath, irodsDescriptionValue);
+			} else if (!current.getTagData().equals(irodsDescriptionValue.getTagData())) {
 				// description changes, delete then add
 				log.info("previous description found, and is changed, so delete and add");
 				deleteDescriptionFromDataObject(dataObjectAbsolutePath, current);
-				doAddOfDescriptionToDataObject(dataObjectAbsolutePath,
-						irodsDescriptionValue);
+				doAddOfDescriptionToDataObject(dataObjectAbsolutePath, irodsDescriptionValue);
 			} else {
 				log.info("description does not change, ignore");
 			}
@@ -299,14 +270,11 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * @throws DataNotFoundException
 	 * @throws DuplicateDataException
 	 */
-	private void doAddOfDescriptionToDataObject(
-			final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DataNotFoundException, DuplicateDataException {
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
+	private void doAddOfDescriptionToDataObject(final String dataObjectAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue)
+			throws JargonException, DataNotFoundException, DuplicateDataException {
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(), irodsDescriptionValue.getTagUser(),
 				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
 		dataObjectAO.addAVUMetadata(dataObjectAbsolutePath, avuData);
 		log.info("description added successfully");
@@ -320,9 +288,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * (java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void deleteTagFromDataObject(final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws DataNotFoundException,
-			JargonException {
+	public void deleteTagFromDataObject(final String dataObjectAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws DataNotFoundException, JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty dataObjectAbsolutepath");
@@ -335,11 +302,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("removing tag:{}", irodsTagValue);
 		log.info("from data object:{}", dataObjectAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(),
-				irodsTagValue.getTagUser(), UserTaggingConstants.TAG_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(), irodsTagValue.getTagUser(),
+				UserTaggingConstants.TAG_AVU_UNIT);
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 
 		try {
 			dataObjectAO.deleteAVUMetadata(dataObjectAbsolutePath, avuData);
@@ -361,10 +327,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void deleteDescriptionFromDataObject(
-			final String dataObjectAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue)
-			throws DataNotFoundException, JargonException {
+	public void deleteDescriptionFromDataObject(final String dataObjectAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue) throws DataNotFoundException, JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty dataObjectAbsolutepath");
@@ -377,12 +341,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("removing description:{}", irodsDescriptionValue);
 		log.info("from data object:{}", dataObjectAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(), irodsDescriptionValue.getTagUser(),
 				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 
 		try {
 			dataObjectAO.deleteAVUMetadata(dataObjectAbsolutePath, avuData);
@@ -404,10 +366,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void deleteDescriptionFromCollection(
-			final String collectionAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue)
-			throws DataNotFoundException, JargonException {
+	public void deleteDescriptionFromCollection(final String collectionAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue) throws DataNotFoundException, JargonException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty collectionAbsolutePath");
@@ -420,12 +380,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("removing description:{}", irodsDescriptionValue);
 		log.info("from collection:{}", collectionAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(), irodsDescriptionValue.getTagUser(),
 				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		try {
 			collectionAO.deleteAVUMetadata(collectionAbsolutePath, avuData);
@@ -447,9 +405,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String)
 	 */
 	@Override
-	public List<IRODSTagValue> getTagsOnDataObject(
-			final String dataObjectAbsolutePath) throws DataNotFoundException,
-			JargonException {
+	public List<IRODSTagValue> getTagsOnDataObject(final String dataObjectAbsolutePath)
+			throws DataNotFoundException, JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty dataObjectAbsolutepath");
@@ -457,42 +414,35 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("getTagsOnDataObject:{}", dataObjectAbsolutePath);
 
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.TAG_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.TAG_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
-		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(dataObjectAbsolutePath);
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(dataObjectAbsolutePath);
 		List<MetaDataAndDomainData> queryResults;
 
 		try {
-			queryResults = dataObjectAO
-					.findMetadataValuesForDataObjectUsingAVUQuery(
-							avuQueryElements, dataFile.getParent(),
-							dataFile.getName());
+			queryResults = dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(avuQueryElements,
+					dataFile.getParent(), dataFile.getName());
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException("file not found querying for data",
-					fnf);
+			throw new DataNotFoundException("file not found querying for data", fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		log.debug("got results from query:{}, process as tag objects",
-				queryResults);
+		log.debug("got results from query:{}, process as tag objects", queryResults);
 
-		List<IRODSTagValue> resultValues = new ArrayList<IRODSTagValue>();
+		List<IRODSTagValue> resultValues = new ArrayList<>();
 
 		for (MetaDataAndDomainData metadataAndDomainData : queryResults) {
 			resultValues.add(new IRODSTagValue(metadataAndDomainData));
@@ -509,50 +459,42 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * getDescriptionOnDataObjectForLoggedInUser(java.lang.String)
 	 */
 	@Override
-	public IRODSTagValue getDescriptionOnDataObjectForLoggedInUser(
-			final String dataObjectAbsolutePath) throws JargonException {
+	public IRODSTagValue getDescriptionOnDataObjectForLoggedInUser(final String dataObjectAbsolutePath)
+			throws JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty dataObjectAbsolutepath");
 		}
 
-		log.info("getDescriptionOnDataObjectForLoggedInUser:{}",
-				dataObjectAbsolutePath);
+		log.info("getDescriptionOnDataObjectForLoggedInUser:{}", dataObjectAbsolutePath);
 
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.DESCRIPTION_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		DataObjectAO dataObjectAO = irodsAccessObjectFactory
-				.getDataObjectAO(irodsAccount);
-		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
-				irodsAccount).instanceIRODSFile(dataObjectAbsolutePath);
+		DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+		IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(dataObjectAbsolutePath);
 		List<MetaDataAndDomainData> queryResults;
 
 		try {
-			queryResults = dataObjectAO
-					.findMetadataValuesForDataObjectUsingAVUQuery(
-							avuQueryElements, dataFile.getParent(),
-							dataFile.getName());
+			queryResults = dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(avuQueryElements,
+					dataFile.getParent(), dataFile.getName());
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException(
-					"did not find data object in query", fnf);
+			throw new DataNotFoundException("did not find data object in query", fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		log.debug("got results from query:{}, process as description objects",
-				queryResults);
+		log.debug("got results from query:{}, process as description objects", queryResults);
 
 		IRODSTagValue descriptionValue = null;
 
@@ -571,48 +513,41 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * getDescriptionOnCollectionForLoggedInUser(java.lang.String)
 	 */
 	@Override
-	public IRODSTagValue getDescriptionOnCollectionForLoggedInUser(
-			final String collectionAbsolutePath) throws JargonException {
+	public IRODSTagValue getDescriptionOnCollectionForLoggedInUser(final String collectionAbsolutePath)
+			throws JargonException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty collectionAbsolutePath");
 		}
 
-		log.info("getDescriptionOnCollectionForLoggedInUser:{}",
-				collectionAbsolutePath);
+		log.info("getDescriptionOnCollectionForLoggedInUser:{}", collectionAbsolutePath);
 
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.DESCRIPTION_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.DESCRIPTION_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		List<MetaDataAndDomainData> queryResults;
 
 		try {
-			queryResults = collectionAO
-					.findMetadataValuesByMetadataQueryForCollection(
-							avuQueryElements, collectionAbsolutePath);
+			queryResults = collectionAO.findMetadataValuesByMetadataQueryForCollection(avuQueryElements,
+					collectionAbsolutePath);
 		} catch (FileNotFoundException fnf) {
-			throw new DataNotFoundException(
-					"did not find data object in query", fnf);
+			throw new DataNotFoundException("did not find data object in query", fnf);
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		log.debug("got results from query:{}, process as description objects",
-				queryResults);
+		log.debug("got results from query:{}, process as description objects", queryResults);
 
 		IRODSTagValue descriptionValue = null;
 
@@ -632,9 +567,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * .lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void addTagToCollection(final String collectionAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws JargonException,
-			DuplicateDataException, DataNotFoundException {
+	public void addTagToCollection(final String collectionAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws JargonException, DuplicateDataException, DataNotFoundException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty collectionAbsolutePath");
@@ -647,11 +581,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("adding tag:{}", irodsTagValue);
 		log.info("to collection:{}", collectionAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(),
-				irodsTagValue.getTagUser(), UserTaggingConstants.TAG_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(), irodsTagValue.getTagUser(),
+				UserTaggingConstants.TAG_AVU_UNIT);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 		collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
 		log.debug("tag added successfully");
 
@@ -660,14 +593,13 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.IRODSTaggingService#addDescriptionToCollection
-	 * (java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
+	 * @see org.irods.jargon.usertagging.IRODSTaggingService#
+	 * addDescriptionToCollection (java.lang.String,
+	 * org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
 	public void addDescriptionToCollection(final String collectionAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DataNotFoundException {
+			final IRODSTagValue irodsDescriptionValue) throws JargonException, DataNotFoundException {
 
 		if (collectionAbsolutePath == null || collectionAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty collectionAbsolutePath");
@@ -689,15 +621,12 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		} else {
 			if (current == null) {
 				log.info("no previous description, just add");
-				doAddOfDescriptionToCollection(collectionAbsolutePath,
-						irodsDescriptionValue);
-			} else if (!current.getTagData().equals(
-					irodsDescriptionValue.getTagData())) {
+				doAddOfDescriptionToCollection(collectionAbsolutePath, irodsDescriptionValue);
+			} else if (!current.getTagData().equals(irodsDescriptionValue.getTagData())) {
 				// description changes, delete then add
 				log.info("previous description found, and is changed, so delete and add");
 				deleteDescriptionFromCollection(collectionAbsolutePath, current);
-				doAddOfDescriptionToCollection(collectionAbsolutePath,
-						irodsDescriptionValue);
+				doAddOfDescriptionToCollection(collectionAbsolutePath, irodsDescriptionValue);
 			} else {
 				log.info("description does not change, ignore");
 			}
@@ -711,15 +640,12 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * @throws DataNotFoundException
 	 * @throws DuplicateDataException
 	 */
-	private void doAddOfDescriptionToCollection(
-			final String collectionAbsolutePath,
-			final IRODSTagValue irodsDescriptionValue) throws JargonException,
-			DataNotFoundException, DuplicateDataException {
+	private void doAddOfDescriptionToCollection(final String collectionAbsolutePath,
+			final IRODSTagValue irodsDescriptionValue)
+			throws JargonException, DataNotFoundException, DuplicateDataException {
 		// add this description now, any previous value will be deleted
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
-		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(),
-				irodsDescriptionValue.getTagUser(),
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
+		AvuData avuData = AvuData.instance(irodsDescriptionValue.getTagData(), irodsDescriptionValue.getTagUser(),
 				UserTaggingConstants.DESCRIPTION_AVU_UNIT);
 		collectionAO.addAVUMetadata(collectionAbsolutePath, avuData);
 		log.info("description added successfully");
@@ -733,8 +659,7 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String)
 	 */
 	@Override
-	public List<IRODSTagValue> getTagsOnCollection(
-			final String irodsAbsolutePath) throws JargonException {
+	public List<IRODSTagValue> getTagsOnCollection(final String irodsAbsolutePath) throws JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty irodsAbsolutePath");
@@ -742,40 +667,35 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("getTagsOnCollection:{}", irodsAbsolutePath);
 
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
-					UserTaggingConstants.TAG_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.TAG_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		List<MetaDataAndDomainData> queryResults;
 
 		try {
-			queryResults = collectionAO
-					.findMetadataValuesByMetadataQueryForCollection(
-							avuQueryElements, irodsAbsolutePath);
+			queryResults = collectionAO.findMetadataValuesByMetadataQueryForCollection(avuQueryElements,
+					irodsAbsolutePath);
 		} catch (FileNotFoundException fnf) {
 			log.error("did not find data object in query, will return empty list");
-			return new ArrayList<IRODSTagValue>();
+			return new ArrayList<>();
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
 		}
 
-		log.debug("got results from query:{}, process as tag objects",
-				queryResults);
+		log.debug("got results from query:{}, process as tag objects", queryResults);
 
-		List<IRODSTagValue> resultValues = new ArrayList<IRODSTagValue>();
+		List<IRODSTagValue> resultValues = new ArrayList<>();
 
 		for (MetaDataAndDomainData metadataAndDomainData : queryResults) {
 			resultValues.add(new IRODSTagValue(metadataAndDomainData));
@@ -793,9 +713,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * (java.lang.String, org.irods.jargon.usertagging.domain.IRODSTagValue)
 	 */
 	@Override
-	public void deleteTagFromCollection(final String irodsAbsolutePath,
-			final IRODSTagValue irodsTagValue) throws DataNotFoundException,
-			JargonException {
+	public void deleteTagFromCollection(final String irodsAbsolutePath, final IRODSTagValue irodsTagValue)
+			throws DataNotFoundException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty irodsAbsolutePath");
@@ -808,11 +727,10 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 		log.info("removing tag:{}", irodsTagValue);
 		log.info("from collection:{}", irodsAbsolutePath);
 
-		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(),
-				irodsTagValue.getTagUser(), UserTaggingConstants.TAG_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsTagValue.getTagData(), irodsTagValue.getTagUser(),
+				UserTaggingConstants.TAG_AVU_UNIT);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 		collectionAO.deleteAVUMetadata(irodsAbsolutePath, avuData);
 		log.debug("tag removed successfully");
 
@@ -821,15 +739,14 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.usertagging.IRODSTaggingService#getTagsBasedOnMetadataDomain
+	 * @see org.irods.jargon.usertagging.IRODSTaggingService#
+	 * getTagsBasedOnMetadataDomain
 	 * (org.irods.jargon.core.query.MetaDataAndDomainData.MetadataDomain,
 	 * java.lang.String)
 	 */
 	@Override
-	public List<IRODSTagValue> getTagsBasedOnMetadataDomain(
-			final MetadataDomain metadataDomain, final String domainUniqueName)
-			throws JargonException {
+	public List<IRODSTagValue> getTagsBasedOnMetadataDomain(final MetadataDomain metadataDomain,
+			final String domainUniqueName) throws JargonException {
 
 		if (metadataDomain == null) {
 			throw new JargonException("null metadataDomain");
@@ -861,9 +778,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String)
 	 */
 	@Override
-	public IRODSTagValue getDescriptionBasedOnMetadataDomain(
-			final MetadataDomain metadataDomain, final String domainUniqueName)
-			throws JargonException {
+	public IRODSTagValue getDescriptionBasedOnMetadataDomain(final MetadataDomain metadataDomain,
+			final String domainUniqueName) throws JargonException {
 
 		if (metadataDomain == null) {
 			throw new JargonException("null metadataDomain");
@@ -896,10 +812,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String)
 	 */
 	@Override
-	public void addTagToGivenDomain(final IRODSTagValue irodsTagValue,
-			final MetadataDomain metadataDomain, final String domainUniqueName)
-			throws JargonException, DuplicateDataException,
-			DataNotFoundException {
+	public void addTagToGivenDomain(final IRODSTagValue irodsTagValue, final MetadataDomain metadataDomain,
+			final String domainUniqueName) throws JargonException, DuplicateDataException, DataNotFoundException {
 
 		if (irodsTagValue == null) {
 			throw new JargonException("null irodsTagValue");
@@ -939,9 +853,8 @@ public final class IRODSTaggingServiceImpl extends AbstractIRODSTaggingService
 	 * java.lang.String)
 	 */
 	@Override
-	public void removeTagFromGivenDomain(final IRODSTagValue irodsTagValue,
-			final MetadataDomain metadataDomain, final String domainUniqueName)
-			throws JargonException {
+	public void removeTagFromGivenDomain(final IRODSTagValue irodsTagValue, final MetadataDomain metadataDomain,
+			final String domainUniqueName) throws JargonException {
 
 		if (irodsTagValue == null) {
 			throw new JargonException("null irodsTagValue");

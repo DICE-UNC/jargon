@@ -315,7 +315,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (metadataTargetType == MetadataTargetType.COLLECTION) {
-			argList.add("-c");
+			argList.add("-C");
 		} else if (metadataTargetType == MetadataTargetType.DATA_OBJECT) {
 			argList.add("-d");
 		} else if (metadataTargetType == MetadataTargetType.RESOURCE) {

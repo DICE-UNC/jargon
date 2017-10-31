@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -527,7 +527,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildDirName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1352,7 +1352,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));
@@ -1441,7 +1441,7 @@ public class FileTreeDiffUtilityTest {
 				"unexpectedFileName",
 				newChildFileName,
 				MiscIRODSUtils
-						.getLastPathComponentForGiveAbsolutePath(diffEntriesFound
+						.getLastPathComponentForGivenAbsolutePath(diffEntriesFound
 								.get(0)
 								.getCollectionAndDataObjectListingEntry()
 								.getPathOrName()));

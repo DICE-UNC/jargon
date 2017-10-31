@@ -22,12 +22,12 @@ import org.slf4j.LoggerFactory;
  * Service to provide a secure data cache. This allows information to be
  * serialized by a key and stored as an iRODS file in an encrypted format, and
  * later retrieved.
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
-		implements DataCacheService {
+implements DataCacheService {
 
 	String xform = "DES/ECB/PKCS5Padding";
 
@@ -43,7 +43,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Constructor with required dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} that can create necessary
 	 *            objects
@@ -65,7 +65,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * putStringValueIntoCache(java.lang.String, java.lang.String)
 	 */
@@ -133,7 +133,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.DataCacheService#
 	 * retrieveStringValueFromCache(java.lang.String, java.lang.String)
 	 */
@@ -180,14 +180,14 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * putSerializedEncryptedObjectIntoCache(java.lang.Object, java.lang.String)
 	 */
 	@Override
 	public String putSerializedEncryptedObjectIntoCache(
 			final Object informationObject, final String key)
-			throws JargonException {
+					throws JargonException {
 
 		if (informationObject == null) {
 			throw new IllegalArgumentException("null informationObject");
@@ -244,7 +244,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * retrieveObjectFromCache(java.lang.String, java.lang.String)
 	 */
@@ -294,7 +294,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Based on the configuration, come up with an absolute path to the file
 	 * name for the cache file
-	 * 
+	 *
 	 * @param keyHash
 	 * @param userName
 	 * @return
@@ -317,7 +317,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 	 * Given a user and zone, come up with the absolute path to the cach dir
 	 * parent directory based on the standard /zone/home/user/cacheDir as
 	 * configured in teh CacheDirConfig
-	 * 
+	 *
 	 * @param userName
 	 *            {@code String} with the name of the user for whom the
 	 *            home cache dir will be computed
@@ -379,7 +379,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.datautils.datacache.AccountCacheService#purgeOldRequests
 	 * ()
@@ -406,7 +406,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 		} else {
 			cacheDir = irodsAccessObjectFactory.getIRODSFileFactory(
 					irodsAccount).instanceIRODSFile(
-					cacheServiceConfiguration.getCacheDirPath());
+							cacheServiceConfiguration.getCacheDirPath());
 		}
 
 		// list the files in the cache and purge any expired
@@ -433,7 +433,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * setCacheServiceConfiguration
 	 * (org.irods.jargon.datautils.datacache.CacheServiceConfiguration)
@@ -446,7 +446,7 @@ public class DataCacheServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.datacache.AccountCacheService#
 	 * getCacheServiceConfiguration()
 	 */

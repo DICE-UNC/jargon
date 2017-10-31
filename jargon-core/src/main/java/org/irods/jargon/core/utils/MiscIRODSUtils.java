@@ -229,9 +229,21 @@ public class MiscIRODSUtils {
 	 */
 	public static String convertStreamToString(final InputStream inputStream)
 			throws Exception {
+		return convertStreamToString(inputStream, "UTF-8");
+	}
+
+	/**
+	 * Handy method to take the given input stream and make it a String
+	 *
+	 * @param inputStream
+	 * @return
+	 * @throws Exception
+	 */
+	public static String convertStreamToString(final InputStream inputStream,
+			final String encoding) throws Exception {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
-		Reader in = new InputStreamReader(inputStream, "UTF-8");
+		Reader in = new InputStreamReader(inputStream, encoding);
 		int read;
 		do {
 			read = in.read(buffer, 0, buffer.length);
@@ -447,7 +459,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @return {@code String} with the last component of the absolute path
 	 */
-	public static String getLastPathComponentForGiveAbsolutePath(
+	public static String getLastPathComponentForGivenAbsolutePath(
 			final String collectionPath) {
 
 		if (collectionPath == null || collectionPath.isEmpty()) {

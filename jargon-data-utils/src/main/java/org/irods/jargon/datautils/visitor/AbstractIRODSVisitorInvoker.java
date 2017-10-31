@@ -12,10 +12,9 @@ import org.slf4j.LoggerFactory;
  * strictly a classic visitor pattern, but somewhere between a visitor and
  * strategy pattern), and allow that visitor to do arbitrary functions as it is
  * invoked. The 'visitor' class will have a reference the object being iterated,
- * as well as a reference to this object, providing the
- * {@code IRODSAccount} and {@code IRODSAccessObjectFactory}
- * references to do additional operations on the iRODS grid containing the
- * relevant data.
+ * as well as a reference to this object, providing the {@code IRODSAccount} and
+ * {@code IRODSAccessObjectFactory} references to do additional operations on
+ * the iRODS grid containing the relevant data.
  * <p>
  * Note that this class takes a generic reference <E> that represents the type
  * of data to be iterated or 'visited', such as a gen query result or a list of
@@ -28,13 +27,12 @@ import org.slf4j.LoggerFactory;
  * project, and it is expected that this will change (and we'll write some nice
  * unit tests under here) as the actual requirements take shape. Use with
  * caution!
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
  * @param <R>
- * 
+ *
  */
-public abstract class AbstractIRODSVisitorInvoker<E> extends
-		AbstractJargonService {
+public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonService {
 
 	public enum VisitorDesiredAction {
 		HALT, CONTINUE
@@ -47,17 +45,14 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 */
 	private volatile boolean cancel = false;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractIRODSVisitorInvoker.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractIRODSVisitorInvoker.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public AbstractIRODSVisitorInvoker(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount,
-			final AbstractIRODSVisitor<E> visitor) {
+	public AbstractIRODSVisitorInvoker(final IRODSAccessObjectFactory irodsAccessObjectFactory,
+			final IRODSAccount irodsAccount, final AbstractIRODSVisitor<E> visitor) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
 		if (visitor == null) {
@@ -73,7 +68,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * underlying data and make invocations to the {@code visit()} method.
 	 * <p>
 	 * This method will honor any cancellation signal when iterating
-	 * 
+	 *
 	 * @throws NoMoreItemsException
 	 *             if no more items were found, but were expected
 	 * @throws JargonException
@@ -92,16 +87,13 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 				}
 			}
 		} catch (JargonException je) {
-			log.error(
-					"unhandled jargon exception in visitor processing, calling close and terminating",
-					je);
+			log.error("unhandled jargon exception in visitor processing, calling close and terminating", je);
 			throw je;
 		} catch (Exception e) {
 			log.error(
 					"unhandled  exception in visitor processing, calling close and terminating, rethrow as JargonException",
 					e);
-			throw new JargonException(
-					"unhandled exception in visitor processing", e);
+			throw new JargonException("unhandled exception in visitor processing", e);
 
 		} finally {
 			log.info("processing complete, calling complete() on the visitor");
@@ -113,10 +105,10 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 
 	/**
 	 * Method template to be implemented by the developer to initialize the
-	 * collection of items to iterate over. Note that the {@code next()}
-	 * method will be called and this method will handle any 'requery' to obtain
-	 * pages of data from iRODS
-	 * 
+	 * collection of items to iterate over. Note that the {@code next()} method
+	 * will be called and this method will handle any 'requery' to obtain pages
+	 * of data from iRODS
+	 *
 	 * @throws JargonException
 	 */
 	protected abstract void initializeInvoker() throws JargonException;
@@ -125,7 +117,7 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * Method to access the next item in the collection to be iterated and
 	 * 'visited'. This method will be responsible for any 'paging' that requires
 	 * a re-query to iRODS.
-	 * 
+	 *
 	 * @return <E> with the next item of iterated data to visit
 	 * @throws NoMoreItemsException
 	 * @throws JargonException
@@ -133,10 +125,10 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	protected abstract E next() throws NoMoreItemsException, JargonException;
 
 	/**
-	 * Return a {@code boolean} that indicates whether the underlying
-	 * collection of data has more results to process
-	 * 
-	 * @return {@code boolean} of {@code true} if there is more data
+	 * Return a {@code boolean} that indicates whether the underlying collection
+	 * of data has more results to process
+	 *
+	 * @return <code>boolean</code> of <code>true</code> if there is more data
 	 *         to process
 	 * @throws JargonException
 	 */
@@ -146,15 +138,15 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 	 * Complete the operation, called even if cancel or error occurs.
 	 * <p>
 	 * Any resource freeing or final evaluation should be implemented here
-	 * 
+	 *
 	 * @throws JargonException
 	 */
 	public abstract void close() throws JargonException;
 
 	/**
-	 * Checks if cancel has been called on this object, or a {@code HALT}
-	 * was returned from the visitor.
-	 * 
+	 * Checks if cancel has been called on this object, or a {@code HALT} was
+	 * returned from the visitor.
+	 *
 	 * @return
 	 */
 	public boolean isCancel() {
@@ -163,8 +155,8 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends
 
 	/**
 	 * signal that the iterator/visitor operation should be cancelled. Note that
-	 * this can also be accomplished by returning a {@code HALT} value from
-	 * the visitor implementation.
+	 * this can also be accomplished by returning a {@code HALT} value from the
+	 * visitor implementation.
 	 */
 	public void setCancel(final boolean cancel) {
 		log.warn("attempting to cancel...");

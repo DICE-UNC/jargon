@@ -20,9 +20,9 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 
 /**
@@ -419,7 +419,7 @@ public class AssertionHelper {
 			List<AVUQueryElement> query = new ArrayList<AVUQueryElement>();
 			query.add(AVUQueryElement.instanceForValueQuery(
 					AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-					AVUQueryOperatorEnum.EQUAL, avuAttribute));
+					QueryConditionOperators.EQUAL, avuAttribute));
 			DataObjectAO dataObjectAO = irodsAccessObjectFactory
 					.getDataObjectAO(irodsAccount);
 			actual = dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(

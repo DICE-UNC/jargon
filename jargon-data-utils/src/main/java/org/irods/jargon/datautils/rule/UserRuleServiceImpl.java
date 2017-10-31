@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
@@ -13,9 +13,9 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
 import org.irods.jargon.core.query.AVUQueryElement.AVUQueryPart;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.service.AbstractJargonService;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.datautils.rule.UserRuleDefinition.RuleAproposTo;
@@ -25,9 +25,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Utilities to manage user defined rules in iRODS via a convention for a user
  * rules dir
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserRuleServiceImpl extends AbstractJargonService implements
 		UserRuleService {
@@ -140,7 +140,7 @@ public class UserRuleServiceImpl extends AbstractJargonService implements
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
 		try {
 			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, AVUQueryOperatorEnum.EQUAL,
+					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
 					USER_RULE_UNIT));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);

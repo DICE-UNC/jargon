@@ -45,7 +45,6 @@ import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -168,6 +167,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	/*
 	 * (non-Javadoc)
 	 * 
+	 *
 	 * @see
 	 * org.irods.jargon.core.pub.DataObjectAO#findByAbsolutePath(java.lang.String )
 	 */
@@ -339,6 +339,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * listener, then the {@code TransferStatusCallbackListener} will receive a
 	 * message asking for the overwrite option for this transfer operation. This is
 	 * the appropriate mode when the client is interactive.
+	 * 
 	 *
 	 * @param localFile
 	 *            {@code File} with a source file or directory in the local file
@@ -346,6 +347,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * @param irodsFileDestination
 	 *            {@link IRODSFile} that is the target of the data transfer
 	 * @param transferControlBlock
+	 * 
 	 *            {@link TransferControlBlock} that will control aspects of the data
 	 *            transfer. Note that the {@link TransferOptions} that are a member
 	 *            of the {@code TransferControlBlock} may be specified here to pass
@@ -445,6 +447,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * listener, then the {@code TransferStatusCallbackListener} will receive a
 	 * message asking for the overwrite option for this transfer operation. This is
 	 * the appropriate mode when the client is interactive.
+	 * 
 	 *
 	 * @param localFile
 	 *            {@code File} with a source file or directory in the local file
@@ -807,7 +810,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			} else {
 				log.info(
 						"parallel operation deferred by server sending 0 threads back in PortalOperOut, revert to single thread transfer");
-				if (transferStatusCallbackListener != null || myTransferOptions.isIntraFileStatusCallbacks()) {
+
+				if (transferStatusCallbackListener != null && myTransferOptions.isIntraFileStatusCallbacks()) {
 					intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instanceSettingTransferOptions(
 							TransferType.PUT, localFile.length(), transferControlBlock, transferStatusCallbackListener,
 							transferControlBlock.getTransferOptions());
@@ -916,6 +920,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *
 	 * @param irodsFileToGet
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the source
+	 *            of the transfer. If the {@code TransferOptions} specified in the
+	 *            {@code TransferControlBlock} indicates no force, then an attempted
+	 *            overwrite will throw the {@code OverwriteException}. If the
+	 *            transfer option is set to ask the callback listener, then the
+	 *            {@code TransferStatusCallbackListener} will receive a message
+	 *            asking for the overwrite option for this transfer operation. This
+	 *            is the appropriate mode when the client is interactive.
+	 *
+	 * @param irodsFileToGet
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the source
 	 *            of the transfer. Setting the resource name in the
 	 *            {@code irodsFileToGet} will specify that the file is retrieved
 	 *            from that particular resource.
@@ -930,7 +944,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *            of the {@code TransferControlBlock} may be specified here to pass
 	 *            to the running transfer. If this is set to {@code null} a default
 	 *            block will be created, and the {@code TransferOptions} will be set
-	 *            to the defined default parameters
+	 *            to the defined default parameters ]
 	 * @param transferStatusCallbackListener
 	 *            {@link TransferStatusCallbackListener}, or {@code null} if not
 	 *            specified, that can receive call-backs on the status of the
@@ -1381,8 +1395,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 					FileRestartInfo fileRestartInfo = retrieveRestartInfoIfAvailable(RestartType.GET,
 							irodsFileToGet.getAbsolutePath());
 					if (fileRestartInfo == null) {
-						log.info("no restart info available, rethrow the exception");
-						throw e;
+						log.error(" exception in get transfer, currently restart is not supported for get", e);
+						throw new JargonException(e);
 					} else {
 						log.info("carrying out restart process..");
 						getRestartRetryTillMaxLoop(transferControlBlock, irodsFileToGet, fileRestartInfo,
@@ -1409,7 +1423,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 				intraFileStatusListener.finalConnectionProgressStatusCallback(status);
 			}
 
-			if (thisFileTransferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
+			if (thisFileTransferOptions != null && thisFileTransferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
 
 				// compute iRODS first, use algorithm from iRODS to compute the
 				// local checksum that should match
@@ -1746,7 +1760,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty avuData");
 		}
 
-		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+		List<BulkAVUOperationResponse> responses = new ArrayList<>();
 
 		for (AvuData value : avuData) {
 			try {
@@ -1774,9 +1788,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#deleteBulkAVUMetadataFromDataObject
-	 * (java.lang.String, java.util.List)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * deleteBulkAVUMetadataFromDataObject (java.lang.String, java.util.List)
 	 */
 	@Override
 	public List<BulkAVUOperationResponse> deleteBulkAVUMetadataFromDataObject(final String absolutePath,
@@ -1788,7 +1801,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty avuData");
 		}
 
-		List<BulkAVUOperationResponse> responses = new ArrayList<BulkAVUOperationResponse>();
+		List<BulkAVUOperationResponse> responses = new ArrayList<>();
 
 		for (AvuData value : avuData) {
 			try {
@@ -1959,7 +1972,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		List<MetaDataAndDomainData> metadatas = this.findMetadataValuesForDataObject(objStat);
 
-		List<AvuData> avusToDelete = new ArrayList<AvuData>();
+		List<AvuData> avusToDelete = new ArrayList<>();
 
 		for (MetaDataAndDomainData metadata : metadatas) {
 			avusToDelete
@@ -2272,7 +2285,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
 
-		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<>();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(irodsCollectionAbsolutePath);
@@ -2286,6 +2299,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		irodsRuleParameters
 				.add(new IRODSRuleParameter("*DelayInfo", RuleUtils.buildDelayParamForMinutes(delayInMinutes)));
+
 		RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
 				.instanceWithDefaultAutoSettings(this.getJargonProperties());
 		ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
@@ -2487,7 +2501,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		// contract checks in delegated method
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements, dataObjectCollectionAbsPath,
 					dataObjectFileName);
@@ -2620,7 +2634,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 					"The special collection type does not support this operation");
 		}
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 		CollectionAndPath collectionAndName = MiscIRODSUtils
 				.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
 
@@ -2647,7 +2661,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null irodsFile");
 		}
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 		try {
 			return this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements, irodsFile.getParent(),
 					irodsFile.getName());
@@ -2936,9 +2950,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#setAccessPermissionWriteInAdminMode
-	 * (java.lang.String, java.lang.String, java.lang.String)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * setAccessPermissionWriteInAdminMode (java.lang.String, java.lang.String,
+	 * java.lang.String)
 	 */
 	@Override
 	public void setAccessPermissionWriteInAdminMode(final String zone, final String absolutePath, final String userName)
@@ -3200,7 +3214,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 
-		List<UserFilePermission> userFilePermissions = new ArrayList<UserFilePermission>();
+		List<UserFilePermission> userFilePermissions = new ArrayList<>();
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
 		DataAOHelper.buildACLQueryForCollectionPathAndDataName(absPath, dataName, builder);
@@ -3302,14 +3316,15 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 		List<MetaDataAndDomainData> result;
 
 		try {
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+					QueryConditionOperators.EQUAL, avuData.getAttribute()));
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.UNITS,
-					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+					QueryConditionOperators.EQUAL, avuData.getUnit()));
+
 			result = this.findMetadataValuesForDataObjectUsingAVUQuery(queryElements, absolutePath);
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
@@ -3524,7 +3539,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		// I support spec query, give it a try
 
-		List<String> arguments = new ArrayList<String>(3);
+		List<String> arguments = new ArrayList<>(3);
 		arguments.add(collFile.getParent());
 		arguments.add(collFile.getName());
 		arguments.add(userName);
@@ -3683,9 +3698,8 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.DataObjectAO#getPermissionForDataObjectForUserName
-	 * (java.lang.String, java.lang.String)
+	 * @see org.irods.jargon.core.pub.DataObjectAO#
+	 * getPermissionForDataObjectForUserName (java.lang.String, java.lang.String)
 	 */
 	@Override
 	public UserFilePermission getPermissionForDataObjectForUserName(final String irodsAbsolutePath,
@@ -3951,7 +3965,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		RuleProcessingAO ruleProcessingAO = getIRODSAccessObjectFactory().getRuleProcessingAO(getIRODSAccount());
 
-		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<IRODSRuleParameter>();
+		List<IRODSRuleParameter> irodsRuleParameters = new ArrayList<>();
 
 		StringBuilder sb = new StringBuilder();
 		sb.append(irodsCollectionAbsolutePath);
@@ -3994,11 +4008,9 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		try {
-			RuleInvocationConfiguration ruleInvocationConfiguration = RuleInvocationConfiguration
-					.instanceWithDefaultAutoSettings(this.getJargonProperties());
-			ruleInvocationConfiguration.setRuleProcessingType(RuleProcessingType.EXTERNAL);
 			IRODSRuleExecResult result = ruleProcessingAO.executeRuleFromResource("/rules/trimDataObject.r",
-					irodsRuleParameters, ruleInvocationConfiguration);
+					irodsRuleParameters, RuleProcessingType.EXTERNAL);
+
 			log.info("result of action:{}", result.getRuleExecOut().trim());
 		} catch (ResourceDoesNotExistException e) {
 			log.error("resource does not exist, rethrow as datanotfound for method contract post 4.1", e);

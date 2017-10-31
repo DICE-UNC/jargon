@@ -1,13 +1,13 @@
 /**
- * 
+ *
  */
 package org.irods.jargon.datautils.rule;
 
 /**
  * Configuration info for user rule services
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class UserRuleServiceConfiguration {
 

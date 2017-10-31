@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  * shopping cart and save in a target file, and then retrieve it. This is handy
  * for serializing the shopping cart contents to be picked up by a download
  * client such as iDrop lite
- * 
+ *
  * @author Mike Conway - DICE (www.irods.org)
- * 
+ *
  */
 public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
-		implements ShoppingCartService {
+implements ShoppingCartService {
 
 	public static final Logger log = LoggerFactory
 			.getLogger(ShoppingCartServiceImpl.class);
@@ -46,7 +46,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Constructor creates a {@code ShoppingCartService} with necessary
 	 * dependencies
-	 * 
+	 *
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory}
 	 * @param irodsAccount
@@ -72,7 +72,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
 	 * serializeShoppingCartAsLoggedInUser
 	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart,
@@ -81,7 +81,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public String serializeShoppingCartAsLoggedInUser(
 			final FileShoppingCart fileShoppingCart, final String key)
-			throws JargonException {
+					throws JargonException {
 
 		log.info("serializeShoppingCartAsLoggedInUser()");
 
@@ -120,7 +120,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
 	 * retreiveShoppingCartAsLoggedInUser(java.lang.String)
 	 */
@@ -177,7 +177,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/*
 	 * (non-Javadoc)
-	 * 
+	 *
 	 * @see org.irods.jargon.datautils.shoppingcart.ShoppingCartService#
 	 * serializeShoppingCartAsSpecifiedUser
 	 * (org.irods.jargon.datautils.shoppingcart.FileShoppingCart,
@@ -246,7 +246,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 		tempUserAccount = IRODSAccount.instance(getIrodsAccount().getHost(),
 				getIrodsAccount().getPort(), userName, tempPassword, "",
 				getIrodsAccount().getZone(), getIrodsAccount()
-						.getDefaultStorageResource());
+				.getDefaultStorageResource());
 
 		log.info("generated temp password and created temp account:${}",
 				tempUserAccount);
@@ -255,7 +255,7 @@ public class ShoppingCartServiceImpl extends AbstractDataUtilsServiceImpl
 
 	/**
 	 * Set the factory (required) used to create data cache service components
-	 * 
+	 *
 	 * @return {@link DataCacheServiceFactory}
 	 */
 	@Override

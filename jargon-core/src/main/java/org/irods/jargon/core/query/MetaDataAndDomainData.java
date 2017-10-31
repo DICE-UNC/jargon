@@ -111,8 +111,8 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 			final String avuAttribute, final String avuValue,
 			final String avuUnit) throws JargonException {
 		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
-				domainObjectUniqueName, 0L, null, null, avuId, avuAttribute,
-				avuValue, avuUnit);
+				domainObjectUniqueName, size, createdAt, modifiedAt, avuId,
+				avuAttribute, avuValue, avuUnit);
 	}
 
 	@Override

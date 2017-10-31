@@ -26,7 +26,6 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -584,10 +583,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		try {
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-					AVUQueryOperatorEnum.EQUAL, avuData.getAttribute()));
+					QueryConditionOperators.EQUAL, avuData.getAttribute()));
 			queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.UNITS,
-					AVUQueryOperatorEnum.EQUAL, avuData.getUnit()));
+					QueryConditionOperators.EQUAL, avuData.getUnit()));
 			result = this.findMetadataValuesByMetadataQueryForCollection(queryElements, myPath);
+
 		} catch (JargonQueryException e) {
 			log.error("error querying data for avu", e);
 			throw new JargonException("error querying data for AVU");

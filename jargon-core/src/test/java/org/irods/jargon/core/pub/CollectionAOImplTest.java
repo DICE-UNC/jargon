@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSServerProperties;
@@ -16,13 +16,17 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
 import org.irods.jargon.core.pub.domain.AvuData;
 import org.irods.jargon.core.pub.domain.Collection;
+import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.query.AVUQueryElement;
-import org.irods.jargon.core.query.AVUQueryOperatorEnum;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
+import org.irods.jargon.core.query.QueryConditionOperators;
+import org.irods.jargon.core.utils.CollectionAndPath;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
@@ -147,7 +151,7 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<Collection> result = collectionAO.findDomainByMetadataQuery(
 				queryElements, 0, true);
@@ -155,6 +159,54 @@ public class CollectionAOImplTest {
 		Assert.assertEquals(
 				"target collection does not equal result collection name",
 				targetIrodsCollection, result.get(0).getCollectionName());
+	}
+
+	@Test
+	public void testGetListingEntryForAbsolutePath() throws Exception {
+		// generate a local scratch file
+		String testFileName = "testGetListingEntryForAbsolutePath";
+
+		String targetIrodsFile = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(
+						testingProperties, IRODS_TEST_SUBDIR_PATH + '/'
+								+ testFileName);
+
+		// now put the file
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
+				.getIRODSAccessObjectFactory();
+
+		IRODSFileFactory irodsFileFactory = accessObjectFactory
+				.getIRODSFileFactory(irodsAccount);
+		IRODSFile destFile = irodsFileFactory
+				.instanceIRODSFile(targetIrodsFile);
+		destFile.mkdir();
+
+		CollectionAO collectionAO = accessObjectFactory
+				.getCollectionAO(irodsAccount);
+
+		ObjStat objStat = collectionAO.getObjectStatForAbsolutePath(destFile
+				.getAbsolutePath());
+		CollectionAndDataObjectListingEntry actual = collectionAO
+				.getListingEntryForAbsolutePath(destFile.getAbsolutePath());
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(destFile
+						.getAbsolutePath());
+		Assert.assertNotNull(actual);
+		Assert.assertEquals(objStat.getAbsolutePath(),
+				actual.getFormattedAbsolutePath());
+		Assert.assertEquals(collectionAndPath.getCollectionParent(),
+				actual.getParentPath());
+		Assert.assertEquals(objStat.getObjSize(), actual.getDataSize());
+		Assert.assertEquals(objStat.getOwnerName(), actual.getOwnerName());
+		Assert.assertEquals(objStat.getOwnerZone(), actual.getOwnerZone());
+		Assert.assertEquals(objStat.getCreatedAt(), actual.getCreatedAt());
+		Assert.assertEquals(objStat.getModifiedAt(), actual.getModifiedAt());
+		Assert.assertEquals(objStat.getObjectType(), actual.getObjectType());
+		Assert.assertEquals(objStat.getSpecColType(), actual.getSpecColType());
+
 	}
 
 	@Test
@@ -192,7 +244,7 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -238,9 +290,11 @@ public class CollectionAOImplTest {
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName.toLowerCase()));
+		queryElements
+				.add(AVUQueryElement.instanceForValueQuery(
+						AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+						QueryConditionOperators.EQUAL,
+						expectedAttribName.toLowerCase()));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements, true);
@@ -283,7 +337,7 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
@@ -326,7 +380,7 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
@@ -410,9 +464,11 @@ public class CollectionAOImplTest {
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName.toLowerCase()));
+		queryElements
+				.add(AVUQueryElement.instanceForValueQuery(
+						AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+						QueryConditionOperators.EQUAL,
+						expectedAttribName.toLowerCase()));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
@@ -458,11 +514,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -515,11 +571,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -529,11 +585,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+				QueryConditionOperators.EQUAL, expectedAttribName2));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue2));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue2));
 
 		result = collectionAO.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertFalse("no query result returned", result.isEmpty());
@@ -598,11 +654,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -612,11 +668,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+				QueryConditionOperators.EQUAL, expectedAttribName2));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue2));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue2));
 
 		Assert.assertTrue("should have been deleted", result.isEmpty());
 
@@ -697,11 +753,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQueryForCollection(queryElements,
@@ -712,11 +768,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+				QueryConditionOperators.EQUAL, expectedAttribName2));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue2));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue2));
 
 		Assert.assertTrue("should have been deleted", result.isEmpty());
 
@@ -835,11 +891,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -894,11 +950,11 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		List<MetaDataAndDomainData> result = collectionAO
 				.findMetadataValuesByMetadataQuery(queryElements);
@@ -1768,19 +1824,19 @@ public class CollectionAOImplTest {
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
+				QueryConditionOperators.EQUAL, expectedAttribName));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
 				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
-				AVUQueryOperatorEnum.EQUAL, expectedAttribName2));
+				QueryConditionOperators.EQUAL, expectedAttribName2));
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.VALUE, AVUQueryOperatorEnum.EQUAL,
-				expectedAttribValue2));
+				AVUQueryElement.AVUQueryPart.VALUE,
+				QueryConditionOperators.EQUAL, expectedAttribValue2));
 
 		List<Collection> result = collectionAO
 				.findDomainByMetadataQuery(queryElements);

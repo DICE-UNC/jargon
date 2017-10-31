@@ -15,6 +15,8 @@ import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.Resource;
 import org.irods.jargon.core.pub.domain.UserFilePermission;
 import org.irods.jargon.core.pub.io.IRODSFile;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
+import org.irods.jargon.core.utils.CollectionAndPath;
 import org.irods.jargon.core.utils.MiscIRODSUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -208,6 +210,54 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
 		return collectionAndDataObjectListAndSearchAO
 				.retrieveObjectStatForPath(irodsAbsolutePath);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getListingEntryForAbsolutePath
+	 * (java.lang.String)
+	 */
+	@Override
+	public CollectionAndDataObjectListingEntry getListingEntryForAbsolutePath(
+			final String irodsAbsolutePath) throws FileNotFoundException,
+			JargonException {
+		log.info("getListingEntryForAbsolutePath()");
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(
+					"null or empty irodsAbsolutePath");
+		}
+		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		ObjStat objStat = this.retrieveObjStat(irodsAbsolutePath);
+		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setCount(0);
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setDataSize(objStat.getObjSize());
+		entry.setModifiedAt(objStat.getModifiedAt());
+		entry.setObjectType(objStat.getObjectType());
+		entry.setOwnerName(objStat.getOwnerName());
+		entry.setOwnerZone(objStat.getOwnerZone());
+		entry.setSpecColType(objStat.getSpecColType());
+		entry.setSpecialObjectPath(objStat.getObjectPath());
+
+		CollectionAndPath collectionAndPath = MiscIRODSUtils
+				.separateCollectionAndPathFromGivenAbsolutePath(irodsAbsolutePath);
+
+		if (objStat.isSomeTypeOfCollection()) {
+			entry.setPathOrName(irodsAbsolutePath);
+			entry.setParentPath(collectionAndPath.getCollectionParent());
+
+		} else {
+			entry.setPathOrName(MiscIRODSUtils
+					.getLastPathComponentForGivenAbsolutePath(irodsAbsolutePath));
+			entry.setParentPath(collectionAndPath.getCollectionParent());
+
+		}
+		log.info("entry was:{}", entry);
+
+		return entry;
+
 	}
 
 	/**

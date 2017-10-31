@@ -6,9 +6,8 @@ import org.irods.jargon.datautils.connectiontester.ConnectionTesterImplTest;
 import org.irods.jargon.datautils.datacache.DataCacheServiceImplTest;
 import org.irods.jargon.datautils.filearchive.LocalFileGzipCompressorTest;
 import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
-import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
-import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
-import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
+import org.irods.jargon.datautils.filesampler.FileSamplerServiceImplTest;
+import org.irods.jargon.datautils.metadatamanifest.MetadataManifestProcessorImplTest;
 import org.irods.jargon.datautils.sharing.AnonymousAccessServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
@@ -30,14 +29,14 @@ import org.junit.runners.Suite;
 		DataCacheServiceImplTest.class,
 		ConnectionCreatingPoolableObjectFactoryTest.class,
 		TempPasswordCachingProtocolManagerTest.class,
-		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
 		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
-		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
+		ShoppingCartServiceImplTest.class,
 		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class,
 		DiffTreePostProcessorTest.class,
 		FileTreeIteratorVisitorInvokerTest.class,
 		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-		LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
+		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class,
+		ConnectionTesterImplTest.class, MetadataManifestProcessorImplTest.class })
 public class AllTests {
 
 }
