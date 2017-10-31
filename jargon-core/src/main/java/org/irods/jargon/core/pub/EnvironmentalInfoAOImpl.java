@@ -18,11 +18,16 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.RemoteScriptExecutionException;
+import org.irods.jargon.core.packinstr.MiscApiConstants;
+import org.irods.jargon.core.packinstr.Tag;
 import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 import org.irods.jargon.core.rule.IRODSRuleExecResult;
 import org.irods.jargon.core.rule.IrodsRuleInvocationTypeEnum;
 import org.irods.jargon.core.rule.RuleInvocationConfiguration;
+import org.irods.jargon.core.transform.ClientHintsTransform;
+import org.irods.jargon.core.utils.IRODSConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,6 +99,43 @@ public class EnvironmentalInfoAOImpl extends IRODSGenericAO implements Environme
 		}
 
 		return timeVal;
+
+	}
+
+	@Override
+	public ClientHints retrieveClientHints(final boolean refresh) throws JargonException {
+		log.info("retrieveClientHints()");
+		ClientHints clientHints = null;
+
+		log.info("first look in cache if not a refresh");
+		if (!refresh) {
+			clientHints = this.getIRODSSession().getDiscoveredServerPropertiesCache()
+					.retrieveClientHints(this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone());
+		}
+
+		if (clientHints == null) {
+
+			log.info("is a refresh, or hints not found");
+			if (this.getIRODSServerProperties().isAtLeastIrods410()) {
+				log.info("going to the server for hints");
+				Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, "",
+						MiscApiConstants.CLIENT_HINTS_API_NBR);
+				log.debug("server response obtained");
+				log.debug("tag:{}", response);
+				Tag buf = response.getTag("buf");
+
+				ClientHintsTransform transformer = new ClientHintsTransform();
+				log.info("refreshing or retrieving new client hints");
+				clientHints = transformer.clientHintsFromIrodsJson(buf.getStringValue());
+				this.getIRODSSession().getDiscoveredServerPropertiesCache().cacheClientHints(
+						this.getIRODSAccount().getHost(), this.getIRODSAccount().getZone(), clientHints);
+			} else {
+				log.info("no client hints available");
+			}
+
+		}
+
+		return clientHints;
 
 	}
 

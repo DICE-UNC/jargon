@@ -6,6 +6,7 @@ package org.irods.jargon.core.connection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,9 +40,10 @@ public class DiscoveredServerPropertiesCache {
 			8, 0.9f, 1);
 	private ConcurrentHashMap<String, IRODSServerProperties> cacheOfIRODSServerProperties = new ConcurrentHashMap<String, IRODSServerProperties>(
 			8, 0.9f, 1);
+	private ConcurrentHashMap<String, ClientHints> cacheOfClientHints = new ConcurrentHashMap<String, ClientHints>(8,
+			0.9f, 1);
 
-	public static final Logger log = LoggerFactory
-			.getLogger(DiscoveredServerPropertiesCache.class);
+	public static final Logger log = LoggerFactory.getLogger(DiscoveredServerPropertiesCache.class);
 
 	/*
 	 * basic properties that can be cached
@@ -60,19 +62,16 @@ public class DiscoveredServerPropertiesCache {
 
 	/**
 	 *
-	 * If an {@code IRODSServerProperties} was already cached, then just
-	 * return it, if not cached, this method will return null
+	 * If an {@code IRODSServerProperties} was already cached, then just return it,
+	 * if not cached, this method will return null
 	 *
 	 * @param host
-	 *            {@code String} with the name of the iRODS host this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS host this applies to
 	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS zone this applies to
 	 * @return {@link IRODSServerProperties} or {@code null} if not cached
 	 */
-	public IRODSServerProperties retrieveIRODSServerProperties(
-			final String host, final String zoneName) {
+	public IRODSServerProperties retrieveIRODSServerProperties(final String host, final String zoneName) {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
 		}
@@ -83,10 +82,37 @@ public class DiscoveredServerPropertiesCache {
 			myZone = "";
 		}
 
-		log.info("now retriving server properties from cache with zone:{}",
-				myZone);
+		log.info("now retriving server properties from cache with zone:{}", myZone);
 
 		return getIRODSServerPropertiesForHostAndZone(host, myZone);
+	}
+
+	/**
+	 *
+	 * If an {@code IRODSServerProperties} was already cached, then just return it,
+	 * if not cached, this method will return null
+	 *
+	 * @param host
+	 *            {@code String} with the name of the iRODS host this applies to
+	 * @param zoneName
+	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @return {@link IRODSServerProperties} or {@code null} if not cached
+	 */
+	public ClientHints retrieveClientHints(final String host, final String zoneName) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		log.info("now retriving clientHints from cache with zone:{}", myZone);
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+		return cacheOfClientHints.get(cacheKey);
 	}
 
 	/**
@@ -96,8 +122,7 @@ public class DiscoveredServerPropertiesCache {
 	 * @param zoneName
 	 * @return
 	 */
-	private IRODSServerProperties getIRODSServerPropertiesForHostAndZone(
-			final String host, final String zoneName) {
+	private IRODSServerProperties getIRODSServerPropertiesForHostAndZone(final String host, final String zoneName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -114,23 +139,20 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Get the value cached for this host and zone. Note that if the zone does
-	 * not exist in the cache, or if the property does not exist in the zone
-	 * cache, a {@code null} will be returned.
+	 * Get the value cached for this host and zone. Note that if the zone does not
+	 * exist in the cache, or if the property does not exist in the zone cache, a
+	 * {@code null} will be returned.
 	 *
 	 * @param host
-	 *            {@code String} with the name of the iRODS host this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS host this applies to
 	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS zone this applies to
 	 * @param propertyName
 	 *            {@code String} with the property value to be retrieved
-	 * @return {@code String} with the value for the given property, or
-	 *         {@code null} if no such value exists
+	 * @return {@code String} with the value for the given property, or {@code null}
+	 *         if no such value exists
 	 */
-	public String retrieveValue(final String host, final String zoneName,
-			final String propertyName) {
+	public String retrieveValue(final String host, final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -157,15 +179,38 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the {@code IRODSServerProperties} If the zone has no cache,
-	 * silently ignore
+	 * Delete the {@code ClientHints} If the zone has no cache, silently ignore
 	 *
 	 * @param host
 	 * @param zoneName
 	 * @param propertyName
 	 */
-	public void deleteCachedIRODSServerProperties(final String host,
-			final String zoneName, final String propertyName) {
+	public void deleteCachedClientHints(final String host, final String zoneName) {
+
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+		cacheOfClientHints.remove(cacheKey);
+
+	}
+
+	/**
+	 * Delete the {@code IRODSServerProperties} If the zone has no cache, silently
+	 * ignore
+	 *
+	 * @param host
+	 * @param zoneName
+	 * @param propertyName
+	 */
+	public void deleteCachedIRODSServerProperties(final String host, final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -183,15 +228,14 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the property from the cache if it exists. If the zone has no
-	 * cache, or the property itself is not cached, silently ignore
+	 * Delete the property from the cache if it exists. If the zone has no cache, or
+	 * the property itself is not cached, silently ignore
 	 *
 	 * @param host
 	 * @param zoneName
 	 * @param propertyName
 	 */
-	public void deleteCachedProperty(final String host, final String zoneName,
-			final String propertyName) {
+	public void deleteCachedProperty(final String host, final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -238,19 +282,46 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
+	 * Add an {@code ClientHints} to the cache
+	 *
+	 * @param host
+	 *            {@code String} with the name of the iRODS host this applies to
+	 * @param zoneName
+	 *            {@code String} with the name of the iRODS zone this applies to
+	 * @param clientHints
+	 *            {@link ClientHints} to cache
+	 */
+	public void cacheClientHints(final String host, final String zoneName, final ClientHints clientHints) {
+		if (host == null || host.isEmpty()) {
+			throw new IllegalArgumentException("null or empty host");
+		}
+
+		String myZone = zoneName;
+
+		if (zoneName == null) {
+			myZone = "";
+		}
+
+		if (clientHints == null) {
+			throw new IllegalArgumentException("null clientHints");
+		}
+
+		String cacheKey = buildHostPlusZone(host, myZone);
+
+		cacheOfClientHints.put(cacheKey, clientHints);
+	}
+
+	/**
 	 * Add an {@code IRODSServerProperties} to the cache
 	 *
 	 * @param host
-	 *            {@code String} with the name of the iRODS host this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS host this applies to
 	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS zone this applies to
 	 * @param irodsServerProperties
 	 *            {@link IRODSServerProperties} to cache
 	 */
-	public void cacheIRODSServerProperties(final String host,
-			final String zoneName,
+	public void cacheIRODSServerProperties(final String host, final String zoneName,
 			final IRODSServerProperties irodsServerProperties) {
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -275,19 +346,17 @@ public class DiscoveredServerPropertiesCache {
 	 * Cache a property for the given host and zone.
 	 *
 	 * @param host
-	 *            {@code String} with the name of the iRODS host this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS host this applies to
 	 * @param zoneName
-	 *            {@code String} with the name of the iRODS zone this
-	 *            applies to
+	 *            {@code String} with the name of the iRODS zone this applies to
 	 * @param propertyName
 	 *            {@code String} with the property to set
 	 * @param value
-	 *            {@code String} with a non-null value to set. For
-	 *            consistency, set to blank if a property has no value.
+	 *            {@code String} with a non-null value to set. For consistency, set
+	 *            to blank if a property has no value.
 	 */
-	public void cacheAProperty(final String host, final String zoneName,
-			final String propertyName, final String value) {
+	public void cacheAProperty(final String host, final String zoneName, final String propertyName,
+			final String value) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -307,21 +376,19 @@ public class DiscoveredServerPropertiesCache {
 			throw new IllegalArgumentException("null value");
 		}
 
-		getCacheForHostAndZoneAndAddIfNotThere(host, myZone).put(propertyName,
-				value);
+		getCacheForHostAndZoneAndAddIfNotThere(host, myZone).put(propertyName, value);
 
 	}
 
 	/**
-	 * Look for a properties map for the given host and zone, add to the main
-	 * cache if it doesn't exist
+	 * Look for a properties map for the given host and zone, add to the main cache
+	 * if it doesn't exist
 	 *
 	 * @param host
 	 * @param zoneName
 	 * @return
 	 */
-	private Map<String, String> getCacheForHostAndZoneAndAddIfNotThere(
-			final String host, final String zoneName) {
+	private Map<String, String> getCacheForHostAndZoneAndAddIfNotThere(final String host, final String zoneName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -334,8 +401,7 @@ public class DiscoveredServerPropertiesCache {
 		}
 
 		String cacheKey = buildHostPlusZone(host, myZone);
-		discoveredServerPropertiesCache.putIfAbsent(cacheKey,
-				new ConcurrentHashMap<String, String>(8, 0.9f, 1));
+		discoveredServerPropertiesCache.putIfAbsent(cacheKey, new ConcurrentHashMap<String, String>(8, 0.9f, 1));
 		return discoveredServerPropertiesCache.get(cacheKey);
 	}
 
@@ -346,8 +412,7 @@ public class DiscoveredServerPropertiesCache {
 	 * @param zoneName
 	 * @return
 	 */
-	private Map<String, String> getCacheForHostAndZone(final String host,
-			final String zoneName) {
+	private Map<String, String> getCacheForHostAndZone(final String host, final String zoneName) {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -364,8 +429,8 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Standard way to concatenate the host and zone name, trimming white space
-	 * in the process. This allows consistent look up
+	 * Standard way to concatenate the host and zone name, trimming white space in
+	 * the process. This allows consistent look up
 	 *
 	 * @param host
 	 * @param zoneName
