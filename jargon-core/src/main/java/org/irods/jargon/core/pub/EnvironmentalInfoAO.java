@@ -2,9 +2,11 @@ package org.irods.jargon.core.pub;
 
 import java.util.List;
 
+import org.irods.jargon.core.connection.EnvironmentalInfoAccessor;
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.pub.domain.ClientHints;
 import org.irods.jargon.core.pub.domain.RemoteCommandInformation;
 
 public interface EnvironmentalInfoAO extends IRODSAccessObject {
@@ -16,21 +18,20 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *         time, version
 	 * @throws JargonException
 	 */
-	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
-			throws JargonException;
+	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer() throws JargonException;
 
 	/**
 	 * Get the current time on the iRODS server
 	 *
-	 * @return {@code long} with the time since epoch that is the current
-	 *         server time
+	 * @return {@code long} with the time since epoch that is the current server
+	 *         time
 	 * @throws JargonException
 	 */
 	long getIRODSServerCurrentTime() throws JargonException;
 
 	/**
-	 * List the available remote commands. This is an experimental method
-	 * subject to API change.
+	 * List the available remote commands. This is an experimental method subject to
+	 * API change.
 	 * <p>
 	 * Note that this command requires the cmd-scripts/listCommands.sh to be
 	 * installed in the target iRODS server/cmd/bin directory, otherwise, a
@@ -38,12 +39,11 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return List of {@link RemoteCommandInformation}
 	 * @throws DataNotFoundException
-	 *             if the {@code listCommands.sh} script is not in the
-	 *             iRODS remote exec bin directory
+	 *             if the {@code listCommands.sh} script is not in the iRODS remote
+	 *             exec bin directory
 	 * @throws JargonException
 	 */
-	List<RemoteCommandInformation> listAvailableRemoteCommands()
-			throws DataNotFoundException, JargonException;
+	List<RemoteCommandInformation> listAvailableRemoteCommands() throws DataNotFoundException, JargonException;
 
 	/**
 	 * Generate a list of the available microservices on the target server.
@@ -52,8 +52,7 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * This method will operate on iRODS servers version 3.0 and up.
 	 *
-	 * @return {@code List<String>} with the names of the available
-	 *         microservices.
+	 * @return {@code List<String>} with the names of the available microservices.
 	 * @throws JargonException
 	 */
 	List<String> listAvailableMicroservices() throws JargonException;
@@ -61,16 +60,32 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	/**
 	 * Check (by version) whether this server can run specific (SQL) query
 	 * <p>
-	 * Note that there is some difficulty with using this method from eIRODS
-	 * 3.0. See [#1663] iRODS environment shows 'rods3.0' as version
+	 * Note that there is some difficulty with using this method from eIRODS 3.0.
+	 * See [#1663] iRODS environment shows 'rods3.0' as version
 	 * <p>
 	 * For EIRODS3.0, it is recommended to use the
 	 * SpecificQueryAO.isSupportsSpecificQuery method
 	 *
-	 * @return {@code boolean} that will be {@code true} if I can run
-	 *         specific query
+	 * @return {@code boolean} that will be {@code true} if I can run specific query
 	 * @throws JargonException
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
+
+	/**
+	 * Make a call and retrieve the available client hints. Note this may be
+	 * <code>null</code> if the version of iRODS does not support client hints API.
+	 * <p/>
+	 * Note that the {@link EnvironmentalInfoAccessor} folds this information into
+	 * the {@link IRODSServerProperties} object and does simple caching to reduce
+	 * traffic to iRODS. A refresh flag will force the data to be updated and
+	 * re-cached.
+	 * 
+	 * @param refresh
+	 *            <code>boolean</code> to refresh any cached value
+	 * @return {@link ClientHints} describing the iRODS server or <code>null</code>
+	 *         if that data is not available
+	 * @throws JargonException
+	 */
+	ClientHints retrieveClientHints(final boolean refresh) throws JargonException;
 
 }
