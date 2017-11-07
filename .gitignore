@@ -3,12 +3,10 @@
 **/nb-configuration.xml
 **/.springBeans
 **/testing.properties
-<<<<<<< HEAD
 **/*.eml
+**/Scripts
 .idea
-=======
 *.iml
->>>>>>> origin/master
 .project
 .idea
 .metadata
@@ -28,8 +26,6 @@ testing.properties
 */test-output
 JargonVersion.java
 **/${test.option.mount.basedir}
-<<<<<<< HEAD
 **/*.*~
-=======
 *.*~
->>>>>>> origin/master
+.dbeaver*

@@ -676,7 +676,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO
 	}
 
 	/*
-	 * (non-Javadoc) <<<<<<< HEAD
+	 * (non-Javadoc)
 	 * 
 	 * @see
 	 * org.irods.jargon.core.pub.UserGroupAO#removeUserFromGroup(java.lang.String ,
