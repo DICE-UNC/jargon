@@ -69,3 +69,6 @@ is implemented as a new method in EnvironmentalInfoAO, and is supported with a r
 object includes an ability to interrogate the type of iCAT.
 
 
+#### mysql causes spec query exception getting user perm through groups #271
+
+Treat spec query error due to not running on a particular dbase platform as a spec query not available error during find user permission by group membership. This will be enhanced in a later release with pluggable spec queries starting with MySql.

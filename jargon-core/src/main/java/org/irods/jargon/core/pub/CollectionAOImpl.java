@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
+import org.irods.jargon.core.exception.CatalogSQLException;
 import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -1701,6 +1702,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 			} catch (DataNotFoundException dnf) {
 				log.info("no result, return null");
+				return null;
+			} catch (CatalogSQLException cse) {
+				log.warn("no result due to specific query error, return null");
 				return null;
 			}
 
