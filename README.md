@@ -51,3 +51,7 @@ Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups 
 #### add enum to indicate rule executing on chosen rule engine #259
 
 Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file. See the user guide for details on using the new rule capabilities
+
+#### mysql causes spec query exception getting user perm through groups #271
+
+Treat spec query error due to not running on a particular dbase platform as a spec query not available error during find user permission by group membership. This will be enhanced in a later release with pluggable spec queries starting with MySql.
