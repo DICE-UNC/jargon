@@ -16,25 +16,23 @@ import org.irods.jargon.core.query.MetaDataAndDomainData;
 public interface ResourceAO extends IRODSAccessObject {
 
 	/**
-	 * Get the first {@code Resource} associated with an iRODS file. There
-	 * may be other iRODS resources associated with the given file
+	 * Get the first {@code Resource} associated with an iRODS file. There may be
+	 * other iRODS resources associated with the given file
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} representing the file in iRODS
-	 * @return {@link Resource} which is the first (of potentially many)
-	 *         resources associated with the given file
+	 * @return {@link Resource} which is the first (of potentially many) resources
+	 *         associated with the given file
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	Resource getFirstResourceForIRODSFile(IRODSFile irodsFile)
-			throws JargonException, DataNotFoundException;
+	Resource getFirstResourceForIRODSFile(IRODSFile irodsFile) throws JargonException, DataNotFoundException;
 
 	/**
 	 * Find all resources on the connected zone and return as a list of
 	 * {@code Resource} objects.
 	 *
-	 * @return a {@code List} of
-	 *         {@link org.irods.jargon.core.pub.domain.Resource};
+	 * @return a {@code List} of {@link org.irods.jargon.core.pub.domain.Resource};
 	 * @throws JargonException
 	 */
 	List<Resource> findAll() throws JargonException;
@@ -43,28 +41,25 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * Find a resource given its name
 	 *
 	 * @param resourceName
-	 *            {@code String} with the name of the resource to be looked
-	 *            up
+	 *            {@code String} with the name of the resource to be looked up
 	 * @return {@link org.irods.jargon.core.pub.domain.Resource}
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 *             indicates that the resource with the given name is not found
 	 */
-	Resource findByName(final String resourceName) throws JargonException,
-			DataNotFoundException;
+	Resource findByName(final String resourceName) throws JargonException, DataNotFoundException;
 
 	/**
 	 * Find a resource by its id
 	 *
 	 * @param resourceId
 	 *            {@code String} with the unique id of the resource
-	 * @return {@link org.irods.jargon.core.pub.domain.Resource} with the
-	 *         matching id
+	 * @return {@link org.irods.jargon.core.pub.domain.Resource} with the matching
+	 *         id
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	Resource findById(final String resourceId) throws JargonException,
-			DataNotFoundException;
+	Resource findById(final String resourceId) throws JargonException, DataNotFoundException;
 
 	/**
 	 * List the AVU metadata, as well as information identifying the Resource
@@ -72,16 +67,15 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *
 	 * @param avuQuery
 	 *            {@code List} of
-	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that
-	 *            defines the metadata query
+	 *            {@link org.irods.jargon.core.query.AVUQueryElement} that defines
+	 *            the metadata query
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
 	 * @throws JargonException
 	 */
-	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(
-			List<AVUQueryElement> avuQuery) throws JargonQueryException,
-			JargonException;
+	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery)
+			throws JargonQueryException, JargonException;
 
 	/**
 	 * List all AVU metadata associated with the resource
@@ -91,17 +85,16 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return {@code List} of {@link AvuData} for this resource
 	 * @throws JargonException
 	 */
-	List<AvuData> listResourceMetadata(String resourceName)
-			throws JargonException;
+	List<AvuData> listResourceMetadata(String resourceName) throws JargonException;
 
 	/**
-	 * Retrieve a list of plain {@code String} with the resource names in
-	 * the zone. These are sorted ascending.
+	 * Retrieve a list of plain {@code String} with the resource names in the zone.
+	 * These are sorted ascending.
 	 * <p>
-	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
-	 * it will only list resources that have no parent, appropriate for
-	 * addressing the top of a composable resource tree where the children
-	 * should not be directly accessed.
+	 * This is handy for generating resource lists in interfaces. For iRODS 4+, it
+	 * will only list resources that have no parent, appropriate for addressing the
+	 * top of a composable resource tree where the children should not be directly
+	 * accessed.
 	 *
 	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
@@ -109,14 +102,13 @@ public interface ResourceAO extends IRODSAccessObject {
 	List<String> listResourceNames() throws JargonException;
 
 	/**
-	 * Retrieve a list of plain {@code String} with the resource names in
-	 * the zone, followed by resourceGroupNames in the zone. These are sorted
-	 * ascending.
+	 * Retrieve a list of plain {@code String} with the resource names in the zone,
+	 * followed by resourceGroupNames in the zone. These are sorted ascending.
 	 * <p>
-	 * This is handy for generating resource lists in interfaces. For iRODS 4+,
-	 * it will only list resources that have no parent, appropriate for
-	 * addressing the top of a composable resource tree where the children
-	 * should not be directly accessed.
+	 * This is handy for generating resource lists in interfaces. For iRODS 4+, it
+	 * will only list resources that have no parent, appropriate for addressing the
+	 * top of a composable resource tree where the children should not be directly
+	 * accessed.
 	 *
 	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
@@ -134,18 +126,17 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 * @throws DuplicateDataException
-	 *             when an AVU already exists. Note that iRODS (at least at 2.5)
-	 *             is inconsistent, where a duplicate will only be detected if
-	 *             units are not blank
+	 *             when an AVU already exists. Note that iRODS (at least at 2.5) is
+	 *             inconsistent, where a duplicate will only be detected if units
+	 *             are not blank
 	 */
 	void addAVUMetadata(String resourceName, AvuData avuData)
-			throws InvalidResourceException, DuplicateDataException,
-			JargonException;
+			throws InvalidResourceException, DuplicateDataException, JargonException;
 
 	/**
-	 * Set AVU metadata for this resource. Be aware setting a metadata forces
-	 * just this one attribute name to exist (it will delete all the possibly
-	 * existing ones)
+	 * Set AVU metadata for this resource. Be aware setting a metadata forces just
+	 * this one attribute name to exist (it will delete all the possibly existing
+	 * ones)
 	 * 
 	 * @param resourceName
 	 *            {@code String} with the name of the resource
@@ -155,8 +146,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 */
-	void setAVUMetadata(String resourceName, AvuData avuData)
-			throws InvalidResourceException, JargonException;
+	void setAVUMetadata(String resourceName, AvuData avuData) throws InvalidResourceException, JargonException;
 
 	/**
 	 * Remove Resource AVU data, silently ignore if metadata is not found.
@@ -169,8 +159,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 */
-	void deleteAVUMetadata(String resourceName, AvuData avuData)
-			throws InvalidResourceException, JargonException;
+	void deleteAVUMetadata(String resourceName, AvuData avuData) throws InvalidResourceException, JargonException;
 
 	/**
 	 * Add a new resource
@@ -180,8 +169,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws DuplicateDataException
 	 * @throws JargonException
 	 */
-	void addResource(final Resource resource) throws DuplicateDataException,
-			JargonException;
+	void addResource(final Resource resource) throws DuplicateDataException, JargonException;
 
 	/**
 	 * Modify a resource
@@ -192,8 +180,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *            what is modified among type, status, comment, info, context
 	 * @throws JargonException
 	 */
-	void modifyResource(final Resource resource, String what)
-			throws JargonException;
+	void modifyResource(final Resource resource, String what) throws JargonException;
 
 	void deleteResource(final String resourceName) throws Exception;
 
@@ -205,12 +192,11 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param child
 	 *            {@code String} with the child resource
 	 * @param optionalContext
-	 *            {@code String} that is blank if not used, with an
-	 *            optional context string
+	 *            {@code String} that is blank if not used, with an optional context
+	 *            string
 	 * @throws JargonException
 	 */
-	void addChildToResource(String parent, String child, String optionalContext)
-			throws JargonException;
+	void addChildToResource(String parent, String child, String optionalContext) throws JargonException;
 
 	/**
 	 * Remove the given child from the resource
@@ -222,6 +208,17 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @throws InvalidResourceException
 	 * @throws JargonException
 	 */
-	void removeChildFromResource(String parent, String child)
-			throws InvalidResourceException, JargonException;
+	void removeChildFromResource(String parent, String child) throws InvalidResourceException, JargonException;
+
+	/**
+	 * List all resources for a given data object
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFile} describing a data object
+	 * @return <code>List</code> of {@link Resource} describing the resources
+	 *         associated with the data object
+	 * @throws JargonException
+	 * @throws DataNotFoundException
+	 */
+	List<Resource> listResourcesForIrodsFile(final IRODSFile irodsFile) throws JargonException, DataNotFoundException;
 }

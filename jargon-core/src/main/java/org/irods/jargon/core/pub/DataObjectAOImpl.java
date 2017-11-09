@@ -3574,53 +3574,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		log.info("listFileResources() for path:{}", irodsAbsolutePath);
 
-		ResourceAOHelper resourceAOHelper = new ResourceAOHelper(getIRODSAccount(), getIRODSAccessObjectFactory());
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(irodsAbsolutePath);
-
+		// get objStat to resolve possible soft link
 		ObjStat objStat = getObjectStatForAbsolutePath(irodsAbsolutePath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
-		CollectionAndPath collName = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(absPath);
+		IRODSFile newFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+				.instanceIRODSFile(absPath);
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-
-		resourceAOHelper.buildResourceSelects(builder);
-
-		if (irodsFile.exists() && irodsFile.isFile()) {
-
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
-					collName.getCollectionParent()).addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
-							QueryConditionOperators.EQUAL, irodsFile.getName());
-
-		} else {
-			log.error("file for query does not exist, or is not a file at path:{}", irodsAbsolutePath);
-			throw new JargonException("file does not exist, or is not a file");
-		}
-
-		IRODSGenQueryExecutorImpl irodsGenQueryExecutorImpl = new IRODSGenQueryExecutorImpl(getIRODSSession(),
-				getIRODSAccount());
-
-		IRODSQueryResultSetInterface resultSet;
-		try {
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = irodsGenQueryExecutorImpl.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-					MiscIRODSUtils.getZoneInPath(absPath));
-		} catch (JargonQueryException e) {
-			log.error("query exception", e);
-			throw new JargonException("error in query");
-		} catch (GenQueryBuilderException e) {
-			log.error("query exception", e);
-			throw new JargonException("error in query");
-		}
-
-		List<Resource> resources = resourceAOHelper.buildResourceListFromResultSetClassic(resultSet);
-
-		if (resources.isEmpty()) {
-			log.warn("no data found");
-			throw new DataNotFoundException("no resources found for file:" + irodsFile.getAbsolutePath());
-		}
-
-		return resources;
+		ResourceAO resourceAO = getIRODSAccessObjectFactory().getResourceAO(getIRODSAccount());
+		return resourceAO.listResourcesForIrodsFile(newFile);
 
 	}
 

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.InvalidResourceException;
@@ -25,6 +23,8 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import junit.framework.Assert;
+
 public class ResourceAOTest {
 
 	private static Properties testingProperties = new Properties();
@@ -40,12 +40,10 @@ public class ResourceAOTest {
 	public static void setUpBeforeClass() throws Exception {
 		org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(
-				testingProperties);
+		scratchFileUtils = new org.irods.jargon.testutils.filemanip.ScratchFileUtils(testingProperties);
 		irodsTestSetupUtilities = new org.irods.jargon.testutils.IRODSTestSetupUtilities();
 		irodsTestSetupUtilities.initializeIrodsScratchDirectory();
-		irodsTestSetupUtilities
-		.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
+		irodsTestSetupUtilities.initializeDirectoryForTest(IRODS_TEST_SUBDIR_PATH);
 		assertionHelper = new org.irods.jargon.testutils.AssertionHelper();
 		irodsFileSystem = IRODSFileSystem.instance();
 	}
@@ -59,11 +57,9 @@ public class ResourceAOTest {
 	// OK41
 	public final void testListResourceNames() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		List<String> resources = resourceAO.listResourceNames();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
@@ -77,17 +73,14 @@ public class ResourceAOTest {
 	@Test
 	public final void testListResourceAndResourceGroupNames() throws Exception {
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		/*
 		 * no resource groups with resource heirarchy
 		 */
-		if (accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		if (accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 
@@ -95,8 +88,7 @@ public class ResourceAOTest {
 		List<String> resources = resourceAO.listResourceAndResourceGroupNames();
 		Assert.assertTrue("no resources returned", resources.size() > 0);
 		// look for the resource group name
-		String expected = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);
+		String expected = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_GROUP_KEY);
 
 		boolean found = false;
 		for (String actual : resources) {
@@ -106,46 +98,33 @@ public class ResourceAOTest {
 			}
 		}
 
-		Assert.assertTrue("did not find the resource group in the results",
-				found);
+		Assert.assertTrue("did not find the resource group in the results", found);
 	}
 
 	@Test
 	public final void testGetFirstResourceForFile() throws Exception {
 		String testFileName = "testGetFirstResourceForFile.txt";
-		String absPath = scratchFileUtils
-				.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
-		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName,
-				8);
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		DataTransferOperations dto = accessObjectFactory
-				.getDataTransferOperations(irodsAccount);
+		DataTransferOperations dto = accessObjectFactory.getDataTransferOperations(irodsAccount);
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
 		StringBuilder fileNameAndPath = new StringBuilder();
 		fileNameAndPath.append(absPath);
 
 		fileNameAndPath.append(testFileName);
 
-		dto.putOperation(
-				fileNameAndPath.toString(),
-				targetIrodsCollection,
-				testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY),
-				null, null);
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
+		dto.putOperation(fileNameAndPath.toString(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY), null, null);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection + '/' + testFileName);
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		Resource resource = resourceAO.getFirstResourceForIRODSFile(irodsFile);
 		Assert.assertNotNull("no resource returned", resource);
@@ -155,19 +134,14 @@ public class ResourceAOTest {
 	public final void testGetFirstResourceForCollection() throws Exception {
 
 		String targetIrodsCollection = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		IRODSFileFactory irodsFileFactory = accessObjectFactory
-				.getIRODSFileFactory(irodsAccount);
-		IRODSFile irodsFile = irodsFileFactory
-				.instanceIRODSFile(targetIrodsCollection);
+		IRODSFileFactory irodsFileFactory = accessObjectFactory.getIRODSFileFactory(irodsAccount);
+		IRODSFile irodsFile = irodsFileFactory.instanceIRODSFile(targetIrodsCollection);
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		resourceAO.getFirstResourceForIRODSFile(irodsFile);
 
@@ -175,11 +149,9 @@ public class ResourceAOTest {
 
 	@Test
 	public final void testFindAll() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		List<Resource> resources = resourceAO.findAll();
@@ -189,51 +161,37 @@ public class ResourceAOTest {
 
 	@Test
 	public final void testFindByName() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		String testResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		Resource resource = resourceAO.findByName(testResource);
-		Assert.assertEquals(
-				"resource not returned that matches given resource name",
-				testResource, resource.getName());
+		Assert.assertEquals("resource not returned that matches given resource name", testResource, resource.getName());
 	}
 
 	@Test
 	public final void testFindById() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		String testResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		Resource resource = resourceAO.findByName(testResource);
 		Resource resourceById = resourceAO.findById(resource.getId());
-		Assert.assertEquals("did not find correct resource by id",
-				resource.getName(), resourceById.getName());
-		Assert.assertEquals(
-				"resource not returned that matches given resource name",
-				testResource, resource.getName());
+		Assert.assertEquals("did not find correct resource by id", resource.getName(), resourceById.getName());
+		Assert.assertEquals("resource not returned that matches given resource name", testResource, resource.getName());
 	}
 
 	@Test
 	public final void testFindMetadataValuesByMetadataQuery() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+		String testResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
@@ -242,8 +200,7 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testFindMetadataValuesByMetadataQueryvalue1";
 		String expectedAttribUnits = "testFindMetadataValuesByMetadataQueryunits";
 
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
@@ -251,17 +208,14 @@ public class ResourceAOTest {
 
 		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
 
-		queryElements.add(AVUQueryElement.instanceForValueQuery(
-				AVUQueryElement.AVUQueryPart.ATTRIBUTE,
+		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				AVUQueryOperatorEnum.EQUAL, expectedAttribName));
 
-		List<MetaDataAndDomainData> result = resourceAO
-				.findMetadataValuesByMetadataQuery(queryElements);
+		List<MetaDataAndDomainData> result = resourceAO.findMetadataValuesByMetadataQuery(queryElements);
 		Assert.assertFalse("no query result returned", result.isEmpty());
 
 		MetaDataAndDomainData result1 = result.get(0);
-		Assert.assertEquals(MetaDataAndDomainData.MetadataDomain.RESOURCE,
-				result1.getMetadataDomain());
+		Assert.assertEquals(MetaDataAndDomainData.MetadataDomain.RESOURCE, result1.getMetadataDomain());
 		Assert.assertEquals(expectedAttribName, result1.getAvuAttribute());
 		Assert.assertEquals(expectedAttribValue, result1.getAvuValue());
 		Assert.assertEquals(expectedAttribUnits, result1.getAvuUnit());
@@ -278,15 +232,12 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.addAVUMetadata(testResource, avuData);
 
@@ -301,15 +252,12 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.addAVUMetadata(testResource, avuData);
 
@@ -324,15 +272,12 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.addAVUMetadata(testResource, avuData);
 
@@ -342,11 +287,9 @@ public class ResourceAOTest {
 	public final void testAddResourceNullAvu() throws Exception {
 		String testResource = "xx";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		AvuData avuData = null;
@@ -357,23 +300,19 @@ public class ResourceAOTest {
 
 	@Test
 	public final void testListResourceMetadata() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+		String testResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
 
 		// initialize the AVU data
 		String expectedAttribName = "testattrib1";
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
@@ -391,35 +330,28 @@ public class ResourceAOTest {
 			}
 		}
 
-		Assert.assertNotNull("did not find the testing attrib in the resource",
-				avuDataItem);
-		Assert.assertEquals("did not get expected attrib", expectedAttribName,
-				avuDataItem.getAttribute());
-		Assert.assertEquals("did not get expected value", expectedAttribValue,
-				avuDataItem.getValue());
+		Assert.assertNotNull("did not find the testing attrib in the resource", avuDataItem);
+		Assert.assertEquals("did not get expected attrib", expectedAttribName, avuDataItem.getAttribute());
+		Assert.assertEquals("did not get expected value", expectedAttribValue, avuDataItem.getValue());
 
 	}
 
 	@Ignore
 	// TODO: see https://github.com/DICE-UNC/jargon/issues/97
 	public final void testDeleteResourceMetadata() throws Exception {
-		String testResource = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
+		String testResource = testingProperties.getProperty(TestingPropertiesHelper.IRODS_RESOURCE_KEY);
 
 		// initialize the AVU data
 		String expectedAttribName = "testDeleteResourceMetadataattrib1";
 		String expectedAttribValue = "testDeleteResourceMetadatavalue1";
 		String expectedAttribUnits = "testDeleteResourceMetadataunits";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
@@ -430,8 +362,7 @@ public class ResourceAOTest {
 		Assert.assertFalse("no query result returned", actual.isEmpty());
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 		actual = resourceAO.listResourceMetadata(testResource);
-		Assert.assertTrue("resource avu there after the delete",
-				actual.isEmpty());
+		Assert.assertTrue("resource avu there after the delete", actual.isEmpty());
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
 	}
@@ -444,15 +375,12 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
@@ -466,38 +394,31 @@ public class ResourceAOTest {
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public final void testDeleteResourceMetadataBlankResource()
-			throws Exception {
+	public final void testDeleteResourceMetadataBlankResource() throws Exception {
 		String testResource = "";
 		// initialize the AVU data
 		String expectedAttribName = "testattrib1";
 		String expectedAttribValue = "testvalue1";
 		String expectedAttribUnits = "test1units";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
-		AvuData avuData = AvuData.instance(expectedAttribName,
-				expectedAttribValue, expectedAttribUnits);
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedAttribValue, expectedAttribUnits);
 
 		resourceAO.deleteAVUMetadata(testResource, avuData);
 
@@ -507,11 +428,9 @@ public class ResourceAOTest {
 	public final void testDeleteResourceMetadataNullAvuData() throws Exception {
 		String testResource = "xxx";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		AvuData avuData = null;
@@ -524,11 +443,9 @@ public class ResourceAOTest {
 	public final void testRemoveBogusResource() throws Exception {
 
 		String rescName = "testRemoveBogusResource";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 
@@ -542,11 +459,9 @@ public class ResourceAOTest {
 	public final void testRemoveDeferredResource() throws Exception {
 
 		String rescName = "testRemoveDeferredResource";
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
 		try {
@@ -579,16 +494,12 @@ public class ResourceAOTest {
 
 		String rescName = "testAddDuplicateResource";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
-			throw new DuplicateDataException(
-					"skip but maintain expectations of test");
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
+			throw new DuplicateDataException("skip but maintain expectations of test");
 		}
 
 		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
@@ -611,14 +522,11 @@ public class ResourceAOTest {
 
 		String rescName = "testAddParentDeferredResource";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 
@@ -643,17 +551,13 @@ public class ResourceAOTest {
 	public final void testAddChildToParent() throws Exception {
 
 		String rescName = "testAddChildToParent";
-		String childName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
+		String childName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 
@@ -682,6 +586,58 @@ public class ResourceAOTest {
 
 	}
 
+	/**
+	 * ResourceAO findByName does not return parent resource #175
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public final void testGetParentNameBug175() throws Exception {
+
+		String rescName = "testGetParentNameBug175Parent";
+		String childName = "testGetParentNameBug175Child";
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
+			return;
+		}
+
+		ResourceAO resourceAO = accessObjectFactory.getResourceAO(irodsAccount);
+
+		try {
+			resourceAO.removeChildFromResource(rescName, childName);
+		} catch (Exception e) {
+		}
+
+		try {
+			resourceAO.deleteResource(rescName);
+			resourceAO.deleteResource(childName);
+		} catch (Exception e) {
+		}
+
+		Resource resource = new Resource();
+		resource.setContextString("");
+		resource.setName(rescName);
+		resource.setType("deferred");
+		resourceAO.addResource(resource);
+
+		Resource childResource = new Resource();
+		childResource.setContextString("");
+		childResource.setName(childName);
+		childResource.setType("deferred");
+		resourceAO.addResource(childResource);
+
+		resourceAO.addChildToResource(rescName, childName, "");
+
+		Resource actual = resourceAO.findByName(childName);
+		Assert.assertNotNull("didn't find child resource", actual);
+		Assert.assertEquals("parent name not set in child", actual.getParentName(), rescName);
+
+	}
+
 	@Ignore
 	// see https://github.com/DICE-UNC/jargon/issues/191
 	public final void testAddTwoChildToParentAndThenListAll() throws Exception {
@@ -692,14 +648,11 @@ public class ResourceAOTest {
 
 		String child1Name = rescName + child1Suffix;
 		String child2Name = rescName + child2Suffix;
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 
@@ -758,8 +711,7 @@ public class ResourceAOTest {
 		for (Resource actualResource : actual) {
 			if (actualResource.getName().equals(rescName)) {
 				foundParent = true;
-				Assert.assertEquals("parent should hove two children", 2,
-						actualResource.getImmediateChildren().size());
+				Assert.assertEquals("parent should hove two children", 2, actualResource.getImmediateChildren().size());
 
 			}
 
@@ -773,16 +725,12 @@ public class ResourceAOTest {
 	public final void testAddChildToParentDuplicate() throws Exception {
 
 		String rescName = "testAddChildToParentDuplicate";
-		String childName = testingProperties
-				.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
+		String childName = testingProperties.getProperty(TestingPropertiesHelper.IRODS_TERTIARY_RESOURCE_KEY);
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 
@@ -815,14 +763,11 @@ public class ResourceAOTest {
 
 		String rescName = "testAddMissingChildToParentxxxx";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAdminAccountFromTestProperties(testingProperties);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
 
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem
-				.getIRODSAccessObjectFactory();
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
 
-		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount)
-				.isAtLeastIrods410()) {
+		if (!accessObjectFactory.getIRODSServerProperties(irodsAccount).isAtLeastIrods410()) {
 			return;
 		}
 

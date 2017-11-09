@@ -1,8 +1,8 @@
 
 # Project: Jargon-core API
 #### Date:  
-#### Release Version: 4.2.0.1-SNAPSHOT 
-#### git tag: 
+#### Release Version: 4.2.0.1-SNAPSHOT
+#### git tag:
 #### Developer: Mike Conway - DICE
 
 ## News
@@ -25,7 +25,7 @@ Jargon-core consists of the following libraries
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
 * jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
- 
+
 ## Requirements
 
 * Jargon depends on Java 1.8+
@@ -55,3 +55,8 @@ Added code to RuleProcessingAO to indicate rule type, and do simple auto detecti
 #### mysql causes spec query exception getting user perm through groups #271
 
 Treat spec query error due to not running on a particular dbase platform as a spec query not available error during find user permission by group membership. This will be enhanced in a later release with pluggable spec queries starting with MySql.
+
+#### ResourceAO findByName does not return parent resource #175
+
+Updated resource methods for composable resource trees as part of MetaLnx development.  Resource
+query and listing methods now include parent resources.
