@@ -4,7 +4,6 @@
 ### Release Version: 4.2.1.0-SNAPSHOT
 ### git tag: 
 
-
 ## News
 
 
@@ -27,7 +26,7 @@ Jargon-core consists of the following libraries
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
 * jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
- 
+
 ## Requirements
 
 * Jargon depends on Java 1.8+
@@ -68,7 +67,3 @@ Implement the client hints api (initially to determine iCAT type for MetaLnx), r
 is implemented as a new method in EnvironmentalInfoAO, and is supported with a refreshible cache behavior. Specifically the new ClientHints domain
 object includes an ability to interrogate the type of iCAT.
 
-
-#### mysql causes spec query exception getting user perm through groups #271
-
-Treat spec query error due to not running on a particular dbase platform as a spec query not available error during find user permission by group membership. This will be enhanced in a later release with pluggable spec queries starting with MySql.
