@@ -7,7 +7,7 @@
 
 ## News
 
-4.2.0 Compatability and maintenance
+4.2.2 Compatability and maintenance
 for milestone: https://github.com/DICE-UNC/jargon/milestone/19
 
 
@@ -30,7 +30,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.X
+* Jargon supports iRODS 4.1.0 through 4.2.2
 
 ## Libraries
 
@@ -60,3 +60,7 @@ Treat spec query error due to not running on a particular dbase platform as a sp
 
 Updated resource methods for composable resource trees as part of MetaLnx development.  Resource
 query and listing methods now include parent resources.
+
+#### change metadata behavior to 'set' versus 'add' #250
+
+New 'set' metadata that does add or update is now supported for resorce, user, data object, and collection. See imeta set docs for details.
