@@ -48,11 +48,10 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class DataObjectAOImplTest {
 
@@ -2642,6 +2641,74 @@ public class DataObjectAOImplTest {
 		dataObjectAO.addAVUMetadata(targetIrodsDataObject, avuData);
 
 		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertTrue(dataObjects.size() >= 1);
+	}
+
+	@Test
+	public void testAddAVUMetadataToDataObjectWithSet() throws Exception {
+		String testFileName = "testAddAVUMetadataToDataObjectWithSet.txt";
+		String expectedAttribName = "testAddAVUMetadataToDataObjectWithSet";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/" + testFileName;
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.delete();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.setAVUMetadata(targetIrodsDataObject, avuData);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertTrue(dataObjects.size() >= 1);
+	}
+
+	@Test
+	public void testAddAVUMetadataToDataObjectWithSetParentAndPath() throws Exception {
+		String testFileName = "testAddAVUMetadataToDataObjectWithSetParentAndPath.txt";
+		String expectedAttribName = "testAddAVUMetadataToDataObjectWithSetParentAndPath";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.delete();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.setAVUMetadata(targetIrodsCollection, testFileName, avuData);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
 

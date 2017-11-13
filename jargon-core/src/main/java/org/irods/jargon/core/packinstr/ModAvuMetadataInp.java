@@ -48,35 +48,48 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * collection.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForAddCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, null, ActionType.ADD);
+	public static final ModAvuMetadataInp instanceForAddCollectionMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.COLLECTION, avuData, null, ActionType.ADD);
+
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will modify the AVU on
-	 * a collection.
+	 * Create an instance of the packing instruction that will set the AVU to a
+	 * resource using 'set' semantics versus 'add' semantics. Only works for later
+	 * versions of iRODS.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForModifyCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData,
-			final AvuData newAvuData) {
+	public static final ModAvuMetadataInp instanceForSetCollectionMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.COLLECTION, avuData, null, ActionType.SET);
+	}
+
+	/**
+	 * Create an instance of the packing instruction that will modify the AVU on a
+	 * collection.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForModifyCollectionMetadata(final String targetIdentifier,
+			final AvuData avuData, final AvuData newAvuData) {
 
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("Null newAvuData");
 		}
 
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, newAvuData,
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.COLLECTION, avuData, newAvuData,
 				ActionType.MOD);
 	}
 
@@ -85,66 +98,75 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * collection.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForDeleteCollectionMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.COLLECTION, avuData, null, ActionType.REMOVE);
+	public static final ModAvuMetadataInp instanceForDeleteCollectionMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.COLLECTION, avuData, null, ActionType.REMOVE);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will add the AVU to a
+	 * Create an instance of the packing instruction that will add the AVU to a data
+	 * object.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForAddDataObjectMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.ADD);
+	}
+
+	/**
+	 * Create an instance of the packing instruction that will add the AVU to a data
+	 * object.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForSetDataObjectMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.SET);
+	}
+
+	/**
+	 * Create an instance of the packing instruction that will modify the AVU on a
 	 * data object.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForAddDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.ADD);
-	}
-
-	/**
-	 * Create an instance of the packing instruction that will modify the AVU on
-	 * a data object.
-	 *
-	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
-	 * @return {@link ModAvuMetadataInp}
-	 */
-	public static final ModAvuMetadataInp instanceForModifyDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData,
-			final AvuData newAvuData) {
+	public static final ModAvuMetadataInp instanceForModifyDataObjectMetadata(final String targetIdentifier,
+			final AvuData avuData, final AvuData newAvuData) {
 
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("Null newAvuData");
 		}
 
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, newAvuData,
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.DATA_OBJECT, avuData, newAvuData,
 				ActionType.MOD);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will add the AVU to a
-	 * data object.
+	 * Create an instance of the packing instruction that will add the AVU to a data
+	 * object.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForDeleteDataObjectMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.DATA_OBJECT, avuData, null,
+	public static final ModAvuMetadataInp instanceForDeleteDataObjectMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.DATA_OBJECT, avuData, null,
 				ActionType.REMOVE);
 	}
 
@@ -153,14 +175,13 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * resource.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForAddResourceMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, null, ActionType.ADD);
+	public static final ModAvuMetadataInp instanceForAddResourceMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.RESOURCE, avuData, null, ActionType.ADD);
 	}
 
 	/**
@@ -168,51 +189,47 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * resource.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForSetResourceMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, null, ActionType.SET);
+	public static final ModAvuMetadataInp instanceForSetResourceMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.RESOURCE, avuData, null, ActionType.SET);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will modify the AVU on
-	 * a resource.
+	 * Create an instance of the packing instruction that will modify the AVU on a
+	 * resource.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForModifyResourceMetadata(
-			final String targetIdentifier, final AvuData avuData,
-			final AvuData newAvuData) {
+	public static final ModAvuMetadataInp instanceForModifyResourceMetadata(final String targetIdentifier,
+			final AvuData avuData, final AvuData newAvuData) {
 
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("Null newAvuData");
 		}
 
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, newAvuData,
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.RESOURCE, avuData, newAvuData,
 				ActionType.MOD);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will remove the AVU
-	 * from a resource .
+	 * Create an instance of the packing instruction that will remove the AVU from a
+	 * resource .
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForDeleteResourceMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier,
-				MetadataTargetType.RESOURCE, avuData, null, ActionType.REMOVE);
+	public static final ModAvuMetadataInp instanceForDeleteResourceMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.RESOURCE, avuData, null, ActionType.REMOVE);
 	}
 
 	/**
@@ -220,60 +237,68 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	 * user.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForAddUserMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, null, ActionType.ADD);
+	public static final ModAvuMetadataInp instanceForAddUserMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, null, ActionType.ADD);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will modify the AVU on
-	 * a user.
+	 * Create an instance of the packing instruction that will set the AVU on a
+	 * user.
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForModifyUserMetadata(
-			final String targetIdentifier, final AvuData avuData,
-			final AvuData newAvuData) {
+	public static final ModAvuMetadataInp instanceForSetUserMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, null, ActionType.SET);
+	}
+
+	/**
+	 * Create an instance of the packing instruction that will modify the AVU on a
+	 * user.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForModifyUserMetadata(final String targetIdentifier,
+			final AvuData avuData, final AvuData newAvuData) {
 
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("Null newAvuData");
 		}
 
-		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, newAvuData, ActionType.MOD);
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, newAvuData, ActionType.MOD);
 	}
 
 	/**
-	 * Create an instance of the packing instruction that will remove the AVU
-	 * from a user .
+	 * Create an instance of the packing instruction that will remove the AVU from a
+	 * user .
 	 *
 	 * @param targetIdentifier
-	 *            {@code String} with the path or unique name of the object
-	 *            to which the metadata will be added
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
 	 * @return {@link ModAvuMetadataInp}
 	 */
-	public static final ModAvuMetadataInp instanceForDeleteUserMetadata(
-			final String targetIdentifier, final AvuData avuData) {
-		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER,
-				avuData, null, ActionType.REMOVE);
+	public static final ModAvuMetadataInp instanceForDeleteUserMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, null, ActionType.REMOVE);
 	}
 
-	private ModAvuMetadataInp(final String targetIdentifier,
-			final MetadataTargetType metadataTargetType, final AvuData avuData,
-			final AvuData newAvuData, final ActionType actionType) {
+	private ModAvuMetadataInp(final String targetIdentifier, final MetadataTargetType metadataTargetType,
+			final AvuData avuData, final AvuData newAvuData, final ActionType actionType) {
 		super();
 
 		if (targetIdentifier == null || targetIdentifier.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty target identifier");
+			throw new IllegalArgumentException("null or empty target identifier");
 		}
 
 		if (metadataTargetType == null) {
@@ -323,9 +348,7 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 		} else if (metadataTargetType == MetadataTargetType.USER) {
 			argList.add("-u");
 		} else {
-			throw new JargonException(
-					"metadata target type is not currently supported:"
-							+ metadataTargetType);
+			throw new JargonException("metadata target type is not currently supported:" + metadataTargetType);
 		}
 
 		argList.add(targetIdentifier);

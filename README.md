@@ -31,7 +31,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.X
+* Jargon supports iRODS 4.1.0 through 4.2.2
 
 ## Libraries
 
@@ -66,4 +66,3 @@ Add user type to LIKE queries to discriminate users from groups in find 'like' q
 Implement the client hints api (initially to determine iCAT type for MetaLnx), returning information about the connected iRODS data grid. This
 is implemented as a new method in EnvironmentalInfoAO, and is supported with a refreshible cache behavior. Specifically the new ClientHints domain
 object includes an ability to interrogate the type of iCAT.
-

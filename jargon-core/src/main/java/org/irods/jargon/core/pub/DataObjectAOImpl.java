@@ -23,6 +23,7 @@ import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.InvalidInputParameterException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.JargonRuntimeException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.exception.OperationNotSupportedForCollectionTypeException;
 import org.irods.jargon.core.exception.OverwriteException;
 import org.irods.jargon.core.exception.ResourceDoesNotExistException;
@@ -1937,6 +1938,96 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		sb.append(fileName);
 
 		addAVUMetadata(sb.toString(), avuData);
+
+	}
+
+	@Override
+	public void setAVUMetadata(final String irodsCollectionAbsolutePath, final String fileName, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		log.info("setAVUMetadata()");
+
+		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_IRODS_COLLECTION_ABSOLUTE_PATH);
+		}
+
+		if (fileName == null || fileName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty fileName");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		IRODSFile file = this.getIRODSFileFactory().instanceIRODSFile(irodsCollectionAbsolutePath, fileName);
+		this.setAVUMetadata(file.getAbsolutePath(), avuData);
+	}
+
+	@Override
+	public void setAVUMetadata(final String absolutePath, final AvuData avuData)
+			throws DataNotFoundException, JargonException {
+
+		log.info("setAVUMetadata()");
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		if (this.getIRODSServerProperties().isSupportsMetadataSet()) {
+			log.error("irods version does not support set avu");
+			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
+		}
+
+		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		log.info("adding avu metadata to data object: {}", avuData);
+		log.info("absolute path: {}", absolutePath);
+
+		/*
+		 * Handle soft links by munging the path
+		 */
+
+		ObjStat objStat;
+		try {
+			objStat = this.retrieveObjStat(absolutePath);
+		} catch (Exception e) {
+			throw new DataNotFoundException(e);
+		}
+
+		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
+			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
+			throw new OperationNotSupportedForCollectionTypeException(
+					"The special collection type does not support this operation");
+		}
+
+		String absPath = resolveAbsolutePathGivenObjStat(objStat);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForSetDataObjectMetadata(absPath,
+				avuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-817000") > -1) {
+				throw new DataNotFoundException("Target dataObject was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException("Duplicate AVU exists, cannot add");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata added");
 
 	}
 
