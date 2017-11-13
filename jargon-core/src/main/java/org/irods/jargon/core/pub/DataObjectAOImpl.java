@@ -1977,7 +1977,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		if (this.getIRODSServerProperties().isSupportsMetadataSet()) {
+		if (!this.getIRODSServerProperties().isSupportsMetadataSet()) {
 			log.error("irods version does not support set avu");
 			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
 		}

@@ -61,8 +61,3 @@ Enhanced user group and user queries for cloud browser
 
 Add user type to LIKE queries to discriminate users from groups in find 'like' queries
 
-#### Implement client hints #268
-
-Implement the client hints api (initially to determine iCAT type for MetaLnx), returning information about the connected iRODS data grid. This
-is implemented as a new method in EnvironmentalInfoAO, and is supported with a refreshible cache behavior. Specifically the new ClientHints domain
-object includes an ability to interrogate the type of iCAT.
