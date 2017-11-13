@@ -122,6 +122,20 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
+	 * Create an instance of the packing instruction that will add the AVU to a data
+	 * object.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForSetDataObjectMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.DATA_OBJECT, avuData, null, ActionType.SET);
+	}
+
+	/**
 	 * Create an instance of the packing instruction that will modify the AVU on a
 	 * data object.
 	 *
@@ -230,6 +244,20 @@ public class ModAvuMetadataInp extends AbstractIRODSPackingInstruction {
 	public static final ModAvuMetadataInp instanceForAddUserMetadata(final String targetIdentifier,
 			final AvuData avuData) {
 		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, null, ActionType.ADD);
+	}
+
+	/**
+	 * Create an instance of the packing instruction that will set the AVU on a
+	 * user.
+	 *
+	 * @param targetIdentifier
+	 *            {@code String} with the path or unique name of the object to which
+	 *            the metadata will be added
+	 * @return {@link ModAvuMetadataInp}
+	 */
+	public static final ModAvuMetadataInp instanceForSetUserMetadata(final String targetIdentifier,
+			final AvuData avuData) {
+		return new ModAvuMetadataInp(targetIdentifier, MetadataTargetType.USER, avuData, null, ActionType.SET);
 	}
 
 	/**
