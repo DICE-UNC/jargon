@@ -467,38 +467,6 @@ public class RuleProcessingAOImplTest {
 
 	}
 
-	@Test
-	public void testExecuteRuleWithDelay() throws Exception {
-
-		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
-		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
-
-		EnvironmentalInfoAO environmentalInfoAO = irodsFileSystem.getIRODSAccessObjectFactory()
-				.getEnvironmentalInfoAO(irodsAccount);
-		IRODSServerProperties props = environmentalInfoAO.getIRODSServerPropertiesFromIRODSServer();
-
-		// test is only valid for 3.1
-		if (!props.isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods3.1")) {
-			irodsFileSystem.closeAndEatExceptions();
-			return;
-		}
-
-		RuleProcessingAO ruleProcessingAO = accessObjectFactory.getRuleProcessingAO(irodsAccount);
-		String ruleString = "ListAvailableMS||delayExec(<PLUSET>2m</PLUSET>,msiListEnabledMS(*KVPairs)##writeKeyValPairs(stdout,*KVPairs, \": \"),nop)|nop\n*A=hello\n ruleExecOut";
-		RuleInvocationConfiguration context = new RuleInvocationConfiguration();
-		context.setIrodsRuleInvocationTypeEnum(IrodsRuleInvocationTypeEnum.IRODS);
-		context.setEncodeRuleEngineInstance(true);
-		IRODSRuleExecResult result = ruleProcessingAO.executeRule(ruleString, null, context);
-
-		String execOut = result.getOutputParameterResults().get(RuleProcessingAOImpl.RULE_EXEC_OUT).getResultObject()
-				.toString();
-		Assert.assertEquals("irodsRule did not have original string", ruleString,
-				result.getIrodsRule().getRuleAsOriginalText());
-		Assert.assertNotNull("did not get exec out", execOut.length() > 0);
-
-	}
-
 	@Ignore // FIXME: park waiting for https://github.com/DICE-UNC/jargon/issues/265
 	// old form rule marked as iRODS seems to run in the Python rule engine #265,
 	// also

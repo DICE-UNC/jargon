@@ -73,6 +73,21 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Does the server (based on version) support metadata 'set' operations as
+	 * opposed to 'add'
+	 * 
+	 * @return
+	 */
+	public boolean isSupportsMetadataSet() {
+		boolean supports = false;
+
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support specific (SQL) query
 	 *
 	 * @return {@code boolean} of {@code true} if specific query is supported

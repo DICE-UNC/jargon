@@ -10,6 +10,7 @@ import org.irods.jargon.core.exception.DataNotFoundException;
 import org.irods.jargon.core.exception.DuplicateDataException;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.OperationNotSupportedByThisServerException;
 import org.irods.jargon.core.packinstr.ModAccessControlInp;
 import org.irods.jargon.core.packinstr.ModAvuMetadataInp;
 import org.irods.jargon.core.protovalues.FilePermissionEnum;
@@ -444,6 +445,52 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForAddCollectionMetadata(myPath,
+				avuData);
+
+		log.debug("sending avu request");
+
+		try {
+
+			getIRODSProtocol().irodsFunction(modifyAvuMetadataInp);
+
+		} catch (JargonException je) {
+
+			if (je.getMessage().indexOf("-814000") > -1) {
+				throw new DataNotFoundException("Target collection was not found, could not add AVU");
+			} else if (je.getMessage().indexOf("-809000") > -1) {
+				throw new DuplicateDataException("Duplicate AVU exists, cannot add");
+			}
+
+			log.error("jargon exception adding AVU metadata", je);
+			throw je;
+		}
+
+		log.debug("metadata added");
+
+	}
+
+	@Override
+	public void setAVUMetadata(final String absolutePath, final AvuData avuData)
+			throws FileNotFoundException, JargonException {
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePath");
+		}
+
+		if (avuData == null) {
+			throw new IllegalArgumentException("null AVU data");
+		}
+
+		log.info("setting avu metadata to collection: {}", avuData);
+		log.info("absolute path: {}", absolutePath);
+
+		if (!this.getIRODSServerProperties().isSupportsMetadataSet()) {
+			throw new OperationNotSupportedByThisServerException("metadata set not supported in this iRODS version");
+		}
+
+		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+
+		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForSetCollectionMetadata(myPath,
 				avuData);
 
 		log.debug("sending avu request");
