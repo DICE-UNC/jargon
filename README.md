@@ -64,3 +64,7 @@ query and listing methods now include parent resources.
 #### change metadata behavior to 'set' versus 'add' #250
 
 New 'set' metadata that does add or update is now supported for resorce, user, data object, and collection. See imeta set docs for details.
+
+#### remove resource group from data obj query #197
+
+Removed resource group from data obj genqueries

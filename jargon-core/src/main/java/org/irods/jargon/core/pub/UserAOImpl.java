@@ -815,7 +815,7 @@ public final class UserAOImpl extends IRODSGenericAO implements UserAO {
 		log.info("set avu metadata for user: {}", avuData);
 		log.info("userName {}", userName);
 
-		if (this.getIRODSServerProperties().isSupportsMetadataSet()) {
+		if (!this.getIRODSServerProperties().isSupportsMetadataSet()) {
 			log.error("irods version does not support set avu");
 			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
 		}

@@ -3245,8 +3245,10 @@ public class DataObjectAOImplTest {
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, true);
-
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 		dataObjectAO.setAccessPermission("", targetIrodsCollection + "/" + testFileName,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				FilePermissionEnum.READ);
@@ -3260,7 +3262,8 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+
+		Assert.assertTrue("user unable to read directory", irodsFileForSecondaryUser.canRead());
 
 	}
 
