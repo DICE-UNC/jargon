@@ -1263,6 +1263,60 @@ public class CollectionAOImplTest {
 		Assert.assertNotNull("did not find collection", actual);
 	}
 
+	@Test
+	public void testFindGivenObjStat() throws Exception {
+		String testDirName = "testFindGivenObjStat";
+
+		String targetIrodsCollection = testingPropertiesHelper.buildIRODSCollectionAbsolutePathFromTestProperties(
+				testingProperties, IRODS_TEST_SUBDIR_PATH + '/' + testDirName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = accessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPathWithHeuristicPathGuessing(targetIrodsCollection);
+
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		Collection collection = collectionAO.findGivenObjStat(objStat);
+		Assert.assertNotNull("did not find collection", collection);
+	}
+
+	@Test
+	public void testFindGivenObjStatWithHeuristicZoneHome() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(irodsAccount.getZone());
+		sb.append("/home");
+
+		String targetIrodsCollection = sb.toString();
+
+		IRODSAccessObjectFactory accessObjectFactory = irodsFileSystem.getIRODSAccessObjectFactory();
+
+		IRODSFile collFile = accessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		collFile.mkdirs();
+
+		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = accessObjectFactory
+				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO
+				.retrieveObjectStatForPathWithHeuristicPathGuessing(targetIrodsCollection);
+
+		CollectionAO collectionAO = accessObjectFactory.getCollectionAO(irodsAccount);
+		Collection collection = collectionAO.findGivenObjStat(objStat);
+		Assert.assertNotNull("did not find collection", collection);
+		Assert.assertTrue("is not set as a proxy", collection.isProxy());
+	}
+
 	@Test(expected = DataNotFoundException.class)
 	public void testFindByIdNotFound() throws Exception {
 
@@ -1297,6 +1351,8 @@ public class CollectionAOImplTest {
 				collection.getCollectionName());
 		Assert.assertEquals("collection Name should be same as requested path", targetIrodsCollection,
 				collection.getCollectionName());
+		Assert.assertFalse("is set as a proxy", collection.isProxy());
+
 	}
 
 	/**

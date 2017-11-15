@@ -55,25 +55,25 @@ class CollectionListingUtils {
 
 	/**
 	 * This is a compensating method used to deal with the top of the tree when
-	 * permissions do not allow listing 'into' the tree to get to things the
-	 * user actually has access to.
+	 * permissions do not allow listing 'into' the tree to get to things the user
+	 * actually has access to.
 	 * <p>
 	 * Phase 1 - when path is / - obtain a listing of zones and display as
 	 * subdirectories
 	 * <p>
 	 * Phase 2 when path is /zone - interpolate a 'home' directory
 	 * <p>
-	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
-	 * user name, see if a public dir. For foreign zone, add a dir for
-	 * user#homeZone and see if a public dir
+	 * Phase 3 when path is /zone/home - for current zone - add a dir for the user
+	 * name, see if a public dir. For foreign zone, add a dir for user#homeZone and
+	 * see if a public dir
 	 * 
 	 * 
 	 * 
 	 * @param absolutePathToParent
 	 *            {@code String} with the current parent
-	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry} that
-	 *         has the children under the parent. These children may be
-	 *         simulated per the given rules
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry} that has
+	 *         the children under the parent. These children may be simulated per
+	 *         the given rules
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
@@ -86,8 +86,7 @@ class CollectionListingUtils {
 		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();
 
 		/*
-		 * Do I have compensating actions configured? If not, it's just a file
-		 * not found
+		 * Do I have compensating actions configured? If not, it's just a file not found
 		 */
 		if (!irodsAccessObjectFactory.getJargonProperties().isDefaultToPublicIfNothingUnderRootWhenListing()) {
 			log.info(
@@ -146,8 +145,8 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * Heuristic processing allows ObjStats to be returned (though fake) at
-	 * points in the hierarchy were strict ACLs would otherwise preclude
+	 * Heuristic processing allows ObjStats to be returned (though fake) at points
+	 * in the hierarchy were strict ACLs would otherwise preclude
 	 * 
 	 * @param irodsAbsolutePath
 	 * @return
@@ -165,8 +164,7 @@ class CollectionListingUtils {
 		ObjStat objStat = null;
 
 		/*
-		 * Do I have compensating actions configured? If not, it's just a file
-		 * not found
+		 * Do I have compensating actions configured? If not, it's just a file not found
 		 */
 		if (!irodsAccessObjectFactory.getJargonProperties().isDefaultToPublicIfNothingUnderRootWhenListing()) {
 			log.info(
@@ -184,7 +182,7 @@ class CollectionListingUtils {
 			log.info("phase1 - under root");
 			objStat = new ObjStat();
 			objStat.setAbsolutePath(irodsAbsolutePath);
-			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
 			objStat.setModifiedAt(new Date());
@@ -215,7 +213,7 @@ class CollectionListingUtils {
 			}
 			objStat = new ObjStat();
 			objStat.setAbsolutePath(irodsAbsolutePath);
-			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
 			objStat.setModifiedAt(new Date());
@@ -232,7 +230,7 @@ class CollectionListingUtils {
 			if (components.get(2).equals("home")) {
 				objStat = new ObjStat();
 				objStat.setAbsolutePath(irodsAbsolutePath);
-				objStat.setObjectType(ObjectType.COLLECTION);
+				objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 				objStat.setSpecColType(SpecColType.NORMAL);
 				objStat.setStandInGeneratedObjStat(true);
 				objStat.setModifiedAt(new Date());
@@ -448,8 +446,8 @@ class CollectionListingUtils {
 		/*
 		 * Special collections are processed in different ways.
 		 * 
-		 * Listing for soft links substitutes the source path for the target
-		 * path in the query
+		 * Listing for soft links substitutes the source path for the target path in the
+		 * query
 		 */
 		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
@@ -624,10 +622,10 @@ class CollectionListingUtils {
 					collectionAndDataObjectListingEntry);
 
 			/*
-			 * for some reason, a query for collections with a parent of '/'
-			 * returns the root as a result, which creates weird situations when
-			 * trying to show collections in a tree structure. This test papers
-			 * over that idiosyncrasy and discards that extraneous result.
+			 * for some reason, a query for collections with a parent of '/' returns the
+			 * root as a result, which creates weird situations when trying to show
+			 * collections in a tree structure. This test papers over that idiosyncrasy and
+			 * discards that extraneous result.
 			 */
 			if (!collectionAndDataObjectListingEntry.getPathOrName().equals("/")) {
 				subdirs.add(collectionAndDataObjectListingEntry);
@@ -663,9 +661,9 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * For a collection based on a row from a collection query, evaluate against
-	 * the provided objStat and decide whether to modify the resulting listing
-	 * entry to reflect special collection status
+	 * For a collection based on a row from a collection query, evaluate against the
+	 * provided objStat and decide whether to modify the resulting listing entry to
+	 * reflect special collection status
 	 * 
 	 * @param objStat
 	 * @param effectiveAbsolutePath
@@ -746,13 +744,11 @@ class CollectionListingUtils {
 			throw new JargonException("error in query", e);
 		}
 
-		List<CollectionAndDataObjectListingEntry> files = new ArrayList<>(
-				resultSet.getResults().size());
+		List<CollectionAndDataObjectListingEntry> files = new ArrayList<>(resultSet.getResults().size());
 
 		/*
-		 * the query that gives the necessary data will cause duplication when
-		 * there are replicas, so discard duplicates. This is the nature of
-		 * GenQuery.
+		 * the query that gives the necessary data will cause duplication when there are
+		 * replicas, so discard duplicates. This is the nature of GenQuery.
 		 */
 		String lastPath = "";
 		String currentPath = "";
@@ -762,8 +758,8 @@ class CollectionListingUtils {
 					resultSet.getTotalRecords());
 
 			/**
-			 * Use the data in the objStat, in the case of special collections,
-			 * to augment the data returned
+			 * Use the data in the objStat, in the case of special collections, to augment
+			 * the data returned
 			 */
 			augmentCollectionEntryForSpecialCollections(objStat, effectiveAbsolutePath, entry);
 
@@ -783,27 +779,25 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * Use the data in the objStat, in the case of special collections, to
-	 * augment the entry for a collection
+	 * Use the data in the objStat, in the case of special collections, to augment
+	 * the entry for a collection
 	 * 
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
 	 *            {@code String} with the path used to query, this will be the
-	 *            canonical path for the parent collection, and should
-	 *            correspond to the absolute path information in the given
-	 *            {@code entry}.
+	 *            canonical path for the parent collection, and should correspond to
+	 *            the absolute path information in the given {@code entry}.
 	 * @param entry
-	 *            {@link CollectionAndDataObjectListingEntry} which is the raw
-	 *            data returned from querying the iCat based on the
+	 *            {@link CollectionAndDataObjectListingEntry} which is the raw data
+	 *            returned from querying the iCat based on the
 	 *            {@code effectiveAbsolutePath}. This information is from the
 	 *            perspective of the canonical path, and the given method will
-	 *            reframe the {@code entry} from the perspective of the
-	 *            requested path This means that a query on children of a soft
-	 *            link carry the data from the perspective of the soft linked
-	 *            directory, even though the iCAT carries the information based
-	 *            on the 'source path' of the soft link. This gets pretty
-	 *            confusing otherwise.
+	 *            reframe the {@code entry} from the perspective of the requested
+	 *            path This means that a query on children of a soft link carry the
+	 *            data from the perspective of the soft linked directory, even
+	 *            though the iCAT carries the information based on the 'source path'
+	 *            of the soft link. This gets pretty confusing otherwise.
 	 */
 	void augmentCollectionEntryForSpecialCollections(final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry entry) {
@@ -1088,9 +1082,8 @@ class CollectionListingUtils {
 		Tag specColl = response.getTag("SpecColl_PI");
 
 		/*
-		 * Look for the specColl tag (it is expected to be there) and see if
-		 * there are any special collection types (e.g. mounted or soft links)
-		 * to deal with
+		 * Look for the specColl tag (it is expected to be there) and see if there are
+		 * any special collection types (e.g. mounted or soft links) to deal with
 		 */
 		if (specColl != null) {
 
@@ -1130,16 +1123,14 @@ class CollectionListingUtils {
 				objStat.setSpecColType(SpecColType.LINKED_COLL);
 
 				/*
-				 * physical path will hold the canonical source dir where it was
-				 * linked. The collection path will hold the top level of the
-				 * soft link target. This does not 'follow' by incrementing the
-				 * path as you descend into subdirs, so I use the collection
-				 * path to chop off the absolute path, and use the remainder
-				 * appended to the collection path to arrive at equivalent
-				 * canonical source path fo rthis soft linked directory. This is
-				 * all rather confusing, so instead of worrying about it, Jargon
-				 * has the headache, you can just trust the objStat objectPath
-				 * to point to the equivalent canonical source path to the soft
+				 * physical path will hold the canonical source dir where it was linked. The
+				 * collection path will hold the top level of the soft link target. This does
+				 * not 'follow' by incrementing the path as you descend into subdirs, so I use
+				 * the collection path to chop off the absolute path, and use the remainder
+				 * appended to the collection path to arrive at equivalent canonical source path
+				 * fo rthis soft linked directory. This is all rather confusing, so instead of
+				 * worrying about it, Jargon has the headache, you can just trust the objStat
+				 * objectPath to point to the equivalent canonical source path to the soft
 				 * linked path.
 				 */
 				String canonicalSourceDirForSoftLink = specColl.getTag("phyPath").getStringValue();

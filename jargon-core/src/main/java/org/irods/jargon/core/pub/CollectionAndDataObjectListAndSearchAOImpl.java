@@ -157,10 +157,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		final CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(entryFile.getParent());
 
-		if (objStat.getObjectType() == ObjectType.DATA_OBJECT || objStat.getObjectType() == ObjectType.LOCAL_FILE) {
-			entry.setPathOrName(entryFile.getName());
-		} else {
+		if (objStat.isSomeTypeOfCollection()) {
 			entry.setPathOrName(absolutePath);
+		} else {
+			entry.setPathOrName(entryFile.getName());
 		}
 
 		entry.setCreatedAt(objStat.getCreatedAt());

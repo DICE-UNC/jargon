@@ -28,6 +28,7 @@ import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.pub.io.IRODSFileFactory;
 import org.irods.jargon.core.pub.io.IRODSFileFactoryImpl;
 import org.irods.jargon.core.query.AVUQueryElement;
+import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry.ObjectType;
 import org.irods.jargon.core.query.GenQueryBuilderException;
 import org.irods.jargon.core.query.GenQueryField.SelectFieldTypes;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
@@ -941,26 +942,40 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 
 		List<Collection> collectionList = CollectionAOHelper.buildListFromResultSet(resultSet);
 
+		Collection collection;
 		if (collectionList.size() == 0) {
-			log.error("No collection found for path:{}", absPath);
-			throw new DataNotFoundException("no collection found for path");
+			log.info("No collection found for path, see if heuristic path guessing was done:{}", absPath);
+			if (objStat.getObjectType() == ObjectType.COLLECTION_HEURISTIC_STANDIN) {
+				log.info(
+						"collection is a stand in proxy for a hierarchy layer the user cannot see, generate a proxy collection for:{}",
+						objStat);
+			}
+			collection = new Collection();
+			collection.setCollectionId(0);
+			collection.setCollectionName(objStat.getAbsolutePath());
+			CollectionAndPath collAndPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
+			collection.setCollectionParentName(collAndPath.getCollectionParent());
+			collection.setObjectPath(objStat.getObjectPath());
+			collection.setSpecColType(objStat.getSpecColType());
+			collection.setProxy(true);
+		} else {
+			collection = collectionList.get(0);
+			if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
+				log.info("this is a special collection,so update the paths and add an object path");
+			}
+
+			collection.setObjectPath(objStat.getObjectPath());
+			CollectionAndPath collectionAndPath = MiscIRODSUtils
+					.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
+
+			StringBuilder sb = new StringBuilder();
+			sb.append(collectionAndPath.getCollectionParent());
+			sb.append("/");
+			collection.setCollectionParentName(sb.toString());
+			collection.setCollectionName(objStat.getAbsolutePath());
+			collection.setSpecColType(objStat.getSpecColType());
 		}
-
-		Collection collection = collectionList.get(0);
-		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
-			log.info("this is a special collection,so update the paths and add an object path");
-		}
-
-		collection.setObjectPath(objStat.getObjectPath());
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(objStat.getAbsolutePath());
-
-		StringBuilder sb = new StringBuilder();
-		sb.append(collectionAndPath.getCollectionParent());
-		sb.append("/");
-		collection.setCollectionParentName(sb.toString());
-		collection.setCollectionName(objStat.getAbsolutePath());
-		collection.setSpecColType(objStat.getSpecColType());
 
 		return collection;
 
@@ -1561,9 +1576,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 					MiscIRODSUtils.getZoneInPath(absPath));
-		} catch (JargonQueryException e) {
-			throw new JargonException("error querying for inheritance flag", e);
-		} catch (GenQueryBuilderException e) {
+		} catch (JargonQueryException | GenQueryBuilderException e) {
 			throw new JargonException("error querying for inheritance flag", e);
 		}
 
