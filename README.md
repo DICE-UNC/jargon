@@ -61,3 +61,8 @@ Enhanced user group and user queries for cloud browser
 
 Add user type to LIKE queries to discriminate users from groups in find 'like' queries
 
+#### add add'l collection listing methods accommodating heuristic path guessing #275
+
+Add additional methods for collection browsing to accommodate browsing down from the top of the tree past
+collections that are actually hidden by strict acls. Much of this is to support the MetaLnx browser but these sorts of client
+affordances can be generally applied.

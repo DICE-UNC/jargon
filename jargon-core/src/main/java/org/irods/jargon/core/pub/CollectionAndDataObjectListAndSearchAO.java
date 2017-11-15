@@ -501,6 +501,29 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 			throws FileNotFoundException, JargonException;
 
 	/**
+	 * Return the {@code CollectionAndDataObjectListingEntry} that is associated
+	 * with the given iRODS absolute path. This is equivalent to doing an 'objStat'
+	 * on the given path, and in fact, this is how the data is retrieved from iRODS.
+	 * <p/>
+	 * This variant of the method is appropriate for interfaces or occasions where a
+	 * user may need to drill down from the top past collections that are not
+	 * actually visible due to strict acls. In this case, the method will 'guess' at
+	 * things like 'home' is under the zone name, and the user and/or public dir are
+	 * under the home directory.
+	 *
+	 * @param absolutePath
+	 *            {@code String} with the absolute path to an iRODS collection or
+	 *            data object.
+	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
+	 *         containing information on the given file or directory at the given
+	 *         absolute path.
+	 * @throws FileNotFoundException
+	 * @throws JargonException
+	 */
+	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePathWithHeuristicPathGuessing(
+			final String absolutePath) throws FileNotFoundException, JargonException;
+
+	/**
 	 * Retrieve the {@code ObjStat} for a collection or data object at the given
 	 * absolute path in iRODS. This is the result of a call to rsObjStat. Note that
 	 * a {@code FileNotFoundException} results if the objStat cannot be determined.

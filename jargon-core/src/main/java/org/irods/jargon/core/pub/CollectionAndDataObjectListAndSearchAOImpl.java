@@ -88,8 +88,7 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO#
-	 * getCollectionAndDataObjectListingEntryAtGivenAbsolutePath
-	 * (java.lang.String)
+	 * getCollectionAndDataObjectListingEntryAtGivenAbsolutePath (java.lang.String)
 	 * 
 	 * 
 	 * softlink
@@ -105,6 +104,48 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		final ObjStat objStat = retrieveObjectStatForPath(absolutePath.trim());
+
+		/*
+		 * See if jargon supports the given object type
+		 */
+		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		final IRODSFile entryFile = getIRODSFileFactory().instanceIRODSFile(absolutePath);
+
+		final CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
+		entry.setParentPath(entryFile.getParent());
+
+		if (objStat.getObjectType() == ObjectType.DATA_OBJECT || objStat.getObjectType() == ObjectType.LOCAL_FILE) {
+			entry.setPathOrName(entryFile.getName());
+		} else {
+			entry.setPathOrName(absolutePath);
+		}
+
+		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setModifiedAt(objStat.getModifiedAt());
+		entry.setDataSize(objStat.getObjSize());
+		entry.setId(objStat.getDataId());
+		entry.setObjectType(objStat.getObjectType());
+		entry.setOwnerName(objStat.getOwnerName());
+		entry.setOwnerZone(MiscIRODSUtils.getZoneInPath(absolutePath));
+		entry.setSpecColType(objStat.getSpecColType());
+		entry.setSpecialObjectPath(objStat.getObjectPath());
+		log.info("created entry for path as: {}", entry);
+		return entry;
+
+	}
+
+	@Override
+	public CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePathWithHeuristicPathGuessing(
+			final String absolutePath) throws FileNotFoundException, JargonException {
+
+		log.info("getCollectionAndDataObjectListingEntryAtGivenAbsolutePathWithHeuristicPathGuessing()");
+
+		if (absolutePath == null || absolutePath.isEmpty()) {
+			throw new IllegalArgumentException("absolutePath is null or empty");
+		}
+
+		final ObjStat objStat = retrieveObjectStatForPathWithHeuristicPathGuessing(absolutePath.trim());
 
 		/*
 		 * See if jargon supports the given object type
@@ -770,8 +811,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/**
-		 * This may be a soft link, in which case the canonical path is used for
-		 * the query
+		 * This may be a soft link, in which case the canonical path is used for the
+		 * query
 		 */
 		final String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
@@ -802,9 +843,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		final List<CollectionAndDataObjectListingEntry> files = new ArrayList<>();
 
 		/*
-		 * the query that gives the necessary data will cause duplication when
-		 * there are replicas, but the data is necessary to get, so discard
-		 * duplicates.
+		 * the query that gives the necessary data will cause duplication when there are
+		 * replicas, but the data is necessary to get, so discard duplicates.
 		 */
 
 		String currentPath = null;
@@ -871,9 +911,9 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/*
-		 * process the last entry, if needed. If more data is coming, then skip
-		 * the last entry. This is so the first entry of the next data object
-		 * will include this data.
+		 * process the last entry, if needed. If more data is coming, then skip the last
+		 * entry. This is so the first entry of the next data object will include this
+		 * data.
 		 */
 
 		if (entry != null) {
@@ -944,11 +984,10 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/*
-		 * Put out the last entry, which I had been caching. I want to avoid
-		 * breaking an entry across requests, so if the last entry in the
-		 * results is not the last entry returned from the query, ignore it. On
-		 * the next read the entire permissions for the file in question should
-		 * be read.
+		 * Put out the last entry, which I had been caching. I want to avoid breaking an
+		 * entry across requests, so if the last entry in the results is not the last
+		 * entry returned from the query, ignore it. On the next read the entire
+		 * permissions for the file in question should be read.
 		 */
 
 		if (collectionAndDataObjectListingEntry != null) {
@@ -1060,8 +1099,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		}
 
 		/**
-		 * This may be a soft link, in which case the canonical path is used for
-		 * the query
+		 * This may be a soft link, in which case the canonical path is used for the
+		 * query
 		 */
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
@@ -1097,17 +1136,17 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	}
 
 	/**
-	 * Given the objStat, list the data objects under the path and the
-	 * associated file permissions
+	 * Given the objStat, list the data objects under the path and the associated
+	 * file permissions
 	 * 
 	 * @param absolutePathToParent
-	 *            {@code String} with the original absolute path as
-	 *            requested. This may not be the canonical path if this is a
-	 *            special collection (e.g. soft links)
+	 *            {@code String} with the original absolute path as requested. This
+	 *            may not be the canonical path if this is a special collection
+	 *            (e.g. soft links)
 	 * @param partialStartIndex
 	 * @param objStat
-	 *            {@link ObjStat} with the information (including special
-	 *            collection information) used to adjust the entry
+	 *            {@link ObjStat} with the information (including special collection
+	 *            information) used to adjust the entry
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws JargonException
@@ -1117,8 +1156,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 			throws FileNotFoundException, JargonException {
 
 		/**
-		 * This may be a soft link, in which case the canonical path is used for
-		 * the query
+		 * This may be a soft link, in which case the canonical path is used for the
+		 * query
 		 */
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
@@ -1140,8 +1179,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		log.info("listDataObjectsUnderPathWithPermissionsViaSpecQuery()");
 
 		/**
-		 * This may be a soft link, in which case the canonical path is used for
-		 * the query
+		 * This may be a soft link, in which case the canonical path is used for the
+		 * query
 		 */
 		final String effectiveAbsolutePath = objStat.determineAbsolutePathBasedOnCollTypeInObjectStat();
 		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
@@ -1296,8 +1335,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * objStat: absolutePath:/test1/home/test1/jargon-scratch/
 		 * CollectionAndDataObjectListAndSearchAOImplForMSSOTest
 		 * /testGetFullObjectForTypeInTestWorkflow
-		 * /testGetFullObjectForTypeInTestWorkflowMounted/eCWkflow.run
-		 * dataId:10043 specColType:STRUCT_FILE_COLL objectType:DATA_OBJECT
+		 * /testGetFullObjectForTypeInTestWorkflowMounted/eCWkflow.run dataId:10043
+		 * specColType:STRUCT_FILE_COLL objectType:DATA_OBJECT
 		 * collectionPath:/test1/home/test1/jargon-scratch/
 		 * CollectionAndDataObjectListAndSearchAOImplForMSSOTest
 		 * /testGetFullObjectForTypeInTestWorkflow
