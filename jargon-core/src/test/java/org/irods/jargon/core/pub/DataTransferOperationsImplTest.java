@@ -2630,8 +2630,10 @@ public class DataTransferOperationsImplTest {
 
 	}
 
+	// altered to test bug Move of coll to another coll results in collection
+	// already exists #277
 	@Test
-	public void testMoveSourceCollectionTargetCollection() throws Exception {
+	public void testMoveSourceCollectionTargetCollectionBug277() throws Exception {
 
 		String rootCollection = "testMoveSourceCollectionTargetCollection";
 		String targetCollection = "targetCollectionForTestMoveSourceCollectionTargetCollection";
@@ -2662,11 +2664,11 @@ public class DataTransferOperationsImplTest {
 		// make the target
 
 		IRODSFile targetParent = irodsFileFactory.instanceIRODSFile(irodsCollectionTargetAbsolutePath);
-		targetParent.deleteWithForceOption();
-		// targetParent.mkdirs();
+		// targetParent.deleteWithForceOption();
+		targetParent.mkdirs();
 
 		dataTransferOperationsAO.move(irodsCollectionRootAbsolutePath + "/" + rootCollection,
-				targetParent.getAbsolutePath());
+				targetParent.getAbsolutePath() + "/" + rootCollection);
 
 		irodsFileSystem = IRODSFileSystem.instance();
 		irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
