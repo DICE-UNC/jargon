@@ -68,3 +68,7 @@ New 'set' metadata that does add or update is now supported for resorce, user, d
 #### remove resource group from data obj query #197
 
 Removed resource group from data obj genqueries
+
+#### IRODSFileImpl rename method not overriding File.rename #2
+
+Added appropriate method signature to conform more closely to J2SE API, keeping the present one without deprecation for now.

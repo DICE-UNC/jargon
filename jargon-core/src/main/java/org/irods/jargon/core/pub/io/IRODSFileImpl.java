@@ -65,7 +65,6 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 *
 	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
 	 */
-	@SuppressWarnings("deprecation")
 	@Deprecated
 	@Override
 	public void reset() {
@@ -1013,6 +1012,21 @@ public class IRODSFileImpl extends File implements IRODSFile {
 			}
 		}
 		return success;
+	}
+
+	@Override
+	public boolean renameTo(File dest) {
+		log.info("renameTo()");
+		if (dest == null) {
+			throw new IllegalArgumentException("dest is null");
+		}
+
+		if (!(dest instanceof IRODSFile)) {
+			log.error("dest is not an IRODSFile");
+			throw new IllegalArgumentException("dest is not an IRODSFile");
+		}
+
+		return renameTo((IRODSFile) dest);
 	}
 
 	/**
