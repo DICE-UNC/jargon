@@ -72,3 +72,7 @@ Removed resource group from data obj genqueries
 #### IRODSFileImpl rename method not overriding File.rename #2
 
 Added appropriate method signature to conform more closely to J2SE API, keeping the present one without deprecation for now.
+
+#### new behavior for dataobjao testphysical move issue, use resc id instead of resource name #192
+
+Added resource id to DataObject along with resource name
