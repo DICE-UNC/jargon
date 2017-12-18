@@ -76,3 +76,7 @@ Added appropriate method signature to conform more closely to J2SE API, keeping 
 #### new behavior for dataobjao testphysical move issue, use resc id instead of resource name #192
 
 Added resource id to DataObject along with resource name
+
+#### Irods Jargon-core seems to compile and run without jglobus or com.claymore dependencies just fine #176
+
+Remove claymore and globus dependencies. This may be reintroduced in some fashion if/when dedicated Globus integration testing happens. For now GSI is not typically used but is planned for the future.
