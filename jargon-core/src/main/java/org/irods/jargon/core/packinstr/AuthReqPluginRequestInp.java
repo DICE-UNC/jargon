@@ -3,6 +3,8 @@
  */
 package org.irods.jargon.core.packinstr;
 
+import org.irods.jargon.core.connection.IrodsVersion;
+import org.irods.jargon.core.connection.StartupResponseData;
 import org.irods.jargon.core.exception.JargonException;
 
 /**
@@ -31,20 +33,20 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the password
 	 * @param timeToLive
 	 *            {@code int} with time to live for password
+	 * @param startupResponseData
+	 *            {@link StartupResponseData} acquired during handshake, carrying
+	 *            iRODS version information necessary to send the correct auth
+	 *            request
 	 * @return {@link AuthReqPluginRequestInp}
 	 */
-	public static AuthReqPluginRequestInp instancePam(final String userName,
-			final String password, final int timeToLive) {
+	public static AuthReqPluginRequestInp instancePam(final String userName, final String password,
+			final int timeToLive, final StartupResponseData startupResponseData) {
 
-		return new AuthReqPluginRequestInp(AUTH_SCHEME_PAM, userName, password,
-				timeToLive);
+		return new AuthReqPluginRequestInp(AUTH_SCHEME_PAM, userName, password, timeToLive, startupResponseData);
 	}
 
-	/**
-	 *
-	 */
-	private AuthReqPluginRequestInp(final String authScheme,
-			final String userName, final String password, final int timeToLive) {
+	private AuthReqPluginRequestInp(final String authScheme, final String userName, final String password,
+			final int timeToLive, StartupResponseData startupResponseData) {
 
 		if (authScheme == null || authScheme.isEmpty()) {
 			throw new IllegalArgumentException("null or empty authScheme");
@@ -60,9 +62,15 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.authScheme = authScheme;
 		this.userName = userName;
-		this.password = password.replaceAll(";", "\\\\;");
+		IrodsVersion irodsVersion = new IrodsVersion(startupResponseData.getRelVersion());
+
+		if (!irodsVersion.hasVersionOfAtLeast("rods4.2.0")) {
+			this.password = password.replaceAll(";", "\\\\;");
+		}
+
 		setApiNumber(AUTH_REQ_API_NBR);
 		this.timeToLive = timeToLive;
+
 	}
 
 	/*
@@ -74,15 +82,14 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	 */
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag message = new Tag("authPlugReqInp_PI", new Tag[] {
-				new Tag("auth_scheme_", authScheme),
-				new Tag("context_", getContext()) });
+		Tag message = new Tag("authPlugReqInp_PI",
+				new Tag[] { new Tag("auth_scheme_", authScheme), new Tag("context_", getContext()) });
 		return message;
 	}
 
 	/**
-	 * Get the context string, right now assumes pam, will need a switch based
-	 * on auth method later
+	 * Get the context string, right now assumes pam, will need a switch based on
+	 * auth method later
 	 *
 	 * @return
 	 */

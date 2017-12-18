@@ -80,3 +80,8 @@ Added resource id to DataObject along with resource name
 #### Irods Jargon-core seems to compile and run without jglobus or com.claymore dependencies just fine #176
 
 Remove claymore and globus dependencies. This may be reintroduced in some fashion if/when dedicated Globus integration testing happens. For now GSI is not typically used but is planned for the future.
+
+#### Add version check for pam password with semicolon failing test 4.2+ #220
+
+For iRODS 4.2+ the escaping of PAM passwords with a ; is no longer done, as iRODS itself corrects this. The patch is still in place
+for iRODS 4.1 up to 4.2.

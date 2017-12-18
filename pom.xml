@@ -119,13 +119,13 @@
 	</reporting>
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
+			<!-- <dependency>
 				<groupId>org.jglobus</groupId>
 				<artifactId>gss</artifactId>
 				<scope>compile</scope>
 				<version>${globus.version}</version>
 				<type>jar</type>
-			</dependency>
+			</dependency>  -->
 			<dependency>
 				<groupId>antlr</groupId>
 				<artifactId>antlr</artifactId>
