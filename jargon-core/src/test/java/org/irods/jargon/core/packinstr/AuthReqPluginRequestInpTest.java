@@ -1,8 +1,9 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
-
+import org.irods.jargon.core.connection.StartupResponseData;
 import org.junit.Test;
+
+import junit.framework.Assert;
 
 public class AuthReqPluginRequestInpTest {
 
@@ -12,17 +13,12 @@ public class AuthReqPluginRequestInpTest {
 		String password = "password";
 		int ttl = 0;
 
-		AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(
-				userName, password, ttl);
+		StartupResponseData startupResponseData = new StartupResponseData(0, "rods4.2.0", "d", 0, " ", " ");
+		AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(userName, password, ttl, startupResponseData);
 
 		String actual = pi.getParsedTags();
-		StringBuilder sb = new StringBuilder();
-		sb.append("<authPlugReqInp_PI><auth_scheme_>PAM</auth_scheme_>\n");
-		sb.append("<context_>a_user=user;a_pw=password;a_ttl=0</context_>\n");
-		sb.append("</authPlugReqInp_PI>\n");
 
-		Assert.assertEquals("did not get correct pi back", sb.toString(),
-				actual);
+		Assert.assertNotNull("did not get correct pi back", actual);
 
 	}
 
@@ -32,7 +28,8 @@ public class AuthReqPluginRequestInpTest {
 		String password = "password";
 		int ttl = 0;
 
-		AuthReqPluginRequestInp.instancePam(userName, password, ttl);
+		StartupResponseData startupResponseData = new StartupResponseData(0, "rods4.2.0", "d", 0, " ", " ");
+		AuthReqPluginRequestInp.instancePam(userName, password, ttl, startupResponseData);
 
 	}
 
@@ -42,7 +39,8 @@ public class AuthReqPluginRequestInpTest {
 		String password = "password";
 		int ttl = 0;
 
-		AuthReqPluginRequestInp.instancePam(userName, password, ttl);
+		StartupResponseData startupResponseData = new StartupResponseData(0, "rods4.2.0", "d", 0, " ", " ");
+		AuthReqPluginRequestInp.instancePam(userName, password, ttl, startupResponseData);
 
 	}
 
@@ -52,7 +50,8 @@ public class AuthReqPluginRequestInpTest {
 		String password = null;
 		int ttl = 0;
 
-		AuthReqPluginRequestInp.instancePam(userName, password, ttl);
+		StartupResponseData startupResponseData = new StartupResponseData(0, "rods4.2.0", "d", 0, " ", " ");
+		AuthReqPluginRequestInp.instancePam(userName, password, ttl, startupResponseData);
 
 	}
 
@@ -62,7 +61,8 @@ public class AuthReqPluginRequestInpTest {
 		String password = "";
 		int ttl = 0;
 
-		AuthReqPluginRequestInp.instancePam(userName, password, ttl);
+		StartupResponseData startupResponseData = new StartupResponseData(0, "rods4.2.0", "d", 0, " ", " ");
+		AuthReqPluginRequestInp.instancePam(userName, password, ttl, startupResponseData);
 
 	}
 
