@@ -56,7 +56,7 @@ public class PAMAuth extends AuthMechanism {
 		Tag response = null;
 
 		if (startupResponseData.checkIs410OrLater()) {
-			log.info("using eirods pluggable pam auth request");
+			log.info("using pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(irodsAccount.getProxyName(),
 					irodsAccount.getPassword(), pamTimeToLive, startupResponseData);
 			response = irodsMidLevelProtocolToUse.irodsFunction(pi);

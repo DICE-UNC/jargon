@@ -66,6 +66,8 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 		if (!irodsVersion.hasVersionOfAtLeast("rods4.2.0")) {
 			this.password = password.replaceAll(";", "\\\\;");
+		} else {
+			this.password = password;
 		}
 
 		setApiNumber(AUTH_REQ_API_NBR);
@@ -83,6 +85,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 		Tag message = new Tag("authPlugReqInp_PI",
+
 				new Tag[] { new Tag("auth_scheme_", authScheme), new Tag("context_", getContext()) });
 		return message;
 	}
