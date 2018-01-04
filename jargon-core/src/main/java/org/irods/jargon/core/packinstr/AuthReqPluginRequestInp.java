@@ -64,11 +64,11 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 		this.userName = userName;
 		IrodsVersion irodsVersion = new IrodsVersion(startupResponseData.getRelVersion());
 
-		if (!irodsVersion.hasVersionOfAtLeast("rods4.2.0")) {
-			this.password = password.replaceAll(";", "\\\\;");
-		} else {
-			this.password = password;
-		}
+		// if (!irodsVersion.hasVersionOfAtLeast("rods4.2.0")) {
+		this.password = password.replaceAll(";", "\\\\;");
+		// } else {
+		// this.password = password;
+		// }
 
 		setApiNumber(AUTH_REQ_API_NBR);
 		this.timeToLive = timeToLive;
