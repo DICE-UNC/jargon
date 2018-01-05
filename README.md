@@ -1,14 +1,14 @@
 
 # Project: Jargon-core API
-#### Date:  01/04/2018
-#### Release Version: 4.2.2.0-RELEASE
-#### git tag: 4.2.2.0-RELEASE
+#### Date:  
+#### Release Version: 4.2.2.1-SNAPSHOT
+#### git tag: 4.2.2.1-SNAPSHOT
 #### Developer: Mike Conway 
 
 ## News
 
-4.2.2 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/19
+4.2.3 Compatability and maintenance
+for milestone: https://github.com/DICE-UNC/jargon/milestone/22
 
 =======
 
@@ -39,48 +39,3 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-#### Failures against 4.1.9 with neg require on server executing file.deleteWithForceOption in unit tests. #216
-
-Fixes to flush behavior (related to #224) remaining after a switch to the SSL negotiation communication regime, corrections to behavior of flush() in client status operation send/receive in recursive delete operations
-
-#### User lacks privileges to invoke the given API" when adding groups / users to groups #255
-
-Added function to UserGroupAO with 'asGroupAdmin' variants to manipulate groups as a user type groupadmin. A few needed functions are added, with plans to add more in coming updates
-
-#### add enum to indicate rule executing on chosen rule engine #259
-
-Added code to RuleProcessingAO to indicate rule type, and do simple auto detection based on extension when running from a file. See the user guide for details on using the new rule capabilities
-
-#### mysql causes spec query exception getting user perm through groups #271
-
-Treat spec query error due to not running on a particular dbase platform as a spec query not available error during find user permission by group membership. This will be enhanced in a later release with pluggable spec queries starting with MySql.
-
-#### ResourceAO findByName does not return parent resource #175
-
-Updated resource methods for composable resource trees as part of MetaLnx development.  Resource
-query and listing methods now include parent resources.
-
-#### change metadata behavior to 'set' versus 'add' #250
-
-New 'set' metadata that does add or update is now supported for resorce, user, data object, and collection. See imeta set docs for details.
-
-#### remove resource group from data obj query #197
-
-Removed resource group from data obj genqueries
-
-#### IRODSFileImpl rename method not overriding File.rename #2
-
-Added appropriate method signature to conform more closely to J2SE API, keeping the present one without deprecation for now.
-
-#### new behavior for dataobjao testphysical move issue, use resc id instead of resource name #192
-
-Added resource id to DataObject along with resource name
-
-#### Irods Jargon-core seems to compile and run without jglobus or com.claymore dependencies just fine #176
-
-Remove claymore and globus dependencies. This may be reintroduced in some fashion if/when dedicated Globus integration testing happens. For now GSI is not typically used but is planned for the future.
-
-#### Add version check for pam password with semicolon failing test 4.2+ #220
-
-For iRODS 4.2+ the escaping of PAM passwords with a ; is no longer done, as iRODS itself corrects this. The patch is still in place
-for iRODS 4.1 up to 4.2.
