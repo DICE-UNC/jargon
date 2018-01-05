@@ -1,7 +1,7 @@
 # Project: Jargon-core API
 
 ### Date:
-### Release Version: 4.2.1.0-SNAPSHOT
+### Release Version: 4.3.0.0-SNAPSHOT
 ### git tag:
 
 ## News
@@ -9,7 +9,7 @@
 
 https://github.com/DICE-UNC/jargon/milestone/13
 
-This version of Jargon is currently targeted at Cloud Browser and REST.  There are still some features that are considered early access and may not support a full range
+This version of Jargon is currently targeted at Metalnx.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
