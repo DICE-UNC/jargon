@@ -275,9 +275,9 @@ public class PAMAuthTest {
 	}
 
 	/**
-	 * Unit test for PAM auth failure when password includes semicolon #195
-	 * original problem was a -158000 exception in the pack struct, so an auth
-	 * exception is expected and shows 'success' in processing the ; char.
+	 * Unit test for PAM auth failure when password includes semicolon #195 original
+	 * problem was a -158000 exception in the pack struct, so an auth exception is
+	 * expected and shows 'success' in processing the ; char.
 	 * 
 	 * @throws Exception
 	 */

@@ -121,8 +121,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#canRead()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#canRead()}.
 	 */
 	@Test
 	public final void testCanRead() throws Exception {
@@ -235,8 +234,8 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#canWrite()} .
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#canWrite()}
+	 * .
 	 */
 	@Test
 	public final void testCanWrite() throws Exception {
@@ -343,8 +342,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#exists()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#exists()}.
 	 */
 	@Test
 	public final void testExists() throws Exception {
@@ -552,8 +550,8 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Delete a file with spaces in the name, test for: [#690] error in mass
-	 * delete on ll
+	 * Delete a file with spaces in the name, test for: [#690] error in mass delete
+	 * on ll
 	 *
 	 * @throws Exception
 	 */
@@ -707,8 +705,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isFile()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#isFile()}.
 	 */
 	@Test
 	public final void testIsFile() throws Exception {
@@ -988,8 +985,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#delete()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#delete()}.
 	 */
 	@Test
 	public final void testDeleteFile() throws Exception {
@@ -1278,8 +1274,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#mkdir()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#mkdir()}.
 	 */
 	@Test
 	public final void testMkdir() throws Exception {
@@ -1320,8 +1315,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#mkdirs()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#mkdirs()}.
 	 */
 	@Test
 	public final void testMkdirs() throws Exception {
@@ -1387,8 +1381,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#compareTo(java.io.File)}
-	 * .
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#compareTo(java.io.File)} .
 	 */
 	@Test
 	public final void testCompareToFile() throws Exception {
@@ -1416,8 +1409,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#equals(java.lang.Object)}
-	 * .
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#equals(java.lang.Object)} .
 	 */
 	@Test
 	public final void testEqualsObject() throws Exception {
@@ -1569,8 +1561,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#getName()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#getName()}.
 	 */
 	@Test
 	public final void testGetName() throws Exception {
@@ -1659,8 +1650,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#list()}
-	 * .
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#list()} .
 	 */
 	@Test
 	public final void testList() throws Exception {
@@ -1809,7 +1799,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsRenameToFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection + '/' + testNewDirectory);
 
-		irodsOrigFile.renameTo(irodsRenameToFile);
+		irodsOrigFile.renameTo((File) irodsRenameToFile);
 
 		Assert.assertFalse(irodsOrigFile.exists());
 		Assert.assertTrue(irodsRenameToFile.exists());
@@ -1818,8 +1808,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#renameTo(java.io.File)}
-	 * .
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#renameTo(java.io.File)} .
 	 */
 	@Test
 	public final void testRenameToFileFile() throws Exception {
@@ -1850,7 +1839,7 @@ public class IRODSFileImplTest {
 		IRODSFile irodsRenameFile = irodsFileFactory
 				.instanceIRODSFile(targetIrodsCollection + '/' + testRenamedFileName);
 
-		irodsFile.renameTo(irodsRenameFile);
+		irodsFile.renameTo((File) irodsRenameFile);
 		assertionHelper.assertIrodsFileOrCollectionDoesNotExist(irodsFile.getAbsolutePath(),
 				irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 		assertionHelper.assertIrodsFileOrCollectionExists(irodsRenameFile.getAbsolutePath(),
@@ -1859,8 +1848,7 @@ public class IRODSFileImplTest {
 
 	/**
 	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#renameTo(java.io.File)}
-	 * .
+	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#renameTo(java.io.File)} .
 	 */
 	@Test
 	public final void testRenameToFileFilePhyMove() throws Exception {
@@ -1892,7 +1880,7 @@ public class IRODSFileImplTest {
 		irodsRenameFile
 				.setResource(testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		irodsFile.renameTo(irodsRenameFile);
+		irodsFile.renameTo((File) irodsRenameFile);
 
 		DataObjectAO dataObjectAO = accessObjectFactory.getDataObjectAO(irodsAccount);
 
@@ -1904,8 +1892,7 @@ public class IRODSFileImplTest {
 	}
 
 	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#toURI()}.
+	 * Test method for {@link org.irods.jargon.core.pub.io.IRODSFileImpl#toURI()}.
 	 */
 	@Test
 	public final void testToURI() throws Exception {

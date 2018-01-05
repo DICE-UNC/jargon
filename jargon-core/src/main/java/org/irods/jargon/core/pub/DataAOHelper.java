@@ -87,49 +87,6 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Create a set of selects for a data object, used in general query.
-	 *
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will be appended with the
-	 *            selects
-	 *
-	 * @return {@code String} with select statements for the domain object.
-	 */
-	void buildSelects(final IRODSGenQueryBuilder builder) throws JargonException {
-
-		if (builder == null) {
-			throw new IllegalArgumentException("null builder");
-		}
-
-		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
-					// FIXME: use resc id for 4.2 --> lookup of the leaf
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_REPL_STATUS)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_STATUS)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException(e);
-		}
-
-	}
-
-	/**
 	 * Return a {@code DataObject} domain object given a result row from a query
 	 *
 	 * @param row
@@ -147,20 +104,21 @@ public final class DataAOHelper extends AOHelper {
 		dataObject.setDataVersion(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(5)));
 		dataObject.setDataTypeName(row.getColumn(6));
 		dataObject.setDataSize(Long.parseLong(row.getColumn(7)));
-		dataObject.setResourceName(row.getColumn(8));
-		dataObject.setDataPath(row.getColumn(9));
-		dataObject.setDataOwnerName(row.getColumn(10));
-		dataObject.setDataOwnerZone(row.getColumn(11));
-		dataObject.setReplicationStatus(row.getColumn(12));
-		dataObject.setDataStatus(row.getColumn(13));
-		dataObject.setChecksum(row.getColumn(14));
-		dataObject.setExpiry(row.getColumn(15));
-		dataObject.setDataMapId(Integer.parseInt(row.getColumn(16)));
-		dataObject.setComments(row.getColumn(17));
-		dataObject.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(18)));
-		dataObject.setUpdatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(19)));
+		dataObject.setResourceId(row.getColumn(8));
+		dataObject.setResourceName(row.getColumn(9));
+		dataObject.setDataPath(row.getColumn(10));
+		dataObject.setDataOwnerName(row.getColumn(11));
+		dataObject.setDataOwnerZone(row.getColumn(12));
+		dataObject.setReplicationStatus(row.getColumn(13));
+		dataObject.setDataStatus(row.getColumn(14));
+		dataObject.setChecksum(row.getColumn(15));
+		dataObject.setExpiry(row.getColumn(16));
+		dataObject.setDataMapId(Integer.parseInt(row.getColumn(17)));
+		dataObject.setComments(row.getColumn(18));
+		dataObject.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(19)));
+		dataObject.setUpdatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(20)));
 
-		// add info to track position in records for possible requery
+		// add info to track position in records for possible re-query
 		dataObject.setLastResult(row.isLastResult());
 		dataObject.setCount(row.getRecordCount());
 
@@ -770,7 +728,7 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)

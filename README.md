@@ -2,7 +2,7 @@
 
 ### Date:
 ### Release Version: 4.2.1.0-SNAPSHOT
-### git tag: 
+### git tag:
 
 ## News
 
@@ -31,7 +31,7 @@ Jargon-core consists of the following libraries
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.2
+* Jargon supports iRODS 4.1.0 through 4.2.2, it also maintains very reasonable backards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
@@ -41,11 +41,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-#### Remove old thumbnail code #165 
+#### Remove old thumbnail code #165
 
 Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
 
-####  Add file to string and vice versa to support cloud browser editor #166 
+####  Add file to string and vice versa to support cloud browser editor #166
 
 Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
 

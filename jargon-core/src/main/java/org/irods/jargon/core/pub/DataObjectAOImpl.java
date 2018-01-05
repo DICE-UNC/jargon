@@ -200,13 +200,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		log.info("findById() with id:{}", id);
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		dataAOHelper.buildSelects(builder);
-
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_D_DATA_ID, QueryConditionOperators.EQUAL,
-				String.valueOf(id));
-
 		IRODSQueryResultSet resultSet = null;
 		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_D_DATA_ID, QueryConditionOperators.EQUAL,
+					String.valueOf(id));
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
@@ -263,20 +263,20 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 
-		dataAOHelper.buildSelects(builder);
-
-		if (collectionAndPath.getCollectionParent() == null || collectionAndPath.getCollectionParent().isEmpty()) {
-			log.info("ignoring collection path in query");
-		} else {
-			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
-					collectionAndPath.getCollectionParent());
-		}
-
-		builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
-				collectionAndPath.getChildName());
-
 		IRODSQueryResultSet resultSet = null;
 		try {
+			DataAOHelper.addDataObjectSelectsToBuilder(builder);
+
+			if (collectionAndPath.getCollectionParent() == null || collectionAndPath.getCollectionParent().isEmpty()) {
+				log.info("ignoring collection path in query");
+			} else {
+				builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
+						collectionAndPath.getCollectionParent());
+			}
+
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
+					collectionAndPath.getChildName());
+
 			IRODSGenQueryFromBuilder irodsQuery = builder
 					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
