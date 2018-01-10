@@ -3,7 +3,7 @@
 #### Date:  
 #### Release Version: 4.2.2.1-SNAPSHOT
 #### git tag: 4.2.2.1-SNAPSHOT
-#### Developer: Mike Conway 
+#### Developer: Mike Conway
 
 ## News
 
@@ -39,3 +39,6 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
+#### Add trash operations service #280
+
+Adding service object for managing trash to retrofit into MetaLnx

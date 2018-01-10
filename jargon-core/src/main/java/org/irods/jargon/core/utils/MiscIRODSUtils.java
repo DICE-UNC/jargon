@@ -35,19 +35,38 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Given an iRODS path to a file, and an iRODS account, get a default
-	 * storage resource name from the iRODS account if that path is in the same
-	 * zone as an iRODS account, otherwise, return an empty resource.
+	 * Given a user name and zone, build the trash home dir
+	 * 
+	 * @param userName
+	 *            <code>String</code> with the user name
+	 * @param zoneName
+	 *            <code>String</code> with the zone name
+	 * @return <code>String</code> with the trash path
+	 */
+	public static String buildTrashHome(final String userName, final String zoneName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(zoneName);
+		sb.append("/trash/home/");
+		sb.append(zoneName);
+		return sb.toString();
+
+	}
+
+	/**
+	 * Given an iRODS path to a file, and an iRODS account, get a default storage
+	 * resource name from the iRODS account if that path is in the same zone as an
+	 * iRODS account, otherwise, return an empty resource.
 	 * <p>
 	 * This is used in places in Jargon so that a default storage resource in an
 	 * iRODS account is not propagated to the wrong zone.
 	 *
 	 * @param irodsAbsolutePath
 	 * @param irodsAccount
-	 * @return
+	 * @return {@code String} with the proper resource name
 	 */
-	public static String getDefaultIRODSResourceFromAccountIfFileInZone(
-			final String irodsAbsolutePath, final IRODSAccount irodsAccount) {
+	public static String getDefaultIRODSResourceFromAccountIfFileInZone(final String irodsAbsolutePath,
+			final IRODSAccount irodsAccount) {
 
 		String defaultResource = "";
 
@@ -73,19 +92,18 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Determine if the given iRODS absolute path is in the zone of the given
-	 * {@code IRODSAccount}. This is done by inspecting the path for first
-	 * zone part, and doing a string comparison with the zone in the
+	 * {@code IRODSAccount}. This is done by inspecting the path for first zone
+	 * part, and doing a string comparison with the zone in the
 	 * {@code IRODSAccount}.
 	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with an iRODS absolute path.
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for the zone in question.
-	 * @return {@code true} if the file path is in the given zone. This
-	 *         does not determine if the path actually exists.
+	 * @return {@code true} if the file path is in the given zone. This does not
+	 *         determine if the path actually exists.
 	 */
-	public static boolean isFileInThisZone(final String irodsAbsolutePath,
-			final IRODSAccount irodsAccount) {
+	public static boolean isFileInThisZone(final String irodsAbsolutePath, final IRODSAccount irodsAccount) {
 
 		boolean inZone = true;
 
@@ -111,8 +129,8 @@ public class MiscIRODSUtils {
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the absolute path to an iRODS file or
 	 *            collection
-	 * @return {@code String} with the zone name, or blank if the zone name
-	 *         is not in the path (e.g. if the path is just '/')
+	 * @return {@code String} with the zone name, or blank if the zone name is not
+	 *         in the path (e.g. if the path is just '/')
 	 */
 	public static String getZoneInPath(final String irodsAbsolutePath) {
 		if (irodsAbsolutePath == null) {
@@ -133,13 +151,14 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * determine if the path is in the current zone
+	 * 
 	 * @param irodsAccount
 	 * @param inZone
 	 * @param pathComponents
-	 * @return
+	 * @return {@code boolean} if this path is in the current zone
 	 */
-	private static boolean isFirstPartOfPathInZone(
-			final IRODSAccount irodsAccount, final List<String> pathComponents) {
+	private static boolean isFirstPartOfPathInZone(final IRODSAccount irodsAccount, final List<String> pathComponents) {
 		boolean inZone = true;
 		if (pathComponents.isEmpty() || pathComponents.size() == 1) {
 			// inZone will remain true, this should be the 'root' directory
@@ -150,20 +169,17 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Handy method to break an iRODS absolute path into the component
-	 * directories.
+	 * Handy method to break an iRODS absolute path into the component directories.
 	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with an iRODS absolute path.
-	 * @return {@code List<String>} with the component path elements (the /
-	 *         path separator will be removed).
+	 * @return {@code List<String>} with the component path elements (the / path
+	 *         separator will be removed).
 	 */
-	public static List<String> breakIRODSPathIntoComponents(
-			final String irodsAbsolutePath) {
+	public static List<String> breakIRODSPathIntoComponents(final String irodsAbsolutePath) {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		String[] components = irodsAbsolutePath.split("/");
@@ -173,21 +189,18 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Given a list of path components, as produced by the
-	 * {@code breakIRODSPathIntoComponents}, re-create an iRODS absolute
-	 * path by simply stringing together the path components with the iRODS '/'
-	 * delimiter.
+	 * {@code breakIRODSPathIntoComponents}, re-create an iRODS absolute path by
+	 * simply stringing together the path components with the iRODS '/' delimiter.
 	 *
 	 * @param pathComponents
 	 *            {@code List<String>} with the iRODS path components.
 	 * @param lastIndex
-	 *            {@code int}, set to -1 if there is no limit, that
-	 *            indicates the index of the last component to string together
-	 *            into the path
-	 * @return {@code String} with an iRODS absolute path built from the
-	 *         given components.
+	 *            {@code int}, set to -1 if there is no limit, that indicates the
+	 *            index of the last component to string together into the path
+	 * @return {@code String} with an iRODS absolute path built from the given
+	 *         components.
 	 */
-	public static String buildPathFromComponentsUpToIndex(
-			final List<String> pathComponents, final int lastIndex) {
+	public static String buildPathFromComponentsUpToIndex(final List<String> pathComponents, final int lastIndex) {
 
 		if (pathComponents == null) {
 			throw new IllegalArgumentException("null pathComponents");
@@ -227,8 +240,7 @@ public class MiscIRODSUtils {
 	 * @return
 	 * @throws Exception
 	 */
-	public static String convertStreamToString(final InputStream inputStream)
-			throws Exception {
+	public static String convertStreamToString(final InputStream inputStream) throws Exception {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
 		Reader in = new InputStreamReader(inputStream, "UTF-8");
@@ -244,15 +256,15 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Pare off a user name if the given user name is in user#zone format,
-	 * there's a complementary method to just get the zone part.
+	 * Pare off a user name if the given user name is in user#zone format, there's a
+	 * complementary method to just get the zone part.
 	 *
 	 * @param userName
-	 *            {@code String} with a user name that can be just a name,
-	 *            or a user name in user#zone format.
+	 *            {@code String} with a user name that can be just a name, or a user
+	 *            name in user#zone format.
 	 *            <p>
-	 *            This will give you back the user name in any case, and will
-	 *            return blank if given blank or null.
+	 *            This will give you back the user name in any case, and will return
+	 *            blank if given blank or null.
 	 * @return {@code String} with the userName, with any zone info trimmed
 	 */
 	public static String getUserInUserName(final String userName) {
@@ -271,15 +283,15 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Pare off a zone name if the given user name is in user#zone format,
-	 * there's a complementary method to just get the user part.
+	 * Pare off a zone name if the given user name is in user#zone format, there's a
+	 * complementary method to just get the user part.
 	 *
 	 * @param userName
-	 *            {@code String} with a user name that can be just a name,
-	 *            or a user name in user#zone format.
+	 *            {@code String} with a user name that can be just a name, or a user
+	 *            name in user#zone format.
 	 *            <p>
-	 *            This will give you back the zone name in any case, and will
-	 *            return blank if given blank or null.
+	 *            This will give you back the zone name in any case, and will return
+	 *            blank if given blank or null.
 	 * @return {@code String} with the zone, with any user info trimmed
 	 */
 	public static String getZoneInUserName(final String userName) {
@@ -301,7 +313,7 @@ public class MiscIRODSUtils {
 	 * Get a displayable byte value from a long value
 	 *
 	 * @param bytes
-	 * @return
+	 * @return {@code String} with a human readable version of the byte count
 	 */
 	public static String humanReadableByteCount(final long bytes) {
 		int unit = 1024;
@@ -317,13 +329,11 @@ public class MiscIRODSUtils {
 	 * Create an MD5 Hash of a string value
 	 *
 	 * @param input
-	 *            {@code String} with the value to be converted to an MD5
-	 *            Hash
+	 *            {@code String} with the value to be converted to an MD5 Hash
 	 * @return {@code String} which is the MD5 has of the string.
 	 */
 
-	public static String computeMD5HashOfAStringValue(final String input)
-			throws JargonException {
+	public static String computeMD5HashOfAStringValue(final String input) throws JargonException {
 
 		if (input == null || input.isEmpty()) {
 			throw new IllegalArgumentException("null or empty input");
@@ -336,8 +346,7 @@ public class MiscIRODSUtils {
 			byte[] md5 = algorithm.digest();
 			return LocalFileUtils.digestByteArrayToString(md5);
 		} catch (NoSuchAlgorithmException ex) {
-			throw new JargonException(
-					"exception creating MD5 Hash of the given string", ex);
+			throw new JargonException("exception creating MD5 Hash of the given string", ex);
 		}
 	}
 
@@ -349,8 +358,7 @@ public class MiscIRODSUtils {
 	 *            {@link IRODSAccount}
 	 * @return {@code String} with a computed home directory path
 	 */
-	public static String computeHomeDirectoryForIRODSAccount(
-			final IRODSAccount irodsAccount) {
+	public static String computeHomeDirectoryForIRODSAccount(final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -364,8 +372,8 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Build the home directory path for the given logged in user in the
-	 * specified federated zone
+	 * Build the home directory path for the given logged in user in the specified
+	 * federated zone
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
@@ -373,8 +381,8 @@ public class MiscIRODSUtils {
 	 *            {@code String} federated zone name
 	 * @return {@code String} in /federatedZone/home/user#homeZone format
 	 */
-	public static String computeHomeDirectoryForIRODSAccountInFederatedZone(
-			final IRODSAccount irodsAccount, final String zone) {
+	public static String computeHomeDirectoryForIRODSAccountInFederatedZone(final IRODSAccount irodsAccount,
+			final String zone) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -391,8 +399,8 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Compute a home directory path in /zone/home/username format given an
-	 * {@code IRODSAccount} that describes the zone, and a user name for
-	 * the target user.
+	 * {@code IRODSAccount} that describes the zone, and a user name for the target
+	 * user.
 	 * <p>
 	 * This variant is meant to allow the computation of a home directory for an
 	 * arbitrary user based on the zone I'm logged into.
@@ -401,8 +409,8 @@ public class MiscIRODSUtils {
 	 *            {@link IRODSAccount}
 	 * @return {@code String} with a computed home directory path
 	 */
-	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-			final IRODSAccount irodsAccount, final String irodsUserName) {
+	public static String computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(final IRODSAccount irodsAccount,
+			final String irodsUserName) {
 
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
@@ -421,13 +429,11 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Helper method for the convention of having a '/zone/home/public'
-	 * directory, especially for use by 'anonymous' accounts. Compute a path to
-	 * that directory
+	 * Helper method for the convention of having a '/zone/home/public' directory,
+	 * especially for use by 'anonymous' accounts. Compute a path to that directory
 	 *
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} for the logged in user (probably
-	 *            anonymous)
+	 *            {@link IRODSAccount} for the logged in user (probably anonymous)
 	 * @return {@code String} in '/zone/home/public' format
 	 */
 	public static String computePublicDirectory(final IRODSAccount irodsAccount) {
@@ -447,8 +453,7 @@ public class MiscIRODSUtils {
 	 *
 	 * @return {@code String} with the last component of the absolute path
 	 */
-	public static String getLastPathComponentForGiveAbsolutePath(
-			final String collectionPath) {
+	public static String getLastPathComponentForGiveAbsolutePath(final String collectionPath) {
 
 		if (collectionPath == null || collectionPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty collection path");
@@ -469,8 +474,7 @@ public class MiscIRODSUtils {
 	 * @param objStat
 	 * @throws JargonException
 	 */
-	public static void evaluateSpecCollSupport(final ObjStat objStat)
-			throws JargonException {
+	public static void evaluateSpecCollSupport(final ObjStat objStat) throws JargonException {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			// OK
 		} else if (objStat.getSpecColType() == SpecColType.NORMAL) {
@@ -481,15 +485,14 @@ public class MiscIRODSUtils {
 			// OK
 		} else {
 			throw new JargonException(
-					"unsupported object type, support not yet available for:"
-							+ objStat.getSpecColType());
+					"unsupported object type, support not yet available for:" + objStat.getSpecColType());
 		}
 	}
 
 	/**
 	 * Build an absolute path combining the collection parent and the data name,
-	 * accounting for the presence or absence of a trailing slash in the
-	 * collection path.
+	 * accounting for the presence or absence of a trailing slash in the collection
+	 * path.
 	 *
 	 * @param collectionPath
 	 *            {@code String} with path of the parent collection
@@ -497,8 +500,8 @@ public class MiscIRODSUtils {
 	 *            {@code String} with file or collection child name
 	 * @return {@code String} with a properly concatenated file path
 	 */
-	public static String buildAbsolutePathFromCollectionParentAndFileName(
-			final String collectionPath, final String dataName) {
+	public static String buildAbsolutePathFromCollectionParentAndFileName(final String collectionPath,
+			final String dataName) {
 
 		if (collectionPath == null) {
 			throw new IllegalArgumentException("null or empty collectionPath");
@@ -514,8 +517,7 @@ public class MiscIRODSUtils {
 			pathBuilder.append("/");
 		} else {
 			pathBuilder.append(collectionPath);
-			if (!collectionPath.isEmpty()
-					&& collectionPath.charAt(collectionPath.length() - 1) != '/') {
+			if (!collectionPath.isEmpty() && collectionPath.charAt(collectionPath.length() - 1) != '/') {
 				pathBuilder.append('/');
 			}
 			pathBuilder.append(dataName);
@@ -526,24 +528,22 @@ public class MiscIRODSUtils {
 
 	/**
 	 * Based on the collection type, determine the absolute path used to query
-	 * iRODS. This is meant to handle special collections, such as soft links,
-	 * where the iCAT data may be associated with the canonical path
+	 * iRODS. This is meant to handle special collections, such as soft links, where
+	 * the iCAT data may be associated with the canonical path
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} with information on the given iRODS object
 	 * @return {@code String} with the canonical iRODS path
 	 */
-	public static String determineAbsolutePathBasedOnCollTypeInObjectStat(
-			final ObjStat objStat) {
+	public static String determineAbsolutePathBasedOnCollTypeInObjectStat(final ObjStat objStat) {
 		String effectiveAbsolutePath = null;
 
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			/*
-			 * StringBuilder sb = new StringBuilder();
-			 * sb.append(objStat.getObjectPath()); sb.append("/");
-			 * sb.append(MiscIRODSUtils
-			 * .getLastPathComponentForGiveAbsolutePath(objStat
-			 * .getAbsolutePath())); effectiveAbsolutePath = sb.toString();
+			 * StringBuilder sb = new StringBuilder(); sb.append(objStat.getObjectPath());
+			 * sb.append("/"); sb.append(MiscIRODSUtils
+			 * .getLastPathComponentForGiveAbsolutePath(objStat .getAbsolutePath()));
+			 * effectiveAbsolutePath = sb.toString();
 			 */
 			effectiveAbsolutePath = objStat.getObjectPath();
 		} else {
@@ -556,12 +556,11 @@ public class MiscIRODSUtils {
 	 * Given an absolue path, split it into a parent name and a child name
 	 *
 	 * @param filePath
-	 *            {@code String} with an absolute iRODS path to a
-	 *            collection or data object
+	 *            {@code String} with an absolute iRODS path to a collection or data
+	 *            object
 	 * @return {@link CollectionAndPath} value object
 	 */
-	public static CollectionAndPath separateCollectionAndPathFromGivenAbsolutePath(
-			final String filePath) {
+	public static CollectionAndPath separateCollectionAndPathFromGivenAbsolutePath(final String filePath) {
 
 		// used when parsing the filepath
 		int index;
@@ -594,16 +593,16 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Get a {@code List} based on the values of the provided enum. Handy
-	 * for creating lists in interfaces and for other purposes
+	 * Get a {@code List} based on the values of the provided enum. Handy for
+	 * creating lists in interfaces and for other purposes
 	 *
 	 * @param enumClass
 	 *            java {@code enum}
 	 * @return {@code List<String>} of enum values
 	 * @throws JargonException
 	 */
-	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(
-			final Class<T> enumClass) throws JargonException {
+	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(final Class<T> enumClass)
+			throws JargonException {
 		try {
 			T[] items = enumClass.getEnumConstants();
 			Method accessor = enumClass.getMethod("toString");
@@ -628,8 +627,7 @@ public class MiscIRODSUtils {
 	 *            {@code char} whose occurrances will be counted
 	 * @return {@code int} with the count of the given character
 	 */
-	public static int countCharsInString(
-			final String stringToCountOccurrancesIn, final char characterToCount) {
+	public static int countCharsInString(final String stringToCountOccurrancesIn, final char characterToCount) {
 
 		if (stringToCountOccurrancesIn == null) {
 			throw new IllegalArgumentException("null s");
@@ -672,18 +670,17 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * Checks the given path for a length violation,this method will also strip
-	 * a trailing slash
+	 * Checks the given path for a length violation,this method will also strip a
+	 * trailing slash
 	 *
 	 * @param path
 	 *            {@code String} with an iRODS path to check
-	 * @return {@code String} with the path, possibly with the trailing
-	 *         slashes truncated
+	 * @return {@code String} with the path, possibly with the trailing slashes
+	 *         truncated
 	 * @throws PathTooLongException
 	 *             thrown if the path is too long
 	 */
-	public static String checkPathSizeForMax(final String path)
-			throws PathTooLongException {
+	public static String checkPathSizeForMax(final String path) throws PathTooLongException {
 		if (path == null) {
 			throw new IllegalArgumentException("null path");
 		}
@@ -708,15 +705,14 @@ public class MiscIRODSUtils {
 	}
 
 	/**
-	 * build a user home directory path (with no trailing slash) based on the
-	 * common /zone/home/userName scheme given an iRODS account
+	 * build a user home directory path (with no trailing slash) based on the common
+	 * /zone/home/userName scheme given an iRODS account
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAcocunt} for the given user
 	 * @return {@code String} with the iRODS user home directory path
 	 */
-	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(
-			final IRODSAccount irodsAccount) {
+	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(final IRODSAccount irodsAccount) {
 		if (irodsAccount == null) {
 			throw new IllegalArgumentException("null irodsAccount");
 		}
@@ -740,8 +736,8 @@ public class MiscIRODSUtils {
 	 * @throws PathTooLongException
 	 *             if the combined path is too long
 	 */
-	public static void checkPathSizeForMax(final String parentPath,
-			final String childPath) throws PathTooLongException {
+	public static void checkPathSizeForMax(final String parentPath, final String childPath)
+			throws PathTooLongException {
 		if (parentPath == null) {
 			throw new IllegalArgumentException("null parentPath");
 		}
@@ -786,7 +782,7 @@ public class MiscIRODSUtils {
 	 * Wrap the given string in " characters and return it
 	 *
 	 * @param string
-	 * @return
+	 * @return {@code String} with a quote wrapped string
 	 */
 	public static final String wrapStringInQuotes(final String string) {
 		if (string == null) {
@@ -808,13 +804,12 @@ public class MiscIRODSUtils {
 	 * @param prefix
 	 *            {@code String} with the prefix to remove
 	 * @param path
-	 *            {@code String} with the path for which the prefix is
-	 *            trimmed
-	 * @return
+	 *            {@code String} with the path for which the prefix is trimmed
+	 * @return {@code String} with the prefix removed
 	 * @throws JargonException
 	 */
-	public static final String subtractPrefixFromGivenPath(final String prefix,
-			final String path) throws JargonException {
+	public static final String subtractPrefixFromGivenPath(final String prefix, final String path)
+			throws JargonException {
 		if (prefix == null) {
 			throw new IllegalArgumentException("null prefix");
 		}
