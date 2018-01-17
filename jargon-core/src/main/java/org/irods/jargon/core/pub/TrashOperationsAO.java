@@ -33,4 +33,56 @@ public interface TrashOperationsAO {
 	 */
 	IRODSFile getTrashHomeForLoggedInUser() throws JargonException;
 
+	/**
+	 * Empty the trash can for the provided user, with an optional (blank or null)
+	 * zone. This operation is done as an administrator
+	 * <p/>
+	 * The caller must properly format the username and zone name appropriately.
+	 * 
+	 * @param userName
+	 *            <code>String</code> that will have trash emptied. If left null or
+	 *            blank, will delete trash for all users
+	 * @param zone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @param age
+	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
+	 *            files are to be deleted
+	 * @param trashOptions
+	 *            {@link TrashOptions} that control details of the processing
+	 * @throws JargonException
+	 */
+	void emptyTrashAdminMode(final String userName, final String zone, final int age) throws JargonException;
+
+	/**
+	 * Empty the trash can for all users. This operation is done as an administrator
+	 * 
+	 *
+	 * @param zone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @param age
+	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
+	 *            files are to be deleted
+	 * 
+	 * @throws JargonException
+	 */
+	void emptyAllTrashAsAdmin(final String zone, final int age) throws JargonException;
+
+	/**
+	 * Get the trash home dir for all users
+	 * 
+	 * @param zone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @return {@link IRODSFile} that is the top of the trash for all users in the
+	 *         given zone
+	 * 
+	 * @throws JargonException
+	 */
+	IRODSFile getTrashHome(final String zone) throws JargonException;
+
 }

@@ -54,6 +54,22 @@ public class MiscIRODSUtils {
 	}
 
 	/**
+	 * Given a zone, build the trash home dir
+	 * 
+	 * @param zoneName
+	 *            <code>String</code> with the zone name
+	 * @return <code>String</code> with the trash path
+	 */
+	public static String buildTrashHome(final String zoneName) {
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(zoneName);
+		sb.append("/trash/home/");
+		return sb.toString();
+
+	}
+
+	/**
 	 * Given an iRODS path to a file, and an iRODS account, get a default storage
 	 * resource name from the iRODS account if that path is in the same zone as an
 	 * iRODS account, otherwise, return an empty resource.

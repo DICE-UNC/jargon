@@ -53,6 +53,23 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	}
 
+	@Override
+	public IRODSFile getTrashHome(final String zone) throws JargonException {
+		log.info("getTrashHome())");
+
+		String operativeZone = zone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		String trashHomePath = MiscIRODSUtils.buildTrashHome(operativeZone);
+		log.info("getting file at:{}", trashHomePath);
+		IRODSFile trashFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+				.instanceIRODSFile(trashHomePath);
+		return trashFile;
+
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -80,26 +97,49 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	}
 
-	/**
-	 * Empty the trash can for the logged in user, with an optional (blank or null)
-	 * zone. This defaults to a recursive operation to remove all trash.
-	 * <p/>
-	 * The caller must properly format the username and zone name appropriately.
+	@Override
+	public void emptyAllTrashAsAdmin(final String zone, final int age) throws JargonException {
+		log.info("emptyAllTrashAsAdmin()");
+		emptyTrashAdminMode("", zone, age);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param userName
-	 *            <code>String</code> that will have trash emptied. If left null or
-	 *            blank, will delete trash for all users
-	 * @param irodsZone
-	 *            optional (<code>null</code> or blank) <code>String</code> with a
-	 *            zone for which the trash will be emptied. defaults to the current
-	 *            logged in zone final TrashOptions trashOptions including recursive
-	 *            and delete orphan collections
-	 * @param trashOptions
-	 *            {@link TrashOptions} that control details of the processing
-	 * @throws JargonException
+	 * @see
+	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashAdminMode(java.lang.
+	 * String, java.lang.String, int)
 	 */
-	public void emptyTrashAdminMode(final String userName, final String irodsZone, final TrashOptions trashOptions)
-			throws JargonException {
+	@Override
+	public void emptyTrashAdminMode(final String userName, final String zone, final int age) throws JargonException {
+
+		log.info("emptyTrashAdminMode()");
+		String operativeUserName = userName;
+		if (userName == null) {
+			operativeUserName = "";
+		}
+
+		String operativeZone = zone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		TrashOptions trashOptions = new TrashOptions();
+		trashOptions.setAgeInMinutes(age);
+		trashOptions.setRecursive(true);
+		trashOptions.setTrashOperationMode(TrashOperationMode.ADMIN);
+		IRODSFile trashHomeFile = this.getTrashHome(zone);
+
+		if (operativeUserName.isEmpty()) {
+			log.info("empty all trash as admin");
+			emptyTrash(operativeZone, trashHomeFile.getAbsolutePath(), trashOptions);
+
+		} else {
+			log.info("empty trash for user {} as admin", operativeUserName);
+			emptyTrash(operativeZone, MiscIRODSUtils.buildTrashHome(operativeUserName, operativeZone), trashOptions);
+		}
+
+		log.info("trash emptied!");
 
 	}
 

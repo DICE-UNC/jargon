@@ -43,6 +43,45 @@ public class TrashOperationsAOImplTest {
 	}
 
 	@Test
+	public void testEmptyTrashForLoggedInUserWithAge() throws Exception {
+		String testFileName = "testEmptyTrashForLoggedInUserWithAge.txt";
+		String testCollectionName = "testEmptyTrashForLoggedInUserWithAge";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		irodsAccount.setDefaultStorageResource("");
+
+		TrashOperationsAO trashOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getTrashOperationsAO(irodsAccount);
+		trashOperationsAO.emptyTrashForLoggedInUser("", 0);
+
+		File sourceFile = new File(absPath + testFileName);
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(sourceFile, targetIRODSColl, null, null);
+
+		targetIRODSColl.delete();
+		// I made some trash
+
+		trashOperationsAO.emptyTrashForLoggedInUser("", 15);
+		IRODSFile trashHome = trashOperationsAO.getTrashHomeForLoggedInUser();
+		Assert.assertFalse("trash should not be empty because of age", trashHome.listFiles().length == 0);
+
+	}
+
+	@Test
 	public void testEmptyTrashForLoggedInUser() throws Exception {
 		String testFileName = "testEmptyTrashForLoggedInUser.txt";
 		String testCollectionName = "testEmptyTrashForLoggedInUser";
@@ -76,6 +115,90 @@ public class TrashOperationsAOImplTest {
 				.getTrashOperationsAO(irodsAccount);
 		trashOperationsAO.emptyTrashForLoggedInUser("", 0);
 		IRODSFile trashHome = trashOperationsAO.getTrashHomeForLoggedInUser();
+		Assert.assertTrue("trash not empty", trashHome.listFiles().length == 0);
+
+	}
+
+	@Test
+	public void testEmptyAllTrashForUserAsAdmin() throws Exception {
+		String testFileName = "testEmptyAllTrashForUserAsAdmin.txt";
+		String testCollectionName = "testEmptyAllTrashForUserAsAdmin";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		irodsAccount.setDefaultStorageResource("");
+
+		File sourceFile = new File(absPath + testFileName);
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(sourceFile, targetIRODSColl, null, null);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+
+		targetIRODSColl.delete();
+		// I made some trash
+
+		IRODSAccount rods = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		TrashOperationsAO trashOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory().getTrashOperationsAO(rods);
+		trashOperationsAO.emptyAllTrashAsAdmin("", -1);
+
+		TrashOperationsAO userTrashOps = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getTrashOperationsAO(irodsAccount);
+		IRODSFile trashHome = userTrashOps.getTrashHomeForLoggedInUser();
+		Assert.assertTrue("trash not empty", trashHome.listFiles().length == 0);
+
+	}
+
+	@Test
+	public void testEmptyTrashForUserAsAdmin() throws Exception {
+		String testFileName = "testEmptyTrashForUserAsAdmin.txt";
+		String testCollectionName = "testEmptyTrashForUserAsAdmin";
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromSecondaryTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH + "/" + testCollectionName);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper
+				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
+		irodsAccount.setDefaultStorageResource("");
+
+		File sourceFile = new File(absPath + testFileName);
+		IRODSFile targetIRODSColl = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+
+		targetIRODSColl.deleteWithForceOption();
+		targetIRODSColl.mkdirs();
+
+		DataTransferOperations dataTransferOperations = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperations.putOperation(sourceFile, targetIRODSColl, null, null);
+		IRODSFileFactory irodsFileFactory = irodsFileSystem.getIRODSFileFactory(irodsAccount);
+
+		targetIRODSColl.delete();
+		// I made some trash
+
+		IRODSAccount rods = testingPropertiesHelper.buildIRODSAdminAccountFromTestProperties(testingProperties);
+
+		TrashOperationsAO trashOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory().getTrashOperationsAO(rods);
+		trashOperationsAO.emptyTrashAdminMode(irodsAccount.getUserName(), "", 0);
+
+		TrashOperationsAO userTrashOps = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getTrashOperationsAO(irodsAccount);
+		IRODSFile trashHome = userTrashOps.getTrashHomeForLoggedInUser();
 		Assert.assertTrue("trash not empty", trashHome.listFiles().length == 0);
 
 	}
