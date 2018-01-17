@@ -48,7 +48,7 @@ public class MiscIRODSUtils {
 		sb.append('/');
 		sb.append(zoneName);
 		sb.append("/trash/home/");
-		sb.append(zoneName);
+		sb.append(userName);
 		return sb.toString();
 
 	}

@@ -30,16 +30,15 @@ import org.slf4j.LoggerFactory;
  * connection is determined by the
  * {@link org.irods.jargon.core.connection.IRODSAccount} that is specified when
  * the access object is created. The connection is managed using a
- * {@code ThreadLocal}, such that any access objects created in the same
- * thread by this factory will automatically create a connection, or will share
- * an already created connection. This also means that, at the end of any set of
+ * {@code ThreadLocal}, such that any access objects created in the same thread
+ * by this factory will automatically create a connection, or will share an
+ * already created connection. This also means that, at the end of any set of
  * operations, the connection must be closed. Typically, and
- * {@link IRODSFileSystem} is instantiated, and that
- * {@code IRODSFileSystem} is used to get a reference to this access object
- * factory. Once operations are done, the {@code IRODSFileSystem} can be
- * used to close connections in that thread. This factory has hooks to also
- * close those connections, and this can be used in cases where this factory is
- * injected itself into another service.
+ * {@link IRODSFileSystem} is instantiated, and that {@code IRODSFileSystem} is
+ * used to get a reference to this access object factory. Once operations are
+ * done, the {@code IRODSFileSystem} can be used to close connections in that
+ * thread. This factory has hooks to also close those connections, and this can
+ * be used in cases where this factory is injected itself into another service.
  *
  * @author Mike Conway, DICE (www.irods.org)
  *
@@ -69,10 +68,9 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 		irodsSession.closeSession(irodsAccount);
 
 		/*
-		 * Note that this works if the account is already authenticated by
-		 * simply returning the cached response. If the account is not
-		 * authenticated, it will cause the authentication process and cache the
-		 * response.
+		 * Note that this works if the account is already authenticated by simply
+		 * returning the cached response. If the account is not authenticated, it will
+		 * cause the authentication process and cache the response.
 		 */
 		AuthResponse authResponse = irodsSession.currentConnection(irodsAccount).getAuthResponse();
 
@@ -97,10 +95,9 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 			throw new IllegalArgumentException("null irodsAccount");
 		}
 		/*
-		 * Note that this works if the account is already authenticated by
-		 * simply returning the cached response. If the account is not
-		 * authenticated, it will cause the authentication process and cache the
-		 * response.
+		 * Note that this works if the account is already authenticated by simply
+		 * returning the cached response. If the account is not authenticated, it will
+		 * cause the authentication process and cache the response.
 		 */
 		AuthResponse authResponse = irodsSession.currentConnection(irodsAccount).getAuthResponse();
 		log.info("authResponse:{}", authResponse);
@@ -117,9 +114,9 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	}
 
 	/**
-	 * Default constructor which does not initialize the
-	 * {@code IRODSSession}. It is up to the developer to inject the
-	 * {@code IRODSsession} or an exception will result.
+	 * Default constructor which does not initialize the {@code IRODSSession}. It is
+	 * up to the developer to inject the {@code IRODSsession} or an exception will
+	 * result.
 	 */
 	public IRODSAccessObjectFactoryImpl() {
 		super();
@@ -185,8 +182,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
-	 * closeSessionAndEatExceptions
-	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 * closeSessionAndEatExceptions (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public void closeSessionAndEatExceptions(final IRODSAccount irodsAccount) {
@@ -227,8 +223,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserAO(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -240,8 +235,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserGroupAO(org
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getUserGroupAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -266,8 +260,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getQuotaAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -291,8 +284,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getZoneAO(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getZoneAO(org.irods
 	 * .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -316,8 +308,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceGroupAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getResourceGroupAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -329,8 +320,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileSystemAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -342,8 +332,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileFactory
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getIRODSFileFactory
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -355,8 +344,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAO(org
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -368,8 +356,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAO(org
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAO(org
 	 * .irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -381,8 +368,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getDataObjectAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -394,8 +380,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getCollectionAuditAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -407,8 +392,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getRuleProcessingAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -488,8 +472,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getStream2StreamAO
 	 * (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
@@ -527,8 +510,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	 * (non-Javadoc)
 	 * 
 	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#
-	 * getIRODSRegistrationOfFilesAO
-	 * (org.irods.jargon.core.connection.IRODSAccount)
+	 * getIRODSRegistrationOfFilesAO (org.irods.jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public IRODSRegistrationOfFilesAO getIRODSRegistrationOfFilesAO(final IRODSAccount irodsAccount)
@@ -550,8 +532,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#setIrodsSession(org
 	 * .irods.jargon.core.connection.IRODSSession)
 	 */
 	@Override
@@ -569,8 +550,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getJargonProperties()
 	 */
 	@Override
 	public JargonProperties getJargonProperties() throws JargonException {
@@ -633,14 +613,25 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getSpecificQueryAO
 	 * (org.irods .jargon.core.connection.IRODSAccount)
 	 */
 	@Override
 	public SpecificQueryAO getSpecificQueryAO(final IRODSAccount irodsAccount) throws JargonException {
 		checkIrodsSessionSet();
 		return new SpecificQueryAOImpl(irodsSession, irodsAccount);
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.IRODSAccessObjectFactory#getTrashOperationsAO(
+	 * org.irods.jargon.core.connection.IRODSAccount)
+	 */
+	@Override
+	public TrashOperationsAO getTrashOperationsAO(final IRODSAccount irodsAccount) throws JargonException {
+		checkIrodsSessionSet();
+		return new TrashOperationsAOImpl(irodsSession, irodsAccount);
 	}
 
 	@Override
