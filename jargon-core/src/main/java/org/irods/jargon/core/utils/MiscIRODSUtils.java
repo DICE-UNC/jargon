@@ -44,6 +44,15 @@ public class MiscIRODSUtils {
 	 * @return <code>String</code> with the trash path
 	 */
 	public static String buildTrashHome(final String userName, final String zoneName) {
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty userName");
+		}
+
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty zoneName");
+		}
+
 		StringBuilder sb = new StringBuilder();
 		sb.append('/');
 		sb.append(zoneName);
@@ -51,6 +60,26 @@ public class MiscIRODSUtils {
 		sb.append(userName);
 		return sb.toString();
 
+	}
+
+	/**
+	 * Build the path to the trash orphan collection in the given zone
+	 * 
+	 * @param zoneName
+	 *            zoneName <code>String</code> with the zone name
+	 * @return {@link String} with orphan path
+	 */
+	public static String buildTrashOrphanPath(final String zoneName) {
+		if (zoneName == null || zoneName.isEmpty()) {
+			throw new IllegalArgumentException("null or empty zoneName");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append('/');
+		sb.append(zoneName);
+		sb.append("/trash/orphan");
+
+		return sb.toString();
 	}
 
 	/**

@@ -57,6 +57,22 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	}
 
 	@Override
+	public IRODSFile getOrphanTrashHome(final String zone) throws JargonException {
+		log.info("getOrphanTrashHome())");
+		String operativeZone = zone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		String trashHomePath = MiscIRODSUtils.buildTrashOrphanPath(getIRODSAccount().getZone());
+
+		IRODSFile trashFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
+				.instanceIRODSFile(trashHomePath);
+		return trashFile;
+
+	}
+
+	@Override
 	public IRODSFile getTrashHome(final String zone) throws JargonException {
 		log.info("getTrashHome())");
 
@@ -211,6 +227,35 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		}
 
 		log.info("trash emptied!");
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.irods.jargon.core.pub.TrashOperationsAO#emptyOrphanTrash(java.lang.
+	 * String)
+	 */
+	@Override
+	public void emptyOrphanTrash(final String zone) throws JargonException {
+
+		log.info("emptyOrphanTrash()");
+
+		String operativeZone = zone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		TrashOptions trashOptions = new TrashOptions();
+		trashOptions.setAgeInMinutes(0);
+		trashOptions.setRecursive(true);
+		trashOptions.setTrashOperationMode(TrashOperationMode.ADMIN);
+		IRODSFile trashHomeFile = this.getOrphanTrashHome(zone);
+
+		log.info("empty orphan trash at: {}", trashHomeFile);
+		emptyTrash(operativeZone, trashHomeFile.getAbsolutePath(), trashOptions);
+
+		log.info("orphan trash emptied!");
 
 	}
 

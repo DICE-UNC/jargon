@@ -18,6 +18,8 @@ import junit.framework.Assert;
 
 public class TrashOperationsAOImplTest {
 
+	// FIXME: remove the time stamps and see trash weirdness, talk w/ irods folks
+
 	private static Properties testingProperties = new Properties();
 	private static org.irods.jargon.testutils.TestingPropertiesHelper testingPropertiesHelper = new TestingPropertiesHelper();
 	private static org.irods.jargon.testutils.filemanip.ScratchFileUtils scratchFileUtils = null;
@@ -85,7 +87,7 @@ public class TrashOperationsAOImplTest {
 
 	@Test
 	public void testEmptyTrashDataObjectForLoggedInUser() throws Exception {
-		String testFileName = "testEmptyTrashDataObjectForLoggedInUser.txt";
+		String testFileName = System.currentTimeMillis() + "testEmptyTrashDataObjectForLoggedInUser.txt";
 		String testCollectionName = "testEmptyTrashDataObjectForLoggedInUser";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
@@ -136,7 +138,7 @@ public class TrashOperationsAOImplTest {
 
 	@Test
 	public void testEmptyTrashDataObjectAsAdmin() throws Exception {
-		String testFileName = "testEmptyTrashDataObjectAsAdmin.txt";
+		String testFileName = System.currentTimeMillis() + "testEmptyTrashDataObjectAsAdmin.txt";
 		String testCollectionName = "testEmptyTrashDataObjectAsAdmin";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);
@@ -192,7 +194,7 @@ public class TrashOperationsAOImplTest {
 
 	@Test
 	public void testEmptyTrashCollectionForLoggedInUser() throws Exception {
-		String testFileName = "testEmptyTrashCollectionForLoggedInUser.txt";
+		String testFileName = System.currentTimeMillis() + "testEmptyTrashCollectionForLoggedInUser.txt";
 		String testCollectionName = "testEmptyTrashCollectionForLoggedInUser";
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 8);

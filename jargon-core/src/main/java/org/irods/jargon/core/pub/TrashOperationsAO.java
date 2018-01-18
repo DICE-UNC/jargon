@@ -34,6 +34,17 @@ public interface TrashOperationsAO {
 	IRODSFile getTrashHomeForLoggedInUser() throws JargonException;
 
 	/**
+	 * Get a reference to the orphan trash path in the zone
+	 * 
+	 * @param zone
+	 *            <code>String</code> with a zone for which the trash will be
+	 *            emptied. defaults to the current logged in zone
+	 * @return {@link IRODSFile} that is the top of the orphan trash collection
+	 * @throws JargonException
+	 */
+	IRODSFile getOrphanTrashHome(final String zone) throws JargonException;
+
+	/**
 	 * Empty the trash can for the provided user, with an optional (blank or null)
 	 * zone. This operation is done as an administrator
 	 * <p/>
@@ -121,5 +132,16 @@ public interface TrashOperationsAO {
 	 * @throws JargonException
 	 */
 	void emptyTrashAtPathAdminMode(String irodsPath, String userName, String zone, int age) throws JargonException;
+
+	/**
+	 * Clear out the /zone/trash/orphan collection as admin
+	 * 
+	 * @param zone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @throws JargonException
+	 */
+	void emptyOrphanTrash(final String zone) throws JargonException;
 
 }
