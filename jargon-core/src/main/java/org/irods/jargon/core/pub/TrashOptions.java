@@ -3,7 +3,7 @@
  */
 package org.irods.jargon.core.pub;
 
-import org.irods.jargon.core.pub.CollInpForEmptyTrash.TrashOperationMode;
+import org.irods.jargon.core.packinstr.CollInpForEmptyTrash.TrashOperationMode;
 
 /**
  * Options for handling trash, passed in requests for detailed control of

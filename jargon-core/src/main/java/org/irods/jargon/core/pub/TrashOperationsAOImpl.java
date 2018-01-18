@@ -10,8 +10,11 @@ import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.FileNotFoundException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.CollInp;
+import org.irods.jargon.core.packinstr.CollInpForEmptyTrash;
+import org.irods.jargon.core.packinstr.CollInpForEmptyTrash.TrashOperationMode;
+import org.irods.jargon.core.packinstr.DataObjInp;
+import org.irods.jargon.core.packinstr.DataObjInpForRmtrash;
 import org.irods.jargon.core.packinstr.Tag;
-import org.irods.jargon.core.pub.CollInpForEmptyTrash.TrashOperationMode;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.io.IRODSFile;
 import org.irods.jargon.core.utils.IRODSConstants;
@@ -97,6 +100,37 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashAtPathForLoggedInUser(
+	 * java.lang.String, java.lang.String, int)
+	 */
+	@Override
+	public void emptyTrashAtPathForLoggedInUser(final String irodsPath, final String irodsZone, final int age)
+			throws JargonException {
+		log.info("emptyTrash()");
+		String operativeZone = irodsZone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		if (irodsPath == null || irodsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsPath");
+		}
+
+		TrashOptions trashOptions = new TrashOptions();
+		trashOptions.setAgeInMinutes(age);
+		trashOptions.setRecursive(true);
+		trashOptions.setTrashOperationMode(TrashOperationMode.USER);
+		log.info("operativeZone:{}", operativeZone);
+		log.info("trashOptions:{}", trashOptions);
+
+		emptyTrash(operativeZone, irodsPath, trashOptions);
+
+	}
+
 	@Override
 	public void emptyAllTrashAsAdmin(final String zone, final int age) throws JargonException {
 		log.info("emptyAllTrashAsAdmin()");
@@ -110,6 +144,43 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * org.irods.jargon.core.pub.TrashOperationsAO#emptyTrashAdminMode(java.lang.
 	 * String, java.lang.String, int)
 	 */
+	@Override
+	public void emptyTrashAtPathAdminMode(final String irodsPath, final String userName, final String zone,
+			final int age) throws JargonException {
+
+		log.info("emptyTrashAtPathAdminMode()");
+		String operativeUserName = userName;
+		if (userName == null) {
+			operativeUserName = "";
+		}
+
+		String operativeZone = zone;
+		if (operativeZone == null || operativeZone.isEmpty()) {
+			operativeZone = this.getIRODSAccount().getZone();
+		}
+
+		if (irodsPath == null || irodsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsPath");
+		}
+
+		TrashOptions trashOptions = new TrashOptions();
+		trashOptions.setAgeInMinutes(age);
+		trashOptions.setRecursive(true);
+		trashOptions.setTrashOperationMode(TrashOperationMode.ADMIN);
+
+		if (operativeUserName.isEmpty()) {
+			log.info("empty trash at path {} as admin", irodsPath);
+			emptyTrash(operativeZone, irodsPath, trashOptions);
+
+		} else {
+			log.info("empty trash at path {} as admin", irodsPath);
+			emptyTrash(operativeZone, irodsPath, trashOptions);
+		}
+
+		log.info("trash emptied!");
+
+	}
+
 	@Override
 	public void emptyTrashAdminMode(final String userName, final String zone, final int age) throws JargonException {
 
@@ -173,7 +244,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 		}
 
 		if (irodsPath == null || irodsPath.isEmpty()) {
-			throw new IllegalArgumentException("null irodsPath");
+			throw new IllegalArgumentException("null or empty irodsPath");
 		}
 
 		if (trashOptions == null) {
@@ -201,10 +272,19 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 			Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, collInp.getParsedTags(),
 					CollInp.RMDIR_API_NBR);
 			processClientStatusMessages(response);
-			log.info("deletion successful");
 		} else {
-
+			log.info("deleting as a data object");
+			DataObjInpForRmtrash dataObjInp = new DataObjInpForRmtrash(irodsPath, trashOptions, operativeZone);
+			Tag response = getIRODSProtocol().irodsFunction(IRODSConstants.RODS_API_REQ, dataObjInp.getParsedTags(),
+					DataObjInp.DELETE_FILE_API_NBR);
+			if (response != null) {
+				String msg = "unexpected response from irods, expected null message - logged and ignored ";
+				log.warn(msg);
+			}
 		}
+
+		log.info("deletion successful");
+
 	}
 
 	/**

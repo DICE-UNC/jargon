@@ -1,16 +1,13 @@
 /**
  * 
  */
-package org.irods.jargon.core.pub;
+package org.irods.jargon.core.packinstr;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.irods.jargon.core.exception.JargonException;
-import org.irods.jargon.core.packinstr.AbstractIRODSPackingInstruction;
-import org.irods.jargon.core.packinstr.CollInp;
-import org.irods.jargon.core.packinstr.KeyValuePair;
-import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.pub.TrashOptions;
 
 /**
  * CollInp packing instruction for removing trash

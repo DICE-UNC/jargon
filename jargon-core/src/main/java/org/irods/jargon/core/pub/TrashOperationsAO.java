@@ -85,4 +85,41 @@ public interface TrashOperationsAO {
 	 */
 	IRODSFile getTrashHome(final String zone) throws JargonException;
 
+	/**
+	 * Empty the trash with the given absolute path (data object or collection) as
+	 * the logged in user.
+	 * 
+	 * @param irodsPath
+	 *            {@link String} absolute path to the trash item
+	 * @param irodsZone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @param age
+	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
+	 *            files are to be deleted
+	 * @throws JargonException
+	 */
+	void emptyTrashAtPathForLoggedInUser(final String irodsPath, final String irodsZone, final int age)
+			throws JargonException;
+
+	/**
+	 * Empty the trash with the given absolute path (data object or collection) as
+	 * the irods admin for the specified user
+	 * 
+	 * @param irodsPath
+	 *            {@link String} absolute path to the trash item
+	 * @param userName
+	 *            <code>String</code> that will have trash emptied.
+	 * @param irodsZone
+	 *            optional (<code>null</code> or blank) <code>String</code> with a
+	 *            zone for which the trash will be emptied. defaults to the current
+	 *            logged in zone
+	 * @param age
+	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
+	 *            files are to be deleted
+	 * @throws JargonException
+	 */
+	void emptyTrashAtPathAdminMode(String irodsPath, String userName, String zone, int age) throws JargonException;
+
 }
