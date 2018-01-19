@@ -27,12 +27,11 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import org.junit.Assert;
 
 public class RuleProcessingAOImplTest {
 
@@ -218,7 +217,7 @@ public class RuleProcessingAOImplTest {
 
 	}
 
-	@Test
+	@Ignore // Bug 4.2.2 testing issue with running rules with overrides from resource #283
 	public void testExecuteRuleFromResourceWithOverrides() throws Exception {
 
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -236,7 +235,7 @@ public class RuleProcessingAOImplTest {
 
 		// place a test file to checksum
 
-		String testFileName = "testExecuteRuleFromResourceWithOverrides.txt";
+		String testFileName = System.currentTimeMillis() + "testExecuteRuleFromResourceWithOverrides.txt";
 
 		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
 		String localFileName = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 300);
