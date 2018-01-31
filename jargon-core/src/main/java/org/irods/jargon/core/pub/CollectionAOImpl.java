@@ -1577,6 +1577,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
 					MiscIRODSUtils.getZoneInPath(absPath));
 		} catch (JargonQueryException | GenQueryBuilderException e) {
+			log.error("error querying for inheritance flag", e);
 			throw new JargonException("error querying for inheritance flag", e);
 		}
 

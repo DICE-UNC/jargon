@@ -380,6 +380,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 
 					// int fileCount = Integer.parseInt((String)
 					// fileCountTag.getValue());
+					log.debug("got status callback");
 					Tag msgHeaderTag = ackResult.getTag("MsgHeader_PI");
 					;
 					if (msgHeaderTag == null) {
