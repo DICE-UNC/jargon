@@ -29,6 +29,32 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 public class MiscIRODSUtils {
 
 	/**
+	 * Escape kvp chars for passwords that make iRODS angry, used in PAM login
+	 * 
+	 * @param password
+	 *            {@link String} with desired password
+	 * @return {@link String} with the properly escaped password
+	 */
+	public static String escapePasswordChars(final String password) {
+		if (password == null || password.isEmpty()) {
+			throw new IllegalArgumentException("null or empty password");
+		}
+
+		StringBuilder sb = new StringBuilder();
+		char[] chars = password.toCharArray();
+		for (char c : chars) {
+			if (c == '@' || c == '=' || c == '&' || c == ';') {
+				sb.append('\\');
+			}
+
+			sb.append(c);
+		}
+
+		return sb.toString();
+
+	}
+
+	/**
 	 * Private constructor, don't create instances
 	 */
 	private MiscIRODSUtils() {

@@ -4,14 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import org.junit.Assert;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.PathTooLongException;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -31,16 +30,48 @@ public class MiscIRODSUtilsTest {
 	public static void tearDownAfterClass() throws Exception {
 	}
 
+	@Test
+	public final void testEscapedPasswordAllClean() throws Exception {
+		String password = "hello";
+		String actual = MiscIRODSUtils.escapePasswordChars(password);
+		Assert.assertEquals(password, actual);
+
+	}
+
+	@Test
+	public final void testEscapedPasswordExclamation() throws Exception {
+		String password = "hell@o";
+		String expected = "hell\\@o";
+		String actual = MiscIRODSUtils.escapePasswordChars(password);
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
+	public final void testEscapedPasswordEquals() throws Exception {
+		String password = "hell=o";
+		String expected = "hell\\=o";
+		String actual = MiscIRODSUtils.escapePasswordChars(password);
+		Assert.assertEquals(expected, actual);
+	}
+
+	@Test
+	public final void testEscapedPasswordAmpersand() throws Exception {
+		String password = "hell&o";
+		String expected = "hell\\&o";
+		String actual = MiscIRODSUtils.escapePasswordChars(password);
+		Assert.assertEquals(expected, actual);
+	}
+
 	@Test(expected = IllegalArgumentException.class)
 	public final void testIsFileInThisZoneNullPath() {
-		MiscIRODSUtils.isFileInThisZone(null, testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
+		MiscIRODSUtils.isFileInThisZone(null,
+				testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
 	public final void testIsFileInThisZoneBlankPath() {
-		MiscIRODSUtils.isFileInThisZone("", testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties));
+		MiscIRODSUtils.isFileInThisZone("",
+				testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -51,56 +82,42 @@ public class MiscIRODSUtilsTest {
 	@Test
 	public final void testIsFileInThisZoneWhenInZone() throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		boolean inZone = MiscIRODSUtils.isFileInThisZone(targetIrodsPath,
-				irodsAccount);
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		boolean inZone = MiscIRODSUtils.isFileInThisZone(targetIrodsPath, irodsAccount);
 		Assert.assertTrue("should be in zone", inZone);
 	}
 
 	@Test
 	public final void testIsFileInThisZoneWhenNotInZone() throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		boolean inZone = MiscIRODSUtils.isFileInThisZone(targetIrodsPath,
-				irodsAccount);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		boolean inZone = MiscIRODSUtils.isFileInThisZone(targetIrodsPath, irodsAccount);
 		Assert.assertFalse("should not be in zone", inZone);
 	}
 
 	@Test
-	public final void testGetDefaultStorageResourceWhenInZone()
-			throws Exception {
+	public final void testGetDefaultStorageResourceWhenInZone() throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		String defaultStorageResource = MiscIRODSUtils
-				.getDefaultIRODSResourceFromAccountIfFileInZone(
-						targetIrodsPath, irodsAccount);
-		Assert.assertEquals("should pull default resource from IRODS account",
-				irodsAccount.getDefaultStorageResource(),
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String defaultStorageResource = MiscIRODSUtils.getDefaultIRODSResourceFromAccountIfFileInZone(targetIrodsPath,
+				irodsAccount);
+		Assert.assertEquals("should pull default resource from IRODS account", irodsAccount.getDefaultStorageResource(),
 				defaultStorageResource);
 	}
 
 	@Test
-	public final void testGetDefaultStorageResourceWhenNotInZone()
-			throws Exception {
+	public final void testGetDefaultStorageResourceWhenNotInZone() throws Exception {
 		String targetIrodsPath = testingPropertiesHelper
-				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(
-						testingProperties, IRODS_TEST_SUBDIR_PATH);
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		String defaultStorageResource = MiscIRODSUtils
-				.getDefaultIRODSResourceFromAccountIfFileInZone(
-						targetIrodsPath, irodsAccount);
-		Assert.assertEquals("should pull default resource from IRODS account",
-				"", defaultStorageResource);
+				.buildIRODSCollectionAbsolutePathFromFederatedZoneReadTestProperties(testingProperties,
+						IRODS_TEST_SUBDIR_PATH);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String defaultStorageResource = MiscIRODSUtils.getDefaultIRODSResourceFromAccountIfFileInZone(targetIrodsPath,
+				irodsAccount);
+		Assert.assertEquals("should pull default resource from IRODS account", "", defaultStorageResource);
 	}
 
 	/**
@@ -111,14 +128,10 @@ public class MiscIRODSUtilsTest {
 	@Test
 	public final void testBreakAndRebuildPathFromComponents() throws Exception {
 		String targetPath = "/a/path/in/irods/here";
-		List<String> pathComponents = MiscIRODSUtils
-				.breakIRODSPathIntoComponents(targetPath);
-		Assert.assertEquals("did not break into right number of paths", 6,
-				pathComponents.size());
-		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
-				pathComponents, -1);
-		Assert.assertEquals("did not reconstitute path correctly", targetPath,
-				actual);
+		List<String> pathComponents = MiscIRODSUtils.breakIRODSPathIntoComponents(targetPath);
+		Assert.assertEquals("did not break into right number of paths", 6, pathComponents.size());
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(pathComponents, -1);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath, actual);
 
 	}
 
@@ -134,42 +147,34 @@ public class MiscIRODSUtilsTest {
 	}
 
 	/**
-	 * Break an iRODS abs path into components. If the path is empty, should
-	 * give '/' as the path back
+	 * Break an iRODS abs path into components. If the path is empty, should give
+	 * '/' as the path back
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testBreakAndRebuildPathFromComponentsWhenEmpty()
-			throws Exception {
+	public final void testBreakAndRebuildPathFromComponentsWhenEmpty() throws Exception {
 		String targetPath = "/";
 		List<String> pathComponents = new ArrayList<String>();
 
-		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
-				pathComponents, -1);
-		Assert.assertEquals("did not reconstitute path correctly", targetPath,
-				actual);
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(pathComponents, -1);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath, actual);
 
 	}
 
 	/**
-	 * Break an iRODS abs path into components, then rebuild the whole path when
-	 * the path is just root
+	 * Break an iRODS abs path into components, then rebuild the whole path when the
+	 * path is just root
 	 *
 	 * @throws Exception
 	 */
 	@Test
-	public final void testBreakAndRebuildPathFromComponentsWhenRoot()
-			throws Exception {
+	public final void testBreakAndRebuildPathFromComponentsWhenRoot() throws Exception {
 		String targetPath = "/";
-		List<String> pathComponents = MiscIRODSUtils
-				.breakIRODSPathIntoComponents(targetPath);
-		Assert.assertEquals("did not break into right number of paths", 0,
-				pathComponents.size());
-		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
-				pathComponents, -1);
-		Assert.assertEquals("did not reconstitute path correctly", targetPath,
-				actual);
+		List<String> pathComponents = MiscIRODSUtils.breakIRODSPathIntoComponents(targetPath);
+		Assert.assertEquals("did not break into right number of paths", 0, pathComponents.size());
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(pathComponents, -1);
+		Assert.assertEquals("did not reconstitute path correctly", targetPath, actual);
 
 	}
 
@@ -180,15 +185,11 @@ public class MiscIRODSUtilsTest {
 	 * @throws Exception
 	 */
 	@Test
-	public final void testBreakAndRebuildPathFromComponentsGetFirstThreeParts()
-			throws Exception {
+	public final void testBreakAndRebuildPathFromComponentsGetFirstThreeParts() throws Exception {
 		String targetPath = "/a/path/in/irods/here";
-		List<String> pathComponents = MiscIRODSUtils
-				.breakIRODSPathIntoComponents(targetPath);
-		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(
-				pathComponents, 3);
-		Assert.assertEquals("did not reconstitute path correctly",
-				"/a/path/in", actual);
+		List<String> pathComponents = MiscIRODSUtils.breakIRODSPathIntoComponents(targetPath);
+		String actual = MiscIRODSUtils.buildPathFromComponentsUpToIndex(pathComponents, 3);
+		Assert.assertEquals("did not reconstitute path correctly", "/a/path/in", actual);
 
 	}
 
@@ -302,59 +303,41 @@ public class MiscIRODSUtilsTest {
 
 	@Test
 	public void testComputeHomeDirectoryForIRODSAccount() throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		String path = MiscIRODSUtils
-				.computeHomeDirectoryForIRODSAccount(irodsAccount);
-		String expected = "/" + irodsAccount.getZone() + "/home/"
-				+ irodsAccount.getUserName();
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String path = MiscIRODSUtils.computeHomeDirectoryForIRODSAccount(irodsAccount);
+		String expected = "/" + irodsAccount.getZone() + "/home/" + irodsAccount.getUserName();
 		Assert.assertEquals("did not correctly compute path", expected, path);
 	}
 
 	@Test
-	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = "blah";
-		String path = MiscIRODSUtils
-				.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-						irodsAccount, userName);
+		String path = MiscIRODSUtils.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(irodsAccount, userName);
 
 		String expected = "/" + irodsAccount.getZone() + "/home/" + userName;
 		Assert.assertEquals("did not correctly compute path", expected, path);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullAccount()
-			throws Exception {
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullAccount() throws Exception {
 		IRODSAccount irodsAccount = null;
 		String userName = "blah";
-		MiscIRODSUtils
-		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-				irodsAccount, userName);
+		MiscIRODSUtils.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullUserName()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountNullUserName() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = null;
-		MiscIRODSUtils
-		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-				irodsAccount, userName);
+		MiscIRODSUtils.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountBlankUserName()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
+	public void testComputeHomeDirectoryForGivenUserInSameZoneAsIRODSAccountBlankUserName() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
 		String userName = "";
-		MiscIRODSUtils
-		.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(
-				irodsAccount, userName);
+		MiscIRODSUtils.computeHomeDirectoryForGivenUserInSameZoneAsIRODSAccount(irodsAccount, userName);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -370,8 +353,7 @@ public class MiscIRODSUtilsTest {
 
 	@Test(expected = PathTooLongException.class)
 	public void testPathLengthTooLong() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax(FileGenerator
-				.generateRandomString(1050));
+		MiscIRODSUtils.checkPathSizeForMax(FileGenerator.generateRandomString(1050));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -386,8 +368,7 @@ public class MiscIRODSUtilsTest {
 
 	@Test(expected = PathTooLongException.class)
 	public void testPathLengthParentAndChildTooLong() throws Exception {
-		MiscIRODSUtils.checkPathSizeForMax(
-				FileGenerator.generateRandomString(1000),
+		MiscIRODSUtils.checkPathSizeForMax(FileGenerator.generateRandomString(1000),
 				FileGenerator.generateRandomString(1000));
 	}
 
@@ -402,22 +383,16 @@ public class MiscIRODSUtilsTest {
 	}
 
 	@Test
-	public void testBuildIRODSUserHomeForAccountUsingDefaultScheme()
-			throws Exception {
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		String computedPath = MiscIRODSUtils
-				.buildIRODSUserHomeForAccountUsingDefaultScheme(irodsAccount);
-		String expected = "/" + irodsAccount.getZone() + "/home/"
-				+ irodsAccount.getUserName();
-		Assert.assertEquals("did not build expected path", expected,
-				computedPath);
+	public void testBuildIRODSUserHomeForAccountUsingDefaultScheme() throws Exception {
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String computedPath = MiscIRODSUtils.buildIRODSUserHomeForAccountUsingDefaultScheme(irodsAccount);
+		String expected = "/" + irodsAccount.getZone() + "/home/" + irodsAccount.getUserName();
+		Assert.assertEquals("did not build expected path", expected, computedPath);
 
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testBuildIRODSUserHomeForAccountUsingDefaultSchemeNullAccount()
-			throws Exception {
+	public void testBuildIRODSUserHomeForAccountUsingDefaultSchemeNullAccount() throws Exception {
 		MiscIRODSUtils.buildIRODSUserHomeForAccountUsingDefaultScheme(null);
 
 	}
@@ -435,8 +410,7 @@ public class MiscIRODSUtilsTest {
 	}
 
 	@Test(expected = JargonException.class)
-	public void testSubtractPrefixFromGivenPathShorterThanPrefix()
-			throws Exception {
+	public void testSubtractPrefixFromGivenPathShorterThanPrefix() throws Exception {
 		String prefix = "/a/prefix/here";
 		String path = "/a/pre";
 		MiscIRODSUtils.subtractPrefixFromGivenPath(prefix, path);
@@ -447,8 +421,7 @@ public class MiscIRODSUtilsTest {
 		String prefix = "/a/prefix/here";
 		String remainder = "/and/some/more";
 		String path = prefix + remainder;
-		String actual = MiscIRODSUtils
-				.subtractPrefixFromGivenPath(prefix, path);
+		String actual = MiscIRODSUtils.subtractPrefixFromGivenPath(prefix, path);
 		Assert.assertEquals(remainder, actual);
 	}
 
