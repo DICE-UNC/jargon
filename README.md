@@ -42,3 +42,7 @@ Note that the following bug and feature requests are logged in GForge with relat
 #### Add trash operations service #280
 
 Adding service object for managing trash to retrofit into MetaLnx
+
+#### Escape spec chars in pam password #288
+
+Added escaping of characters that cause problems with the kvp processing when sending PAM passwords and integrated into PAMAuth. This is linked to iRODS https://github.com/irods/irods/issues/3528

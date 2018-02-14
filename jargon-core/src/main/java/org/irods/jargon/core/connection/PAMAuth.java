@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.packinstr.AuthReqPluginRequestInp;
 import org.irods.jargon.core.packinstr.PamAuthRequestInp;
 import org.irods.jargon.core.packinstr.Tag;
+import org.irods.jargon.core.utils.MiscIRODSUtils;
 
 /**
  * Support for PAM (plug-able authentication module) contributed by Chris Smith
@@ -58,7 +59,7 @@ public class PAMAuth extends AuthMechanism {
 		if (startupResponseData.checkIs410OrLater()) {
 			log.info("using pluggable pam auth request");
 			AuthReqPluginRequestInp pi = AuthReqPluginRequestInp.instancePam(irodsAccount.getProxyName(),
-					irodsAccount.getPassword(), pamTimeToLive, startupResponseData);
+					MiscIRODSUtils.escapePasswordChars(irodsAccount.getPassword()), pamTimeToLive, startupResponseData);
 			response = irodsMidLevelProtocolToUse.irodsFunction(pi);
 
 		} else {
