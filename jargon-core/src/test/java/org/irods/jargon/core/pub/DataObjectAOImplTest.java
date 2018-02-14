@@ -611,11 +611,8 @@ public class DataObjectAOImplTest {
 		dto.putOperation(localFileName, targetIrodsFile, "", null, null);
 
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
 		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFile);
-
 		DataObject actual = dataObjectAO.findById(dataObject.getId());
-
 		Assert.assertNotNull("null data object, was not found", actual);
 
 	}
@@ -626,9 +623,7 @@ public class DataObjectAOImplTest {
 
 		// now put the file
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
 		dataObjectAO.findById(999999999);
 
 	}
