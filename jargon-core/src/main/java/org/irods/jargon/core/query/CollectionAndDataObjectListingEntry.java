@@ -224,7 +224,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public String getFormattedAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
-		if (objectType == ObjectType.COLLECTION) {
+		if (isCollection()) {
 			sb.append(pathOrName);
 		} else {
 			sb.append(parentPath);
@@ -245,7 +245,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	 */
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
-		if (objectType == ObjectType.COLLECTION) {
+		if (isCollection()) {
 			nodeVal = MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(getPathOrName());
 		} else {
 			nodeVal = pathOrName;
@@ -255,7 +255,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	public boolean isCollection() {
-		return (objectType == ObjectType.COLLECTION);
+		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.COLLECTION_HEURISTIC_STANDIN);
 	}
 
 	public boolean isDataObject() {

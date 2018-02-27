@@ -284,9 +284,13 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 	public List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(
 			final String absolutePathToParent) throws FileNotFoundException, JargonException {
 
+		log.info("listDataObjectsAndCollectionsUnderPath()");
+
 		if (absolutePathToParent == null || absolutePathToParent.isEmpty()) {
 			throw new IllegalArgumentException("absolutePathToParent is null or empty");
 		}
+
+		log.info("absolutePathToParent:{}", absolutePathToParent);
 
 		ObjStat objStat;
 
@@ -302,6 +306,8 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
+
+		log.info("querying for children...");
 
 		final List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 

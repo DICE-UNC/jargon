@@ -335,6 +335,8 @@ class CollectionListingUtils {
 			entry.setObjectType(ObjectType.COLLECTION);
 			entry.setCount(count++);
 			entry.setLastResult(true);
+			entry.setCreatedAt(new Date());
+			entry.setModifiedAt(new Date());
 			entries.add(entry);
 		}
 
@@ -359,6 +361,8 @@ class CollectionListingUtils {
 		sb.append(path);
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setSpecColType(SpecColType.NORMAL);
 		entry.setLastResult(true);
 
@@ -377,10 +381,11 @@ class CollectionListingUtils {
 		entry.setLastResult(true);
 		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setOwnerName(objStat.getOwnerName());
-
 		entry.setPathOrName(objStat.getAbsolutePath());
+		entry.setParentPath(objStat.getCollectionPath());
 		entry.setSpecColType(objStat.getSpecColType());
-		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
 		return entry;
@@ -400,8 +405,10 @@ class CollectionListingUtils {
 
 		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setPathOrName(objStat.getAbsolutePath());
+		entry.setParentPath(objStat.getCollectionPath());
 		entry.setSpecColType(objStat.getSpecColType());
-		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
 		entry.setOwnerZone(irodsAccount.getZone());
