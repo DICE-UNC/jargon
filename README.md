@@ -66,3 +66,7 @@ Add additional methods for collection browsing to accommodate browsing down from
 collections that are actually hidden by strict acls. Much of this is to support the MetaLnx browser but these sorts of client
 affordances can be generally applied.
 
+#### deprecation of old idrop-web and demo code #291
+
+A few cleanups of old vestigal code.
+

@@ -6,6 +6,8 @@ package org.irods.jargon.httpstream;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
+@Deprecated
+
 public class HttpStreamingException extends Exception {
 
 	/**

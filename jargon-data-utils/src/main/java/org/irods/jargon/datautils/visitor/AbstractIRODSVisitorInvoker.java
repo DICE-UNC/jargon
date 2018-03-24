@@ -32,6 +32,8 @@ import org.slf4j.LoggerFactory;
  * @param <R>
  *
  */
+@Deprecated
+
 public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonService {
 
 	public enum VisitorDesiredAction {
@@ -63,8 +65,8 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonServi
 	}
 
 	/**
-	 * Access iRODS and derive the data that will be iterated and provided to
-	 * the visitor object. The execute method should iterate or process over the
+	 * Access iRODS and derive the data that will be iterated and provided to the
+	 * visitor object. The execute method should iterate or process over the
 	 * underlying data and make invocations to the {@code visit()} method.
 	 * <p>
 	 * This method will honor any cancellation signal when iterating
@@ -105,9 +107,9 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonServi
 
 	/**
 	 * Method template to be implemented by the developer to initialize the
-	 * collection of items to iterate over. Note that the {@code next()} method
-	 * will be called and this method will handle any 'requery' to obtain pages
-	 * of data from iRODS
+	 * collection of items to iterate over. Note that the {@code next()} method will
+	 * be called and this method will handle any 'requery' to obtain pages of data
+	 * from iRODS
 	 *
 	 * @throws JargonException
 	 */
@@ -115,8 +117,8 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonServi
 
 	/**
 	 * Method to access the next item in the collection to be iterated and
-	 * 'visited'. This method will be responsible for any 'paging' that requires
-	 * a re-query to iRODS.
+	 * 'visited'. This method will be responsible for any 'paging' that requires a
+	 * re-query to iRODS.
 	 *
 	 * @return <E> with the next item of iterated data to visit
 	 * @throws NoMoreItemsException
@@ -125,11 +127,11 @@ public abstract class AbstractIRODSVisitorInvoker<E> extends AbstractJargonServi
 	protected abstract E next() throws NoMoreItemsException, JargonException;
 
 	/**
-	 * Return a {@code boolean} that indicates whether the underlying collection
-	 * of data has more results to process
+	 * Return a {@code boolean} that indicates whether the underlying collection of
+	 * data has more results to process
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if there is more data
-	 *         to process
+	 * @return <code>boolean</code> of <code>true</code> if there is more data to
+	 *         process
 	 * @throws JargonException
 	 */
 	protected abstract boolean hasMore() throws JargonException;

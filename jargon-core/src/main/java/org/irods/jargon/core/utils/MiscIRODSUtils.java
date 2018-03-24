@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.io.FilenameUtils;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
@@ -27,6 +28,22 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
  *
  */
 public class MiscIRODSUtils {
+
+	/**
+	 * Given an iRODS path, do path cleanup and normalization
+	 * 
+	 * @param irodsPath
+	 *            {@link String} with an iRODS path
+	 * @return {@link String} with a normalized iRODS path
+	 */
+	public static String normalizeIrodsPath(final String irodsPath) {
+		if (irodsPath == null || irodsPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty iRODS path");
+		}
+
+		return FilenameUtils.normalizeNoEndSeparator(irodsPath, true); // use / unix separator
+
+	}
 
 	/**
 	 * Escape kvp chars for passwords that make iRODS angry, used in PAM login
