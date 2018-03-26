@@ -2,7 +2,7 @@ package org.irods.jargon.core.pub.io;
 
 import java.io.InputStream;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.ConnectionProgressStatus;
 import org.irods.jargon.core.connection.ConnectionProgressStatusListener;

@@ -10,16 +10,18 @@ import org.irods.jargon.core.pub.io.IRODSFile;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
+@Deprecated
+
 public interface UploadsService {
 
 	public static final String UPLOADS_DIR_DEFAULT_NAME = "uploads";
 
 	/**
-	 * Retrieve an 'uploads' directory under the user home directory, creating
-	 * it if it does not exist yet
+	 * Retrieve an 'uploads' directory under the user home directory, creating it if
+	 * it does not exist yet
 	 *
-	 * @return {@link IRODSFile} which represents the uploads top level
-	 *         direcrory under the user home directory
+	 * @return {@link IRODSFile} which represents the uploads top level direcrory
+	 *         under the user home directory
 	 * @throws JargonException
 	 */
 	IRODSFile getUploadsDirectory() throws JargonException;

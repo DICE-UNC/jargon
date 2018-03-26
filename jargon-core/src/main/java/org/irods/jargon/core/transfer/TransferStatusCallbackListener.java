@@ -61,10 +61,10 @@ public interface TransferStatusCallbackListener {
 	 * determine this behavior in real time by answering the call back.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with the absolute path to the file or
+	 *            {@code String} with the absolute path to the file or
 	 *            collection to be over-written.
 	 * @param isCollection
-	 *            <code>boolean</code> that hints that the path is a collection,
+	 *            {@code boolean} that hints that the path is a collection,
 	 *            versus a data object. This is mostly useful for creating a
 	 *            more specific dialog in the case of a user interface.
 	 * @return {@link CallbackResponse} enum value determining the behavior of

@@ -14,7 +14,7 @@ import org.irods.jargon.core.utils.MiscIRODSUtils;
  * Value object that holds information on data objects and collections. This
  * object includes info to distinguish between data object and collection, to
  * identify it by path, and also information that can be used for paging.
- * <p/>
+ * <p>
  * This object is meant to be used for use cases such as iRODS file tree
  * browsing, and as such it is meant to be returned in collections. The behavior
  * of these objects in the collection is such that objects for collections and
@@ -30,10 +30,14 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		implements Comparable<CollectionAndDataObjectListingEntry> {
 
 	/**
-	 * Analogous to objType_t defined in rodsType.h
+	 * Analogous to objType_t defined in rodsType.h with the addition of heuristic
+	 * standin, which is a way of creating phantom objects to simulate browsing down
+	 * a tree past the first few strict-acl limited folders. This is set by the
+	 * jargon bits that do the heuristic creation of objstats as a way of tellig
+	 * other parts of the api these are just 'proxy' folders.
 	 */
 	public enum ObjectType {
-		UNKNOWN, DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT
+		UNKNOWN, DATA_OBJECT, COLLECTION, UNKNOWN_FILE, LOCAL_FILE, LOCAL_DIR, NO_INPUT, COLLECTION_HEURISTIC_STANDIN
 	}
 
 	private String parentPath = "";
@@ -62,8 +66,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return the absolute path the the parent of the file or collection.
 	 *
-	 * @return <code>String</code> with the absolute path to the parent of the
-	 *         file or collection.
+	 * @return {@code String} with the absolute path to the parent of the file or
+	 *         collection.
 	 */
 	public String getParentPath() {
 		return parentPath;
@@ -76,8 +80,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return the absolute path of the file or collection under the parent
 	 *
-	 * @return <code>String</code> with the absolute path to the file or
-	 *         collection under the parent.
+	 * @return {@code String} with the absolute path to the file or collection under
+	 *         the parent.
 	 */
 	public String getPathOrName() {
 		return pathOrName;
@@ -90,7 +94,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	/**
 	 * Return an enum that differentiates between collection and data object
 	 *
-	 * @return <code>ObjectType</code> enum value
+	 * @return {@code ObjectType} enum value
 	 */
 	public ObjectType getObjectType() {
 		return objectType;
@@ -125,10 +129,10 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * Handy method gets a displayable <code>String</code> with a unit (e.g. MB,
-	 * GB) appropriate to the file length
+	 * Handy method gets a displayable {@code String} with a unit (e.g. MB, GB)
+	 * appropriate to the file length
 	 *
-	 * @return <code>String</code> with displayable file size
+	 * @return {@code String} with displayable file size
 	 */
 	public String getDisplayDataSize() {
 		// return FileUtils.byteCountToDisplaySize(dataSize);
@@ -149,8 +153,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 			return false;
 		}
 		CollectionAndDataObjectListingEntry otherEntry = (CollectionAndDataObjectListingEntry) obj;
-		return (otherEntry.parentPath.equals(parentPath) && otherEntry.pathOrName
-				.equals(pathOrName));
+		return (otherEntry.parentPath.equals(parentPath) && otherEntry.pathOrName.equals(pathOrName));
 	}
 
 	@Override
@@ -178,8 +181,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 			builder.append("description=").append(description).append(", ");
 		}
 		if (specialObjectPath != null) {
-			builder.append("specialObjectPath=").append(specialObjectPath)
-					.append(", ");
+			builder.append("specialObjectPath=").append(specialObjectPath).append(", ");
 		}
 		if (objectType != null) {
 			builder.append("objectType=").append(objectType).append(", ");
@@ -199,9 +201,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 		}
 		if (userFilePermission != null) {
 			builder.append("userFilePermission=")
-					.append(userFilePermission.subList(0,
-							Math.min(userFilePermission.size(), maxLen)))
-					.append(", ");
+					.append(userFilePermission.subList(0, Math.min(userFilePermission.size(), maxLen))).append(", ");
 		}
 		builder.append("id=").append(id).append(", ");
 		if (specColType != null) {
@@ -212,19 +212,19 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * Handy method that will compute the appropriate absolute path, whether a
-	 * data object or a collection. This will be the display path. In the case
-	 * of a soft-linked directory, this is the soft link target, rather then the
+	 * Handy method that will compute the appropriate absolute path, whether a data
+	 * object or a collection. This will be the display path. In the case of a
+	 * soft-linked directory, this is the soft link target, rather then the
 	 * canonical source directory. This is appropriate as listings under a soft
-	 * linked directory should be in terms of the parent directory, but may not
-	 * give the intended result if used to query the iCAT for information about
-	 * the file or collection.
+	 * linked directory should be in terms of the parent directory, but may not give
+	 * the intended result if used to query the iCAT for information about the file
+	 * or collection.
 	 *
-	 * @return <code>String</code> with the formatted path
+	 * @return {@code String} with the formatted path
 	 */
 	public String getFormattedAbsolutePath() {
 		StringBuilder sb = new StringBuilder();
-		if (objectType == ObjectType.COLLECTION) {
+		if (isCollection()) {
 			sb.append(pathOrName);
 		} else {
 			sb.append(parentPath);
@@ -236,20 +236,17 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * Tree nodes typically want a short name for the subdirectory or data name
-	 * to display. Obtain a descriptive name for the collection (the last path
-	 * component with no /'s), or the data object name (with no /'s). This
-	 * method will eat any errors and make a best effort to return something
-	 * meaningful.
+	 * Tree nodes typically want a short name for the subdirectory or data name to
+	 * display. Obtain a descriptive name for the collection (the last path
+	 * component with no /'s), or the data object name (with no /'s). This method
+	 * will eat any errors and make a best effort to return something meaningful.
 	 *
-	 * @return <code>String</code> with a value suitable for a node name in a
-	 *         tree.
+	 * @return {@code String} with a value suitable for a node name in a tree.
 	 */
 	public String getNodeLabelDisplayValue() {
 		String nodeVal;
-		if (objectType == ObjectType.COLLECTION) {
-			nodeVal = MiscIRODSUtils
-					.getLastPathComponentForGivenAbsolutePath(getPathOrName());
+		if (isCollection()) {
+			nodeVal = MiscIRODSUtils.getLastPathComponentForGivenAbsolutePath(getPathOrName());
 		} else {
 			nodeVal = pathOrName;
 		}
@@ -258,7 +255,7 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	public boolean isCollection() {
-		return (objectType == ObjectType.COLLECTION);
+		return (objectType == ObjectType.COLLECTION || objectType == ObjectType.COLLECTION_HEURISTIC_STANDIN);
 	}
 
 	public boolean isDataObject() {
@@ -274,28 +271,26 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * Gets the permissions associated with the collection or data object. Note
-	 * that this information is not retrieved in some of the query methods
-	 * within Jargon, so make sure that a method that adds user permissions is
-	 * called. In other cases, this collection will be empty.
+	 * Gets the permissions associated with the collection or data object. Note that
+	 * this information is not retrieved in some of the query methods within Jargon,
+	 * so make sure that a method that adds user permissions is called. In other
+	 * cases, this collection will be empty.
 	 *
-	 * @return <code>List</code> of {@link UserFilePermission} with the per-user
-	 *         ACL information, included if explicity requested from Jargon,
-	 *         otherwise, empty
+	 * @return {@code List} of {@link UserFilePermission} with the per-user ACL
+	 *         information, included if explicity requested from Jargon, otherwise,
+	 *         empty
 	 */
 	public List<UserFilePermission> getUserFilePermission() {
 		return userFilePermission;
 	}
 
-	public void setUserFilePermission(
-			final List<UserFilePermission> userFilePermission) {
+	public void setUserFilePermission(final List<UserFilePermission> userFilePermission) {
 		this.userFilePermission = userFilePermission;
 	}
 
 	@Override
 	public int compareTo(final CollectionAndDataObjectListingEntry obj) {
-		return getFormattedAbsolutePath().compareTo(
-				(obj).getFormattedAbsolutePath());
+		return getFormattedAbsolutePath().compareTo((obj).getFormattedAbsolutePath());
 	}
 
 	/**
@@ -314,8 +309,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * @return the specColType {@link SpecColType} enum value that indicates if
-	 *         this is some type of special collection
+	 * @return the specColType {@link SpecColType} enum value that indicates if this
+	 *         is some type of special collection
 	 */
 	public SpecColType getSpecColType() {
 		return specColType;
@@ -331,9 +326,9 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 	}
 
 	/**
-	 * @return the specialObjectPath <code>String</code> with the underlyng
-	 *         special object path. If this is a soft link, this reflects the
-	 *         canonical iRODS path.
+	 * @return the specialObjectPath {@code String} with the underlyng special
+	 *         object path. If this is a soft link, this reflects the canonical
+	 *         iRODS path.
 	 */
 	public String getSpecialObjectPath() {
 		return specialObjectPath;
@@ -341,8 +336,8 @@ public class CollectionAndDataObjectListingEntry extends IRODSDomainObject
 
 	/**
 	 * @param specialObjectPath
-	 *            the specialObjectPath to set <code>String</code> with the
-	 *            underlyng special object path.
+	 *            the specialObjectPath to set {@code String} with the underlyng
+	 *            special object path.
 	 */
 	public void setSpecialObjectPath(final String specialObjectPath) {
 		this.specialObjectPath = specialObjectPath;

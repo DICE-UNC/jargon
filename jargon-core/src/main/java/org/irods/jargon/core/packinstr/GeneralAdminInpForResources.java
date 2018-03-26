@@ -13,7 +13,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	/**
 	 * Generate the packing instruction suitable for creating a
-	 * <code>Resource</code>
+	 * {@code Resource}
 	 *
 	 * @param resource
 	 *            {@link Resource} to be added to iRODS.
@@ -80,7 +80,7 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	/**
 	 * Generate the packing instruction suitable for modifying a
-	 * <code>Resource</code>
+	 * {@code Resource}
 	 *
 	 * @param resource
 	 *            {@link Resource} to be added to iRODS.
@@ -148,11 +148,11 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 	 * Packing instruction to add a child to a resource
 	 *
 	 * @param childResourceName
-	 *            <code>String</code> with the resource name for the child
+	 *            {@code String} with the resource name for the child
 	 * @param parentResourceName
-	 *            <code>String</code> with the resource name for the parent
+	 *            {@code String} with the resource name for the parent
 	 * @param context
-	 *            <code>String</code> with an optional context, blank of not
+	 *            {@code String} with an optional context, blank of not
 	 *            needed
 	 * @return {@link GeneralAdminInpForResources}
 	 * @throws JargonException
@@ -203,10 +203,10 @@ public class GeneralAdminInpForResources extends GeneralAdminInp {
 
 	/**
 	 * Generate the packing instruction suitable for removing a
-	 * <code>Resource</code>
+	 * {@code Resource}
 	 *
 	 * @param resourceName
-	 *            <code>String</code> with the name of the resource
+	 *            {@code String} with the name of the resource
 	 *
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException

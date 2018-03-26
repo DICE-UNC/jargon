@@ -22,11 +22,11 @@ public interface CollectionAuditAO {
 	 * @param irodsFile
 	 *            {@link IRODSFile} that represents the collection
 	 * @param partialStart
-	 *            <code>int</code> with an offset into the results to start at
+	 *            {@code int} with an offset into the results to start at
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> with the number of desired results for the
+	 *            {@code int} with the number of desired results for the
 	 *            page of query results
-	 * @return <code>List</code> of {@link AuditedAction} that contain the audit
+	 * @return {@code List} of {@link AuditedAction} that contain the audit
 	 *         trail information
 	 * @throws FileNotFoundException
 	 *             if the collection does not exist
@@ -45,12 +45,12 @@ public interface CollectionAuditAO {
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param auditActionCode
-	 *            <code>String</code> with the audited action code (the event
+	 *            {@code String} with the audited action code (the event
 	 *            type)
 	 * @param timeStampInIRODSFormat
-	 *            <code>String</code> with the time stamp (in irods format) that
+	 *            {@code String} with the time stamp (in irods format) that
 	 *            is associated with this event. Conveniently, the
-	 *            <code>AuditedAction</code> object returned from a query has
+	 *            {@code AuditedAction} object returned from a query has
 	 *            this data in the correct format.
 	 * @return {@link AuditedAction} with available details about the audit
 	 *         event

@@ -1,4 +1,5 @@
 myTestRule {
+# @RuleEngine=IRODS
 #Input parameters are:
 #  Time type (icat/unix or human) in seconds
 #Output parameter is:

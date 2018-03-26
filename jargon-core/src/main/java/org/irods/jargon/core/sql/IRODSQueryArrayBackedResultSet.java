@@ -21,14 +21,14 @@ import java.util.Calendar;
 import java.util.Map;
 
 /**
- * Version of a <code>java.sql.ResultSet</code> based on the results of an iRODS
- * query using one of the various query techniques. The <code>ResultSet</code>
- * is based on data parsed into an array of <code>String</code> data, and
- * includes other information about the generating query, and the capability to
- * page the results.
- * <p/>
+ * Version of a {@code java.sql.ResultSet} based on the results of an iRODS
+ * query using one of the various query techniques. The {@code ResultSet} is
+ * based on data parsed into an array of {@code String} data, and includes other
+ * information about the generating query, and the capability to page the
+ * results.
+ * <p>
  * Notes:
- * <p/>
+ * <p>
  * This might need to be abstract with subclasses for the various query types,
  * need to consider whether this is stateful (page results) or stateless (use
  * offsets).
@@ -36,8 +36,7 @@ import java.util.Map;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public abstract class IRODSQueryArrayBackedResultSet extends
-AbstractIRODSSqlResultSet {
+public abstract class IRODSQueryArrayBackedResultSet extends AbstractIRODSSqlResultSet {
 
 	/*
 	 * (non-Javadoc)
@@ -66,8 +65,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#findColumn(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#findColumn(java
 	 * .lang.String)
 	 */
 	@Override
@@ -98,8 +96,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getArray(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getArray(java.lang
 	 * .String)
 	 */
 	@Override
@@ -121,8 +118,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getAsciiStream(
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getAsciiStream(
 	 * java.lang.String)
 	 */
 	@Override
@@ -133,8 +129,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(int)
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(int)
 	 */
 	@Override
 	public BigDecimal getBigDecimal(final int arg0) throws SQLException {
@@ -144,8 +139,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(java
 	 * .lang.String)
 	 */
 	@Override
@@ -156,34 +150,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(int,
-	 * int)
-	 */
-	@Override
-	public BigDecimal getBigDecimal(final int arg0, final int arg1)
-			throws SQLException {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBigDecimal(java
-	 * .lang.String, int)
-	 */
-	@Override
-	public BigDecimal getBigDecimal(final String arg0, final int arg1)
-			throws SQLException {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
 	 * (int)
 	 */
 	@Override
@@ -194,8 +161,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBinaryStream
 	 * (java.lang.String)
 	 */
 	@Override
@@ -216,8 +182,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBlob(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBlob(java.lang
 	 * .String)
 	 */
 	@Override
@@ -228,8 +193,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(int)
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(int)
 	 */
 	@Override
 	public boolean getBoolean(final int arg0) throws SQLException {
@@ -239,8 +203,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBoolean(java
 	 * .lang.String)
 	 */
 	@Override
@@ -261,8 +224,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getByte(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getByte(java.lang
 	 * .String)
 	 */
 	@Override
@@ -283,8 +245,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBytes(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getBytes(java.lang
 	 * .String)
 	 */
 	@Override
@@ -295,8 +256,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
 	 * (int)
 	 */
 	@Override
@@ -307,8 +267,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getCharacterStream
 	 * (java.lang.String)
 	 */
 	@Override
@@ -329,8 +288,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getClob(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getClob(java.lang
 	 * .String)
 	 */
 	@Override
@@ -351,8 +309,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
 	 * .String)
 	 */
 	@Override
@@ -367,21 +324,18 @@ AbstractIRODSSqlResultSet {
 	 * java.util.Calendar)
 	 */
 	@Override
-	public Date getDate(final int arg0, final Calendar arg1)
-			throws SQLException {
+	public Date getDate(final int arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDate(java.lang
 	 * .String, java.util.Calendar)
 	 */
 	@Override
-	public Date getDate(final String arg0, final Calendar arg1)
-			throws SQLException {
+	public Date getDate(final String arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
@@ -398,8 +352,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDouble(java.
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getDouble(java.
 	 * lang.String)
 	 */
 	@Override
@@ -420,8 +373,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getFloat(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getFloat(java.lang
 	 * .String)
 	 */
 	@Override
@@ -442,8 +394,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getInt(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getInt(java.lang
 	 * .String)
 	 */
 	@Override
@@ -464,8 +415,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getLong(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getLong(java.lang
 	 * .String)
 	 */
 	@Override
@@ -510,8 +460,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNClob(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNClob(java.lang
 	 * .String)
 	 */
 	@Override
@@ -522,8 +471,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(int)
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(int)
 	 */
 	@Override
 	public String getNString(final int arg0) throws SQLException {
@@ -533,8 +481,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getNString(java
 	 * .lang.String)
 	 */
 	@Override
@@ -555,8 +502,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
 	 * lang.String)
 	 */
 	@Override
@@ -571,21 +517,18 @@ AbstractIRODSSqlResultSet {
 	 * java.util.Map)
 	 */
 	@Override
-	public Object getObject(final int arg0, final Map<String, Class<?>> arg1)
-			throws SQLException {
+	public Object getObject(final int arg0, final Map<String, Class<?>> arg1) throws SQLException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getObject(java.
 	 * lang.String, java.util.Map)
 	 */
 	@Override
-	public Object getObject(final String arg0, final Map<String, Class<?>> arg1)
-			throws SQLException {
+	public Object getObject(final String arg0, final Map<String, Class<?>> arg1) throws SQLException {
 		return null;
 	}
 
@@ -612,8 +555,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getSQLXML(java.
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getSQLXML(java.
 	 * lang.String)
 	 */
 	@Override
@@ -634,8 +576,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getShort(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getShort(java.lang
 	 * .String)
 	 */
 	@Override
@@ -666,8 +607,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getString(java.
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getString(java.
 	 * lang.String)
 	 */
 	@Override
@@ -688,8 +628,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
 	 * .String)
 	 */
 	@Override
@@ -704,29 +643,25 @@ AbstractIRODSSqlResultSet {
 	 * java.util.Calendar)
 	 */
 	@Override
-	public Time getTime(final int arg0, final Calendar arg1)
-			throws SQLException {
+	public Time getTime(final int arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTime(java.lang
 	 * .String, java.util.Calendar)
 	 */
 	@Override
-	public Time getTime(final String arg0, final Calendar arg1)
-			throws SQLException {
+	public Time getTime(final String arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int)
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int)
 	 */
 	@Override
 	public Timestamp getTimestamp(final int arg0) throws SQLException {
@@ -736,8 +671,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
 	 * .lang.String)
 	 */
 	@Override
@@ -748,26 +682,22 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int,
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(int,
 	 * java.util.Calendar)
 	 */
 	@Override
-	public Timestamp getTimestamp(final int arg0, final Calendar arg1)
-			throws SQLException {
+	public Timestamp getTimestamp(final int arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getTimestamp(java
 	 * .lang.String, java.util.Calendar)
 	 */
 	@Override
-	public Timestamp getTimestamp(final String arg0, final Calendar arg1)
-			throws SQLException {
+	public Timestamp getTimestamp(final String arg0, final Calendar arg1) throws SQLException {
 		return null;
 	}
 
@@ -784,36 +714,11 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getURL(java.lang
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getURL(java.lang
 	 * .String)
 	 */
 	@Override
 	public URL getURL(final String arg0) throws SQLException {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getUnicodeStream
-	 * (int)
-	 */
-	@Override
-	public InputStream getUnicodeStream(final int arg0) throws SQLException {
-		return null;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#getUnicodeStream
-	 * (java.lang.String)
-	 */
-	@Override
-	public InputStream getUnicodeStream(final String arg0) throws SQLException {
 		return null;
 	}
 
@@ -830,8 +735,7 @@ AbstractIRODSSqlResultSet {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isBeforeFirst()
+	 * @see org.irods.jargon.core.sql.AbstractIRODSQueryResultSet#isBeforeFirst()
 	 */
 	@Override
 	public boolean isBeforeFirst() throws SQLException {

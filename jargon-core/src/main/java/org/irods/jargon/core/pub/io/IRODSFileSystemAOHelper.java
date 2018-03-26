@@ -14,7 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Helper functions for the <code>IRODSFileSystemAO</code>, essentially to make
+ * Helper functions for the {@code IRODSFileSystemAO}, essentially to make
  * that class a bit more compact.
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -28,7 +28,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * List all directories under the path.
 	 *
 	 * @param path
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection. If a data object is described by the path, the
 	 *            parent collection of the data object will be used.
 	 * @param builder
@@ -59,7 +59,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * that this query will return a list of all replicas.
 	 *
 	 * @param path
-	 *            <code>String</code> with the absolute path to the iRODS parent
+	 *            {@code String} with the absolute path to the iRODS parent
 	 *            collection.
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be augmented with
@@ -95,7 +95,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * builder
 	 *
 	 * @param path
-	 *            <code>String</code> with the parent directory absolute path
+	 *            {@code String} with the parent directory absolute path
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder}
 	 * @throws JargonException
@@ -163,7 +163,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	 * replicated are only returned once.
 	 *
 	 * @param path
-	 *            <code>String</code> with the absolute path to a parent
+	 *            {@code String} with the absolute path to a parent
 	 *            directory
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be augmented with
@@ -194,7 +194,7 @@ public class IRODSFileSystemAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Append to the provided <code>IRODSGenQueryBuilder</code> the selects and
+	 * Append to the provided {@code IRODSGenQueryBuilder} the selects and
 	 * conditions necessary to list all directories under a parent path
 	 * including permissions.
 	 *

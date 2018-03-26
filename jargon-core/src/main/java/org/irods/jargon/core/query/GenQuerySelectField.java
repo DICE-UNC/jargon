@@ -21,13 +21,13 @@ public class GenQuerySelectField extends GenQueryField {
 	 *            {@link org.irods.jargon.core.query.RodsGenQueryEnum} value
 	 *            that represents the desired select field.
 	 * @param selectFieldType
-	 *            <code>SelectFieldTypes</code> enum value that classifies the
+	 *            {@code SelectFieldTypes} enum value that classifies the
 	 *            select field as a value, or an aggregation.
 	 * @param selectFieldSource
-	 *            <code>SelectFieldSource</code> enum value that indicates the
+	 *            {@code SelectFieldSource} enum value that indicates the
 	 *            type of field (iRODS iCAT value, user AVU, extensible
 	 *            metadata, etc).
-	 * @return <code>SelectField</code> describing details about this field.
+	 * @return {@code SelectField} describing details about this field.
 	 * @throws JargonException
 	 */
 	public static GenQuerySelectField instance(
@@ -47,20 +47,20 @@ public class GenQuerySelectField extends GenQueryField {
 	 * appropriate numeric translation value.
 	 *
 	 * @param selectFieldName
-	 *            <code>String</code> containing the original string value of
+	 *            {@code String} containing the original string value of
 	 *            the select field in the query.
 	 * @param selectFieldNumericTranslation
-	 *            <code>String</code> containing the numeric value that iRODS
+	 *            {@code String} containing the numeric value that iRODS
 	 *            uses in query processing, sent in GenQueryInp packing
 	 *            instruction.
 	 * @param selectFieldType
-	 *            <code>SelectFieldTypes</code> enum value that classifies the
+	 *            {@code SelectFieldTypes} enum value that classifies the
 	 *            select field as a value, or an aggregation.
 	 * @param selectFieldSource
-	 *            <code>SelectFieldSource</code> enum value that indicates the
+	 *            {@code SelectFieldSource} enum value that indicates the
 	 *            type of field (iRODS iCAT value, user AVU, extensible
 	 *            metadata, etc).
-	 * @return <code>SelectField</code> describing details about this field.
+	 * @return {@code SelectField} describing details about this field.
 	 * @throws JargonException
 	 */
 	public static GenQuerySelectField instance(final String selectFieldName,

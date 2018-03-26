@@ -11,11 +11,11 @@ import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
  * Builder facility for iRODS gen queries. This class allows an iRODS general
  * query to be built via code, including the specification of select fields,
  * conditions, and order by parameters.
- * <p/>
+ * <p>
  * This technique allows richer query development then the original 'iquest'
  * syntax facility that relied on the building of queries as 'iquest' select
  * strings.
- * <p/>
+ * <p>
  * This class is not thread-safe, but really does not need to be. The queries
  * produced by the builder are immutable references to the fields in this
  * builder.
@@ -60,20 +60,20 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
-	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
+	 * Constructor takes an optional {@code ExtensibleMetadataMapping} if
 	 * extensible metadata is to be used in the query processing.
-	 * <p/>
+	 * <p>
 	 * This version allows the specification of case insensitive queries
 	 *
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the select is
+	 *            {@code boolean} that indicates whether the select is
 	 *            distinct
 	 * @param upperCase
-	 *            <code>boolean</code> which indicates that upper case should be
+	 *            {@code boolean} which indicates that upper case should be
 	 *            used in the where (case-insensitive queries)
 	 * @param extensibleMetadataMapping
 	 *            {@link ExtensibleMetaDataMapping} that may be used in queries.
-	 *            This can be <code>null</code> if not required
+	 *            This can be {@code null} if not required
 	 */
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase,
@@ -85,25 +85,25 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
-	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
+	 * Constructor takes an optional {@code ExtensibleMetadataMapping} if
 	 * extensible metadata is to be used in the query processing.
-	 * <p/>
+	 * <p>
 	 * This version allows the specification of case insensitive queries
 	 *
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the select is
+	 *            {@code boolean} that indicates whether the select is
 	 *            distinct
 	 * @param upperCase
-	 *            <code>boolean</code> which indicates that upper case should be
+	 *            {@code boolean} which indicates that upper case should be
 	 *            used in the where (case-insensitive queries)
 	 * @param computeTotalRowCount
-	 *            <code>boolean</code> with a value of <code>true</code>
+	 *            {@code boolean} with a value of {@code true}
 	 *            indicating that a total row count should be computed by iRODS
 	 *            from this query. This may introduce overhead in the ICAT
 	 *            database processing on the iRODS server
 	 * @param extensibleMetadataMapping
 	 *            {@link ExtensibleMetaDataMapping} that may be used in queries.
-	 *            This can be <code>null</code> if not required
+	 *            This can be {@code null} if not required
 	 */
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final boolean upperCase, final boolean computeTotalRowCount,
@@ -115,15 +115,15 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
-	 * Constructor takes an optional <code>ExtensibleMetadataMapping</code> if
+	 * Constructor takes an optional {@code ExtensibleMetadataMapping} if
 	 * extensible metadata is to be used in the query processing.
 	 *
 	 * @param distinct
-	 *            <code>boolean</code> that indicates whether the select is
+	 *            {@code boolean} that indicates whether the select is
 	 *            distinct
 	 * @param extensibleMetadataMapping
 	 *            {@link ExtensibleMetaDataMapping} that may be used in queries.
-	 *            This can be <code>null</code> if not required
+	 *            This can be {@code null} if not required
 	 */
 	public IRODSGenQueryBuilder(final boolean distinct,
 			final ExtensibleMetaDataMapping extensibleMetadataMapping) {
@@ -134,7 +134,7 @@ public class IRODSGenQueryBuilder {
 	}
 
 	/**
-	 * Add a select represented by a value in <code>RodsGenQueryEnum</code>.
+	 * Add a select represented by a value in {@code RodsGenQueryEnum}.
 	 * These are standard select fields.
 	 *
 	 * @param rodsGenQueryEnumValue
@@ -167,7 +167,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a select field represented by a value in
-	 * <code>RodsGenQueryEnum</code> as an aggregate field (e.g. a count()).
+	 * {@code RodsGenQueryEnum} as an aggregate field (e.g. a count()).
 	 *
 	 * @param rodsGenQueryEnumValue
 	 *            {@link RodsGenQueryEnum} value
@@ -209,7 +209,7 @@ public class IRODSGenQueryBuilder {
 	 *            {@link QueryConditionOperators} enum value for the operator of
 	 *            the condition
 	 * @param value
-	 *            <code>long</code> with the value for the condition
+	 *            {@code long} with the value for the condition
 	 * @return a reference to this builder, so that builder statements may be
 	 *         chained
 	 */
@@ -231,7 +231,7 @@ public class IRODSGenQueryBuilder {
 	 *            {@link QueryConditionOperators} enum value for the operator of
 	 *            the condition
 	 * @param value
-	 *            <code>int</code> with the value for the condition
+	 *            {@code int} with the value for the condition
 	 * @return a reference to this builder, so that builder statements may be
 	 *         chained
 	 */
@@ -246,7 +246,7 @@ public class IRODSGenQueryBuilder {
 
 	/**
 	 * Add a condition that is multi-value operator condition such as IN and
-	 * BETWEEN, with a <code>List<String></code> of values provided without
+	 * BETWEEN, with a {@code List<String>} of values provided without
 	 * quotes (these are added later)
 	 *
 	 * @param rodsGenQueryEnumValue
@@ -255,7 +255,7 @@ public class IRODSGenQueryBuilder {
 	 *            {@link QueryConditionOperators} enum value for the operator of
 	 *            the condition that is a multi value operator such as IN
 	 * @param nonQuotedValues
-	 *            <code>List<String></code>
+	 *            {@code List<String>}
 	 * @return {@link IRODSGenQueryBuilder}
 	 */
 	public IRODSGenQueryBuilder addConditionAsMultiValueCondition(
@@ -315,7 +315,7 @@ public class IRODSGenQueryBuilder {
 	 *            {@link QueryConditionOperators} enum value for the operator of
 	 *            the condition
 	 * @param value
-	 *            <code>String</code> with the value for the condition
+	 *            {@code String} with the value for the condition
 	 * @return a reference to this builder, so that builder statements may be
 	 *         chained
 	 */
@@ -469,7 +469,7 @@ public class IRODSGenQueryBuilder {
 	 * service
 	 *
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> that is >= 1 indicating the number of desired
+	 *            {@code int} that is &gt;= 1 indicating the number of desired
 	 *            results
 	 * @return {@link IRODSGenQueryFromBuilder} that can be executed by the
 	 *         general query executor service
@@ -498,7 +498,7 @@ public class IRODSGenQueryBuilder {
 	/**
 	 * Is this a case-insensitive query? (supported in iRODS 3.2 and higher)
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	public boolean isUpperCase() {
 		return upperCase;

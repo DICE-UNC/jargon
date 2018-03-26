@@ -34,7 +34,7 @@ public class UserAOHelper {
 	 * Handy method will build the select portion of a gen query that accesses
 	 * user data.
 	 *
-	 * @return <code>String</code> with genquery select statement that obtains
+	 * @return {@code String} with genquery select statement that obtains
 	 *         user data.
 	 */
 	public static String buildUserSelects() {
@@ -83,7 +83,7 @@ public class UserAOHelper {
 	}
 
 	/**
-	 * Given a query build from the <code>buildUserSelects</code>, create a user
+	 * Given a query build from the {@code buildUserSelects}, create a user
 	 * for a given result row
 	 *
 	 * @param row
@@ -92,8 +92,8 @@ public class UserAOHelper {
 	 *            {@link IRODSGenQueryExecutor} access object to do various
 	 *            queries
 	 * @param retrieveDN
-	 *            <code>boolean</code> that causes an additional lookup to
-	 *            retrieve the Distinguished Name. <code>false</code> avoids an
+	 *            {@code boolean} that causes an additional lookup to
+	 *            retrieve the Distinguished Name. {@code false} avoids an
 	 *            additional lookup per user.
 	 * @return {@link User} built from that row result
 	 * @throws JargonException
@@ -135,8 +135,8 @@ public class UserAOHelper {
 	 *
 	 * @param userId
 	 * @param irodsGenQueryExecutor
-	 * @return <code>String</code> with the distinguished name for the user, if
-	 *         it exists, otherwise, <code>null</code> will be returned
+	 * @return {@code String} with the distinguished name for the user, if
+	 *         it exists, otherwise, {@code null} will be returned
 	 * @throws JargonException
 	 */
 	public static String findUserDnIfExists(final String userId,
@@ -189,9 +189,9 @@ public class UserAOHelper {
 	 * part
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name, possibly in user#zone
+	 *            {@code String} with the user name, possibly in user#zone
 	 *            format
-	 * @return <code>String</code> with only the user name, not the zone
+	 * @return {@code String} with only the user name, not the zone
 	 */
 	public static String getUserNameFromUserPoundZone(final String userName) {
 		if (userName == null || userName.isEmpty()) {
@@ -210,9 +210,9 @@ public class UserAOHelper {
 	 * part
 	 *
 	 * @param userName
-	 *            <code>String</code> with the user name, possibly in user#zone
+	 *            {@code String} with the user name, possibly in user#zone
 	 *            format
-	 * @return <code>String</code> with only the zone name, not the user
+	 * @return {@code String} with only the zone name, not the user
 	 */
 	public static String getZoneFromUserPoundZone(final String userName) {
 		if (userName == null || userName.isEmpty()) {

@@ -3,7 +3,7 @@ package org.irods.jargon.datautils.datacache;
 import org.irods.jargon.core.connection.IRODSAccount;
 
 /**
- * Interface describing a factory to create a <code>DataCacheService</code>
+ * Interface describing a factory to create a {@code DataCacheService}
  * component.
  *
  * @author Mike Conway - DICE (www.irods.org)

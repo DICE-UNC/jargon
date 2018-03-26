@@ -22,8 +22,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  *         Access object that encapsulates file IO operations. This is a
- *         delegate class for the <code>IRODSFileInputStream</code> and
- *         <code>IRODSFileOutputStream</code> classes. This class is not
+ *         delegate class for the {@code IRODSFileInputStream} and
+ *         {@code IRODSFileOutputStream} classes. This class is not
  *         publicly visible. Instead, the various IRODS-specific steam classes
  *         should be used.
  */

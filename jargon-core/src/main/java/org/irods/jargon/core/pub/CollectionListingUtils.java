@@ -51,49 +51,46 @@ class CollectionListingUtils {
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	public static final String QUERY_EXCEPTION_FOR_QUERY = "query exception for  query:";
 
-	static final Logger log = LoggerFactory
-			.getLogger(CollectionListingUtils.class);
+	static final Logger log = LoggerFactory.getLogger(CollectionListingUtils.class);
 
 	/**
 	 * This is a compensating method used to deal with the top of the tree when
-	 * permissions do not allow listing 'into' the tree to get to things the
-	 * user actually has access to.
-	 * <p/>
+	 * permissions do not allow listing 'into' the tree to get to things the user
+	 * actually has access to.
+	 * <p>
 	 * Phase 1 - when path is / - obtain a listing of zones and display as
 	 * subdirectories
-	 * <p/>
+	 * <p>
 	 * Phase 2 when path is /zone - interpolate a 'home' directory
-	 * <p/>
-	 * Phase 3 when path is /zone/home - for current zone - add a dir for the
-	 * user name, see if a public dir. For foreign zone, add a dir for
-	 * user#homeZone and see if a public dir
+	 * <p>
+	 * Phase 3 when path is /zone/home - for current zone - add a dir for the user
+	 * name, see if a public dir. For foreign zone, add a dir for user#homeZone and
+	 * see if a public dir
 	 * 
 	 * 
 	 * 
 	 * @param absolutePathToParent
-	 *            <code>String</code> with the current parent
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
-	 *         that has the children under the parent. These children may be
-	 *         simulated per the given rules
+	 *            {@code String} with the current parent
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry} that has
+	 *         the children under the parent. These children may be simulated per
+	 *         the given rules
 	 * @throws JargonException
 	 */
 	List<CollectionAndDataObjectListingEntry> handleNoListingUnderRootOrHomeByLookingForPublicAndHome(
-			final String absolutePathToParent) throws FileNotFoundException,
-			JargonException {
+			final String absolutePathToParent) throws FileNotFoundException, JargonException {
 
 		log.info("handleNoListingUnderRootOrHomeByLookingForPublicAndHome()");
 
 		String path = absolutePathToParent;
 
-		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();
 
 		/*
-		 * Do I have compensating actions configured? If not, it's just a file
-		 * not found
+		 * Do I have compensating actions configured? If not, it's just a file not found
 		 */
-		if (!irodsAccessObjectFactory.getJargonProperties()
-				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
-			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+		if (!irodsAccessObjectFactory.getJargonProperties().isDefaultToPublicIfNothingUnderRootWhenListing()) {
+			log.info(
+					"not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
 			throw new FileNotFoundException("the collection cannot be found");
 		}
 
@@ -105,8 +102,7 @@ class CollectionListingUtils {
 
 		if (path.equals("/")) {
 			log.info("phase1 - under root, add zones");
-			collectionAndDataObjectListingEntries
-					.addAll(createStandInForZoneDir());
+			collectionAndDataObjectListingEntries.addAll(createStandInForZoneDir());
 			return collectionAndDataObjectListingEntries;
 		}
 
@@ -114,13 +110,11 @@ class CollectionListingUtils {
 		 * Phase2 - under a zone, add a home
 		 */
 
-		List<String> components = MiscIRODSUtils
-				.breakIRODSPathIntoComponents(path);
+		List<String> components = MiscIRODSUtils.breakIRODSPathIntoComponents(path);
 		if (components.size() == 2) {
 			log.info("under zone, add a home");
 			log.info("assume this is a zone name, look for a home dir under the zone name");
-			collectionAndDataObjectListingEntries
-					.add(createStandInForHomeDir(path));
+			collectionAndDataObjectListingEntries.add(createStandInForHomeDir(path));
 			return collectionAndDataObjectListingEntries;
 		}
 
@@ -133,13 +127,10 @@ class CollectionListingUtils {
 			log.info("under home, see if same zone as login");
 			if (irodsAccount.getZone().equals(components.get(1))) {
 				log.info("under logged in zone, add user and public dirs");
-				collectionAndDataObjectListingEntries
-						.addAll(createStandInsUnderHomeInLoggedInZone(path));
+				collectionAndDataObjectListingEntries.addAll(createStandInsUnderHomeInLoggedInZone(path));
 			} else {
 				log.info("under federated zone, add federated user");
-				collectionAndDataObjectListingEntries
-						.addAll(createStandInsUnderHomeInFederatedZone(components
-								.get(1)));
+				collectionAndDataObjectListingEntries.addAll(createStandInsUnderHomeInFederatedZone(components.get(1)));
 			}
 			return collectionAndDataObjectListingEntries;
 		}
@@ -154,33 +145,30 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * Heuristic processing allows ObjStats to be returned (though fake) at
-	 * points in the hierarchy were strict ACLs would otherwise preclude
+	 * Heuristic processing allows ObjStats to be returned (though fake) at points
+	 * in the hierarchy were strict ACLs would otherwise preclude
 	 * 
 	 * @param irodsAbsolutePath
 	 * @return
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(
-			final String irodsAbsolutePath) throws FileNotFoundException,
-			JargonException {
+	ObjStat handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		log.info("handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome()");
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		ObjStat objStat = null;
 
 		/*
-		 * Do I have compensating actions configured? If not, it's just a file
-		 * not found
+		 * Do I have compensating actions configured? If not, it's just a file not found
 		 */
-		if (!irodsAccessObjectFactory.getJargonProperties()
-				.isDefaultToPublicIfNothingUnderRootWhenListing()) {
-			log.info("not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
+		if (!irodsAccessObjectFactory.getJargonProperties().isDefaultToPublicIfNothingUnderRootWhenListing()) {
+			log.info(
+					"not configured in jargon.properties to look for public and user home, throw the FileNotFoundException");
 			throw new FileNotFoundException("the object cannot be found");
 		}
 
@@ -194,7 +182,7 @@ class CollectionListingUtils {
 			log.info("phase1 - under root");
 			objStat = new ObjStat();
 			objStat.setAbsolutePath(irodsAbsolutePath);
-			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
 			objStat.setModifiedAt(new Date());
@@ -203,8 +191,7 @@ class CollectionListingUtils {
 			return objStat;
 		}
 
-		List<String> components = MiscIRODSUtils
-				.breakIRODSPathIntoComponents(irodsAbsolutePath);
+		List<String> components = MiscIRODSUtils.breakIRODSPathIntoComponents(irodsAbsolutePath);
 
 		/*
 		 * Phase2 - first path under root should be a zone
@@ -221,13 +208,12 @@ class CollectionListingUtils {
 				}
 			}
 			if (!found) {
-				log.error("not a valid zone, cannot interpolate this path:{}",
-						irodsAbsolutePath);
+				log.error("not a valid zone, cannot interpolate this path:{}", irodsAbsolutePath);
 				throw new FileNotFoundException("path does not exist");
 			}
 			objStat = new ObjStat();
 			objStat.setAbsolutePath(irodsAbsolutePath);
-			objStat.setObjectType(ObjectType.COLLECTION);
+			objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 			objStat.setSpecColType(SpecColType.NORMAL);
 			objStat.setStandInGeneratedObjStat(true);
 			objStat.setModifiedAt(new Date());
@@ -244,7 +230,7 @@ class CollectionListingUtils {
 			if (components.get(2).equals("home")) {
 				objStat = new ObjStat();
 				objStat.setAbsolutePath(irodsAbsolutePath);
-				objStat.setObjectType(ObjectType.COLLECTION);
+				objStat.setObjectType(ObjectType.COLLECTION_HEURISTIC_STANDIN);
 				objStat.setSpecColType(SpecColType.NORMAL);
 				objStat.setStandInGeneratedObjStat(true);
 				objStat.setModifiedAt(new Date());
@@ -262,9 +248,9 @@ class CollectionListingUtils {
 
 	}
 
-	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInLoggedInZone(
-			final String path) throws FileNotFoundException, JargonException {
-		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInLoggedInZone(final String path)
+			throws FileNotFoundException, JargonException {
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
 		log.info("under home, look for public and user dir");
@@ -274,10 +260,8 @@ class CollectionListingUtils {
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = this.irodsAccessObjectFactory
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 		try {
-			statForPublic = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(sb.toString());
-			collectionAndDataObjectListingEntries
-					.add(createStandInForPublicDir(statForPublic));
+			statForPublic = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sb.toString());
+			collectionAndDataObjectListingEntries.add(createStandInForPublicDir(statForPublic));
 		} catch (FileNotFoundException fnf) {
 			log.info("no public dir");
 		}
@@ -286,21 +270,18 @@ class CollectionListingUtils {
 
 		ObjStat statForUserHome;
 		try {
-			statForUserHome = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(MiscIRODSUtils
-							.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO
-									.getIRODSAccount()));
-			collectionAndDataObjectListingEntries
-					.add(createStandInForUserDir(statForUserHome));
+			statForUserHome = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(MiscIRODSUtils
+					.computeHomeDirectoryForIRODSAccount(collectionAndDataObjectListAndSearchAO.getIRODSAccount()));
+			collectionAndDataObjectListingEntries.add(createStandInForUserDir(statForUserHome));
 		} catch (FileNotFoundException fnf) {
 			log.info("no home dir");
 		}
 		return collectionAndDataObjectListingEntries;
 	}
 
-	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInFederatedZone(
-			final String zone) throws FileNotFoundException, JargonException {
-		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<CollectionAndDataObjectListingEntry>();
+	private List<CollectionAndDataObjectListingEntry> createStandInsUnderHomeInFederatedZone(final String zone)
+			throws FileNotFoundException, JargonException {
+		List<CollectionAndDataObjectListingEntry> collectionAndDataObjectListingEntries = new ArrayList<>();
 		// if same zone, look for public and home, if cross zone, look for a
 		// user dir in zone and public
 		log.info("under home in federated zone, look for public and home dir");
@@ -313,10 +294,8 @@ class CollectionListingUtils {
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
 
 		try {
-			ObjStat statForPublic = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(sb.toString());
-			collectionAndDataObjectListingEntries
-					.add(createStandInForPublicDir(statForPublic));
+			ObjStat statForPublic = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(sb.toString());
+			collectionAndDataObjectListingEntries.add(createStandInForPublicDir(statForPublic));
 		} catch (FileNotFoundException fnf) {
 			log.info("no public dir");
 		}
@@ -324,13 +303,10 @@ class CollectionListingUtils {
 		log.info("see if a user home dir applies");
 
 		try {
-			ObjStat homeStat = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(MiscIRODSUtils
-							.computeHomeDirectoryForIRODSAccountInFederatedZone(
-									irodsAccount, zone));
+			ObjStat homeStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(
+					MiscIRODSUtils.computeHomeDirectoryForIRODSAccountInFederatedZone(irodsAccount, zone));
 
-			collectionAndDataObjectListingEntries
-					.add(createStandInForUserDir(homeStat));
+			collectionAndDataObjectListingEntries.add(createStandInForUserDir(homeStat));
 		} catch (FileNotFoundException fnf) {
 			log.info("no user dir");
 		}
@@ -342,7 +318,7 @@ class CollectionListingUtils {
 		log.info("under root, put out zone as an entry");
 
 		CollectionAndDataObjectListingEntry entry;
-		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 		StringBuilder sb;
 		ZoneAO zoneAO = irodsAccessObjectFactory.getZoneAO(irodsAccount);
 
@@ -359,6 +335,8 @@ class CollectionListingUtils {
 			entry.setObjectType(ObjectType.COLLECTION);
 			entry.setCount(count++);
 			entry.setLastResult(true);
+			entry.setCreatedAt(new Date());
+			entry.setModifiedAt(new Date());
 			entries.add(entry);
 		}
 
@@ -370,8 +348,7 @@ class CollectionListingUtils {
 	 * @param data
 	 *            .getCollectionAndDataObjectListingEntries()
 	 */
-	private CollectionAndDataObjectListingEntry createStandInForHomeDir(
-			final String path) {
+	private CollectionAndDataObjectListingEntry createStandInForHomeDir(final String path) {
 		log.info("under a zone, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
@@ -384,6 +361,8 @@ class CollectionListingUtils {
 		sb.append(path);
 		sb.append("/home");
 		entry.setPathOrName(sb.toString());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setSpecColType(SpecColType.NORMAL);
 		entry.setLastResult(true);
 
@@ -395,18 +374,18 @@ class CollectionListingUtils {
 	 * 
 	 * @return
 	 */
-	private CollectionAndDataObjectListingEntry createStandInForPublicDir(
-			final ObjStat objStat) {
+	private CollectionAndDataObjectListingEntry createStandInForPublicDir(final ObjStat objStat) {
 		log.info("under root, put out home as an entry");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
 		entry.setLastResult(true);
 		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setOwnerName(objStat.getOwnerName());
-
 		entry.setPathOrName(objStat.getAbsolutePath());
+		entry.setParentPath(objStat.getCollectionPath());
 		entry.setSpecColType(objStat.getSpecColType());
-		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
 		return entry;
@@ -417,8 +396,7 @@ class CollectionListingUtils {
 	 * 
 	 * @return
 	 */
-	private CollectionAndDataObjectListingEntry createStandInForUserDir(
-			final ObjStat objStat) {
+	private CollectionAndDataObjectListingEntry createStandInForUserDir(final ObjStat objStat) {
 		log.info("put a user dir entry out there");
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setCount(0);
@@ -427,8 +405,10 @@ class CollectionListingUtils {
 
 		entry.setOwnerZone(irodsAccount.getZone());
 		entry.setPathOrName(objStat.getAbsolutePath());
+		entry.setParentPath(objStat.getCollectionPath());
 		entry.setSpecColType(objStat.getSpecColType());
-		entry.setCreatedAt(objStat.getCreatedAt());
+		entry.setCreatedAt(new Date());
+		entry.setModifiedAt(new Date());
 		entry.setId(objStat.getDataId());
 		entry.setObjectType(objStat.getObjectType());
 		entry.setOwnerZone(irodsAccount.getZone());
@@ -438,7 +418,7 @@ class CollectionListingUtils {
 
 	/**
 	 * List the collections underneath the given path
-	 * <p/>
+	 * <p>
 	 * Works with soft links
 	 * 
 	 * @param objStat
@@ -451,9 +431,8 @@ class CollectionListingUtils {
 	 * 
 	 * 
 	 */
-	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(
-			final ObjStat objStat, final int partialStartIndex)
-			throws FileNotFoundException, JargonException {
+	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws FileNotFoundException, JargonException {
 
 		log.info("listCollectionsUnderPath()");
 
@@ -468,38 +447,32 @@ class CollectionListingUtils {
 
 		if (objStat.isStandInGeneratedObjStat()) {
 			log.info("this objStat was heuristically generated, create stand-in subdirs if needed");
-			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(objStat
-					.getAbsolutePath());
+			return handleNoListingUnderRootOrHomeByLookingForPublicAndHome(objStat.getAbsolutePath());
 		}
 
 		/*
 		 * Special collections are processed in different ways.
 		 * 
-		 * Listing for soft links substitutes the source path for the target
-		 * path in the query
+		 * Listing for soft links substitutes the source path for the target path in the
+		 * query
 		 */
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
 		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
 				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
-			return listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath,
-					true, partialStartIndex);
+			return listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, true, partialStartIndex);
 		} else {
-			return listCollectionsUnderPathViaGenQuery(objStat,
-					partialStartIndex, effectiveAbsolutePath);
+			return listCollectionsUnderPathViaGenQuery(objStat, partialStartIndex, effectiveAbsolutePath);
 		}
 
 	}
 
-	private List<CollectionAndDataObjectListingEntry> listUnderPathWhenSpecColl(
-			final ObjStat objStat, final String effectiveAbsolutePath,
-			final boolean isCollection, final long offset)
-			throws JargonException {
+	private List<CollectionAndDataObjectListingEntry> listUnderPathWhenSpecColl(final ObjStat objStat,
+			final String effectiveAbsolutePath, final boolean isCollection, final long offset) throws JargonException {
 
 		log.info("listCollectionsUnderPathWhenSpecColl()");
 
-		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<CollectionAndDataObjectListingEntry>();
+		List<CollectionAndDataObjectListingEntry> entries = new ArrayList<>();
 
 		SpecColInfo specColInfo = new SpecColInfo();
 		specColInfo.setCacheDir(objStat.getCacheDir());
@@ -515,27 +488,24 @@ class CollectionListingUtils {
 		specColInfo.setReplNum(objStat.getReplNumber());
 		specColInfo.setType(2);
 
-		if (this.irodsAccessObjectFactory.getIRODSServerProperties(
-				this.irodsAccount).isAtLeastIrods410()) {
+		if (this.irodsAccessObjectFactory.getIRODSServerProperties(this.irodsAccount).isAtLeastIrods410()) {
 			specColInfo.setUseResourceHierarchy(true);
 		}
 
 		DataObjInpForQuerySpecColl dataObjInp = null;
 
 		if (isCollection) {
-			dataObjInp = DataObjInpForQuerySpecColl
-					.instanceQueryCollectionsWithOffset(effectiveAbsolutePath,
-							specColInfo, offset);
+			dataObjInp = DataObjInpForQuerySpecColl.instanceQueryCollectionsWithOffset(effectiveAbsolutePath,
+					specColInfo, offset);
 		} else {
-			dataObjInp = DataObjInpForQuerySpecColl
-					.instanceQueryDataObjWithOffset(effectiveAbsolutePath,
-							specColInfo, offset);
+			dataObjInp = DataObjInpForQuerySpecColl.instanceQueryDataObjWithOffset(effectiveAbsolutePath, specColInfo,
+					offset);
 		}
 		Tag response;
 
 		try {
-			response = irodsAccessObjectFactory.getIrodsSession()
-					.currentConnection(irodsAccount).irodsFunction(dataObjInp);
+			response = irodsAccessObjectFactory.getIrodsSession().currentConnection(irodsAccount)
+					.irodsFunction(dataObjInp);
 
 			log.debug("response from function: {}", response.parseTag());
 
@@ -543,37 +513,31 @@ class CollectionListingUtils {
 			log.info("total records:{}", totalRecords);
 			int continueInx = response.getTag("continueInx").getIntValue();
 
-			List<IRODSQueryResultRow> results = QueryResultProcessingUtils
-					.translateResponseIntoResultSet(response,
-							new ArrayList<String>(), 0, 0);
+			List<IRODSQueryResultRow> results = QueryResultProcessingUtils.translateResponseIntoResultSet(response,
+					new ArrayList<String>(), 0, 0);
 
 			int ctr = (int) offset + 1;
 			CollectionAndDataObjectListingEntry entry = null;
 			for (IRODSQueryResultRow row : results) {
-				entry = createListingEntryFromResultRow(objStat, row,
-						isCollection);
+				entry = createListingEntryFromResultRow(objStat, row, isCollection);
 				entry.setCount(ctr++);
 				entry.setLastResult(continueInx <= 0);
 				entries.add(entry);
 			}
 
 			while (continueInx > 0) {
-				dataObjInp = DataObjInpForQuerySpecColl
-						.instanceQueryCollections(effectiveAbsolutePath,
-								specColInfo, continueInx);
+				dataObjInp = DataObjInpForQuerySpecColl.instanceQueryCollections(effectiveAbsolutePath, specColInfo,
+						continueInx);
 
 				if (isCollection) {
-					dataObjInp = DataObjInpForQuerySpecColl
-							.instanceQueryCollections(effectiveAbsolutePath,
-									specColInfo, continueInx);
+					dataObjInp = DataObjInpForQuerySpecColl.instanceQueryCollections(effectiveAbsolutePath, specColInfo,
+							continueInx);
 				} else {
-					dataObjInp = DataObjInpForQuerySpecColl
-							.instanceQueryDataObj(effectiveAbsolutePath,
-									specColInfo, continueInx);
+					dataObjInp = DataObjInpForQuerySpecColl.instanceQueryDataObj(effectiveAbsolutePath, specColInfo,
+							continueInx);
 				}
 
-				response = irodsAccessObjectFactory.getIrodsSession()
-						.currentConnection(irodsAccount)
+				response = irodsAccessObjectFactory.getIrodsSession().currentConnection(irodsAccount)
 						.irodsFunction(dataObjInp);
 
 				log.debug("response from function: {}", response.parseTag());
@@ -582,12 +546,10 @@ class CollectionListingUtils {
 				log.info("total records:{}", totalRecords);
 				continueInx = response.getTag("continueInx").getIntValue();
 
-				results = QueryResultProcessingUtils
-						.translateResponseIntoResultSet(response,
-								new ArrayList<String>(), 0, entries.size());
+				results = QueryResultProcessingUtils.translateResponseIntoResultSet(response, new ArrayList<String>(),
+						0, entries.size());
 				for (IRODSQueryResultRow row : results) {
-					entry = createListingEntryFromResultRow(objStat, row,
-							isCollection);
+					entry = createListingEntryFromResultRow(objStat, row, isCollection);
 					entry.setCount(ctr++);
 					entry.setLastResult(continueInx <= 0);
 					entries.add(entry);
@@ -598,7 +560,7 @@ class CollectionListingUtils {
 
 		} catch (FileDriverError fde) {
 			log.warn("file driver error listing empty spec coll is ignored, just act as no data found");
-			return new ArrayList<CollectionAndDataObjectListingEntry>();
+			return new ArrayList<>();
 		} catch (DataNotFoundException dnf) {
 			log.info("end of data");
 		}
@@ -607,18 +569,14 @@ class CollectionListingUtils {
 
 	}
 
-	private CollectionAndDataObjectListingEntry createListingEntryFromResultRow(
-			final ObjStat objStat, final IRODSQueryResultRow row,
-			final boolean isCollection) throws JargonException {
+	private CollectionAndDataObjectListingEntry createListingEntryFromResultRow(final ObjStat objStat,
+			final IRODSQueryResultRow row, final boolean isCollection) throws JargonException {
 		CollectionAndDataObjectListingEntry listingEntry;
 		CollectionAndPath collectionAndPath;
 		listingEntry = new CollectionAndDataObjectListingEntry();
-		listingEntry.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(2)));
-		listingEntry.setDataSize(IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(row.getColumn(4)));
-		listingEntry.setModifiedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(3)));
+		listingEntry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(2)));
+		listingEntry.setDataSize(IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(row.getColumn(4)));
+		listingEntry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(3)));
 		row.getColumn(1);
 
 		if (isCollection) {
@@ -632,9 +590,7 @@ class CollectionListingUtils {
 
 		if (isCollection) {
 
-			collectionAndPath = MiscIRODSUtils
-					.separateCollectionAndPathFromGivenAbsolutePath(row
-							.getColumn(0));
+			collectionAndPath = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(row.getColumn(0));
 			listingEntry.setParentPath(collectionAndPath.getCollectionParent());
 			listingEntry.setPathOrName(row.getColumn(0));
 
@@ -646,45 +602,39 @@ class CollectionListingUtils {
 		return listingEntry;
 	}
 
-	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathViaGenQuery(
-			final ObjStat objStat, final int partialStartIndex,
-			final String effectiveAbsolutePath) throws JargonException {
+	private List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathViaGenQuery(final ObjStat objStat,
+			final int partialStartIndex, final String effectiveAbsolutePath) throws JargonException {
 
 		List<CollectionAndDataObjectListingEntry> subdirs;
 
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
-				true, null);
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
 		try {
-			IRODSFileSystemAOHelper.buildQueryListAllCollections(
-					effectiveAbsolutePath, builder);
+			IRODSFileSystemAOHelper.buildQueryListAllCollections(effectiveAbsolutePath, builder);
 		} catch (GenQueryBuilderException e) {
 			log.error("query builder exception", e);
 			throw new JargonException("error building query", e);
 		}
 
-		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(
-				objStat.getAbsolutePath(), builder, partialStartIndex, objStat);
+		IRODSQueryResultSet resultSet = queryForPathAndReturnResultSet(objStat.getAbsolutePath(), builder,
+				partialStartIndex, objStat);
 
-		subdirs = new ArrayList<CollectionAndDataObjectListingEntry>(resultSet
-				.getResults().size());
+		subdirs = new ArrayList<>(resultSet.getResults().size());
 		CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry = null;
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			collectionAndDataObjectListingEntry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForCollectionQuery(
-							row, resultSet.getTotalRecords());
+					.buildCollectionListEntryFromResultSetRowForCollectionQuery(row, resultSet.getTotalRecords());
 
-			adjustEntryFromRowInCaseOfSpecialCollection(objStat,
-					effectiveAbsolutePath, collectionAndDataObjectListingEntry);
+			adjustEntryFromRowInCaseOfSpecialCollection(objStat, effectiveAbsolutePath,
+					collectionAndDataObjectListingEntry);
 
 			/*
-			 * for some reason, a query for collections with a parent of '/'
-			 * returns the root as a result, which creates weird situations when
-			 * trying to show collections in a tree structure. This test papers
-			 * over that idiosyncrasy and discards that extraneous result.
+			 * for some reason, a query for collections with a parent of '/' returns the
+			 * root as a result, which creates weird situations when trying to show
+			 * collections in a tree structure. This test papers over that idiosyncrasy and
+			 * discards that extraneous result.
 			 */
-			if (!collectionAndDataObjectListingEntry.getPathOrName()
-					.equals("/")) {
+			if (!collectionAndDataObjectListingEntry.getPathOrName().equals("/")) {
 				subdirs.add(collectionAndDataObjectListingEntry);
 			}
 		}
@@ -692,26 +642,20 @@ class CollectionListingUtils {
 		return subdirs;
 	}
 
-	IRODSQueryResultSet queryForPathAndReturnResultSet(
-			final String absolutePath, final IRODSGenQueryBuilder builder,
-			final int partialStartIndex, final ObjStat objStat)
-			throws JargonException {
+	IRODSQueryResultSet queryForPathAndReturnResultSet(final String absolutePath, final IRODSGenQueryBuilder builder,
+			final int partialStartIndex, final ObjStat objStat) throws JargonException {
 
 		log.info("queryForPathAndReturnResultSet for: {}", absolutePath);
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSGenQueryFromBuilder irodsQuery;
 		IRODSQueryResultSet resultSet;
 
 		try {
-			irodsQuery = builder
-					.exportIRODSQueryFromBuilder(irodsAccessObjectFactory
-							.getJargonProperties().getMaxFilesAndDirsQueryMax());
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryWithPagingInZone(irodsQuery,
-							partialStartIndex,
-							MiscIRODSUtils.getZoneInPath(absolutePath));
+			irodsQuery = builder.exportIRODSQueryFromBuilder(
+					irodsAccessObjectFactory.getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex,
+					MiscIRODSUtils.getZoneInPath(absolutePath));
 		} catch (JargonQueryException e) {
 			log.error(QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException(e);
@@ -724,17 +668,15 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * For a collection based on a row from a collection query, evaluate against
-	 * the provided objStat and decide whether to modify the resulting listing
-	 * entry to reflect special collection status
+	 * For a collection based on a row from a collection query, evaluate against the
+	 * provided objStat and decide whether to modify the resulting listing entry to
+	 * reflect special collection status
 	 * 
 	 * @param objStat
 	 * @param effectiveAbsolutePath
 	 * @param collectionAndDataObjectListingEntry
 	 */
-	private void adjustEntryFromRowInCaseOfSpecialCollection(
-			final ObjStat objStat,
-			final String effectiveAbsolutePath,
+	private void adjustEntryFromRowInCaseOfSpecialCollection(final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry collectionAndDataObjectListingEntry) {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			log.info("adjusting paths in entry to reflect linked collection info");
@@ -742,51 +684,42 @@ class CollectionListingUtils {
 			sb.append(objStat.getObjectPath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry
-							.getPathOrName()));
-			collectionAndDataObjectListingEntry.setSpecialObjectPath(sb
-					.toString());
+					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry.getPathOrName()));
+			collectionAndDataObjectListingEntry.setSpecialObjectPath(sb.toString());
 
 			sb = new StringBuilder();
 			sb.append(objStat.getAbsolutePath());
 			sb.append('/');
 			sb.append(MiscIRODSUtils
-					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry
-							.getPathOrName()));
+					.getLastPathComponentForGivenAbsolutePath(collectionAndDataObjectListingEntry.getPathOrName()));
 
 			collectionAndDataObjectListingEntry.setPathOrName(sb.toString());
 
-			collectionAndDataObjectListingEntry.setParentPath(objStat
-					.getAbsolutePath());
-			collectionAndDataObjectListingEntry
-					.setSpecColType(SpecColType.LINKED_COLL);
+			collectionAndDataObjectListingEntry.setParentPath(objStat.getAbsolutePath());
+			collectionAndDataObjectListingEntry.setSpecColType(SpecColType.LINKED_COLL);
 		}
 	}
 
 	/**
 	 * List the data objects underneath the given path given an already obtained
-	 * <code>ObjStat</code>
-	 * 
+	 * {@code ObjStat}
+	 *
 	 * @param objStat
 	 * @param partialStartIndex
 	 * @return
 	 * @throws JargonException
 	 */
-	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(
-			final ObjStat objStat, final int partialStartIndex)
-			throws JargonException {
+	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(final ObjStat objStat,
+			final int partialStartIndex) throws JargonException {
 
 		log.info("listDataObjectsUnderPath(objStat, partialStartIndex)");
 
 		if (objStat == null) {
-			throw new IllegalArgumentException(
-					"collectionAndDataObjectListingEntry is null");
+			throw new IllegalArgumentException("collectionAndDataObjectListingEntry is null");
 		}
 
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		log.info("determined effectiveAbsolutePathToBe:{}",
-				effectiveAbsolutePath);
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		log.info("listDataObjectsUnderPath for: {}", objStat);
 
@@ -794,59 +727,48 @@ class CollectionListingUtils {
 		if (objStat.getSpecColType() == SpecColType.STRUCT_FILE_COLL
 				|| objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 
-			files = listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath,
-					false, partialStartIndex);
+			files = listUnderPathWhenSpecColl(objStat, effectiveAbsolutePath, false, partialStartIndex);
 		} else {
 
-			files = listDataObjectsUnderPathViaGenQuery(objStat,
-					partialStartIndex, effectiveAbsolutePath);
+			files = listDataObjectsUnderPathViaGenQuery(objStat, partialStartIndex, effectiveAbsolutePath);
 		}
 
 		return files;
 
 	}
 
-	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathViaGenQuery(
-			final ObjStat objStat, final int partialStartIndex,
-			final String effectiveAbsolutePath) throws JargonException {
-		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false,
-				true, null);
+	private List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathViaGenQuery(final ObjStat objStat,
+			final int partialStartIndex, final String effectiveAbsolutePath) throws JargonException {
+		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, false, true, null);
 
-		IRODSFileSystemAOHelper
-				.buildQueryListAllDataObjectsWithSizeAndDateInfo(
-						effectiveAbsolutePath, builder);
+		IRODSFileSystemAOHelper.buildQueryListAllDataObjectsWithSizeAndDateInfo(effectiveAbsolutePath, builder);
 		IRODSQueryResultSet resultSet;
 
 		try {
-			resultSet = queryForPathAndReturnResultSet(effectiveAbsolutePath,
-					builder, partialStartIndex, objStat);
+			resultSet = queryForPathAndReturnResultSet(effectiveAbsolutePath, builder, partialStartIndex, objStat);
 		} catch (JargonException e) {
 			log.error("exception querying for data objects:{}", builder, e);
 			throw new JargonException("error in query", e);
 		}
 
-		List<CollectionAndDataObjectListingEntry> files = new ArrayList<CollectionAndDataObjectListingEntry>(
-				resultSet.getResults().size());
+		List<CollectionAndDataObjectListingEntry> files = new ArrayList<>(resultSet.getResults().size());
 
 		/*
-		 * the query that gives the necessary data will cause duplication when
-		 * there are replicas, so discard duplicates. This is the nature of
-		 * GenQuery.
+		 * the query that gives the necessary data will cause duplication when there are
+		 * replicas, so discard duplicates. This is the nature of GenQuery.
 		 */
 		String lastPath = "";
 		String currentPath = "";
 		CollectionAndDataObjectListingEntry entry;
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			entry = CollectionAOHelper
-					.buildCollectionListEntryFromResultSetRowForDataObjectQuery(
-							row, resultSet.getTotalRecords());
+			entry = CollectionAOHelper.buildCollectionListEntryFromResultSetRowForDataObjectQuery(row,
+					resultSet.getTotalRecords());
 
 			/**
-			 * Use the data in the objStat, in the case of special collections,
-			 * to augment the data returned
+			 * Use the data in the objStat, in the case of special collections, to augment
+			 * the data returned
 			 */
-			augmentCollectionEntryForSpecialCollections(objStat,
-					effectiveAbsolutePath, entry);
+			augmentCollectionEntryForSpecialCollections(objStat, effectiveAbsolutePath, entry);
 
 			StringBuilder sb = new StringBuilder();
 			sb.append(entry.getParentPath());
@@ -864,42 +786,37 @@ class CollectionListingUtils {
 	}
 
 	/**
-	 * Use the data in the objStat, in the case of special collections, to
-	 * augment the entry for a collection
+	 * Use the data in the objStat, in the case of special collections, to augment
+	 * the entry for a collection
 	 * 
 	 * @param objStat
 	 *            {@link ObjStat} retreived for the parent directory
 	 * @param effectiveAbsolutePath
-	 *            <code>String</code> with the path used to query, this will be
-	 *            the canonical path for the parent collection, and should
-	 *            correspond to the absolute path information in the given
-	 *            <code>entry</code>.
+	 *            {@code String} with the path used to query, this will be the
+	 *            canonical path for the parent collection, and should correspond to
+	 *            the absolute path information in the given {@code entry}.
 	 * @param entry
-	 *            {@link CollectionAndDataObjectListingEntry} which is the raw
-	 *            data returned from querying the iCat based on the
-	 *            <code>effectiveAbsolutePath</code>. This information is from
-	 *            the perspective of the canonical path, and the given method
-	 *            will reframe the <code>entry</code> from the perspective of
-	 *            the requested path This means that a query on children of a
-	 *            soft link carry the data from the perspective of the soft
-	 *            linked directory, even though the iCAT carries the information
-	 *            based on the 'source path' of the soft link. This gets pretty
-	 *            confusing otherwise.
+	 *            {@link CollectionAndDataObjectListingEntry} which is the raw data
+	 *            returned from querying the iCat based on the
+	 *            {@code effectiveAbsolutePath}. This information is from the
+	 *            perspective of the canonical path, and the given method will
+	 *            reframe the {@code entry} from the perspective of the requested
+	 *            path This means that a query on children of a soft link carry the
+	 *            data from the perspective of the soft linked directory, even
+	 *            though the iCAT carries the information based on the 'source path'
+	 *            of the soft link. This gets pretty confusing otherwise.
 	 */
-	void augmentCollectionEntryForSpecialCollections(final ObjStat objStat,
-			final String effectiveAbsolutePath,
+	void augmentCollectionEntryForSpecialCollections(final ObjStat objStat, final String effectiveAbsolutePath,
 			final CollectionAndDataObjectListingEntry entry) {
 
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
 			log.info("adjusting paths in entry to reflect linked collection info");
 			entry.setSpecialObjectPath(objStat.getObjectPath());
 			CollectionAndPath collectionAndPathForAbsPath = MiscIRODSUtils
-					.separateCollectionAndPathFromGivenAbsolutePath(entry
-							.getPathOrName());
+					.separateCollectionAndPathFromGivenAbsolutePath(entry.getPathOrName());
 
 			if (entry.isCollection()) {
-				entry.setPathOrName(objStat.getAbsolutePath() + "/"
-						+ collectionAndPathForAbsPath.getChildName());
+				entry.setPathOrName(objStat.getAbsolutePath() + "/" + collectionAndPathForAbsPath.getChildName());
 				entry.setParentPath(objStat.getAbsolutePath());
 			} else {
 				entry.setParentPath(objStat.getAbsolutePath());
@@ -909,8 +826,7 @@ class CollectionListingUtils {
 
 	}
 
-	int countDataObjectsUnderPath(final ObjStat objStat)
-			throws FileNotFoundException, JargonException {
+	int countDataObjectsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
 		log.info("countDataObjectsUnderPath()");
 
@@ -923,28 +839,22 @@ class CollectionListingUtils {
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		log.info("determined effectiveAbsolutePathToBe:{}",
-				effectiveAbsolutePath);
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
 		if (!objStat.isSomeTypeOfCollection()) {
-			log.error(
-					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
+			log.error("this is a file, not a directory, and therefore I cannot get a count of the children: {}",
 					objStat.getAbsolutePath());
-			throw new JargonException(
-					"attempting to count children under a file at path:"
-							+ objStat.getAbsolutePath());
+			throw new JargonException("attempting to count children under a file at path:" + objStat.getAbsolutePath());
 		}
 
 		return queryDataObjectCountsUnderPath(effectiveAbsolutePath);
 
 	}
 
-	long totalDataObjectSizesUnderPath(final ObjStat objStat)
-			throws FileNotFoundException, JargonException {
+	long totalDataObjectSizesUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
 		log.info("totalDataObjectsSizeUnderPath()");
 
@@ -957,19 +867,14 @@ class CollectionListingUtils {
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		log.info("determined effectiveAbsolutePathToBe:{}",
-				effectiveAbsolutePath);
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
 		if (!objStat.isSomeTypeOfCollection()) {
-			log.error("this is a file, not a directory: {}",
-					objStat.getAbsolutePath());
-			throw new JargonException(
-					"attempting to total children under a file at path:"
-							+ objStat.getAbsolutePath());
+			log.error("this is a file, not a directory: {}", objStat.getAbsolutePath());
+			throw new JargonException("attempting to total children under a file at path:" + objStat.getAbsolutePath());
 		}
 
 		return queryDataObjectSizesUnderPath(effectiveAbsolutePath);
@@ -978,30 +883,23 @@ class CollectionListingUtils {
 
 	long queryDataObjectSizesUnderPath(final String effectiveAbsolutePath)
 			throws JargonException, DataNotFoundException {
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet;
 
 		try {
-			builder.addSelectAsAgregateGenQueryValue(
-					RodsGenQueryEnum.COL_DATA_SIZE, SelectFieldTypes.SUM)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.LIKE,
+			builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE, SelectFieldTypes.SUM)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.LIKE,
 							effectiveAbsolutePath.trim() + "%")
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_REPL_NUM,
-							QueryConditionOperators.EQUAL, "0");
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_REPL_NUM, QueryConditionOperators.EQUAL,
+							"0");
 
 			;
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(1);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
@@ -1013,9 +911,7 @@ class CollectionListingUtils {
 		long fileCtr = 0;
 
 		if (resultSet.getResults().size() > 0) {
-			fileCtr = IRODSDataConversionUtil
-					.getLongOrZeroFromIRODSValue(resultSet.getFirstResult()
-							.getColumn(0));
+			fileCtr = IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(resultSet.getFirstResult().getColumn(0));
 		}
 		log.info("got total size of:{}", fileCtr);
 
@@ -1031,8 +927,7 @@ class CollectionListingUtils {
 	 * @throws FileNotFoundException
 	 * @throws JargonException
 	 */
-	int countCollectionsUnderPath(final ObjStat objStat)
-			throws FileNotFoundException, JargonException {
+	int countCollectionsUnderPath(final ObjStat objStat) throws FileNotFoundException, JargonException {
 
 		log.info("countCollectionsUnderPath()");
 
@@ -1045,44 +940,31 @@ class CollectionListingUtils {
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
 
-		String effectiveAbsolutePath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
-		log.info("determined effectiveAbsolutePathToBe:{}",
-				effectiveAbsolutePath);
+		String effectiveAbsolutePath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		log.info("determined effectiveAbsolutePathToBe:{}", effectiveAbsolutePath);
 
 		// I cannot get children if this is not a directory (a file has no
 		// children)
 		if (!objStat.isSomeTypeOfCollection()) {
-			log.error(
-					"this is a file, not a directory, and therefore I cannot get a count of the children: {}",
+			log.error("this is a file, not a directory, and therefore I cannot get a count of the children: {}",
 					objStat.getAbsolutePath());
-			throw new JargonException(
-					"attempting to count children under a file at path:"
-							+ objStat);
+			throw new JargonException("attempting to count children under a file at path:" + objStat);
 		}
 
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet;
 
 		try {
-			builder.addSelectAsAgregateGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_TYPE, SelectFieldTypes.COUNT)
-					.addSelectAsAgregateGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							SelectFieldTypes.COUNT)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_PARENT_NAME,
-							QueryConditionOperators.EQUAL,
+			builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_TYPE, SelectFieldTypes.COUNT)
+					.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_PARENT_NAME, QueryConditionOperators.EQUAL,
 							effectiveAbsolutePath);
 
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(1);
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
@@ -1093,9 +975,7 @@ class CollectionListingUtils {
 
 		int collCtr = 0;
 		if (resultSet.getResults().size() > 0) {
-			collCtr = IRODSDataConversionUtil
-					.getIntOrZeroFromIRODSValue(resultSet.getFirstResult()
-							.getColumn(0));
+			collCtr = IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(resultSet.getFirstResult().getColumn(0));
 		}
 
 		return collCtr;
@@ -1104,33 +984,24 @@ class CollectionListingUtils {
 
 	int queryDataObjectCountsUnderPath(final String effectiveAbsolutePath)
 			throws JargonException, DataNotFoundException {
-		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory
-				.getIRODSGenQueryExecutor(irodsAccount);
+		IRODSGenQueryExecutor irodsGenQueryExecutor = irodsAccessObjectFactory.getIRODSGenQueryExecutor(irodsAccount);
 
 		IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
 		IRODSQueryResultSet resultSet;
 
 		try {
-			builder.addSelectAsAgregateGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
-					.addSelectAsAgregateGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_NAME,
-							SelectFieldTypes.COUNT)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
+			builder.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME, SelectFieldTypes.COUNT)
+					.addSelectAsAgregateGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME, SelectFieldTypes.COUNT)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
 							effectiveAbsolutePath)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_REPL_NUM,
-							QueryConditionOperators.EQUAL, "0");
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_REPL_NUM, QueryConditionOperators.EQUAL,
+							"0");
 
 			;
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(1);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
-							MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0,
+					MiscIRODSUtils.getZoneInPath(effectiveAbsolutePath));
 		} catch (JargonQueryException e) {
 			log.error(CollectionListingUtils.QUERY_EXCEPTION_FOR_QUERY, e);
 			throw new JargonException("error in exists query", e);
@@ -1142,9 +1013,7 @@ class CollectionListingUtils {
 		int fileCtr = 0;
 
 		if (resultSet.getResults().size() > 0) {
-			fileCtr = IRODSDataConversionUtil
-					.getIntOrZeroFromIRODSValue(resultSet.getFirstResult()
-							.getColumn(0));
+			fileCtr = IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(resultSet.getFirstResult().getColumn(0));
 		}
 
 		return fileCtr;
@@ -1155,8 +1024,7 @@ class CollectionListingUtils {
 	 * @param irodsAccessObjectFactory
 	 * @throws JargonException
 	 */
-	CollectionListingUtils(IRODSAccount irodsAccount,
-			IRODSAccessObjectFactory irodsAccessObjectFactory)
+	CollectionListingUtils(IRODSAccount irodsAccount, IRODSAccessObjectFactory irodsAccessObjectFactory)
 			throws JargonException {
 		super();
 
@@ -1183,23 +1051,20 @@ class CollectionListingUtils {
 	 *             if the file does not exist
 	 * @throws JargonException
 	 */
-	ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath)
-			throws FileNotFoundException, JargonException {
+	ObjStat retrieveObjectStatForPath(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"irodsAbsolutePath is null or empty");
+			throw new IllegalArgumentException("irodsAbsolutePath is null or empty");
 		}
 
 		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat
-				.instance(irodsAbsolutePath);
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance(irodsAbsolutePath);
 		Tag response;
 		ObjStat objStat;
 		try {
-			response = irodsAccessObjectFactory.getIrodsSession()
-					.currentConnection(irodsAccount).irodsFunction(dataObjInp);
+			response = irodsAccessObjectFactory.getIrodsSession().currentConnection(irodsAccount)
+					.irodsFunction(dataObjInp);
 		} catch (FileNotFoundException e) {
 			log.info("got a file not found, try to heuristically produce an objstat");
 			return handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(irodsAbsolutePath);
@@ -1224,9 +1089,8 @@ class CollectionListingUtils {
 		Tag specColl = response.getTag("SpecColl_PI");
 
 		/*
-		 * Look for the specColl tag (it is expected to be there) and see if
-		 * there are any special collection types (e.g. mounted or soft links)
-		 * to deal with
+		 * Look for the specColl tag (it is expected to be there) and see if there are
+		 * any special collection types (e.g. mounted or soft links) to deal with
 		 */
 		if (specColl != null) {
 
@@ -1254,8 +1118,7 @@ class CollectionListingUtils {
 			switch (collClass) {
 			case 0:
 				objStat.setSpecColType(SpecColType.NORMAL);
-				objStat.setObjectPath(specColl.getTag("phyPath")
-						.getStringValue());
+				objStat.setObjectPath(specColl.getTag("phyPath").getStringValue());
 				break;
 			case 1:
 				objStat.setSpecColType(SpecColType.STRUCT_FILE_COLL);
@@ -1267,30 +1130,23 @@ class CollectionListingUtils {
 				objStat.setSpecColType(SpecColType.LINKED_COLL);
 
 				/*
-				 * physical path will hold the canonical source dir where it was
-				 * linked. The collection path will hold the top level of the
-				 * soft link target. This does not 'follow' by incrementing the
-				 * path as you descend into subdirs, so I use the collection
-				 * path to chop off the absolute path, and use the remainder
-				 * appended to the collection path to arrive at equivalent
-				 * canonical source path fo rthis soft linked directory. This is
-				 * all rather confusing, so instead of worrying about it, Jargon
-				 * has the headache, you can just trust the objStat objectPath
-				 * to point to the equivalent canonical source path to the soft
+				 * physical path will hold the canonical source dir where it was linked. The
+				 * collection path will hold the top level of the soft link target. This does
+				 * not 'follow' by incrementing the path as you descend into subdirs, so I use
+				 * the collection path to chop off the absolute path, and use the remainder
+				 * appended to the collection path to arrive at equivalent canonical source path
+				 * fo rthis soft linked directory. This is all rather confusing, so instead of
+				 * worrying about it, Jargon has the headache, you can just trust the objStat
+				 * objectPath to point to the equivalent canonical source path to the soft
 				 * linked path.
 				 */
-				String canonicalSourceDirForSoftLink = specColl.getTag(
-						"phyPath").getStringValue();
-				String softLinkTargetDir = specColl.getTag("collection")
-						.getStringValue();
-				if (softLinkTargetDir.length() > objStat.getAbsolutePath()
-						.length()) {
-					throw new JargonException(
-							"cannot properly compute path for soft link");
+				String canonicalSourceDirForSoftLink = specColl.getTag("phyPath").getStringValue();
+				String softLinkTargetDir = specColl.getTag("collection").getStringValue();
+				if (softLinkTargetDir.length() > objStat.getAbsolutePath().length()) {
+					throw new JargonException("cannot properly compute path for soft link");
 				}
 
-				String additionalPath = objStat.getAbsolutePath().substring(
-						softLinkTargetDir.length());
+				String additionalPath = objStat.getAbsolutePath().substring(softLinkTargetDir.length());
 				StringBuilder sb = new StringBuilder();
 				sb.append(canonicalSourceDirForSoftLink);
 				sb.append(additionalPath);
@@ -1305,10 +1161,8 @@ class CollectionListingUtils {
 
 		String createdDate = response.getTag("createTime").getStringValue();
 		String modifiedDate = response.getTag("modifyTime").getStringValue();
-		objStat.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(createdDate));
-		objStat.setModifiedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(modifiedDate));
+		objStat.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(createdDate));
+		objStat.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(modifiedDate));
 
 		log.info(objStat.toString());
 		return objStat;

@@ -19,7 +19,7 @@ public class HtmlLogTableFormatter {
 	 * usable in bootsrap2
 	 * 
 	 * @param exception
-	 * @return <code>String</code> representing an HTML table for bootstrap2
+	 * @return {@code String} representing an HTML table for bootstrap2
 	 */
 	public static String formatStackTraceAsBootstrap2Table(
 			final Exception exception) {
@@ -41,11 +41,11 @@ public class HtmlLogTableFormatter {
 	 * basic striped table representing the log data
 	 * 
 	 * @param logData
-	 *            <code>String</code> with the log data
+	 *            {@code String} with the log data
 	 * @param caption
-	 *            <code>String</code> that is blank if not needed, that givs an
+	 *            {@code String} that is blank if not needed, that givs an
 	 *            optional table caption
-	 * @return <code>String</code> representing an HTML table for bootstrap2
+	 * @return {@code String} representing an HTML table for bootstrap2
 	 */
 	public static String formatAsBootstrap2Table(final String logData,
 			final String caption) {

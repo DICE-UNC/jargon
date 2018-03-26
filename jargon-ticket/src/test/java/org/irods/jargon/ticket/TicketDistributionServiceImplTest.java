@@ -3,12 +3,11 @@ package org.irods.jargon.ticket;
 import java.net.URL;
 import java.util.Properties;
 
-import junit.framework.TestCase;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.testutils.TestingPropertiesHelper;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -23,10 +22,10 @@ public class TicketDistributionServiceImplTest {
 	public static void setUpBeforeClass() throws Exception {
 		TestingPropertiesHelper testingPropertiesLoader = new TestingPropertiesHelper();
 		testingProperties = testingPropertiesLoader.getTestProperties();
-		testTicket = testingPropertiesLoader
-				.isTestRemoteExecStream(testingProperties);
+		testTicket = testingPropertiesLoader.isTestRemoteExecStream(testingProperties);
 
 	}
+
 	@AfterClass
 	public static void tearDownAfterClass() throws Exception {
 	}
@@ -37,16 +36,11 @@ public class TicketDistributionServiceImplTest {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = null;
-	ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+		ticketServiceFactory.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 
 	}
 
@@ -66,16 +60,12 @@ public class TicketDistributionServiceImplTest {
 		boolean ssl = false;
 		String context = "/idrop-web/tickets/redeemTicket";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		ticketDistributionContext.setContext(context);
 		ticketDistributionContext.setHost(host);
 		ticketDistributionContext.setPort(port);
@@ -83,21 +73,16 @@ public class TicketDistributionServiceImplTest {
 		Ticket ticket = new Ticket();
 		ticket.setTicketString("xxx");
 		ticket.setIrodsAbsolutePath("/yyy");
-		TicketDistribution ticketDistribution = ticketDistributionService
-				.getTicketDistributionForTicket(ticket);
-		TestCase.assertNotNull("null ticket distribution returned",
-				ticketDistribution);
-		TestCase.assertNotNull("no ticket in ticketDistribution",
-				ticketDistribution.getTicket());
-		TestCase.assertNotNull("no irods uri in ticketDistribution",
-				ticketDistribution.getIrodsAccessURI());
-		TestCase.assertNotNull("no ticket URL in ticket distribution",
-				ticketDistribution.getTicketURL());
+		TicketDistribution ticketDistribution = ticketDistributionService.getTicketDistributionForTicket(ticket);
+		Assert.assertNotNull("null ticket distribution returned", ticketDistribution);
+		Assert.assertNotNull("no ticket in ticketDistribution", ticketDistribution.getTicket());
+		Assert.assertNotNull("no irods uri in ticketDistribution", ticketDistribution.getIrodsAccessURI());
+		Assert.assertNotNull("no ticket URL in ticket distribution", ticketDistribution.getTicketURL());
 		URL url = ticketDistribution.getTicketURL();
-		TestCase.assertEquals("bad url host", host, url.getHost());
-		TestCase.assertEquals("bad port", port, url.getPort());
-		TestCase.assertEquals("should be http", "http", url.getProtocol());
-		TestCase.assertNotNull("no ticket landing URL in ticket distribution",
+		Assert.assertEquals("bad url host", host, url.getHost());
+		Assert.assertEquals("bad port", port, url.getPort());
+		Assert.assertEquals("should be http", "http", url.getProtocol());
+		Assert.assertNotNull("no ticket landing URL in ticket distribution",
 				ticketDistribution.getTicketURLWithLandingPage());
 
 	}
@@ -109,8 +94,7 @@ public class TicketDistributionServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public final void testGetTicketDistributionForTicketWithSpacesInAbsPath()
-			throws Exception {
+	public final void testGetTicketDistributionForTicketWithSpacesInAbsPath() throws Exception {
 		if (!testTicket) {
 			return;
 		}
@@ -120,16 +104,12 @@ public class TicketDistributionServiceImplTest {
 		boolean ssl = false;
 		String context = "/idrop-web/tickets/redeem Ticket";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		ticketDistributionContext.setContext(context);
 		ticketDistributionContext.setHost(host);
 		ticketDistributionContext.setPort(port);
@@ -137,21 +117,16 @@ public class TicketDistributionServiceImplTest {
 		Ticket ticket = new Ticket();
 		ticket.setTicketString("xxx");
 		ticket.setIrodsAbsolutePath("/yyy");
-		TicketDistribution ticketDistribution = ticketDistributionService
-				.getTicketDistributionForTicket(ticket);
-		TestCase.assertNotNull("null ticket distribution returned",
-				ticketDistribution);
-		TestCase.assertNotNull("no ticket in ticketDistribution",
-				ticketDistribution.getTicket());
-		TestCase.assertNotNull("no irods uri in ticketDistribution",
-				ticketDistribution.getIrodsAccessURI());
-		TestCase.assertNotNull("no ticket URL in ticket distribution",
-				ticketDistribution.getTicketURL());
+		TicketDistribution ticketDistribution = ticketDistributionService.getTicketDistributionForTicket(ticket);
+		Assert.assertNotNull("null ticket distribution returned", ticketDistribution);
+		Assert.assertNotNull("no ticket in ticketDistribution", ticketDistribution.getTicket());
+		Assert.assertNotNull("no irods uri in ticketDistribution", ticketDistribution.getIrodsAccessURI());
+		Assert.assertNotNull("no ticket URL in ticket distribution", ticketDistribution.getTicketURL());
 		URL url = ticketDistribution.getTicketURL();
-		TestCase.assertEquals("bad url host", host, url.getHost());
-		TestCase.assertEquals("bad port", port, url.getPort());
-		TestCase.assertEquals("should be http", "http", url.getProtocol());
-		TestCase.assertNotNull("no ticket landing URL in ticket distribution",
+		Assert.assertEquals("bad url host", host, url.getHost());
+		Assert.assertEquals("bad port", port, url.getPort());
+		Assert.assertEquals("should be http", "http", url.getProtocol());
+		Assert.assertNotNull("no ticket landing URL in ticket distribution",
 				ticketDistribution.getTicketURLWithLandingPage());
 
 	}
@@ -162,8 +137,7 @@ public class TicketDistributionServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test
-	public final void testGetTicketDistributionForTicketWithSSL()
-			throws Exception {
+	public final void testGetTicketDistributionForTicketWithSSL() throws Exception {
 		if (!testTicket) {
 			return;
 		}
@@ -173,16 +147,12 @@ public class TicketDistributionServiceImplTest {
 		boolean ssl = true;
 		String context = "/idrop-web/tickets/redeemTicket";
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		ticketDistributionContext.setContext(context);
 		ticketDistributionContext.setHost(host);
 		ticketDistributionContext.setPort(port);
@@ -190,59 +160,44 @@ public class TicketDistributionServiceImplTest {
 		Ticket ticket = new Ticket();
 		ticket.setTicketString("xxx");
 		ticket.setIrodsAbsolutePath("/yyy");
-		TicketDistribution ticketDistribution = ticketDistributionService
-				.getTicketDistributionForTicket(ticket);
-		TestCase.assertNotNull("null ticket distribution returned",
-				ticketDistribution);
-		TestCase.assertNotNull("no ticket in ticketDistribution",
-				ticketDistribution.getTicket());
-		TestCase.assertNotNull("no irods uri in ticketDistribution",
-				ticketDistribution.getIrodsAccessURI());
-		TestCase.assertNotNull("no ticket URL in ticket distribution",
-				ticketDistribution.getTicketURL());
+		TicketDistribution ticketDistribution = ticketDistributionService.getTicketDistributionForTicket(ticket);
+		Assert.assertNotNull("null ticket distribution returned", ticketDistribution);
+		Assert.assertNotNull("no ticket in ticketDistribution", ticketDistribution.getTicket());
+		Assert.assertNotNull("no irods uri in ticketDistribution", ticketDistribution.getIrodsAccessURI());
+		Assert.assertNotNull("no ticket URL in ticket distribution", ticketDistribution.getTicketURL());
 		URL url = ticketDistribution.getTicketURL();
-		TestCase.assertEquals("bad url host", host, url.getHost());
-		TestCase.assertEquals("bad port", port, url.getPort());
-		TestCase.assertEquals("should be https", "https", url.getProtocol());
+		Assert.assertEquals("bad url host", host, url.getHost());
+		Assert.assertEquals("bad port", port, url.getPort());
+		Assert.assertEquals("should be https", "https", url.getProtocol());
 
 	}
 
 	/**
-	 * Get a ticket distribution for a valid ticket and context where I don't
-	 * have a mid-tier host, so no URL generated
+	 * Get a ticket distribution for a valid ticket and context where I don't have a
+	 * mid-tier host, so no URL generated
 	 * 
 	 * @throws Exception
 	 */
 	@Test
-	public final void testGetTicketDistributionForTicketNoHostInContext()
-			throws Exception {
+	public final void testGetTicketDistributionForTicketNoHostInContext() throws Exception {
 		if (!testTicket) {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		Ticket ticket = new Ticket();
 		ticket.setTicketString("xxx");
 		ticket.setIrodsAbsolutePath("yyy");
-		TicketDistribution ticketDistribution = ticketDistributionService
-				.getTicketDistributionForTicket(ticket);
-		TestCase.assertNotNull("null ticket distribution returned",
-				ticketDistribution);
-		TestCase.assertNotNull("no ticket in ticketDistribution",
-				ticketDistribution.getTicket());
-		TestCase.assertNotNull("no irods uri in ticketDistribution",
-				ticketDistribution.getIrodsAccessURI());
-		TestCase.assertNull(
-				"no host, so should be no ticket URL in ticket distribution",
+		TicketDistribution ticketDistribution = ticketDistributionService.getTicketDistributionForTicket(ticket);
+		Assert.assertNotNull("null ticket distribution returned", ticketDistribution);
+		Assert.assertNotNull("no ticket in ticketDistribution", ticketDistribution.getTicket());
+		Assert.assertNotNull("no irods uri in ticketDistribution", ticketDistribution.getIrodsAccessURI());
+		Assert.assertNull("no host, so should be no ticket URL in ticket distribution",
 				ticketDistribution.getTicketURL());
 
 	}
@@ -253,26 +208,20 @@ public class TicketDistributionServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public final void testGetTicketDistributionForTicketThatsMissingTicketString()
-			throws Exception {
+	public final void testGetTicketDistributionForTicketThatsMissingTicketString() throws Exception {
 		if (!testTicket) {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		Ticket ticket = new Ticket();
-		ticketDistributionService
-				.getTicketDistributionForTicket(ticket);
+		ticketDistributionService.getTicketDistributionForTicket(ticket);
 
 	}
 
@@ -283,22 +232,17 @@ public class TicketDistributionServiceImplTest {
 	 * @throws Exception
 	 */
 	@Test(expected = IllegalArgumentException.class)
-	public final void testGetTicketDistributionForTicketThatsMissingIRODSPath()
-			throws Exception {
+	public final void testGetTicketDistributionForTicketThatsMissingIRODSPath() throws Exception {
 		if (!testTicket) {
 			return;
 		}
 
-		IRODSAccount irodsAccount = testingPropertiesHelper
-				.buildIRODSAccountFromTestProperties(testingProperties);
-		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito
-				.mock(IRODSAccessObjectFactory.class);
-		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(
-				irodsAccessObjectFactory);
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSAccessObjectFactory irodsAccessObjectFactory = Mockito.mock(IRODSAccessObjectFactory.class);
+		TicketServiceFactory ticketServiceFactory = new TicketServiceFactoryImpl(irodsAccessObjectFactory);
 		TicketDistributionContext ticketDistributionContext = new TicketDistributionContext();
 		TicketDistributionService ticketDistributionService = ticketServiceFactory
-				.instanceTicketDistributionService(irodsAccount,
-						ticketDistributionContext);
+				.instanceTicketDistributionService(irodsAccount, ticketDistributionContext);
 		Ticket ticket = new Ticket();
 		ticket.setTicketString("xxx");
 		ticketDistributionService.getTicketDistributionForTicket(ticket);

@@ -7,7 +7,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.IRODSAccount;

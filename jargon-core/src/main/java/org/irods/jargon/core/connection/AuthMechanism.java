@@ -58,7 +58,7 @@ abstract class AuthMechanism {
 
 	/**
 	 * After startup pack, the client/server negotiation commences here, based
-	 * on configuration and the settings in the <code>IRODSAccount</code>
+	 * on configuration and the settings in the {@code IRODSAccount}
 	 * visible here.
 	 * 
 	 * @param irodsMidLevelProtocol
@@ -186,7 +186,7 @@ abstract class AuthMechanism {
 
 	/**
 	 * Given the initial connection, perform the authentication process. This
-	 * process will return a <code>AbstractIRODSMidLevelProtocol</code>. This
+	 * process will return a {@code AbstractIRODSMidLevelProtocol}. This
 	 * method will start the connection by sending the auth request, process the
 	 * startup packet, and then call the authentication method of the actual
 	 * auth mechanism implementation.
@@ -227,7 +227,7 @@ abstract class AuthMechanism {
 	 * has completed. By default, the method just returns the protocol as passed
 	 * in. In some authentication scenarios, follow on steps may manipulate, or
 	 * even create a different authenticated protocol layer and return that.
-	 * <p/>
+	 * <p>
 	 * Note that the protocol contains a reference to the {@link AuthResponse}
 	 * that details the authenticating and authenticated accounts and
 	 * identities.
@@ -289,7 +289,7 @@ abstract class AuthMechanism {
 	/**
 	 * Hook method in the life cycle after the startup packet has been sent,
 	 * encapsulating the actual authentication process.
-	 * <p/>
+	 * <p>
 	 * This abstract method should be implemented in a subclass authentication
 	 * handler
 	 *

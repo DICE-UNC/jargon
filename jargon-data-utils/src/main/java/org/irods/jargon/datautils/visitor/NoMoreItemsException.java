@@ -8,6 +8,8 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
+@Deprecated
+
 public class NoMoreItemsException extends JargonException {
 
 	/**
@@ -42,8 +44,7 @@ public class NoMoreItemsException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMoreItemsException(final String message, final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public NoMoreItemsException(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
@@ -51,8 +52,7 @@ public class NoMoreItemsException extends JargonException {
 	 * @param cause
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMoreItemsException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public NoMoreItemsException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
@@ -60,8 +60,7 @@ public class NoMoreItemsException extends JargonException {
 	 * @param message
 	 * @param underlyingIRODSExceptionCode
 	 */
-	public NoMoreItemsException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public NoMoreItemsException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

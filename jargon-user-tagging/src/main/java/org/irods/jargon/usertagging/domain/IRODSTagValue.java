@@ -25,9 +25,9 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	 * Construct a tag with the given value
 	 * 
 	 * @param tagData
-	 *            <code>String</code> with the tag data value for the tag.
+	 *            {@code String} with the tag data value for the tag.
 	 * @param user
-	 *            <code>String</code> with the user name that owns the tag.
+	 *            {@code String} with the user name that owns the tag.
 	 * @throws JargonException
 	 */
 	public IRODSTagValue(final String tagData, final String tagUser)
@@ -52,7 +52,7 @@ public final class IRODSTagValue implements Serializable, Comparable<Object> {
 	 * <code>user[username]
 	 * 
 	 * @param metadataAndDomainData
-	 *            <code>MetaDataAndDomainData</code> object from Jargon that
+	 *            {@code MetaDataAndDomainData} object from Jargon that
 	 *            contains information from a raw AVU triple.
 	 * @throws JargonException
 	 */

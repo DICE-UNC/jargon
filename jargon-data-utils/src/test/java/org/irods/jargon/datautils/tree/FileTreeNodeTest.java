@@ -1,6 +1,6 @@
 package org.irods.jargon.datautils.tree;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.query.CollectionAndDataObjectListingEntry;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntry.DiffType;

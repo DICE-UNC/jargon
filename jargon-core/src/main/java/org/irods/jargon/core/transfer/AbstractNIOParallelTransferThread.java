@@ -105,8 +105,8 @@ public class AbstractNIOParallelTransferThread {
 	 * Any exception that occurs in this transfer thread is saved so that the
 	 * parallel transfer process can access it and handle any errors.
 	 *
-	 * @return <code>Exception</code> that occured in this thread, or
-	 *         <code>null</code> if no error occurred.
+	 * @return {@code Exception} that occured in this thread, or
+	 *         {@code null} if no error occurred.
 	 */
 	public Exception getExceptionInTransfer() {
 		return exceptionInTransfer;

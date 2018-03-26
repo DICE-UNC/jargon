@@ -1,22 +1,20 @@
 # Project: Jargon-core API
-
 ### Date:
-### Release Version: 4.2.1.0-SNAPSHOT
-### git tag: 
-
+### Release Version: 4.3.0.0-SNAPSHOT
+### git tag:
 
 ## News
 
 
-4.2.0 Compatability and maintenance
-for milestone: https://github.com/DICE-UNC/jargon/milestone/16
+https://github.com/DICE-UNC/jargon/milestone/13
 
-This version of Jargon is currently targeted at Cloud Browser and REST.  There are still some features that are considered early access and may not support a full range
+This version of Jargon is currently targeted at Metalnx.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
 Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
 
 =======
+
 Jargon-core consists of the following libraries
 
 * jargon-core - base libraries, implementation of the iRODS protocol
@@ -27,12 +25,12 @@ Jargon-core consists of the following libraries
 * jargon-httpstream - stream http content into iRODS via Jargon
 * jargon-ruleservice - support for running and managing rules from interfaces
 * jargon-pool - initial implementation of commons-pool caching of iRODS agent connections.  This is initially for WebDav, and will be utilized as an option in REST and cloud browser.  Consider this code experimental
- 
+
 ## Requirements
 
 * Jargon depends on Java 1.8+
 * Jargon is built using Apache Maven2, see POM for dependencies
-* Jargon supports iRODS 4.1.0 through 4.2.X
+* Jargon supports iRODS 4.1.0 through 4.2.2, it also maintains very reasonable backards compatability to iRODS 3.3.1 however this is no longer actively tested
 
 ## Libraries
 
@@ -42,12 +40,11 @@ Note that the following bug and feature requests are logged in GForge with relat
 
 ## Changes
 
-<<<<<<< HEAD
-#### Remove old thumbnail code #165 
+#### Remove old thumbnail code #165
 
 Remove old image thumbnail code that relied on specific 'lifetime library' configuration.  This will later be replaced by a more globally applicable set of tools.  Likely in the jargon-extensions package
 
-####  Add file to string and vice versa to support cloud browser editor #166 
+####  Add file to string and vice versa to support cloud browser editor #166
 
 Add file to string and vice versa in FileSamplerService of data utils.  This allows cloud browser to turn a file into an edit pane and store edits to irods.
 
@@ -62,20 +59,14 @@ Enhanced user group and user queries for cloud browser
 #### add col user type to genquery #235
 
 Add user type to LIKE queries to discriminate users from groups in find 'like' queries
-=======
-#### fix javadoc gen issues #230
 
-Clean up javadocs to allow generation via Maven
+#### add add'l collection listing methods accommodating heuristic path guessing #275
 
-#### Performance regression in 4.1.10.0-RELEASE #243
+Add additional methods for collection browsing to accommodate browsing down from the top of the tree past
+collections that are actually hidden by strict acls. Much of this is to support the MetaLnx browser but these sorts of client
+affordances can be generally applied.
 
-Removed extra flush behavior that was an artifact of previous iRODS versions.  Have begun to deemphasize 3.3.1 through 4.0 iRODS server versions.
+#### deprecation of old idrop-web and demo code #291
 
-#### Fix usage of SSL socket factory from custom context. #242
+A few cleanups of old vestigal code.
 
-Fix provided by pull request.
-
-#### Connection pooling implementation #225
-
-Initial implementation of commons-pool for connections
->>>>>>> origin/master

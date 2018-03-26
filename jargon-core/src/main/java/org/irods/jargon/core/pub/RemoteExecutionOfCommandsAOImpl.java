@@ -144,7 +144,7 @@ public class RemoteExecutionOfCommandsAOImpl extends IRODSGenericAO implements
 	/**
 	 * Inquire if this irodsServer has the ability to stream large results back.
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 * @throws JargonException
 	 */
 	protected boolean isAbleToStreamLargeResults() throws JargonException {

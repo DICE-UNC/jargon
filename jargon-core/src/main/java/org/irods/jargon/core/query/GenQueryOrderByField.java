@@ -18,11 +18,11 @@ public class GenQueryOrderByField extends GenQueryField {
 	 * Create an order by field in a query.
 	 *
 	 * @param selectFieldColumnName
-	 *            <code>String</code> with the name of the column
+	 *            {@code String} with the name of the column
 	 * @param selectFieldSource
 	 *            {@link SelectFieldSource} indicates the type of query field
 	 * @param selectFieldNumericTranslation
-	 *            <code>String</code> with the iRODS protocol translation of a
+	 *            {@code String} with the iRODS protocol translation of a
 	 *            gen query field
 	 * @param orderByType
 	 *            {@link OrderByType} that indicates the order by type.

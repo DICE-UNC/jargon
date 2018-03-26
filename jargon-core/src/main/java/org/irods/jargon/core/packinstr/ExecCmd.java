@@ -8,7 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 /**
  * Immutable object gives translation of an ExecCmd operation into XML. This is
  * the operation for remote execution protocol format.
- * <p/>
+ * <p>
  * Note that this packing instruction must deal with backwards compatability for
  * versions of ExecCmd prior to the addition of enhanced streaming of large
  * result sets. The method names indicate which version of iRODS the packing
@@ -76,12 +76,12 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * platform.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
-	 * @return <code>ExcecCmd</code> instance.
+	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithCommandPriorTo25(
@@ -97,12 +97,12 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script) using the newer API with 64 bit alignment for some platforms.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
-	 * @return <code>ExcecCmd</code> instance.
+	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithCommandPost25(
@@ -120,12 +120,12 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * 2.4.1 and is not supported in prior releases.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
-	 * @return <code>ExcecCmd</code> instance.
+	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithCommandAllowingStreamingForLargeResultsPost25(
@@ -143,16 +143,16 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * platform.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
@@ -160,7 +160,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
 	 *            additional information about the request functionality. This
 	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to <code>NONE</code>
+	 *            set to {@code NONE}
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPriorTo25(
@@ -181,16 +181,16 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script) using the newer API with 64 bit alignment for some platforms.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
@@ -198,7 +198,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
 	 *            additional information about the request functionality. This
 	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to <code>NONE</code>
+	 *            set to {@code NONE}
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPost25(
@@ -221,16 +221,16 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * iRODS releases after 2.5
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
@@ -238,7 +238,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
 	 *            additional information about the request functionality. This
 	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to <code>NONE</code>
+	 *            set to {@code NONE}
 	 * @throws JargonException
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
@@ -258,23 +258,23 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * Constructor for a remote execution service packing instruction call.
 	 *
 	 * @param apiNumber
-	 *            <code>int</code> with the api number to use with this call.
+	 *            {@code int} with the api number to use with this call.
 	 * @param commandToExecuteWithoutArguments
-	 *            <code>String</code> with the name of the command to execute.
+	 *            {@code String} with the name of the command to execute.
 	 *            Do not put arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            <code>String</code> that is blank, or has the arguments to
+	 *            {@code String} that is blank, or has the arguments to
 	 *            send with the given command
 	 * @param executionHost
-	 *            <code>String</code> that can optionally point to the host on
+	 *            {@code String} that can optionally point to the host on
 	 *            which the command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            <code>String</code> that can optionally give an iRODS absolute
+	 *            {@code String} that can optionally give an iRODS absolute
 	 *            path. This is used within iRODS to find the host upon which
 	 *            the file is located, and that host can be used to execute the
 	 *            given command.
 	 * @param useBackwardCompatableInstruction
-	 *            <code>boolean</code> that indicates that the older version
+	 *            {@code boolean} that indicates that the older version
 	 *            (2.4.1 and prior) should be used. Otherwise, the newer API
 	 *            with fixes for streaming and 64 bit alignment issues will be
 	 *            used.
@@ -282,7 +282,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
 	 *            additional information about the request functionality. This
 	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to <code>NONE</code>
+	 *            set to {@code NONE}
 	 * @throws JargonException
 	 */
 	private ExecCmd(

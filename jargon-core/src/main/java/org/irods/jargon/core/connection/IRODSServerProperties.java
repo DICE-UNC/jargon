@@ -24,15 +24,12 @@ public class IRODSServerProperties {
 	private final String apiVersion;
 	private final String rodsZone;
 
-	public static IRODSServerProperties instance(final IcatEnabled icatEnabled,
-			final int serverBootTime, final String relVersion,
-			final String apiVersion, final String rodsZone) {
-		return new IRODSServerProperties(icatEnabled, serverBootTime,
-				relVersion, apiVersion, rodsZone);
+	public static IRODSServerProperties instance(final IcatEnabled icatEnabled, final int serverBootTime,
+			final String relVersion, final String apiVersion, final String rodsZone) {
+		return new IRODSServerProperties(icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
 	}
 
-	private IRODSServerProperties(final IcatEnabled icatEnabled,
-			final int serverBootTime, final String relVersion,
+	private IRODSServerProperties(final IcatEnabled icatEnabled, final int serverBootTime, final String relVersion,
 			final String apiVersion, final String rodsZone) {
 		super();
 		this.icatEnabled = icatEnabled;
@@ -65,8 +62,7 @@ public class IRODSServerProperties {
 	/**
 	 * Does the server (based on version) support connection re-routing?
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if re-routing is
-	 *         supported.
+	 * @return {@code boolean} of {@code true} if re-routing is supported.
 	 */
 	public boolean isSupportsConnectionRerouting() {
 		boolean supports = false;
@@ -77,10 +73,24 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Does the server (based on version) support metadata 'set' operations as
+	 * opposed to 'add'
+	 * 
+	 * @return
+	 */
+	public boolean isSupportsMetadataSet() {
+		boolean supports = false;
+
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support specific (SQL) query
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if specific query is
-	 *         supported
+	 * @return {@code boolean} of {@code true} if specific query is supported
 	 */
 	public boolean isSupportsSpecificQuery() {
 		boolean supports = false;
@@ -92,10 +102,23 @@ public class IRODSServerProperties {
 	}
 
 	/**
+	 * Does the server (based on version) support composable resources
+	 * 
+	 * @return
+	 */
+	public boolean isSupportsComposableResoures() {
+		boolean supports = false;
+
+		if (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0")) {
+			supports = true;
+		}
+		return supports;
+	}
+
+	/**
 	 * Does the server (based on version) support tickets?
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if this version
-	 *         supports tickets
+	 * @return {@code boolean} of {@code true} if this version supports tickets
 	 */
 	public boolean isSupportsTickets() {
 		boolean supports = false;
@@ -109,8 +132,7 @@ public class IRODSServerProperties {
 	/**
 	 * Does the server (based on version) support workflow (WSOs)?
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if this version
-	 *         supports WSO workflow
+	 * @return {@code boolean} of {@code true} if this version supports WSO workflow
 	 */
 	public boolean isSupportsWSOWorkflow() {
 		boolean supports = false;
@@ -124,8 +146,8 @@ public class IRODSServerProperties {
 	 * Does the server (based on version) support case-insensitive gen query
 	 * conditions
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if this version
-	 *         supports case-insensitive gen query conditions
+	 * @return {@code boolean} of {@code true} if this version supports
+	 *         case-insensitive gen query conditions
 	 */
 	public boolean isSupportsCaseInsensitiveQueries() {
 		boolean supports = false;
@@ -138,36 +160,33 @@ public class IRODSServerProperties {
 
 	/**
 	 * Handy method compares the iRODS release version of the target server, and
-	 * will indicate that the iRODS version being connected to is at or above
-	 * the given version.
+	 * will indicate that the iRODS version being connected to is at or above the
+	 * given version.
 	 *
 	 * @param releaseVersion
-	 *            <code>String</code> in standard iRODS version format that will
-	 *            be checked against the currently-connected server.
-	 * @return <code>boolean</code> that will be <code>true</code> if the iRODS
-	 *         server is at or above the <code>releaseVersion</code>
+	 *            {@code String} in standard iRODS version format that will be
+	 *            checked against the currently-connected server.
+	 * @return {@code boolean} that will be {@code true} if the iRODS server is at
+	 *         or above the {@code releaseVersion}
 	 */
-	public boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(
-			final String releaseVersion) {
+	public boolean isTheIrodsServerAtLeastAtTheGivenReleaseVersion(final String releaseVersion) {
 		if (releaseVersion == null || releaseVersion.length() == 0) {
 			throw new IllegalArgumentException("null or empty releaseVersion");
 		}
 
-		int compare = getIrodsVersion().compareTo(
-				new IrodsVersion(releaseVersion));
+		int compare = getIrodsVersion().compareTo(new IrodsVersion(releaseVersion));
 		return compare >= 0;
 
 	}
 
 	/**
-	 * Is the server 4.0.X and not yet 4.1? Then I need to worry about pam
-	 * flushes per https://github.com/DICE-UNC/jargon/issues/70 This overhead
-	 * will force the pam flush based on the forceSslFlush flag, which will only
-	 * be turned on to bracket the necessary calls to the protocol, preventing a
-	 * performance drop from unneeded flushes later
+	 * Is the server 4.0.X and not yet 4.1? Then I need to worry about pam flushes
+	 * per https://github.com/DICE-UNC/jargon/issues/70 This overhead will force the
+	 * pam flush based on the forceSslFlush flag, which will only be turned on to
+	 * bracket the necessary calls to the protocol, preventing a performance drop
+	 * from unneeded flushes later
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if pam flush overhead
-	 *         is required
+	 * @return {@code boolean} of {@code true} if pam flush overhead is required
 	 */
 	public boolean isNeedsPamFlush() {
 		return (isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.0") && (!isAtLeastIrods410()));
@@ -176,7 +195,7 @@ public class IRODSServerProperties {
 	/**
 	 * Is the server at least iRODS 4.1.0
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	public boolean isAtLeastIrods410() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.1.0");
@@ -185,7 +204,7 @@ public class IRODSServerProperties {
 	/**
 	 * Is the server at least iRODS 4.2.0
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	public boolean isAtLeastIrods420() {
 		return isTheIrodsServerAtLeastAtTheGivenReleaseVersion("rods4.2.0");

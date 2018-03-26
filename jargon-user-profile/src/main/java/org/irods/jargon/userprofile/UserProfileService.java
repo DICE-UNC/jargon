@@ -18,7 +18,7 @@ public interface UserProfileService {
 	 * Add a profile for the given user.
 	 * 
 	 * @param irodsUserName
-	 *            <code>String</code> with the name of the iRODS user in the
+	 *            {@code String} with the name of the iRODS user in the
 	 *            given zone for which a profile will be added
 	 * @param userProfile
 	 *            {@link UserProfile} that will be added
@@ -54,7 +54,7 @@ public interface UserProfileService {
 	 * Remove the public and protected user profile information
 	 * 
 	 * @param irodsUserName
-	 *            <code>String</code> with the name of the iRODS user in the
+	 *            {@code String} with the name of the iRODS user in the
 	 *            given zone for which a profile will be removed
 	 * @throws JargonException
 	 */
@@ -64,7 +64,7 @@ public interface UserProfileService {
 	 * Given an iRODS user name, retrive the user profile if it exists
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name
+	 *            {@code String} with the iRODS user name
 	 * @return {@link UserProfile} with available information (may depend on
 	 *         ACL's)
 	 * @throws DataNotFoundException
@@ -79,9 +79,9 @@ public interface UserProfileService {
 	 * user name and the {@link UserProfileServiceConfiguration} information.
 	 * 
 	 * @param userName
-	 *            <code>String</code> with the iRODS user name for which the
+	 *            {@code String} with the iRODS user name for which the
 	 *            profile information is kept
-	 * @return <code>String</code> with the absolute path to the iRODS
+	 * @return {@code String} with the absolute path to the iRODS
 	 *         collection where user profile information is kept.
 	 */
 	String getUserProfileDir(String userName);
@@ -102,7 +102,7 @@ public interface UserProfileService {
 	 * operate, but that permission is not set and will have to be set by the
 	 * administrator
 	 * 
-	 * @return <code>boolean</code> of <code>true</code> if you want to set
+	 * @return {@code boolean} of {@code true} if you want to set
 	 *         permissions for a protected profile group
 	 * @throws JargonException
 	 */

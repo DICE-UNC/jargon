@@ -34,17 +34,16 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class Stream2StreamAOImpl extends IRODSGenericAO implements
-		Stream2StreamAO {
+
+public class Stream2StreamAOImpl extends IRODSGenericAO implements Stream2StreamAO {
 
 	// private final int bufferSize = this.getJargonProperties().get
 	private static final int bufferSize = 32 * 1024; // FIXME: temp code
 
-	public static final Logger log = LoggerFactory
-			.getLogger(Stream2StreamAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(Stream2StreamAOImpl.class);
 
-	public Stream2StreamAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public Stream2StreamAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
@@ -52,12 +51,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.Stream2StreamAO#streamBytesToIRODSFile(byte[],
-	 * org.irods.jargon.core.pub.io.IRODSFile)
+	 * org.irods.jargon.core.pub.Stream2StreamAO#streamBytesToIRODSFile(byte[],org.
+	 * irods.jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
-	public void streamBytesToIRODSFile(final byte[] bytesToStream,
-			final IRODSFile irodsTargetFile) throws JargonException {
+	public void streamBytesToIRODSFile(final byte[] bytesToStream, final IRODSFile irodsTargetFile)
+			throws JargonException {
 
 		if (bytesToStream == null || bytesToStream.length == 0) {
 			throw new IllegalArgumentException("null or empty bytesToStream");
@@ -70,17 +69,16 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		log.info("streamBytesToIRODSFile(), irodsFile:{}", irodsTargetFile);
 		log.info("bytesToStream length:{}", bytesToStream.length);
 
-		OutputStream ifOs = getIRODSFileFactory()
-				.instanceIRODSFileOutputStream(irodsTargetFile,
-						OpenFlags.WRITE_TRUNCATE);
+		OutputStream ifOs = getIRODSFileFactory().instanceIRODSFileOutputStream(irodsTargetFile,
+				OpenFlags.WRITE_TRUNCATE);
+
 		InputStream bis = new ByteArrayInputStream(bytesToStream);
 
 		final ReadableByteChannel inputChannel = Channels.newChannel(bis);
 		final WritableByteChannel outputChannel = Channels.newChannel(ifOs);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
-					bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -102,10 +100,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	 * (java.io.InputStream, java.io.File, long, int)
 	 */
 	@Override
-	public TransferStatistics transferStreamToFileUsingIOStreams(
-			final InputStream inputStream, final File targetFile,
-			final long length, final int readBuffSize)
-			throws NoResourceDefinedException, JargonException {
+	public TransferStatistics transferStreamToFileUsingIOStreams(final InputStream inputStream, final File targetFile,
+			final long length, final int readBuffSize) throws NoResourceDefinedException, JargonException {
 
 		// FIXME: deprecate length, not needed
 
@@ -136,8 +132,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		try {
 
-			int outputBufferSize = getJargonProperties()
-					.getLocalFileOutputStreamBufferSize();
+			int outputBufferSize = getJargonProperties().getLocalFileOutputStreamBufferSize();
 
 			if (targetFile instanceof IRODSFile) {
 				log.info("target file is an iRODS file");
@@ -145,13 +140,10 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				if (getJargonProperties().isAllowPutGetResourceRedirects()) {
 					log.info("using transfer redirects, so check for stream re-routing");
 					fileOutputStream = getIRODSFileFactory()
-							.instanceIRODSFileOutputStreamWithRerouting(
-									(IRODSFile) targetFile);
+							.instanceIRODSFileOutputStreamWithRerouting((IRODSFile) targetFile);
 				} else {
 					log.info("not using transfer redirects, so do not do any stream re-routing");
-					fileOutputStream = getIRODSFileFactory()
-							.instanceIRODSFileOutputStream(
-									(IRODSFile) targetFile);
+					fileOutputStream = getIRODSFileFactory().instanceIRODSFileOutputStream((IRODSFile) targetFile);
 				}
 
 			} else {
@@ -164,8 +156,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				fileOutputStream = new FileOutputStream(targetFile);
 			}
 
-			log.debug("output buffer size for file output stream in copy:{}",
-					outputBufferSize);
+			log.debug("output buffer size for file output stream in copy:{}", outputBufferSize);
 
 			if (outputBufferSize == -1) {
 				log.info("no buffer on file output stream to local file");
@@ -174,23 +165,17 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 				log.info("default buffered io to file output stream to local file");
 				fileOutputStream = new BufferedOutputStream(fileOutputStream);
 			} else {
-				log.info(
-						"buffer io to file output stream to local file with size of: {}",
-						outputBufferSize);
-				fileOutputStream = new BufferedOutputStream(fileOutputStream,
-						outputBufferSize);
+				log.info("buffer io to file output stream to local file with size of: {}", outputBufferSize);
+				fileOutputStream = new BufferedOutputStream(fileOutputStream, outputBufferSize);
 			}
 
 			int myBuffSize = readBuffSize;
 			if (myBuffSize <= 0) {
-				myBuffSize = getJargonProperties()
-						.getInputToOutputCopyBufferByteSize();
+				myBuffSize = getJargonProperties().getInputToOutputCopyBufferByteSize();
 			}
 
 			if (myBuffSize <= 0) {
-				throw new JargonException(
-						"invalid stream to stream copy buffer size of {}",
-						myBuffSize);
+				throw new JargonException("invalid stream to stream copy buffer size of {}", myBuffSize);
 			}
 
 			log.debug("using {} as copy buffer size", myBuffSize);
@@ -212,8 +197,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		} catch (FileNotFoundException e) {
 			log.error("File not found exception copying buffers", e);
-			throw new JargonException(
-					"file not found exception copying buffers", e);
+			throw new JargonException("file not found exception copying buffers", e);
 		} catch (IOException e) {
 			log.error("io exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -225,7 +209,9 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			}
 
 			try {
-				fileOutputStream.close();
+				if (fileOutputStream != null) {
+					fileOutputStream.close();
+				}
 			} catch (Exception e) {
 			}
 
@@ -243,8 +229,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		transferStatistics.setTotalBytes(length);
 
 		if (transferStatistics.getSeconds() > 0) {
-			transferStatistics.setKbPerSecond((int) (transferStatistics
-					.getTotalBytes() / seconds));
+			transferStatistics.setKbPerSecond((int) (transferStatistics.getTotalBytes() / seconds));
 		}
 
 		log.info("transfer stats:{}", transferStatistics);
@@ -261,9 +246,8 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	 * (java.io.InputStream, java.io.OutputStream)
 	 */
 	@Override
-	public TransferStatistics streamToStreamCopyUsingStandardIO(
-			final InputStream inputStream, final OutputStream outputStream)
-			throws JargonException {
+	public TransferStatistics streamToStreamCopyUsingStandardIO(final InputStream inputStream,
+			final OutputStream outputStream) throws JargonException {
 
 		log.info("streamToStreamCopyUsingStandardIO()");
 
@@ -295,8 +279,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 			myOutput = new BufferedOutputStream(outputStream);
 		}
 
-		final byte[] buffer = new byte[getJargonProperties()
-				.getInputToOutputCopyBufferByteSize()];
+		final byte[] buffer = new byte[getJargonProperties().getInputToOutputCopyBufferByteSize()];
 
 		log.info("buffer length for read/write will be:{}", buffer.length);
 
@@ -332,8 +315,7 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		transferStatistics.setTotalBytes(count);
 
 		if (transferStatistics.getSeconds() > 0) {
-			transferStatistics.setKbPerSecond((int) (transferStatistics
-					.getTotalBytes() / seconds));
+			transferStatistics.setKbPerSecond((int) (transferStatistics.getTotalBytes() / seconds));
 		}
 
 		log.info("transfer stats:{}", transferStatistics);
@@ -344,13 +326,12 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamToStreamCopy(java.io.
 	 * InputStream, java.io.OutputStream)
 	 */
 	@Override
-	public void streamToStreamCopy(final InputStream inputStream,
-			final OutputStream outputStream) throws JargonException {
+	public void streamToStreamCopy(final InputStream inputStream, final OutputStream outputStream)
+			throws JargonException {
 
 		if (inputStream == null) {
 			throw new IllegalArgumentException("null inputStream");
@@ -362,14 +343,11 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 
 		log.info("streamToStreamCopy()");
 
-		final ReadableByteChannel inputChannel = Channels
-				.newChannel(inputStream);
-		final WritableByteChannel outputChannel = Channels
-				.newChannel(outputStream);
+		final ReadableByteChannel inputChannel = Channels.newChannel(inputStream);
+		final WritableByteChannel outputChannel = Channels.newChannel(outputStream);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
-					bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -385,15 +363,16 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	}
 
 	/*
-	 * (non-Javadoc)
+	 * (non-Javadoc) <<<<<<< HEAD
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
-	 * jargon.core.pub.io.IRODSFile)
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
+	 * =======
+	 *
+	 * @see org.irods.jargon.core.pub.Stream2StreamAO#streamFileToByte(org.irods.
+	 * >>>>>>> origin/master jargon.core.pub.io.IRODSFile)
 	 */
 	@Override
-	public byte[] streamFileToByte(final IRODSFile irodsFile)
-			throws JargonException {
+	public byte[] streamFileToByte(final IRODSFile irodsFile) throws JargonException {
 
 		if (irodsFile == null) {
 			throw new IllegalArgumentException("null irodsTargetFile");
@@ -404,19 +383,16 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 		if (irodsFile.exists() && irodsFile.isFile()) {
 			log.info("verified as an existing data object");
 		} else {
-			throw new JargonException(
-					"cannot stream, does not exist or is not a file");
+			throw new JargonException("cannot stream, does not exist or is not a file");
 		}
 
-		InputStream is = getIRODSFileFactory().instanceIRODSFileInputStream(
-				irodsFile);
+		InputStream is = getIRODSFileFactory().instanceIRODSFileInputStream(irodsFile);
 		ByteArrayOutputStream bos = new ByteArrayOutputStream();
 		final ReadableByteChannel inputChannel = Channels.newChannel(is);
 		final WritableByteChannel outputChannel = Channels.newChannel(bos);
 		// copy the channels
 		try {
-			ChannelTools.fastChannelCopy(inputChannel, outputChannel,
-					bufferSize);
+			ChannelTools.fastChannelCopy(inputChannel, outputChannel, bufferSize);
 		} catch (IOException e) {
 			log.error("IO Exception copying buffers", e);
 			throw new JargonException("io exception copying buffers", e);
@@ -441,25 +417,22 @@ public class Stream2StreamAOImpl extends IRODSGenericAO implements
 	 * (java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void streamClasspathResourceToIRODSFile(final String resourcePath,
-			final String irodsFileAbsolutePath) throws JargonException {
+	public void streamClasspathResourceToIRODSFile(final String resourcePath, final String irodsFileAbsolutePath)
+			throws JargonException {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
 
 		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsFileAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsFileAbsolutePath");
 		}
 
-		IRODSFile irodsTarget = getIRODSFileFactory().instanceIRODSFile(
-				irodsFileAbsolutePath);
+		IRODSFile irodsTarget = getIRODSFileFactory().instanceIRODSFile(irodsFileAbsolutePath);
 		irodsTarget.getParentFile().mkdirs();
 		irodsTarget.delete();
 
-		InputStream inputStream = new BufferedInputStream(this.getClass()
-				.getResourceAsStream(resourcePath));
+		InputStream inputStream = new BufferedInputStream(this.getClass().getResourceAsStream(resourcePath));
 
 		IRODSFileOutputStream irodsFileOutputStream = getIRODSFileFactory()
 				.instanceIRODSFileOutputStream(irodsFileAbsolutePath);

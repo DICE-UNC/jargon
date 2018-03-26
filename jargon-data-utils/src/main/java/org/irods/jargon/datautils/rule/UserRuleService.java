@@ -24,7 +24,6 @@ public interface UserRuleService {
 	 *         empty if no rules are found
 	 * @throws JargonException
 	 */
-	List<UserRuleDefinition> listUserRulesInUserHomeDir()
-			throws JargonException;
+	List<UserRuleDefinition> listUserRulesInUserHomeDir() throws JargonException;
 
 }

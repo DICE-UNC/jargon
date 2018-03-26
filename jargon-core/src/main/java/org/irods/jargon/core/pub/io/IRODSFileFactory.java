@@ -9,7 +9,7 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * Defines the interface to a factory that can produce connected versions of
- * various <code>java.io.*</code> objects specific to iRODS.
+ * various {@code java.io.*} objects specific to iRODS.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -17,10 +17,10 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 public interface IRODSFileFactory {
 
 	/**
-	 * Create an instance of an <code>IRODSFile</code> by absolute path.
+	 * Create an instance of an {@code IRODSFile} by absolute path.
 	 *
 	 * @param path
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            or collection
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
@@ -32,7 +32,7 @@ public interface IRODSFileFactory {
 	 * format
 	 *
 	 * @param uri
-	 *            <code>URI</code> in iRODS specific format.
+	 *            {@code URI} in iRODS specific format.
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
 	 */
@@ -42,9 +42,9 @@ public interface IRODSFileFactory {
 	 * Creates an instance of an iRODS file by defining a parent and child path
 	 *
 	 * @param parent
-	 *            <code>String</code> with the absolute path to the parent
+	 *            {@code String} with the absolute path to the parent
 	 * @param child
-	 *            <code>String</code> with the relative path below the parent
+	 *            {@code String} with the relative path below the parent
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
 	 */
@@ -59,7 +59,7 @@ public interface IRODSFileFactory {
 	 *            {@link IRODSFile} that will be written to via the given
 	 *            stream.
 	 * @return {@link IRODSFileOutputStream} implementation of a
-	 *         <code>java.io.OutputStream</code>
+	 *         {@code java.io.OutputStream}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -70,7 +70,7 @@ public interface IRODSFileFactory {
 
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
-	 * iRODS file. This method takes an <code>OpenFlags</code> parameter that
+	 * iRODS file. This method takes an {@code OpenFlags} parameter that
 	 * dicates the open mode and file create mode. See {@link OpenFlags} for
 	 * details
 	 *
@@ -95,13 +95,13 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
 	 * iRODS file. This will default the open behavior to
-	 * <code>OpenFlags.WRITE</code>
+	 * {@code OpenFlags.WRITE}
 	 *
 	 * @param name
-	 *            <code>String</code> with and absolute path to the file that
+	 *            {@code String} with and absolute path to the file that
 	 *            will be written to via the given stream.
 	 * @return {@link IRODSFileOutputStream} implementation of a
-	 *         <code>java.io.OutputStream</code>
+	 *         {@code java.io.OutputStream}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -113,14 +113,14 @@ public interface IRODSFileFactory {
 	/**
 	 *
 	 * @param name
-	 *            <code>String</code> with and absolute path to the file that
+	 *            {@code String} with and absolute path to the file that
 	 *            will be written to via the given stream.
 	 * @param openFlags
 	 *            {@link OpenFlags} parameter that dicates open mode and
 	 *            automatic create behavior, as well as overwrite/truncation
 	 *            behavior
 	 * @return {@link IRODSFileOutputStream} implementation of a
-	 *         <code>java.io.OutputStream</code>
+	 *         {@code java.io.OutputStream}
 	 * @throws NoResourceDefinedException
 	 * @throws JargonException
 	 */
@@ -131,15 +131,15 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS output stream such that data can be written to the given
 	 * iRODS file.
-	 * <p/>
+	 * <p>
 	 * This particular method will inspect the target resource, as set in the
-	 * <code>irodsFile</code>, and potentially re-route the connection to that
+	 * {@code irodsFile}, and potentially re-route the connection to that
 	 * resource.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that is the target of the stream.
 	 * @return {@link IRODSFileOutputStream} that will write to the target
-	 *         <code>irodsFile</code>
+	 *         {@code irodsFile}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -167,10 +167,10 @@ public interface IRODSFileFactory {
 	 * iRODS file.
 	 *
 	 * @param name
-	 *            <code>String</code> with and absolute path to the file that
+	 *            {@code String} with and absolute path to the file that
 	 *            will be read to via the given stream.
 	 * @return {@link IRODSFileInputStream} implementation of a
-	 *         <code>java.io.InputStream</code>
+	 *         {@code java.io.InputStream}
 	 * @throws JargonException
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStream(String name)
@@ -179,25 +179,25 @@ public interface IRODSFileFactory {
 	/**
 	 * Creates an iRODS input stream such that data can be read to the given
 	 * iRODS file.
-	 * <p/>
+	 * <p>
 	 * Note that this method signature will do any necessary connection
 	 * re-routing based to a resource actually containing the file. If such
-	 * rerouting is done, the <code>InputStream</code> will be wrapped with a
+	 * rerouting is done, the {@code InputStream} will be wrapped with a
 	 * {@link SessionClosingIRODSFileInputStream} that will close the re-routed
 	 * connection when the stream is closed.
 	 *
 	 * @param irodsAbsolutePath
-	 *            <code>String</code> with and absolute path to the file that
+	 *            {@code String} with and absolute path to the file that
 	 *            will be read to via the given stream.
 	 * @return {@link IRODSFileInputStream} implementation of a
-	 *         <code>java.io.InputStream</code>
+	 *         {@code java.io.InputStream}
 	 * @throws JargonException
 	 */
 	IRODSFileInputStream instanceIRODSFileInputStreamWithRerouting(
 			String irodsAbsolutePath) throws JargonException;
 
 	/**
-	 * Create an IRODSRandomAccessFile given the <code>IRODSFileImpl</code>.
+	 * Create an IRODSRandomAccessFile given the {@code IRODSFileImpl}.
 	 * Note that this method will check if the file exists, and the file will be
 	 * created if it does not.
 	 *
@@ -219,7 +219,7 @@ public interface IRODSFileFactory {
 	 * does not.
 	 *
 	 * @param name
-	 *            <code>String</code> with the absolute path to the file.
+	 *            {@code String} with the absolute path to the file.
 	 * @return {@link IRODSRandomAccessFile}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
@@ -234,10 +234,10 @@ public interface IRODSFileFactory {
 	 * path
 	 *
 	 * @param name
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            that will be witten to.
 	 * @return {@link IRODSFileWriter} that is an iRODS specific implmementation
-	 *         of a <code>FileWriter</code>
+	 *         of a {@code FileWriter}
 	 * @throws NoResourceDefinedException
 	 *             if no storage resource is defined and no default rule is set
 	 *             up on iRODS
@@ -251,7 +251,7 @@ public interface IRODSFileFactory {
 	 * {@link org.irods.jargon.core.pub.io.IRODSFileReader}
 	 *
 	 * @param irodsFileAbsolutePath
-	 *            <code>String</code> containing the absolute path to the iRODS
+	 *            {@code String} containing the absolute path to the iRODS
 	 *            file to be read
 	 * @return {@link IRODSFileReader}
 	 * @throws JargonException
@@ -260,15 +260,15 @@ public interface IRODSFileFactory {
 			throws JargonException;
 
 	/**
-	 * Returns an iRODS file given a <code>File</code> as a parent, and a string
+	 * Returns an iRODS file given a {@code File} as a parent, and a string
 	 * which is the relative path underneath the parent file.
 	 *
 	 * @param parent
-	 *            <code>File</code> that describes the parent of the iRODS file.
+	 *            {@code File} that describes the parent of the iRODS file.
 	 *            Note that the parent will actually be an instance of
-	 *            <code>IRODSFile</code>
+	 *            {@code IRODSFile}
 	 * @param child
-	 *            <code>String</code> with the relative file path underneat the
+	 *            {@code String} with the relative file path underneat the
 	 *            given parent file.
 	 * @return {@link IRODSFile}
 	 * @throws JargonException
@@ -282,7 +282,7 @@ public interface IRODSFileFactory {
 	 * stream is closed.
 	 *
 	 * @param name
-	 *            <code>String</code> with the absolute path to the iRODS file
+	 *            {@code String} with the absolute path to the iRODS file
 	 *            that will be read and streamed.
 	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws JargonException
@@ -309,13 +309,13 @@ public interface IRODSFileFactory {
 	 * Create an instance of a {@link SessionClosingIRODSFileInputStream}. This
 	 * special input stream will close the underlying iRODS connection when the
 	 * stream is closed. This method provides the ability to add the
-	 * <code>fd</code> when the file is already opened.
+	 * {@code fd} when the file is already opened.
 	 *
 	 * @param file
-	 *            <code>File</code> with the absolute path to the iRODS file
+	 *            {@code File} with the absolute path to the iRODS file
 	 *            that will be read and streamed.
 	 * @param fd
-	 *            <code>int</code> with the file descriptor
+	 *            {@code int} with the file descriptor
 	 * @return {@link SessionClosingIRODSFileInputStream}
 	 * @throws JargonException
 	 */
@@ -345,7 +345,7 @@ public interface IRODSFileFactory {
 	 * not apply in highly customized iRODS instances.
 	 *
 	 * @param userName
-	 *            <code>String</code> with the userName that will be used for
+	 *            {@code String} with the userName that will be used for
 	 *            the home directory
 	 * @return {@link IRODSFile} that is the user home directory
 	 * @throws JargonException
@@ -360,7 +360,7 @@ public interface IRODSFileFactory {
 	 * for 'create if not exists'
 	 *
 	 * @param name
-	 *            <code>String</code> with the absolute path to the file.
+	 *            {@code String} with the absolute path to the file.
 	 * @param openFlags
 	 *            {@link OpenFlags} that defines how the file is to be opened
 	 *            (e.g. Read only versus Read/write)

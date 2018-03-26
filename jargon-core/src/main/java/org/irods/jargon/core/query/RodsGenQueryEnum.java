@@ -266,7 +266,7 @@ public enum RodsGenQueryEnum {
 	 * value. If there is no match, null will be returned.
 	 *
 	 * @param attribName
-	 *            <code>String</code> that contains the attibuteName to look up
+	 *            {@code String} that contains the attibuteName to look up
 	 * @return {@link org.irods.jargon.core.query.RodsGenQueryEnum
 	 *         RodsGenQueryEnum} that gives information about the query field
 	 * @throws JargonException

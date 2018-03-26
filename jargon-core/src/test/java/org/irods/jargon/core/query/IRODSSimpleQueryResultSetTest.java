@@ -2,7 +2,7 @@ package org.irods.jargon.core.query;
 
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.junit.Test;
 import org.mockito.Mockito;

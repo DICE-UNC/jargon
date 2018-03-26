@@ -47,8 +47,8 @@ public class TicketInp extends AbstractIRODSPackingInstruction {
 	 * a caller accomplishing a transfer when a ticket is provided.
 	 * 
 	 * @param ticketString
-	 *            <code>String</code> (required) with a valid ticket
-	 * @return <code>TicketInp</code> instance suitable for initializing a
+	 *            {@code String} (required) with a valid ticket
+	 * @return {@code TicketInp} instance suitable for initializing a
 	 *         ticket session
 	 */
 	public static TicketInp instanceForSetSessionWithTicket(

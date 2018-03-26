@@ -20,57 +20,91 @@ public final class IRODSRule {
 	private final List<IRODSRuleParameter> irodsRuleInputParameters;
 	private final List<IRODSRuleParameter> irodsRuleOutputParameters;
 	private final String ruleBody;
+	private final RuleInvocationConfiguration ruleInvocationConfiguration;
+
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("IRODSRule [");
+		if (ruleAsOriginalText != null) {
+			builder.append("ruleAsOriginalText=").append(ruleAsOriginalText).append(", ");
+		}
+		if (irodsRuleInputParameters != null) {
+			builder.append("irodsRuleInputParameters=")
+					.append(irodsRuleInputParameters.subList(0, Math.min(irodsRuleInputParameters.size(), maxLen)))
+					.append(", ");
+		}
+		if (irodsRuleOutputParameters != null) {
+			builder.append("irodsRuleOutputParameters=")
+					.append(irodsRuleOutputParameters.subList(0, Math.min(irodsRuleOutputParameters.size(), maxLen)))
+					.append(", ");
+		}
+		if (ruleBody != null) {
+			builder.append("ruleBody=").append(ruleBody).append(", ");
+		}
+		if (ruleInvocationConfiguration != null) {
+			builder.append("ruleInvocationConfiguration=").append(ruleInvocationConfiguration);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
 
 	/**
-	 * Return an immutable instance of an <code>IRODSRule</code>
+	 * Return an immutable instance of an {@code IRODSRule}
 	 *
 	 * @param ruleAsOriginalText
-	 *            <code>String</code> with the plain text version of the rule
+	 *            {@code String} with the plain text version of the rule
 	 * @param irodsRuleInputParameters
-	 *            <code>List<IRODSRuleParameter></code> containing the
-	 *            translated rule input parameters
+	 *            {@code List<IRODSRuleParameter>} containing the translated rule
+	 *            input parameters
 	 * @param irodsRuleOutputParameters
-	 *            <code>List<IRODSRuleParameter></code> containing the
-	 *            translated rule output parameters
+	 *            {@code List<IRODSRuleParameter>} containing the translated rule
+	 *            output parameters
 	 * @param ruleBody
-	 *            <code>String</code> containing the body of the rule
-	 * @return <code>IRODSRule</code> containing an object model of the rule.
+	 *            {@code String} containing the body of the rule
+	 * @param ruleInvocationConfiguration
+	 *            {@link RuleInvocationConfiguration} with information about the
+	 *            type of rule (rule language) involved
+	 * @return {@code IRODSRule} containing an object model of the rule.
 	 * @throws JargonException
 	 */
 	public static IRODSRule instance(final String ruleAsOriginalText,
 			final List<IRODSRuleParameter> irodsRuleInputParameters,
-			final List<IRODSRuleParameter> irodsRuleOutputParameters,
-			final String ruleBody) throws JargonException {
-		return new IRODSRule(ruleAsOriginalText, irodsRuleInputParameters,
-				irodsRuleOutputParameters, ruleBody);
+			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody,
+			final RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonException {
+		return new IRODSRule(ruleAsOriginalText, irodsRuleInputParameters, irodsRuleOutputParameters, ruleBody,
+				ruleInvocationConfiguration);
 	}
 
-	private IRODSRule(final String ruleAsOriginalText,
-			final List<IRODSRuleParameter> irodsRuleInputParameters,
-			final List<IRODSRuleParameter> irodsRuleOutputParameters,
-			final String ruleBody) throws JargonException {
+	private IRODSRule(final String ruleAsOriginalText, final List<IRODSRuleParameter> irodsRuleInputParameters,
+			final List<IRODSRuleParameter> irodsRuleOutputParameters, final String ruleBody,
+			RuleInvocationConfiguration ruleInvocationConfiguration) {
 		if (ruleAsOriginalText == null || ruleAsOriginalText.isEmpty()) {
-			throw new JargonException("null or empty ruleAsOriginalText");
+			throw new IllegalArgumentException("null or empty ruleAsOriginalText");
 		}
 
 		if (irodsRuleInputParameters == null) {
-			throw new JargonException("null irodsRuleInputParameters");
+			throw new IllegalArgumentException("null irodsRuleInputParameters");
 		}
 
 		if (irodsRuleOutputParameters == null) {
-			throw new JargonException("null irodsRuleOutputParameters");
+			throw new IllegalArgumentException("null irodsRuleOutputParameters");
 		}
 
 		if (ruleBody == null || ruleBody.isEmpty()) {
-			throw new JargonException("null or empty ruleBody");
+			throw new IllegalArgumentException("null or empty ruleBody");
+		}
+
+		if (ruleInvocationConfiguration == null) {
+			throw new IllegalArgumentException("null ruleInvocationConfiguration");
 		}
 
 		this.ruleAsOriginalText = ruleAsOriginalText;
-		this.irodsRuleInputParameters = Collections
-				.unmodifiableList(irodsRuleInputParameters);
-		this.irodsRuleOutputParameters = Collections
-				.unmodifiableList(irodsRuleOutputParameters);
+		this.irodsRuleInputParameters = Collections.unmodifiableList(irodsRuleInputParameters);
+		this.irodsRuleOutputParameters = Collections.unmodifiableList(irodsRuleOutputParameters);
 		this.ruleBody = ruleBody;
+		this.ruleInvocationConfiguration = ruleInvocationConfiguration;
 
 	}
 
@@ -88,6 +122,13 @@ public final class IRODSRule {
 
 	public String getRuleBody() {
 		return ruleBody;
+	}
+
+	/**
+	 * @return the ruleInvocationConfiguration
+	 */
+	public RuleInvocationConfiguration getRuleInvocationConfiguration() {
+		return ruleInvocationConfiguration;
 	}
 
 }

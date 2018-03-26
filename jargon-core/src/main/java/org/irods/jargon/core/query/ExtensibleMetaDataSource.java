@@ -22,7 +22,7 @@ public interface ExtensibleMetaDataSource {
 	 * @return {@link org.irods.jargon.core.query.ExtensibleMetaDataMapping
 	 *         ExtensibleMetaDataMapping}
 	 * @throws JargonException
-	 *             an <code>Exception</code> that wraps any underlying issue
+	 *             an {@code Exception} that wraps any underlying issue
 	 */
 	public ExtensibleMetaDataMapping generateExtensibleMetaDataMapping()
 			throws JargonException;

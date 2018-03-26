@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 
 /**
  * Helpful methods for parsing and dealing with IRODS URIs, also supports the
- * creation of <code>IRODSAccount</code> based on a given iRODS uri format
+ * creation of {@code IRODSAccount} based on a given iRODS uri format
  * (irods://).
  *
  * @author Mike Conway - DICE (www.irods.org)
@@ -25,14 +25,14 @@ public class IRODSUriUtils {
 	private static final String PATH_SEPARATOR = "/";
 
 	/**
-	 * Retrieves the user information from the <code>URI</code>.
+	 * Retrieves the user information from the {@code URI}.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
+	 *            {@link URI} in the {@code irods://} format
 	 * @return The user information if any is present, otherwise
-	 *         <code>null</code>.
+	 *         {@code null}.
 	 * @throws InvalidIRODSUriException
-	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             This is thrown when {@code irodsURI} is not an iRODS
 	 *             URI.
 	 */
 	public static IRODSUriUserInfo getUserInfo(final URI irodsURI)
@@ -44,16 +44,16 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Retrieve the iRODS user name from the <code>URI</code>, or
-	 * <code>null</code> if this componenet cannot be derived from the
-	 * <code>URI</code>
+	 * Retrieve the iRODS user name from the {@code URI}, or
+	 * {@code null} if this componenet cannot be derived from the
+	 * {@code URI}
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
+	 *            {@link URI} in the {@code irods://} format
 	 * @return {@link String} with the discovered iRODS user name, or
-	 *         <code>null</code> if the user name is not present.
+	 *         {@code null} if the user name is not present.
 	 * @throws InvalidIRODSUriException
-	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             This is thrown when {@code irodsURI} is not an iRODS
 	 *             URI.
 	 */
 	public static String getUserName(final URI irodsURI)
@@ -63,14 +63,14 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Get the zone (if available) from the <code>URI</code> in iRODS form.
+	 * Get the zone (if available) from the {@code URI} in iRODS form.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
-	 * @return {@link String} with the iRODS zone, or <code>null</code> if not
+	 *            {@link URI} in the {@code irods://} format
+	 * @return {@link String} with the iRODS zone, or {@code null} if not
 	 *         available.
 	 * @throws InvalidIRODSUriException
-	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             This is thrown when {@code irodsURI} is not an iRODS
 	 *             URI.
 	 */
 	public static String getZone(final URI irodsURI)
@@ -83,11 +83,11 @@ public class IRODSUriUtils {
 	 * Get the password (if available) from the {@link URI} in iRODS form.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
-	 * @return {@link String} with the iRODS password, or <code>null</code> if
+	 *            {@link URI} in the {@code irods://} format
+	 * @return {@link String} with the iRODS password, or {@code null} if
 	 *         not available.
 	 * @throws InvalidIRODSUriException
-	 *             This is thrown when <code>irodsURI</code> is not an iRODS
+	 *             This is thrown when {@code irodsURI} is not an iRODS
 	 *             URI.
 	 */
 	public static String getPassword(final URI irodsURI)
@@ -97,13 +97,13 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Retrieve the iRODS user name from the {@code URI}, or <code>null</code>
+	 * Retrieve the iRODS user name from the {@code URI}, or {@code null}
 	 * if this componenet cannot be derived from the {@code URI}.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
+	 *            {@link URI} in the {@code irods://} format
 	 * @return {@link String} with the discovered iRODS user name, or
-	 *         <code>null</code> if the user name is not present.
+	 *         {@code null} if the user name is not present.
 	 * @deprecated Use {@link IRODSUriUtils#getUserName(URI)} instead.
 	 */
 	@Deprecated
@@ -190,11 +190,11 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Get the password (if available) from the <code>URI</code> in iRODS form.
+	 * Get the password (if available) from the {@code URI} in iRODS form.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
-	 * @return <code>String</code> with the iRODS password, or <code>null</code>
+	 *            {@link URI} in the {@code irods://} format
+	 * @return {@code String} with the iRODS password, or {@code null}
 	 *         if not available.
 	 * @deprecated use {@link IRODSUriUtils#getPassword(URI)} instead.
 	 */
@@ -206,11 +206,11 @@ public class IRODSUriUtils {
 	}
 
 	/**
-	 * Get the zone (if available) from the <code>URI</code> in iRODS form.
+	 * Get the zone (if available) from the {@code URI} in iRODS form.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in the <code>irods://</code> format
-	 * @return <code>String</code> with the iRODS zone, or <code>null</code> if
+	 *            {@link URI} in the {@code irods://} format
+	 * @return {@code String} with the iRODS zone, or {@code null} if
 	 *         not available.
 	 * @deprecated use {@link IRODSUriUtils#getZone(URI)} instead.
 	 */
@@ -226,7 +226,7 @@ public class IRODSUriUtils {
 	 *
 	 * @param uri
 	 *            the URI
-	 * @return {@link String} with the host, or <code>null</code> if not
+	 * @return {@link String} with the host, or {@code null} if not
 	 *         available.
 	 */
 	public static String getHostFromURI(final URI uri) {
@@ -238,7 +238,7 @@ public class IRODSUriUtils {
 	 *
 	 * @param uri
 	 *            the URI
-	 * @return <code>int</code> with the port.
+	 * @return {@code int} with the port.
 	 */
 	public static int getPortFromURI(final URI uri) {
 		return uri.getPort();
@@ -259,7 +259,7 @@ public class IRODSUriUtils {
 	 * Build an {@link IRODSAccount} from the {@link URI} in iRODS format.
 	 *
 	 * @param irodsURI
-	 *            {@link URI} in <code>irods://</code> form
+	 *            {@link URI} in {@code irods://} form
 	 * @return {@link IRODSAccount} based on the URI information
 	 * @throws JargonException
 	 *             if the account cannot be built from the information in the
@@ -293,7 +293,7 @@ public class IRODSUriUtils {
 	 *
 	 * @param irodsURI
 	 *            {@link URI} to check
-	 * @return <code>boolean</code> which is <code>true</code> if this is the
+	 * @return {@code boolean} which is {@code true} if this is the
 	 *         iRODS URI scheme.
 	 */
 	public static boolean isIRODSURIScheme(final URI irodsURI) {
@@ -506,11 +506,11 @@ public class IRODSUriUtils {
 }
 
 /**
- * Internal value class for parts of user info in the irods <code>URI</code>
+ * Internal value class for parts of user info in the irods {@code URI}
  * scheme
  *
  * @author Mike Conway - DICE (www.irods.org)
- * @deprecated Use <code>IRODSUriUserInfo</code>
+ * @deprecated Use {@code IRODSUriUserInfo}
  */
 @Deprecated
 class URIUserParts {

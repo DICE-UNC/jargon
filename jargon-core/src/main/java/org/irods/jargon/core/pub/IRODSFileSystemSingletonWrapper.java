@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 
 /**
  * Handy wrapper for {@link IRODSFileSystem} that makes it a singleton. The base
- * <code>IRODSFileSystem</code> doesn't impose this singleton pattern, so this
+ * {@code IRODSFileSystem} doesn't impose this singleton pattern, so this
  * separate bit of code does that for you if you think it fits your situation.
  *
  * @author Mike Conway - DICE

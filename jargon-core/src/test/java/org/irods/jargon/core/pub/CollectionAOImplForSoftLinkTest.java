@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.pub.domain.AvuData;
@@ -19,7 +19,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 
 /**
- * Tests handling of soft links in <code>CollectionAOImpl</code>
+ * Tests handling of soft links in {@code CollectionAOImpl}
  *
  * @author Mike Conway - DICE (www.irods.org)
  *

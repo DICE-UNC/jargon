@@ -40,7 +40,7 @@ public class CollectionAOHelper extends AOHelper {
 	/**
 	 * Create a set of selects for a collection, used in general query
 	 *
-	 * @return <code>String</code> with select statements for the domain object.
+	 * @return {@code String} with select statements for the domain object.
 	 */
 	public static String buildSelects() {
 		final StringBuilder query = new StringBuilder();
@@ -104,7 +104,7 @@ public class CollectionAOHelper extends AOHelper {
 	 * the "select" statement or any trailing delimiter, and is handy when you
 	 * want to tack a metadata selection onto the end of a query.
 	 *
-	 * @return <code>String</code> with metadata select fragment.
+	 * @return {@code String} with metadata select fragment.
 	 */
 	public static String buildMetadataSelects() {
 		final StringBuilder query = new StringBuilder();
@@ -117,7 +117,7 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Return a <code>Collection</code> domain object given a result row from a
+	 * Return a {@code Collection} domain object given a result row from a
 	 * query
 	 *
 	 * @param row
@@ -157,7 +157,7 @@ public class CollectionAOHelper extends AOHelper {
 	 * add to a query
 	 *
 	 * @param queryElement
-	 *            <codeStringBuilder</code> with the given AVU query in iquest
+	 *            {@code StringBuilder} with the given AVU query in iquest
 	 *            query form.
 	 */
 	public static StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
@@ -251,12 +251,12 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * for a result set row, create a
-	 * <code>CollectionAndDataObjectListingEntry</code>
+	 * {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
-	 *            <code>IRODSQueryResultRow</code> with raw data.
+	 *            {@code IRODSQueryResultRow} with raw data.
 	 * @param totalRecords
-	 *            <code>int</code> with the optional total records in the
+	 *            {@code int} with the optional total records in the
 	 *            database, not always available in the iCAT, this can be set to
 	 *            0 if not available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
@@ -286,12 +286,12 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * for a result set row from a query for data objects in a collection,
-	 * create a <code>CollectionAndDataObjectListingEntry</code>
+	 * create a {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
-	 *            <code>IRODSQueryResultRow</code> with raw data
+	 *            {@code IRODSQueryResultRow} with raw data
 	 * @param totalRecords
-	 *            <code>int</code> with the optional total records in the
+	 *            {@code int} with the optional total records in the
 	 *            database, not always available in the iCAT, this can be set to
 	 *            0 if not available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
@@ -342,10 +342,10 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * Build an inheritance query for the collection by appending the selects
-	 * and conditions to the <code>IRODSGenQueryBuilder</code> provided
+	 * and conditions to the {@code IRODSGenQueryBuilder} provided
 	 *
 	 * @param absolutePathToCollection
-	 *            <code>String</code> with the absolute path to the iRODS
+	 *            {@code String} with the absolute path to the iRODS
 	 *            collection for which the permission bit will be queried
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder}

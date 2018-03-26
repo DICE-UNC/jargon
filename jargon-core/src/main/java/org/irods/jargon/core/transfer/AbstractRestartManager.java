@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Abstract superclass for a manager of file restarts. This allows in-memory,
  * file based, and other variants to maintain long file restart information.
- * <p/>
+ * <p>
  * This manager serves as a repository of file restart info and a place to
  * update that information, maintaining a representation of
  * {@link FileRestartInfo} for a given path
@@ -27,7 +27,7 @@ public abstract class AbstractRestartManager {
 	 *
 	 * @param fileRestartInfoIdentifier
 	 * @param localFilePath
-	 *            <code>String</code> with the local file name
+	 *            {@code String} with the local file name
 	 * @return {@link FileRestartInfo}
 	 * @throws FileRestartManagementException
 	 */
@@ -85,7 +85,7 @@ public abstract class AbstractRestartManager {
 
 	/**
 	 * Method to properly increment the restart count, allowing an
-	 * implementation to do synchronization. <code>null</code> is returned if no
+	 * implementation to do synchronization. {@code null} is returned if no
 	 * restart info is found.
 	 *
 	 * @param fileRestartInfo
@@ -106,9 +106,9 @@ public abstract class AbstractRestartManager {
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
 	 * @param threadNumber
-	 *            <code>int</code> with the thread number
+	 *            {@code int} with the thread number
 	 * @param length
-	 *            <code>long</code> with the length to add to the segment
+	 *            {@code long} with the length to add to the segment
 	 * @throws FileRestartManagementException
 	 */
 	public void updateLengthForSegment(
@@ -157,9 +157,9 @@ public abstract class AbstractRestartManager {
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier}
 	 * @param threadNumber
-	 *            <code>int</code> with the thread number
+	 *            {@code int} with the thread number
 	 * @param offset
-	 *            <code>long</code> with the length to add to the segment
+	 *            {@code long} with the length to add to the segment
 	 * @throws FileRestartManagementException
 	 */
 	public void updateOffsetForSegment(
@@ -221,7 +221,7 @@ public abstract class AbstractRestartManager {
 	 * @param fileRestartInfoIdentifier
 	 *            {@link FileRestartInfoIdentifier} that is the key (oper type,
 	 *            account info, path)
-	 * @return {@link FileRestartInfo} that matches the key or <code>null</code>
+	 * @return {@link FileRestartInfo} that matches the key or {@code null}
 	 *         if no match
 	 * @throws FileRestartManagementException
 	 *

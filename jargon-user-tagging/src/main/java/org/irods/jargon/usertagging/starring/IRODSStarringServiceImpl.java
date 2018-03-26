@@ -37,11 +37,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  * 
  */
-public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
-		implements IRODSStarringService {
+public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService implements IRODSStarringService {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(IRODSStarringServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(IRODSStarringServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
@@ -49,8 +47,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that describes the iRODS server and user
 	 */
-	public IRODSStarringServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public IRODSStarringServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
@@ -62,15 +59,13 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * findStarredForAbsolutePath(java.lang.String)
 	 */
 	@Override
-	public IRODSStarredFileOrCollection findStarredForAbsolutePath(
-			final String irodsAbsolutePath) throws FileNotFoundException,
-			JargonException {
+	public IRODSStarredFileOrCollection findStarredForAbsolutePath(final String irodsAbsolutePath)
+			throws FileNotFoundException, JargonException {
 
 		log.info("findStarredForAbsolutePath");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("absolute path:{}", irodsAbsolutePath);
@@ -79,8 +74,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIrodsAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIrodsAccount());
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath);
 
 		return findStarredGivenObjStat(irodsAbsolutePath, objStat);
 	}
@@ -92,15 +86,13 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * starFileOrCollection(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void starFileOrCollection(final String irodsAbsolutePath,
-			final String description) throws FileNotFoundException,
-			JargonException {
+	public void starFileOrCollection(final String irodsAbsolutePath, final String description)
+			throws FileNotFoundException, JargonException {
 
 		log.info("starFileOrCollection()");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		if (description == null) {
@@ -128,20 +120,18 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		 * If I find a starred folder already, then update the AVU data, which
 		 * will just be the description, otherwise add one.
 		 */
-		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(
-				irodsAbsolutePath, objStat);
+		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(irodsAbsolutePath, objStat);
 
 		log.info("no starring already, so add...");
-		AvuData avuData = AvuData.instance(myDescr, getIrodsAccount()
-				.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(myDescr, getIrodsAccount().getUserName(),
+				UserTaggingConstants.STAR_AVU_UNIT);
 
 		if (irodsStarredFileOrCollection == null) {
 			log.info("this is an add");
 			addMetadataForStarring(irodsAbsolutePath, objStat, avuData);
 		} else {
 			log.info("starred data found, so update description");
-			modifyMetadataForStarringGivenCurrent(irodsStarredFileOrCollection,
-					irodsAbsolutePath, objStat, myDescr);
+			modifyMetadataForStarringGivenCurrent(irodsStarredFileOrCollection, irodsAbsolutePath, objStat, myDescr);
 		}
 
 		log.info("updated");
@@ -155,14 +145,12 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * unstarFileOrCollection(java.lang.String)
 	 */
 	@Override
-	public void unstarFileOrCollection(final String irodsAbsolutePath)
-			throws FileNotFoundException, JargonException {
+	public void unstarFileOrCollection(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("unstarFileOrCollection()");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
@@ -173,28 +161,23 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 		 * If I find a starred folder already, then update the AVU data, which
 		 * will just be the description, otherwise add one.
 		 */
-		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(
-				irodsAbsolutePath, objStat);
+		IRODSStarredFileOrCollection irodsStarredFileOrCollection = findStarredGivenObjStat(irodsAbsolutePath, objStat);
 
 		if (irodsStarredFileOrCollection == null) {
 			log.info("no star found for path, treat as successful delete");
 			return;
 		}
 
-		AvuData avuData = AvuData.instance(
-				irodsStarredFileOrCollection.getDescription(),
-				getIrodsAccount().getUserName(),
-				UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsStarredFileOrCollection.getDescription(),
+				getIrodsAccount().getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 
 		log.info("deleting AVU:{}", avuData);
 
 		if (objStat.isSomeTypeOfCollection()) {
-			CollectionAO collectionAO = getIrodsAccessObjectFactory()
-					.getCollectionAO(getIrodsAccount());
+			CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
 			collectionAO.deleteAVUMetadata(irodsAbsolutePath, avuData);
 		} else {
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 			dataObjectAO.deleteAVUMetadata(irodsAbsolutePath, avuData);
 		}
 
@@ -209,28 +192,24 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * listStarredCollections(int)
 	 */
 	@Override
-	public List<IRODSStarredFileOrCollection> listStarredCollections(
-			final int pagingOffset) throws JargonException {
+	public List<IRODSStarredFileOrCollection> listStarredCollections(final int pagingOffset) throws JargonException {
 
 		log.info("listStarredCollections()");
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<>();
 
 		// Do collections, then do files
 
 		log.info("querying metadata as a collection to look for starred");
-		CollectionAO collectionAO = getIrodsAccessObjectFactory()
-				.getCollectionAO(getIrodsAccount());
+		CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
 		try {
-			List<MetaDataAndDomainData> metadata = collectionAO
-					.findMetadataValuesByMetadataQuery(avuQueryElements);
+			List<MetaDataAndDomainData> metadata = collectionAO.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
-				irodsStarredFiles
-						.add(transformMetadataValueToStarValue(metadataAndDomainData));
+				irodsStarredFiles.add(transformMetadataValueToStarValue(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -248,27 +227,23 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * listStarredDataObjects(int)
 	 */
 	@Override
-	public List<IRODSStarredFileOrCollection> listStarredDataObjects(
-			final int pagingOffset) throws JargonException {
+	public List<IRODSStarredFileOrCollection> listStarredDataObjects(final int pagingOffset) throws JargonException {
 
 		log.info("listStarredDataObjects()");
 
 		List<AVUQueryElement> avuQueryElements = buildAVUQueryForStarred();
 
-		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<IRODSStarredFileOrCollection>();
+		List<IRODSStarredFileOrCollection> irodsStarredFiles = new ArrayList<>();
 
 		// Do collections, then do files
 		log.info("querying metadata as a data object to look for starred");
-		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory()
-				.getDataObjectAO(getIrodsAccount());
+		DataObjectAO dataObjectAO = getIrodsAccessObjectFactory().getDataObjectAO(getIrodsAccount());
 		try {
-			List<MetaDataAndDomainData> metadata = dataObjectAO
-					.findMetadataValuesByMetadataQuery(avuQueryElements);
+			List<MetaDataAndDomainData> metadata = dataObjectAO.findMetadataValuesByMetadataQuery(avuQueryElements);
 
 			for (MetaDataAndDomainData metadataAndDomainData : metadata) {
 				log.debug("adding starred file:{}", metadataAndDomainData);
-				irodsStarredFiles
-						.add(transformMetadataValueToStarValue(metadataAndDomainData));
+				irodsStarredFiles.add(transformMetadataValueToStarValue(metadataAndDomainData));
 			}
 
 		} catch (JargonQueryException e) {
@@ -283,16 +258,13 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * @return
 	 * @throws JargonException
 	 */
-	private List<AVUQueryElement> buildAVUQueryForStarred()
-			throws JargonException {
-		List<AVUQueryElement> avuQueryElements = new ArrayList<AVUQueryElement>();
+	private List<AVUQueryElement> buildAVUQueryForStarred() throws JargonException {
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
 		try {
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.UNITS, QueryConditionOperators.EQUAL,
-					UserTaggingConstants.STAR_AVU_UNIT));
-			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.VALUE, QueryConditionOperators.EQUAL,
-					getIrodsAccount().getUserName()));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, UserTaggingConstants.STAR_AVU_UNIT));
+			avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE,
+					QueryConditionOperators.EQUAL, getIrodsAccount().getUserName()));
 		} catch (JargonQueryException e) {
 			log.error("error on metadata query, rethrow as JargonException", e);
 			throw new JargonException(e);
@@ -309,33 +281,25 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * @param irodsAbsolutePath
 	 * @param objStat
 	 */
-	private void modifyMetadataForStarringGivenCurrent(
-			final IRODSStarredFileOrCollection irodsStarredFileOrCollection,
-			final String irodsAbsolutePath, final ObjStat objStat,
-			final String description) throws JargonException {
+	private void modifyMetadataForStarringGivenCurrent(final IRODSStarredFileOrCollection irodsStarredFileOrCollection,
+			final String irodsAbsolutePath, final ObjStat objStat, final String description) throws JargonException {
 
 		// construct the 'prior AVU'
 
-		AvuData avuData = AvuData.instance(
-				irodsStarredFileOrCollection.getDescription(),
-				getIrodsAccount().getUserName(),
-				UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData avuData = AvuData.instance(irodsStarredFileOrCollection.getDescription(),
+				getIrodsAccount().getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
 
-		AvuData newAvuData = AvuData.instance(description, getIrodsAccount()
-				.getUserName(), UserTaggingConstants.STAR_AVU_UNIT);
+		AvuData newAvuData = AvuData.instance(description, getIrodsAccount().getUserName(),
+				UserTaggingConstants.STAR_AVU_UNIT);
 
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("modifying metadata for collection");
-			CollectionAO collectionAO = getIrodsAccessObjectFactory()
-					.getCollectionAO(getIrodsAccount());
-			collectionAO.modifyAVUMetadata(irodsAbsolutePath, avuData,
-					newAvuData);
+			CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
+			collectionAO.modifyAVUMetadata(irodsAbsolutePath, avuData, newAvuData);
 		} else {
 			log.info("modifying metadata for data object");
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
-			dataObjectAO.modifyAVUMetadata(irodsAbsolutePath, avuData,
-					newAvuData);
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+			dataObjectAO.modifyAVUMetadata(irodsAbsolutePath, avuData, newAvuData);
 		}
 
 		log.info("modified");
@@ -349,17 +313,13 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * @throws DataNotFoundException
 	 * @throws DuplicateDataException
 	 */
-	private void addMetadataForStarring(final String irodsAbsolutePath,
-			final ObjStat objStat, final AvuData avuData)
-			throws JargonException, DataNotFoundException,
-			DuplicateDataException {
+	private void addMetadataForStarring(final String irodsAbsolutePath, final ObjStat objStat, final AvuData avuData)
+			throws JargonException, DataNotFoundException, DuplicateDataException {
 		if (objStat.isSomeTypeOfCollection()) {
-			CollectionAO collectionAO = getIrodsAccessObjectFactory()
-					.getCollectionAO(getIrodsAccount());
+			CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
 			collectionAO.addAVUMetadata(irodsAbsolutePath, avuData);
 		} else {
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
 			dataObjectAO.addAVUMetadata(irodsAbsolutePath, avuData);
 		}
 	}
@@ -375,8 +335,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 */
 
 	private IRODSStarredFileOrCollection transformMetadataValueToStarValue(
-			final MetaDataAndDomainData metadataAndDomainData)
-			throws JargonException {
+			final MetaDataAndDomainData metadataAndDomainData) throws JargonException {
 
 		log.info("transformMetadataValueToStarValue()");
 
@@ -386,25 +345,19 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		log.info("metadataAndDomainData:{}", metadataAndDomainData);
 
-		if (!metadataAndDomainData.getAvuUnit().equals(
-				UserTaggingConstants.STAR_AVU_UNIT)) {
+		if (!metadataAndDomainData.getAvuUnit().equals(UserTaggingConstants.STAR_AVU_UNIT)) {
 			throw new IllegalArgumentException("metadata is not a starred item");
 		}
 
 		IRODSStarredFileOrCollection irodsStarredFileOrCollection = new IRODSStarredFileOrCollection(
-				metadataAndDomainData.getMetadataDomain(),
-				metadataAndDomainData.getDomainObjectUniqueName(),
-				metadataAndDomainData.getAvuAttribute(),
-				metadataAndDomainData.getAvuValue(),
-				metadataAndDomainData.getSize(),
-				metadataAndDomainData.getCreatedAt(),
+				metadataAndDomainData.getMetadataDomain(), metadataAndDomainData.getDomainObjectUniqueName(),
+				metadataAndDomainData.getAvuAttribute(), metadataAndDomainData.getAvuValue(),
+				metadataAndDomainData.getSize(), metadataAndDomainData.getCreatedAt(),
 				metadataAndDomainData.getModifiedAt());
 
 		irodsStarredFileOrCollection.setCount(metadataAndDomainData.getCount());
-		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData
-				.isLastResult());
-		log.debug("irodsStarredFileOrCollection:{}",
-				irodsStarredFileOrCollection);
+		irodsStarredFileOrCollection.setLastResult(metadataAndDomainData.isLastResult());
+		log.debug("irodsStarredFileOrCollection:{}", irodsStarredFileOrCollection);
 		return irodsStarredFileOrCollection;
 
 	}
@@ -415,8 +368,7 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 	 * @return
 	 * @throws JargonException
 	 */
-	private IRODSStarredFileOrCollection findStarredGivenObjStat(
-			final String irodsAbsolutePath, final ObjStat objStat)
+	private IRODSStarredFileOrCollection findStarredGivenObjStat(final String irodsAbsolutePath, final ObjStat objStat)
 			throws JargonException {
 
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
@@ -427,26 +379,21 @@ public class IRODSStarringServiceImpl extends AbstractIRODSTaggingService
 
 		if (objStat.isSomeTypeOfCollection()) {
 			log.info("querying metadata as a collection to look for starred");
-			CollectionAO collectionAO = getIrodsAccessObjectFactory()
-					.getCollectionAO(getIrodsAccount());
+			CollectionAO collectionAO = getIrodsAccessObjectFactory().getCollectionAO(getIrodsAccount());
 			try {
-				queryResults = collectionAO
-						.findMetadataValuesByMetadataQueryForCollection(
-								avuQueryElements, irodsAbsolutePath);
+				queryResults = collectionAO.findMetadataValuesByMetadataQueryForCollection(avuQueryElements,
+						irodsAbsolutePath);
 			} catch (JargonQueryException e) {
 				throw new JargonException("error querying for metadata", e);
 			}
 		} else {
 			log.info("querying metadata as a data object to look for starred");
-			DataObjectAO dataObjectAO = irodsAccessObjectFactory
-					.getDataObjectAO(irodsAccount);
-			IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(
-					irodsAccount).instanceIRODSFile(irodsAbsolutePath);
+			DataObjectAO dataObjectAO = irodsAccessObjectFactory.getDataObjectAO(irodsAccount);
+			IRODSFile dataFile = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+					.instanceIRODSFile(irodsAbsolutePath);
 			try {
-				queryResults = dataObjectAO
-						.findMetadataValuesForDataObjectUsingAVUQuery(
-								avuQueryElements, dataFile.getParent(),
-								dataFile.getName());
+				queryResults = dataObjectAO.findMetadataValuesForDataObjectUsingAVUQuery(avuQueryElements,
+						dataFile.getParent(), dataFile.getName());
 			} catch (JargonQueryException e) {
 				throw new JargonException("error querying for metadata", e);
 			}

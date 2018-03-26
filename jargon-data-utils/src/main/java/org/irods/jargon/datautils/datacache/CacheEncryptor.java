@@ -105,7 +105,7 @@ public class CacheEncryptor {
 	 *
 	 * @param str
 	 *            String to be encrypted
-	 * @return <code>String</code> Encrypted version of the provided String
+	 * @return {@code String} Encrypted version of the provided String
 	 */
 	public String encrypt(final String str) throws JargonException {
 		try {
@@ -130,7 +130,7 @@ public class CacheEncryptor {
 	 *
 	 * @param str
 	 *            Encrypted String to be decrypted
-	 * @return <code>String</code> Decrypted version of the provided String
+	 * @return {@code String} Decrypted version of the provided String
 	 */
 	public String decrypt(final String str) throws JargonException {
 

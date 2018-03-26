@@ -5,7 +5,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.packinstr.TransferOptions.ForceOption;
@@ -27,7 +27,7 @@ import org.junit.Test;
 /**
  * Testing for gen query across zones, requires a two-zone setup per the
  * fedTestSetup.txt file in the test-scripts directory.
- * <p/>
+ * <p>
  * If the testing property for federated zone testing is not configured, these
  * tests will be bypassed
  *

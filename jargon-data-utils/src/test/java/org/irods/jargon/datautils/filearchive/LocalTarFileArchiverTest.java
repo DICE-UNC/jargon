@@ -3,7 +3,7 @@ package org.irods.jargon.datautils.filearchive;
 import java.io.File;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.JargonProperties;
 import org.irods.jargon.core.connection.SettableJargonProperties;

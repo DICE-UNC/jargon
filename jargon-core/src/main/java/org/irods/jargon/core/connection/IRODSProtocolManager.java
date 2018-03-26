@@ -9,7 +9,7 @@ public abstract class IRODSProtocolManager {
 
 	/**
 	 * Factory that will associate an iRODS authentication scheme handler with
-	 * an iRODS authentication scheme in an <code>IRODSAccount</code> when
+	 * an iRODS authentication scheme in an {@code IRODSAccount} when
 	 * logging in.
 	 */
 	private AuthenticationFactory authenticationFactory = new AuthenticationFactoryImpl();
@@ -29,7 +29,7 @@ public abstract class IRODSProtocolManager {
 	 * demand
 	 *
 	 * @return {@link AuthenticationFactory} that will create objects that can
-	 *         authenticate <code>iRODSAccount</code>s
+	 *         authenticate {@code iRODSAccount}s
 	 */
 	AuthenticationFactory getAuthenticationFactory() {
 		return authenticationFactory;
@@ -37,11 +37,11 @@ public abstract class IRODSProtocolManager {
 
 	/**
 	 * Inject a factory that will be used to authentication
-	 * <code>IRODSAccount</code>s when a new connection needs to be made
+	 * {@code IRODSAccount}s when a new connection needs to be made
 	 *
 	 * @param authenticationFactory
 	 *            {@link AuthenticationFactory} that will create objects that
-	 *            can authenticate <code>iRODSAccount</code>s
+	 *            can authenticate {@code iRODSAccount}s
 	 */
 	public void setAuthenticationFactory(final AuthenticationFactory authenticationFactory) {
 		if (authenticationFactory == null) {
@@ -55,12 +55,12 @@ public abstract class IRODSProtocolManager {
 	 * This may be created new, cached from previous connection by the same
 	 * user, or from a pool.
 	 *
-	 * <p/>
+	 * <p>
 	 * Note that this abstract class provides a protected method dedicated to
 	 * creating a fresh protocol layer when this protocol is not originating
 	 * from a pool or cache when invoked. Other variants will just create a new
 	 * protocol layer each time it is asked.
-	 * <p/>
+	 * <p>
 	 * This methods is typically not used by clients of this API. Instead, use
 	 * the methods in {@link IRODSSession} to manage the connection life cycle.
 	 * An exception would be a situation where one is implementing a custom pool
@@ -88,7 +88,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * Called by a client that no longer needs the connection to iRODS. This
 	 * signals a normal close from the higher level API. The
-	 * <code>IRODSProtocolManager</code> can then decide how to treat a normally
+	 * {@code IRODSProtocolManager} can then decide how to treat a normally
 	 * returned connection. This can either be shut down, returned to a cache or
 	 * pool, or any other sort of custom behavior.
 	 *
@@ -142,7 +142,7 @@ public abstract class IRODSProtocolManager {
 	/**
 	 * Abandon a connection to iRODS for some error by forcefully shutting it
 	 * down.
-	 * <p/>
+	 * <p>
 	 * This is called by the {@link IRODSSession} when a signal has been sent
 	 * that it longer needs the connection, and wishes to signal that there was
 	 * an error or other condition that gives reason to suspect that the agent

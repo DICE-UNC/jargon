@@ -3,7 +3,7 @@ package org.irods.jargon.core.pub.io;
 import java.io.StringReader;
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;

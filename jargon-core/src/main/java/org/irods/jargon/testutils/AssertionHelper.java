@@ -39,7 +39,7 @@ public class AssertionHelper {
 	private static final String ASSERTION_ERROR_MESSAGE = "assertion failed -- ";
 	private static final String FILE_DOES_NOT_EXIST_ERROR = "requested file does not exist!";
 
-	public AssertionHelper() throws TestingUtilsException {
+	public AssertionHelper() throws TestConfigurationException {
 		testingProperties = testingPropertiesHelper.getTestProperties();
 		scratchFileUtils = new ScratchFileUtils(testingProperties);
 	}
@@ -48,7 +48,7 @@ public class AssertionHelper {
 	 * Ensures that a scratch file does not exist given the path/file name
 	 *
 	 * @param filePathRelativeToScratch
-	 *            <code>String</code> that gives the relative file path under
+	 *            {@code String} that gives the relative file path under
 	 *            scratch, with no leading separator character
 	 * @throws IRODSTestAssertionException
 	 */
@@ -71,7 +71,7 @@ public class AssertionHelper {
 	 * Ensures that a file exists given the path/file name
 	 *
 	 * @param filePathRelativeToScratch
-	 *            <code>String</code> that gives the relative file path under
+	 *            {@code String} that gives the relative file path under
 	 *            scratch, with no leading separator character
 	 * @throws IRODSTestAssertionException
 	 */
@@ -94,10 +94,10 @@ public class AssertionHelper {
 	 * Ensures that the given file has the expected length
 	 *
 	 * @param filePathRelativeToScratch
-	 *            <code>String</code> that gives the relative file path under
+	 *            {@code String} that gives the relative file path under
 	 *            scratch, with no leading separator character
 	 * @param expectedLength
-	 *            <code>long</code> with length in KB of file that is expected
+	 *            {@code long} with length in KB of file that is expected
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalScratchFileLengthEquals(
@@ -126,10 +126,10 @@ public class AssertionHelper {
 	 * value
 	 *
 	 * @param filePathRelativeToScratch
-	 *            <code>String</code> that gives the relative file path under
+	 *            {@code String} that gives the relative file path under
 	 *            scratch, with no leading separator character
 	 * @param actualChecksum2
-	 *            <code>long</code> value with the anticipated MD5 checksum
+	 *            {@code long} value with the anticipated MD5 checksum
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalFileHasChecksum(
@@ -153,7 +153,7 @@ public class AssertionHelper {
 				throw new IRODSTestAssertionException(errorMessage.toString());
 
 			}
-		} catch (TestingUtilsException e) {
+		} catch (TestConfigurationException e) {
 			StringBuilder message = new StringBuilder();
 			message.append("error when computing checksum on file:");
 			message.append(filePathRelativeToScratch);
@@ -174,7 +174,7 @@ public class AssertionHelper {
 	 * Make sure that a file or collection is in IRODS
 	 *
 	 * @param absoluteIrodsPathUnderScratch
-	 *            <code>String</code> with absolute path (leading '/', or a path
+	 *            {@code String} with absolute path (leading '/', or a path
 	 *            and filename to look for
 	 * @throws IRODSTestAssertionException
 	 */
@@ -202,7 +202,7 @@ public class AssertionHelper {
 	 * Make sure that a file or collection is not in IRODS
 	 *
 	 * @param relativeIrodsPathUnderScratch
-	 *            <code>String</code> with absolute path
+	 *            {@code String} with absolute path
 	 *
 	 * @throws IRODSTestAssertionException
 	 *
@@ -233,9 +233,9 @@ public class AssertionHelper {
 	 * number of subdirectories/files.
 	 *
 	 * @param dir1
-	 *            <code>String<code> with the absolute path to a directory
+	 *            {@code String} with the absolute path to a directory
 	 * @param dir2
-	 *            <code>String<code> with
+	 *            {@code String} with
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertLocalDirectoriesHaveSameData(final String dir1,
@@ -299,9 +299,9 @@ public class AssertionHelper {
 	 * and name
 	 *
 	 * @param file1
-	 *            <code>File</code> with a file or directory
+	 *            {@code File} with a file or directory
 	 * @param file2
-	 *            <code>File<code> with a file or directory
+	 *            {@code File} with a file or directory
 	 * @throws IRODSTestAssertionException
 	 */
 	public void assertTwoFilesAreEqualByRecursiveTreeComparison(

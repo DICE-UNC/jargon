@@ -50,11 +50,11 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * seek operation
 	 *
 	 * @param offset
-	 *            <code>long</code> with the offset into the file to seek to.
+	 *            {@code long} with the offset into the file to seek to.
 	 * @param fileDescriptor
-	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 *            {@code int} that iRODS assigns to the file when opening.
 	 * @param whence
-	 *            <code>int</code> with the proper seek type (see SEEK_
+	 *            {@code int} with the proper seek type (see SEEK_
 	 *            constants in this class)
 	 * @return an instance of the packing instruction ready to send to iRODS.
 	 * @throws JargonException
@@ -95,7 +95,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	/**
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 *            {@code int} that iRODS assigns to the file when opening.
 	 * @param length
 	 * @return {@link OpenedDataObjInp}
 	 */
@@ -111,7 +111,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * acPostProcForPut #93
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 *            {@code int} that iRODS assigns to the file when opening.
 	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileCloseWithPutOpr(
@@ -124,7 +124,7 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 	 * Instance for a close operation
 	 *
 	 * @param fileDescriptor
-	 *            <code>int</code> that iRODS assigns to the file when opening.
+	 *            {@code int} that iRODS assigns to the file when opening.
 	 * @return {@link OpenedDataObjInp}
 	 */
 	public static final OpenedDataObjInp instanceForFileClose(

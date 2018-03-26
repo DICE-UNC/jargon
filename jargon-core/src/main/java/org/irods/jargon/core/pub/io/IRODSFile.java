@@ -13,22 +13,22 @@ import org.irods.jargon.core.packinstr.DataObjInp.OpenFlags;
 
 /**
  * Interface followed by {@link org.irods.jargon.core.pub.io.IRODSFileImpl}. The
- * class <code>IRODSFileImpl</code> extends the <code>java.io.File</code> class.
- * This interface is available to allow easier testing and potentially other
+ * class {@code IRODSFileImpl} extends the {@code java.io.File} class. This
+ * interface is available to allow easier testing and potentially other
  * implementations.
- * <p/>
- * The <code>IRODSFile</code>, and the <code>IRODSFileImpl</code> implementation
- * class are meant to strictly follow the <code>java.io.File</code> interface,
- * with a minimum of iRODS-specific methods.
- * <p/>
- * The <code>org.irods.jargon.core.pub.io.</code> classes provide familiar file
+ * <p>
+ * The {@code IRODSFile}, and the {@code IRODSFileImpl} implementation class are
+ * meant to strictly follow the {@code java.io.File} interface, with a minimum
+ * of iRODS-specific methods.
+ * <p>
+ * The {@code org.irods.jargon.core.pub.io.} classes provide familiar file
  * operations. In older versions of Jargon, various iRODS operations were mixed
- * in with the <code>java.io.*</code> implementation classes, and these have
- * been refactored to a set of access objects found in the
- * <code>org.irods.jargon.core.pub.*</code> classes. There you will find
- * facilities to manipulate the metadata catalog entities, do AVU operations,
- * transfers of various sorts, queries, and other iRODS operations.
- * <p/>
+ * in with the {@code java.io.*} implementation classes, and these have been
+ * refactored to a set of access objects found in the
+ * {@code org.irods.jargon.core.pub.*} classes. There you will find facilities
+ * to manipulate the metadata catalog entities, do AVU operations, transfers of
+ * various sorts, queries, and other iRODS operations.
+ * <p>
  * This code handles soft linked files and collections as expected. You may
  * operate on canoncial paths or soft-linked paths.
  *
@@ -56,11 +56,11 @@ public interface IRODSFile {
 	boolean createNewFile() throws IOException;
 
 	/**
-	 * Delete the given iRODS file. Note that, by default, the data is moved to
-	 * the trash (no force option). Note that for a collection, the iRODS
-	 * collection is recursively deleted.
+	 * Delete the given iRODS file. Note that, by default, the data is moved to the
+	 * trash (no force option). Note that for a collection, the iRODS collection is
+	 * recursively deleted.
 	 *
-	 * @return <code>boolean<code> with the success of the delete operation.
+	 * @return {@code boolean} with the success of the delete operation.
 	 */
 	boolean delete();
 
@@ -119,44 +119,44 @@ public interface IRODSFile {
 	boolean mkdirs();
 
 	/**
-	 * Marks the file or directory named by this abstract pathname so that only
-	 * read operations are allowed. After invoking this method the file or
-	 * directory is guaranteed not to change until it is either deleted or
-	 * marked to allow write access. Whether or not a read-only file or
-	 * directory may be deleted depends upon the underlying system.
+	 * Marks the file or directory named by this abstract pathname so that only read
+	 * operations are allowed. After invoking this method the file or directory is
+	 * guaranteed not to change until it is either deleted or marked to allow write
+	 * access. Whether or not a read-only file or directory may be deleted depends
+	 * upon the underlying system.
 	 */
 	boolean setExecutable(boolean executable, boolean ownerOnly);
 
 	/**
-	 * Marks the file or directory named by this abstract pathname so that only
-	 * read operations are allowed. After invoking this method the file or
-	 * directory is guaranteed not to change until it is either deleted or
-	 * marked to allow write access. Whether or not a read-only file or
-	 * directory may be deleted depends upon the underlying system.
+	 * Marks the file or directory named by this abstract pathname so that only read
+	 * operations are allowed. After invoking this method the file or directory is
+	 * guaranteed not to change until it is either deleted or marked to allow write
+	 * access. Whether or not a read-only file or directory may be deleted depends
+	 * upon the underlying system.
 	 */
 	boolean setExecutable(boolean executable);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setLastModified(long time);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadable(boolean readable, boolean ownerOnly);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadable(boolean readable);
 
 	/**
 	 * This method is not implemented for IRODS, and will throw an
-	 * <code>UnsupportedOperationException</code> if called.
+	 * {@code UnsupportedOperationException} if called.
 	 */
 	boolean setReadOnly();
 
@@ -171,25 +171,23 @@ public interface IRODSFile {
 
 	/**
 	 * Get the resource (if set by the user) associated with the file. Note that
-	 * this does not inquire to the iCAT for the resource for this particular
-	 * file, instead, this is used by any Jargon methods that have
-	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
-	 * operate with.
+	 * this does not inquire to the iCAT for the resource for this particular file,
+	 * instead, this is used by any Jargon methods that have {@code IRODSFile} as a
+	 * paramenter to tell iRODS what resoruce to operate with.
 	 *
-	 * @return <code>String</code> with the resource name
+	 * @return {@code String} with the resource name
 	 * @throws JargonException
 	 */
 	String getResource() throws JargonException;
 
 	/**
 	 * Set the resource (if set by the user) associated with the file. Note that
-	 * this does not inquire to the iCAT for the resource for this particular
-	 * file, instead, this is used by any Jargon methods that have
-	 * <code>IRODSFile</code> as a paramenter to tell iRODS what resoruce to
-	 * operate with.
+	 * this does not inquire to the iCAT for the resource for this particular file,
+	 * instead, this is used by any Jargon methods that have {@code IRODSFile} as a
+	 * paramenter to tell iRODS what resoruce to operate with.
 	 *
 	 * @param resource
-	 *            <code>String</code> with the resource name
+	 *            {@code String} with the resource name
 	 */
 	void setResource(String resource);
 
@@ -203,19 +201,18 @@ public interface IRODSFile {
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read/write mode.
 	 *
-	 * @return <code>int</code> with the iRODS file descriptor.
+	 * @return {@code int} with the iRODS file descriptor.
 	 * @throws JargonException
 	 */
 	int open() throws JargonException;
 
 	/**
-	 * Open the iRODS file (obtaining a file descritor from iRODS). THis method
-	 * will open the file according to the provided flags
+	 * Open the iRODS file (obtaining a file descritor from iRODS). THis method will
+	 * open the file according to the provided flags
 	 *
 	 * @param openFlags
-	 *            {@link OpenFlags} enum value that will dictate the open
-	 *            behavior
-	 * @return <code>int</code> with the iRODS file descriptor value
+	 *            {@link OpenFlags} enum value that will dictate the open behavior
+	 * @return {@code int} with the iRODS file descriptor value
 	 * @throws JargonException
 	 */
 	int open(final OpenFlags openFlags) throws JargonException;
@@ -224,9 +221,9 @@ public interface IRODSFile {
 	 * Open the iRODS file (obtaining a file descriptor from iRODS). This method
 	 * will open the file in read-only mode.
 	 *
-	 * @return <code>int</code> with the irods file descriptor.
+	 * @return {@code int} with the irods file descriptor.
 	 * @throws JargonException
-	 * @deprecated use the <code>open(OpenFlags)</code method
+	 * @deprecated use the @{code open(OpenFlags)} method
 	 */
 	@Deprecated
 	int openReadOnly() throws JargonException;
@@ -235,35 +232,54 @@ public interface IRODSFile {
 
 	int compareTo(IRODSFile irodsFile2);
 
+	/**
+	 * Rename to a new target location
+	 * 
+	 * @param dest
+	 *            {@link IRODSFile} that is the target of the rename
+	 * @return <code>boolean</code> if successful
+	 * 
+	 */
 	boolean renameTo(IRODSFile dest);
 
 	/**
-	 * Delete the given file, and use the iRODS force option. File will not be
-	 * moved to trash, and metadata will be deleted. Note that if the given
-	 * iRODS file is a collection, the delete will be automatically recursive.
-	 * This particular method is not part of the standard
-	 * <code>java.io.File</code> contracts.
+	 * Rename to a new target location
+	 * 
+	 * @param dest
+	 *            {@link File} that is the target. This must be an {@link IRODSFile}
+	 *            and will be cast as such in the implementation, other types will
+	 *            cause an exception. This method conforms more closely to the
+	 *            {@link File} API.
+	 * @return <code>boolean</code> if successful
+	 */
+	boolean renameTo(File dest);
+
+	/**
+	 * Delete the given file, and use the iRODS force option. File will not be moved
+	 * to trash, and metadata will be deleted. Note that if the given iRODS file is
+	 * a collection, the delete will be automatically recursive. This particular
+	 * method is not part of the standard {@code java.io.File} contracts.
 	 *
-	 * @return <code>boolean</code> with success of operation.
+	 * @return {@code boolean} with success of operation.
 	 */
 	boolean deleteWithForceOption();
 
 	/**
-	 * Note: the caching behavior has been removed and deprecated, this method
-	 * can be removed and has no effect Reset cached data about the file
-	 * (exists, type, length) so it can be accessed again
+	 * Note: the caching behavior has been removed and deprecated, this method can
+	 * be removed and has no effect Reset cached data about the file (exists, type,
+	 * length) so it can be accessed again
 	 */
 	@Deprecated
 	void reset();
 
 	/**
 	 * Special form of close that can take a file descriptor to close. This has
-	 * special uses for narrow cases in Jargon, and should not typically be
-	 * used. In normal usage, the <code>IRODSFile</code> keeps track of its file
-	 * descriptor.
+	 * special uses for narrow cases in Jargon, and should not typically be used. In
+	 * normal usage, the {@code IRODSFile} keeps track of its file descriptor.
 	 *
 	 * @param fd
-	 *            <code>int<code> with the file descriptor associated with this file that should be closed in iRODS.
+	 *            {@code int} with the file descriptor associated with this file
+	 *            that should be closed in iRODS.
 	 * @throws JargonException
 	 */
 	void closeGivenDescriptor(int fd) throws JargonException;
@@ -271,22 +287,20 @@ public interface IRODSFile {
 	/**
 	 * Create a new file, and detect errors where no default storage resource is
 	 * available. This is an iRODS oriented variation on the
-	 * <code>java.io.File createNewFile()</code> method to handle cases where no
-	 * defautl storage resource is found
+	 * {@code java.io.File createNewFile()} method to handle cases where no defautl
+	 * storage resource is found
 	 *
-	 * @return <code>boolean</code> of <code>true</code> if the file could be
-	 *         created
+	 * @return {@code boolean} of {@code true} if the file could be created
 	 * @throws NoResourceDefinedException
-	 *             if no default storage resource is defined, and no default
-	 *             rule is installed in iRODS
+	 *             if no default storage resource is defined, and no default rule is
+	 *             installed in iRODS
 	 * @throws JargonException
 	 */
-	boolean createNewFileCheckNoResourceFound(OpenFlags openFlags)
-			throws NoResourceDefinedException, JargonException;
+	boolean createNewFileCheckNoResourceFound(OpenFlags openFlags) throws NoResourceDefinedException, JargonException;
 
 	/**
-	 * Handy method to return a file:// based URL from the iRODS file, instead
-	 * of the irods:// protocol format
+	 * Handy method to return a file:// based URL from the iRODS file, instead of
+	 * the irods:// protocol format
 	 *
 	 * @return {@link URL} in file:// format
 	 */

@@ -2,7 +2,7 @@ package org.irods.jargon.core.pub;
 
 import java.util.Properties;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.checksum.ChecksumValue;
 import org.irods.jargon.core.connection.DiscoveredServerPropertiesCache;

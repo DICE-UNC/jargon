@@ -12,6 +12,7 @@ import org.irods.jargon.core.exception.InvalidUserException;
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.exception.NoMoreRulesException;
 import org.irods.jargon.core.packinstr.GeneralAdminInp;
+import org.irods.jargon.core.packinstr.UserAdminInp;
 import org.irods.jargon.core.pub.aohelper.UserAOHelper;
 import org.irods.jargon.core.pub.aohelper.UserGroupAOHelper;
 import org.irods.jargon.core.pub.domain.User;
@@ -36,8 +37,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public final class UserGroupAOImpl extends IRODSGenericAO implements
-		UserGroupAO {
+public final class UserGroupAOImpl extends IRODSGenericAO implements UserGroupAO {
 
 	private final Logger log = LoggerFactory.getLogger(this.getClass());
 	private static final char COMMA = ',';
@@ -49,21 +49,18 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected UserGroupAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected UserGroupAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#addUserGroup(org.irods.jargon.core
+	 * @see org.irods.jargon.core.pub.UserGroupAO#addUserGroup(org.irods.jargon.core
 	 * .pub.domain.UserGroup)
 	 */
 	@Override
-	public void addUserGroup(final UserGroup userGroup)
-			throws DuplicateDataException, JargonException {
+	public void addUserGroup(final UserGroup userGroup) throws DuplicateDataException, JargonException {
 
 		log.info("addUserGroup()");
 
@@ -71,8 +68,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null userGroup");
 		}
 
-		if (userGroup.getUserGroupName() == null
-				|| userGroup.getUserGroupName().isEmpty()) {
+		if (userGroup.getUserGroupName() == null || userGroup.getUserGroupName().isEmpty()) {
 			throw new IllegalArgumentException("userGroup has no userGroupName");
 		}
 
@@ -82,29 +78,57 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		log.info("user group:{}", userGroup);
 
-		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForAddUserGroup(userGroup);
-		log.debug("executing admin PI");
+		try {
+			GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserGroup(userGroup);
+			log.debug("executing admin PI");
+			getIRODSProtocol().irodsFunction(adminPI);
+
+		} catch (NoMoreRulesException nmr) {
+			log.warn(
+					"no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
+			throw new DuplicateDataException("no more rules exception interpreted as duplicate user", nmr);
+		}
+	}
+
+	@Override
+	public void addUserGroupAsGroupAdmin(final UserGroup userGroup) throws DuplicateDataException, JargonException {
+
+		log.info("addUserGroupAsGroupAdmin()");
+
+		if (userGroup == null) {
+			throw new IllegalArgumentException("null userGroup");
+		}
+
+		if (userGroup.getUserGroupName() == null || userGroup.getUserGroupName().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no userGroupName");
+		}
+
+		if (userGroup.getZone() == null || userGroup.getZone().isEmpty()) {
+			throw new IllegalArgumentException("userGroup has no zone");
+		}
+
+		log.info("user group:{}", userGroup);
 
 		try {
+
+			UserAdminInp adminPI = UserAdminInp.instanceForAddUserGroup(userGroup);
+			log.debug("executing user admin PI");
 			getIRODSProtocol().irodsFunction(adminPI);
+
 		} catch (NoMoreRulesException nmr) {
-			log.warn("no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
-			throw new DuplicateDataException(
-					"no more rules exception interpreted as duplicate user",
-					nmr);
+			log.warn(
+					"no more rules exception will be treated as duplicate user to normalize behavior for pre-2.5 iRODS servers");
+			throw new DuplicateDataException("no more rules exception interpreted as duplicate user", nmr);
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(java.lang.String)
+	 * @see org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(java.lang.String)
 	 */
 	@Override
-	public void removeUserGroup(final String userGroupName)
-			throws JargonException {
+	public void removeUserGroup(final String userGroupName) throws JargonException {
 
 		log.info("removeUserGroup()");
 		if (userGroupName == null || userGroupName.isEmpty()) {
@@ -126,20 +150,17 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(org.irods.jargon
+	 * @see org.irods.jargon.core.pub.UserGroupAO#removeUserGroup(org.irods.jargon
 	 * .core.pub.domain.UserGroup)
 	 */
 	@Override
-	public void removeUserGroup(final UserGroup userGroup)
-			throws JargonException {
+	public void removeUserGroup(final UserGroup userGroup) throws JargonException {
 		log.info("removeUserGroup()");
 		if (userGroup == null) {
 			throw new IllegalArgumentException("null userGroup");
 		}
 
-		if (userGroup.getUserGroupName() == null
-				|| userGroup.getUserGroupName().isEmpty()) {
+		if (userGroup.getUserGroupName() == null || userGroup.getUserGroupName().isEmpty()) {
 			throw new IllegalArgumentException("userGroup has no userGroupName");
 		}
 
@@ -149,8 +170,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		log.info("user group:{}", userGroup);
 
-		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForRemoveUserGroup(userGroup);
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForRemoveUserGroup(userGroup);
 		log.debug("executing admin PI");
 
 		try {
@@ -205,8 +225,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
@@ -259,14 +278,13 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
 		}
 
-		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+		List<UserGroup> userGroups = new ArrayList<>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			userGroups.add(buildUserGroupFromResultSet(row));
@@ -279,12 +297,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findByName(java.lang.String)
+	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findByName(java.lang.String)
 	 */
 	@Override
-	public UserGroup findByName(final String userGroupName)
-			throws JargonException {
+	public UserGroup findByName(final String userGroupName) throws JargonException {
 
 		if (userGroupName == null || userGroupName.length() == 0) {
 			throw new JargonException("null or missing userGroupName");
@@ -293,22 +309,15 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		AbstractIRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_USER_GROUP_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_USER_GROUP_ID)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_USER_GROUP_NAME,
-							QueryConditionOperators.EQUAL, userGroupName.trim());
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_ID).addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL, userGroupName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
-									.getJargonProperties()
-									.getMaxFilesAndDirsQueryMax()), 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(builder.exportIRODSQueryFromBuilder(
+					getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()), 0);
 		} catch (JargonQueryException e) {
 			log.error("jargon query exception getting results", e);
 			throw new JargonException(e);
@@ -336,12 +345,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findWhere(java.lang.String)
+	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findWhere(java.lang.String)
 	 */
 	@Override
-	public List<UserGroup> findWhere(final String whereClause)
-			throws JargonException, JargonQueryException {
+	public List<UserGroup> findWhere(final String whereClause) throws JargonException, JargonQueryException {
 
 		if (whereClause == null || whereClause.length() == 0) {
 			throw new JargonException("null or missing where clause");
@@ -364,14 +371,13 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
 		}
 
-		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+		List<UserGroup> userGroups = new ArrayList<>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			userGroups.add(buildUserGroupFromResultSet(row));
@@ -383,13 +389,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#listUserGroupMembers(java.lang.
+	 * @see org.irods.jargon.core.pub.UserGroupAO#listUserGroupMembers(java.lang.
 	 * String)
 	 */
 	@Override
-	public List<User> listUserGroupMembers(final String userGroupName)
-			throws JargonException {
+	public List<User> listUserGroupMembers(final String userGroupName) throws JargonException {
 
 		log.info("listUserGroupMembers()");
 
@@ -399,7 +403,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		log.info("for user group name:{}", userGroupName);
 
-		List<User> users = new ArrayList<User>();
+		List<User> users = new ArrayList<>();
 
 		// create query for users in group
 
@@ -423,8 +427,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
@@ -435,8 +438,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 			if (row.getColumn(1).equals(userGroupName)) {
 				continue;
 			}
-			users.add(UserAOHelper.buildUserFromResultSet(row,
-					irodsGenQueryExecutor, false));
+			users.add(UserAOHelper.buildUserFromResultSet(row, irodsGenQueryExecutor, false));
 		}
 
 		return users;
@@ -445,12 +447,10 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#findUserGroups(java.lang.String)
+	 * @see org.irods.jargon.core.pub.UserGroupAO#findUserGroups(java.lang.String)
 	 */
 	@Override
-	public List<UserGroup> findUserGroups(final String userGroupName)
-			throws JargonException {
+	public List<UserGroup> findUserGroups(final String userGroupName) throws JargonException {
 
 		log.info("findUserGroups()");
 
@@ -478,17 +478,14 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		builder
 
-		.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME,
-				QueryConditionOperators.LIKE, sb.toString())
-				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE,
-						QueryConditionOperators.EQUAL, RODS_GROUP);
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.LIKE,
+						sb.toString())
+				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_TYPE, QueryConditionOperators.EQUAL, RODS_GROUP);
 		IRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(getJargonProperties()
-							.getMaxFilesAndDirsQueryMax());
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+					.exportIRODSQueryFromBuilder(getJargonProperties().getMaxFilesAndDirsQueryMax());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 
 		} catch (JargonQueryException e) {
 			log.error("query exception for query", e);
@@ -508,13 +505,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSUserGroupAO#findUserGroupsForUser(java
+	 * @see org.irods.jargon.core.pub.IRODSUserGroupAO#findUserGroupsForUser(java
 	 * .lang.String)
 	 */
 	@Override
-	public List<UserGroup> findUserGroupsForUser(final String userName)
-			throws JargonException {
+	public List<UserGroup> findUserGroupsForUser(final String userName) throws JargonException {
 		if (userName == null || userName.length() == 0) {
 			throw new JargonException("null or missing userName");
 		}
@@ -538,14 +533,13 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		IRODSQueryResultSetInterface resultSet;
 		try {
-			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(
-					irodsQuery, 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(irodsQuery, 0);
 		} catch (JargonQueryException e) {
 			log.error("query exception for user query:" + queryString, e);
 			throw new JargonException("error in user group query");
 		}
 
-		List<UserGroup> userGroups = new ArrayList<UserGroup>();
+		List<UserGroup> userGroups = new ArrayList<>();
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
 			if (row.getColumn(0).equals(userName)) {
@@ -560,13 +554,11 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#isUserInGroup(java.lang.String,
+	 * @see org.irods.jargon.core.pub.UserGroupAO#isUserInGroup(java.lang.String,
 	 * java.lang.String)
 	 */
 	@Override
-	public boolean isUserInGroup(final String userName, final String groupName)
-			throws JargonException {
+	public boolean isUserInGroup(final String userName, final String groupName) throws JargonException {
 
 		log.info("isUserinGroup()");
 
@@ -586,25 +578,19 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		AbstractIRODSQueryResultSet resultSet = null;
 		try {
 			IRODSGenQueryBuilder builder = new IRODSGenQueryBuilder(true, null);
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_USER_GROUP_NAME)
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_GROUP_NAME)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_USER_GROUP_NAME,
-							QueryConditionOperators.EQUAL, groupName.trim())
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_USER_NAME,
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_GROUP_NAME, QueryConditionOperators.EQUAL,
+							groupName.trim())
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_USER_NAME,
 
 							QueryConditionOperators.EQUAL, userName.trim());
 
 			IRODSGenQueryExecutor irodsGenQueryExecutor = getIRODSAccessObjectFactory()
 					.getIRODSGenQueryExecutor(getIRODSAccount());
 
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResult(
-							builder.exportIRODSQueryFromBuilder(getIRODSAccessObjectFactory()
-									.getJargonProperties()
-									.getMaxFilesAndDirsQueryMax()), 0);
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResult(builder.exportIRODSQueryFromBuilder(
+					getIRODSAccessObjectFactory().getJargonProperties().getMaxFilesAndDirsQueryMax()), 0);
 
 			if (resultSet.getResults().isEmpty()) {
 				inGroup = false;
@@ -626,15 +612,12 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#addUserToGroup(java.lang.String,
+	 * @see org.irods.jargon.core.pub.UserGroupAO#addUserToGroup(java.lang.String,
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addUserToGroup(final String userGroupName,
-			final String userName, final String zoneName)
-			throws DuplicateDataException, InvalidGroupException,
-			InvalidUserException, JargonException {
+	public void addUserToGroup(final String userGroupName, final String userName, final String zoneName)
+			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
 
 		log.info("addUserToGroup()");
 
@@ -655,8 +638,37 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		// call the iadmin iRODS service
 
-		GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserToGroup(
-				userGroupName, userName, zoneName);
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForAddUserToGroup(userGroupName, userName, zoneName);
+
+		log.debug("executing admin PI");
+
+		getIRODSProtocol().irodsFunction(adminPI);
+	}
+
+	@Override
+	public void addUserToGroupAsGroupAdmin(final String userGroupName, final String userName, final String zoneName)
+			throws DuplicateDataException, InvalidGroupException, InvalidUserException, JargonException {
+
+		log.info("addUserToGroupAsGroupAdmin()");
+
+		if (userGroupName == null || userGroupName.isEmpty()) {
+			throw new IllegalArgumentException("null or emtpy userGroupName");
+		}
+
+		if (userName == null || userName.isEmpty()) {
+			throw new IllegalArgumentException("null or emtpy userName");
+		}
+
+		log.info("userName:{}", userName);
+		log.info("userGroupName:{}", userGroupName);
+
+		if (zoneName != null) {
+			log.info("zoneName:{}", zoneName);
+		}
+
+		// call the iadmin iRODS service
+
+		UserAdminInp adminPI = UserAdminInp.instanceForAddUserToGroup(userGroupName, userName, zoneName);
 
 		log.debug("executing admin PI");
 
@@ -667,12 +679,12 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.UserGroupAO#removeUserFromGroup(java.lang.String
-	 * , java.lang.String, java.lang.String)
+	 * org.irods.jargon.core.pub.UserGroupAO#removeUserFromGroup(java.lang.String ,
+	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void removeUserFromGroup(final String userGroupName,
-			final String userName, final String zoneName)
+	public void removeUserFromGroup(final String userGroupName, final String userName, final String zoneName)
+
 			throws InvalidUserException, InvalidGroupException, JargonException {
 
 		log.info("removeUserFromGroup()");
@@ -694,9 +706,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 		// call the iadmin iRODS service
 
-		GeneralAdminInp adminPI = GeneralAdminInp
-				.instanceForRemoveUserFromGroup(userGroupName, userName,
-						zoneName);
+		GeneralAdminInp adminPI = GeneralAdminInp.instanceForRemoveUserFromGroup(userGroupName, userName, zoneName);
 
 		log.debug("executing admin PI");
 
@@ -713,8 +723,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 		return query.toString();
 	}
 
-	private UserGroup buildUserGroupFromResultSet(final IRODSQueryResultRow row)
-			throws JargonException {
+	private UserGroup buildUserGroupFromResultSet(final IRODSQueryResultRow row) throws JargonException {
 		UserGroup userGroup = new UserGroup();
 		userGroup.setUserGroupId(row.getColumn(1));
 		userGroup.setUserGroupName(row.getColumn(0));
@@ -724,8 +733,7 @@ public final class UserGroupAOImpl extends IRODSGenericAO implements
 
 	private IRODSGenQueryExecutor getGenQueryExecutor() throws JargonException {
 		if (irodsGenQueryExecutor == null) {
-			irodsGenQueryExecutor = getIRODSAccessObjectFactory()
-					.getIRODSGenQueryExecutor(getIRODSAccount());
+			irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(getIRODSAccount());
 		}
 
 		return irodsGenQueryExecutor;

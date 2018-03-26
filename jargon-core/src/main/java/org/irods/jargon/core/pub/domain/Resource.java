@@ -33,6 +33,8 @@ public class Resource extends IRODSDomainObject {
 	Date createTime = new Date();
 	Date modifyTime = new Date();
 	private String status = "";
+	private String parentId = "";
+	private Resource parentResource = null;
 	private String parentName = "";
 	private List<String> immediateChildren = new ArrayList<String>();
 
@@ -148,93 +150,66 @@ public class Resource extends IRODSDomainObject {
 		this.status = status;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
+		final int maxLen = 10;
 		StringBuilder builder = new StringBuilder();
 		builder.append("Resource [");
 		if (id != null) {
-			builder.append("id=");
-			builder.append(id);
-			builder.append(", ");
+			builder.append("id=").append(id).append(", ");
 		}
 		if (name != null) {
-			builder.append("name=");
-			builder.append(name);
-			builder.append(", ");
+			builder.append("name=").append(name).append(", ");
 		}
 		if (zone != null) {
-			builder.append("zone=");
-			builder.append(zone);
-			builder.append(", ");
-		}
-		if (contextString != null) {
-			builder.append("contextString=");
-			builder.append(contextString);
-			builder.append(", ");
-		}
-		if (resourceClass != null) {
-			builder.append("resourceClass=");
-			builder.append(resourceClass);
-			builder.append(", ");
-		}
-		if (location != null) {
-			builder.append("location=");
-			builder.append(location);
-			builder.append(", ");
-		}
-		if (vaultPath != null) {
-			builder.append("vaultPath=");
-			builder.append(vaultPath);
-			builder.append(", ");
+			builder.append("zone=").append(zone).append(", ");
 		}
 		if (type != null) {
-			builder.append("type=");
-			builder.append(type);
-			builder.append(", ");
+			builder.append("type=").append(type).append(", ");
 		}
-
-		builder.append("freeSpace=");
-		builder.append(freeSpace);
-		builder.append(", ");
+		if (contextString != null) {
+			builder.append("contextString=").append(contextString).append(", ");
+		}
+		if (resourceClass != null) {
+			builder.append("resourceClass=").append(resourceClass).append(", ");
+		}
+		if (location != null) {
+			builder.append("location=").append(location).append(", ");
+		}
+		if (vaultPath != null) {
+			builder.append("vaultPath=").append(vaultPath).append(", ");
+		}
+		builder.append("freeSpace=").append(freeSpace).append(", ");
 		if (freeSpaceTime != null) {
-			builder.append("freeSpaceTime=");
-			builder.append(freeSpaceTime);
-			builder.append(", ");
+			builder.append("freeSpaceTime=").append(freeSpaceTime).append(", ");
 		}
 		if (info != null) {
-			builder.append("info=");
-			builder.append(info);
-			builder.append(", ");
+			builder.append("info=").append(info).append(", ");
 		}
 		if (comment != null) {
-			builder.append("comment=");
-			builder.append(comment);
-			builder.append(", ");
+			builder.append("comment=").append(comment).append(", ");
 		}
 		if (createTime != null) {
-			builder.append("createTime=");
-			builder.append(createTime);
-			builder.append(", ");
+			builder.append("createTime=").append(createTime).append(", ");
 		}
 		if (modifyTime != null) {
-			builder.append("modifyTime=");
-			builder.append(modifyTime);
-			builder.append(", ");
+			builder.append("modifyTime=").append(modifyTime).append(", ");
 		}
-
 		if (status != null) {
-			builder.append("status=");
-			builder.append(status);
+			builder.append("status=").append(status).append(", ");
 		}
-
+		if (parentId != null) {
+			builder.append("parentId=").append(parentId).append(", ");
+		}
+		if (parentResource != null) {
+			builder.append("parentResource=").append(parentResource).append(", ");
+		}
 		if (parentName != null) {
-			builder.append("parentName=");
-			builder.append(parentName);
+			builder.append("parentName=").append(parentName).append(", ");
+		}
+		if (immediateChildren != null) {
+			builder.append("immediateChildren=")
+					.append(immediateChildren.subList(0, Math.min(immediateChildren.size(), maxLen)));
 		}
 		builder.append("]");
 		return builder.toString();
@@ -283,6 +258,22 @@ public class Resource extends IRODSDomainObject {
 	 */
 	public void setImmediateChildren(final List<String> immediateChildren) {
 		this.immediateChildren = immediateChildren;
+	}
+
+	public String getParentId() {
+		return parentId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public Resource getParentResource() {
+		return parentResource;
+	}
+
+	public void setParentResource(Resource parentResource) {
+		this.parentResource = parentResource;
 	}
 
 }

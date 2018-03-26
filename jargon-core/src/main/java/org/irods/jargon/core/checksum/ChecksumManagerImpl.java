@@ -17,7 +17,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Various methods to compute and determine checksums
- * <p/>
+ * <p>
  * Note this implementation is very basic and will be expanded later.
  * {@link DataObjectAO} has other checksum support that will eventually migrate
  * here.

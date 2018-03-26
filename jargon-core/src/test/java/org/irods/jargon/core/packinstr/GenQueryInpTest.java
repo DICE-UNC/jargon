@@ -1,6 +1,6 @@
 package org.irods.jargon.core.packinstr;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.connection.IRODSServerProperties;
 import org.irods.jargon.core.query.IRODSGenQuery;

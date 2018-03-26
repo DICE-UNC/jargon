@@ -23,16 +23,16 @@ public class TranslatedGenQueryCondition {
 
 	/**
 	 * Static initializer when the field is given as a value from the
-	 * <code>RodsGenQueryEnum</code> enumeration.
+	 * {@code RodsGenQueryEnum} enumeration.
 	 *
 	 * @param fieldName
 	 *            {@link org.irods.jargon.core.query.RodsGenQueryEnum} value for
 	 *            the condition field.
 	 * @param operator
-	 *            <code>String</code> with the operator.
+	 *            {@code String} with the operator.
 	 * @param value
-	 *            <code>String</code> with the value component of the condition.
-	 * @return <code>TranslatedQueryCondition</code> object.
+	 *            {@code String} with the value component of the condition.
+	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
 	 */
 	public static TranslatedGenQueryCondition instance(
@@ -48,13 +48,13 @@ public class TranslatedGenQueryCondition {
 	 * values.
 	 *
 	 * @param fieldName
-	 *            <code>String</code> with the translated value for the
+	 *            {@code String} with the translated value for the
 	 *            condition.
 	 * @param operator
-	 *            <code>String</code> with the operator.
+	 *            {@code String} with the operator.
 	 * @param value
-	 *            <code>String</code> with the value component of the condition.
-	 * @return <code>TranslatedQueryCondition</code> object.
+	 *            {@code String} with the value component of the condition.
+	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
 	 */
 	public static TranslatedGenQueryCondition instanceForExtensibleMetaData(
@@ -69,13 +69,13 @@ public class TranslatedGenQueryCondition {
 	 * translated name of the field in a format that GenQuery will understand.
 	 *
 	 * @param fieldName
-	 *            <code>String</code> with the translated value for the
+	 *            {@code String} with the translated value for the
 	 *            condition.
 	 * @param operator
-	 *            <code>String</code> with the operator.
+	 *            {@code String} with the operator.
 	 * @param value
-	 *            <code>String</code> with the value component of the condition.
-	 * @return <code>TranslatedQueryCondition</code> object.
+	 *            {@code String} with the value component of the condition.
+	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
 	 */
 	public static TranslatedGenQueryCondition instanceWithFieldNameAndNumericTranslation(

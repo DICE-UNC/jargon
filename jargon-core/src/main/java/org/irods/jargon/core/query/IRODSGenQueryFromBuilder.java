@@ -10,7 +10,7 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * Represents an iRODS general query as specified using the
- * <code>IRODSGenQueryBuilder</code> tool.
+ * {@code IRODSGenQueryBuilder} tool.
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -26,7 +26,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> with the number of results desired from the
+	 *            {@code int} with the number of results desired from the
 	 *            query
 	 */
 	public static IRODSGenQueryFromBuilder instance(
@@ -43,7 +43,7 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> with the number of results desired from the
+	 *            {@code int} with the number of results desired from the
 	 *            query
 	 */
 	private IRODSGenQueryFromBuilder(

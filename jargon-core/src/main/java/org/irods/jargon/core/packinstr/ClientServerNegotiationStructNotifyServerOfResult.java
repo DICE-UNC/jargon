@@ -107,7 +107,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	/**
 	 * Was this negotiation a success?
 	 *
-	 * @return <code>boolean</code>
+	 * @return {@code boolean}
 	 */
 	public boolean wasThisASuccess() {
 		return getStatus() == 1;

@@ -72,7 +72,7 @@ public enum FilePermissionEnum {
 	 * Handy method to get all enum values as a list, good for building select
 	 * boxes and the like
 	 *
-	 * @return <code>List<FilePermissionEnum></code>
+	 * @return {@code List<FilePermissionEnum>}
 	 */
 	public static List<FilePermissionEnum> listAllValues() {
 		List<FilePermissionEnum> allValues = new ArrayList<FilePermissionEnum>();
@@ -85,7 +85,7 @@ public enum FilePermissionEnum {
 	}
 
 	/**
-	 * @return the permissionNumericValue <code>int</code> with the iRODS
+	 * @return the permissionNumericValue {@code int} with the iRODS
 	 *         protocol value for the permission
 	 */
 	public int getPermissionNumericValue() {
@@ -94,7 +94,7 @@ public enum FilePermissionEnum {
 
 	/**
 	 * @param permissionNumericValue
-	 *            <code>int</code> with the permissionNumericValue that is the
+	 *            {@code int} with the permissionNumericValue that is the
 	 *            iRODS protocol representation
 	 */
 	public void setPermissionNumericValue(final int permissionNumericValue) {

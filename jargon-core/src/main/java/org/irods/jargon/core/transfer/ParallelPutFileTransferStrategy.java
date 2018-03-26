@@ -34,27 +34,27 @@ public final class ParallelPutFileTransferStrategy extends
 	 * Create an instance of a strategy to accomplish a parallel file transfer.
 	 *
 	 * @param host
-	 *            <code>String</code> with the host name to transfer to.
+	 *            {@code String} with the host name to transfer to.
 	 * @param port
-	 *            <code>int</code> with the port number for the host.
+	 *            {@code int} with the port number for the host.
 	 * @param numberOfThreads
-	 *            <code>int</code> with the number of threads over which the
+	 *            {@code int} with the number of threads over which the
 	 *            transfer will occur.
 	 * @param password
-	 *            <code>String</code> with the password sent by iRODS for this
+	 *            {@code String} with the password sent by iRODS for this
 	 *            transfer.
 	 * @param localFile
-	 *            <code>File</code> representing the local file
+	 *            {@code File} representing the local file
 	 * @param irodsAccessObjectFactory
 	 *            {@link IRODSAccessObjectFactory} for the session.
 	 * @param transferLength
-	 *            <code>long</code> with the length of the total file to
+	 *            {@code long} with the length of the total file to
 	 *            transfer
 	 * @param transferControlBlock
 	 *            {@link TransferControlBlock} that controls and keeps track of
 	 *            the transfer operation, required.
 	 * @param transferStatusCallbackListener
-	 *            {@link TransferStatusCallbackListener} or <code>null</code> if
+	 *            {@link TransferStatusCallbackListener} or {@code null} if
 	 *            not desired. This can receive call-backs on the status of the
 	 *            parallel transfer operation.
 	 * @param fileRestartInfo

@@ -65,19 +65,19 @@ public final class StructFileExtAndRegInp extends
 	 * in iRODS to be extracted to the given collection in iRODS.
 	 *
 	 * @param tarFileAbsolutePath
-	 *            <code>String</code> that is the absolute path to a tar file in
+	 *            {@code String} that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
 	 * @param tarCollectionAbsolutePath
-	 *            <code>String</code> that is the absolute path to an iRODS
+	 *            {@code String} that is the absolute path to an iRODS
 	 *            collection that is the target of the extracted files from the
 	 *            given tar, note that this option does not specify a force
 	 *            flag, so any subfiles in the target collection will cause the
 	 *            operation to fail.
 	 * @param resourceNameToStoreTo
-	 *            <code>String</code> with an optional resource name to store
+	 *            {@code String} with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForExtractBundleNoForce(
 			final String tarFileAbsolutePath,
@@ -95,19 +95,19 @@ public final class StructFileExtAndRegInp extends
 	 * register the files, resulting in reduced overhead.
 	 *
 	 * @param tarFileAbsolutePath
-	 *            <code>String</code> that is the absolute path to a tar file in
+	 *            {@code String} that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
 	 * @param tarCollectionAbsolutePath
-	 *            <code>String</code> that is the absolute path to an iRODS
+	 *            {@code String} that is the absolute path to an iRODS
 	 *            collection that is the target of the extracted files from the
 	 *            given tar, note that this option does not specify a force
 	 *            flag, so any subfiles in the target collection will cause the
 	 *            operation to fail.
 	 * @param resourceNameToStoreTo
-	 *            <code>String</code> with an optional resource name to store
+	 *            {@code String} with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForExtractBundleNoForceWithBulkOperation(
 			final String tarFileAbsolutePath,
@@ -124,19 +124,19 @@ public final class StructFileExtAndRegInp extends
 	 * is specified.
 	 *
 	 * @param tarFileAbsolutePath
-	 *            <code>String</code> that is the absolute path to a tar file in
+	 *            {@code String} that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
 	 * @param tarCollectionAbsolutePath
-	 *            <code>String</code> that is the absolute path to an iRODS
+	 *            {@code String} that is the absolute path to an iRODS
 	 *            collection that is the target of the extracted files from the
 	 *            given tar, note that this option specifies a force flag, so
 	 *            any subfiles in the target collection will not cause the
 	 *            operation to fail.
 	 * @param resourceNameToStoreTo
-	 *            <code>String</code> with an optional resource name to store
+	 *            {@code String} with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForExtractBundleWithForceOption(
 			final String tarFileAbsolutePath,
@@ -154,19 +154,19 @@ public final class StructFileExtAndRegInp extends
 	 * facility in iRODS to register the files, resulting in reduced overhead.
 	 *
 	 * @param tarFileAbsolutePath
-	 *            <code>String</code> that is the absolute path to a tar file in
+	 *            {@code String} that is the absolute path to a tar file in
 	 *            iRODS to be extracted.
 	 * @param tarCollectionAbsolutePath
-	 *            <code>String</code> that is the absolute path to an iRODS
+	 *            {@code String} that is the absolute path to an iRODS
 	 *            collection that is the target of the extracted files from the
 	 *            given tar, note that this option specifies a force flag, so
 	 *            any subfiles in the target collection will not cause the
 	 *            operation to fail.
 	 * @param resourceNameToStoreTo
-	 *            <code>String</code> with an optional resource name to store
+	 *            {@code String} with an optional resource name to store
 	 *            the extracted files to. Leave blank if not specified, not
 	 *            null.
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForExtractBundleWithForceOptionAndBulkOperation(
 			final String tarFileAbsolutePath,
@@ -182,15 +182,15 @@ public final class StructFileExtAndRegInp extends
 	 * as the source.
 	 *
 	 * @param tarFileToCreateAbsolutePath
-	 *            <code>String</code> with the absolute path to the tar file
+	 *            {@code String} with the absolute path to the tar file
 	 *            that will be created.
 	 * @param irodsSourceCollectionForTarAbsolutePath
-	 *            <code>String</code> with the absolute path to collection that
+	 *            {@code String} with the absolute path to collection that
 	 *            will be bundled into the tar file.
 	 * @param resourceNameThatIsSourceForTarFile
-	 *            <code>String</code> that is the resource that will be the
+	 *            {@code String} that is the resource that will be the
 	 *            source, set to blank of not used (not null)
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForCreateBundle(
 			final String tarFileToCreateAbsolutePath,
@@ -209,15 +209,15 @@ public final class StructFileExtAndRegInp extends
 	 * option which will overwrite the bun file if already existing.
 	 *
 	 * @param tarFileToCreateAbsolutePath
-	 *            <code>String</code> with the absolute path to the tar file
+	 *            {@code String} with the absolute path to the tar file
 	 *            that will be created.
 	 * @param irodsSourceCollectionForTarAbsolutePath
-	 *            <code>String</code> with the absolute path to collection that
+	 *            {@code String} with the absolute path to collection that
 	 *            will be bundled into the tar file.
 	 * @param resourceNameThatIsSourceForTarFile
-	 *            <code>String</code> that is the resource that will be the
+	 *            {@code String} that is the resource that will be the
 	 *            source, set to blank of not used (not null)
-	 * @return <code>StructFileExtAndRegInp</code> packing instruction
+	 * @return {@code StructFileExtAndRegInp} packing instruction
 	 */
 	public static final StructFileExtAndRegInp instanceForCreateBundleWithForceOption(
 			final String tarFileToCreateAbsolutePath,

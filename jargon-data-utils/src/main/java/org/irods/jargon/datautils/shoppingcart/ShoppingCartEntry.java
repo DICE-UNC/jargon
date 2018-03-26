@@ -17,7 +17,7 @@ public class ShoppingCartEntry implements Serializable {
 	 * Static initializer creates a new shopping cart entry
 	 *
 	 * @param fileName
-	 *            <code>String</code> with the file name for the entry in the
+	 *            {@code String} with the file name for the entry in the
 	 *            shopping cart
 	 * @return
 	 */

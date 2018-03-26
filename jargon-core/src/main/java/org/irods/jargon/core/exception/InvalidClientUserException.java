@@ -26,7 +26,7 @@ public final class InvalidClientUserException extends JargonException {
 	 * the constructor
 	 *
 	 * @param explanation
-	 *            <code>String</code> with any additional information
+	 *            {@code String} with any additional information
 	 */
 	public InvalidClientUserException(final String explanation) {
 		super(makeMessage(explanation), ErrorEnum.CAT_INVALID_CLIENT_USER

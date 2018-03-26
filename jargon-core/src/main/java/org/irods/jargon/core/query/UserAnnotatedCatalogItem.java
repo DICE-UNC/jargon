@@ -44,10 +44,10 @@ public abstract class UserAnnotatedCatalogItem extends IRODSDomainObject
 	 *            {@link MetadataDomain} enum value that describes the iCAT
 	 *            domain the annotation is for
 	 * @param domainUniqueName
-	 *            <code>String</code> with the unique identifier of the domain.
+	 *            {@code String} with the unique identifier of the domain.
 	 *            For files and collections this is the iRODS absolute path
 	 * @param userName
-	 *            <code>String</code> with the user name for which the item is
+	 *            {@code String} with the user name for which the item is
 	 *            annotated (these annotations are per user)
 	 */
 	public UserAnnotatedCatalogItem(final MetadataDomain metadataDomain,

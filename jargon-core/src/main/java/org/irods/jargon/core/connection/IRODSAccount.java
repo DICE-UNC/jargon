@@ -39,7 +39,7 @@ public class IRODSAccount implements Serializable {
 	 * Client-server negotiation policy. This is an override of the default
 	 * negotiation policy settings derived from jargon properties. This allows a
 	 * per-connection specification of an appropriate policy. If this is left
-	 * <code>null</code> (the default), then the policy in jargon.properties is
+	 * {@code null} (the default), then the policy in jargon.properties is
 	 * respected.
 	 */
 	private ClientServerNegotiationPolicy clientServerNegotiationPolicy;
@@ -68,7 +68,7 @@ public class IRODSAccount implements Serializable {
 	 * @param clientServerNegotiationPolicy
 	 *            {@link ClientServerNegotiationPolicy} object describing
 	 *            overrides from the default policy, may be set to
-	 *            <code>null</code> to accept defaults from Jargon properties.
+	 *            {@code null} to accept defaults from Jargon properties.
 	 */
 	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String zone, final String defaultStorageResource,
@@ -166,24 +166,24 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Create an <code>IRODSAccount</code> suitable for anonymous access.
+	 * Create an {@code IRODSAccount} suitable for anonymous access.
 	 *
 	 * @param host
-	 *            <code>String</code> with the DNS name of the iRODS host
+	 *            {@code String} with the DNS name of the iRODS host
 	 * @param port
-	 *            <code>int</code> with the iRODS port number (typically 1247)
+	 *            {@code int} with the iRODS port number (typically 1247)
 	 * @param homeDirectory
-	 *            <code>String</code> with optional value for the starting home
+	 *            {@code String} with optional value for the starting home
 	 *            directory, this can be used to set initial views, etc by other
 	 *            code
 	 * @param zone
-	 *            <code>String</code> with the iRODS zone
+	 *            {@code String} with the iRODS zone
 	 * @param defaultStorageResource
-	 *            <code>String</code> with optional value for the default
+	 *            {@code String} with optional value for the default
 	 *            storage resource. Note that iRODS may have defaults set by
 	 *            policy. In cases where no default policy exists, and none is
 	 *            specified here, an error can occur.
-	 * @return <code>IRODSAccount</code> suitable for anonymous access
+	 * @return {@code IRODSAccount} suitable for anonymous access
 	 * @throws JargonException
 	 */
 	public static IRODSAccount instanceForAnonymous(final String host, final int port, final String homeDirectory,
@@ -198,9 +198,9 @@ public class IRODSAccount implements Serializable {
 	 * @param initialAccount
 	 *            {@link IRODSAccount} for the initial connection
 	 * @param reroutedHostName
-	 *            <code>String</code> with the host name to which the connection
+	 *            {@code String} with the host name to which the connection
 	 *            should be routed.
-	 * @return <code>IRODSAccount</code> connected to the new host.
+	 * @return {@code IRODSAccount} connected to the new host.
 	 * @throws JargonException
 	 */
 	public static IRODSAccount instanceForReroutedHost(final IRODSAccount initialAccount, final String reroutedHostName)
@@ -420,14 +420,14 @@ public class IRODSAccount implements Serializable {
 
 	/**
 	 * Tests this local file system account object for equality with the given
-	 * object. Returns <code>true</code> if and only if the argument is not
-	 * <code>null</code> and both are account objects for the same filesystem.
+	 * object. Returns {@code true} if and only if the argument is not
+	 * {@code null} and both are account objects for the same filesystem.
 	 *
 	 * @param obj
 	 *            The object to be compared with this abstract pathname
 	 *
-	 * @return <code>true</code> if and only if the objects are the same;
-	 *         <code>false</code> otherwise
+	 * @return {@code true} if and only if the objects are the same;
+	 *         {@code false} otherwise
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -590,7 +590,7 @@ public class IRODSAccount implements Serializable {
 	/**
 	 * Check if this is 'anonymous'
 	 *
-	 * @return <code>boolean</code> that will be <code>true</code> if this is an
+	 * @return {@code boolean} that will be {@code true} if this is an
 	 *         anonymous iRODS account
 	 */
 	public boolean isAnonymousAccount() {

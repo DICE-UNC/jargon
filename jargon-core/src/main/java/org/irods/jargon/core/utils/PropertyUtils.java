@@ -14,7 +14,7 @@ import java.util.Properties;
 public class PropertyUtils {
 
 	/**
-	 * Verify the given property exists and return as a <code>String</code>
+	 * Verify the given property exists and return as a {@code String}
 	 *
 	 * @param properties
 	 * @param propKey
@@ -36,7 +36,7 @@ public class PropertyUtils {
 	}
 
 	/**
-	 * Verify the given property exists and return as an <code>int</code>
+	 * Verify the given property exists and return as an {@code int}
 	 *
 	 * @param propKey
 	 * @return
@@ -61,7 +61,7 @@ public class PropertyUtils {
 	}
 
 	/**
-	 * Verify the property exists and get as a <code>boolean</code> value
+	 * Verify the property exists and get as a {@code boolean} value
 	 *
 	 * @param properties
 	 * @param propKey
@@ -80,7 +80,7 @@ public class PropertyUtils {
 	}
 
 	/**
-	 * Verify the property exists and get as a <code>long</code>
+	 * Verify the property exists and get as a {@code long}
 	 *
 	 * @param properties
 	 * @param propKey

@@ -29,8 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
-		implements SynchPropertiesService {
+public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl implements SynchPropertiesService {
 
 	/*
 	 * AVU conventions attrib | value | unit
@@ -41,13 +40,11 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * iRODSSynch:userSynchDir
 	 */
 
-	public static final Logger log = LoggerFactory
-			.getLogger(SynchPropertiesServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(SynchPropertiesServiceImpl.class);
 
 	/**
-	 * Default (no-values) constructor. The account and
-	 * <code>IRODSFileSystem</code> need to be initialized va the setter
-	 * methods.
+	 * Default (no-values) constructor. The account and {@code IRODSFileSystem}
+	 * need to be initialized va the setter methods.
 	 */
 	public SynchPropertiesServiceImpl() {
 		super();
@@ -58,14 +55,13 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * the default constructor.
 	 *
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that can create various
+	 *            {@code IRODSAccessObjectFactory} that can create various
 	 *            access objects to interact with iRODS
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that describes the user and server
-	 *            to connect to
+	 *            {@code IRODSAccount} that describes the user and server to
+	 *            connect to
 	 */
-	public SynchPropertiesServiceImpl(
-			final IRODSAccessObjectFactory irodsAccessObjectFactory,
+	public SynchPropertiesServiceImpl(final IRODSAccessObjectFactory irodsAccessObjectFactory,
 			final IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 
@@ -79,10 +75,8 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public UserSynchTarget getUserSynchTargetForUserAndAbsolutePath(
-			final String userName, final String deviceName,
-			final String irodsAbsolutePath) throws DataNotFoundException,
-			JargonException {
+	public UserSynchTarget getUserSynchTargetForUserAndAbsolutePath(final String userName, final String deviceName,
+			final String irodsAbsolutePath) throws DataNotFoundException, JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -93,43 +87,33 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		}
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		checkDependencies();
 
-		log.info("getUserSynchTargetForUserAndAbsolutePath for user:{}",
-				userName);
+		log.info("getUserSynchTargetForUserAndAbsolutePath for user:{}", userName);
 		log.info("    for absPath:{}", irodsAbsolutePath);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
-		String userDevAttrib = buildAvuAttribForSynchUtilTarget(userName,
-				deviceName);
+		String userDevAttrib = buildAvuAttribForSynchUtilTarget(userName, deviceName);
 
-		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQuery = new ArrayList<>();
 		List<MetaDataAndDomainData> queryResults;
 
 		log.debug("building avu query");
 
 		try {
-			AVUQueryElement avuQueryElement = AVUQueryElement
-					.instanceForValueQuery(AVUQueryPart.UNITS,
-							QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
+			AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
 			avuQuery.add(avuQueryElement);
-			avuQueryElement = AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
-					userDevAttrib);
+			avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+					QueryConditionOperators.EQUAL, userDevAttrib);
 			avuQuery.add(avuQueryElement);
-			queryResults = collectionAO
-					.findMetadataValuesByMetadataQueryForCollection(avuQuery,
-							irodsAbsolutePath);
+			queryResults = collectionAO.findMetadataValuesByMetadataQueryForCollection(avuQuery, irodsAbsolutePath);
 		} catch (JargonQueryException e) {
-			log.error(
-					"error creating query for lookup of user synch target data",
-					e);
+			log.error("error creating query for lookup of user synch target data", e);
 			throw new JargonException(e);
 		}
 
@@ -138,11 +122,9 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		// there should be only one synch device. If there's more than one,
 		// treat as an error for now
 		if (queryResults.isEmpty()) {
-			throw new DataNotFoundException(
-					"no synch data for given user and device");
+			throw new DataNotFoundException("no synch data for given user and device");
 		} else if (queryResults.size() > 1) {
-			throw new JargonException(
-					"more than one synch entry found for given user and device");
+			throw new JargonException("more than one synch entry found for given user and device");
 		}
 
 		MetaDataAndDomainData deviceInfo = queryResults.get(0);
@@ -171,41 +153,34 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 
 		log.info("getUserSynchTargets for user:{}", userName);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
-		List<AVUQueryElement> avuQuery = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> avuQuery = new ArrayList<>();
 		List<MetaDataAndDomainData> queryResults;
 
 		log.debug("building avu query");
 
 		try {
-			AVUQueryElement avuQueryElement = AVUQueryElement
-					.instanceForValueQuery(AVUQueryPart.UNITS,
-							QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
+			AVUQueryElement avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.UNITS,
+					QueryConditionOperators.EQUAL, USER_SYNCH_DIR_TAG);
 			avuQuery.add(avuQueryElement);
 			StringBuilder sb = new StringBuilder();
 			sb.append(userName);
 			sb.append(":%");
-			avuQueryElement = AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.LIKE,
-					sb.toString());
+			avuQueryElement = AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+					QueryConditionOperators.LIKE, sb.toString());
 			avuQuery.add(avuQueryElement);
-			queryResults = collectionAO
-					.findMetadataValuesByMetadataQuery(avuQuery);
+			queryResults = collectionAO.findMetadataValuesByMetadataQuery(avuQuery);
 		} catch (JargonQueryException e) {
-			log.error(
-					"error creating query for lookup of user synch target data",
-					e);
+			log.error("error creating query for lookup of user synch target data", e);
 			throw new JargonException(e);
 		}
 
 		log.debug("result of query for synch target data:{}", queryResults);
-		List<UserSynchTarget> userSynchTargets = new ArrayList<UserSynchTarget>();
+		List<UserSynchTarget> userSynchTargets = new ArrayList<>();
 
 		for (MetaDataAndDomainData metadata : queryResults) {
-			userSynchTargets
-					.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
+			userSynchTargets.add(buildUserSynchTargetFromMetaDataAndDomainData(metadata));
 		}
 
 		return userSynchTargets;
@@ -215,7 +190,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	/**
 	 * Parse the synch directory AVU value for component values to build a
 	 * <code>UserSynchTarget</code> description.
-	 *
+	 * 
 	 * @param metaDataAndDomainData
 	 *            {@link MetaDataAndDomainData} from an AVU query
 	 * @return {@link UserSynchTarget} describing a synch relationship for this
@@ -223,15 +198,11 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * @throws JargonException
 	 */
 	private UserSynchTarget buildUserSynchTargetFromMetaDataAndDomainData(
-			final MetaDataAndDomainData metaDataAndDomainData)
-			throws JargonException {
-		String[] valueComponents = metaDataAndDomainData.getAvuValue().split(
-				"[~]");
+			final MetaDataAndDomainData metaDataAndDomainData) throws JargonException {
+		String[] valueComponents = metaDataAndDomainData.getAvuValue().split("[~]");
 		if (valueComponents.length != 3) {
-			log.error("did not find 3 expected values in the avu value: {}",
-					metaDataAndDomainData);
-			throw new JargonException(
-					"unexpected data in AVU value for UserSynchTarget");
+			log.error("did not find 3 expected values in the avu value: {}", metaDataAndDomainData);
+			throw new JargonException("unexpected data in AVU value for UserSynchTarget");
 		}
 
 		long lastIrodsSynch;
@@ -242,34 +213,26 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 			lastIrodsSynch = Long.valueOf(valueComponents[0]);
 			lastLocalSynch = Long.valueOf(valueComponents[1]);
 		} catch (NumberFormatException nfe) {
-			log.error(
-					"unable to parse out timestamps from synch data in AVU value:{}",
-					metaDataAndDomainData);
+			log.error("unable to parse out timestamps from synch data in AVU value:{}", metaDataAndDomainData);
 			throw new JargonException("UserSynchTarget parse error");
 		}
 
 		localSynchAbsolutePath = valueComponents[2];
 
-		String[] userComponents = metaDataAndDomainData.getAvuAttribute()
-				.split("[:]");
+		String[] userComponents = metaDataAndDomainData.getAvuAttribute().split("[:]");
 		if (userComponents.length != 2) {
-			log.error(
-					"did not find 2 expected values in the avu attribute for user data: {}",
-					metaDataAndDomainData);
-			throw new JargonException(
-					"unexpected data in AVU attribute for UserSynchTarget");
+			log.error("did not find 2 expected values in the avu attribute for user data: {}", metaDataAndDomainData);
+			throw new JargonException("unexpected data in AVU attribute for UserSynchTarget");
 		}
 
 		if (localSynchAbsolutePath == null || localSynchAbsolutePath.isEmpty()) {
-			log.error("no local synch absolute path found in:{}",
-					metaDataAndDomainData);
+			log.error("no local synch absolute path found in:{}", metaDataAndDomainData);
 			throw new JargonException("no local synch absolute path");
 		}
 
 		UserSynchTarget userSynchTarget = new UserSynchTarget();
 		userSynchTarget.setDeviceName(userComponents[1]);
-		userSynchTarget.setIrodsSynchRootAbsolutePath(metaDataAndDomainData
-				.getDomainObjectUniqueName());
+		userSynchTarget.setIrodsSynchRootAbsolutePath(metaDataAndDomainData.getDomainObjectUniqueName());
 		userSynchTarget.setLocalSynchRootAbsolutePath(localSynchAbsolutePath);
 		userSynchTarget.setLastIRODSSynchTimestamp(lastIrodsSynch);
 		userSynchTarget.setLastLocalSynchTimestamp(lastLocalSynch);
@@ -287,9 +250,8 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * java.lang.String)
 	 */
 	@Override
-	public void updateTimestampsToCurrent(final String userName,
-			final String deviceName, final String irodsAbsolutePath)
-			throws JargonException {
+	public void updateTimestampsToCurrent(final String userName, final String deviceName,
+			final String irodsAbsolutePath) throws JargonException {
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -300,8 +262,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		}
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("updateTimestampsToCurrent()");
@@ -310,21 +271,16 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("   irodsAbsolutePath:{}", irodsAbsolutePath);
 
 		SynchTimestamps synchTimestamps = getSynchTimestamps();
-		UserSynchTarget existingUserSynchTarget = getUserSynchTargetForUserAndAbsolutePath(
-				userName, deviceName, irodsAbsolutePath);
+		UserSynchTarget existingUserSynchTarget = getUserSynchTargetForUserAndAbsolutePath(userName, deviceName,
+				irodsAbsolutePath);
 		log.debug("existing synch target info:{}", existingUserSynchTarget);
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(getIrodsAccount());
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(getIrodsAccount());
 		String attrib = buildAvuAttribForSynchUtilTarget(userName, deviceName);
-		String value = buildAvuValueForSynchUtilTarget(
-				synchTimestamps.getLocalSynchTimestamp(),
-				synchTimestamps.getIrodsSynchTimestamp(),
-				existingUserSynchTarget.getLocalSynchRootAbsolutePath());
-		AvuData avuData = AvuData.instance(attrib, value,
-				SynchPropertiesService.USER_SYNCH_DIR_TAG);
+		String value = buildAvuValueForSynchUtilTarget(synchTimestamps.getLocalSynchTimestamp(),
+				synchTimestamps.getIrodsSynchTimestamp(), existingUserSynchTarget.getLocalSynchRootAbsolutePath());
+		AvuData avuData = AvuData.instance(attrib, value, SynchPropertiesService.USER_SYNCH_DIR_TAG);
 		log.info("updating timestamps using AVU of :{}", avuData);
-		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(
-				irodsAbsolutePath, avuData);
+		collectionAO.modifyAvuValueBasedOnGivenAttributeAndUnit(irodsAbsolutePath, avuData);
 		log.info("timestamps updated");
 	}
 
@@ -334,8 +290,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	private void checkDependencies() throws JargonException {
 
 		if (irodsAccessObjectFactory == null) {
-			throw new JargonException(
-					"irodsAccessObjectFactory was not initialized");
+			throw new JargonException("irodsAccessObjectFactory was not initialized");
 		}
 
 		if (irodsAccount == null) {
@@ -352,8 +307,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public void addSynchDeviceForUserAndIrodsAbsolutePath(
-			final String userName, final String deviceName,
+	public void addSynchDeviceForUserAndIrodsAbsolutePath(final String userName, final String deviceName,
 			final String irodsAbsolutePath, final String localAbsolutePath)
 			throws DuplicateDataException, JargonException {
 
@@ -368,13 +322,11 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		}
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		if (localAbsolutePath == null || localAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty localAbsolutePath");
+			throw new IllegalArgumentException("null or empty localAbsolutePath");
 		}
 
 		log.info("addSynchDeviceForUserAndIrodsAbsolutePath");
@@ -386,11 +338,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		log.info("checking for already-added synch device");
 
 		try {
-			UserSynchTarget userSynchTarget = getUserSynchTargetForUserAndAbsolutePath(
-					userName, deviceName, irodsAbsolutePath);
+			UserSynchTarget userSynchTarget = getUserSynchTargetForUserAndAbsolutePath(userName, deviceName,
+					irodsAbsolutePath);
 			log.error("userSynchTarget already defined:{}", userSynchTarget);
-			throw new DuplicateDataException(
-					"cannot add userSyncTarget, already defined");
+			throw new DuplicateDataException("cannot add userSyncTarget, already defined");
 		} catch (DataNotFoundException dnf) {
 			log.debug("no duplicate found, this is normal");
 		}
@@ -400,9 +351,8 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 				irodsAbsolutePath);
 
 		// see if the irods directory exists, create if it does not
-		IRODSFile irodsCollection = irodsAccessObjectFactory
-				.getIRODSFileFactory(irodsAccount).instanceIRODSFile(
-						irodsAbsolutePath);
+		IRODSFile irodsCollection = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(irodsAbsolutePath);
 
 		if (!irodsCollection.exists()) {
 			log.info("creating collection, does not exist");
@@ -412,13 +362,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		// TODO: what timestamp vals here? I'm thinking 0 as it hasn't been
 		// synched yet, this would be updated at synch completes
 		log.info("adding marker avu for target collection");
-		AvuData marker = AvuData.instance(
-				buildAvuAttribForSynchUtilTarget(userName, deviceName),
-				buildAvuValueForSynchUtilTarget(0L, 0L, localAbsolutePath),
-				USER_SYNCH_DIR_TAG);
+		AvuData marker = AvuData.instance(buildAvuAttribForSynchUtilTarget(userName, deviceName),
+				buildAvuValueForSynchUtilTarget(0L, 0L, localAbsolutePath), USER_SYNCH_DIR_TAG);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		collectionAO.addAVUMetadata(irodsAbsolutePath, marker);
 		log.info("marker added:{}", marker);
@@ -434,12 +381,10 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	@Override
 	public SynchTimestamps getSynchTimestamps() throws JargonException {
 		log.info("getSynchTimestamps()");
-		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory
-				.getEnvironmentalInfoAO(irodsAccount);
+		EnvironmentalInfoAO environmentalInfoAO = irodsAccessObjectFactory.getEnvironmentalInfoAO(irodsAccount);
 		long localTimestamp = new Date().getTime();
 		long irodsTimestamp = environmentalInfoAO.getIRODSServerCurrentTime();
-		SynchTimestamps synchTimestamps = new SynchTimestamps(localTimestamp,
-				irodsTimestamp);
+		SynchTimestamps synchTimestamps = new SynchTimestamps(localTimestamp, irodsTimestamp);
 		log.info("timestamps are:{}", synchTimestamps);
 		return synchTimestamps;
 	}
@@ -451,24 +396,19 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * synchDeviceExists(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public boolean synchDeviceExists(final String userName,
-			final String deviceName, final String irodsAbsolutePath)
+	public boolean synchDeviceExists(final String userName, final String deviceName, final String irodsAbsolutePath)
 			throws JargonException {
-		String attribute = buildAvuAttribForSynchUtilTarget(userName,
-				deviceName);
+		String attribute = buildAvuAttribForSynchUtilTarget(userName, deviceName);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		try {
-			List<AVUQueryElement> avuQueryElement = new ArrayList<AVUQueryElement>();
-			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
-					attribute));
+			List<AVUQueryElement> avuQueryElement = new ArrayList<>();
+			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+					QueryConditionOperators.EQUAL, attribute));
 
 			List<MetaDataAndDomainData> metaDataAndDomainDataList = collectionAO
-					.findMetadataValuesByMetadataQueryForCollection(
-							avuQueryElement, irodsAbsolutePath);
+					.findMetadataValuesByMetadataQueryForCollection(avuQueryElement, irodsAbsolutePath);
 			if (metaDataAndDomainDataList.size() > 0) {
 				return true;
 			}
@@ -485,30 +425,24 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * removeSynchDevice(java.lang.String)
 	 */
 	@Override
-	public void removeSynchDevice(final String userName,
-			final String deviceName, final String irodsAbsolutePath)
+	public void removeSynchDevice(final String userName, final String deviceName, final String irodsAbsolutePath)
 			throws JargonException {
 
-		String attribute = buildAvuAttribForSynchUtilTarget(userName,
-				deviceName);
+		String attribute = buildAvuAttribForSynchUtilTarget(userName, deviceName);
 
-		CollectionAO collectionAO = irodsAccessObjectFactory
-				.getCollectionAO(irodsAccount);
+		CollectionAO collectionAO = irodsAccessObjectFactory.getCollectionAO(irodsAccount);
 
 		try {
-			List<AVUQueryElement> avuQueryElement = new ArrayList<AVUQueryElement>();
-			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(
-					AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
-					attribute));
+			List<AVUQueryElement> avuQueryElement = new ArrayList<>();
+			avuQueryElement.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+					QueryConditionOperators.EQUAL, attribute));
 
 			List<MetaDataAndDomainData> metaDataAndDomainDataList = collectionAO
-					.findMetadataValuesByMetadataQueryForCollection(
-							avuQueryElement, irodsAbsolutePath);
+					.findMetadataValuesByMetadataQueryForCollection(avuQueryElement, irodsAbsolutePath);
 
 			for (MetaDataAndDomainData m : metaDataAndDomainDataList) {
 				if (attribute.equals(m.getAvuAttribute())) {
-					AvuData marker = AvuData.instance(m.getAvuAttribute(),
-							m.getAvuValue(), USER_SYNCH_DIR_TAG);
+					AvuData marker = AvuData.instance(m.getAvuAttribute(), m.getAvuValue(), USER_SYNCH_DIR_TAG);
 					collectionAO.deleteAVUMetadata(irodsAbsolutePath, marker);
 				}
 			}
@@ -523,8 +457,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 	 * @param deviceName
 	 * @return
 	 */
-	private String buildAvuAttribForSynchUtilTarget(final String userName,
-			final String deviceName) {
+	private String buildAvuAttribForSynchUtilTarget(final String userName, final String deviceName) {
 		StringBuilder userDevAttrib = new StringBuilder();
 		userDevAttrib.append(userName);
 		userDevAttrib.append(":");
@@ -532,8 +465,7 @@ public class SynchPropertiesServiceImpl extends AbstractDataUtilsServiceImpl
 		return userDevAttrib.toString();
 	}
 
-	private String buildAvuValueForSynchUtilTarget(
-			final long localLastSynchTimestamp,
+	private String buildAvuValueForSynchUtilTarget(final long localLastSynchTimestamp,
 			final long irodsLastSynchTimestamp, final String localAbsolutePath) {
 		StringBuilder sb = new StringBuilder();
 		sb.append(localLastSynchTimestamp);

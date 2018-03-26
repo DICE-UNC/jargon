@@ -39,7 +39,7 @@ public class NegotiatedClientServerConfiguration {
 	 * Default constructor
 	 *
 	 * @param sslConnection
-	 *            <code>boolean</code> that will be <code>true</code> if ssl is
+	 *            {@code boolean} that will be {@code true} if ssl is
 	 *            used
 	 */
 	public NegotiatedClientServerConfiguration(final boolean sslConnection) {

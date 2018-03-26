@@ -30,8 +30,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to create a diff between two file trees. These trees may be either
  * local or iRODS.
- * <p/>
- * Note that this method will be passed an <code>IRODSAccessObjectFactory</code>
+ * <p>
+ * Note that this method will be passed an {@code IRODSAccessObjectFactory}
  * , and this class assumes that the underlying iRODS connection will be closed
  * outside of the scope of this object.
  *
@@ -54,10 +54,10 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	 * Default constructor
 	 *
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that is used to connect to the
+	 *            {@code IRODSAccount} that is used to connect to the
 	 *            compared iRODS file system
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that is used to obtain
+	 *            {@code IRODSAccessObjectFactory} that is used to obtain
 	 *            objects needed to work with iRODS data cancellation of the
 	 *            diff process.
 	 */
@@ -72,13 +72,13 @@ public class FileTreeDiffUtilityImpl extends AbstractDataUtilsServiceImpl
 	 * Default constructor
 	 *
 	 * @param irodsAccount
-	 *            <code>IRODSAccount</code> that is used to connect to the
+	 *            {@code IRODSAccount} that is used to connect to the
 	 *            compared iRODS file system
 	 * @param irodsAccessObjectFactory
-	 *            <code>IRODSAccessObjectFactory</code> that is used to obtain
+	 *            {@code IRODSAccessObjectFactory} that is used to obtain
 	 *            objects needed to work with iRODS data
 	 * @param transferControlBlock
-	 *            {@link TransferControlBlock} or <code>null</code>. The
+	 *            {@link TransferControlBlock} or {@code null}. The
 	 *            transfer control block allows signalling of a cancellation of
 	 *            the diff process.
 	 */

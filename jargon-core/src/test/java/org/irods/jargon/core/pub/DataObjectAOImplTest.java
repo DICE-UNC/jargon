@@ -48,11 +48,10 @@ import org.irods.jargon.testutils.filemanip.FileGenerator;
 import org.irods.jargon.testutils.filemanip.ScratchFileUtils;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
-
-import junit.framework.Assert;
 
 public class DataObjectAOImplTest {
 
@@ -563,8 +562,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug [#1139] Spaces at the begin or end of a data object name will cause
-	 * an exception
+	 * Bug [#1139] Spaces at the begin or end of a data object name will cause an
+	 * exception
 	 *
 	 * @throws Exception
 	 */
@@ -612,11 +611,8 @@ public class DataObjectAOImplTest {
 		dto.putOperation(localFileName, targetIrodsFile, "", null, null);
 
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
 		DataObject dataObject = dataObjectAO.findByAbsolutePath(targetIrodsFile);
-
 		DataObject actual = dataObjectAO.findById(dataObject.getId());
-
 		Assert.assertNotNull("null data object, was not found", actual);
 
 	}
@@ -627,9 +623,7 @@ public class DataObjectAOImplTest {
 
 		// now put the file
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
-
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
-
 		dataObjectAO.findById(999999999);
 
 	}
@@ -822,8 +816,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * test for transfer get of file with parens and spaces in name gives file
-	 * not found #1
+	 * test for transfer get of file with parens and spaces in name gives file not
+	 * found #1
 	 * 
 	 * @throws Exception
 	 */
@@ -944,8 +938,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get when the local file aready exists, ask the callback listener,
-	 * and get a no for this file. This should not be in error
+	 * Do a get when the local file aready exists, ask the callback listener, and
+	 * get a no for this file. This should not be in error
 	 *
 	 * @throws Exception
 	 */
@@ -1004,8 +998,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get with an overwrite situation, callback listener set to be asked,
-	 * but no callback listener provided (this is an error state)
+	 * Do a get with an overwrite situation, callback listener set to be asked, but
+	 * no callback listener provided (this is an error state)
 	 *
 	 * @throws Exception
 	 */
@@ -1057,9 +1051,9 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Do a get when the local file aready exists, ask the callback listener,
-	 * and get a no all for this file. This should not be in error, and should
-	 * update the transfer options
+	 * Do a get when the local file aready exists, ask the callback listener, and
+	 * get a no all for this file. This should not be in error, and should update
+	 * the transfer options
 	 *
 	 * @throws Exception
 	 */
@@ -1261,8 +1255,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Get a data object where the source name and the target name are
-	 * different. It should be retrieved as the target name.
+	 * Get a data object where the source name and the target name are different. It
+	 * should be retrieved as the target name.
 	 *
 	 * @throws Exception
 	 */
@@ -1817,7 +1811,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -1866,7 +1860,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.replicateIrodsDataObject(dataObjectAbsPath,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_RESOURCE_KEY));
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -1912,7 +1906,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -1953,7 +1947,7 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.addAVUMetadata(targetIrodsFile.getAbsolutePath(), avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -1994,7 +1988,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -2004,8 +1998,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Add 2 avu's that are the same except the attrib value is upper case in
-	 * the second. A case insensiitive query should return both
+	 * Add 2 avu's that are the same except the attrib value is upper case in the
+	 * second. A case insensiitive query should return both
 	 *
 	 * @throws Exception
 	 */
@@ -2056,7 +2050,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -2098,7 +2092,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -2149,7 +2143,7 @@ public class DataObjectAOImplTest {
 		dataObjectAO.deleteAVUMetadata(dataObjectAbsPath, avuData);
 		dataObjectAO.addAVUMetadata(dataObjectAbsPath, avuData);
 
-		List<AVUQueryElement> queryElements = new ArrayList<AVUQueryElement>();
+		List<AVUQueryElement> queryElements = new ArrayList<>();
 
 		queryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryElement.AVUQueryPart.ATTRIBUTE,
 				QueryConditionOperators.EQUAL, expectedAttribName));
@@ -2224,8 +2218,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb to noforce option, should just copy the
-	 * file
+	 * Normal copy operation with tcb to noforce option, should just copy the file
 	 *
 	 * @throws Exception
 	 */
@@ -2375,8 +2368,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Normal copy operation with tcb to noforce option, should just copy the
-	 * file
+	 * Normal copy operation with tcb to noforce option, should just copy the file
 	 *
 	 * @throws Exception
 	 */
@@ -2651,6 +2643,74 @@ public class DataObjectAOImplTest {
 		Assert.assertTrue(dataObjects.size() >= 1);
 	}
 
+	@Test
+	public void testAddAVUMetadataToDataObjectWithSet() throws Exception {
+		String testFileName = "testAddAVUMetadataToDataObjectWithSet.txt";
+		String expectedAttribName = "testAddAVUMetadataToDataObjectWithSet";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String targetIrodsDataObject = targetIrodsCollection + "/" + testFileName;
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.delete();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.setAVUMetadata(targetIrodsDataObject, avuData);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertTrue(dataObjects.size() >= 1);
+	}
+
+	@Test
+	public void testAddAVUMetadataToDataObjectWithSetParentAndPath() throws Exception {
+		String testFileName = "testAddAVUMetadataToDataObjectWithSetParentAndPath.txt";
+		String expectedAttribName = "testAddAVUMetadataToDataObjectWithSetParentAndPath";
+		String expectedValueName = "testval1";
+
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		String absPath = scratchFileUtils.createAndReturnAbsoluteScratchPath(IRODS_TEST_SUBDIR_PATH);
+		String fileNameOrig = FileGenerator.generateFileOfFixedLengthGivenName(absPath, testFileName, 2);
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		IRODSFile targetIrodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
+				.instanceIRODSFile(targetIrodsCollection);
+		targetIrodsFile.delete();
+		targetIrodsFile.mkdirs();
+		DataTransferOperations dataTransferOperationsAO = irodsFileSystem.getIRODSAccessObjectFactory()
+				.getDataTransferOperations(irodsAccount);
+		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
+
+		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
+		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
+		dataObjectAO.setAVUMetadata(targetIrodsCollection, testFileName, avuData);
+
+		List<AVUQueryElement> avuQueryElements = new ArrayList<>();
+		avuQueryElements.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE,
+				QueryConditionOperators.EQUAL, expectedAttribName));
+
+		List<DataObject> dataObjects = dataObjectAO.findDomainByMetadataQuery(avuQueryElements);
+		Assert.assertTrue(dataObjects.size() >= 1);
+	}
+
 	/**
 	 * Test for https://github.com/DICE-UNC/jargon/issues/227
 	 * 
@@ -2723,7 +2783,7 @@ public class DataObjectAOImplTest {
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
 
 		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
-		List<AvuData> bulkAvuData = new ArrayList<AvuData>();
+		List<AvuData> bulkAvuData = new ArrayList<>();
 		bulkAvuData.add(avuData);
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<BulkAVUOperationResponse> response = dataObjectAO.addBulkAVUMetadataToDataObject(targetIrodsDataObject,
@@ -2972,7 +3032,6 @@ public class DataObjectAOImplTest {
 				.instanceIRODSFile(targetIrodsCollection);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, null, null, false);
 
-		DataObjectAO rodsDataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccountRods);
 		CollectionAO rodsCollectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccountRods);
 
 		rodsCollectionAO.setAccessPermissionReadAsAdmin("", targetIrodsCollection,
@@ -3075,8 +3134,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Added to test appending path in dataObjectAOImpl causes duplicate file
-	 * name #73
+	 * Added to test appending path in dataObjectAOImpl causes duplicate file name
+	 * #73
 	 *
 	 * https://github.com/DICE-UNC/jargon/issues/73
 	 *
@@ -3198,6 +3257,9 @@ public class DataObjectAOImplTest {
 
 		dataObjectAO.setAccessPermissionOwn("", targetIrodsCollection + "/" + testFileName,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY));
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
+		collectionAO.setAccessPermissionOwn(irodsAccount.getZone(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 
 		// log in as the secondary user and test read access
 		IRODSAccount secondaryAccount = testingPropertiesHelper
@@ -3245,6 +3307,7 @@ public class DataObjectAOImplTest {
 	}
 
 	@Test
+
 	public final void testGetPermissionsOwn() throws Exception {
 		// generate a local scratch file
 
@@ -3399,8 +3462,10 @@ public class DataObjectAOImplTest {
 				.getDataObjectAO(irodsAccount);
 		IRODSFile irodsFile = irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(targetIrodsCollection);
+		CollectionAO collectionAO = irodsFileSystem.getIRODSAccessObjectFactory().getCollectionAO(irodsAccount);
 		dataObjectAO.putLocalDataObjectToIRODS(new File(fileNameOrig), irodsFile, true);
-
+		collectionAO.setAccessPermissionRead(irodsAccount.getZone(), targetIrodsCollection,
+				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY), true);
 		dataObjectAO.setAccessPermission("", targetIrodsCollection + "/" + testFileName,
 				testingProperties.getProperty(TestingPropertiesHelper.IRODS_SECONDARY_USER_KEY),
 				FilePermissionEnum.READ);
@@ -3414,7 +3479,8 @@ public class DataObjectAOImplTest {
 				.buildIRODSAccountFromSecondaryTestProperties(testingProperties);
 		IRODSFile irodsFileForSecondaryUser = irodsFileSystem.getIRODSFileFactory(secondaryAccount)
 				.instanceIRODSFile(targetIrodsCollection + "/" + testFileName);
-		Assert.assertTrue(irodsFileForSecondaryUser.canRead());
+
+		Assert.assertTrue("user unable to read directory", irodsFileForSecondaryUser.canRead());
 
 	}
 
@@ -3493,8 +3559,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * [#1575] jargon-core permissions issue Add a user to a group, add that
-	 * group to file permissions, and list the group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that group
+	 * to file permissions, and list the group
 	 *
 	 * @throws Exception
 	 */
@@ -3554,8 +3620,8 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * [#1575] jargon-core permissions issue Add a user to a group, add that
-	 * group to file permissions, and list the group
+	 * [#1575] jargon-core permissions issue Add a user to a group, add that group
+	 * to file permissions, and list the group
 	 *
 	 * @throws Exception
 	 */
@@ -4198,8 +4264,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug 629-malloc/resource error in irods when doing
-	 * findDomainByMetadataQuery
+	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
 	 */
 	@Test
 	public void testFindDataObjectDomainDataByAVUQueryForBug629() throws Exception {
@@ -4255,6 +4320,7 @@ public class DataObjectAOImplTest {
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.ATTRIBUTE, QueryConditionOperators.EQUAL,
 				expectedAttribName));
 		avus.add(AVUQueryElement.instanceForValueQuery(AVUQueryPart.VALUE, QueryConditionOperators.LIKE,
+
 				expectedAttribValue + "%"));
 
 		List<DataObject> files = dAO.findDomainByMetadataQuery(avus);
@@ -4264,8 +4330,7 @@ public class DataObjectAOImplTest {
 	}
 
 	/**
-	 * Bug 629-malloc/resource error in irods when doing
-	 * findDomainByMetadataQuery
+	 * Bug 629-malloc/resource error in irods when doing findDomainByMetadataQuery
 	 */
 	@Test(expected = IllegalArgumentException.class)
 	public void testFindDataObjectDomainDataByAVUQueryForBug629NoQueryElements() throws Exception {
@@ -4274,7 +4339,7 @@ public class DataObjectAOImplTest {
 
 		DataObjectAO dAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 
-		ArrayList<AVUQueryElement> avus = new ArrayList<AVUQueryElement>();
+		ArrayList<AVUQueryElement> avus = new ArrayList<>();
 
 		dAO.findDomainByMetadataQuery(avus);
 
@@ -4838,7 +4903,8 @@ public class DataObjectAOImplTest {
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
 
 		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
-		List<AvuData> bulkAvuData = new ArrayList<AvuData>();
+
+		List<AvuData> bulkAvuData = new ArrayList<>();
 		bulkAvuData.add(avuData);
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<BulkAVUOperationResponse> response = dataObjectAO.addBulkAVUMetadataToDataObject(targetIrodsDataObject,
@@ -4883,7 +4949,8 @@ public class DataObjectAOImplTest {
 		dataTransferOperationsAO.putOperation(new File(fileNameOrig), targetIrodsFile, null, null);
 
 		AvuData avuData = AvuData.instance(expectedAttribName, expectedValueName, "");
-		List<AvuData> bulkAvuData = new ArrayList<AvuData>();
+
+		List<AvuData> bulkAvuData = new ArrayList<>();
 		bulkAvuData.add(avuData);
 		DataObjectAO dataObjectAO = irodsFileSystem.getIRODSAccessObjectFactory().getDataObjectAO(irodsAccount);
 		List<BulkAVUOperationResponse> response = dataObjectAO.addBulkAVUMetadataToDataObject(targetIrodsDataObject,

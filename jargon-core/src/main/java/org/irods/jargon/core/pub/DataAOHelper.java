@@ -58,8 +58,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public final class DataAOHelper extends AOHelper {
-	public static final Logger log = LoggerFactory
-			.getLogger(DataAOHelper.class);
+	public static final Logger log = LoggerFactory.getLogger(DataAOHelper.class);
 
 	private final IRODSAccessObjectFactory irodsAccessObjectFactory;
 	private final IRODSAccount irodsAccount;
@@ -67,8 +66,8 @@ public final class DataAOHelper extends AOHelper {
 
 	private int putBufferSize = 0;
 
-	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory,
-			final IRODSAccount irodsAccount) throws JargonException {
+	DataAOHelper(final IRODSAccessObjectFactory irodsAccessObjectFactory, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super();
 		if (irodsAccessObjectFactory == null) {
 			throw new IllegalArgumentException("null irodsAccessObjectFactory");
@@ -81,103 +80,45 @@ public final class DataAOHelper extends AOHelper {
 		this.irodsAccessObjectFactory = irodsAccessObjectFactory;
 		this.irodsAccount = irodsAccount;
 
-		this.irodsAccessObjectFactory.getJargonProperties()
-				.getSendInputStreamBufferSize();
-		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties()
-				.getPutBufferSize();
-		checksumManager = new ChecksumManagerImpl(irodsAccount,
-				irodsAccessObjectFactory);
+		this.irodsAccessObjectFactory.getJargonProperties().getSendInputStreamBufferSize();
+		putBufferSize = this.irodsAccessObjectFactory.getJargonProperties().getPutBufferSize();
+		checksumManager = new ChecksumManagerImpl(irodsAccount, irodsAccessObjectFactory);
 
 	}
 
 	/**
-	 * Create a set of selects for a data object, used in general query.
-	 *
-	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will be appended with the
-	 *            selects
-	 *
-	 * @return <code>String</code> with select statements for the domain object.
-	 */
-	void buildSelects(final IRODSGenQueryBuilder builder)
-			throws JargonException {
-
-		if (builder == null) {
-			throw new IllegalArgumentException("null builder");
-		}
-
-		try {
-			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_REPL_NUM)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_TYPE_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
-					// FIXME: use resc id for 4.2 --> lookup of the leaf
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_REPL_STATUS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_DATA_STATUS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
-					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_CREATE_TIME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_D_MODIFY_TIME);
-		} catch (GenQueryBuilderException e) {
-			throw new JargonException(e);
-		}
-
-	}
-
-	/**
-	 * Return a <code>DataObject</code> domain object given a result row from a
-	 * query
+	 * Return a {@code DataObject} domain object given a result row from a query
 	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow} containing the result of a query
 	 * @return {@link DataObject} that represents the data in the row.
 	 * @throws JargonException
 	 */
-	public static DataObject buildDomainFromResultSetRow(
-			final IRODSQueryResultRow row) throws JargonException {
+	public static DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row) throws JargonException {
 		DataObject dataObject = new DataObject();
 		dataObject.setId(Integer.parseInt(row.getColumn(0)));
 		dataObject.setCollectionId(Integer.parseInt(row.getColumn(1)));
 		dataObject.setCollectionName(row.getColumn(2));
 		dataObject.setDataName(row.getColumn(3));
 		dataObject.setDataReplicationNumber(Integer.parseInt(row.getColumn(4)));
-		dataObject.setDataVersion(IRODSDataConversionUtil
-				.getIntOrZeroFromIRODSValue(row.getColumn(5)));
+		dataObject.setDataVersion(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(5)));
 		dataObject.setDataTypeName(row.getColumn(6));
 		dataObject.setDataSize(Long.parseLong(row.getColumn(7)));
-		dataObject.setResourceName(row.getColumn(8));
-		dataObject.setDataPath(row.getColumn(9));
-		dataObject.setDataOwnerName(row.getColumn(10));
-		dataObject.setDataOwnerZone(row.getColumn(11));
-		dataObject.setReplicationStatus(row.getColumn(12));
-		dataObject.setDataStatus(row.getColumn(13));
-		dataObject.setChecksum(row.getColumn(14));
-		dataObject.setExpiry(row.getColumn(15));
-		dataObject.setDataMapId(Integer.parseInt(row.getColumn(16)));
-		dataObject.setComments(row.getColumn(17));
-		dataObject.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(18)));
-		dataObject.setUpdatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(19)));
+		dataObject.setResourceId(row.getColumn(8));
+		dataObject.setResourceName(row.getColumn(9));
+		dataObject.setDataPath(row.getColumn(10));
+		dataObject.setDataOwnerName(row.getColumn(11));
+		dataObject.setDataOwnerZone(row.getColumn(12));
+		dataObject.setReplicationStatus(row.getColumn(13));
+		dataObject.setDataStatus(row.getColumn(14));
+		dataObject.setChecksum(row.getColumn(15));
+		dataObject.setExpiry(row.getColumn(16));
+		dataObject.setDataMapId(Integer.parseInt(row.getColumn(17)));
+		dataObject.setComments(row.getColumn(18));
+		dataObject.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(19)));
+		dataObject.setUpdatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(20)));
 
-		// add info to track position in records for possible requery
+		// add info to track position in records for possible re-query
 		dataObject.setLastResult(row.isLastResult());
 		dataObject.setCount(row.getRecordCount());
 
@@ -189,8 +130,7 @@ public final class DataAOHelper extends AOHelper {
 		return dataObject;
 	}
 
-	public static List<DataObject> buildListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet)
+	public static List<DataObject> buildListFromResultSet(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
 		final List<DataObject> data = new ArrayList<DataObject>();
@@ -209,8 +149,7 @@ public final class DataAOHelper extends AOHelper {
 	 * @throws JargonException
 	 */
 	static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
-			final IRODSQueryResultSetInterface irodsQueryResultSet)
-			throws JargonException {
+			final IRODSQueryResultSetInterface irodsQueryResultSet) throws JargonException {
 
 		if (irodsQueryResultSet == null) {
 			throw new JargonException("null irodsQueryResultSet");
@@ -219,9 +158,8 @@ public final class DataAOHelper extends AOHelper {
 		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
 
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
-			metaDataResults
-					.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(
-							row, irodsQueryResultSet.getTotalRecords()));
+			metaDataResults.add(buildMetaDataAndDomainDataFromResultSetRowForDataObject(row,
+					irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -234,9 +172,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(
-			final IRODSQueryResultRow row, final int totalRecordCount)
-			throws JargonException {
+	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(final IRODSQueryResultRow row,
+			final int totalRecordCount) throws JargonException {
 
 		String domainId = row.getColumn(0);
 		StringBuilder sb = new StringBuilder();
@@ -253,9 +190,8 @@ public final class DataAOHelper extends AOHelper {
 		String attributeValue = row.getColumn(5);
 		String attributeUnits = row.getColumn(6);
 
-		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				MetadataDomain.DATA, domainId, domainUniqueName, 0, null, null,
-				attributeId, attributeName, attributeValue, attributeUnits);
+		MetaDataAndDomainData data = MetaDataAndDomainData.instance(MetadataDomain.DATA, domainId, domainUniqueName, 0,
+				null, null, attributeId, attributeName, attributeValue, attributeUnits);
 
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
@@ -275,13 +211,10 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	void processNormalGetTransfer(final File localFileToHoldData,
-			final long length,
-			final AbstractIRODSMidLevelProtocol irodsProtocol,
-			final TransferOptions transferOptions,
+	void processNormalGetTransfer(final File localFileToHoldData, final long length,
+			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferOptions transferOptions,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener) throws JargonException {
 
 		log.info("normal file transfer started, get output stream for local destination file");
 
@@ -302,70 +235,58 @@ public final class DataAOHelper extends AOHelper {
 
 		try {
 
-			if (irodsProtocol.getPipelineConfiguration()
-					.getLocalFileOutputStreamBufferSize() <= 0) {
+			if (irodsProtocol.getPipelineConfiguration().getLocalFileOutputStreamBufferSize() <= 0) {
 
-				localFileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(localFileToHoldData));
+				localFileOutputStream = new BufferedOutputStream(new FileOutputStream(localFileToHoldData));
 			} else {
-				localFileOutputStream = new BufferedOutputStream(
-						new FileOutputStream(localFileToHoldData),
-						irodsProtocol.getPipelineConfiguration()
-								.getLocalFileOutputStreamBufferSize());
+				localFileOutputStream = new BufferedOutputStream(new FileOutputStream(localFileToHoldData),
+						irodsProtocol.getPipelineConfiguration().getLocalFileOutputStreamBufferSize());
 			}
 		} catch (FileNotFoundException e) {
-			log.error(
-					"FileNotFoundException when trying to create a new file for the local output stream for {}",
+			log.error("FileNotFoundException when trying to create a new file for the local output stream for {}",
 					localFileToHoldData.getAbsolutePath(), e);
-			throw new JargonException(
-					"FileNotFoundException for local file when trying to get to: "
-							+ localFileToHoldData.getAbsolutePath(), e);
+			throw new JargonException("FileNotFoundException for local file when trying to get to: "
+					+ localFileToHoldData.getAbsolutePath(), e);
 		}
 
 		ConnectionProgressStatusListener intraFileStatusListener = null;
 
 		/*
-		 * If specified by options, and with a call-back listener registered,
-		 * create an object to aggregate and channel within-file progress
-		 * reports to the caller.
+		 * If specified by options, and with a call-back listener registered, create an
+		 * object to aggregate and channel within-file progress reports to the caller.
 		 */
 		if (transferStatusCallbackListener != null
-				&& transferControlBlock.getTransferOptions()
-						.isIntraFileStatusCallbacks()) {
-			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-					.instance(TransferType.GET, length, transferControlBlock,
-							transferStatusCallbackListener);
+				&& transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks()) {
+			intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instance(TransferType.GET, length,
+					transferControlBlock, transferStatusCallbackListener);
 		}
 
 		// read the message byte stream into the local file
-		irodsProtocol.read(localFileOutputStream, length,
-				intraFileStatusListener);
+		irodsProtocol.read(localFileOutputStream, length, intraFileStatusListener);
 		log.info("transfer is complete");
 		try {
 			localFileOutputStream.flush();
 			localFileOutputStream.close();
 		} catch (IOException e) {
-			log.error(
-					"IOException when trying to create a new file for the local output stream for {}",
+			log.error("IOException when trying to create a new file for the local output stream for {}",
 					localFileToHoldData.getAbsolutePath(), e);
 			throw new JargonException(
-					"IOException for local file when trying to get to: "
-							+ localFileToHoldData.getAbsolutePath(), e);
+					"IOException for local file when trying to get to: " + localFileToHoldData.getAbsolutePath(), e);
 		}
 	}
 
 	/**
-	 * Process a put transfer (uplaod a file to iRODS from the local file
-	 * system). This method is meant to be used within the API, and as such, is
-	 * not useful to api users. To do normal data transfers, please consult the
+	 * Process a put transfer (uplaod a file to iRODS from the local file system).
+	 * This method is meant to be used within the API, and as such, is not useful to
+	 * api users. To do normal data transfers, please consult the
 	 * {@link DataTransferOperations} access object.
 	 *
 	 * @param localFile
-	 *            <code>File</code> which points to the local data object or
-	 *            collection to uplaod
+	 *            {@code File} which points to the local data object or collection
+	 *            to uplaod
 	 * @param overwrite
-	 *            <code>boolean</code> that indicates whether the data can be
-	 *            overwritten // FIXME: migrate to the transfer control block
+	 *            {@code boolean} that indicates whether the data can be overwritten
+	 *            // FIXME: migrate to the transfer control block
 	 * @param targetFile
 	 *            {@link IRODSFile} that will be the target of the put
 	 * @param irodsProtocol
@@ -375,16 +296,13 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link TransferControlBlock} that contains information that
 	 *            controls the transfer operation, this is required
 	 * @param transferStatusCallbackListener
-	 *            {@link StatusCallbackListener} implementation to receive
-	 *            status callbacks, this can be set to <code>null</code> if
-	 *            desired
+	 *            {@link StatusCallbackListener} implementation to receive status
+	 *            callbacks, this can be set to {@code null} if desired
 	 * @throws JargonException
 	 * @throws FileNotFoundException
 	 */
-	void processNormalPutTransfer(final File localFile,
-			final boolean overwrite, final IRODSFile targetFile,
-			final AbstractIRODSMidLevelProtocol irodsProtocol,
-			final TransferControlBlock transferControlBlock,
+	void processNormalPutTransfer(final File localFile, final boolean overwrite, final IRODSFile targetFile,
+			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
 			final TransferStatusCallbackListener transferStatusCallbackListener)
 			throws JargonException, FileNotFoundException {
 
@@ -407,8 +325,7 @@ public final class DataAOHelper extends AOHelper {
 		log.info("processNormalPutTransfer");
 
 		// make a defensive copy
-		TransferOptions myTransferOptions = new TransferOptions(
-				transferControlBlock.getTransferOptions());
+		TransferOptions myTransferOptions = new TransferOptions(transferControlBlock.getTransferOptions());
 		myTransferOptions.setMaxThreads(0);
 
 		boolean execFlag = false;
@@ -417,58 +334,44 @@ public final class DataAOHelper extends AOHelper {
 			execFlag = true;
 		}
 
-		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(
-				targetFile.getAbsolutePath(), localFile.length(),
-				targetFile.getResource(), overwrite, myTransferOptions,
-				execFlag);
+		DataObjInp dataObjInp = DataObjInp.instanceForNormalPutStrategy(targetFile.getAbsolutePath(),
+				localFile.length(), targetFile.getResource(), overwrite, myTransferOptions, execFlag);
 
 		// see if checksum is required
 
-		if (myTransferOptions != null) {
-			if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
-					|| myTransferOptions.isComputeChecksumAfterTransfer()) {
-				log.info("computing a checksum on the file at:{}",
-						localFile.getAbsolutePath());
+		if (myTransferOptions.isComputeAndVerifyChecksumAfterTransfer()
+				|| myTransferOptions.isComputeChecksumAfterTransfer()) {
+			log.info("computing a checksum on the file at:{}", localFile.getAbsolutePath());
 
-				ChecksumValue localFileChecksum = computeLocalFileChecksum(
-						localFile, null);
+			ChecksumValue localFileChecksum = computeLocalFileChecksum(localFile, null);
 
-				log.info("local file checksum is:{}", localFileChecksum);
-				dataObjInp.setFileChecksumValue(localFileChecksum);
-			}
+			log.info("local file checksum is:{}", localFileChecksum);
+			dataObjInp.setFileChecksumValue(localFileChecksum);
 		}
 
 		ConnectionProgressStatusListener intraFileStatusListener = null;
 
 		/*
-		 * If specified by options, and with a call-back listener registered,
-		 * create an object to aggregate and channel within-file progress
-		 * reports to the caller.
+		 * If specified by options, and with a call-back listener registered, create an
+		 * object to aggregate and channel within-file progress reports to the caller.
 		 */
-		if (transferStatusCallbackListener != null
-				&& myTransferOptions.isIntraFileStatusCallbacks()) {
-			intraFileStatusListener = DefaultIntraFileProgressCallbackListener
-					.instance(TransferType.PUT, localFile.length(),
-							transferControlBlock,
-							transferStatusCallbackListener);
+		if (transferStatusCallbackListener != null && myTransferOptions.isIntraFileStatusCallbacks()) {
+			intraFileStatusListener = DefaultIntraFileProgressCallbackListener.instance(TransferType.PUT,
+					localFile.length(), transferControlBlock, transferStatusCallbackListener);
 		}
 
 		InputStream fileInputStream = new FileInputStream(localFile);
-		int inputStreamBuffSize = irodsAccessObjectFactory
-				.getJargonProperties().getLocalFileInputStreamBufferSize();
+		int inputStreamBuffSize = irodsAccessObjectFactory.getJargonProperties().getLocalFileInputStreamBufferSize();
 		if (inputStreamBuffSize == 0) {
 			log.debug("local file input stream will use default buffering");
 			fileInputStream = new BufferedInputStream(fileInputStream);
 		} else if (inputStreamBuffSize > 0) {
-			log.debug(
-					"local file input stream will use specified buffering:{}",
-					inputStreamBuffSize);
-			fileInputStream = new BufferedInputStream(fileInputStream,
-					inputStreamBuffSize);
+			log.debug("local file input stream will use specified buffering:{}", inputStreamBuffSize);
+			fileInputStream = new BufferedInputStream(fileInputStream, inputStreamBuffSize);
 		}
 
-		irodsProtocol.irodsFunctionIncludingAllDataInStream(dataObjInp,
-				localFile.length(), fileInputStream, intraFileStatusListener);
+		irodsProtocol.irodsFunctionIncludingAllDataInStream(dataObjInp, localFile.length(), fileInputStream,
+				intraFileStatusListener);
 
 	}
 
@@ -477,13 +380,12 @@ public final class DataAOHelper extends AOHelper {
 	 *
 	 * @param localFile
 	 * @param overrideChecksumEncoding
-	 *            {@link ChecksumEncodingEnum} to use explicitly, otherwise will
-	 *            use a default and <code>null</code> can be passed here
+	 *            {@link ChecksumEncodingEnum} to use explicitly, otherwise will use
+	 *            a default and {@code null} can be passed here
 	 * @return
 	 * @throws JargonException
 	 */
-	ChecksumValue computeLocalFileChecksum(final File localFile,
-			final ChecksumEncodingEnum overrideChecksumEncoding)
+	ChecksumValue computeLocalFileChecksum(final File localFile, final ChecksumEncodingEnum overrideChecksumEncoding)
 			throws JargonException {
 
 		log.info("computeLocalFileChecksum()");
@@ -504,24 +406,20 @@ public final class DataAOHelper extends AOHelper {
 
 		ChecksumEncodingEnum checksumEncoding;
 		if (overrideChecksumEncoding == null) {
-			checksumEncoding = checksumManager
-					.determineChecksumEncodingForTargetServer();
+			checksumEncoding = checksumManager.determineChecksumEncodingForTargetServer();
 		} else {
 			checksumEncoding = overrideChecksumEncoding;
 		}
 
 		log.info("using checksum algorithm:{}", checksumEncoding);
 
-		AbstractChecksumComputeStrategy strategy = irodsAccessObjectFactory
-				.getIrodsSession().getLocalChecksumComputerFactory()
-				.instance(checksumEncoding);
+		AbstractChecksumComputeStrategy strategy = irodsAccessObjectFactory.getIrodsSession()
+				.getLocalChecksumComputerFactory().instance(checksumEncoding);
 		try {
-			return strategy.computeChecksumValueForLocalFile(localFile
-					.getAbsolutePath());
+			return strategy.computeChecksumValueForLocalFile(localFile.getAbsolutePath());
 		} catch (FileNotFoundException e) {
 			log.error("cannot find file for computing local checksum", e);
-			throw new JargonException(
-					"cannot find local file to do the checksum", e);
+			throw new JargonException("cannot find local file to do the checksum", e);
 		}
 
 	}
@@ -535,17 +433,13 @@ public final class DataAOHelper extends AOHelper {
 	 * @deprecated see {@link DataObjectChecksumUtilitiesAO} in future
 	 */
 	@Deprecated
-	ChecksumValue computeChecksumValueFromIrodsData(final String irodsValue)
-			throws JargonException {
+	ChecksumValue computeChecksumValueFromIrodsData(final String irodsValue) throws JargonException {
 		// param checks in delegated method
-		return checksumManager
-				.determineChecksumEncodingFromIrodsData(irodsValue.trim());
+		return checksumManager.determineChecksumEncodingFromIrodsData(irodsValue.trim());
 	}
 
-	void putReadWriteLoop(final File localFile, final boolean overwrite,
-			final IRODSFile targetFile, final int fd,
-			final AbstractIRODSMidLevelProtocol irodsProtocol,
-			final TransferControlBlock transferControlBlock,
+	void putReadWriteLoop(final File localFile, final boolean overwrite, final IRODSFile targetFile, final int fd,
+			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
 			final ConnectionProgressStatusListener intraFileStatusListener)
 			throws JargonException, FileNotFoundException {
 
@@ -568,23 +462,19 @@ public final class DataAOHelper extends AOHelper {
 		}
 
 		/*
-		 * Process the iRODS put operation by successively sending chunks of the
-		 * file in a loop
+		 * Process the iRODS put operation by successively sending chunks of the file in
+		 * a loop
 		 */
 
 		long lengthLeftToSend = localFile.length();
 		InputStream fileInputStream = new FileInputStream(localFile);
-		int inputStreamBuffSize = irodsAccessObjectFactory
-				.getJargonProperties().getLocalFileInputStreamBufferSize();
+		int inputStreamBuffSize = irodsAccessObjectFactory.getJargonProperties().getLocalFileInputStreamBufferSize();
 		if (inputStreamBuffSize == 0) {
 			log.debug("local file input stream will use default buffering");
 			fileInputStream = new BufferedInputStream(fileInputStream);
 		} else if (inputStreamBuffSize > 0) {
-			log.debug(
-					"local file input stream will use specified buffering:{}",
-					inputStreamBuffSize);
-			fileInputStream = new BufferedInputStream(fileInputStream,
-					inputStreamBuffSize);
+			log.debug("local file input stream will use specified buffering:{}", inputStreamBuffSize);
+			fileInputStream = new BufferedInputStream(fileInputStream, inputStreamBuffSize);
 		}
 
 		try {
@@ -600,19 +490,15 @@ public final class DataAOHelper extends AOHelper {
 					transferControlBlock.setCancelled(true);
 				}
 
-				if (transferControlBlock.isCancelled()
-						|| transferControlBlock.isPaused()) {
+				if (transferControlBlock.isCancelled() || transferControlBlock.isPaused()) {
 					log.info("cancelling");
 					break;
 				}
 
 				lengthThisSend = Math.min(putBufferSize, lengthLeftToSend);
-				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd,
-						lengthThisSend);
-				lengthLeftToSend -= irodsProtocol
-						.irodsFunctionForStreamingToIRODSInFrames(
-								openedDataObjInp, (int) lengthThisSend,
-								fileInputStream, intraFileStatusListener);
+				openedDataObjInp = OpenedDataObjInp.instanceForFilePut(fd, lengthThisSend);
+				lengthLeftToSend -= irodsProtocol.irodsFunctionForStreamingToIRODSInFrames(openedDataObjInp,
+						(int) lengthThisSend, fileInputStream, intraFileStatusListener);
 
 				log.debug("length left:{}", lengthLeftToSend);
 
@@ -620,8 +506,7 @@ public final class DataAOHelper extends AOHelper {
 
 			if (lengthLeftToSend != 0) {
 				log.error("did not send all data");
-				irodsAccessObjectFactory.getIrodsSession()
-						.discardSessionForErrors(irodsAccount);
+				irodsAccessObjectFactory.getIrodsSession().discardSessionForErrors(irodsAccount);
 				throw new JargonException("did not send all data");
 			}
 
@@ -644,10 +529,9 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Check if the target of a put is an iRODS collection or data object name.
-	 * This method is smart enough to know that if you put a data object to an
-	 * iRODS collection, it can carry over the fileName in the specified iRODS
-	 * collection.
+	 * Check if the target of a put is an iRODS collection or data object name. This
+	 * method is smart enough to know that if you put a data object to an iRODS
+	 * collection, it can carry over the fileName in the specified iRODS collection.
 	 *
 	 * @param localFile
 	 * @param irodsFileDestination
@@ -655,9 +539,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @return
 	 * @throws JargonException
 	 */
-	IRODSFile checkTargetFileForPutOperation(final File localFile,
-			final IRODSFile irodsFileDestination, final boolean ignoreChecks,
-			final IRODSFileFactory irodsFileFactory) throws JargonException {
+	IRODSFile checkTargetFileForPutOperation(final File localFile, final IRODSFile irodsFileDestination,
+			final boolean ignoreChecks, final IRODSFileFactory irodsFileFactory) throws JargonException {
 
 		if (localFile == null) {
 			throw new IllegalArgumentException("null localFile");
@@ -679,11 +562,9 @@ public final class DataAOHelper extends AOHelper {
 		} else {
 
 			if (irodsFileDestination.isDirectory()) {
-				log.info(
-						"put specifying an irods collection, will use the local file name as the iRODS file name:{}",
+				log.info("put specifying an irods collection, will use the local file name as the iRODS file name:{}",
 						localFile.getName());
-				targetFile = irodsFileFactory.instanceIRODSFile(
-						irodsFileDestination.getAbsolutePath(),
+				targetFile = irodsFileFactory.instanceIRODSFile(irodsFileDestination.getAbsolutePath(),
 						localFile.getName());
 				targetFile.setResource(irodsFileDestination.getResource());
 			} else {
@@ -699,33 +580,27 @@ public final class DataAOHelper extends AOHelper {
 	 * @param builder
 	 * @return
 	 */
-	static void buildACLQueryForCollectionPathAndDataName(
-			final String irodsCollectionAbsolutePath, final String dataName,
-			final IRODSGenQueryBuilder builder) throws JargonException {
+	static void buildACLQueryForCollectionPathAndDataName(final String irodsCollectionAbsolutePath,
+			final String dataName, final IRODSGenQueryBuilder builder) throws JargonException {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_ACCESS_TYPE)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_TYPE)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_ZONE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL,
 							irodsCollectionAbsolutePath)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_DATA_NAME,
-							QueryConditionOperators.EQUAL, dataName);
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_DATA_NAME, QueryConditionOperators.EQUAL,
+							dataName);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}
 	}
 
 	/**
-	 * Special transfer operation when the file is to be read and streamed to
-	 * the given output.
+	 * Special transfer operation when the file is to be read and streamed to the
+	 * given output.
 	 *
 	 * @param irodsFile
 	 * @param localFileToHoldData
@@ -736,12 +611,10 @@ public final class DataAOHelper extends AOHelper {
 	 * @param transferControlBlock
 	 * @throws JargonException
 	 */
-	void processGetTransferViaRead(final IRODSFile irodsFile,
-			final File localFileToHoldData, final long irodsFileLength,
-			final TransferOptions transferOptions, final int fd,
+	void processGetTransferViaRead(final IRODSFile irodsFile, final File localFileToHoldData,
+			final long irodsFileLength, final TransferOptions transferOptions, final int fd,
 			final TransferControlBlock transferControlBlock,
-			final TransferStatusCallbackListener transferStatusCallbackListener)
-			throws JargonException {
+			final TransferStatusCallbackListener transferStatusCallbackListener) throws JargonException {
 		log.info("processGetTransferViaRead()");
 
 		if (localFileToHoldData == null) {
@@ -759,40 +632,32 @@ public final class DataAOHelper extends AOHelper {
 		log.info("streaming file transfer started, get output stream for local destination file");
 
 		try {
-			IRODSFileInputStream ifis = irodsAccessObjectFactory
-					.getIRODSFileFactory(irodsAccount)
+			IRODSFileInputStream ifis = irodsAccessObjectFactory.getIRODSFileFactory(irodsAccount)
 					.instanceIRODSFileInputStreamGivingFD(irodsFile, fd);
 
-			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory
-					.getStream2StreamAO(irodsAccount);
+			Stream2StreamAO stream2StreamAO = irodsAccessObjectFactory.getStream2StreamAO(irodsAccount);
 
-			if (transferControlBlock.getTransferOptions()
-					.isIntraFileStatusCallbacks()
+			if (transferControlBlock.getTransferOptions().isIntraFileStatusCallbacks()
 					&& transferStatusCallbackListener != null) {
 				log.info("wrapping stream with callback stream wrapper");
 				ConnectionProgressStatusListener connectionProgressStatusListener = DefaultIntraFileProgressCallbackListener
-						.instanceSettingTransferOptions(TransferType.GET,
-								irodsFileLength, transferControlBlock,
-								transferStatusCallbackListener,
-								transferControlBlock.getTransferOptions());
-				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(
-						connectionProgressStatusListener, ifis);
+						.instanceSettingTransferOptions(TransferType.GET, irodsFileLength, transferControlBlock,
+								transferStatusCallbackListener, transferControlBlock.getTransferOptions());
+				InputStream wrapper = new ByteCountingCallbackInputStreamWrapper(connectionProgressStatusListener,
+						ifis);
 
-				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper,
-						localFileToHoldData, irodsFileLength,
-						irodsAccessObjectFactory.getJargonProperties()
-								.getGetBufferSize());
+				stream2StreamAO.transferStreamToFileUsingIOStreams(wrapper, localFileToHoldData, irodsFileLength,
+						irodsAccessObjectFactory.getJargonProperties().getGetBufferSize());
 
 			} else {
 
-				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis,
-						localFileToHoldData, irodsFileLength, 4194304);
+				stream2StreamAO.transferStreamToFileUsingIOStreams(ifis, localFileToHoldData, irodsFileLength, 4194304);
 
 			}
 
 		} catch (JargonException e) {
-			log.error("Exception streaming data to local file from iRODS: {}",
-					localFileToHoldData.getAbsolutePath(), e);
+			log.error("Exception streaming data to local file from iRODS: {}", localFileToHoldData.getAbsolutePath(),
+					e);
 			throw e;
 		} finally {
 
@@ -805,56 +670,51 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Append the appropriately formed query condition to the provided builder
-	 * for a collection metadata query
+	 * Append the appropriately formed query condition to the provided builder for a
+	 * collection metadata query
 	 *
 	 * @param queryElement
 	 *            {@link AVUQueryElement} to be added as a condition
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will have the derived
-	 *            condition appended
+	 *            {@link IRODSGenQueryBuilder} that will have the derived condition
+	 *            appended
 	 * @throws JargonQueryException
 	 *             if the query cannot be built
 	 */
-	public static void appendConditionPartToBuilderQuery(
-			final AVUQueryElement queryElement,
+	public static void appendConditionPartToBuilderQuery(final AVUQueryElement queryElement,
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
-					queryElement.getOperator(), queryElement.getValue().trim());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
-					queryElement.getOperator(), queryElement.getValue().trim());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE, queryElement.getOperator(),
+					queryElement.getValue().trim());
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS,
-					queryElement.getOperator(), queryElement.getValue().trim());
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_UNITS, queryElement.getOperator(),
+					queryElement.getValue().trim());
+
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
 		}
 
 	}
 
-	public static void translateAVUQueryElementOperatorToBuilderQueryCondition(
-			final AVUQueryElement avuQueryElement) {
+	public static void translateAVUQueryElementOperatorToBuilderQueryCondition(final AVUQueryElement avuQueryElement) {
 
 	}
 
 	/**
-	 * Given the provide builder, add the selects for the iCAT data object.
-	 * These will be appended to the provided <code>IRODSGenQueryBuilder</code>
-	 * object
+	 * Given the provide builder, add the selects for the iCAT data object. These
+	 * will be appended to the provided {@code IRODSGenQueryBuilder} object
 	 *
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will have the selects
-	 *            appended to it
+	 *            {@link IRODSGenQueryBuilder} that will have the selects appended
+	 *            to it
 	 * @throws GenQueryBuilderException
 	 */
-	public static void addDataObjectSelectsToBuilder(
-			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+	public static void addDataObjectSelectsToBuilder(final IRODSGenQueryBuilder builder)
+			throws GenQueryBuilderException {
 
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
@@ -868,8 +728,7 @@ public final class DataAOHelper extends AOHelper {
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
-				// .addSelectAsGenQueryValue(
-				// RodsGenQueryEnum.COL_D_RESC_GROUP_NAME)
+				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
@@ -886,18 +745,17 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build the necessary GenQuery selects to query data objects for
-	 * information. Used in many common queries for listing data objects, as in
-	 * an ils-like command. This version does not ask for any replication
-	 * information.
+	 * Build the necessary GenQuery selects to query data objects for information.
+	 * Used in many common queries for listing data objects, as in an ils-like
+	 * command. This version does not ask for any replication information.
 	 *
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be augmented with the
 	 *            necessary selects
 	 *
 	 */
-	public static void buildDataObjectQuerySelectsNoReplicationInfo(
-			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+	public static void buildDataObjectQuerySelectsNoReplicationInfo(final IRODSGenQueryBuilder builder)
+			throws GenQueryBuilderException {
 
 		if (builder == null) {
 			throw new IllegalArgumentException("null builder");
@@ -913,28 +771,25 @@ public final class DataAOHelper extends AOHelper {
 
 	/**
 	 * Given a result set from the
-	 * <code>buildDataObjectQuerySelectsNoReplicationInfo()</code> method,
-	 * return a result set of <code>CollectionAndDataObjectListingEntry</code>
+	 * {@code buildDataObjectQuerySelectsNoReplicationInfo()} method, return a
+	 * result set of {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@link IRODSQueryResultRow} entry from query
 	 * @param totalRecords
-	 *            <code>int</code> with total records in the result set
-	 * @return <code>List</code> of {@link CollectionAndDataObjectListingEntry}
+	 *            {@code int} with total records in the result set
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
-			final IRODSQueryResultRow row, final int totalRecords)
-			throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
 
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		entry.setPathOrName(row.getColumn(1));
-		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-				.getColumn(2)));
-		entry.setDataSize(IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(row.getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(2)));
+		entry.setDataSize(IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(row.getColumn(3)));
 		entry.setOwnerName(row.getColumn(4));
 		entry.setCount(row.getRecordCount());
 		entry.setLastResult(row.isLastResult());

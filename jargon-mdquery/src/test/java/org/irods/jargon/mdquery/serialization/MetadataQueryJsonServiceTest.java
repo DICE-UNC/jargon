@@ -3,7 +3,7 @@ package org.irods.jargon.mdquery.serialization;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.irods.jargon.core.query.QueryConditionOperators;
 import org.irods.jargon.core.utils.LocalFileUtils;

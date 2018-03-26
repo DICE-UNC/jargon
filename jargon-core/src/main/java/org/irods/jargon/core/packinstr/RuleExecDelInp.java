@@ -24,7 +24,7 @@ public class RuleExecDelInp extends AbstractIRODSPackingInstruction {
 	 * Instance method for delete of a rule in the delayed rule execution queue
 	 *
 	 * @param ruleExecId
-	 *            <code>String</code> with the id of a rule in the delayed rule
+	 *            {@code String} with the id of a rule in the delayed rule
 	 *            execution queue
 	 * @return {@link RuleExecDelInp}
 	 */

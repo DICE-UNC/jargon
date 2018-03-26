@@ -20,9 +20,9 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 * defaults.
 	 *
 	 * @param queryString
-	 *            <code>String</code> version of an IRODS Query
+	 *            {@code String} version of an IRODS Query
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> with the number of desired results
+	 *            {@code int} with the number of desired results
 	 * @return {@link IRODSGenQuery}
 	 * @throws JargonException
 	 */
@@ -36,11 +36,11 @@ public final class IRODSGenQuery extends AbstractIRODSGenQuery {
 	 * Creates an immutable description of a general query to IRODS.
 	 *
 	 * @param queryString
-	 *            <code>String</code> version of an IRODS Query
+	 *            {@code String} version of an IRODS Query
 	 * @param numberOfResultsDesired
-	 *            <code>int</code> with the number of desired results
+	 *            {@code int} with the number of desired results
 	 * @param rowCountOption
-	 * @return <code>RowCountOptions</code> enumeration indicating the type of
+	 * @return {@code RowCountOptions} enumeration indicating the type of
 	 *         row count to be returned.
 	 * @throws JargonException
 	 */

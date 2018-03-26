@@ -14,7 +14,7 @@ public class GetTempPasswordIn extends AbstractIRODSPackingInstruction {
 	/**
 	 * Instance method creates a request to generate a temporary password.
 	 *
-	 * @return <code>GetTempPasswordIn</code> instance
+	 * @return {@code GetTempPasswordIn} instance
 	 */
 	public static GetTempPasswordIn instance() {
 		return new GetTempPasswordIn();
