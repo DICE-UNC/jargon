@@ -120,7 +120,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 			JargonException;
 
 	/**
-	 * Add or update AVU metadata for this data object usimg the new set semantics.
+	 * Add or update AVU metadata for this data object using the new set semantics.
 	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * the canonical file path, and AVU metadata associated with the canonical file
@@ -142,7 +142,7 @@ public interface DataObjectAO extends FileCatalogObjectAO {
 	void setAVUMetadata(final String absolutePath, final AvuData avuData) throws DataNotFoundException, JargonException;
 
 	/**
-	 * * Add or update AVU metadata for this data object usimg the new set
+	 * * Add or update AVU metadata for this data object using the new set
 	 * semantics.
 	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
