@@ -28,9 +28,9 @@ public class PagingAwareCollectionListingDescriptor {
 	private List<String> pathComponents;
 	/**
 	 * Represents the paging style supported by the underlying source of the
-	 * listing. For example, the iRODS iCAT treats collections and data objects
-	 * as separate entities with a paging status for each type, while other
-	 * listings might have a single source.
+	 * listing. For example, the iRODS iCAT treats collections and data objects as
+	 * separate entities with a paging status for each type, while other listings
+	 * might have a single source.
 	 */
 	private PagingStyle pagingStyle;
 	/**
@@ -53,26 +53,26 @@ public class PagingAwareCollectionListingDescriptor {
 	 * 
 	 * <b>for mixed</b>
 	 * 
-	 * Offset into data objects represented by the results. The
-	 * <code>offset</code> will reflect the offset into collections
+	 * Offset into data objects represented by the results. The <code>offset</code>
+	 * will reflect the offset into collections
 	 */
 	private int dataObjectsOffset;
 	/**
 	 * <b>for continuous</b>
 	 * <p/>
 	 * 
-	 * Count of collections and data objects in results. The
+	 * Count of collections and data objects in current result set. The
 	 * <code>dataObjectsCount</code> is unused and would be 0
 	 * 
 	 * <b>for mixed</b>
 	 * <p/>
 	 * 
-	 * Count of collections in results, will be 0 if no collections.
+	 * Count of collections in current result set, will be 0 if no collections.
 	 * 
 	 * <p/>
-	 * To differentiate from total records, the count is the total number of
-	 * results in this page. It may be the page size, or it may be less, if
-	 * fewer records were returned.
+	 * To differentiate from total records, the count is the total number of results
+	 * in this page. It may be the page size, or it may be less, if fewer records
+	 * were returned.
 	 */
 	private int count;
 	/**
@@ -80,43 +80,41 @@ public class PagingAwareCollectionListingDescriptor {
 	 * <b>for continuous</b>
 	 * <p/>
 	 * 
-	 * The total records available in the catalog (if available).
+	 * The total records available for all pages (if available).
 	 * 
 	 * 
 	 * <b>for mixed</b>
 	 * <p/>
 	 * 
 	 * 
-	 * The total number of collections
+	 * The total number of collections available
 	 */
 	private int totalRecords;
 	/**
-	 * Count of files in result (current page). Only used when split mode. This
-	 * is usually the same as page size but may be less if fewer results were
+	 * Count of files in result (current page). Only used when split mode. This is
+	 * usually the same as page size but may be less if fewer results were
 	 * available.
 	 */
 	private int dataObjectsCount;
 	/**
-	 * Total data object records available in the catalog (may not be available
-	 * on all databases). This is only used in split mode
+	 * Total data object records available from the source (may not be available on
+	 * all databases). This is only used in split mode
 	 */
 	private int dataObjectsTotalRecords;
 	/**
 	 * <b>for continuous</b>
 	 * <p/>
-	 * The offset represents the starting point of the listing in the total
-	 * available listing. So the second page of results would be pageSize
-	 * 
-	 * <b>for mixed</b>
+	 * Indicates with <code>true</code> that all records have been displayed <b>for
+	 * mixed</b>
 	 * <p/>
-	 * Indicates that collection listing is complete, there may be data objects
-	 * in this page, and more data objects on the server
+	 * Indicates that collection listing is complete, there may be data objects in
+	 * this page, and more data objects on the server
 	 */
 	private boolean complete;
 	/**
 	 * Indicates whether the set of data objects is complete, or whether more
-	 * results exist. Will be <code>true</code> if complete OR if no data
-	 * objects exist
+	 * results exist. Will be <code>true</code> if complete OR if no data objects
+	 * exist
 	 */
 	private boolean dataObjectsComplete;
 	/**
@@ -124,6 +122,10 @@ public class PagingAwareCollectionListingDescriptor {
 	 */
 	private int pageSizeUtilized;
 
+	/**
+	 * Represents the 'pages' available and their characteristics if supported by
+	 * the listing source
+	 */
 	private List<PagingChunk> pagingChunks = new ArrayList<>();
 
 	/**
@@ -157,9 +159,8 @@ public class PagingAwareCollectionListingDescriptor {
 	 * @return <code>int</code> with the continuous count of data objects and
 	 *         collections.
 	 *         <p/>
-	 *         Remember that 'counts' are 1 based, so the last count value in
-	 *         the listing is the offset for the next listing (offset is 0
-	 *         based)
+	 *         Remember that 'counts' are 1 based, so the last count value in the
+	 *         listing is the offset for the next listing (offset is 0 based)
 	 */
 	public int computeAbsoluteNextOffset() {
 		return this.count + this.dataObjectsCount;

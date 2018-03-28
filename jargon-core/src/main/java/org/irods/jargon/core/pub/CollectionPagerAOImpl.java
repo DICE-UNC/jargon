@@ -66,8 +66,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods
+	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveNextPage(org.irods
 	 * .jargon.core.query.PagingAwareCollectionListingDescriptor)
 	 */
 	@Override
@@ -166,8 +165,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent
+	 * @see org.irods.jargon.core.pub.CollectionPagerAO#retrieveFirstPageUnderParent
 	 * (java.lang.String)
 	 */
 	@Override
@@ -206,7 +204,20 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 			addDataObjectsToExistingListing(pagingAwareCollectionListing);
 		}
 
+		computeChunks(pagingAwareCollectionListing);
+
 		return pagingAwareCollectionListing;
+
+	}
+
+	/**
+	 * Given the current listing, break it into chunks and characterize them in the
+	 * included listing descriptor
+	 * 
+	 * @param pagingAwareCollectionListing
+	 */
+	private void computeChunks(PagingAwareCollectionListing pagingAwareCollectionListing) {
+		// TODO Auto-generated method stub
 
 	}
 
@@ -286,8 +297,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 				collectionListingUtils.listCollectionsUnderPath(objStat, offset));
 
 		/*
-		 * see if the query had total records, if it did not, do a separate
-		 * query to establish total records
+		 * see if the query had total records, if it did not, do a separate query to
+		 * establish total records
 		 */
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
@@ -331,8 +342,8 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 				collectionListingUtils.listDataObjectsUnderPath(objStat, offset));
 
 		/*
-		 * see if the query had total records, if it did not, do a separate
-		 * query to establish total records
+		 * see if the query had total records, if it did not, do a separate query to
+		 * establish total records
 		 */
 
 		if (listAndCount.getCollectionAndDataObjectListingEntries().isEmpty()) {
