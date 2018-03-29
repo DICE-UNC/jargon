@@ -23,13 +23,19 @@ import org.irods.jargon.core.query.PagingAwareCollectionListingDescriptor;
 public interface CollectionPagerAO {
 
 	/**
+	 * Temp constant (go to jargon props if it works out) with the span of 'pages'
+	 * to show FIXME: make a jargonproperties value
+	 */
+	public static final int PAGE_DISPLAY_SPAN = 10;
+
+	/**
 	 * Start a listing under a path, getting the first page of results.
 	 * <p/>
 	 * Inside the {@link PagingAwareCollectionListing} is a POJO containing
-	 * information about the status of the listing (more collections or data
-	 * objects to page, counts, etc). This object may be retained by the client
-	 * caller and submitted back to this object in other methods to page around
-	 * given information on the current position. This
+	 * information about the status of the listing (more collections or data objects
+	 * to page, counts, etc). This object may be retained by the client caller and
+	 * submitted back to this object in other methods to page around given
+	 * information on the current position. This
 	 * {@link PagingAwareCollectionListingDescriptor} can be extracted from the
 	 * listing (to save memory storing the whole listing in some state keeping
 	 * mechanism) to help manage paging.
@@ -39,27 +45,25 @@ public interface CollectionPagerAO {
 	 * @param irodsAbsolutePath
 	 *            <code>String</code> with the iRODS absolute path of the parent
 	 *            collection
-	 * @return {@link PagingAwareCollectionListing} with the list of children
-	 *         and a block of data about position and paging
+	 * @return {@link PagingAwareCollectionListing} with the list of children and a
+	 *         block of data about position and paging
 	 * @throws FileNotFoundException
 	 * @throws NoMoreDataException
 	 * @throws JargonException
 	 */
-	public abstract PagingAwareCollectionListing retrieveFirstPageUnderParent(
-			String irodsAbsolutePath) throws FileNotFoundException,
-			NoMoreDataException, JargonException;
+	public abstract PagingAwareCollectionListing retrieveFirstPageUnderParent(String irodsAbsolutePath)
+			throws FileNotFoundException, NoMoreDataException, JargonException;
 
 	/**
 	 * Given my current location, as depicted in the
-	 * <code>PagingAwareCollectionListingDescriptor</code>, page forwards. This
-	 * will give the next page of whatever (collections, data objects) are
-	 * available, and if need be page across the Collections/Data Objects
-	 * boundary.
+	 * <code>PagingAwareCollectionListingDescriptor</code>, page forwards. This will
+	 * give the next page of whatever (collections, data objects) are available, and
+	 * if need be page across the Collections/Data Objects boundary.
 	 * 
 	 * @param lastListingDescriptor
-	 *            {@link PagingAwareCollectionListingDescriptor} from the
-	 *            previous page, as retained by the client. This keeps state of
-	 *            the position in the collection
+	 *            {@link PagingAwareCollectionListingDescriptor} from the previous
+	 *            page, as retained by the client. This keeps state of the position
+	 *            in the collection
 	 * @return {@link PagingAwareCollectionListing} with the next page of data
 	 * @throws FileNotFoundException
 	 * @throws NoMoreDataException

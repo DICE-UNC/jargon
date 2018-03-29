@@ -152,6 +152,15 @@ public class PagingAwareCollectionListingDescriptor {
 	}
 
 	/**
+	 * See if the listing is currently at the first page
+	 * 
+	 * @return {@link boolean} indicating whether this is the first page of data
+	 */
+	public boolean amAtFirstPage() {
+		return (getOffset() + getDataObjectsOffset()) == 0;
+	}
+
+	/**
 	 * Return an
 	 * <code>int<code> that is the absolute offset across both collections and data objects.  Collections are listed first
 	 * so the offset for data objects will be the total offset of the collections added to the offset of any data objects.
@@ -173,6 +182,21 @@ public class PagingAwareCollectionListingDescriptor {
 	 */
 	public int computeAbsoluteTotalSize() {
 		return this.totalRecords + this.dataObjectsTotalRecords;
+	}
+
+	/**
+	 * Compute an estimate of the number of pages, only meaningful when total
+	 * records are available
+	 * 
+	 * @return <code>int</code> with number of pages, will just return 0 if paging
+	 *         isn't available
+	 */
+	public int computeTotalPages() {
+		if (pageSizeUtilized > 0) {
+			return computeAbsoluteTotalSize() / pageSizeUtilized;
+		} else {
+			return 0;
+		}
 	}
 
 	public PagingAwareCollectionListingDescriptor() {

@@ -11,19 +11,6 @@ package org.irods.jargon.core.query;
  *
  */
 public class PagingChunk {
-	/**
-	 * Enumeration of the type of chunk. Depending on the listing style, it may be
-	 * all collections, all data objects, or represent a mix at the point of
-	 * transition. For continuous paging it may make no such distinction. This is
-	 * contingent on the virtual collection, and up to the renderer to decide how to
-	 * handle. NONE indicates that no effort is made to characterize the chunks.
-	 * 
-	 * @author Mike Conway - DICE
-	 *
-	 */
-	public enum ChunkType {
-		NONE, COLLECTION, DATA_OBJECT, MIXED, CONTINUOUS
-	}
 
 	/**
 	 * 
@@ -32,14 +19,31 @@ public class PagingChunk {
 	 * 
 	 */
 	public enum ChunkPosition {
-		FIRST, NORMAL, CURRENT, LAST
+		NORMAL, CURRENT
 	}
 
+	/**
+	 * sequential index of the chunk
+	 */
 	private int chunkNumber = 0;
+
+	/**
+	 * Offset into the total number of records for the chunk (0 based)
+	 */
 	private int offset = 0;
-	private String link = "";
-	private ChunkType chunkType = ChunkType.NONE;
+
+	/**
+	 * Enum describing the type of chunk, which maps conceptually to radio and
+	 * transport buttons like first, prev, next, last or numeric position buttons
+	 */
 	private ChunkPosition chunkPosition = ChunkPosition.NORMAL;
+
+	/**
+	 * Whether the chunk is conceptually enabled in the current display, e.g. there
+	 * may be a PREVIOUS chunk, but in the current display of the first page it
+	 * would not conceptually be enabled
+	 */
+	private boolean enabled = true;
 
 	/**
 	 * @return the chunkNumber
@@ -72,36 +76,6 @@ public class PagingChunk {
 	}
 
 	/**
-	 * @return the link
-	 */
-	public String getLink() {
-		return link;
-	}
-
-	/**
-	 * @param link
-	 *            the link to set
-	 */
-	public void setLink(String link) {
-		this.link = link;
-	}
-
-	/**
-	 * @return the chunkType
-	 */
-	public ChunkType getChunkType() {
-		return chunkType;
-	}
-
-	/**
-	 * @param chunkType
-	 *            the chunkType to set
-	 */
-	public void setChunkType(ChunkType chunkType) {
-		this.chunkType = chunkType;
-	}
-
-	/**
 	 * @return the chunkPosition
 	 */
 	public ChunkPosition getChunkPosition() {
@@ -116,26 +90,23 @@ public class PagingChunk {
 		this.chunkPosition = chunkPosition;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PagingChunk [chunkNumber=").append(chunkNumber).append(", offset=").append(offset).append(", ");
-		if (link != null) {
-			builder.append("link=").append(link).append(", ");
-		}
-		if (chunkType != null) {
-			builder.append("chunkType=").append(chunkType).append(", ");
-		}
 		if (chunkPosition != null) {
-			builder.append("chunkPosition=").append(chunkPosition);
+			builder.append("chunkPosition=").append(chunkPosition).append(", ");
 		}
-		builder.append("]");
+		builder.append("enabled=").append(enabled).append("]");
 		return builder.toString();
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
 	}
 
 }

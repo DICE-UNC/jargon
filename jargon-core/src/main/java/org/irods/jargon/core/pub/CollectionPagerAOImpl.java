@@ -63,6 +63,55 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 		this.collectionListingUtils = collectionListingUtils;
 	}
 
+	public PagingAwareCollectionListing retrievePreviousPage(
+			final PagingAwareCollectionListingDescriptor lastListingDescriptor)
+			throws FileNotFoundException, NoMoreDataException, JargonException {
+
+		log.info("retrievePreviousPage()");
+
+		if (lastListingDescriptor == null) {
+			throw new IllegalArgumentException("null lastListingDescriptor");
+		}
+
+		log.info("find previous page based on descriptor:{}", lastListingDescriptor);
+
+		/*
+		 * If this is a continuous listing, it's just the current offset - the page size
+		 * bounded by zero
+		 * 
+		 * 
+		 * If this is split, it's the current data object offset - the page size. If
+		 * this is less than zero, than page backwards in the collections for the
+		 * remainder
+		 */
+
+		if (lastListingDescriptor.getPagingStyle() == PagingStyle.NONE) {
+			log.error("cannot page backwards, paging not supported here");
+			throw new NoMoreDataException("cannot page backwards, paging not supported");
+		}
+
+		if (lastListingDescriptor.getPagingStyle() == PagingStyle.CONTINUOUS) {
+			log.info("continuous paging...");
+			return pageBackwardsWhenContinuous(lastListingDescriptor);
+		} else {
+			log.info("split paging");
+			return pageBackwardsWhenSplit(lastListingDescriptor);
+		}
+
+	}
+
+	private PagingAwareCollectionListing pageBackwardsWhenSplit(
+			PagingAwareCollectionListingDescriptor lastListingDescriptor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	private PagingAwareCollectionListing pageBackwardsWhenContinuous(
+			PagingAwareCollectionListingDescriptor lastListingDescriptor) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -217,7 +266,28 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	 * @param pagingAwareCollectionListing
 	 */
 	private void computeChunks(PagingAwareCollectionListing pagingAwareCollectionListing) {
-		// TODO Auto-generated method stub
+		log.info("computeChunks()");
+		PagingAwareCollectionListingDescriptor descriptor = pagingAwareCollectionListing
+				.getPagingAwareCollectionListingDescriptor();
+
+		/*
+		 * If paging is not supported I just go away now
+		 */
+
+		if (pagingAwareCollectionListing.getPagingAwareCollectionListingDescriptor()
+				.getPagingStyle() == PagingStyle.NONE) {
+			log.debug("no paging supported");
+			return;
+		}
+
+		/*
+		 * There may be no data!
+		 */
+
+		if (!descriptor.hasAnyDataToShow()) {
+			log.debug("no data to show");
+			return;
+		}
 
 	}
 
