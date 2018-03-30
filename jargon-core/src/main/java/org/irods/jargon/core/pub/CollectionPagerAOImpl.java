@@ -19,7 +19,15 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Improved facility to list under a parent collection in a manner that supports
- * paging by clients
+ * paging by clients.
+ * 
+ * <p/>
+ * 
+ * NB this has some things in it for continuous or no paging situations, and it
+ * really doesn't belong here as this is dedicated to iRODS paging. This is
+ * being developed with an eye towards virtual collections support (other types
+ * of paging) and it will need some refactoring, so that this pager can
+ * eventually extend an abstract superclass - mcc
  * 
  * @author Mike Conway - DICE
  * 
@@ -101,15 +109,81 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	}
 
 	private PagingAwareCollectionListing pageBackwardsWhenSplit(
-			PagingAwareCollectionListingDescriptor lastListingDescriptor) {
+			PagingAwareCollectionListingDescriptor lastListingDescriptor)
+			throws FileNotFoundException, NoMoreDataException, JargonException {
+
+		log.info("pageBackwardsWhenSplit()");
+
+		/*
+		 * If I am into data objects, page backwards to the start of them, then pick up
+		 * any remainder in collections
+		 */
+
+		int dataObjRewind = 0;
+		int collectionRewind = 0;
+
+		if (lastListingDescriptor.getDataObjectsOffset() > 0) {
+
+			/*
+			 * There were at least some data objects to find, so page backwards in data
+			 * objects for at least part of the way
+			 */
+
+			dataObjRewind = lastListingDescriptor.getDataObjectsOffset() - lastListingDescriptor.getPageSizeUtilized();
+
+			/*
+			 * How much did I rewind in data objects? If I go back a page from the offset
+			 * and get into negative territory then just count back to offset zero and I'll
+			 * make up the rest in collections
+			 */
+
+			if (dataObjRewind < 0) {
+
+				/*
+				 * I'm paging backwards within data objects
+				 */
+
+			} else {
+
+				/*
+				 * I'm paging backwards within collections
+				 */
+
+			}
+
+		} else {
+
+			/*
+			 * I am paging backwards in collections
+			 */
+
+			collectionRewind = lastListingDescriptor.getOffset() - lastListingDescriptor.getPageSizeUtilized();
+			if (collectionRewind <= 0) {
+
+				/*
+				 * Just load the first page
+				 */
+
+				log.debug("getting first collection");
+				return this.retrieveFirstPageUnderParent(lastListingDescriptor.getParentAbsolutePath());
+			}
+
+		}
+
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	private PagingAwareCollectionListing pageBackwardsWhenContinuous(
 			PagingAwareCollectionListingDescriptor lastListingDescriptor) {
-		// TODO Auto-generated method stub
-		return null;
+
+		log.info("pageBackwardsWhenContinuous()");
+
+		/*
+		 * this is here for an eventual abstract superclass, but right now gets mad if
+		 * you try to use it
+		 */
+		throw new UnsupportedOperationException("continuous paging not supported for iRODS collections");
 	}
 
 	/*
@@ -185,6 +259,7 @@ public class CollectionPagerAOImpl extends IRODSGenericAO implements CollectionP
 	private PagingAwareCollectionListing pageForwardInCollections(
 			PagingAwareCollectionListingDescriptor lastListingDescriptor)
 			throws FileNotFoundException, JargonException {
+
 		log.info("pageForwardInCollections()");
 
 		// since I fold the provided descriptor into the listing I generate, it
