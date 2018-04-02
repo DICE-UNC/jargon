@@ -294,9 +294,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			}
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(collectionAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(collectionAbsolutePath);
 
-		log.info("absPath for querying iCAT:{}", collectionAbsolutePath);
+		log.info("absPath for querying iCAT:{}", myPath);
 
 		log.info("building a metadata query for: {}", avuQuery);
 
@@ -442,7 +442,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("adding avu metadata to collection: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForAddCollectionMetadata(myPath,
 				avuData);
@@ -488,7 +488,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new OperationNotSupportedByThisServerException("metadata set not supported in this iRODS version");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForSetCollectionMetadata(myPath,
 				avuData);
@@ -533,10 +533,10 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		log.info("deleting avu metadata from collection: {}", avuData);
-		log.info("absolute path: {}", absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		log.info("deleting avu metadata from collection: {}", avuData);
+		log.info("absolute path: {}", myPath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForDeleteCollectionMetadata(myPath,
 				avuData);
@@ -623,7 +623,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("with  avu metadata:{}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		// avu is distinct based on attrib and value, so do an attrib/unit
 		// query, can only be one result
@@ -686,7 +686,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 		log.info("with new avu metadata:{}", newAvuData);
 		log.info("absolute path: {}", absolutePath);
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		final ModAvuMetadataInp modifyAvuMetadataInp = ModAvuMetadataInp.instanceForModifyCollectionMetadata(myPath,
 				currentAvuData, newAvuData);
@@ -1614,9 +1614,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null zone");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("getPermissionForCollection for absPath:{}", irodsAbsolutePath);
+		log.info("getPermissionForCollection for absPath:{}", myPath);
 		log.info("userName:{}", userName);
 
 		UserFilePermission permission = getPermissionForUserName(myPath, userName);
@@ -1648,7 +1648,7 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		IRODSFile collFile = getIRODSFileFactory().instanceIRODSFile(myPath);
 
@@ -1945,9 +1945,9 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		String myPath = MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("irodsAbsolutePath:{}", myPath);
 		log.info("userName:{}", userName);
 
 		UserFilePermission derivedPermission = getPermissionForUserName(myPath, userName);

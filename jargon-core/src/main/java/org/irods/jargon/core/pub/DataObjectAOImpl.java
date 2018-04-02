@@ -179,11 +179,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
-		log.info("findByAbsolutePath() with path:{}", absolutePath);
-		CollectionAndPath collectionAndPath = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(absolutePath);
+		log.info("findByAbsolutePath() with path:{}", myPath);
+		CollectionAndPath collectionAndPath = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(myPath);
 		return findByCollectionNameAndDataName(collectionAndPath.getCollectionParent(),
 				collectionAndPath.getChildName());
 
@@ -1842,10 +1841,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		log.info("adding avu metadata to data object: {}", avuData);
-		log.info("absolute path: {}", absolutePath);
+		log.info("absolute path: {}", myPath);
 
 		/*
 		 * Handle soft links by munging the path
@@ -1853,7 +1852,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 		ObjStat objStat;
 		try {
-			objStat = this.retrieveObjStat(absolutePath);
+			objStat = this.retrieveObjStat(myPath);
 		} catch (Exception e) {
 			throw new DataNotFoundException(e);
 		}
@@ -1982,8 +1981,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new OperationNotSupportedByThisServerException("set avu not available on this iRODS version");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		log.info("adding avu metadata to data object: {}", avuData);
 		log.info("absolute path: {}", absolutePath);
 
@@ -2045,13 +2042,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException(NULL_OR_EMPTY_ABSOLUTE_PATH);
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
-		log.info("absolute path: {}", absolutePath);
+		log.info("absolute path: {}", myPath);
 
 		ObjStat objStat;
 		try {
-			objStat = this.retrieveObjStat(absolutePath);
+			objStat = this.retrieveObjStat(myPath);
 		} catch (FileNotFoundException e) {
 			throw new DataNotFoundException(e);
 		}
@@ -2070,7 +2067,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 					.add(AvuData.instance(metadata.getAvuAttribute(), metadata.getAvuValue(), metadata.getAvuUnit()));
 		}
 
-		deleteBulkAVUMetadataFromDataObject(absolutePath, avusToDelete);
+		deleteBulkAVUMetadataFromDataObject(myPath, avusToDelete);
 
 	}
 
@@ -2093,14 +2090,14 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null AVU data");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		log.info("deleting avu metadata on dataObject: {}", avuData);
-		log.info("absolute path: {}", absolutePath);
+		log.info("absolute path: {}", myPath);
 
 		ObjStat objStat;
 		try {
-			objStat = this.retrieveObjStat(absolutePath);
+			objStat = this.retrieveObjStat(myPath);
 		} catch (FileNotFoundException e) {
 			throw new DataNotFoundException(e);
 		}
@@ -2324,16 +2321,16 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty targetResource");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsFileAbsolutePath);
 
-		log.info("replicate operation, irodsFileAbsolutePath: {}", irodsFileAbsolutePath);
+		log.info("replicate operation, irodsFileAbsolutePath: {}", myPath);
 		log.info("to resource: {}", targetResource);
 
 		DataObjInp dataObjInp;
 		if (getIRODSServerProperties().isAtLeastIrods410()) {
-			dataObjInp = DataObjInp.instanceForReplicate410(irodsFileAbsolutePath, targetResource);
+			dataObjInp = DataObjInp.instanceForReplicate410(myPath, targetResource);
 		} else {
-			dataObjInp = DataObjInp.instanceForReplicate(irodsFileAbsolutePath, targetResource);
+			dataObjInp = DataObjInp.instanceForReplicate(myPath, targetResource);
 		}
 
 		try {
@@ -2522,13 +2519,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty targetResource");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsFileAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsFileAbsolutePath);
 
-		log.info("replicate operation, irodsFileAbsolutePath: {}", irodsFileAbsolutePath);
+		log.info("replicate operation, irodsFileAbsolutePath: {}", myPath);
 		log.info("to resource group: {}", irodsResourceGroupName);
 
-		final DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup(irodsFileAbsolutePath,
-				irodsResourceGroupName);
+		final DataObjInp dataObjInp = DataObjInp.instanceForReplicateToResourceGroup(myPath, irodsResourceGroupName);
 
 		try {
 			getIRODSProtocol().irodsFunction(dataObjInp);
@@ -2619,12 +2615,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty dataObjectAbsolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(dataObjectAbsolutePath);
 
-		log.info("findMetadataValueForDataObjectById: {}", dataObjectAbsolutePath);
+		log.info("findMetadataValueForDataObjectById: {}", myPath);
 		log.info("id:{}", id);
 
-		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+		ObjStat objStat = this.retrieveObjStat(myPath);
 
 		return findMetadataValueForDataObjectById(objStat, id);
 	}
@@ -2700,8 +2696,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty dataObjectAbsolutePath");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
 
 		log.info("findMetadataValuesForDataObject: {}", dataObjectAbsolutePath);
 
@@ -2885,8 +2879,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -2928,8 +2920,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -2970,8 +2960,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (absolutePath == null || absolutePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
@@ -3057,8 +3045,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
@@ -3095,13 +3081,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty absolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(absolutePath);
 
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		ObjStat objStat = this.retrieveObjStat(absolutePath);
+		ObjStat objStat = this.retrieveObjStat(myPath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
@@ -3136,8 +3122,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		/*
 		 * Handle soft links by munging the path
@@ -3179,8 +3163,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
-
 		/*
 		 * Handle soft links by munging the path
 		 */
@@ -3220,8 +3202,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		ObjStat objStat = this.retrieveObjStat(absolutePath);
 
@@ -3363,11 +3343,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty irodsDataObjectAbsolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsDataObjectAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsDataObjectAbsolutePath);
 
-		log.info("listPermissionsForDataObject: {}", irodsDataObjectAbsolutePath);
-		CollectionAndPath collName = MiscIRODSUtils
-				.separateCollectionAndPathFromGivenAbsolutePath(irodsDataObjectAbsolutePath);
+		log.info("listPermissionsForDataObject: {}", myPath);
+		CollectionAndPath collName = MiscIRODSUtils.separateCollectionAndPathFromGivenAbsolutePath(myPath);
 		return listPermissionsForDataObject(collName.getCollectionParent(), collName.getChildName());
 
 	}
@@ -3390,8 +3369,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (avuData == null) {
 			throw new IllegalArgumentException("null avuData");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(absolutePath);
 
 		log.info("setting avu metadata value for dataObject");
 		log.info("with avu metadata:{}", avuData);
@@ -3462,13 +3439,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null newAvuData");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(dataObjectAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(dataObjectAbsolutePath);
 
 		log.info("overwrite avu metadata for data object: {}", currentAvuData);
 		log.info("with new avu metadata:{}", newAvuData);
-		log.info("absolute path: {}", dataObjectAbsolutePath);
+		log.info("absolute path: {}", myPath);
 
-		ObjStat objStat = this.retrieveObjStat(dataObjectAbsolutePath);
+		ObjStat objStat = this.retrieveObjStat(myPath);
 
 		if (objStat.getSpecColType() == SpecColType.MOUNTED_COLL) {
 			log.info("objStat indicates collection type that does not support this operation:{}", objStat);
@@ -3526,8 +3503,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (newAvuData == null) {
 			throw new IllegalArgumentException("null newAvuData");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsCollectionAbsolutePath);
 
 		ObjStat objStat = this.retrieveObjStat(irodsCollectionAbsolutePath);
 
@@ -3676,12 +3651,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("listFileResources() for path:{}", irodsAbsolutePath);
+		log.info("listFileResources() for path:{}", myPath);
 
 		// get objStat to resolve possible soft link
-		ObjStat objStat = getObjectStatForAbsolutePath(irodsAbsolutePath);
+		ObjStat objStat = getObjectStatForAbsolutePath(myPath);
 		String absPath = resolveAbsolutePathGivenObjStat(objStat);
 		IRODSFile newFile = this.getIRODSAccessObjectFactory().getIRODSFileFactory(getIRODSAccount())
 				.instanceIRODSFile(absPath);
@@ -3764,8 +3739,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		if (userName == null || userName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty userName");
 		}
-
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
 
 		ObjStat objStat = this.retrieveObjStat(irodsAbsolutePath);
 
@@ -3896,12 +3869,12 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new IllegalArgumentException("null or empty userName");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
+		log.info("irodsAbsolutePath:{}", myPath);
 		log.info("userName:{}", userName);
 
-		UserFilePermission derivedPermission = this.getPermissionForDataObjectForUserName(irodsAbsolutePath, userName);
+		UserFilePermission derivedPermission = this.getPermissionForDataObjectForUserName(myPath, userName);
 		boolean hasPermission = false;
 		if (derivedPermission != null) {
 			hasPermission = true;

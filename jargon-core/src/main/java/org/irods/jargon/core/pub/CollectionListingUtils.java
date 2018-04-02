@@ -1057,9 +1057,9 @@ class CollectionListingUtils {
 			throw new IllegalArgumentException("irodsAbsolutePath is null or empty");
 		}
 
-		MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath);
+		String myPath = MiscIRODSUtils.normalizeIrodsPath(irodsAbsolutePath);
 
-		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance(irodsAbsolutePath);
+		DataObjInpForObjStat dataObjInp = DataObjInpForObjStat.instance(myPath);
 		Tag response;
 		ObjStat objStat;
 		try {
@@ -1067,7 +1067,7 @@ class CollectionListingUtils {
 					.irodsFunction(dataObjInp);
 		} catch (FileNotFoundException e) {
 			log.info("got a file not found, try to heuristically produce an objstat");
-			return handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(irodsAbsolutePath);
+			return handleNoObjStatUnderRootOrHomeByLookingForPublicAndHome(myPath);
 		}
 
 		log.debug("response from objStat: {}", response.parseTag());
@@ -1077,7 +1077,7 @@ class CollectionListingUtils {
 		 * canonical path
 		 */
 		objStat = new ObjStat();
-		objStat.setAbsolutePath(irodsAbsolutePath);
+		objStat.setAbsolutePath(myPath);
 		objStat.setChecksum(response.getTag("chksum").getStringValue());
 		objStat.setDataId(response.getTag("dataId").getIntValue());
 		int objType = response.getTag("objType").getIntValue();

@@ -72,11 +72,6 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	protected IRODSFileImpl(final String pathName, final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		this("", pathName, irodsFileSystemAO);
-		if (pathName.isEmpty()) {
-			throw new JargonException("path name is null or empty");
-		}
-
-		MiscIRODSUtils.checkPathSizeForMax(pathName);
 	}
 
 	protected IRODSFileImpl(final String parent, final String child, final IRODSFileSystemAO irodsFileSystemAO)
@@ -99,7 +94,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		MiscIRODSUtils.checkPathSizeForMax(parent, child);
 
 		this.irodsFileSystemAO = irodsFileSystemAO;
-		setDirectory(parent);
+		setDirectory(MiscIRODSUtils.normalizeIrodsPath(parent));
 		setFileName(child);
 		makePathCanonical(parent);
 	}

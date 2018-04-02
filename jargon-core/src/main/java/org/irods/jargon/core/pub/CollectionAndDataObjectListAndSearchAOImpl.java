@@ -401,7 +401,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("countDataObjectsAndCollectionsUnder: {}", absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		final ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
 		/*
@@ -441,7 +440,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("countDataObjectsAndCollectionsUnder: {}", absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		final ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
 		/*
@@ -509,7 +507,6 @@ public class CollectionAndDataObjectListAndSearchAOImpl extends IRODSGenericAO
 
 		log.info("countDataObjectsAndCollectionsUnder: {}", absolutePathToParent);
 
-		MiscIRODSUtils.checkPathSizeForMax(absolutePathToParent);
 		final ObjStat objStat = retrieveObjectStatForPath(absolutePathToParent);
 
 		if (!objStat.isSomeTypeOfCollection()) {

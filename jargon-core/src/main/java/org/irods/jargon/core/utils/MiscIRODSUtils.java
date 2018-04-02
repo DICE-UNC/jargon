@@ -30,16 +30,20 @@ import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
 public class MiscIRODSUtils {
 
 	/**
-	 * Given an iRODS path, do path cleanup and normalization
+	 * Given an iRODS path, do path cleanup and normalization, also checking for max
+	 * size violations
 	 * 
 	 * @param irodsPath
 	 *            {@link String} with an iRODS path
 	 * @return {@link String} with a normalized iRODS path
+	 * @throws PathTooLongException
 	 */
-	public static String normalizeIrodsPath(final String irodsPath) {
-		if (irodsPath == null || irodsPath.isEmpty()) {
+	public static String normalizeIrodsPath(final String irodsPath) throws PathTooLongException {
+		if (irodsPath == null) {
 			throw new IllegalArgumentException("null or empty iRODS path");
 		}
+
+		checkPathSizeForMax(irodsPath);
 
 		return FilenameUtils.normalizeNoEndSeparator(irodsPath, true); // use / unix separator
 
