@@ -1,5 +1,6 @@
 package org.irods.jargon.datautils.unittest;
 
+import org.irods.jargon.datautils.avuautocomplete.AvuAutocompleteServiceImplTest;
 import org.irods.jargon.datautils.connection.ConnectionCreatingPoolableObjectFactoryTest;
 import org.irods.jargon.datautils.connection.TempPasswordCachingProtocolManagerTest;
 import org.irods.jargon.datautils.connectiontester.ConnectionTesterImplTest;
@@ -24,19 +25,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ FileTreeDiffEntryTest.class, FileTreeNodeTest.class,
-		FileTreeDiffUtilityTest.class, SynchPropertiesServiceImplTest.class,
-		DataCacheServiceImplTest.class,
-		ConnectionCreatingPoolableObjectFactoryTest.class,
-		TempPasswordCachingProtocolManagerTest.class,
-		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
-		ShoppingCartServiceImplTest.class,
-		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class,
-		DiffTreePostProcessorTest.class,
-		FileTreeIteratorVisitorInvokerTest.class,
-		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class,
-		ConnectionTesterImplTest.class, MetadataManifestProcessorImplTest.class })
+@Suite.SuiteClasses({ FileTreeDiffEntryTest.class, FileTreeNodeTest.class, FileTreeDiffUtilityTest.class,
+		SynchPropertiesServiceImplTest.class, DataCacheServiceImplTest.class,
+		ConnectionCreatingPoolableObjectFactoryTest.class, TempPasswordCachingProtocolManagerTest.class,
+		ShoppingCartEntryTest.class, FileShoppingCartTest.class, ShoppingCartServiceImplTest.class,
+		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class, DiffTreePostProcessorTest.class,
+		FileTreeIteratorVisitorInvokerTest.class, TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
+		LocalFileGzipCompressorTest.class, FileSamplerServiceImplTest.class, ConnectionTesterImplTest.class,
+		MetadataManifestProcessorImplTest.class, AvuAutocompleteServiceImplTest.class })
 public class AllTests {
 
 }

@@ -27,6 +27,8 @@ public class AvuSearchResult {
 	 */
 	private List<String> elements = new ArrayList<String>();
 
+	private int nextOffset = 0;
+
 	/**
 	 * 
 	 */
@@ -63,10 +65,25 @@ public class AvuSearchResult {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AvuSearchResult [offset=").append(offset).append(", more=").append(more).append(", ");
 		if (elements != null) {
-			builder.append("elements=").append(elements.subList(0, Math.min(elements.size(), maxLen)));
+			builder.append("elements=").append(elements.subList(0, Math.min(elements.size(), maxLen))).append(", ");
 		}
-		builder.append("]");
+		builder.append("nextOffset=").append(nextOffset).append("]");
 		return builder.toString();
+	}
+
+	/**
+	 * @return the nextOffset
+	 */
+	public int getNextOffset() {
+		return nextOffset;
+	}
+
+	/**
+	 * @param nextOffset
+	 *            the nextOffset to set
+	 */
+	public void setNextOffset(int nextOffset) {
+		this.nextOffset = nextOffset;
 	}
 
 }
