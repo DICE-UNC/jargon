@@ -73,6 +73,8 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 				builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME).addConditionAsGenQueryField(
 						RodsGenQueryEnum.COL_META_COLL_ATTR_NAME, QueryConditionOperators.LIKE, prefix);
 
+			} else if (avuTypeEnum == AvuTypeEnum.DATA_OBJECT) {
+				// RodsGenQueryEnum.COL_META_DATA_ATTR_NAME
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(
