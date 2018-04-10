@@ -330,7 +330,7 @@ public class AvuAutocompleteServiceImplTest {
 		Assert.assertFalse("no results", actual.getElements().isEmpty());
 
 	}
-	
+
 	@Test
 	public void testGatherAvailableValuesForCollWithPrefix() throws Exception {
 		String testDirName = "testGatherAvailableValuesForCollWithPrefix";
@@ -368,13 +368,14 @@ public class AvuAutocompleteServiceImplTest {
 
 		AvuAutocompleteService service = new AvuAutocompleteServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
 				irodsAccount);
-		AvuSearchResult actual = service.gatherAvailableValues("testGatherAvailableValuesForCollWithPrefix-testmdattrib1",
+		AvuSearchResult actual = service.gatherAvailableValues(
+				"testGatherAvailableValuesForCollWithPrefix-testmdattrib1",
 				"testGatherAvailableValuesForCollWithPrefix%", 0, AvuTypeEnum.COLLECTION);
 		Assert.assertNotNull("null result returned", actual);
 		Assert.assertFalse("no results", actual.getElements().isEmpty());
 
 	}
-	
+
 	@Test
 	public void testGatherAvailableValuesForDataObjNoPrefix() throws Exception {
 		String testFileName = "testGatherAvailableValuesForDataObjNoPrefix.dat";
@@ -409,12 +410,13 @@ public class AvuAutocompleteServiceImplTest {
 		// now test
 		AvuAutocompleteService service = new AvuAutocompleteServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
 				irodsAccount);
-		AvuSearchResult actual = service.gatherAvailableValues("testGatherAvailableValuesForDataObjNoPrefix-testmdattrib1", "%", 0, AvuTypeEnum.DATA_OBJECT);
+		AvuSearchResult actual = service.gatherAvailableValues(
+				"testGatherAvailableValuesForDataObjNoPrefix-testmdattrib1", "%", 0, AvuTypeEnum.DATA_OBJECT);
 		Assert.assertNotNull("null result returned", actual);
 		Assert.assertFalse("no results", actual.getElements().isEmpty());
 
 	}
-	
+
 	@Test
 	public void testGatherAvailableValuesForDataObjWithPrefix() throws Exception {
 		String testFileName = "testGatherAvailableValuesForDataObjWithPrefix.dat";
@@ -449,7 +451,9 @@ public class AvuAutocompleteServiceImplTest {
 		// now test
 		AvuAutocompleteService service = new AvuAutocompleteServiceImpl(irodsFileSystem.getIRODSAccessObjectFactory(),
 				irodsAccount);
-		AvuSearchResult actual = service.gatherAvailableValues("testGatherAvailableValuesForDataObjWithPrefix-testmdattrib1", "testGatherAvailableValuesForDataObjWithPrefix%", 0, AvuTypeEnum.DATA_OBJECT);
+		AvuSearchResult actual = service.gatherAvailableValues(
+				"testGatherAvailableValuesForDataObjWithPrefix-testmdattrib1",
+				"testGatherAvailableValuesForDataObjWithPrefix%", 0, AvuTypeEnum.DATA_OBJECT);
 		Assert.assertNotNull("null result returned", actual);
 		Assert.assertFalse("no results", actual.getElements().isEmpty());
 
