@@ -8,6 +8,7 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.IRODSGenQueryExecutor;
 import org.irods.jargon.core.query.GenQueryBuilderException;
+import org.irods.jargon.core.query.GenQueryOrderByField.OrderByType;
 import org.irods.jargon.core.query.IRODSGenQueryBuilder;
 import org.irods.jargon.core.query.IRODSGenQueryFromBuilder;
 import org.irods.jargon.core.query.IRODSQueryResultRow;
@@ -79,7 +80,7 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 						RodsGenQueryEnum.COL_META_DATA_ATTR_NAME, QueryConditionOperators.LIKE, prefix);
 			} else if (avuTypeEnum == AvuTypeEnum.BOTH) {
 				// to do add query for both
-				return null;
+				throw new UnsupportedOperationException();
 			}
 
 			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(
@@ -150,7 +151,7 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
 								QueryConditionOperators.LIKE, forAttribute)
 						.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
-								QueryConditionOperators.LIKE, prefix);
+								QueryConditionOperators.LIKE, prefix).addOrderByGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE, OrderByType.ASC);
 
 			} else if (avuTypeEnum == AvuTypeEnum.DATA_OBJECT) {
 
@@ -158,7 +159,7 @@ public class AvuAutocompleteServiceImpl extends AbstractJargonService implements
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_NAME,
 						QueryConditionOperators.LIKE, forAttribute)
 				.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,
-						QueryConditionOperators.LIKE, prefix);
+						QueryConditionOperators.LIKE, prefix).addOrderByGenQueryField(RodsGenQueryEnum.COL_META_DATA_ATTR_VALUE,  OrderByType.ASC);
 
 			} else if (avuTypeEnum == AvuTypeEnum.BOTH) {
 
