@@ -25,12 +25,12 @@ public class IRODSAccount implements Serializable {
 	public static final String PUBLIC_USERNAME = "anonymous";
 	private AuthScheme authenticationScheme = AuthScheme.STANDARD;
 
-	private final String host;
-	private final int port;
+	private String host;
+	private int port;
 	private String userZone;
 	private String userName;
-	private final String proxyZone;
-	private final String proxyName;
+	private String proxyZone;
+	private String proxyName;
 	private String password;
 	private String defaultStorageResource;
 	private String homeDirectory;
@@ -47,8 +47,8 @@ public class IRODSAccount implements Serializable {
 	private List<String> authenticatedRoles = new ArrayList<String>();
 
 	/**
-	 * Creates an object to hold iRODS account information. All parameters need
-	 * to be initialized to use this initializer.
+	 * Creates an object to hold iRODS account information. All parameters need to
+	 * be initialized to use this initializer.
 	 * <P>
 	 *
 	 * @param host
@@ -66,9 +66,9 @@ public class IRODSAccount implements Serializable {
 	 * @param defaultStorageResource
 	 *            default storage resource
 	 * @param clientServerNegotiationPolicy
-	 *            {@link ClientServerNegotiationPolicy} object describing
-	 *            overrides from the default policy, may be set to
-	 *            {@code null} to accept defaults from Jargon properties.
+	 *            {@link ClientServerNegotiationPolicy} object describing overrides
+	 *            from the default policy, may be set to {@code null} to accept
+	 *            defaults from Jargon properties.
 	 */
 	public static IRODSAccount instance(final String host, final int port, final String userName, final String password,
 			final String homeDirectory, final String zone, final String defaultStorageResource,
@@ -78,8 +78,8 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Creates an object to hold iRODS account information. All parameters need
-	 * to be initialized to use this initializer.
+	 * Creates an object to hold iRODS account information. All parameters need to
+	 * be initialized to use this initializer.
 	 * <P>
 	 *
 	 * @param host
@@ -104,9 +104,9 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Creates an object to hold iRODS account information. All parameters need
-	 * to be initialized to use this initializer. Note that this instance method
-	 * will set the auth scheme
+	 * Creates an object to hold iRODS account information. All parameters need to
+	 * be initialized to use this initializer. Note that this instance method will
+	 * set the auth scheme
 	 *
 	 * @param host
 	 *            the iRODS server domain name
@@ -179,10 +179,10 @@ public class IRODSAccount implements Serializable {
 	 * @param zone
 	 *            {@code String} with the iRODS zone
 	 * @param defaultStorageResource
-	 *            {@code String} with optional value for the default
-	 *            storage resource. Note that iRODS may have defaults set by
-	 *            policy. In cases where no default policy exists, and none is
-	 *            specified here, an error can occur.
+	 *            {@code String} with optional value for the default storage
+	 *            resource. Note that iRODS may have defaults set by policy. In
+	 *            cases where no default policy exists, and none is specified here,
+	 *            an error can occur.
 	 * @return {@code IRODSAccount} suitable for anonymous access
 	 * @throws JargonException
 	 */
@@ -192,14 +192,14 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Create a re-routed iRODS account using an initial account, and a host
-	 * name to which the connection should be re-routed
+	 * Create a re-routed iRODS account using an initial account, and a host name to
+	 * which the connection should be re-routed
 	 *
 	 * @param initialAccount
 	 *            {@link IRODSAccount} for the initial connection
 	 * @param reroutedHostName
-	 *            {@code String} with the host name to which the connection
-	 *            should be routed.
+	 *            {@code String} with the host name to which the connection should
+	 *            be routed.
 	 * @return {@code IRODSAccount} connected to the new host.
 	 * @throws JargonException
 	 */
@@ -222,8 +222,8 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Creates an object to hold iRODS account information for a proxied user.
-	 * All parameters need to be initialized to use this initializer.
+	 * Creates an object to hold iRODS account information for a proxied user. All
+	 * parameters need to be initialized to use this initializer.
 	 *
 	 * @param host
 	 *            the iRODS server domain name
@@ -253,8 +253,8 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Creates an object to hold iRODS account information for a proxied user.
-	 * All parameters need to be initialized to use this initializer.
+	 * Creates an object to hold iRODS account information for a proxied user. All
+	 * parameters need to be initialized to use this initializer.
 	 *
 	 * @param host
 	 *            the iRODS server domain name
@@ -315,8 +315,8 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Comprehensive constructor that includes auth scheme, proxy information,
-	 * and the ability to overide client-server negotiation settings on a
+	 * Comprehensive constructor that includes auth scheme, proxy information, and
+	 * the ability to overide client-server negotiation settings on a
 	 * per-transaction basis
 	 *
 	 * @param host
@@ -334,8 +334,8 @@ public class IRODSAccount implements Serializable {
 	 * @param defaultStorageResource
 	 *            default storage resource
 	 * @param clientServerNegotiationPolicy
-	 *            {@link ClientServerNegotiationPolicy} object describing
-	 *            overrides from the default policy, may be set to <code>nu
+	 *            {@link ClientServerNegotiationPolicy} object describing overrides
+	 *            from the default policy, may be set to <code>nu
 	 * &#64;param proxyName
 	 *            the name of the user's proxy
 	 * &#64;param proxyZone
@@ -420,14 +420,14 @@ public class IRODSAccount implements Serializable {
 
 	/**
 	 * Tests this local file system account object for equality with the given
-	 * object. Returns {@code true} if and only if the argument is not
-	 * {@code null} and both are account objects for the same filesystem.
+	 * object. Returns {@code true} if and only if the argument is not {@code null}
+	 * and both are account objects for the same filesystem.
 	 *
 	 * @param obj
 	 *            The object to be compared with this abstract pathname
 	 *
-	 * @return {@code true} if and only if the objects are the same;
-	 *         {@code false} otherwise
+	 * @return {@code true} if and only if the objects are the same; {@code false}
+	 *         otherwise
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -461,8 +461,8 @@ public class IRODSAccount implements Serializable {
 
 	/**
 	 * Returns a string representation of this file system object. The string is
-	 * formated according to the iRODS URI model. Note: the user password will
-	 * not be included in the URI.
+	 * formated according to the iRODS URI model. Note: the user password will not
+	 * be included in the URI.
 	 */
 	@Override
 	public String toString() {
@@ -477,16 +477,16 @@ public class IRODSAccount implements Serializable {
 	}
 
 	/**
-	 * Return the URI representation of this Account object. If the account uses
-	 * a proxy user a password cannot be included in the URI.
+	 * Return the URI representation of this Account object. If the account uses a
+	 * proxy user a password cannot be included in the URI.
 	 *
 	 * @param includePassword
-	 *            If true, the account's password will be included in the URI,
-	 *            if possible.
+	 *            If true, the account's password will be included in the URI, if
+	 *            possible.
 	 *
 	 * @throws UnsupportedOperationException
-	 *             This exception is thrown if an attempt is made to create a
-	 *             irods URI that authenticates as a proxy user.
+	 *             This exception is thrown if an attempt is made to create a irods
+	 *             URI that authenticates as a proxy user.
 	 */
 	public URI toURI(final boolean includePassword) throws JargonException {
 
@@ -508,6 +508,51 @@ public class IRODSAccount implements Serializable {
 
 		try {
 			return new URI("irods", sb.toString(), getHost(), getPort(), getHomeDirectory(), null, null);
+		} catch (URISyntaxException e) {
+			throw new JargonException("unable to convert to URI", e);
+		}
+
+	}
+
+	/**
+	 * Return the URI representation of this Account object. If the account uses a
+	 * proxy user a password cannot be included in the URI.
+	 *
+	 * @param includePassword
+	 *            If true, the account's password will be included in the URI, if
+	 *            possible.
+	 * 
+	 * @param irodsAbsolutePath
+	 *            {@link String} with an iRODS path
+	 *
+	 * @throws UnsupportedOperationException
+	 *             This exception is thrown if an attempt is made to create a irods
+	 *             URI that authenticates as a proxy user.
+	 */
+	public URI toURI(final boolean includePassword, final String irodsAbsolutePath) throws JargonException {
+
+		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
+			return toURI(includePassword);
+		}
+
+		StringBuilder sb = new StringBuilder();
+		sb.append(getUserName());
+		sb.append('.');
+		sb.append(getZone());
+
+		if (includePassword) {
+			if (proxied()) {
+				throw new UnsupportedOperationException(
+						"irods URI scheme doesn't support authentication through a proxy.");
+			}
+
+			sb.append(':');
+			sb.append(getPassword());
+
+		}
+
+		try {
+			return new URI("irods", sb.toString(), getHost(), getPort(), irodsAbsolutePath, null, null);
 		} catch (URISyntaxException e) {
 			throw new JargonException("unable to convert to URI", e);
 		}
@@ -590,8 +635,8 @@ public class IRODSAccount implements Serializable {
 	/**
 	 * Check if this is 'anonymous'
 	 *
-	 * @return {@code boolean} that will be {@code true} if this is an
-	 *         anonymous iRODS account
+	 * @return {@code boolean} that will be {@code true} if this is an anonymous
+	 *         iRODS account
 	 */
 	public boolean isAnonymousAccount() {
 		if (userName.equals(PUBLIC_USERNAME)) {
@@ -642,6 +687,40 @@ public class IRODSAccount implements Serializable {
 	public synchronized void setClientServerNegotiationPolicy(
 			final ClientServerNegotiationPolicy clientServerNegotiationPolicy) {
 		this.clientServerNegotiationPolicy = clientServerNegotiationPolicy;
+	}
+
+	/**
+	 * @deprecated - not even sure what this is!
+	 * @return
+	 */
+	@Deprecated
+	public String getUserZone() {
+		return userZone;
+	}
+
+	/**
+	 * @deprecated - not even sure what this is for! - MCC
+	 * @param userZone
+	 */
+	@Deprecated
+	public void setUserZone(String userZone) {
+		this.userZone = userZone;
+	}
+
+	public void setHost(String host) {
+		this.host = host;
+	}
+
+	public void setPort(int port) {
+		this.port = port;
+	}
+
+	public void setProxyZone(String proxyZone) {
+		this.proxyZone = proxyZone;
+	}
+
+	public void setProxyName(String proxyName) {
+		this.proxyName = proxyName;
 	}
 
 }
