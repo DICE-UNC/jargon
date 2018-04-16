@@ -39,6 +39,7 @@ public class IrodsNioFileSystemTest {
 		irodsFileSystem.closeAndEatExceptions();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testCreateWithUri() throws Exception {
 		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
@@ -47,7 +48,9 @@ public class IrodsNioFileSystemTest {
 
 		IrodsFileSystemProvider provider = Mockito.mock(IrodsFileSystemProvider.class);
 
+		@SuppressWarnings("rawtypes")
 		Map<String, ?> env = new HashMap();
+		@SuppressWarnings("resource")
 		IrodsNioFileSystem actual = new IrodsNioFileSystem(irodsFileSystem, irodsAccount, env, targetIrodsCollection,
 				provider);
 		Assert.assertEquals(irodsAccount, actual.getIrodsAccount());

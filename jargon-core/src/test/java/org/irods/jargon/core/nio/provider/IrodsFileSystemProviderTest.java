@@ -54,4 +54,23 @@ public class IrodsFileSystemProviderTest {
 
 	}
 
+	/*
+	 * no thrown error = good!
+	 */
+	@Test
+	public void testClose() throws Exception {
+
+		IRODSAccount irodsAccount = testingPropertiesHelper.buildIRODSAccountFromTestProperties(testingProperties);
+		String targetIrodsCollection = testingPropertiesHelper
+				.buildIRODSCollectionAbsolutePathFromTestProperties(testingProperties, IRODS_TEST_SUBDIR_PATH);
+
+		IrodsFileSystemProvider provider = new IrodsFileSystemProvider();
+		Map<String, ?> env = new HashMap();
+
+		IrodsNioFileSystem actual = (IrodsNioFileSystem) provider
+				.newFileSystem(irodsAccount.toURI(true, targetIrodsCollection), env);
+		actual.close();
+
+	}
+
 }

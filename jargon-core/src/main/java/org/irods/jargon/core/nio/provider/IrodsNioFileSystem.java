@@ -8,9 +8,12 @@ import java.nio.file.FileStore;
 import java.nio.file.FileSystem;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
+import java.nio.file.Paths;
 import java.nio.file.WatchService;
 import java.nio.file.attribute.UserPrincipalLookupService;
 import java.nio.file.spi.FileSystemProvider;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -91,7 +94,8 @@ public class IrodsNioFileSystem extends FileSystem {
 	@Override
 	public void close() throws IOException {
 		log.info("closing!");
-		irodsFileSystem.closeAndEatExceptions();
+		irodsFileSystem.closeAndEatExceptions(); // TODO: only closes for current thread...I don't know if this is
+													// useful
 	}
 
 	/*
@@ -101,7 +105,7 @@ public class IrodsNioFileSystem extends FileSystem {
 	 */
 	@Override
 	public boolean isOpen() {
-		return false;
+		return true;
 	}
 
 	/*
@@ -111,7 +115,6 @@ public class IrodsNioFileSystem extends FileSystem {
 	 */
 	@Override
 	public boolean isReadOnly() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -122,8 +125,7 @@ public class IrodsNioFileSystem extends FileSystem {
 	 */
 	@Override
 	public String getSeparator() {
-		// TODO Auto-generated method stub
-		return null;
+		return "/";
 	}
 
 	/*
@@ -133,8 +135,10 @@ public class IrodsNioFileSystem extends FileSystem {
 	 */
 	@Override
 	public Iterable<Path> getRootDirectories() {
-		// TODO Auto-generated method stub
-		return null;
+		List<Path> paths = new ArrayList<Path>();
+		paths.add(Paths.get(this.rootAbsolutePath));
+		return paths;
+
 	}
 
 	/*

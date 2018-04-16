@@ -41,22 +41,22 @@ import org.slf4j.LoggerFactory;
 /**
  * Utility to open and maintain connections to iRODS across services. This is
  * used internally to keep connections to iRODS on a per-thread basis. A
- * {@code Map} is kept in a ThreadLocal cache with the
- * {@code IRODSAccount} as the key.
+ * {@code Map} is kept in a ThreadLocal cache with the {@code IRODSAccount} as
+ * the key.
  * <p>
- * Connections are returned to the particular {@code IRODSProtocolManager}
- * for disposal or return to cache or pool. See the comments for
+ * Connections are returned to the particular {@code IRODSProtocolManager} for
+ * disposal or return to cache or pool. See the comments for
  * {@link IRODSMidLevelProtocol} for details on connection creation and
  * disposal.
  * <p>
- * {@code IRODSSession} is also the place where shared, expensive objects
- * are kept. Note that IRODSSession is not coded as a singleton. It is up to the
+ * {@code IRODSSession} is also the place where shared, expensive objects are
+ * kept. Note that IRODSSession is not coded as a singleton. It is up to the
  * developer to place the {@code IRODSSession} in a context where it can be
  * shared across the application (such as in a Servlet application context). The
  * comments for {@link IRODSFileSystem} have more information. Essentially,
- * {@code IRODSSession} is meant to be created once, either directly, or
- * wrapped in the shared {@code IRODSFileSystem}. If desired, the developer
- * can wrap these objects as singletons, but that is not imposed by Jargon.
+ * {@code IRODSSession} is meant to be created once, either directly, or wrapped
+ * in the shared {@code IRODSFileSystem}. If desired, the developer can wrap
+ * these objects as singletons, but that is not imposed by Jargon.
  * <p>
  * The {@code IRODSAccount} presented by the user is the key to the session
  * cache. The actual operative account is stored within the iRODS protocol. For
@@ -69,19 +69,18 @@ import org.slf4j.LoggerFactory;
 public class IRODSSession {
 
 	/**
-	 * {@code ThreadLocal} to cache connections to iRODS. This is a
-	 * {@code Map} that is keyed by the {@link IRODSAccount}, so that each
-	 * thread automatically shares a common connection to an iRODS server.
+	 * {@code ThreadLocal} to cache connections to iRODS. This is a {@code Map} that
+	 * is keyed by the {@link IRODSAccount}, so that each thread automatically
+	 * shares a common connection to an iRODS server.
 	 */
 	public static final ThreadLocal<Map<String, AbstractIRODSMidLevelProtocol>> sessionMap = new ThreadLocal<Map<String, AbstractIRODSMidLevelProtocol>>();
 
 	/**
-	 * The parallel transfer thread pool is lazily initialized on the first
-	 * parallel transfer operation. This will use the
-	 * {@code JargonProperties} configured in this {@code Session} if
-	 * the properties indicate that the pool will be used. Once initialized,
-	 * changing the {@code JargonProperties} controlling the pool have no
-	 * effect.
+	 * The parallel transfer thread pool is lazily initialized on the first parallel
+	 * transfer operation. This will use the {@code JargonProperties} configured in
+	 * this {@code Session} if the properties indicate that the pool will be used.
+	 * Once initialized, changing the {@code JargonProperties} controlling the pool
+	 * have no effect.
 	 */
 	private ExecutorService parallelTransferThreadPool = null;
 	private IRODSProtocolManager irodsProtocolManager;
@@ -89,17 +88,17 @@ public class IRODSSession {
 
 	/**
 	 * Trust manager (which can have a custom manager injected) for SSL
-	 * certificates. {@code JargonProperties} can set a 'trust all' trust
-	 * manager by setting the {@code bypass.ssl.cert.checks} to
-	 * {@code true}, otherwise, the default will be used. In addition, a
-	 * custom trust manager may be injected here.
+	 * certificates. {@code JargonProperties} can set a 'trust all' trust manager by
+	 * setting the {@code bypass.ssl.cert.checks} to {@code true}, otherwise, the
+	 * default will be used. In addition, a custom trust manager may be injected
+	 * here.
 	 */
 	private X509TrustManager x509TrustManager = null;
 
 	/**
-	 * @return the x509TrustManager that is currently set for SSL connections,
-	 *         it may be {@code null}, which will take a default for any
-	 *         SSL sockets created
+	 * @return the x509TrustManager that is currently set for SSL connections, it
+	 *         may be {@code null}, which will take a default for any SSL sockets
+	 *         created
 	 */
 	public synchronized X509TrustManager getX509TrustManager() {
 		return x509TrustManager;
@@ -107,25 +106,25 @@ public class IRODSSession {
 
 	/**
 	 * @param x509TrustManager
-	 *            the x509TrustManager to set, this may be left
-	 *            {@code null}, in which case a default trust manager is
-	 *            used. this allows users to inject their own certificate trust
-	 *            manager. Note as well that {@link JargonProperties} can also
-	 *            specifiy that a 'trust all' trust manager should be used, in
-	 *            which case the {@link TrustAllX509TrustManager} will be
-	 *            created and put here. This creation is only done when
-	 *            constructing iRODS session using the constructor that takes a
-	 *            {@code JargonProperties} parameter, with the bypassSslCet
+	 *            the x509TrustManager to set, this may be left {@code null}, in
+	 *            which case a default trust manager is used. this allows users to
+	 *            inject their own certificate trust manager. Note as well that
+	 *            {@link JargonProperties} can also specifiy that a 'trust all'
+	 *            trust manager should be used, in which case the
+	 *            {@link TrustAllX509TrustManager} will be created and put here.
+	 *            This creation is only done when constructing iRODS session using
+	 *            the constructor that takes a {@code JargonProperties} parameter,
+	 *            with the bypassSslCet
 	 */
 	public synchronized void setX509TrustManager(final X509TrustManager x509TrustManager) {
 		this.x509TrustManager = x509TrustManager;
 	}
 
 	/**
-	 * Manager for long file restarts. Defaults to a simple in-memory manager,
-	 * but can have an alternative manager injected. There is no harm in leaving
-	 * this as {@code null} if not needed, as Jargon will guard against
-	 * null access and assume restarts are not supported
+	 * Manager for long file restarts. Defaults to a simple in-memory manager, but
+	 * can have an alternative manager injected. There is no harm in leaving this as
+	 * {@code null} if not needed, as Jargon will guard against null access and
+	 * assume restarts are not supported
 	 */
 	private AbstractRestartManager restartManager = null;
 
@@ -141,25 +140,23 @@ public class IRODSSession {
 	private final LocalChecksumComputerFactory localChecksumComputerFactory = new LocalChecksumComputerFactoryImpl();
 
 	/**
-	 * Simple cache (tolerating concurrent access) for name/value props. This
-	 * cache is meant to hold user-definable properties about a connected server
-	 * (by host and zone name). This is meant as an efficient way to record
-	 * properties of a connected iRODS server that are discovered by interacting
-	 * with the server. This is especially useful for operations that may or may
-	 * not be configured, such that repeated failed attempts at an operation are
-	 * not made.
+	 * Simple cache (tolerating concurrent access) for name/value props. This cache
+	 * is meant to hold user-definable properties about a connected server (by host
+	 * and zone name). This is meant as an efficient way to record properties of a
+	 * connected iRODS server that are discovered by interacting with the server.
+	 * This is especially useful for operations that may or may not be configured,
+	 * such that repeated failed attempts at an operation are not made.
 	 * <p>
-	 * A good example would be if required specific queries, rules,
-	 * micro-services, or remote command scripts are not available to do an
-	 * operation.
+	 * A good example would be if required specific queries, rules, micro-services,
+	 * or remote command scripts are not available to do an operation.
 	 */
 	private final DiscoveredServerPropertiesCache discoveredServerPropertiesCache = new DiscoveredServerPropertiesCache();
 
 	/**
-	 * Get the {@code JargonProperties} that contains metadata to tune the
-	 * behavior of Jargon. This will either be the default, loaded from the
-	 * {@code jargon.properties} file, or a custom source that can be
-	 * injected into the {@code IRODSSession} object.
+	 * Get the {@code JargonProperties} that contains metadata to tune the behavior
+	 * of Jargon. This will either be the default, loaded from the
+	 * {@code jargon.properties} file, or a custom source that can be injected into
+	 * the {@code IRODSSession} object.
 	 *
 	 * @return {@link JargonProperties} with configuration metadata.
 	 */
@@ -170,9 +167,9 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Convenience method builds a default {@code TransferControlBlock}
-	 * that has default {@code TransferOptions} based on the
-	 * {@code JargonProperties} configured for the system.
+	 * Convenience method builds a default {@code TransferControlBlock} that has
+	 * default {@code TransferOptions} based on the {@code JargonProperties}
+	 * configured for the system.
 	 *
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
@@ -189,11 +186,11 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Build an immutable {@code PipelineConfiguration} object that
-	 * controls i/o behavior with iRODS
+	 * Build an immutable {@code PipelineConfiguration} object that controls i/o
+	 * behavior with iRODS
 	 *
-	 * @return {@link PipelineConfiguration} which is an immutable set of
-	 *         properties to control i/o behavior of Jargon
+	 * @return {@link PipelineConfiguration} which is an immutable set of properties
+	 *         to control i/o behavior of Jargon
 	 */
 	public PipelineConfiguration buildPipelineConfigurationBasedOnJargonProperties() {
 
@@ -204,8 +201,8 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Get the default transfer options based on the properties that have been
-	 * set. This can then be tuned for an individual transfer
+	 * Get the default transfer options based on the properties that have been set.
+	 * This can then be tuned for an individual transfer
 	 *
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
@@ -236,8 +233,32 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Close all sessions to iRODS that exist for this Thread. This method can
-	 * be safely called by multiple threads, as the connections are in a
+	 * Get a count of the current open connections in this Thread
+	 * 
+	 * @return <code>int</code> with the current count
+	 * @throws JargonException
+	 */
+	public int currentConnectionsCount() throws JargonException {
+
+		Map<String, AbstractIRODSMidLevelProtocol> irodsProtocols = sessionMap.get();
+		return irodsProtocols.size();
+
+	}
+
+	/**
+	 * Checks if there are any open connections in this Thread
+	 * 
+	 * @return <code>boolean</code> of <code>true</code> if there are any open
+	 *         connections
+	 * @throws JargonException
+	 */
+	public boolean isAnyOpenConnections() throws JargonException {
+		return (currentConnectionsCount() > 0);
+	}
+
+	/**
+	 * Close all sessions to iRODS that exist for this Thread. This method can be
+	 * safely called by multiple threads, as the connections are in a
 	 * {@code ThreadLocal}
 	 *
 	 * @throws JargonException
@@ -325,9 +346,9 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Instance method, still supported (for now) but switching to straight
-	 * setter methods and a default constructor to make it easer to wire with
-	 * dependency injection. Look to see this deprecated.
+	 * Instance method, still supported (for now) but switching to straight setter
+	 * methods and a default constructor to make it easer to wire with dependency
+	 * injection. Look to see this deprecated.
 	 *
 	 * @param irodsConnectionManager
 	 * @return {@link IRODSSession}
@@ -339,17 +360,16 @@ public class IRODSSession {
 	}
 
 	/**
-	 * For a given {@code IRODSAccount}, create and return, or return a
-	 * connection from the cache. This connection is per-Thread, so if another
-	 * thread has a cached connection, it is not visible from here, and must be
-	 * properly closed on that Thread.
+	 * For a given {@code IRODSAccount}, create and return, or return a connection
+	 * from the cache. This connection is per-Thread, so if another thread has a
+	 * cached connection, it is not visible from here, and must be properly closed
+	 * on that Thread.
 	 *
 	 * @param irodsAccount
-	 *            {@code IRODSAccount} that describes this connection to
-	 *            iRODS.
-	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
-	 *         that represents protocol level (above the socket level)
-	 *         communications to iRODS.
+	 *            {@code IRODSAccount} that describes this connection to iRODS.
+	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} that
+	 *         represents protocol level (above the socket level) communications to
+	 *         iRODS.
 	 * @throws JargonException
 	 */
 	public AbstractIRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
@@ -406,8 +426,8 @@ public class IRODSSession {
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
-	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol}
-	 *         with a renewed connection
+	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} with a
+	 *         renewed connection
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
@@ -438,8 +458,7 @@ public class IRODSSession {
 	 * connection and potentially renew the connection if necessary.
 	 *
 	 * @param irodsMidLevelProtocol
-	 * @return {@code boolean} that will be {@code true} if the conn
-	 *         was shut down
+	 * @return {@code boolean} that will be {@code true} if the conn was shut down
 	 * @throws AuthenticationException
 	 * @throws JargonException
 	 */
@@ -483,8 +502,8 @@ public class IRODSSession {
 		irodsProtocols.put(irodsAccount.toString(), irodsProtocol);
 
 		/*
-		 * check for GSI and add user info, consider factoring out to a 'post
-		 * processor' MC
+		 * check for GSI and add user info, consider factoring out to a 'post processor'
+		 * MC
 		 */
 		if (irodsAccount.getAuthenticationScheme() == AuthScheme.GSI) {
 			log.debug("adding user information to iRODS account for GSI");
@@ -559,11 +578,11 @@ public class IRODSSession {
 	 * Close an iRODS session for the given account
 	 *
 	 * @param irodsAccount
-	 *            {@code IRODSAccount} that describes the connection that
-	 *            should be closed.
+	 *            {@code IRODSAccount} that describes the connection that should be
+	 *            closed.
 	 * @throws JargonException
-	 *             if an error occurs on the close. If the connection does not
-	 *             exist it is logged and ignored.
+	 *             if an error occurs on the close. If the connection does not exist
+	 *             it is logged and ignored.
 	 */
 	public void closeSession(final IRODSAccount irodsAccount) throws JargonException {
 
@@ -598,9 +617,8 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Signal to the {@code IRODSSession} that a connection has been
-	 * forcefully terminated due to errors, and should be removed from the
-	 * cache.
+	 * Signal to the {@code IRODSSession} that a connection has been forcefully
+	 * terminated due to errors, and should be removed from the cache.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} that maps the connection
@@ -631,8 +649,8 @@ public class IRODSSession {
 
 	/**
 	 * This method is not particularly useful, but does provide a route to get a
-	 * direct handle on the connections for this Thread in cases where such
-	 * status information needs to be kept. Returns null if no map is available.
+	 * direct handle on the connections for this Thread in cases where such status
+	 * information needs to be kept. Returns null if no map is available.
 	 *
 	 * @return {@code Map<String, AbstractIRODSMidLevelProtocol>}
 	 */
@@ -651,14 +669,14 @@ public class IRODSSession {
 	/**
 	 * Get (lazily) the pool of parallel transfer threads. This will return
 	 * {@code null} if the use of the pool is not set in the
-	 * {@code JargonProperties}. The method will create the pool on the
-	 * first request based on the {@code JargonProperties}, and once
-	 * created, changing the properties does not reconfigure the pool, it just
-	 * returns the lazily created instance.
+	 * {@code JargonProperties}. The method will create the pool on the first
+	 * request based on the {@code JargonProperties}, and once created, changing the
+	 * properties does not reconfigure the pool, it just returns the lazily created
+	 * instance.
 	 *
-	 * @return {@link ExecutorService} that is the pool of threads for the
-	 *         paralllel transfers, or {@code null} if the pool is not
-	 *         configured in the jargon properties.
+	 * @return {@link ExecutorService} that is the pool of threads for the paralllel
+	 *         transfers, or {@code null} if the pool is not configured in the
+	 *         jargon properties.
 	 * @throws JargonException
 	 */
 	public ExecutorService getParallelTransferThreadPool() throws JargonException {
@@ -707,17 +725,15 @@ public class IRODSSession {
 
 	/**
 	 *
-	 * Simple cache (tolerating concurrent access) for name/value props. This
-	 * cache is meant to hold user-definable properties about a connected server
-	 * (by host and zone name). This is meant as an efficient way to record
-	 * properties of a connected iRODS server that are discovered by interacting
-	 * with the server. This is especially useful for operations that may or may
-	 * not be configured, such that repeated failed attempts at an operation are
-	 * not made.
+	 * Simple cache (tolerating concurrent access) for name/value props. This cache
+	 * is meant to hold user-definable properties about a connected server (by host
+	 * and zone name). This is meant as an efficient way to record properties of a
+	 * connected iRODS server that are discovered by interacting with the server.
+	 * This is especially useful for operations that may or may not be configured,
+	 * such that repeated failed attempts at an operation are not made.
 	 * <p>
-	 * A good example would be if required specific queries, rules,
-	 * micro-services, or remote command scripts are not available to do an
-	 * operation.
+	 * A good example would be if required specific queries, rules, micro-services,
+	 * or remote command scripts are not available to do an operation.
 	 *
 	 * @return {@link DiscoveredServerPropertiesCache}
 	 */
@@ -726,8 +742,8 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Handy method to see if we're using the dynamic server properties cache.
-	 * This is set in the jargon properties.
+	 * Handy method to see if we're using the dynamic server properties cache. This
+	 * is set in the jargon properties.
 	 *
 	 * @return {@code boolean}
 	 */
@@ -737,8 +753,8 @@ public class IRODSSession {
 	}
 
 	/**
-	 * Get a reference to a factory that can return checksum computation
-	 * strategies on local file systems
+	 * Get a reference to a factory that can return checksum computation strategies
+	 * on local file systems
 	 *
 	 * @return {@link LocalChecksumComputerFactory}
 	 */
