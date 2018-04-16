@@ -12,7 +12,7 @@ for milestone: https://github.com/DICE-UNC/jargon/milestone/22
 
 =======
 
-Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
+Please go to https://github.com/DICE-UNC/jargon for the latest news and info.
 
 Jargon-core consists of the following libraries
 
