@@ -17,27 +17,19 @@ import org.irods.jargon.datautils.synchproperties.SynchPropertiesServiceImplTest
 import org.irods.jargon.datautils.tree.DiffTreePostProcessorTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityTest;
-import org.irods.jargon.datautils.tree.FileTreeIteratorVisitorInvokerTest;
 import org.irods.jargon.datautils.tree.FileTreeNodeTest;
-import org.irods.jargon.datautils.tree.TreeSummarizingServiceImplTest;
 import org.irods.jargon.datautils.uploads.UploadsServiceImplTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ FileTreeDiffEntryTest.class, FileTreeNodeTest.class,
-		FileTreeDiffUtilityTest.class, SynchPropertiesServiceImplTest.class,
-		DataCacheServiceImplTest.class,
-		ConnectionCreatingPoolableObjectFactoryTest.class,
-		TempPasswordCachingProtocolManagerTest.class,
-		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class,
-		ShoppingCartEntryTest.class, FileShoppingCartTest.class,
-		MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
-		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class,
-		DiffTreePostProcessorTest.class,
-		FileTreeIteratorVisitorInvokerTest.class,
-		TreeSummarizingServiceImplTest.class, LocalTarFileArchiverTest.class,
-		LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
+@Suite.SuiteClasses({ FileTreeDiffEntryTest.class, FileTreeNodeTest.class, FileTreeDiffUtilityTest.class,
+		SynchPropertiesServiceImplTest.class, DataCacheServiceImplTest.class,
+		ConnectionCreatingPoolableObjectFactoryTest.class, TempPasswordCachingProtocolManagerTest.class,
+		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class, ShoppingCartEntryTest.class,
+		FileShoppingCartTest.class, MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
+		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class, DiffTreePostProcessorTest.class,
+		LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
 public class AllTests {
 
 }

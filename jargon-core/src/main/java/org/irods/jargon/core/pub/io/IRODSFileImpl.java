@@ -1441,4 +1441,12 @@ public class IRODSFileImpl extends File implements IRODSFile {
 		this.openFlags = openFlags;
 	}
 
+	public IRODSFileSystemAO getIrodsFileSystemAO() {
+		return irodsFileSystemAO;
+	}
+
+	public void setIrodsFileSystemAO(IRODSFileSystemAO irodsFileSystemAO) {
+		this.irodsFileSystemAO = irodsFileSystemAO;
+	}
+
 }
