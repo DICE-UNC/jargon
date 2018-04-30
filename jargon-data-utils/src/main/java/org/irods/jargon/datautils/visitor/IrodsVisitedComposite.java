@@ -1,6 +1,6 @@
 /**
- * 
- */
+* 
+*/
 package org.irods.jargon.datautils.visitor;
 
 import java.io.File;
