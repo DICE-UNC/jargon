@@ -9,6 +9,7 @@ import org.irods.jargon.datautils.filearchive.LocalTarFileArchiverTest;
 import org.irods.jargon.datautils.image.ImageServiceFactoryImplTest;
 import org.irods.jargon.datautils.image.MediaHandlingUtilsTest;
 import org.irods.jargon.datautils.image.ThumbnailServiceImplTest;
+import org.irods.jargon.datautils.indexer.AbstractIndexerVisitorTest;
 import org.irods.jargon.datautils.sharing.AnonymousAccessServiceImplTest;
 import org.irods.jargon.datautils.shoppingcart.FileShoppingCartTest;
 import org.irods.jargon.datautils.shoppingcart.ShoppingCartEntryTest;
@@ -29,7 +30,8 @@ import org.junit.runners.Suite;
 		ThumbnailServiceImplTest.class, ImageServiceFactoryImplTest.class, ShoppingCartEntryTest.class,
 		FileShoppingCartTest.class, MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
 		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class, DiffTreePostProcessorTest.class,
-		LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class })
+		LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class,
+		AbstractIndexerVisitorTest.class })
 public class AllTests {
 
 }

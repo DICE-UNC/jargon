@@ -39,15 +39,8 @@ public abstract class AbstractIrodsVisitor extends AbstractJargonService impleme
 	@Override
 	public abstract boolean visitEnter(HierComposite node);
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.datautils.visitor.HierVisitor#visitLeave(org.irods.jargon.
-	 * datautils.visitor.HierComposite)
-	 */
 	@Override
-	public abstract boolean visitLeave(HierComposite node);
+	public abstract boolean visitLeave(HierComposite node, boolean visitorEntered);
 
 	/*
 	 * (non-Javadoc)

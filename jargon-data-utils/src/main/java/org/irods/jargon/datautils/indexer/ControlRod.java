@@ -25,7 +25,8 @@ public interface ControlRod {
 	 * @param hierComponent
 	 *            {@link HierComponent} that is about to be accessed.
 	 * @return {@code} boolean of <code>true</code> to continue or
-	 *         <code>false</code> to end the crawl
+	 *         <code>false</code> to end the crawl, aborting the rest of the crawl
+	 *         and returning a normal status code
 	 */
 	public boolean checkControlRod(HierComponent hierComponent);
 

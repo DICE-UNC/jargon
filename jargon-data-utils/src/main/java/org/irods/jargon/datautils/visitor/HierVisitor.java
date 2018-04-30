@@ -36,11 +36,19 @@ public interface HierVisitor {
 	 * <p/>
 	 * A composite returning false will cause the visiting of siblings to halt.
 	 * 
+	 * @param node
+	 *            {@link HierComposite} that was being visited in the current
+	 *            iteration.
+	 * @param visitorEntered
+	 *            {@link boolean} indicating that the visitEnter() method had
+	 *            returned 'false'. Can be used for orchestrating proper action on
+	 *            leave in an implementing indexer
+	 * 
 	 * @return {@link boolean} with a <code>true</code> if the node and the node's
 	 *         siblings should be visited
 	 * 
 	 */
-	public boolean visitLeave(HierComposite node);
+	public boolean visitLeave(HierComposite node, boolean visitorEntered);
 
 	/**
 	 * Called on visiting a leaf node (file). This visitor can return

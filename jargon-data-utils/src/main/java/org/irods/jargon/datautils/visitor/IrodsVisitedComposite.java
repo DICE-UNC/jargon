@@ -77,7 +77,8 @@ public class IrodsVisitedComposite extends IrodsFileItem implements HierComposit
 			throw new IllegalArgumentException("null visitor");
 		}
 		log.debug("check if enter at:{}", this.getAbsolutePath());
-		if (visitor.visitEnter(this)) { // enter this node?
+		boolean visitorEntered = visitor.visitEnter(this);
+		if (visitorEntered) { // enter this node?
 
 			log.debug("entering...");
 			for (File file : this.listFiles()) {
@@ -91,8 +92,7 @@ public class IrodsVisitedComposite extends IrodsFileItem implements HierComposit
 		}
 
 		log.debug("done with children...");
-
-		return visitor.visitLeave(this);
+		return visitor.visitLeave(this, visitorEntered);
 	}
 
 }
