@@ -8,25 +8,26 @@ import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.service.AbstractJargonService;
 
 /**
- * Abstract implementation of a Hierarchical Visitor.
+ * Abstract implementation of a Hierarchical Visitor. Basis for concrete visitor
+ * implementations.
  * 
  * @author conwaymc
  *
  */
-public abstract class AbstractIrodsVisitor extends AbstractJargonService implements HierVisitor {
+public abstract class AbstractIrodsVisitorComponent extends AbstractJargonService implements HierVisitor {
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public AbstractIrodsVisitor(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public AbstractIrodsVisitorComponent(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
 	/**
 	 * 
 	 */
-	public AbstractIrodsVisitor() {
+	public AbstractIrodsVisitorComponent() {
 	}
 
 	/*

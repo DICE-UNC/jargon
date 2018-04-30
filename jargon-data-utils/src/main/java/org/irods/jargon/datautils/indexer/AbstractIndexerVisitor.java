@@ -13,7 +13,7 @@ import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
-import org.irods.jargon.datautils.visitor.AbstractIrodsVisitor;
+import org.irods.jargon.datautils.visitor.AbstractIrodsVisitorComponent;
 import org.irods.jargon.datautils.visitor.HierComponent;
 import org.irods.jargon.datautils.visitor.HierComposite;
 import org.irods.jargon.datautils.visitor.HierLeaf;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author conwaymc
  *
  */
-public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitor {
+public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorComponent {
 
 	public static final Logger log = LoggerFactory.getLogger(AbstractIndexerVisitor.class);
 	private final CollectionAO collectionAO;
