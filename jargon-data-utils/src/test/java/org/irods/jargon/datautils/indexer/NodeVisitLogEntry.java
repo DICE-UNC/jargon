@@ -70,4 +70,26 @@ public class NodeVisitLogEntry {
 		this.resultOfVisit = resultOfVisit;
 	}
 
+	@Override
+	public String toString() {
+		final int maxLen = 10;
+		StringBuilder builder = new StringBuilder();
+		builder.append("NodeVisitLogEntry [");
+		if (visitType != null) {
+			builder.append("visitType=").append(visitType).append(", ");
+		}
+		if (nodeAbsolutePath != null) {
+			builder.append("nodeAbsolutePath=").append(nodeAbsolutePath).append(", ");
+		}
+		if (nodeName != null) {
+			builder.append("nodeName=").append(nodeName).append(", ");
+		}
+		if (metadataThisLevel != null) {
+			builder.append("metadataThisLevel=")
+					.append(metadataThisLevel.subList(0, Math.min(metadataThisLevel.size(), maxLen))).append(", ");
+		}
+		builder.append("resultOfVisit=").append(resultOfVisit).append("]");
+		return builder.toString();
+	}
+
 }
