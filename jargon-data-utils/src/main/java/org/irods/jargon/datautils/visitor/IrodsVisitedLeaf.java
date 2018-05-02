@@ -7,6 +7,7 @@ import java.io.File;
 
 import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSFileSystemAO;
+import org.irods.jargon.core.pub.io.IRODSFileImpl;
 
 /**
  * Concrete implementation of a
@@ -48,6 +49,18 @@ public class IrodsVisitedLeaf extends IrodsFileItem implements HierLeaf {
 	 */
 	public IrodsVisitedLeaf(File parent, String child, IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		super(parent, child, irodsFileSystemAO);
+	}
+
+	/**
+	 * Handy constructor takes an <code>IRODSFileImpl</code>
+	 * 
+	 * @param irodsFile
+	 *            {@link IRODSFileImpl} that represents the iRODS file as a leaf
+	 *            node
+	 * @throws JargonException
+	 */
+	public IrodsVisitedLeaf(IRODSFileImpl irodsFile) throws JargonException {
+		this(irodsFile.getAbsolutePath(), irodsFile.getIrodsFileSystemAO());
 	}
 
 	/*

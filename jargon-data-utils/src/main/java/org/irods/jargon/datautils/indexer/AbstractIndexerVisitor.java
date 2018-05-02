@@ -272,7 +272,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	private boolean checkControlRod(HierComponent component) {
 
 		if (controlRod == null) {
-			return true;
+			return false;
 		} else {
 			return controlRod.checkControlRod(component);
 		}

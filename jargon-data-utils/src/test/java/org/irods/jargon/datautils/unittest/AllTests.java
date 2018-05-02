@@ -20,6 +20,8 @@ import org.irods.jargon.datautils.tree.FileTreeDiffEntryTest;
 import org.irods.jargon.datautils.tree.FileTreeDiffUtilityTest;
 import org.irods.jargon.datautils.tree.FileTreeNodeTest;
 import org.irods.jargon.datautils.uploads.UploadsServiceImplTest;
+import org.irods.jargon.datautils.visitor.IrodsVisitedCompositeTest;
+import org.irods.jargon.datautils.visitor.IrodsVisitedLeafTest;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -31,7 +33,7 @@ import org.junit.runners.Suite;
 		FileShoppingCartTest.class, MediaHandlingUtilsTest.class, ShoppingCartServiceImplTest.class,
 		AnonymousAccessServiceImplTest.class, UploadsServiceImplTest.class, DiffTreePostProcessorTest.class,
 		LocalTarFileArchiverTest.class, LocalFileGzipCompressorTest.class, ConnectionTesterImplTest.class,
-		AbstractIndexerVisitorTest.class })
+		AbstractIndexerVisitorTest.class, IrodsVisitedLeafTest.class, IrodsVisitedCompositeTest.class })
 public class AllTests {
 
 }

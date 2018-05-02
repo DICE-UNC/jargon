@@ -82,10 +82,18 @@ public class IrodsVisitedComposite extends IrodsFileItem implements HierComposit
 
 			log.debug("entering...");
 			for (File file : this.listFiles()) {
-				IrodsVisitedComposite child = new IrodsVisitedComposite((IRODSFileImpl) file);
-				if (!child.accept(visitor)) {
-					log.info("child doesn't accept, short circuit rest of siblings at:{}", child.getAbsolutePath());
-					break;
+				if (file.isDirectory()) {
+					IrodsVisitedComposite child = new IrodsVisitedComposite((IRODSFileImpl) file);
+					if (!child.accept(visitor)) {
+						log.info("child doesn't accept, short circuit rest of siblings at:{}", child.getAbsolutePath());
+						break;
+					}
+				} else {
+					IrodsVisitedLeaf leaf = new IrodsVisitedLeaf((IRODSFileImpl) file);
+					if (!leaf.accept(visitor)) {
+						log.info("child doesn't accept, short circuit rest of siblings at:{}", leaf.getAbsolutePath());
+						break;
+					}
 				}
 			}
 

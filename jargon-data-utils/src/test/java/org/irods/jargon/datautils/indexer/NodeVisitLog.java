@@ -34,4 +34,15 @@ public class NodeVisitLog {
 		this.logEntries = logEntries;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("NodeVisitLog [");
+		if (logEntries != null) {
+			builder.append("logEntries=").append(logEntries);
+		}
+		builder.append("]");
+		return builder.toString();
+	}
+
 }
