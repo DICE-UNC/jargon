@@ -111,7 +111,7 @@ public class AbstractIndexerVisitorTest {
 		IRODSFileImpl irodsFile = (IRODSFileImpl) irodsFileSystem.getIRODSFileFactory(irodsAccount)
 				.instanceIRODSFile(dataObjectAbsPath);
 
-		IrodsVisitedComposite composite = new IrodsVisitedComposite(irodsFile);
+		IrodsVisitedComposite composite = new IrodsVisitedComposite((IRODSFileImpl) parentDir);
 		TestIndexVisitor visitor = new TestIndexVisitor(irodsFileSystem.getIRODSAccessObjectFactory(), irodsAccount);
 
 		composite.accept(visitor);
@@ -122,7 +122,7 @@ public class AbstractIndexerVisitorTest {
 		Assert.assertEquals(targetIrodsParentCollection, actual.getNodeAbsolutePath());
 		Assert.assertEquals(1, actual.getMetadataThisLevel().size());
 		MetaDataAndDomainData md = actual.getMetadataThisLevel().get(0);
-		Assert.assertEquals(expectedAttribName, md.getAvuAttribute());
+		Assert.assertEquals(avuAttribName, md.getAvuAttribute());
 		Assert.assertEquals(testParentDir, md.getAvuValue());
 	}
 
