@@ -1,7 +1,5 @@
 package org.irods.jargon.datautils.indexer;
 
-import static org.junit.Assert.fail;
-
 import java.util.Properties;
 
 import org.irods.jargon.core.connection.IRODSAccount;
@@ -124,11 +122,6 @@ public class AbstractIndexerVisitorTest {
 		MetaDataAndDomainData md = actual.getMetadataThisLevel().get(0);
 		Assert.assertEquals(avuAttribName, md.getAvuAttribute());
 		Assert.assertEquals(testParentDir, md.getAvuValue());
-	}
-
-	@Test
-	public void testVisitLeaveWithMetadata() {
-		fail("Not yet implemented");
 	}
 
 	@Test
