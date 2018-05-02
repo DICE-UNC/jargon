@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.irods.jargon.datautils.visitor;
+package org.irods.jargon.datautils.indexer;
 
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.DataNotFoundException;
@@ -9,36 +9,35 @@ import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
 import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.service.AbstractJargonService;
+import org.irods.jargon.datautils.visitor.IrodsVisitedComposite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Service to run a crawl given a visitor and configuration. This is an example
- * of how the crawl can be initiated. It is likey a specific implementation
- * would differ.
+ * Service to run an indexer
  * 
  * @author conwaymc
  *
  */
-public class HierVisitorCrawlerServiceImpl extends AbstractJargonService {
+public class IndexerServiceImpl extends AbstractJargonService {
 
-	public static final Logger log = LoggerFactory.getLogger(HierVisitorCrawlerServiceImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(IndexerServiceImpl.class);
 
 	/**
 	 * @param irodsAccessObjectFactory
 	 * @param irodsAccount
 	 */
-	public HierVisitorCrawlerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
+	public IndexerServiceImpl(IRODSAccessObjectFactory irodsAccessObjectFactory, IRODSAccount irodsAccount) {
 		super(irodsAccessObjectFactory, irodsAccount);
 	}
 
 	/**
 	 * 
 	 */
-	public HierVisitorCrawlerServiceImpl() {
+	public IndexerServiceImpl() {
 	}
 
-	public void launch(final String startingCollectionPath, final HierVisitor visitor)
+	public void launch(final String startingCollectionPath, final AbstractIndexerVisitor visitor)
 			throws DataNotFoundException, JargonException {
 		log.info("launch");
 		if (startingCollectionPath == null || startingCollectionPath.isEmpty()) {
