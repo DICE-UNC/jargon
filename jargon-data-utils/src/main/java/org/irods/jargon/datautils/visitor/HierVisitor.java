@@ -60,4 +60,8 @@ public interface HierVisitor {
 	 *         continue (<code>true</code>) or short-circuit.
 	 */
 	public boolean visit(HierLeaf node);
+	
+	public void launch(final String startingCollectionPath, final HierVisitor visitor);
+	
+	//public boolean shutdown();
 }

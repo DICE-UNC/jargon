@@ -11,12 +11,15 @@ import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.CollectionAO;
 import org.irods.jargon.core.pub.DataObjectAO;
 import org.irods.jargon.core.pub.IRODSAccessObjectFactory;
+import org.irods.jargon.core.pub.io.IRODSFileImpl;
 import org.irods.jargon.core.query.JargonQueryException;
 import org.irods.jargon.core.query.MetaDataAndDomainData;
 import org.irods.jargon.datautils.visitor.AbstractIrodsVisitorComponent;
 import org.irods.jargon.datautils.visitor.HierComponent;
 import org.irods.jargon.datautils.visitor.HierComposite;
 import org.irods.jargon.datautils.visitor.HierLeaf;
+import org.irods.jargon.datautils.visitor.HierVisitor;
+import org.irods.jargon.datautils.visitor.IrodsVisitedComposite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,6 +235,39 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			throw new JargonRuntimeException("error getting metadata", e);
 		}
 
+	}
+	
+	@Override
+	public void launch(final String startingCollectionPath, final HierVisitor visitor) {
+		log.info("launch");
+		if (startingCollectionPath == null || startingCollectionPath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty startingCollectionPath");
+		}
+		log.info("startingCollectionPath:{}", startingCollectionPath);
+		if (visitor == null) {
+			throw new IllegalArgumentException("null visitor");
+		}
+
+		log.info("beginning the crawl...east to west...north to south...");
+
+		IRODSFileImpl startingPoint;
+		try {
+			startingPoint = (IRODSFileImpl) this.getIrodsAccessObjectFactory()
+					.getIRODSFileFactory(getIrodsAccount()).instanceIRODSFile(startingCollectionPath);
+			if (!startingPoint.isDirectory()) {
+				log.info("starting point is not a leaf node:{}", startingPoint);
+				throw new JargonException("cannot start a crawl on a leaf node!");
+			}
+
+			IrodsVisitedComposite startingComposite = new IrodsVisitedComposite(startingPoint);
+			startingComposite.accept(visitor);
+
+			log.info("....crawl!");
+		} catch (JargonException e) {
+			log.error("error in obtaining metadata", e);
+			throw new JargonRuntimeException("error lauching visitor", e);
+		}
+		
 	}
 
 	/**
