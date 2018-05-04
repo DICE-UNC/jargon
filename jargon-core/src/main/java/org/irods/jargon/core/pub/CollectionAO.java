@@ -283,7 +283,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@code boolean} indicates that this is a case-insensitive query.
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
-	 * @throws FileNotFoundExcepton
+	 * @throws FileNotFoundException
 	 *             if the collection cannot be found
 	 * @throws JargonQueryException
 	 * @throws JargonException
@@ -621,7 +621,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData} describing the
 	 *            desired state of the avu
 	 * @throws JargonException
-	 * @throws DataNotFoundExeption
+	 * @throws DataNotFoundException
 	 *             if the AVU is not present
 	 */
 	void modifyAVUMetadata(String absolutePath, AvuData currentAvuData, AvuData newAvuData)

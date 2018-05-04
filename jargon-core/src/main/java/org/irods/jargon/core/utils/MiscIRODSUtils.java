@@ -308,7 +308,9 @@ public class MiscIRODSUtils {
 	 * Handy method to take the given input stream and make it a String
 	 *
 	 * @param inputStream
-	 * @return
+	 *            {@link InputStream} to be converted to a string using the given
+	 *            encoding
+	 * @return {@link String} with the stream contents
 	 * @throws Exception
 	 */
 	public static String convertStreamToString(final InputStream inputStream) throws Exception {
@@ -779,7 +781,7 @@ public class MiscIRODSUtils {
 	 * /zone/home/userName scheme given an iRODS account
 	 *
 	 * @param irodsAccount
-	 *            {@link IRODSAcocunt} for the given user
+	 *            {@link IRODSAccount} for the given user
 	 * @return {@code String} with the iRODS user home directory path
 	 */
 	public static String buildIRODSUserHomeForAccountUsingDefaultScheme(final IRODSAccount irodsAccount) {
@@ -826,7 +828,8 @@ public class MiscIRODSUtils {
 	 * Create a truncated file name suitable for display in interfaces
 	 *
 	 * @param fileName
-	 * @return
+	 *            {@link String} with the file name to be abbreviated
+	 * @return {@link String} with the abbreviated file name
 	 */
 	public static final String abbreviateFileName(final String fileName) {
 
@@ -852,6 +855,7 @@ public class MiscIRODSUtils {
 	 * Wrap the given string in " characters and return it
 	 *
 	 * @param string
+	 *            {@link String} with the file name to wrap in quotes
 	 * @return {@code String} with a quote wrapped string
 	 */
 	public static final String wrapStringInQuotes(final String string) {

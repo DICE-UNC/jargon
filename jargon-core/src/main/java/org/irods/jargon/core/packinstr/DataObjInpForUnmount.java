@@ -25,40 +25,32 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 	 * Create a packing instruction to unmount a special collection
 	 *
 	 * @param destResourceName
-	 *            {@code String} with the absolute path for the mounted
-	 *            collection to be unmounted
-	 * @return {@link DataObjInpForUnmount}
-	 */
-	public static DataObjInpForUnmount instanceForUnmount(
-			final String collectionToUnmountAbsolutePath,
-			final String destResourceName) {
-
-		return new DataObjInpForUnmount(collectionToUnmountAbsolutePath,
-				destResourceName);
-	}
-
-	/**
-	 * Private constructor, use the instance methods to create the proper
-	 * instance.
-	 *
-	 * @param collectionToUnmountAbsolutePath
-	 *            {@code String} with the absolute path to the collection
+	 *            {@code String} with the absolute path for the mounted collection
 	 *            to be unmounted
 	 * @return {@link DataObjInpForUnmount}
 	 */
-	private DataObjInpForUnmount(final String collectionToUnmountAbsolutePath,
+	public static DataObjInpForUnmount instanceForUnmount(final String collectionToUnmountAbsolutePath,
 			final String destResourceName) {
 
+		return new DataObjInpForUnmount(collectionToUnmountAbsolutePath, destResourceName);
+	}
+
+	/**
+	 * Private constructor, use the instance methods to create the proper instance.
+	 *
+	 * @param collectionToUnmountAbsolutePath
+	 *            {@code String} with the absolute path to the collection to be
+	 *            unmounted
+	 */
+	private DataObjInpForUnmount(final String collectionToUnmountAbsolutePath, final String destResourceName) {
+
 		super();
-		if (collectionToUnmountAbsolutePath == null
-				|| collectionToUnmountAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"collectionToUnmountAbsolutePath is null or empty");
+		if (collectionToUnmountAbsolutePath == null || collectionToUnmountAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("collectionToUnmountAbsolutePath is null or empty");
 		}
 
 		if (destResourceName == null) {
-			throw new IllegalArgumentException(
-					"destResourceName is null set to blank if unused");
+			throw new IllegalArgumentException("destResourceName is null set to blank if unused");
 		}
 
 		this.collectionToUnmountAbsolutePath = collectionToUnmountAbsolutePath;
@@ -70,14 +62,11 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, collectionToUnmountAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, operationType) });
+		Tag message = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, collectionToUnmountAbsolutePath),
+						new Tag(DataObjInp.CREATE_MODE, 0), new Tag(DataObjInp.OPEN_FLAGS, 0),
+						new Tag(DataObjInp.OFFSET, 0), new Tag(DataObjInp.DATA_SIZE, 0),
+						new Tag(DataObjInp.NUM_THREADS, 0), new Tag(DataObjInp.OPR_TYPE, operationType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		kvps.add(KeyValuePair.instance("collectionType", "unmount"));

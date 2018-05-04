@@ -41,20 +41,20 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	private Logger log = LoggerFactory.getLogger(AbstractIRODSMidLevelProtocol.class);
 
 	/**
-	 * authResponse contains information about the authentication phase,
-	 * including the account used to authenticate, and the actual account
-	 * represented by the connection. These may be two different things, for
-	 * example, in PAM, one can authenticate as a PAM user, but actually connect
-	 * as standard IRODS authentication using a temporary password generated in
-	 * the PAM authentication process.
+	 * authResponse contains information about the authentication phase, including
+	 * the account used to authenticate, and the actual account represented by the
+	 * connection. These may be two different things, for example, in PAM, one can
+	 * authenticate as a PAM user, but actually connect as standard IRODS
+	 * authentication using a temporary password generated in the PAM authentication
+	 * process.
 	 */
 	private AuthResponse authResponse = null;
 
 	/**
 	 * This account will represent the account information used for the actual
-	 * connection, as specified when the user originally logged in. This is
-	 * broken down into the account presented, and the account actually used in
-	 * the {@code AuthResponse} object.
+	 * connection, as specified when the user originally logged in. This is broken
+	 * down into the account presented, and the account actually used in the
+	 * {@code AuthResponse} object.
 	 */
 	private IRODSAccount irodsAccount;
 
@@ -63,18 +63,16 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * through multiple phases before being ready for use.
 	 * <p>
 	 * The life cycle of this connection is mediated by the
-	 * {@code AbstractIRODSMidLevelProtocolFactory} implemenation used, and
-	 * these connections should be obtained from that factory, typically through
-	 * the {@code IRODSProtocolManager} implementation that has been
-	 * selected.
+	 * {@code AbstractIRODSMidLevelProtocolFactory} implemenation used, and these
+	 * connections should be obtained from that factory, typically through the
+	 * {@code IRODSProtocolManager} implementation that has been selected.
 	 *
 	 * @param irodsConnection
-	 *            {@link AbstractConnection} that repreents the low level
-	 *            networking connection to the iRODS agent
+	 *            {@link AbstractConnection} that repreents the low level networking
+	 *            connection to the iRODS agent
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} that was the source of this
-	 *            connection, and to which it will be returned when
-	 *            disconnecting.
+	 *            connection, and to which it will be returned when disconnecting.
 	 */
 	protected AbstractIRODSMidLevelProtocol(final AbstractConnection irodsConnection,
 			final IRODSProtocolManager irodsProtocolManager) {
@@ -176,18 +174,18 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Send the given iROD protocol request with any included binary data, and
-	 * return the iRODS response as a {@code Tag} object. This method has
-	 * detailed parameters, and there are other methods in the class with
-	 * simpler signatures that should be used.
+	 * return the iRODS response as a {@code Tag} object. This method has detailed
+	 * parameters, and there are other methods in the class with simpler signatures
+	 * that should be used.
 	 *
 	 * @param type
-	 *            {@code String} with the type of request, typically an
-	 *            iRODS protocol request
+	 *            {@code String} with the type of request, typically an iRODS
+	 *            protocol request
 	 * @param message
 	 *            {@code String} with an XML formatted messag
 	 * @param errorBytes
-	 *            {@code byte[]} with any error data to send to iRODS, can
-	 *            be set to {@code null}
+	 *            {@code byte[]} with any error data to send to iRODS, can be set to
+	 *            {@code null}
 	 * @param errorOffset
 	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
@@ -209,36 +207,36 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * iRODS protocol request that sends data to iRODS using the
-	 * {@code OpenedDataObjInp} protocol interaction to send binary data in
-	 * frames of a given size. Note the frame size is defined in the
-	 * jargon.properties as jargon.put.buffer.size. The input stream should have
-	 * any buffering wrapped around it before making this call, as this method
-	 * will not wrap any buffering around the input stream. It is the
-	 * responsibility of the caller of this method to properly close the
-	 * {@code inputStream} object at the appropriate time.
+	 * {@code OpenedDataObjInp} protocol interaction to send binary data in frames
+	 * of a given size. Note the frame size is defined in the jargon.properties as
+	 * jargon.put.buffer.size. The input stream should have any buffering wrapped
+	 * around it before making this call, as this method will not wrap any buffering
+	 * around the input stream. It is the responsibility of the caller of this
+	 * method to properly close the {@code inputStream} object at the appropriate
+	 * time.
 	 * <p>
 	 * This method is meant to handle the put operation when streaming to iRODS,
-	 * this occurs when a parallel operation is overridden in server side
-	 * policy, and is not used for typical put operations.
+	 * this occurs when a parallel operation is overridden in server side policy,
+	 * and is not used for typical put operations.
 	 *
 	 * @param irodsPI
-	 *            {@code IRodsPI} subclass that is the definition of the
-	 *            packing instruction
+	 *            {@code IRodsPI} subclass that is the definition of the packing
+	 *            instruction
 	 * @param byteStreamLength
-	 *            {@code int} with the size of the input stream data to be
-	 *            sent per frame. The method will make repeated
-	 *            {@code OpernedDataObjInp} protocol operations, each time
-	 *            sending jargon.put.buffer.size buffers.
+	 *            {@code int} with the size of the input stream data to be sent per
+	 *            frame. The method will make repeated {@code OpernedDataObjInp}
+	 *            protocol operations, each time sending jargon.put.buffer.size
+	 *            buffers.
 	 * @param byteStream
-	 *            {@code InputStream} that has been buffered if required
-	 *            before calling this method. The method will not call
-	 *            {@code close()} on this stream.
+	 *            {@code InputStream} that has been buffered if required before
+	 *            calling this method. The method will not call {@code close()} on
+	 *            this stream.
 	 * @param connectionProgressStatusListener
 	 *            {@link ConnectionProgressStatusListener} that can optionally
-	 *            processes file progress. Can be set to {@code null} if
-	 *            not required.
-	 * @return {@code long} with total bytes sent. Note that this method
-	 *         will send the appropriate operation complete messages
+	 *            processes file progress. Can be set to {@code null} if not
+	 *            required.
+	 * @return {@code long} with total bytes sent. Note that this method will send
+	 *         the appropriate operation complete messages
 	 * @throws JargonException
 	 */
 	public synchronized long irodsFunctionForStreamingToIRODSInFrames(final IRodsPI irodsPI, final int byteStreamLength,
@@ -291,11 +289,10 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * the {@link StartupResponseData} from the send of the initial iRODS
-	 * startup packet is provisisioned by the authentication mechanism.
+	 * the {@link StartupResponseData} from the send of the initial iRODS startup
+	 * packet is provisisioned by the authentication mechanism.
 	 *
-	 * @return {@link StartupResponseData} as obtained when sending the startup
-	 *         pack
+	 * @return {@link StartupResponseData} as obtained when sending the startup pack
 	 */
 	public StartupResponseData getStartupResponseData() {
 		return startupResponseData;
@@ -306,30 +303,28 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * iRODS protocol request that sends data to iRODS. This method will stream
-	 * the entire {@code inputStream} data to the given length at one time.
-	 * This is used for normal put operations that do not required parallel
-	 * transfers.
+	 * iRODS protocol request that sends data to iRODS. This method will stream the
+	 * entire {@code inputStream} data to the given length at one time. This is used
+	 * for normal put operations that do not required parallel transfers.
 	 * <p>
-	 * Note that the {@code inputStream} object is closed by this method
-	 * when completed. Any buffering that should be done on the stream must be
-	 * done before passing the stream to this method, as this method does not
-	 * wrap the stream with any additional buffering.
+	 * Note that the {@code inputStream} object is closed by this method when
+	 * completed. Any buffering that should be done on the stream must be done
+	 * before passing the stream to this method, as this method does not wrap the
+	 * stream with any additional buffering.
 	 *
 	 * @param irodsPI
-	 *            {@code IRodsPI} subclass that is the definition of the
-	 *            packing instruction
+	 *            {@code IRodsPI} subclass that is the definition of the packing
+	 *            instruction
 	 * @param byteStreamLength
-	 *            {@code int} with the size of the input stream data to be
-	 *            sent
+	 *            {@code int} with the size of the input stream data to be sent
 	 * @param byteStream
-	 *            {@code InputStream} that has been buffered if required
-	 *            before calling this method. The method will call
-	 *            {@code close()} on this stream.
+	 *            {@code InputStream} that has been buffered if required before
+	 *            calling this method. The method will call {@code close()} on this
+	 *            stream.
 	 * @param connectionProgressStatusListener
 	 *            {@link ConnectionProgressStatusListener} that can optionally
-	 *            processes file progress. Can be set to {@code null} if
-	 *            not required.
+	 *            processes file progress. Can be set to {@code null} if not
+	 *            required.
 	 * @return {@code long} with total bytes sent.
 	 * @throws JargonException
 	 */
@@ -435,9 +430,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Read from a stream into a byte array. This method will delegate to the
-	 * underlying
-	 * {@link org.irods.jargon.core.connection.IRODSBasicTCPConnection} and is
-	 * included in this class to provide a public hook for certain operations.
+	 * underlying {@link org.irods.jargon.core.connection.IRODSBasicTCPConnection}
+	 * and is included in this class to provide a public hook for certain
+	 * operations.
 	 *
 	 * @param value
 	 *            {@code byte[]} that will contain the data read
@@ -481,8 +476,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * included in this class to provide a public hook for certain operations.
 	 *
 	 * @param destination
-	 *            {@code OutputStream} for writing data that is read from
-	 *            the input stream.
+	 *            {@code OutputStream} for writing data that is read from the input
+	 *            stream.
 	 * @param length
 	 *            {@code long} length of data to be read and written out.
 	 * @throws JargonException
@@ -499,15 +494,15 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * included in this class to provide a public hook for certain operations.
 	 *
 	 * @param destination
-	 *            {@code OutputStream} for writing data that is read from
-	 *            the input stream. This stream is not wrapped with a buffer
-	 *            here, so a buffer should be provided when calling.
+	 *            {@code OutputStream} for writing data that is read from the input
+	 *            stream. This stream is not wrapped with a buffer here, so a buffer
+	 *            should be provided when calling.
 	 * @param length
 	 *            {@code long} length of data to be read and written out.
 	 * @param intraFileStatusListener
-	 *            {@link ConnectionProgressStatusListener} or {@code null}
-	 *            if not utilized, that can receive call-backs of streaming
-	 *            progress with a small peformance penalty.
+	 *            {@link ConnectionProgressStatusListener} or {@code null} if not
+	 *            utilized, that can receive call-backs of streaming progress with a
+	 *            small peformance penalty.
 	 * @throws JargonException
 	 */
 	public synchronized void read(final OutputStream destination, final long length,
@@ -535,8 +530,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Create an iRODS message Tag, including header. This convenience method is
-	 * suitable for operations that do not require error or binary streams, and
-	 * will set up empty streams for the method call.
+	 * suitable for operations that do not require error or binary streams, and will
+	 * set up empty streams for the method call.
 	 */
 	public synchronized Tag irodsFunction(final IRodsPI irodsPI) throws JargonException {
 
@@ -550,10 +545,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Create an iRODS message Tag, including header, for negotiation requests.
-	 * This convenience method is suitable for operations that do not require
-	 * error or binary streams, and will set up empty streams for the method
-	 * call.
+	 * Create an iRODS message Tag, including header, for negotiation requests. This
+	 * convenience method is suitable for operations that do not require error or
+	 * binary streams, and will set up empty streams for the method call.
 	 */
 	public synchronized Tag irodsFunctionForNegotiation(final IRodsPI irodsPI) throws JargonException {
 
@@ -578,9 +572,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * Protocol impl specific method to create and send an iRODS header. This is
 	 * generally not used in normal protocol operations (instead, the
-	 * {@code irodsFunction} methods will handle headers). There are
-	 * certain situations, such as ssl negotiation, where raw headers are sent
-	 * without accompanying messages.
+	 * {@code irodsFunction} methods will handle headers). There are certain
+	 * situations, such as ssl negotiation, where raw headers are sent without
+	 * accompanying messages.
 	 *
 	 * @param type
 	 *            {@code String} with the header type
@@ -640,17 +634,17 @@ public abstract class AbstractIRODSMidLevelProtocol {
 		}
 		// FIXME: issue #4
 		/*
-		 * byte[] full = new byte[4 + temp.length]; // load first 4 byte with
-		 * header length org.irods.jargon.core.utils.Host.copyInt(temp.length,
-		 * full); // copy rest of header into full System.arraycopy(temp, 0,
-		 * full, 4, temp.length); return full;
+		 * byte[] full = new byte[4 + temp.length]; // load first 4 byte with header
+		 * length org.irods.jargon.core.utils.Host.copyInt(temp.length, full); // copy
+		 * rest of header into full System.arraycopy(temp, 0, full, 4, temp.length);
+		 * return full;
 		 */
 
 	}
 
 	/**
-	 * Read a message from iRODS in response to a protocol operation. This
-	 * method will decode the response using the configured encoding
+	 * Read a message from iRODS in response to a protocol operation. This method
+	 * will decode the response using the configured encoding
 	 *
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
@@ -660,13 +654,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Read a message from iRODS in response to a protocol operation. This
-	 * method will decode the response using the configured encoding based on
-	 * the {@code decode} parameter.
+	 * Read a message from iRODS in response to a protocol operation. This method
+	 * will decode the response using the configured encoding based on the
+	 * {@code decode} parameter.
 	 *
 	 * @param decode
-	 *            {@code boolean} that will cause the protocol response to
-	 *            be decoded using the given character set if {@code true}
+	 *            {@code boolean} that will cause the protocol response to be
+	 *            decoded using the given character set if {@code true}
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
 	 */
@@ -731,12 +725,12 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * <b>If you are a client, you should not call this!</b> Shutdown hook used
-	 * by the {@link IRODSProtocolManager} to cause the actual connection to be
+	 * <b>If you are a client, you should not call this!</b> Shutdown hook used by
+	 * the {@link IRODSProtocolManager} to cause the actual connection to be
 	 * terminated normally by sending a disconnect method.
 	 * <p>
-	 * Clients should use the methods in {@link IRODSSession} to obtain and
-	 * return connections, and let the IRODSSession work with the configured
+	 * Clients should use the methods in {@link IRODSSession} to obtain and return
+	 * connections, and let the IRODSSession work with the configured
 	 * {@link IRODSProtocolManager} to enforce the connection life-cycle.
 	 * <p>
 	 * This method may be called by pooling implementations that are pruning
@@ -791,14 +785,12 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Method that will cause the connection to be released, returning it to the
-	 * {@code IRODSProtocolManager} for actual shutdown or return to a
-	 * pool.
+	 * {@code IRODSProtocolManager} for actual shutdown or return to a pool.
 	 * <p>
-	 * This method is called for normal close of a connection from a higher
-	 * level API method, and typically is not used by clients of the API. The
-	 * exception would be when implementing a custom
-	 * {@code IRODSProtocolManager} that needs to directly manipulate
-	 * connections in a pool or cache.
+	 * This method is called for normal close of a connection from a higher level
+	 * API method, and typically is not used by clients of the API. The exception
+	 * would be when implementing a custom {@code IRODSProtocolManager} that needs
+	 * to directly manipulate connections in a pool or cache.
 	 *
 	 * @throws JargonException
 	 */
@@ -810,15 +802,13 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Method that will cause the connection to be released, returning it to the
-	 * {@code IRODSProtocolManager} for shutdown when something has gone
-	 * wrong with the agent or connection, and the connection should not be
-	 * re-used.
+	 * {@code IRODSProtocolManager} for shutdown when something has gone wrong with
+	 * the agent or connection, and the connection should not be re-used.
 	 * <p>
-	 * This method is called for a forced error close of a connection from a
-	 * higher level API method, and typically is not used by clients of the API.
-	 * The exception would be when implementing a custom
-	 * {@code IRODSProtocolManager} that needs to directly manipulate
-	 * connections in a pool or cache.
+	 * This method is called for a forced error close of a connection from a higher
+	 * level API method, and typically is not used by clients of the API. The
+	 * exception would be when implementing a custom {@code IRODSProtocolManager}
+	 * that needs to directly manipulate connections in a pool or cache.
 	 */
 	public synchronized void disconnectWithForce() throws JargonException {
 		if (getIrodsAccount() != null) {
@@ -855,7 +845,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * operations.
 	 *
 	 * @param status
-	 * @throws IOException
 	 */
 	public synchronized void operationComplete(final int status) throws JargonException {
 		Tag message = new Tag(AbstractIRODSPackingInstruction.INT_PI,
@@ -864,8 +853,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Used internally to consume status messages from various commands, this
-	 * will send a given integer value in network order to iRODS.
+	 * Used internally to consume status messages from various commands, this will
+	 * send a given integer value in network order to iRODS.
 	 *
 	 * @param value
 	 *            {@code int} with
@@ -881,9 +870,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Used internally to consume status messages from various commands, this
-	 * will send a given integer value in network order to iRODS. Will flush
-	 * after the send.
+	 * Used internally to consume status messages from various commands, this will
+	 * send a given integer value in network order to iRODS. Will flush after the
+	 * send.
 	 *
 	 * @param value
 	 *            {@code int} with
@@ -938,7 +927,6 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *
 	 * @param reply
 	 *            {@code Tag} containing status messages from IRODS
-	 * @throws IOException
 	 */
 	public synchronized void processClientStatusMessages(final Tag reply) throws JargonException {
 
@@ -1019,22 +1007,20 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			throw new JargonException("Protocol error, read header and got header length less than zero");
 		} else if (length > 10000000) {
 			/*
-			 * Protocol failure: One cause, if running a rule that uses
-			 * msiDataObjPut or Get, then when the server requests the Put, the
-			 * client instead send a query or other function, the next function
-			 * sent to the server (such as the Put itself) will fail and the
-			 * server will return a RError_PI message. However this message,
-			 * unlike regular server communications, does not have the 4 byte
-			 * message length in front of the message. Causing unexpected
-			 * results when attempting to parse the message, ie. <REr are
-			 * interpreted as the message length.
+			 * Protocol failure: One cause, if running a rule that uses msiDataObjPut or
+			 * Get, then when the server requests the Put, the client instead send a query
+			 * or other function, the next function sent to the server (such as the Put
+			 * itself) will fail and the server will return a RError_PI message. However
+			 * this message, unlike regular server communications, does not have the 4 byte
+			 * message length in front of the message. Causing unexpected results when
+			 * attempting to parse the message, ie. <REr are interpreted as the message
+			 * length.
 			 * 
-			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000
-			 * </status> <msg>ERROR: msiDataObjPut: rsDataObjPut failed for
-			 * <MsgHeader_PI> <type>RODS_API_REPLY </type> <msgLen>0 </msgLen>
-			 * <errorLen>0 </errorLen> <bsLen>0 </bsLen> <intInfo>-808000
-			 * </intInfo> </MsgHeader_PI> , status = -808000 </msg>
-			 * </RErrMsg_PI> </RError_PI>
+			 * <RError_PI> <count>1 </count> <RErrMsg_PI> <status>-808000 </status>
+			 * <msg>ERROR: msiDataObjPut: rsDataObjPut failed for <MsgHeader_PI>
+			 * <type>RODS_API_REPLY </type> <msgLen>0 </msgLen> <errorLen>0 </errorLen>
+			 * <bsLen>0 </bsLen> <intInfo>-808000 </intInfo> </MsgHeader_PI> , status =
+			 * -808000 </msg> </RErrMsg_PI> </RError_PI>
 			 */
 
 			irodsSession.discardSessionForErrors(irodsAccount);
@@ -1201,8 +1187,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Look at error message and log it, returning any additional message info
-	 * found in the error tag
+	 * Look at error message and log it, returning any additional message info found
+	 * in the error tag
 	 *
 	 * @param errorLength
 	 * @param info
@@ -1251,8 +1237,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Handy method to get the pipeline configuration, which is derived from the
-	 * jargon properties and describes the various networing and buffering
-	 * options
+	 * jargon properties and describes the various networing and buffering options
 	 *
 	 * @return {@link PipelineConfiguration}
 	 */
@@ -1280,8 +1265,8 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	/**
 	 * Get the system time the connection was made, in milliseconds
 	 *
-	 * @return {@code long} with the system time in milliseconds the
-	 *         connection was made
+	 * @return {@code long} with the system time in milliseconds the connection was
+	 *         made
 	 */
 	public long getConnectTimeInMillis() {
 		return getIrodsConnection().getConnectTimeInMillis();
@@ -1296,19 +1281,18 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Send an iRODS message as a byte buffer message payload, without blocking
-	 * and returning a response. This is an edge case in the iRODS protocol used
-	 * for certain phases of client-server negotiation and typically is not the
-	 * case.
+	 * Send an iRODS message as a byte buffer message payload, without blocking and
+	 * returning a response. This is an edge case in the iRODS protocol used for
+	 * certain phases of client-server negotiation and typically is not the case.
 	 *
 	 * @param type
-	 *            {@code String} with the type of request, typically an
-	 *            iRODS protocol request
+	 *            {@code String} with the type of request, typically an iRODS
+	 *            protocol request
 	 * @param message
 	 *            {@code byte[]} with an arbitrary binary payload
 	 * @param errorBytes
-	 *            {@code byte[]} with any error data to send to iRODS, can
-	 *            be set to {@code null}
+	 *            {@code byte[]} with any error data to send to iRODS, can be set to
+	 *            {@code null}
 	 * @param errorOffset
 	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
@@ -1325,9 +1309,9 @@ public abstract class AbstractIRODSMidLevelProtocol {
 			int errorLength, byte[] bytes, int byteOffset, int byteBufferLength, int intInfo) throws JargonException;
 
 	/**
-	 * Cause the underlying connection to be closed and disconnected. This is
-	 * used internally to do out of band shutdowns of connections, for example,
-	 * when manipulating secure connections for auth.
+	 * Cause the underlying connection to be closed and disconnected. This is used
+	 * internally to do out of band shutdowns of connections, for example, when
+	 * manipulating secure connections for auth.
 	 *
 	 * @throws IOException
 	 */

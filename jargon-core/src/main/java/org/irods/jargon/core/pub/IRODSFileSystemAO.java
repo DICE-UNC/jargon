@@ -34,22 +34,19 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 *            {@code IRODSFile} that will have permissions checked.
-	 * @return {@code boolean} that is {@code true} if the file can be
-	 *         written.
+	 * @return {@code boolean} that is {@code true} if the file can be written.
 	 * @throws FileNotFoundException
 	 *             if the path cannot be found
 	 * @throws JargonException
 	 */
-	boolean isFileWriteable(IRODSFile irodsFile) throws FileNotFoundException,
-			JargonException;
+	boolean isFileWriteable(IRODSFile irodsFile) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Check if the given file exists in iRODS.
 	 *
 	 * @param irodsFile
 	 *            {@code IRODSFile} that is to be checked.
-	 * @return {@code boolean} that is true if the given file exists in
-	 *         iRODS.
+	 * @return {@code boolean} that is true if the given file exists in iRODS.
 	 * @throws JargonException
 	 */
 	boolean isFileExists(IRODSFile irodsFile) throws JargonException;
@@ -59,9 +56,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 *            {@code IRODSFile} to be checked.
-	 * @return {@code boolean} that will be true if the given
-	 *         {@code IRODSFile} is an iRODS Collection, and
-	 *         {@code false} if not exists or not a dir.
+	 * @return {@code boolean} that will be true if the given {@code IRODSFile} is
+	 *         an iRODS Collection, and {@code false} if not exists or not a dir.
 	 * @throws JargonException
 	 */
 	boolean isDirectory(IRODSFile irodsFile) throws JargonException;
@@ -73,11 +69,10 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @param irodsFile
 	 * @return {@code List<String>}
 	 * @throws JargonException
-	 * @throws FileNoFoundException
+	 * @throws FileNotFoundException
 	 *             Thrown if the file does not exist in iRODS
 	 */
-	List<String> getListInDir(IRODSFile irodsFile)
-			throws FileNotFoundException, JargonException;
+	List<String> getListInDir(IRODSFile irodsFile) throws FileNotFoundException, JargonException;
 
 	/**
 	 * Apply a filter implementation that will select result files.
@@ -89,9 +84,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	List<String> getListInDirWithFilter(IRODSFile irodsFile,
-			FilenameFilter fileNameFilter) throws JargonException,
-			DataNotFoundException;
+	List<String> getListInDirWithFilter(IRODSFile irodsFile, FilenameFilter fileNameFilter)
+			throws JargonException, DataNotFoundException;
 
 	/**
 	 * Apply a {@code FileFilter} to select files in a given directory.
@@ -102,9 +96,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws DataNotFoundException
 	 */
-	List<File> getListInDirWithFileFilter(IRODSFile irodsFile,
-			FileFilter fileFilter) throws JargonException,
-			DataNotFoundException;
+	List<File> getListInDirWithFileFilter(IRODSFile irodsFile, FileFilter fileFilter)
+			throws JargonException, DataNotFoundException;
 
 	/**
 	 * Get the iRODS file type for the given file
@@ -117,12 +110,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 *             if the file already exists and cannot be created
 	 * @throws NoResourceDefinedException
-	 *             if no resource is specified, and this iRODS grid does not
-	 *             have a default resource rule defined
+	 *             if no resource is specified, and this iRODS grid does not have a
+	 *             default resource rule defined
 	 * @throws JargonException
 	 */
-	ObjectType getFileDataType(final IRODSFile irodsFile)
-			throws FileNotFoundException, JargonException;
+	ObjectType getFileDataType(final IRODSFile irodsFile) throws FileNotFoundException, JargonException;
 
 	/**
 	 *
@@ -134,9 +126,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws NoResourceDefinedException
 	 * @throws JargonException
 	 */
-	int createFile(String absolutePath, DataObjInp.OpenFlags openFlags,
-			int createMode) throws JargonFileOrCollAlreadyExistsException,
-			NoResourceDefinedException, JargonException;
+	int createFile(String absolutePath, DataObjInp.OpenFlags openFlags, int createMode)
+			throws JargonFileOrCollAlreadyExistsException, NoResourceDefinedException, JargonException;
 
 	/**
 	 *
@@ -148,8 +139,7 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @throws JargonException
 	 * @throws JargonFileOrCollAlreadyExistsException
 	 */
-	int createFileInResource(String absolutePath,
-			DataObjInp.OpenFlags openFlags, int createMode, String resource)
+	int createFileInResource(String absolutePath, DataObjInp.OpenFlags openFlags, int createMode, String resource)
 			throws JargonException, JargonFileOrCollAlreadyExistsException;
 
 	/**
@@ -157,19 +147,18 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * {@code IRODSFileImpl} object.
 	 *
 	 * @param irodsFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} describing
-	 *            the desired directory path.
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFileImpl} describing the
+	 *            desired directory path.
 	 * @param recursiveOpr
-	 *            {@code boolean} indicates whether parent directories
-	 *            should also be created
+	 *            {@code boolean} indicates whether parent directories should also
+	 *            be created
 	 * @throws JargonException
 	 */
-	void mkdir(IRODSFile irodsFile, boolean recursiveOpr)
-			throws JargonException;
+	void mkdir(IRODSFile irodsFile, boolean recursiveOpr) throws JargonException;
 
 	/**
-	 * Delete the given directory, and do not move the file to trash. This
-	 * removes the file and metadata completely from iRODS.
+	 * Delete the given directory, and do not move the file to trash. This removes
+	 * the file and metadata completely from iRODS.
 	 *
 	 * @param irodsFile
 	 * @throws JargonException
@@ -177,8 +166,8 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	void directoryDeleteForce(IRODSFile irodsFile) throws JargonException;
 
 	/**
-	 * Delete the given data object. Do not move the object to trash, rather
-	 * remove the file and metadata completely.
+	 * Delete the given data object. Do not move the object to trash, rather remove
+	 * the file and metadata completely.
 	 *
 	 * @param irodsFile
 	 * @throws JargonException
@@ -189,37 +178,33 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	// deleteNoForce methods in IRODSFileImpl
 
 	/**
-	 * Rename the iRODS file from one path to another. This method also detects
+	 * Rename the iRODS file from one path to another. This method also detects a
+	 * file being moved to another iRODS resource, and if necessary will do a
+	 * physical move.
+	 */
+	void renameFile(IRODSFile fromFile, IRODSFile toFile) throws JargonException;
+
+	/**
+	 * Rename the iRODS directory from one path to another. This method also detects
 	 * a file being moved to another iRODS resource, and if necessary will do a
 	 * physical move.
 	 */
-	void renameFile(IRODSFile fromFile, IRODSFile toFile)
-			throws JargonException;
-
-	/**
-	 * Rename the iRODS directory from one path to another. This method also
-	 * detects a file being moved to another iRODS resource, and if necessary
-	 * will do a physical move.
-	 */
-	void renameDirectory(IRODSFile fromFile, IRODSFile toFile)
-			throws JargonException;
+	void renameDirectory(IRODSFile fromFile, IRODSFile toFile) throws JargonException;
 
 	/**
 	 * Transfer a file between iRODS resources
 	 *
 	 * @param fromFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} describing the
-	 *            file to physically move.
+	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} describing the file
+	 *            to physically move.
 	 * @param targetResource
 	 *            {@code String} with the target resource name iRODS.
 	 * @throws JargonException
 	 */
-	void physicalMove(IRODSFile fromFile, String targetResource)
-			throws JargonException;
+	void physicalMove(IRODSFile fromFile, String targetResource) throws JargonException;
 
 	/**
-	 * Get the name of the first resource that stores this
-	 * {@code IRODSFile}
+	 * Get the name of the first resource that stores this {@code IRODSFile}
 	 *
 	 * @param irodsFile
 	 * @return {@code String}
@@ -232,26 +217,23 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 *
 	 * @param irodsFile
 	 * @param openFlags
-	 *            {@code DataObjInp.OpenFlags} enum value which describes
-	 *            the open options.
+	 *            {@code DataObjInp.OpenFlags} enum value which describes the open
+	 *            options.
 	 * @return {@code int} with the internal iRODS identifier for the file.
 	 * @throws JargonException
 	 */
-	int openFile(IRODSFile irodsFile, DataObjInp.OpenFlags openFlags)
-			throws JargonException;
+	int openFile(IRODSFile irodsFile, DataObjInp.OpenFlags openFlags) throws JargonException;
 
 	/**
 	 * Transfer a file between iRODS resources
 	 *
 	 * @param absolutePathToSourceFile
-	 *            {@code String} with the absolute path to the source file
-	 *            in iRODS.
+	 *            {@code String} with the absolute path to the source file in iRODS.
 	 * @param targetResource
 	 *            {@code String} with the target resource name iRODS.
 	 * @throws JargonException
 	 */
-	void physicalMove(final String absolutePathToSourceFile,
-			final String targetResource) throws JargonException;
+	void physicalMove(final String absolutePathToSourceFile, final String targetResource) throws JargonException;
 
 	/**
 	 * Delete the given data object, and move the deleted objects to the iRODS
@@ -276,10 +258,10 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	void fileDeleteNoForce(IRODSFile irodsFile) throws JargonException;
 
 	/**
-	 * Returns the iRODS encoded value that reflects the highest file
-	 * permissions for the given iRODS collection. Note that a separate
-	 * {@code getFilePermissions()} method is available that can retrieve
-	 * the permissions for a data object. This method will get the permissions
+	 * Returns the iRODS encoded value that reflects the highest file permissions
+	 * for the given iRODS collection. Note that a separate
+	 * {@code getFilePermissions()} method is available that can retrieve the
+	 * permissions for a data object. This method will get the permissions
 	 * associated with the logged-in user.
 	 *
 	 * @param irodsFile
@@ -291,11 +273,11 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	int getDirectoryPermissions(IRODSFile irodsFile) throws JargonException;
 
 	/**
-	 * Returns the iRODS encoded value that reflects the highest file
-	 * permissions for the given iRODS data object. Note that a separate
-	 * {@code getDirectoryPermissions()} method is available that can
-	 * retrieve the permissions for a collection. This method will get the
-	 * permissions associated with the logged in user.
+	 * Returns the iRODS encoded value that reflects the highest file permissions
+	 * for the given iRODS data object. Note that a separate
+	 * {@code getDirectoryPermissions()} method is available that can retrieve the
+	 * permissions for a collection. This method will get the permissions associated
+	 * with the logged in user.
 	 *
 	 * @param irodsFile
 	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} which is a data
@@ -324,16 +306,14 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	 * @return {@code int}
 	 * @throws JargonException
 	 */
-	int getFilePermissionsForGivenUser(IRODSFile irodsFile, String userName)
-			throws JargonException;
+	int getFilePermissionsForGivenUser(IRODSFile irodsFile, String userName) throws JargonException;
 
 	/**
 	 * Check if the data object (must exist) has an executable bit set
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} to test
-	 * @return {@code boolean} that is {@code true} if the file is
-	 *         executable
+	 * @return {@code boolean} that is {@code true} if the file is executable
 	 * @throws JargonException
 	 */
 	boolean isFileExecutable(IRODSFile irodsFile) throws JargonException;
@@ -350,17 +330,16 @@ public interface IRODSFileSystemAO extends IRODSAccessObject {
 	boolean isFile(IRODSFile irodsFile) throws JargonException;
 
 	/**
-	 * Handy method to return the
-	 * {@code ObjStat} that represents the given iRODS file path
+	 * Handy method to return the {@code ObjStat} that represents the given iRODS
+	 * file path
 	 *
 	 * @param irodsAbsolutePath
 	 *            {@code String} with the iRODS file absolute path
-	 * @return {@link ObjStat}, note that a {@code FileNotFoundException}
-	 *         will result if the file is not in iRODS
+	 * @return {@link ObjStat}, note that a {@code FileNotFoundException} will
+	 *         result if the file is not in iRODS
 	 * @throws JargonException
 	 */
-	ObjStat getObjStat(String irodsAbsolutePath) throws FileNotFoundException,
-			JargonException;
+	ObjStat getObjStat(String irodsAbsolutePath) throws FileNotFoundException, JargonException;
 
 	void fileClose(int fileDescriptor, boolean putOpr) throws JargonException;
 

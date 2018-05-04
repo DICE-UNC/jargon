@@ -1,7 +1,6 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -55,15 +54,8 @@ public interface JargonProperties {
 	 * This is done for backwards compatibility. Older versions of iRODS will
 	 * default to parallel processing if any nonzero number is sent in numThreads.
 	 *
-	 * @return {@code long} in megabytes for the size above which a non-zero
-	 *         numThreads of value maxParallelThreads will be sent.
-	 * @throws JargonException
-	 *             long getParallelThreadsLengthThreshold();
 	 *
-	 *             /** Sets a default number of results to ask for when executing
-	 *             GenQuery for listing files and collections.
-	 *
-	 * @return {@code int}
+	 * @return <code>int</code> with the max number of files and dirs to return
 	 */
 	int getMaxFilesAndDirsQueryMax();
 
@@ -89,7 +81,6 @@ public interface JargonProperties {
 	 * {@code isUseTranfsferThreadsPool()} value is true;
 	 *
 	 * @return {@code int} with the desired transfer thread pool max size
-	 * @throws JargonException
 	 */
 	int getTransferThreadPoolTimeoutMillis();
 

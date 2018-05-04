@@ -48,10 +48,10 @@ public class RuleEngineInstanceChooser {
 	 * Inspect the <code>IRODSRule</code> and correctly indicate the iRODS rule
 	 * engine instance that should be used to invoke the rule. Note that this
 	 * function will respect the <code>encodeRuleEngineInstance</code> flag in the
-	 * included {@link RuleInvocationConfiguration</code> and if <code>true</code>
-	 * it will try and set it based on Jargon and irods configuration. Note that you
-	 * can also just directly set the value in the <code>ruleEngineSpecifier</code>
-	 * also in the <code>RuleInvocationSpecification</code>
+	 * included {@link RuleInvocationConfiguration} and if <code>true</code> it will
+	 * try and set it based on Jargon and irods configuration. Note that you can
+	 * also just directly set the value in the <code>ruleEngineSpecifier</code> also
+	 * in the <code>RuleInvocationSpecification</code>
 	 * 
 	 * 
 	 * @param irodsRule

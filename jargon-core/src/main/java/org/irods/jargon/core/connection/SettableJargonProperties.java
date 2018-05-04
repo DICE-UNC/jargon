@@ -316,7 +316,6 @@ public class SettableJargonProperties implements JargonProperties {
 	 *
 	 * @param allowPutGetResourceRedirects
 	 *            {@code boolean} which allows resource redirects if {@code true}
-	 * @throws JargonException
 	 */
 	public synchronized void setAllowPutGetResourceRedirects(final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
@@ -339,7 +338,6 @@ public class SettableJargonProperties implements JargonProperties {
 	 * @param computeChecksumAfterTransfer
 	 *            {@code boolean} that will cause a checksum to be computed by
 	 *            default if {@code true}
-	 * @throws JargonException
 	 */
 	public synchronized void setComputeChecksumAfterTransfer(final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;

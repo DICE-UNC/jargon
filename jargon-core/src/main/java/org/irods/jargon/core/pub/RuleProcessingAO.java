@@ -252,7 +252,7 @@ public interface RuleProcessingAO extends IRODSAccessObject {
 	 *            parameters derived from the rule bodies.
 	 * 
 	 * @param ruleInvocationConfiguration
-	 *            {@link ruleInvocationConfiguration} that represents the type of
+	 *            {@link RuleInvocationConfiguration} that represents the type of
 	 *            rule engine the user wishes this rule to be run on. With multiple
 	 *            rule engines iRODS needs this information to properly process the
 	 *            rule. If set to AUTO_DETECT Jargon will try and guess (but may not

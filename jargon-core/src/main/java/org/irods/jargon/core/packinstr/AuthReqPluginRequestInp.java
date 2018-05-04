@@ -3,7 +3,6 @@
  */
 package org.irods.jargon.core.packinstr;
 
-import org.irods.jargon.core.connection.IrodsVersion;
 import org.irods.jargon.core.connection.StartupResponseData;
 import org.irods.jargon.core.exception.JargonException;
 
@@ -62,13 +61,7 @@ public class AuthReqPluginRequestInp extends AbstractIRODSPackingInstruction {
 
 		this.authScheme = authScheme;
 		this.userName = userName;
-		IrodsVersion irodsVersion = new IrodsVersion(startupResponseData.getRelVersion());
-
-		// if (!irodsVersion.hasVersionOfAtLeast("rods4.2.0")) {
 		this.password = password.replaceAll(";", "\\\\;");
-		// } else {
-		// this.password = password;
-		// }
 
 		setApiNumber(AUTH_REQ_API_NBR);
 		this.timeToLive = timeToLive;
