@@ -18,7 +18,6 @@ import org.irods.jargon.datautils.visitor.AbstractIrodsVisitorComponent;
 import org.irods.jargon.datautils.visitor.HierComponent;
 import org.irods.jargon.datautils.visitor.HierComposite;
 import org.irods.jargon.datautils.visitor.HierLeaf;
-import org.irods.jargon.datautils.visitor.HierVisitor;
 import org.irods.jargon.datautils.visitor.IrodsVisitedComposite;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -238,16 +237,12 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 	}
 	
 	@Override
-	public void launch(final String startingCollectionPath, final HierVisitor visitor) {
+	public void launch(final String startingCollectionPath) {
 		log.info("launch");
 		if (startingCollectionPath == null || startingCollectionPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty startingCollectionPath");
 		}
 		log.info("startingCollectionPath:{}", startingCollectionPath);
-		if (visitor == null) {
-			throw new IllegalArgumentException("null visitor");
-		}
-
 		log.info("beginning the crawl...east to west...north to south...");
 
 		IRODSFileImpl startingPoint;
@@ -260,7 +255,7 @@ public abstract class AbstractIndexerVisitor extends AbstractIrodsVisitorCompone
 			}
 
 			IrodsVisitedComposite startingComposite = new IrodsVisitedComposite(startingPoint);
-			startingComposite.accept(visitor);
+			startingComposite.accept(this);
 
 			log.info("....crawl!");
 		} catch (JargonException e) {

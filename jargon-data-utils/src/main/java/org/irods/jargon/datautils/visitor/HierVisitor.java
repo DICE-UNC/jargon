@@ -61,7 +61,7 @@ public interface HierVisitor {
 	 */
 	public boolean visit(HierLeaf node);
 	
-	public void launch(final String startingCollectionPath, final HierVisitor visitor);
+	public void launch(final String startingCollectionPath);
 	
-	//public boolean shutdown();
+	
 }
