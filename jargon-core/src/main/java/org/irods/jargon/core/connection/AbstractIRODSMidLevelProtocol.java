@@ -166,6 +166,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            {@code int} with the iRODS api number
 	 * @return {@link Tag} with the iRODS protocol response
 	 * @throws JargonException
+	 *             on invocation of the function
 	 */
 	public synchronized Tag irodsFunction(final String type, final String message, final int intInfo)
 			throws JargonException {
@@ -198,7 +199,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            {@code int} with the length of the bytes to send
 	 * @param intInfo
 	 *            {@code int} with the iRODS API number
-	 * @return {@link Tag}
+	 * @return {@link Tag} with the result of the function call
 	 * @throws JargonException
 	 */
 	public abstract Tag irodsFunction(final String type, final String message, final byte[] errorBytes,
@@ -238,6 +239,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * @return {@code long} with total bytes sent. Note that this method will send
 	 *         the appropriate operation complete messages
 	 * @throws JargonException
+	 *             on function error
 	 */
 	public synchronized long irodsFunctionForStreamingToIRODSInFrames(final IRodsPI irodsPI, final int byteStreamLength,
 			final InputStream byteStream, final ConnectionProgressStatusListener connectionProgressStatusListener)
@@ -327,6 +329,7 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 *            required.
 	 * @return {@code long} with total bytes sent.
 	 * @throws JargonException
+	 *             for iRODS errors
 	 */
 	public synchronized Tag irodsFunctionIncludingAllDataInStream(final IRodsPI irodsPI, final long byteStreamLength,
 			final InputStream byteStream, final ConnectionProgressStatusListener connectionProgressStatusListener)
@@ -382,6 +385,31 @@ public abstract class AbstractIRODSMidLevelProtocol {
 	 * Create an iRODS message Tag, including header. Send the bytes of the byte
 	 * array, no error stream.
 	 */
+
+	/**
+	 * Create an iRODS message Tag, including header. Send the bytes of the byte
+	 * array, no error stream.
+	 * 
+	 * @param irodsPI
+	 *            {@link IRodsPI} with the packing instruction
+	 * @param errorStream
+	 *            {@code byte[]} with the error stream data
+	 * @param errorOffset
+	 *            {@code byte[]} with the offset that should be used to send from
+	 *            the error stream
+	 * @param errorLength
+	 *            {@code int} with the length of the error stream to send
+	 * @param bytes
+	 *            {@code byte[]} with the binary data to send
+	 * @param byteOffset
+	 *            {@code int} with the offset into the data bytes
+	 * @param byteStreamLength
+	 *            {@code int} with the length of data from the byte stream to send
+	 * @return {@link Tag} with the iRODS response
+	 * @throws JargonException
+	 *             on iRODS error
+	 */
+
 	public synchronized Tag irodsFunction(final IRodsPI irodsPI, final byte[] errorStream, final int errorOffset,
 			final int errorLength, final byte[] bytes, final int byteOffset, final int byteStreamLength)
 			throws JargonException {

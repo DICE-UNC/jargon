@@ -163,6 +163,7 @@ public abstract class AbstractConnection {
 	 * @param irodsSession
 	 *            {@link IRODSSession} that is associated with this connection
 	 * @throws JargonException
+	 *             on creation of the connection
 	 */
 	protected AbstractConnection(final IRODSAccount irodsAccount, final PipelineConfiguration pipelineConfiguration,
 			final IRODSProtocolManager irodsProtocolManager, final IRODSSession irodsSession) throws JargonException {
@@ -201,9 +202,6 @@ public abstract class AbstractConnection {
 
 	}
 
-	/**
-	 * @param pipelineConfiguration
-	 */
 	private void initInternalBufferIfNeeded(final PipelineConfiguration pipelineConfiguration) {
 		/*
 		 * If using the custom internal buffer, initialize it
@@ -240,10 +238,6 @@ public abstract class AbstractConnection {
 		initializeIdentifier(irodsAccount);
 	}
 
-	/**
-	 * @param irodsAccount
-	 * @throws JargonException
-	 */
 	private void initializeIdentifier(final IRODSAccount irodsAccount) throws JargonException {
 		// build an identifier for this connection, at least for now
 		StringBuilder connectionInternalIdentifierBuilder = new StringBuilder();
@@ -340,7 +334,7 @@ public abstract class AbstractConnection {
 	 * @param length
 	 *            number of bytes to read
 	 * @throws IOException
-	 *             If an IOException occurs
+	 *             if an IOException occurs
 	 */
 	public void send(final byte[] value, final int offset, final int length) throws IOException {
 
@@ -541,8 +535,9 @@ public abstract class AbstractConnection {
 	 * Reads an int from the server
 	 *
 	 * @param value
-	 * @return {@code int}
-	 * @throws JargonException
+	 *            {@code byte[]} which will contain the read value
+	 * @return {@code int} with number of bytes read
+	 * @throws IOException
 	 */
 	protected int read(final byte[] value) throws IOException {
 		return read(value, 0, value.length);
@@ -550,8 +545,14 @@ public abstract class AbstractConnection {
 	}
 
 	/**
-	 * read length bytes from the server socket connection and write them to
-	 * destination
+	 * Read into the given output stream
+	 * 
+	 * @param destination
+	 *            {@link OutputStream} with the value read from the connection
+	 * @param length
+	 *            {@code long} with the data to read
+	 * @throws IOException
+	 *             on read error
 	 */
 	void read(final OutputStream destination, final long length) throws IOException {
 		read(destination, length, null);
@@ -571,6 +572,8 @@ public abstract class AbstractConnection {
 	 * @param intraFileStatusListener
 	 *            {@link ConnectionProgressStatusListener} that will receive
 	 *            progress on the streaming, or {@code null} for no such call-backs.
+	 * @throws IOException
+	 *             on read error
 	 */
 	public void read(final OutputStream destination, long length,
 			final ConnectionProgressStatusListener intraFileStatusListener) throws IOException {
@@ -632,9 +635,14 @@ public abstract class AbstractConnection {
 	/**
 	 * Reads a byte array from the server. Blocks until {@code length} number of
 	 * bytes are read.
-	 *
+	 * 
+	 * @param value
+	 *            {code byte[]} with the value that was read
 	 * @param length
 	 *            length of byte array to be read
+	 * @param offset
+	 *            {@code int} with the offset into the value array to place the read
+	 *            data
 	 * @return byte[] bytes read from the server
 	 * @throws OutOfMemoryError
 	 *             Read buffer overflow
@@ -643,7 +651,9 @@ public abstract class AbstractConnection {
 	 * @throws NullPointerException
 	 *             Read buffer empty
 	 * @throws IOException
-	 *             If an IOException occurs
+	 *             If an IOException occurs if the connection is closed
+	 * @throws InterruptedIOException
+	 *             if IO interrupted
 	 */
 	protected int read(final byte[] value, final int offset, final int length)
 			throws ClosedChannelException, InterruptedIOException, IOException {
@@ -798,6 +808,7 @@ public abstract class AbstractConnection {
 	 * Close down the actual network connection
 	 *
 	 * @throws JargonException
+	 *             on shutdown error
 	 */
 	protected abstract void shutdown() throws JargonException;
 
