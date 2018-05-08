@@ -538,6 +538,7 @@ public abstract class AbstractConnection {
 	 *            {@code byte[]} which will contain the read value
 	 * @return {@code int} with number of bytes read
 	 * @throws IOException
+	 *             for read error
 	 */
 	protected int read(final byte[] value) throws IOException {
 		return read(value, 0, value.length);

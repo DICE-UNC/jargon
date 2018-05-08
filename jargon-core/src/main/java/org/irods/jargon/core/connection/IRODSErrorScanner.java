@@ -54,24 +54,22 @@ import org.slf4j.LoggerFactory;
  */
 public class IRODSErrorScanner {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(IRODSErrorScanner.class);
+	public static final Logger log = LoggerFactory.getLogger(IRODSErrorScanner.class);
 
 	/**
-	 * Scan the response for errors, and incorporate any message information
-	 * that might expand the error
+	 * Scan the response for errors, and incorporate any message information that
+	 * might expand the error
 	 *
 	 * @param infoValue
-	 *            {@code int} with the iRODS info value from a packing
-	 *            instruction response header
+	 *            {@code int} with the iRODS info value from a packing instruction
+	 *            response header
 	 * @param message
-	 *            {@code String} with any additional error information
-	 *            coming from the response in the {@code msg} field of the
-	 *            header
+	 *            {@code String} with any additional error information coming from
+	 *            the response in the {@code msg} field of the header
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static void inspectAndThrowIfNeeded(final int infoValue,
-			String message) throws JargonException {
+	public static void inspectAndThrowIfNeeded(final int infoValue, String message) throws JargonException {
 
 		log.debug("inspectAndThrowIfNeeded:{}", infoValue);
 
@@ -86,14 +84,11 @@ public class IRODSErrorScanner {
 		// non-zero value, create appropriate exception, first try some ranges
 		// (especially for unix file system exceptions, which can have subcodes
 		if (infoValue <= -511000 && infoValue >= -511199) {
-			throw new UnixFileCreateException(
-					"Exception creating file in file system", infoValue);
+			throw new UnixFileCreateException("Exception creating file in file system", infoValue);
 		} else if (infoValue >= -520013 && infoValue <= -520000) {
-			throw new UnixFileMkdirException("Exception making unix directory",
-					infoValue);
+			throw new UnixFileMkdirException("Exception making unix directory", infoValue);
 		} else if (infoValue >= -528036 && infoValue <= -528000) {
-			throw new UnixFileRenameException(
-					"Exception renaming file in file system", infoValue);
+			throw new UnixFileRenameException("Exception renaming file in file system", infoValue);
 
 		}
 
@@ -107,21 +102,17 @@ public class IRODSErrorScanner {
 				errorEnum = ErrorEnum.valueOf(infoValue);
 
 			} catch (IllegalArgumentException iae) {
-				throw new JargonException(
-						"Unknown iRODS exception code recieved:" + infoValue,
-						infoValue);
+				throw new JargonException("Unknown iRODS exception code recieved:" + infoValue, infoValue);
 			}
 
 			log.debug("errorEnum val:{}", errorEnum);
 		} catch (IllegalArgumentException ie) {
 			log.error("error getting error enum value", ie);
-			throw new JargonException(
-					"error code received from iRODS, not in ErrorEnum translation table:"
-							+ infoValue, infoValue);
+			throw new JargonException("error code received from iRODS, not in ErrorEnum translation table:" + infoValue,
+					infoValue);
 		}
 
-		checkSpecificCodesAndThrowIfExceptionLocated(infoValue, message,
-				errorEnum);
+		checkSpecificCodesAndThrowIfExceptionLocated(infoValue, message, errorEnum);
 	}
 
 	/**
@@ -131,45 +122,36 @@ public class IRODSErrorScanner {
 	 * @throws JargonException
 	 *             or specific child exception of {@code JargonException}
 	 */
-	private static void checkSpecificCodesAndThrowIfExceptionLocated(
-			final int infoValue, final String message, final ErrorEnum errorEnum)
-			throws JargonException {
+	private static void checkSpecificCodesAndThrowIfExceptionLocated(final int infoValue, final String message,
+			final ErrorEnum errorEnum) throws JargonException {
 		switch (errorEnum) {
 		case OVERWITE_WITHOUT_FORCE_FLAG:
-			throw new JargonFileOrCollAlreadyExistsException(
-					"Attempt to overwrite file without force flag.", infoValue);
-		case CAT_INVALID_AUTHENTICATION:
-			throw new AuthenticationException("AuthenticationException",
+			throw new JargonFileOrCollAlreadyExistsException("Attempt to overwrite file without force flag.",
 					infoValue);
+		case CAT_INVALID_AUTHENTICATION:
+			throw new AuthenticationException("AuthenticationException", infoValue);
 		case CAT_INVALID_USER:
 			throw new InvalidUserException("InvalidUserException");
 		case SYS_NO_API_PRIV:
-			throw new NoAPIPrivException(
-					"User lacks privileges to invoke the given API");
+			throw new NoAPIPrivException("User lacks privileges to invoke the given API");
 		case CAT_NO_ROWS_FOUND:
 			throw new DataNotFoundException("No data found");
 		case CAT_NAME_EXISTS_AS_COLLECTION:
-			throw new JargonFileOrCollAlreadyExistsException(
-					"Collection already exists", infoValue);
+			throw new JargonFileOrCollAlreadyExistsException("Collection already exists", infoValue);
 		case CAT_NAME_EXISTS_AS_DATAOBJ:
-			throw new JargonFileOrCollAlreadyExistsException(
-					"Attempt to overwrite file without force flag", infoValue);
+			throw new JargonFileOrCollAlreadyExistsException("Attempt to overwrite file without force flag", infoValue);
 		case CATALOG_ALREADY_HAS_ITEM_BY_THAT_NAME:
-			throw new DuplicateDataException(
-					"Catalog already has item by that name");
+			throw new DuplicateDataException("Catalog already has item by that name");
 		case USER_CHKSUM_MISMATCH:
-			throw new FileIntegrityException(
-					"File checksum verification mismatch");
+			throw new FileIntegrityException("File checksum verification mismatch");
 		case CAT_UNKNOWN_FILE:
 			throw new FileNotFoundException("Unknown file");
 		case CAT_UNKNOWN_COLLECTION:
 			throw new FileNotFoundException("Unknown collection");
 		case CAT_COLLECTION_NOT_EMPTY:
-			throw new CollectionNotEmptyException("Collection not empty",
-					infoValue);
+			throw new CollectionNotEmptyException("Collection not empty", infoValue);
 		case EXEC_CMD_ERROR:
-			throw new RemoteScriptExecutionException(
-					"Remote script execution error" + infoValue);
+			throw new RemoteScriptExecutionException("Remote script execution error" + infoValue);
 		case USER_FILE_DOES_NOT_EXIST:
 			throw new FileNotFoundException("File not found", infoValue);
 		case CAT_INVALID_GROUP:
@@ -189,19 +171,16 @@ public class IRODSErrorScanner {
 		case CAT_SQL_ERR:
 			throw new CatalogSQLException("Catalog SQL error");
 		case SPECIFIC_QUERY_EXCEPTION:
-			throw new SpecificQueryException(
-					"Exception processing specific query", infoValue);
+			throw new SpecificQueryException("Exception processing specific query", infoValue);
 		case CAT_INVALID_ARGUMENT:
 			throw new InvalidArgumentException(message, infoValue);
 
 		case CAT_INVALID_RESOURCE:
 			throw new InvalidResourceException(message, infoValue);
 		case FEDERATED_ZONE_NOT_AVAILABLE:
-			throw new ZoneUnavailableException(
-					"the federated zone is not available");
+			throw new ZoneUnavailableException("the federated zone is not available");
 		case SYS_MOUNT_MOUNTED_COLL_ERR:
-			throw new CollectionNotMountedException(
-					"unable to mount collection, potential duplicate mount");
+			throw new CollectionNotMountedException("unable to mount collection, potential duplicate mount");
 		case SYS_SPEC_COLL_OBJ_NOT_EXIST:
 			throw new DataNotFoundException("Special collection not found");
 		case PAM_AUTH_ERROR:
@@ -211,110 +190,82 @@ public class IRODSErrorScanner {
 		case CAT_INVALID_CLIENT_USER:
 			throw new InvalidClientUserException(message);
 		case KEY_NOT_FOUND:
-			throw new KeyException(ErrorEnum.KEY_NOT_FOUND.toString(),
-					ErrorEnum.KEY_NOT_FOUND.getInt());
+			throw new KeyException(ErrorEnum.KEY_NOT_FOUND.toString(), ErrorEnum.KEY_NOT_FOUND.getInt());
 		case KEY_TYPE_MISMATCH:
-			throw new KeyException(ErrorEnum.KEY_TYPE_MISMATCH.toString(),
-					ErrorEnum.KEY_TYPE_MISMATCH.getInt());
+			throw new KeyException(ErrorEnum.KEY_TYPE_MISMATCH.toString(), ErrorEnum.KEY_TYPE_MISMATCH.getInt());
 		case CHILD_EXISTS:
-			throw new ResourceHierarchyException(
-					ErrorEnum.CHILD_EXISTS.toString(),
-					ErrorEnum.CHILD_EXISTS.getInt());
+			throw new ResourceHierarchyException(ErrorEnum.CHILD_EXISTS.toString(), ErrorEnum.CHILD_EXISTS.getInt());
 		case HIERARCHY_ERROR:
-			throw new ResourceHierarchyException(
-					ErrorEnum.HIERARCHY_ERROR.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.HIERARCHY_ERROR.toString(),
 					ErrorEnum.HIERARCHY_ERROR.getInt());
 		case CHILD_NOT_FOUND:
-			throw new ResourceHierarchyException(
-					ErrorEnum.CHILD_NOT_FOUND.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.CHILD_NOT_FOUND.toString(),
 					ErrorEnum.CHILD_NOT_FOUND.getInt());
 		case NO_NEXT_RESOURCE_FOUND:
-			throw new ResourceHierarchyException(
-					ErrorEnum.NO_NEXT_RESOURCE_FOUND.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.NO_NEXT_RESOURCE_FOUND.toString(),
 					ErrorEnum.NO_NEXT_RESOURCE_FOUND.getInt());
 		case NO_PDMO_DEFINED:
-			throw new ResourceHierarchyException(
-					ErrorEnum.NO_PDMO_DEFINED.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.NO_PDMO_DEFINED.toString(),
 					ErrorEnum.NO_PDMO_DEFINED.getInt());
 		case INVALID_LOCATION:
-			throw new ResourceHierarchyException(
-					ErrorEnum.INVALID_LOCATION.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.INVALID_LOCATION.toString(),
 					ErrorEnum.INVALID_LOCATION.getInt());
 		case PLUGIN_ERROR:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.PLUGIN_ERROR.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.PLUGIN_ERROR.toString(),
 					ErrorEnum.PLUGIN_ERROR.getInt());
 		case INVALID_RESC_CHILD_CONTEXT:
-			throw new ResourceHierarchyException(
-					ErrorEnum.INVALID_RESC_CHILD_CONTEXT.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.INVALID_RESC_CHILD_CONTEXT.toString(),
 					ErrorEnum.INVALID_RESC_CHILD_CONTEXT.getInt());
 		case INVALID_FILE_OBJECT:
-			throw new ResourceHierarchyException(
-					ErrorEnum.INVALID_FILE_OBJECT.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.INVALID_FILE_OBJECT.toString(),
 					ErrorEnum.INVALID_FILE_OBJECT.getInt());
 		case INVALID_OPERATION:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.INVALID_OPERATION.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.INVALID_OPERATION.toString(),
 					ErrorEnum.INVALID_OPERATION.getInt());
 		case CHILD_HAS_PARENT:
-			throw new ResourceHierarchyException(
-					ErrorEnum.CHILD_HAS_PARENT.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.CHILD_HAS_PARENT.toString(),
 					ErrorEnum.CHILD_HAS_PARENT.getInt());
 		case FILE_NOT_IN_VAULT:
-			throw new ResourceHierarchyException(
-					ErrorEnum.FILE_NOT_IN_VAULT.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.FILE_NOT_IN_VAULT.toString(),
 					ErrorEnum.FILE_NOT_IN_VAULT.getInt());
 		case DIRECT_ARCHIVE_ACCESS:
-			throw new ResourceHierarchyException(
-					ErrorEnum.DIRECT_ARCHIVE_ACCESS.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.DIRECT_ARCHIVE_ACCESS.toString(),
 					ErrorEnum.DIRECT_ARCHIVE_ACCESS.getInt());
 		case ADVANCED_NEGOTIATION_NOT_SUPPORTED:
-			throw new NegotiationException(
-					ErrorEnum.ADVANCED_NEGOTIATION_NOT_SUPPORTED.toString(),
+			throw new NegotiationException(ErrorEnum.ADVANCED_NEGOTIATION_NOT_SUPPORTED.toString(),
 					ErrorEnum.ADVANCED_NEGOTIATION_NOT_SUPPORTED.getInt());
 		case DIRECT_CHILD_ACCESS:
-			throw new ResourceHierarchyException(
-					ErrorEnum.DIRECT_CHILD_ACCESS.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.DIRECT_CHILD_ACCESS.toString(),
 					ErrorEnum.DIRECT_CHILD_ACCESS.getInt());
 		case INVALID_DYNAMIC_CAST:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.INVALID_DYNAMIC_CAST.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.INVALID_DYNAMIC_CAST.toString(),
 					ErrorEnum.INVALID_DYNAMIC_CAST.getInt());
 		case INVALID_ACCESS_TO_IMPOSTOR_RESOURCE:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.INVALID_ACCESS_TO_IMPOSTOR_RESOURCE.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.INVALID_ACCESS_TO_IMPOSTOR_RESOURCE.toString(),
 					ErrorEnum.INVALID_ACCESS_TO_IMPOSTOR_RESOURCE.getInt());
 		case INVALID_LEXICAL_CAST:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.INVALID_LEXICAL_CAST.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.INVALID_LEXICAL_CAST.toString(),
 					ErrorEnum.INVALID_LEXICAL_CAST.getInt());
 		case CONTROL_PLANE_MESSAGE_ERROR:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.CONTROL_PLANE_MESSAGE_ERROR.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.CONTROL_PLANE_MESSAGE_ERROR.toString(),
 					ErrorEnum.CONTROL_PLANE_MESSAGE_ERROR.getInt());
 		case REPLICA_NOT_IN_RESC:
-			throw new ResourceHierarchyException(
-					ErrorEnum.REPLICA_NOT_IN_RESC.toString(),
+			throw new ResourceHierarchyException(ErrorEnum.REPLICA_NOT_IN_RESC.toString(),
 					ErrorEnum.REPLICA_NOT_IN_RESC.getInt());
 		case INVALID_ANY_CAST:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.INVALID_ANY_CAST.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.INVALID_ANY_CAST.toString(),
 					ErrorEnum.INVALID_ANY_CAST.getInt());
 		case BAD_FUNCTION_CALL:
-			throw new InternalIrodsOperationException(
-					ErrorEnum.BAD_FUNCTION_CALL.toString(),
+			throw new InternalIrodsOperationException(ErrorEnum.BAD_FUNCTION_CALL.toString(),
 					ErrorEnum.BAD_FUNCTION_CALL.getInt());
 		case CLIENT_NEGOTIATION_ERROR:
-			throw new NegotiationException(
-					ErrorEnum.CLIENT_NEGOTIATION_ERROR.toString(),
+			throw new NegotiationException(ErrorEnum.CLIENT_NEGOTIATION_ERROR.toString(),
 					ErrorEnum.CLIENT_NEGOTIATION_ERROR.getInt());
 		case SERVER_NEGOTIATION_ERROR:
-			throw new NegotiationException(
-					ErrorEnum.SERVER_NEGOTIATION_ERROR.toString(),
+			throw new NegotiationException(ErrorEnum.SERVER_NEGOTIATION_ERROR.toString(),
 					ErrorEnum.SERVER_NEGOTIATION_ERROR.getInt());
 		case SYS_RESC_DOES_NOT_EXIST:
-			throw new ResourceDoesNotExistException(
-					ErrorEnum.SYS_RESC_DOES_NOT_EXIST.toString(),
+			throw new ResourceDoesNotExistException(ErrorEnum.SYS_RESC_DOES_NOT_EXIST.toString(),
 					ErrorEnum.SYS_RESC_DOES_NOT_EXIST.getInt());
 		default:
 			StringBuilder sb = new StringBuilder();
@@ -334,14 +285,13 @@ public class IRODSErrorScanner {
 	}
 
 	/**
-	 * Inspect the {@code info} value from an iRODS packing instruction
-	 * response header and throw an exception if an error was detected
+	 * Inspect the {@code info} value from an iRODS packing instruction response
+	 * header and throw an exception if an error was detected
 	 *
 	 * @param infoValue
 	 * @throws JargonException
 	 */
-	public static void inspectAndThrowIfNeeded(final int infoValue)
-			throws JargonException {
+	public static void inspectAndThrowIfNeeded(final int infoValue) throws JargonException {
 
 		inspectAndThrowIfNeeded(infoValue, "");
 	}

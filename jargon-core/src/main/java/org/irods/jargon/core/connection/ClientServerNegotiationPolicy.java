@@ -24,8 +24,7 @@ public class ClientServerNegotiationPolicy {
 	 * interpolate with the negotiation table.
 	 */
 
-	private static Logger log = LoggerFactory
-			.getLogger(ClientServerNegotiationPolicy.class);
+	private static Logger log = LoggerFactory.getLogger(ClientServerNegotiationPolicy.class);
 
 	public enum SslNegotiationPolicy {
 		CS_NEG_REQUIRE, CS_NEG_DONT_CARE, CS_NEG_REFUSE, NO_NEGOTIATION, CS_NEG_FAILURE
@@ -39,8 +38,7 @@ public class ClientServerNegotiationPolicy {
 		return sslNegotiationPolicy;
 	}
 
-	public synchronized void setSslNegotiationPolicy(
-			final SslNegotiationPolicy sslNegotiationPolicy) {
+	public synchronized void setSslNegotiationPolicy(final SslNegotiationPolicy sslNegotiationPolicy) {
 		this.sslNegotiationPolicy = sslNegotiationPolicy;
 	}
 
@@ -66,14 +64,14 @@ public class ClientServerNegotiationPolicy {
 	}
 
 	/**
-	 * Handy method (this is a bit awkward and needs to be refactored) to find
-	 * the ssl negotiation policy as an enum value from a given string
+	 * Handy method (this is a bit awkward and needs to be refactored) to find the
+	 * ssl negotiation policy as an enum value from a given string
 	 * 
 	 * @param policyString
+	 *            {@link String} with the string name of the SSL negotiation policy
 	 * @return {@link SslNegotiationPolicy}
 	 */
-	public static SslNegotiationPolicy findSslNegotiationPolicyFromString(
-			final String policyString) {
+	public static SslNegotiationPolicy findSslNegotiationPolicyFromString(final String policyString) {
 
 		if (policyString == null || policyString.isEmpty()) {
 			throw new IllegalArgumentException("null or empty policyString");
@@ -84,17 +82,14 @@ public class ClientServerNegotiationPolicy {
 		if (policyString.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.toString())) {
 			log.info("setting to neg require");
 			return SslNegotiationPolicy.CS_NEG_REQUIRE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
-				.toString())) {
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE.toString())) {
 			log.info("setting to neg dont care");
 			return SslNegotiationPolicy.CS_NEG_DONT_CARE;
-		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE
-				.toString())) {
+		} else if (policyString.equals(SslNegotiationPolicy.CS_NEG_REFUSE.toString())) {
 			log.info("setting to neg refuse");
 
 			return SslNegotiationPolicy.CS_NEG_REFUSE;
-		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION
-				.toString())) {
+		} else if (policyString.equals(SslNegotiationPolicy.NO_NEGOTIATION.toString())) {
 			log.info("setting to no negotiation");
 			return SslNegotiationPolicy.NO_NEGOTIATION;
 		} else {
