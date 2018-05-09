@@ -12,29 +12,16 @@ package org.irods.jargon.core.exception;
  */
 public class DataNotFoundException extends JargonException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7242363525516259108L;
 
-	/**
-	 * @param message
-	 */
 	public DataNotFoundException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public DataNotFoundException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public DataNotFoundException(final String message, final Throwable cause) {
 		super(message, cause);
 	}

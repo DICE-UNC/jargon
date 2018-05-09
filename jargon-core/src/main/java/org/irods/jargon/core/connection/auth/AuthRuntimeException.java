@@ -19,6 +19,7 @@ public class AuthRuntimeException extends JargonRuntimeException {
 
 	/**
 	 * @param message
+	 *            {@link String} with any message
 	 */
 	public AuthRuntimeException(final String message) {
 		super(message);
@@ -26,6 +27,7 @@ public class AuthRuntimeException extends JargonRuntimeException {
 
 	/**
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 */
 	public AuthRuntimeException(final Throwable cause) {
 		super(cause);
@@ -33,7 +35,9 @@ public class AuthRuntimeException extends JargonRuntimeException {
 
 	/**
 	 * @param message
+	 *            {@link String} with any message
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 */
 	public AuthRuntimeException(final String message, final Throwable cause) {
 		super(message, cause);

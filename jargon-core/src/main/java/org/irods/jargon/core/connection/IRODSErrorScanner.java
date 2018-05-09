@@ -289,7 +289,9 @@ public class IRODSErrorScanner {
 	 * header and throw an exception if an error was detected
 	 *
 	 * @param infoValue
+	 *            {@code int} with the iRODS error code
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static void inspectAndThrowIfNeeded(final int infoValue) throws JargonException {
 

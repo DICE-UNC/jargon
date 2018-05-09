@@ -24,25 +24,24 @@ import org.irods.jargon.core.utils.LocalFileUtils;
 public class GSIUtilities {
 
 	/**
-	 * Create the {@code GSIIRODSAccount} with the certificate that exists
-	 * in the given file
+	 * Create the {@code GSIIRODSAccount} with the certificate that exists in the
+	 * given file
 	 *
 	 * @param host
 	 *            {@code String} with the iRODS host name
 	 * @param port
 	 *            {@code int} with the iRODS server port
 	 * @param credentialFile
-	 *            {@link File} for the user certificate (a GSI proxy
-	 *            certificate)
+	 *            {@link File} for the user certificate (a GSI proxy certificate)
 	 * @param defaultStorageResource
-	 *            {@code String} with an optional (blank if not specified)
-	 *            default storage resource
+	 *            {@code String} with an optional (blank if not specified) default
+	 *            storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(
-			final File credentialFile, final String host, final int port,
-			final String defaultStorageResource) throws JargonException {
+	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(final File credentialFile, final String host,
+			final int port, final String defaultStorageResource) throws JargonException {
 
 		if (credentialFile == null) {
 			throw new IllegalArgumentException("null credentialFile");
@@ -54,35 +53,33 @@ public class GSIUtilities {
 
 		try {
 			byte[] certBytes = LocalFileUtils.getBytesFromFile(credentialFile);
-			return createGSIIRODSAccountFromCredential(host, port, certBytes,
-					defaultStorageResource);
+			return createGSIIRODSAccountFromCredential(host, port, certBytes, defaultStorageResource);
 		} catch (IOException e) {
-			throw new JargonException(
-					"io exception reading bytes from credential file", e);
+			throw new JargonException("io exception reading bytes from credential file", e);
 		}
 
 	}
 
 	/**
-	 * Create the {@code GSIIRODSAccount} with the certificate based on the
-	 * contents of the given {@code String}
+	 * Create the {@code GSIIRODSAccount} with the certificate based on the contents
+	 * of the given {@code String}
 	 *
 	 * @param host
 	 *            {@code String} with the iRODS host name
 	 * @param port
 	 *            {@code int} with the iRODS server port
 	 * @param certificate
-	 *            {@code String} with the GSI proxy certificate in
-	 *            {@code String} form
+	 *            {@code String} with the GSI proxy certificate in {@code String}
+	 *            form
 	 * @param defaultStorageResource
-	 *            {@code String} with an optional (blank if not specified)
-	 *            default storage resource
+	 *            {@code String} with an optional (blank if not specified) default
+	 *            storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(
-			final String host, final int port, final String certificate,
-			final String defaultStorageResource) throws JargonException {
+	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(final String host, final int port,
+			final String certificate, final String defaultStorageResource) throws JargonException {
 
 		if (certificate == null || certificate.isEmpty()) {
 			throw new IllegalArgumentException("null or empty certificate");
@@ -95,14 +92,13 @@ public class GSIUtilities {
 
 		byte[] data = certificate.getBytes();
 
-		return createGSIIRODSAccountFromCredential(host, port, data,
-				defaultStorageResource);
+		return createGSIIRODSAccountFromCredential(host, port, data, defaultStorageResource);
 
 	}
 
 	/**
-	 * Create the {@code GSIIRODSAccount} with the certificate based on the
-	 * contents of the given {@code byte[]}
+	 * Create the {@code GSIIRODSAccount} with the certificate based on the contents
+	 * of the given {@code byte[]}
 	 *
 	 * @param host
 	 *            {@code String} with the iRODS host name
@@ -111,14 +107,14 @@ public class GSIUtilities {
 	 * @param certificate
 	 *            GSI proxy certificate in the form of a {@code byte} array
 	 * @param defaultStorageResource
-	 *            {@code String} with an optional (blank if not specified)
-	 *            default storage resource
+	 *            {@code String} with an optional (blank if not specified) default
+	 *            storage resource
 	 * @return {@link GSIIRODSAccount} configured for use in authentication
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(
-			final String host, final int port, final byte[] certificate,
-			final String defaultStorageResource) throws JargonException {
+	public static GSIIRODSAccount createGSIIRODSAccountFromCredential(final String host, final int port,
+			final byte[] certificate, final String defaultStorageResource) throws JargonException {
 
 		if (host == null || host.isEmpty()) {
 			throw new IllegalArgumentException("null or empty host");
@@ -128,16 +124,12 @@ public class GSIUtilities {
 			throw new IllegalArgumentException("null or empty certificate");
 		}
 
-		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager
-				.getInstance();
+		ExtendedGSSManager manager = (ExtendedGSSManager) ExtendedGSSManager.getInstance();
 
 		try {
-			GSSCredential credential = manager.createCredential(certificate,
-					ExtendedGSSCredential.IMPEXP_OPAQUE,
-					GSSCredential.DEFAULT_LIFETIME, null,
-					GSSCredential.INITIATE_AND_ACCEPT);
-			GSIIRODSAccount gsiIRODSAccount = GSIIRODSAccount.instance(host,
-					port, credential, defaultStorageResource);
+			GSSCredential credential = manager.createCredential(certificate, ExtendedGSSCredential.IMPEXP_OPAQUE,
+					GSSCredential.DEFAULT_LIFETIME, null, GSSCredential.INITIATE_AND_ACCEPT);
+			GSIIRODSAccount gsiIRODSAccount = GSIIRODSAccount.instance(host, port, credential, defaultStorageResource);
 			return gsiIRODSAccount;
 		} catch (GSSException e) {
 			throw new JargonException("GSSException creating credential", e);
@@ -149,11 +141,12 @@ public class GSIUtilities {
 	 * Derive the user distinguished name from the provided cert.
 	 *
 	 * @param account
+	 *            {@link GSIIRODSAccount}
 	 * @return {@code String} with DN
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static String getDN(final GSIIRODSAccount account)
-			throws JargonException {
+	public static String getDN(final GSIIRODSAccount account) throws JargonException {
 		StringBuffer dn = null;
 		int index = -1, index2 = -1;
 

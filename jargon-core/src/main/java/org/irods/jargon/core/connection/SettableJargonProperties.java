@@ -209,58 +209,24 @@ public class SettableJargonProperties implements JargonProperties {
 		this.rulesSetDestinationWhenAuto = jargonProperties.isRulesSetDestinationWhenAuto();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperites#isUseParallelTransfer()
-	 */
 	@Override
 	public synchronized boolean isUseParallelTransfer() {
 		return useParallelTransfer;
 	}
 
-	/**
-	 * Utilize parallel transfer algorithm for files above the transfer size
-	 *
-	 * @param useParallelTransfer
-	 *            {@code boolean} of {@code true} if parallel transfers are allowed
-	 */
 	public synchronized void setUseParallelTransfer(final boolean useParallelTransfer) {
 		this.useParallelTransfer = useParallelTransfer;
 	}
 
-	/**
-	 * Set the maximum number of threads allowed for parallel transfers. 0 means use
-	 * iRODS limit.
-	 *
-	 * @param maxParallelThreads
-	 *            {@code int} with the maximum number of threads to use in a
-	 *            parallel transfer, with 0 meaning use the iRODS default set in
-	 *            rules.
-	 */
 	public synchronized void setMaxParallelThreads(final int maxParallelThreads) {
 		this.maxParallelThreads = maxParallelThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperites#getMaxParallelThreads()
-	 */
 	@Override
 	public synchronized int getMaxParallelThreads() {
 		return maxParallelThreads;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getMaxFilesAndDirsQueryMax
-	 * ()
-	 */
 	@Override
 	public synchronized int getMaxFilesAndDirsQueryMax() {
 		return maxFilesAndDirsQueryMax;
@@ -276,126 +242,55 @@ public class SettableJargonProperties implements JargonProperties {
 		return transferThreadPoolTimeoutMillis;
 	}
 
-	/**
-	 * @param maxFilesAndDirsQueryMax
-	 *            the maxFilesAndDirsQueryMax to set
-	 */
 	public synchronized void setMaxFilesAndDirsQueryMax(final int maxFilesAndDirsQueryMax) {
 		this.maxFilesAndDirsQueryMax = maxFilesAndDirsQueryMax;
 	}
 
-	/**
-	 * @param useTransferThreadsPool
-	 *            the useTransferThreadsPool to set
-	 */
 	public synchronized void setUseTransferThreadsPool(final boolean useTransferThreadsPool) {
 		this.useTransferThreadsPool = useTransferThreadsPool;
 	}
 
-	/**
-	 * @param transferThreadPoolTimeoutMillis
-	 *            the transferThreadPoolTimeoutMillis to set
-	 */
 	public synchronized void setTransferThreadPoolTimeoutMillis(final int transferThreadPoolTimeoutMillis) {
 		this.transferThreadPoolTimeoutMillis = transferThreadPoolTimeoutMillis;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isAllowPutGetResourceRedirects()
-	 */
 	@Override
 	public synchronized boolean isAllowPutGetResourceRedirects() {
 		return allowPutGetResourceRedirects;
 	}
 
-	/**
-	 * Allow resource redirects to occur
-	 *
-	 * @param allowPutGetResourceRedirects
-	 *            {@code boolean} which allows resource redirects if {@code true}
-	 */
 	public synchronized void setAllowPutGetResourceRedirects(final boolean allowPutGetResourceRedirects) {
 		this.allowPutGetResourceRedirects = allowPutGetResourceRedirects;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isComputeChecksumAfterTransfer()
-	 */
 	@Override
 	public synchronized boolean isComputeChecksumAfterTransfer() {
 		return computeChecksumAfterTransfer;
 	}
 
-	/**
-	 * Compute (but do not verify) a checksum after a transfer.
-	 *
-	 * @param computeChecksumAfterTransfer
-	 *            {@code boolean} that will cause a checksum to be computed by
-	 *            default if {@code true}
-	 */
 	public synchronized void setComputeChecksumAfterTransfer(final boolean computeChecksumAfterTransfer) {
 		this.computeChecksumAfterTransfer = computeChecksumAfterTransfer;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isComputeAndVerifyChecksumAfterTransfer()
-	 */
 	@Override
 	public synchronized boolean isComputeAndVerifyChecksumAfterTransfer() {
 		return computeAndVerifyChecksumAfterTransfer;
 	}
 
-	/**
-	 * Compute and verify the file checksum after a put/get transfer
-	 *
-	 * @param computeAndVerifyChecksumAfterTransfer
-	 *            {@code boolean} that causes a checksum validation if set to
-	 *            {@code true}
-	 */
 	public synchronized void setComputeAndVerifyChecksumAfterTransfer(
 			final boolean computeAndVerifyChecksumAfterTransfer) {
 		this.computeAndVerifyChecksumAfterTransfer = computeAndVerifyChecksumAfterTransfer;
 	}
 
-	/**
-	 * Set whether intra-file status call-backs for file transfers are enabled. This
-	 * will give progress of bytes within transfers, with a slight performance
-	 * penalty.
-	 *
-	 * @param intraFileStatusCallbacks
-	 *            the intraFileStatusCallbacks to set
-	 */
 	public synchronized void setIntraFileStatusCallbacks(final boolean intraFileStatusCallbacks) {
 		this.intraFileStatusCallbacks = intraFileStatusCallbacks;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#isIntraFileStatusCallbacks
-	 * ()
-	 */
 	@Override
 	public synchronized boolean isIntraFileStatusCallbacks() {
 		return intraFileStatusCallbacks;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getIRODSSocketTimeout()
-	 */
 	@Override
 	public synchronized int getIRODSSocketTimeout() {
 		return irodsSocketTimeout;
@@ -405,12 +300,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getIRODSParallelTransferSocketTimeout()
-	 */
 	@Override
 	public synchronized int getIRODSParallelTransferSocketTimeout() {
 		return irodsParallelSocketTimeout;
@@ -420,79 +309,36 @@ public class SettableJargonProperties implements JargonProperties {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getTransferThreadPoolMaxSimultaneousTransfers()
-	 */
 	@Override
 	public synchronized int getTransferThreadPoolMaxSimultaneousTransfers() {
 		return transferThreadPoolMaxSimultaneousTransfers;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getInternalInputStreamBufferSize()
-	 */
 	@Override
 	public synchronized int getInternalInputStreamBufferSize() {
 		return internalInputStreamBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getInternalOutputStreamBufferSize()
-	 */
 	@Override
 	public synchronized int getInternalOutputStreamBufferSize() {
 		return internalOutputStreamBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getInternalCacheBufferSize
-	 * ()
-	 */
 	@Override
 	public synchronized int getInternalCacheBufferSize() {
 		return internalCacheBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getSendInputStreamBufferSize()
-	 */
 	@Override
 	public synchronized int getSendInputStreamBufferSize() {
 		return sendInputStreamBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getInputToOutputCopyBufferByteSize()
-	 */
 	@Override
 	public synchronized int getInputToOutputCopyBufferByteSize() {
 		return inputToOutputCopyBufferByteSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getLocalFileOutputStreamBufferSize()
-	 */
 	@Override
 	public synchronized int getLocalFileOutputStreamBufferSize() {
 		return localFileOutputStreamBufferSize;
@@ -503,128 +349,65 @@ public class SettableJargonProperties implements JargonProperties {
 		return localFileInputStreamBufferSize;
 	}
 
-	/**
-	 * @param transferThreadPoolMaxSimultaneousTransfers
-	 *            the transferThreadPoolMaxSimultaneousTransfers to set
-	 */
 	public synchronized void setTransferThreadPoolMaxSimultaneousTransfers(
 			final int transferThreadPoolMaxSimultaneousTransfers) {
 		this.transferThreadPoolMaxSimultaneousTransfers = transferThreadPoolMaxSimultaneousTransfers;
 	}
 
-	/**
-	 * @param internalInputStreamBufferSize
-	 *            the internalInputStreamBufferSize to set
-	 */
 	public synchronized void setInternalInputStreamBufferSize(final int internalInputStreamBufferSize) {
 		this.internalInputStreamBufferSize = internalInputStreamBufferSize;
 	}
 
-	/**
-	 * @param internalOutputStreamBufferSize
-	 *            the internalOutputStreamBufferSize to set
-	 */
 	public synchronized void setInternalOutputStreamBufferSize(final int internalOutputStreamBufferSize) {
 		this.internalOutputStreamBufferSize = internalOutputStreamBufferSize;
 	}
 
-	/**
-	 * @param internalCacheBufferSize
-	 *            the internalCacheBufferSize to set
-	 */
 	public synchronized void setInternalCacheBufferSize(final int internalCacheBufferSize) {
 		this.internalCacheBufferSize = internalCacheBufferSize;
 	}
 
-	/**
-	 * @param sendInputStreamBufferSize
-	 *            the sendInputStreamBufferSize to set
-	 */
 	public synchronized void setSendInputStreamBufferSize(final int sendInputStreamBufferSize) {
 		this.sendInputStreamBufferSize = sendInputStreamBufferSize;
 	}
 
-	/**
-	 * @param localFileOutputStreamBufferSize
-	 *            the localFileOutputStreamBufferSize to set
-	 */
 	public synchronized void setLocalFileOutputStreamBufferSize(final int localFileOutputStreamBufferSize) {
 		this.localFileOutputStreamBufferSize = localFileOutputStreamBufferSize;
 	}
 
-	/**
-	 * @param localFileInputStreamBufferSize
-	 *            the localFileInputStreamBufferSize to set
-	 */
 	public synchronized void setLocalFileInputStreamBufferSize(final int localFileInputStreamBufferSize) {
 		this.localFileInputStreamBufferSize = localFileInputStreamBufferSize;
 	}
 
-	/**
-	 * @param irodsSocketTimeout
-	 *            the irodsSocketTimeout to set
-	 */
 	public synchronized void setIrodsSocketTimeout(final int irodsSocketTimeout) {
 		this.irodsSocketTimeout = irodsSocketTimeout;
 	}
 
-	/**
-	 * @param irodsParallelSocketTimeout
-	 *            the irodsParallelSocketTimeout to set
-	 */
 	public synchronized void setIrodsParallelSocketTimeout(final int irodsParallelSocketTimeout) {
 		this.irodsParallelSocketTimeout = irodsParallelSocketTimeout;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getPutBufferSize()
-	 */
 	@Override
 	public synchronized int getPutBufferSize() {
 		return putBufferSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getGetBufferSize()
-	 */
 	@Override
 	public synchronized int getGetBufferSize() {
 		return getBufferSize;
 	}
 
-	/**
-	 * @param putBufferSize
-	 *            the putBufferSize to set
-	 */
 	public synchronized void setPutBufferSize(final int putBufferSize) {
 		this.putBufferSize = putBufferSize;
 	}
 
-	/**
-	 * @param getBufferSize
-	 *            the getBufferSize to set
-	 */
 	public synchronized void setGetBufferSize(final int getBufferSize) {
 		this.getBufferSize = getBufferSize;
 	}
 
-	/**
-	 * @param inputToOutputCopyBufferByteSize
-	 *            the inputToOutputCopyBufferByteSize to set
-	 */
 	public synchronized void setInputToOutputCopyBufferByteSize(final int inputToOutputCopyBufferByteSize) {
 		this.inputToOutputCopyBufferByteSize = inputToOutputCopyBufferByteSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getEncoding()
-	 */
 	@Override
 	public synchronized String getEncoding() {
 		return encoding;
@@ -638,107 +421,51 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encoding = encoding;
 	}
 
-	/**
-	 * @return {@code boolean} that indicates whether a reconnect of long running
-	 *         connections is done. This is equvalent to the -T icommand option
-	 */
 	@Override
 	public synchronized boolean isReconnect() {
 		return reconnect;
 	}
 
-	/**
-	 * Return {@code boolean} that indicates whether detailed performance
-	 * information is gathered and reported to the DEBUG log. This may introduce
-	 * overhead to operations.
-	 * <p>
-	 * Note that the implementation of such instrumentation will be an ongoing
-	 * process.
-	 *
-	 * @return {@code boolean}
-	 */
 	@Override
 	public synchronized boolean isInstrument() {
 		return instrument;
 	}
 
-	/**
-	 * @return the irodsSocketTimeout
-	 */
 	public synchronized int getIrodsSocketTimeout() {
 		return irodsSocketTimeout;
 	}
 
-	/**
-	 * @return the irodsParallelSocketTimeout
-	 */
 	public synchronized int getIrodsParallelSocketTimeout() {
 		return irodsParallelSocketTimeout;
 	}
 
-	/**
-	 * @param instrument
-	 *            the instrument to set
-	 */
 	public synchronized void setInstrument(final boolean instrument) {
 		this.instrument = instrument;
 	}
 
-	/**
-	 * @param reconnect
-	 *            the reconnect to set
-	 */
 	public synchronized void setReconnect(final boolean reconnect) {
 		this.reconnect = reconnect;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isDefaultToPublicIfNothingUnderRootWhenListing()
-	 */
 
 	@Override
 	public synchronized boolean isDefaultToPublicIfNothingUnderRootWhenListing() {
 		return defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
-	/**
-	 * Set a property that will automatically look for /zone/home/public and
-	 * /zone/home/username directories in the process of listing.
-	 *
-	 * @param defaultToPublicIfNothingUnderRootWhenListing
-	 */
 	public synchronized void setDefaultToPublicIfNothingUnderRootWhenListing(
 			final boolean defaultToPublicIfNothingUnderRootWhenListing) {
 		this.defaultToPublicIfNothingUnderRootWhenListing = defaultToPublicIfNothingUnderRootWhenListing;
 	}
 
-	/**
-	 * @return the reconnectTimeInMillis {@code long} indicating the time to wait
-	 *         for reconnect. This is only used if {@code isReconnect()} is
-	 *         {@code true}
-	 */
 	@Override
 	public synchronized long getReconnectTimeInMillis() {
 		return reconnectTimeInMillis;
 	}
 
-	/**
-	 * @param reconnectTimeInMillis
-	 *            the reconnectTimeInMillis to set
-	 */
 	public synchronized void setReconnectTimeInMillis(final long reconnectTimeInMillis) {
 		this.reconnectTimeInMillis = reconnectTimeInMillis;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUsingDiscoveredServerPropertiesCache()
-	 */
 	@Override
 	public synchronized boolean isUsingDiscoveredServerPropertiesCache() {
 		return usingDiscoveredServerPropertiesCache;
@@ -753,51 +480,25 @@ public class SettableJargonProperties implements JargonProperties {
 		usingSpecificQueryForCollectionListingsWithPermissions = useSpecificQuery;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * isUsingSpecQueryForDataObjPermissionsForUserInGroup()
-	 */
 	@Override
 	public synchronized boolean isUsingSpecQueryForDataObjPermissionsForUserInGroup() {
 		return usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
-	/**
-	 * @param usingSpecQueryForDataObjPermissionsForUserInGroup
-	 *            the usingSpecQueryForDataObjPermissionsForUserInGroup to set
-	 */
 	public synchronized void setUsingSpecQueryForDataObjPermissionsForUserInGroup(
 			final boolean usingSpecQueryForDataObjPermissionsForUserInGroup) {
 		this.usingSpecQueryForDataObjPermissionsForUserInGroup = usingSpecQueryForDataObjPermissionsForUserInGroup;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getPAMTimeToLive()
-	 */
 	@Override
 	public synchronized int getPAMTimeToLive() {
 		return pamTimeToLive;
 	}
 
-	/**
-	 * Set the pam time to live (in seconds)
-	 *
-	 * @param pamTimeToLive
-	 *            {@code int} with the time to live for pam passwords
-	 */
 	public synchronized void setPAMTimeToLive(final int pamTimeToLive) {
 		this.pamTimeToLive = pamTimeToLive;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#isForcePamFlush()
-	 */
 	@Override
 	public synchronized boolean isForcePamFlush() {
 		return forcePamFlush;
@@ -834,21 +535,11 @@ public class SettableJargonProperties implements JargonProperties {
 		this.connectionFactory = connectionFactory;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getChecksumEncoding()
-	 */
 	@Override
 	public synchronized ChecksumEncodingEnum getChecksumEncoding() {
 		return checksumEncoding;
 	}
 
-	/**
-	 * Set the encoding used for computing checksums
-	 *
-	 * @param checksumEncoding
-	 */
 	public synchronized void setChecksumEncoding(final ChecksumEncodingEnum checksumEncoding) {
 		if (checksumEncoding == null) {
 			throw new IllegalArgumentException("null checksumEncoding");
@@ -1050,23 +741,11 @@ public class SettableJargonProperties implements JargonProperties {
 		return builder.toString();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getSocketRenewalIntervalInSeconds()
-	 */
 	@Override
 	public synchronized int getSocketRenewalIntervalInSeconds() {
 		return socketRenewalIntervalInSeconds;
 	}
 
-	/**
-	 * Set the interval in seconds to renew a socket during long transfers. Set to 0
-	 * to turn this behavior off.
-	 *
-	 * @param socketRenewalIntervalInSeconds
-	 */
 	public synchronized void setSocketRenewalIntervalInSeconds(final int socketRenewalIntervalInSeconds) {
 		this.socketRenewalIntervalInSeconds = socketRenewalIntervalInSeconds;
 	}
@@ -1076,11 +755,6 @@ public class SettableJargonProperties implements JargonProperties {
 		return longTransferRestart;
 	}
 
-	/**
-	 * Sets the ability to restart long file transfers if needed
-	 *
-	 * @param longFileTransferRestart
-	 */
 	public synchronized void setLongTransferRestart(final boolean longFileTransferRestart) {
 		longTransferRestart = longFileTransferRestart;
 	}
@@ -1090,12 +764,6 @@ public class SettableJargonProperties implements JargonProperties {
 		return parallelCopyBufferSize;
 	}
 
-	/**
-	 * Set the size (in bytes) of the copy buffer used between streams in parallel
-	 * transfer
-	 *
-	 * @param parallelCopyBufferSize
-	 */
 	public synchronized void setParallelCopyBufferSize(final int parallelCopyBufferSize) {
 		this.parallelCopyBufferSize = parallelCopyBufferSize;
 	}
@@ -1120,22 +788,11 @@ public class SettableJargonProperties implements JargonProperties {
 		this.intraFileStatusCallbacksTotalBytesInterval = intraFileStatusCallbacksTotalBytesInterval;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getNegotiationPolicy()
-	 */
 	@Override
 	public synchronized SslNegotiationPolicy getNegotiationPolicy() {
 		return negotiationPolicy;
 	}
 
-	/**
-	 * Sets the default negotiation policy for SSL, cannot be {@code null}
-	 *
-	 * @param negotiationPolicy
-	 *            {@link SslNegotiationPolicy}
-	 */
 	public synchronized void setNegotiationPolicy(final SslNegotiationPolicy negotiationPolicy) {
 		if (negotiationPolicy == null) {
 			throw new IllegalArgumentException("null negotiationPolicy");
@@ -1143,14 +800,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.negotiationPolicy = negotiationPolicy;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 *
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionAlgorithmEnum
-	 * ()
-	 */
 	@Override
 	public synchronized EncryptionAlgorithmEnum getEncryptionAlgorithmEnum() {
 		return encryptionAlgorithmEnum;
@@ -1160,11 +809,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encryptionAlgorithmEnum = encryptionAlgorithmEnum;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#getEncryptionKeySize()
-	 */
 	@Override
 	public synchronized int getEncryptionKeySize() {
 		return encryptionKeySize;
@@ -1174,12 +818,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encryptionKeySize = encryptionKeySize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * org.irods.jargon.core.connection.JargonProperties#getEncryptionSaltSize()
-	 */
 	@Override
 	public synchronized int getEncryptionSaltSize() {
 		return encryptionSaltSize;
@@ -1189,12 +827,6 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encryptionSaltSize = encryptionSaltSize;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#
-	 * getEncryptionNumberHashRounds()
-	 */
 	@Override
 	public synchronized int getEncryptionNumberHashRounds() {
 		return encryptionNumberHashRounds;
@@ -1204,59 +836,33 @@ public class SettableJargonProperties implements JargonProperties {
 		this.encryptionNumberHashRounds = encryptionNumberHashRounds;
 	}
 
-	/**
-	 *
-	 * @see org.irods.jargon.core.connection.JargonProperties#isBypassSslCertChecks()
-	 */
 	@Override
 	public synchronized boolean isBypassSslCertChecks() {
 		return bypassSslCertChecks;
 	}
 
-	/**
-	 * Set whether to bypass SslCertChecks.
-	 *
-	 * @param bypassSslCertChecks
-	 */
 	public synchronized void setBypassSslCertChecks(final boolean bypassSslCertChecks) {
 		this.bypassSslCertChecks = bypassSslCertChecks;
 	}
 
-	/**
-	 * @return the defaultIrodsRuleEngineIdentifier
-	 */
 	@Override
 	public String getDefaultIrodsRuleEngineIdentifier() {
 		return defaultIrodsRuleEngineIdentifier;
 	}
 
-	/**
-	 * @param defaultIrodsRuleEngineIdentifier
-	 *            the defaultIrodsRuleEngineIdentifier to set
-	 */
 	public void setDefaultIrodsRuleEngineIdentifier(final String defaultIrodsRuleEngineIdentifier) {
 		this.defaultIrodsRuleEngineIdentifier = defaultIrodsRuleEngineIdentifier;
 	}
 
-	/**
-	 * @return the defaultPythonRuleEngineIdentifier
-	 */
 	@Override
 	public String getDefaultPythonRuleEngineIdentifier() {
 		return defaultPythonRuleEngineIdentifier;
 	}
 
-	/**
-	 * @param defaultPythonRuleEngineIdentifier
-	 *            the defaultPythonRuleEngineIdentifier to set
-	 */
 	public void setDefaultPythonRuleEngineIdentifier(final String defaultPythonRuleEngineIdentifier) {
 		this.defaultPythonRuleEngineIdentifier = defaultPythonRuleEngineIdentifier;
 	}
 
-	/**
-	 * @return the useNIOForParallelTransfers
-	 */
 	public boolean isUseNIOForParallelTransfers() {
 		return useNIOForParallelTransfers;
 	}
@@ -1275,14 +881,6 @@ public class SettableJargonProperties implements JargonProperties {
 		return this.rulesSetDestinationWhenAuto;
 	}
 
-	/**
-	 * Set whether the rule processing submits rules with a rule engine default
-	 * 
-	 * @param rulesSetDestinationWhenAuto
-	 *            <code>boolean</code> indicating whether the rule engine to process
-	 *            the rule should be specified in the rule invocation protocol
-	 *            message
-	 */
 	public void setRulesSetDestinationWhenAuto(final boolean rulesSetDestinationWhenAuto) {
 		this.rulesSetDestinationWhenAuto = rulesSetDestinationWhenAuto;
 	}

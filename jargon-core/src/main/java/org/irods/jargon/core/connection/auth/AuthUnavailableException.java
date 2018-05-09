@@ -14,6 +14,7 @@ public class AuthUnavailableException extends JargonException {
 
 	/**
 	 * @param message
+	 *            {@link String} that is the underlying error message
 	 */
 	public AuthUnavailableException(final String message) {
 		super(message);
@@ -21,7 +22,9 @@ public class AuthUnavailableException extends JargonException {
 
 	/**
 	 * @param message
+	 *            {@link String} that is the underlying error message
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 */
 	public AuthUnavailableException(final String message, final Throwable cause) {
 		super(message, cause);
@@ -29,6 +32,7 @@ public class AuthUnavailableException extends JargonException {
 
 	/**
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 */
 	public AuthUnavailableException(final Throwable cause) {
 		super(cause);
@@ -36,29 +40,34 @@ public class AuthUnavailableException extends JargonException {
 
 	/**
 	 * @param message
+	 *            {@link String} that is the underlying error message
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 * @param underlyingIRODSExceptionCode
+	 *            {@code int} with an iRODS response code
 	 */
-	public AuthUnavailableException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
 	/**
 	 * @param cause
+	 *            {@link Throwable} that is the underlying cause
 	 * @param underlyingIRODSExceptionCode
+	 *            {@code int} with an iRODS response code
 	 */
-	public AuthUnavailableException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
 	/**
 	 * @param message
+	 *            {@link String} that is the underlying error message
 	 * @param underlyingIRODSExceptionCode
+	 *            {@code int}
 	 */
-	public AuthUnavailableException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public AuthUnavailableException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

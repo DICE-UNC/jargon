@@ -38,6 +38,7 @@ abstract class AuthMechanism {
 	 * Optional method that will be called before any startup pack is sent
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected void preConnectionStartup() throws JargonException {
 
@@ -48,6 +49,7 @@ abstract class AuthMechanism {
 	 * the actual authentication attempt, and before client/server negotiation
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected void postConnectionStartupPreAuthentication() throws JargonException {
 
@@ -58,9 +60,12 @@ abstract class AuthMechanism {
 	 * configuration and the settings in the {@code IRODSAccount} visible here.
 	 * 
 	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @return {@link StartupResponseData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected StartupResponseData clientServerNegotiationHook(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws JargonException {
@@ -106,8 +111,10 @@ abstract class AuthMechanism {
 	 * irods/lib/core/src/sockComm.cpp line 845
 	 *
 	 * @param irodsMidLevelProtocol
+	 *            {@link AbstractIRODSMidLevelProtocol}
 	 * @param irodsAccount
-	 * @return
+	 *            {@link IRODSAccount}
+	 * @return {@link StartupResponseData} with the result of the startup process
 	 * @throws JargonException
 	 */
 	private StartupResponseData clientServerNegotiation(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
@@ -186,7 +193,9 @@ abstract class AuthMechanism {
 	 *         method.
 	 *
 	 * @throws AuthenticationException
+	 *             for error in authentication
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected AbstractIRODSMidLevelProtocol authenticate(final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol,
 			final IRODSAccount irodsAccount) throws AuthenticationException, JargonException {
@@ -223,7 +232,9 @@ abstract class AuthMechanism {
 	 *         method.
 	 *
 	 * @throws AuthenticationException
+	 *             for auth error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected AbstractIRODSMidLevelProtocol processAfterAuthentication(
 			final AbstractIRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)
@@ -277,7 +288,9 @@ abstract class AuthMechanism {
 	 *            process
 	 * @return {@link AbstractIRODSMidLevelProtocol}
 	 * @throws AuthenticationException
+	 *             for auth error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected abstract AbstractIRODSMidLevelProtocol processAuthenticationAfterStartup(IRODSAccount irodsAccount,
 			AbstractIRODSMidLevelProtocol irodsMidLevelProtocol, final StartupResponseData startupResponseData)

@@ -12,58 +12,29 @@ package org.irods.jargon.core.exception;
  */
 public class FileDriverError extends InternalIrodsOperationException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -5370926952990437497L;
 
-	/**
-	 * @param message
-	 */
 	public FileDriverError(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public FileDriverError(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public FileDriverError(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public FileDriverError(final String message, final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public FileDriverError(final String message, final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	/**
-	 * @param cause
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public FileDriverError(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public FileDriverError(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	/**
-	 * @param message
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public FileDriverError(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public FileDriverError(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

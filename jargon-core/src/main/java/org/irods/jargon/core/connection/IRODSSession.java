@@ -175,6 +175,7 @@ public class IRODSSession {
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException {
 		TransferControlBlock transferControlBlock = DefaultTransferControlBlock.instance();
@@ -237,6 +238,7 @@ public class IRODSSession {
 	 * {@code ThreadLocal}
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public void closeSession() throws JargonException {
 		log.debug("closing all irods sessions");
@@ -308,6 +310,7 @@ public class IRODSSession {
 	 *            {@link IRODSProtocolManager} that is in charge of handing out
 	 *            connections
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public IRODSSession(final IRODSProtocolManager irodsConnectionManager) throws JargonException {
 
@@ -325,13 +328,15 @@ public class IRODSSession {
 	 * methods and a default constructor to make it easer to wire with dependency
 	 * injection. Look to see this deprecated.
 	 *
-	 * @param irodsConnectionManager
+	 * @param irodsProtocolHandler
+	 *            {@link IRODSProtocolManager} to create connections in the session
 	 * @return {@link IRODSSession}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
-	public static IRODSSession instance(final IRODSProtocolManager irodsConnectionManager) throws JargonException {
-		return new IRODSSession(irodsConnectionManager);
+	public static IRODSSession instance(final IRODSProtocolManager irodsProtocolHandler) throws JargonException {
+		return new IRODSSession(irodsProtocolHandler);
 	}
 
 	/**
@@ -346,6 +351,7 @@ public class IRODSSession {
 	 *         represents protocol level (above the socket level) communications to
 	 *         iRODS.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public AbstractIRODSMidLevelProtocol currentConnection(final IRODSAccount irodsAccount) throws JargonException {
 
@@ -404,7 +410,9 @@ public class IRODSSession {
 	 * @return {@link org.irods.jargon.core.connection.IRODSMidLevelProtocol} with a
 	 *         renewed connection
 	 * @throws AuthenticationException
+	 *             for auth error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public AbstractIRODSMidLevelProtocol currentConnectionCheckRenewalOfSocket(final IRODSAccount irodsAccount)
 			throws AuthenticationException, JargonException {
@@ -652,6 +660,7 @@ public class IRODSSession {
 	 *         transfers, or {@code null} if the pool is not configured in the
 	 *         jargon properties.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public ExecutorService getParallelTransferThreadPool() throws JargonException {
 		log.debug("getting the ParallelTransferThreadPool");
