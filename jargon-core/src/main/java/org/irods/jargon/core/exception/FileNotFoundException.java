@@ -12,29 +12,16 @@ package org.irods.jargon.core.exception;
  */
 public class FileNotFoundException extends JargonException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -4561596226207958550L;
 
-	/**
-	 * @param message
-	 */
 	public FileNotFoundException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public FileNotFoundException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public FileNotFoundException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
