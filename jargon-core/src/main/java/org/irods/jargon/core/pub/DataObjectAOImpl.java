@@ -1210,13 +1210,13 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *            of the transfer. The resource of the {@code IRODSFile} is
 	 *            controlling.
 	 * @param localFileToHoldData
-	 *            {@code File} which is the target of the transfer
-	 * @param {@link
-	 * 			TransferOptions} to control the transfer, or null if not
+	 *            {@link File} which is the target of the transfer
+	 * @param transferOptions
+	 *            {@link TransferOptions} to control the transfer, or null if not
 	 *            specified. Note that the {@code TransferOptions} object will be
 	 *            cloned, and as such the passed-in parameter will not be altered.
-	 * @return {@code int} that represents the handle (l1descInx) for the opened
-	 *         file, to be used for sending operation complete messages
+	 * @return <code>int</code> that represents the handle (l1descInx) for the
+	 *         opened file, to be used for sending operation complete messages
 	 * @throws JargonException
 	 */
 	int irodsDataObjectGetOperationForClientSideAction(final IRODSFile irodsFileToGet, final File localFileToHoldData,

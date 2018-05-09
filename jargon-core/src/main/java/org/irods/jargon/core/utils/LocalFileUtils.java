@@ -33,8 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class LocalFileUtils {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(LocalFileUtils.class);
+	public static final Logger log = LoggerFactory.getLogger(LocalFileUtils.class);
 
 	/**
 	 * private constructor, this is not meant to be an instantiated class.
@@ -44,8 +43,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff after the last '.' character to treat
-	 * as the file extension
+	 * Parse a file name to get the stuff after the last '.' character to treat as
+	 * the file extension
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
@@ -69,7 +68,7 @@ public class LocalFileUtils {
 	 * Normalize any Windows paths from \ separators to / separators
 	 *
 	 * @param inPath
-	 * @return
+	 * @return {@link String} with the normalized path
 	 */
 	public static String normalizePath(final String inPath) {
 
@@ -86,13 +85,13 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff before last '.' character to treat as
-	 * the file name
+	 * Parse a file name to get the stuff before last '.' character to treat as the
+	 * file name
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
-	 * @return {@code String} with the file name before the extension,
-	 *         without the '.'
+	 * @return {@code String} with the file name before the extension, without the
+	 *         '.'
 	 */
 	public static String getFileNameUpToExtension(final String fileName) {
 		if (fileName == null || fileName.isEmpty()) {
@@ -113,11 +112,9 @@ public class LocalFileUtils {
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out
-	 * @return {@code String} with the updated file name containing a time
-	 *         stamp
+	 * @return {@code String} with the updated file name containing a time stamp
 	 */
-	public static String getFileNameWithTimeStampInterposed(
-			final String fileName) {
+	public static String getFileNameWithTimeStampInterposed(final String fileName) {
 		String namePart = getFileNameUpToExtension(fileName);
 		String extension = getFileExtension(fileName);
 		StringBuilder newName = new StringBuilder(namePart);
@@ -166,25 +163,19 @@ public class LocalFileUtils {
 	 * @param localFileToHoldData
 	 * @throws JargonException
 	 */
-	public static void createLocalFileIfNotExists(final File localFileToHoldData)
-			throws JargonException {
+	public static void createLocalFileIfNotExists(final File localFileToHoldData) throws JargonException {
 		if (localFileToHoldData.exists()) {
-			log.info(
-					"local file exists, will not create the local file for {}",
-					localFileToHoldData.getAbsolutePath());
+			log.info("local file exists, will not create the local file for {}", localFileToHoldData.getAbsolutePath());
 		} else {
-			log.info(
-					"local file does not exist, will attempt to create local file: {}",
+			log.info("local file does not exist, will attempt to create local file: {}",
 					localFileToHoldData.getAbsolutePath());
 			try {
 				localFileToHoldData.createNewFile();
 			} catch (IOException e) {
-				log.error(
-						"IOException when trying to create a new file for the local output stream for {}",
+				log.error("IOException when trying to create a new file for the local output stream for {}",
 						localFileToHoldData.getAbsolutePath(), e);
 				throw new JargonException(
-						"IOException trying to create new file: "
-								+ localFileToHoldData.getAbsolutePath(), e);
+						"IOException trying to create new file: " + localFileToHoldData.getAbsolutePath(), e);
 			}
 		}
 	}
@@ -193,21 +184,19 @@ public class LocalFileUtils {
 	 * Compute a CRC32 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code long} with the file's checksum value
 	 * @throws JargonException
 	 */
-	public static long computeCRC32FileCheckSumViaAbsolutePath(
-			final String absolutePathToLocalFile) throws JargonException {
+	public static long computeCRC32FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
+			throws JargonException {
 
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
 		} catch (FileNotFoundException e1) {
-			throw new JargonException(
-					"error computing checksum, file not found:"
-							+ absolutePathToLocalFile, e1);
+			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
 		CheckedInputStream check = new CheckedInputStream(file, new CRC32());
@@ -216,8 +205,7 @@ public class LocalFileUtils {
 			while (in.read() != -1) {
 			}
 		} catch (IOException e) {
-			throw new JargonException("error computing checksum for file:"
-					+ absolutePathToLocalFile, e);
+			throw new JargonException("error computing checksum for file:" + absolutePathToLocalFile, e);
 		} finally {
 			try {
 				in.close();
@@ -234,29 +222,25 @@ public class LocalFileUtils {
 	 * Compute an SHA-256 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
-	public static byte[] computeSHA256FileCheckSumViaAbsolutePath(
-			final String absolutePathToLocalFile) throws JargonException {
+	public static byte[] computeSHA256FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
+			throws JargonException {
 
 		log.info("computeSHA256FileCheckSumViaAbsolutePath()");
 
-		if (absolutePathToLocalFile == null
-				|| absolutePathToLocalFile.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty absolutePathToLocalFile");
+		if (absolutePathToLocalFile == null || absolutePathToLocalFile.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePathToLocalFile");
 		}
 
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
 		} catch (FileNotFoundException e1) {
-			throw new JargonException(
-					"error computing checksum, file not found:"
-							+ absolutePathToLocalFile, e1);
+			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
 
@@ -297,21 +281,19 @@ public class LocalFileUtils {
 	 * Compute an MD5 checksum for a local file given an absolute path
 	 *
 	 * @param absolutePathToLocalFile
-	 *            {@code String} with absolute local file path under
-	 *            scratch (no leading '/')
+	 *            {@code String} with absolute local file path under scratch (no
+	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
 	 */
-	public static byte[] computeMD5FileCheckSumViaAbsolutePath(
-			final String absolutePathToLocalFile) throws JargonException {
+	public static byte[] computeMD5FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
+			throws JargonException {
 
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
 		} catch (FileNotFoundException e1) {
-			throw new JargonException(
-					"error computing checksum, file not found:"
-							+ absolutePathToLocalFile, e1);
+			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
 
@@ -349,8 +331,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a {@code String} representing hex characters (e.g. b1f0a2),
-	 * return the actual bytes represented by the hex value
+	 * Given a {@code String} representing hex characters (e.g. b1f0a2), return the
+	 * actual bytes represented by the hex value
 	 *
 	 * @param s
 	 *            {@code String} with the representation of the hex bytes
@@ -360,15 +342,14 @@ public class LocalFileUtils {
 		int len = s.length();
 		byte[] data = new byte[len / 2];
 		for (int i = 0; i < len; i += 2) {
-			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character
-					.digit(s.charAt(i + 1), 16));
+			data[i / 2] = (byte) ((Character.digit(s.charAt(i), 16) << 4) + Character.digit(s.charAt(i + 1), 16));
 		}
 		return data;
 	}
 
 	/**
-	 * Given a checksum digest as a {@code byte[]}, return a
-	 * {@code String} as used in iRODS packing instructions
+	 * Given a checksum digest as a {@code byte[]}, return a {@code String} as used
+	 * in iRODS packing instructions
 	 *
 	 * @param digestAsByteArray
 	 *            {@code byte[]} which is a checksum value
@@ -377,8 +358,7 @@ public class LocalFileUtils {
 	public static String digestByteArrayToString(final byte[] digestAsByteArray) {
 
 		if (digestAsByteArray == null) {
-			throw new IllegalArgumentException(
-					"unknown format, not recognized as an MD5 checksum in a byte array");
+			throw new IllegalArgumentException("unknown format, not recognized as an MD5 checksum in a byte array");
 		}
 
 		StringBuilder sb = new StringBuilder();
@@ -391,8 +371,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a path to a classpath resoruce, return that resource as a
-	 * {@code File}
+	 * Given a path to a classpath resoruce, return that resource as a {@code File}
 	 *
 	 * @param resourcePath
 	 *            {@code String} with an absolute path to a resource in the
@@ -400,8 +379,7 @@ public class LocalFileUtils {
 	 * @return {@code File} representing the resource in the classpath
 	 * @throws JargonException
 	 */
-	public static File getClasspathResourceAsFile(final String resourcePath)
-			throws JargonException {
+	public static File getClasspathResourceAsFile(final String resourcePath) throws JargonException {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourcePath");
@@ -426,25 +404,21 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Given a path to a classpath resource, return that resource data as a
-	 * string
+	 * Given a path to a classpath resource, return that resource data as a string
 	 *
 	 * @param resourcePath
 	 *            {@code String} for a classpath resource
 	 * @return {@code String} with the String value of that resource data
 	 * @throws JargonException
 	 */
-	public static String getClasspathResourceFileAsString(
-			final String resourcePath) throws JargonException {
+	public static String getClasspathResourceFileAsString(final String resourcePath) throws JargonException {
 
 		if (resourcePath == null || resourcePath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourcePath");
 		}
 
 		InputStreamReader resourceReader = new InputStreamReader(
-				new BufferedInputStream(
-						RuleProcessingAOImpl.class
-						.getResourceAsStream(resourcePath)));
+				new BufferedInputStream(RuleProcessingAOImpl.class.getResourceAsStream(resourcePath)));
 
 		StringWriter writer = null;
 		String ruleString = null;
@@ -477,11 +451,11 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Read the contents of a file into a byte array (be carefule not to read
-	 * big files!)
+	 * Read the contents of a file into a byte array (be carefule not to read big
+	 * files!)
 	 *
 	 * @param file
-	 * @return
+	 * @return <code>byte[]</code> with file contents
 	 * @throws IOException
 	 */
 	public static byte[] getBytesFromFile(final File file) throws IOException {
@@ -506,15 +480,13 @@ public class LocalFileUtils {
 			// Read in the bytes
 			int offset = 0;
 			int numRead = 0;
-			while (offset < bytes.length
-					&& (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
+			while (offset < bytes.length && (numRead = is.read(bytes, offset, bytes.length - offset)) >= 0) {
 				offset += numRead;
 			}
 
 			// Ensure all the bytes have been read in
 			if (offset < bytes.length) {
-				throw new IOException("Could not completely read file "
-						+ file.getName());
+				throw new IOException("Could not completely read file " + file.getName());
 			}
 		} finally {
 			// Close the input stream and return bytes

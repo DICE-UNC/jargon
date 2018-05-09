@@ -18,25 +18,25 @@ public interface ChecksumManager {
 	 *
 	 * @return {@link ChecksumEncodingEnum} used for the server
 	 * @throws JargonException
+	 *             for general error
 	 */
-	public abstract ChecksumEncodingEnum determineChecksumEncodingForTargetServer()
-			throws JargonException;
+	public abstract ChecksumEncodingEnum determineChecksumEncodingForTargetServer() throws JargonException;
 
 	/**
-	 * Using a value from iRODS describing a checksum on a file, determine the
-	 * type of encoding used. Note that if no checksum is present,
-	 * {@code null} will be returned
+	 * Using a value from iRODS describing a checksum on a file, determine the type
+	 * of encoding used. Note that if no checksum is present, {@code null} will be
+	 * returned
 	 *
 	 * @param irodsChecksumValue
-	 *            {@code String} with the checksum value from iRODS,
-	 *            potentially including a prefix
+	 *            {@code String} with the checksum value from iRODS, potentially
+	 *            including a prefix
 	 * @return {@link ChecksumValue} indicating the hashing algorithm used to
-	 *         determine the checksum and the actual value or {@code null}
-	 *         if no checksum available
+	 *         determine the checksum and the actual value or {@code null} if no
+	 *         checksum available
 	 * @throws ChecksumMethodUnavailableException
+	 *             for non-existent method
 	 */
-	public ChecksumValue determineChecksumEncodingFromIrodsData(
-			String irodsChecksumValue)
-					throws ChecksumMethodUnavailableException;
+	public ChecksumValue determineChecksumEncodingFromIrodsData(String irodsChecksumValue)
+			throws ChecksumMethodUnavailableException;
 
 }

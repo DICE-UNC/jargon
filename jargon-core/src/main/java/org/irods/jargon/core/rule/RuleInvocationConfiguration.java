@@ -157,7 +157,8 @@ public class RuleInvocationConfiguration {
 	 * 
 	 * @param jargonProperties
 	 *            {@link JargonProperties} that are binding
-	 * @return
+	 * @return {@link RuleInvocationConfiguration} that contains general parameter
+	 *         settings
 	 */
 	public static RuleInvocationConfiguration instanceWithDefaultAutoSettings(JargonProperties jargonProperties) {
 		if (jargonProperties == null) {

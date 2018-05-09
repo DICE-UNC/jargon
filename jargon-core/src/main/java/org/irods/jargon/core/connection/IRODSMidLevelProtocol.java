@@ -16,8 +16,8 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Note that the IRODS Connection object that this protocol utilizes is not
  * synchronized. Since a connection manager may also be managing the connection.
- * This {@code IRODSProtocol} object manages any necessary synchronization
- * on the connection to the underlying {@link IRODSBasicTCPConnection
+ * This {@code IRODSProtocol} object manages any necessary synchronization on
+ * the connection to the underlying {@link IRODSBasicTCPConnection
  * IRODSConnection} This connection should not be shared between threads. A rule
  * of thumb is to treat a connection to IRODS the same way you would treat a
  * JDBC database connection.
@@ -34,34 +34,32 @@ import org.slf4j.LoggerFactory;
  * There are several cooperating objects involved in obtaining a connection.
  * There is an {@link IRODSSession} object that maintains a ThreadLocal cache of
  * connections by account. Jargon asks for connections from the
- * {@code IRODSSession} when you create access objects or files. When you
- * call {@code close()} methods, you are actually telling
- * {@code IRODSSession} to close the connection on your behalf and remove
- * it from the cache. {@code IRODSSession} will tell the
- * {@link IRODSProtocolManager} that you are through with the connection. The
- * actual behavior of the {@code IRODSProtocolManager} depends on the
- * implementation. It may just close the connection at that point, or return it
- * to a pool or cache. When the {@code IRODSProtocolManager} does decide to
- * actually close a connection, it will call the {@code disconnect} method
- * here.
+ * {@code IRODSSession} when you create access objects or files. When you call
+ * {@code close()} methods, you are actually telling {@code IRODSSession} to
+ * close the connection on your behalf and remove it from the cache.
+ * {@code IRODSSession} will tell the {@link IRODSProtocolManager} that you are
+ * through with the connection. The actual behavior of the
+ * {@code IRODSProtocolManager} depends on the implementation. It may just close
+ * the connection at that point, or return it to a pool or cache. When the
+ * {@code IRODSProtocolManager} does decide to actually close a connection, it
+ * will call the {@code disconnect} method here.
  * <p>
  * If something bad happens on the network level (IOException like a broken
  * pipe), then it is doubtful that the iRODS disconnect sequence will succeed,
  * or that the connection to the agent is still reliable. In this case, it is
- * the responsibility of the {@code IRODSConnection} that is wrapped by
- * this class, to forcefully close the socket connection (without doing the
+ * the responsibility of the {@code IRODSConnection} that is wrapped by this
+ * class, to forcefully close the socket connection (without doing the
  * disconnect sequence), and to tell the {@code IRODSSession} to remove the
- * connection from the cache. {@code IRODSSession} also has a secondary
- * check when it hands out a connection to the caller, to make sure the returned
- * {@code IRODSCommands} object is connected. It does this by interrogating
- * the {@code isConnected()} method. In the future, or in alternative
+ * connection from the cache. {@code IRODSSession} also has a secondary check
+ * when it hands out a connection to the caller, to make sure the returned
+ * {@code IRODSCommands} object is connected. It does this by interrogating the
+ * {@code isConnected()} method. In the future, or in alternative
  * implementations, an actual ping could be made against the underlying
  * connection, but this is not currently done.
  * <p>
- * Bottom line, use the {@code IRODSSession} close methods. These are
- * exposed in the {@code IRODSFileSystem} and
- * {@code IRODSAccesObjectFactory} as well. Do not attempt to manipulate
- * the connection using the methods here!
+ * Bottom line, use the {@code IRODSSession} close methods. These are exposed in
+ * the {@code IRODSFileSystem} and {@code IRODSAccesObjectFactory} as well. Do
+ * not attempt to manipulate the connection using the methods here!
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
@@ -83,16 +81,16 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	@Override
 	protected void finalize() throws Throwable {
 		/*
-		 * Check if a still-connected agent connection is being finalized, and
-		 * nag in the log, then try and disconnect
+		 * Check if a still-connected agent connection is being finalized, and nag in
+		 * the log, then try and disconnect
 		 */
 		if (getIrodsConnection().isConnected()) {
 			log.error("**************************************************************************************");
 			log.error("********  WARNING: POTENTIAL CONNECTION LEAK  ******************");
-			log.error("********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
-			log.error("********  IRODSCommands is:{}", this);
 			log.error(
-					"********  connection is:{}, will attempt to disconnect and shut down any restart thread",
+					"********  finalizer has run and found a connection left opened, please check your code to ensure that all connections are closed");
+			log.error("********  IRODSCommands is:{}", this);
+			log.error("********  connection is:{}, will attempt to disconnect and shut down any restart thread",
 					getIrodsConnection().getConnectionInternalIdentifier());
 			log.error("**************************************************************************************");
 			obliterateConnectionAndDiscardErrors();
@@ -107,8 +105,8 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	}
 
 	/**
-	 * Check server version and see if I need extra flushes for SSL processing
-	 * (for PAM). This is needed for PAM pre iRODS 3.3.
+	 * Check server version and see if I need extra flushes for SSL processing (for
+	 * PAM). This is needed for PAM pre iRODS 3.3.
 	 *
 	 * @return
 	 */
@@ -118,11 +116,10 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 			return true;
 		} else {
 
-			IrodsVersion currentVersion = new IrodsVersion(
-					getStartupResponseData().getRelVersion());
-			if (currentVersion.getMajor() == 4
-					&& currentVersion.getMinor() == 0) {
-				log.warn("using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
+			IrodsVersion currentVersion = new IrodsVersion(getStartupResponseData().getRelVersion());
+			if (currentVersion.getMajor() == 4 && currentVersion.getMinor() == 0) {
+				log.warn(
+						"using the pam flush behavior because of iRODS 4.0.X-ness - see https://github.com/DICE-UNC/jargon/issues/70");
 				return true;
 			} else {
 				return false;
@@ -133,18 +130,18 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Send the given iROD protocol request with any included binary data, and
-	 * return the iRODS response as a {@code Tag} object. This method has
-	 * detailed parameters, and there are other methods in the class with
-	 * simpler signatures that should be used.
+	 * return the iRODS response as a {@code Tag} object. This method has detailed
+	 * parameters, and there are other methods in the class with simpler signatures
+	 * that should be used.
 	 *
 	 * @param type
-	 *            {@code String} with the type of request, typically an
-	 *            iRODS protocol request
+	 *            {@code String} with the type of request, typically an iRODS
+	 *            protocol request
 	 * @param message
 	 *            {@code String} with an XML formatted messag
 	 * @param errorBytes
-	 *            {@code byte[]} with any error data to send to iRODS, can
-	 *            be set to {@code null}
+	 *            {@code byte[]} with any error data to send to iRODS, can be set to
+	 *            {@code null}
 	 * @param errorOffset
 	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
@@ -159,13 +156,12 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 *            {@code int} with the iRODS API number
 	 * @return {@link Tag}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	@Override
-	public synchronized Tag irodsFunction(final String type,
-			final String message, final byte[] errorBytes,
-			final int errorOffset, final int errorLength, final byte[] bytes,
-			final int byteOffset, final int byteBufferLength, final int intInfo)
-			throws JargonException {
+	public synchronized Tag irodsFunction(final String type, final String message, final byte[] errorBytes,
+			final int errorOffset, final int errorLength, final byte[] bytes, final int byteOffset,
+			final int byteBufferLength, final int intInfo) throws JargonException {
 
 		log.debug("calling irods function with byte array");
 
@@ -190,8 +186,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.getBytes(getEncoding()).length;
 			}
 
-			sendHeader(type, messageLength, errorLength, byteBufferLength,
-					intInfo);
+			sendHeader(type, messageLength, errorLength, byteBufferLength, intInfo);
 
 			if (getStartupResponseData() == null) {
 				log.debug("no ssl flush checking during negotiation");
@@ -222,18 +217,18 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 
 	/**
 	 * Send the given iROD protocol request with any included binary data, and
-	 * return the iRODS response as a {@code Tag} object. This method has
-	 * detailed parameters, and there are other methods in the class with
-	 * simpler signatures that should be used.
+	 * return the iRODS response as a {@code Tag} object. This method has detailed
+	 * parameters, and there are other methods in the class with simpler signatures
+	 * that should be used.
 	 *
 	 * @param type
-	 *            {@code String} with the type of request, typically an
-	 *            iRODS protocol request
+	 *            {@code String} with the type of request, typically an iRODS
+	 *            protocol request
 	 * @param message
 	 *            {@code String} with an XML formatted messag
 	 * @param errorBytes
-	 *            {@code byte[]} with any error data to send to iRODS, can
-	 *            be set to {@code null}
+	 *            {@code byte[]} with any error data to send to iRODS, can be set to
+	 *            {@code null}
 	 * @param errorOffset
 	 *            {@code int} with offset into the error data to send
 	 * @param errorLength
@@ -247,13 +242,12 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * @param intInfo
 	 *            {@code int} with the iRODS API number
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	@Override
-	public synchronized void irodsFunctionUnidirectional(final String type,
-			final byte[] message, final byte[] errorBytes,
-			final int errorOffset, final int errorLength, final byte[] bytes,
-			final int byteOffset, final int byteBufferLength, final int intInfo)
-			throws JargonException {
+	public synchronized void irodsFunctionUnidirectional(final String type, final byte[] message,
+			final byte[] errorBytes, final int errorOffset, final int errorLength, final byte[] bytes,
+			final int byteOffset, final int byteBufferLength, final int intInfo) throws JargonException {
 
 		log.debug("calling irods function with byte array");
 		log.debug("calling irods function with:{}", message);
@@ -274,8 +268,7 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 				messageLength = message.length;
 			}
 
-			sendHeader(type, messageLength, errorLength, byteBufferLength,
-					intInfo);
+			sendHeader(type, messageLength, errorLength, byteBufferLength, intInfo);
 
 			if (getStartupResponseData() == null) {
 				log.debug("no pam flush check during negotiation phase");
@@ -313,12 +306,10 @@ public class IRODSMidLevelProtocol extends AbstractIRODSMidLevelProtocol {
 	 * (java.lang.String, int, int, long, int)
 	 */
 	@Override
-	public void sendHeader(final String type, final int messageLength,
-			final int errorLength, final long byteStringLength,
-			final int intInfo) throws JargonException, IOException {
+	public void sendHeader(final String type, final int messageLength, final int errorLength,
+			final long byteStringLength, final int intInfo) throws JargonException, IOException {
 
-		byte[] header = createHeader(type, messageLength, errorLength,
-				byteStringLength, intInfo);
+		byte[] header = createHeader(type, messageLength, errorLength, byteStringLength, intInfo);
 
 		int len = header.length;
 

@@ -76,10 +76,10 @@ public class PipelineConfiguration {
 	 * {@code JargonProperties} at the time the connection is created.
 	 *
 	 * @param jargonProperties
+	 *            {@link JargonProperties}
 	 * @return {@link PipelineConfiguration}
 	 */
-	public static PipelineConfiguration instance(
-			final JargonProperties jargonProperties) {
+	public static PipelineConfiguration instance(final JargonProperties jargonProperties) {
 		return new PipelineConfiguration(jargonProperties);
 	}
 
@@ -90,56 +90,37 @@ public class PipelineConfiguration {
 		}
 
 		irodsSocketTimeout = jargonProperties.getIRODSSocketTimeout();
-		irodsParallelSocketTimeout = jargonProperties
-				.getIRODSParallelTransferSocketTimeout();
-		internalInputStreamBufferSize = jargonProperties
-				.getInternalInputStreamBufferSize();
-		internalOutputStreamBufferSize = jargonProperties
-				.getInternalOutputStreamBufferSize();
+		irodsParallelSocketTimeout = jargonProperties.getIRODSParallelTransferSocketTimeout();
+		internalInputStreamBufferSize = jargonProperties.getInternalInputStreamBufferSize();
+		internalOutputStreamBufferSize = jargonProperties.getInternalOutputStreamBufferSize();
 		internalCacheBufferSize = jargonProperties.getInternalCacheBufferSize();
-		sendInputStreamBufferSize = jargonProperties
-				.getSendInputStreamBufferSize();
-		localFileInputStreamBufferSize = jargonProperties
-				.getLocalFileInputStreamBufferSize();
-		localFileOutputStreamBufferSize = jargonProperties
-				.getLocalFileOutputStreamBufferSize();
-		inputToOutputCopyBufferByteSize = jargonProperties
-				.getInputToOutputCopyBufferByteSize();
+		sendInputStreamBufferSize = jargonProperties.getSendInputStreamBufferSize();
+		localFileInputStreamBufferSize = jargonProperties.getLocalFileInputStreamBufferSize();
+		localFileOutputStreamBufferSize = jargonProperties.getLocalFileOutputStreamBufferSize();
+		inputToOutputCopyBufferByteSize = jargonProperties.getInputToOutputCopyBufferByteSize();
 		instrument = jargonProperties.isInstrument();
 		reconnect = jargonProperties.isReconnect();
 		defaultEncoding = jargonProperties.getEncoding();
 		forcePamFlush = jargonProperties.isForcePamFlush();
 
 		parallelTcpKeepAlive = jargonProperties.isParallelTcpKeepAlive();
-		parallelTcpPerformancePrefsBandwidth = jargonProperties
-				.getParallelTcpPerformancePrefsBandwidth();
-		parallelTcpPerformancePrefsConnectionTime = jargonProperties
-				.getParallelTcpPerformancePrefsConnectionTime();
-		parallelTcpPerformancePrefsLatency = jargonProperties
-				.getParallelTcpPerformancePrefsLatency();
-		parallelTcpReceiveWindowSize = jargonProperties
-				.getParallelTcpReceiveWindowSize();
-		parallelTcpSendWindowSize = jargonProperties
-				.getParallelTcpSendWindowSize();
+		parallelTcpPerformancePrefsBandwidth = jargonProperties.getParallelTcpPerformancePrefsBandwidth();
+		parallelTcpPerformancePrefsConnectionTime = jargonProperties.getParallelTcpPerformancePrefsConnectionTime();
+		parallelTcpPerformancePrefsLatency = jargonProperties.getParallelTcpPerformancePrefsLatency();
+		parallelTcpReceiveWindowSize = jargonProperties.getParallelTcpReceiveWindowSize();
+		parallelTcpSendWindowSize = jargonProperties.getParallelTcpSendWindowSize();
 
 		primaryTcpKeepAlive = jargonProperties.isPrimaryTcpKeepAlive();
-		primaryTcpPerformancePrefsBandwidth = jargonProperties
-				.getPrimaryTcpPerformancePrefsBandwidth();
-		primaryTcpPerformancePrefsConnectionTime = jargonProperties
-				.getPrimaryTcpPerformancePrefsConnectionTime();
-		primaryTcpPerformancePrefsLatency = jargonProperties
-				.getPrimaryTcpPerformancePrefsLatency();
-		primaryTcpReceiveWindowSize = jargonProperties
-				.getPrimaryTcpReceiveWindowSize();
-		primaryTcpSendWindowSize = jargonProperties
-				.getPrimaryTcpSendWindowSize();
-		socketRenewalIntervalInSeconds = jargonProperties
-				.getSocketRenewalIntervalInSeconds();
+		primaryTcpPerformancePrefsBandwidth = jargonProperties.getPrimaryTcpPerformancePrefsBandwidth();
+		primaryTcpPerformancePrefsConnectionTime = jargonProperties.getPrimaryTcpPerformancePrefsConnectionTime();
+		primaryTcpPerformancePrefsLatency = jargonProperties.getPrimaryTcpPerformancePrefsLatency();
+		primaryTcpReceiveWindowSize = jargonProperties.getPrimaryTcpReceiveWindowSize();
+		primaryTcpSendWindowSize = jargonProperties.getPrimaryTcpSendWindowSize();
+		socketRenewalIntervalInSeconds = jargonProperties.getSocketRenewalIntervalInSeconds();
 		negotiationPolicy = jargonProperties.getNegotiationPolicy();
 		encryptionAlgorithmEnum = jargonProperties.getEncryptionAlgorithmEnum();
 		encryptionKeySize = jargonProperties.getEncryptionKeySize();
-		encryptionNumberHashRounds = jargonProperties
-				.getEncryptionNumberHashRounds();
+		encryptionNumberHashRounds = jargonProperties.getEncryptionNumberHashRounds();
 		encryptionSaltSize = jargonProperties.getEncryptionSaltSize();
 
 	}
@@ -215,19 +196,19 @@ public class PipelineConfiguration {
 	}
 
 	/**
-	 * @return {@code boolean} indicates whether to reconnect to avoid some
-	 *         firewall issues. This is equivalent to the -T option on the
-	 *         put/get operations in iCommands
+	 * @return {@code boolean} indicates whether to reconnect to avoid some firewall
+	 *         issues. This is equivalent to the -T option on the put/get operations
+	 *         in iCommands
 	 */
 	public boolean isReconnect() {
 		return reconnect;
 	}
 
 	/**
-	 * @return {@code boolean} indicates whether to incorporate detailed
-	 *         statistics in the DEBUG log regarding performance metrics, useful
-	 *         for tuning and optimization, with the potential to add overhead,
-	 *         so typically not suitable for production
+	 * @return {@code boolean} indicates whether to incorporate detailed statistics
+	 *         in the DEBUG log regarding performance metrics, useful for tuning and
+	 *         optimization, with the potential to add overhead, so typically not
+	 *         suitable for production
 	 */
 	public boolean isInstrument() {
 		return instrument;

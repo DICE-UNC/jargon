@@ -76,7 +76,8 @@ public class IRODSServerProperties {
 	 * Does the server (based on version) support metadata 'set' operations as
 	 * opposed to 'add'
 	 * 
-	 * @return
+	 * @return <code>boolean</code> indicating whether metadata 'set' semantics are
+	 *         supported
 	 */
 	public boolean isSupportsMetadataSet() {
 		boolean supports = false;
@@ -104,7 +105,8 @@ public class IRODSServerProperties {
 	/**
 	 * Does the server (based on version) support composable resources
 	 * 
-	 * @return
+	 * @return <code>boolean</code> indicating whether composable resources are
+	 *         supported
 	 */
 	public boolean isSupportsComposableResoures() {
 		boolean supports = false;

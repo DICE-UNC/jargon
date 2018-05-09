@@ -32,6 +32,27 @@ public class MiscIRODSUtilsTest {
 	}
 
 	@Test
+	public final void testHumanReadableByteCountKB() throws Exception {
+		long bytes = 1024 * 2;
+		String actual = MiscIRODSUtils.humanReadableByteCount(bytes);
+		Assert.assertEquals("2.0 kB", actual);
+	}
+
+	@Test
+	public final void testHumanReadableByteCountKB2() throws Exception {
+		long bytes = 1024 * 35;
+		String actual = MiscIRODSUtils.humanReadableByteCount(bytes);
+		Assert.assertEquals("35.0 kB", actual);
+	}
+
+	@Test
+	public final void testHumanReadableByteCountMB() throws Exception {
+		long bytes = 452984832;
+		String actual = MiscIRODSUtils.humanReadableByteCount(bytes);
+		Assert.assertEquals("432.0 MB", actual);
+	}
+
+	@Test
 	public final void testEscapedPasswordAllClean() throws Exception {
 		String password = "hello";
 		String actual = MiscIRODSUtils.escapePasswordChars(password);

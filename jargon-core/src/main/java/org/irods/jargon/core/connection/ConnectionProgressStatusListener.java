@@ -19,16 +19,15 @@ public interface ConnectionProgressStatusListener {
 	 * @param connectionProgressStatus
 	 *            {@link ConnectionProgressStatus} with callback information
 	 */
-	void connectionProgressStatusCallback(
-			final ConnectionProgressStatus connectionProgressStatus);
+	void connectionProgressStatusCallback(final ConnectionProgressStatus connectionProgressStatus);
 
 	/**
-	 * Method to directly send a status callback, appropriate for a final
-	 * callback, and bypassing any accumulators
+	 * Method to directly send a status callback, appropriate for a final callback,
+	 * and bypassing any accumulators
 	 *
 	 * @param connectionProgressStatus
+	 *            {@link ConnectionProgressStatus} with the status callback
 	 */
-	void finalConnectionProgressStatusCallback(
-			final ConnectionProgressStatus connectionProgressStatus);
+	void finalConnectionProgressStatusCallback(final ConnectionProgressStatus connectionProgressStatus);
 
 }

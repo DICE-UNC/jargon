@@ -27,15 +27,16 @@ public class IRODSConnectionFactoryProducingFactory {
 	}
 
 	/**
-	 * Given the {@code JargonProperties}, return the factory that will
-	 * create the networking layer
+	 * Given the {@code JargonProperties}, return the factory that will create the
+	 * networking layer
 	 *
 	 * @param jargonProperties
+	 *            {@link JargonProperties} used for the connection
 	 * @return {@link IRODSConnectionFactory}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSConnectionFactory instance(
-			final JargonProperties jargonProperties) throws JargonException {
+	public IRODSConnectionFactory instance(final JargonProperties jargonProperties) throws JargonException {
 		if (jargonProperties == null) {
 			throw new IllegalArgumentException("null jargonProperties");
 		}
@@ -43,8 +44,7 @@ public class IRODSConnectionFactoryProducingFactory {
 		if (jargonProperties.getConnectionFactory().equals("tcp")) {
 			return new IRODSTCPConnectionFactoryImpl();
 		} else {
-			throw new JargonException("unsupported connection factory type:"
-					+ jargonProperties.getConnectionFactory());
+			throw new JargonException("unsupported connection factory type:" + jargonProperties.getConnectionFactory());
 		}
 	}
 

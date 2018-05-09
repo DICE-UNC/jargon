@@ -92,7 +92,7 @@ public class ScratchFileUtils {
 	 * @param pathUnderScratch
 	 *            {@code String} giving the relative path of the file/directory
 	 *            underneath the scratch area (no leading / delim is necessary
-	 * @return
+	 * @return <code>boolean</code> if file exists in the scratch area
 	 */
 	public boolean checkIfFileExistsInScratch(final String pathUnderScratch) {
 		File targetFile = new File(testingProperties.getProperty(GENERATED_FILE_DIRECTORY_KEY) + pathUnderScratch);
@@ -187,7 +187,7 @@ public class ScratchFileUtils {
 	 *            leading '/')
 	 * 
 	 * @return {@code long} with the file's checksum value
-	 * @throws TestingUtilsException
+	 * @throws TestConfigurationException
 	 */
 	public long computeFileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
 			throws TestConfigurationException {

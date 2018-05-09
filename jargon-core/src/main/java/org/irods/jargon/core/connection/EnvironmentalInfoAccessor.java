@@ -19,12 +19,9 @@ import org.slf4j.LoggerFactory;
 public class EnvironmentalInfoAccessor {
 
 	private AbstractIRODSMidLevelProtocol irodsProtocol = null;
-	private final Logger log = LoggerFactory
-			.getLogger(EnvironmentalInfoAccessor.class);
+	private final Logger log = LoggerFactory.getLogger(EnvironmentalInfoAccessor.class);
 
-	public EnvironmentalInfoAccessor(
-			final AbstractIRODSMidLevelProtocol irodsProtocol)
-			throws JargonException {
+	public EnvironmentalInfoAccessor(final AbstractIRODSMidLevelProtocol irodsProtocol) throws JargonException {
 		if (irodsProtocol == null) {
 			throw new JargonException("null irodsProtocol");
 		}
@@ -36,24 +33,21 @@ public class EnvironmentalInfoAccessor {
 	}
 
 	/**
-	 * Class to access underlying {@code IRODSServerProperties}. Note that
-	 * this uses a caching optimization.
+	 * Class to access underlying {@code IRODSServerProperties}. Note that this uses
+	 * a caching optimization.
 	 *
 	 * @return {@link IRODSServerProperties}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSServerProperties getIRODSServerProperties()
-			throws JargonException {
+	public IRODSServerProperties getIRODSServerProperties() throws JargonException {
 		log.info("getting irods server properties");
 
 		log.debug("checking for cached properties...");
 
 		if (irodsProtocol.getIrodsSession() != null) {
-			IRODSServerProperties cached = irodsProtocol
-					.getIrodsSession()
-					.getDiscoveredServerPropertiesCache()
-					.retrieveIRODSServerProperties(
-							irodsProtocol.getIrodsAccount().getHost(),
+			IRODSServerProperties cached = irodsProtocol.getIrodsSession().getDiscoveredServerPropertiesCache()
+					.retrieveIRODSServerProperties(irodsProtocol.getIrodsAccount().getHost(),
 							irodsProtocol.getIrodsAccount().getZone());
 
 			if (cached != null) {
@@ -62,11 +56,9 @@ public class EnvironmentalInfoAccessor {
 			}
 		}
 
-		Tag response = irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ,
-				"", MiscSvrInfo.API_NBR);
+		Tag response = irodsProtocol.irodsFunction(IRODSConstants.RODS_API_REQ, "", MiscSvrInfo.API_NBR);
 		log.info("server response obtained");
-		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG)
-				.getIntValue();
+		int serverType = response.getTag(MiscSvrInfo.SERVER_TYPE_TAG).getIntValue();
 
 		IRODSServerProperties.IcatEnabled icatEnabled = null;
 		if (serverType == 1) {
@@ -75,24 +67,16 @@ public class EnvironmentalInfoAccessor {
 			icatEnabled = IRODSServerProperties.IcatEnabled.NO_ICAT;
 		}
 
-		int serverBootTime = response.getTag(MiscSvrInfo.SERVER_BOOT_TIME_TAG)
-				.getIntValue();
-		String relVersion = response.getTag(MiscSvrInfo.REL_VERSION_TAG)
-				.getStringValue();
-		String apiVersion = response.getTag(MiscSvrInfo.API_VERSION_TAG)
-				.getStringValue();
-		String rodsZone = response.getTag(MiscSvrInfo.RODS_ZONE_TAG)
-				.getStringValue();
-		IRODSServerProperties props = IRODSServerProperties.instance(
-				icatEnabled, serverBootTime, relVersion, apiVersion, rodsZone);
+		int serverBootTime = response.getTag(MiscSvrInfo.SERVER_BOOT_TIME_TAG).getIntValue();
+		String relVersion = response.getTag(MiscSvrInfo.REL_VERSION_TAG).getStringValue();
+		String apiVersion = response.getTag(MiscSvrInfo.API_VERSION_TAG).getStringValue();
+		String rodsZone = response.getTag(MiscSvrInfo.RODS_ZONE_TAG).getStringValue();
+		IRODSServerProperties props = IRODSServerProperties.instance(icatEnabled, serverBootTime, relVersion,
+				apiVersion, rodsZone);
 
 		if (irodsProtocol.getIrodsSession() != null) {
-			irodsProtocol
-					.getIrodsSession()
-					.getDiscoveredServerPropertiesCache()
-					.cacheIRODSServerProperties(
-							irodsProtocol.getIrodsAccount().getHost(),
-							irodsProtocol.getIrodsAccount().getZone(), props);
+			irodsProtocol.getIrodsSession().getDiscoveredServerPropertiesCache().cacheIRODSServerProperties(
+					irodsProtocol.getIrodsAccount().getHost(), irodsProtocol.getIrodsAccount().getZone(), props);
 			log.debug("cached the props for host and zone:{}", props);
 		}
 		return props;

@@ -16,8 +16,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	private static final long serialVersionUID = -2165721910428546185L;
 
 	/**
-	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the
-	 * iRODS.
+	 * Stores the org.ietf.jgss.GSSCredential, used in GSI connections to the iRODS.
 	 */
 	private transient final GSSCredential gssCredential;
 
@@ -46,17 +45,15 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * @param gssCredential
 	 *            {@link GSSCredential} for the user login
 	 * @param defaultStorageResource
-	 *            {@code String} with an optional (blank if not specified)
-	 *            default storage resource
+	 *            {@code String} with an optional (blank if not specified) default
+	 *            storage resource
 	 * @return {@link GSIIRODSAccount} for GSS login
 	 * @throws JargonException
 	 *             if there was an error creating the account
 	 */
-	public static GSIIRODSAccount instance(final String host, final int port,
-			final GSSCredential gssCredential,
+	public static GSIIRODSAccount instance(final String host, final int port, final GSSCredential gssCredential,
 			final String defaultStorageResource) throws JargonException {
-		return new GSIIRODSAccount(host, port, gssCredential,
-				defaultStorageResource);
+		return new GSIIRODSAccount(host, port, gssCredential, defaultStorageResource);
 	}
 
 	/**
@@ -72,8 +69,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 * @throws JargonException
 	 *             if there was an error creating the account
 	 */
-	private GSIIRODSAccount(final String host, final int port,
-			final GSSCredential gssCredential,
+	private GSIIRODSAccount(final String host, final int port, final GSSCredential gssCredential,
 			final String defaultStorageResource) throws JargonException {
 
 		super(host, port, "", "", "", "", defaultStorageResource);
@@ -86,8 +82,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 		try {
 			distinguishedName = gssCredential.getName().toString();
 		} catch (GSSException e) {
-			throw new JargonException(
-					"GSSException getting distinguished name", e);
+			throw new JargonException("GSSException getting distinguished name", e);
 		}
 		setAuthenticationScheme(AuthScheme.GSI);
 
@@ -95,6 +90,8 @@ public class GSIIRODSAccount extends IRODSAccount {
 
 	/**
 	 * If one exists, gets the GSSCredential used to make a GSI authentication.
+	 * 
+	 * @return {@link GSSCredential} used to sign on
 	 */
 	public GSSCredential getGSSCredential() {
 		return gssCredential;
@@ -108,16 +105,15 @@ public class GSIIRODSAccount extends IRODSAccount {
 	}
 
 	/**
-	 * @return the serverDistinguishedName provided by iRODS upon GSI
-	 *         authentication
+	 * @return the serverDistinguishedName provided by iRODS upon GSI authentication
 	 */
 	public String getServerDistinguishedName() {
 		return serverDistinguishedName;
 	}
 
 	/**
-	 * Set the distinguished name of the iRODS server (this is done by the
-	 * GSIAuth handler)
+	 * Set the distinguished name of the iRODS server (this is done by the GSIAuth
+	 * handler)
 	 *
 	 * @param serverDistinguishedName
 	 */
@@ -143,8 +139,7 @@ public class GSIIRODSAccount extends IRODSAccount {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
+	 * @see org.irods.jargon.core.connection.IRODSAccount#equals(java.lang.Object)
 	 */
 	@Override
 	public boolean equals(final Object obj) {
@@ -179,14 +174,13 @@ public class GSIIRODSAccount extends IRODSAccount {
 	 */
 	@Override
 	public int hashCode() {
-		return getHost().hashCode() + getPort()
-				+ getDistinguishedName().hashCode();
+		return getHost().hashCode() + getPort() + getDistinguishedName().hashCode();
 	}
 
 	/**
 	 * Returns a string representation of this file system object. The string is
-	 * formated according to the iRODS URI model. Note: the user password will
-	 * not be included in the URI.
+	 * formated according to the iRODS URI model. Note: the user password will not
+	 * be included in the URI.
 	 * <p>
 	 * This version using the user DN as the user name. This may change in the
 	 * future.

@@ -94,7 +94,6 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link IRODSGenQueryBuilder} that will be appended with the
 	 *            selects
 	 *
-	 * @return {@code String} with select statements for the domain object.
 	 */
 	void buildSelects(final IRODSGenQueryBuilder builder) throws JargonException {
 
@@ -623,7 +622,6 @@ public final class DataAOHelper extends AOHelper {
 	 * @param irodsCollectionAbsolutePath
 	 * @param dataName
 	 * @param builder
-	 * @return
 	 */
 	static void buildACLQueryForCollectionPathAndDataName(final String irodsCollectionAbsolutePath,
 			final String dataName, final IRODSGenQueryBuilder builder) throws JargonException {

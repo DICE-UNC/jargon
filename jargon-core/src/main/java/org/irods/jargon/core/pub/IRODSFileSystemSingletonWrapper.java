@@ -28,7 +28,6 @@ public final class IRODSFileSystemSingletonWrapper implements Serializable {
 	 * Obtain a singleton instance
 	 *
 	 * @return {@link IRODSFileSystem}
-	 * @throws JargonException
 	 */
 	public static synchronized IRODSFileSystem instance() {
 		if (irodsFileSystem == null) {

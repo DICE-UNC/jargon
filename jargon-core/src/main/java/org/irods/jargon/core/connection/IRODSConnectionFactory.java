@@ -25,18 +25,16 @@ public abstract class IRODSConnectionFactory {
 	 * Create the basic network layer connection to iRODS
 	 *
 	 * @param irodsAccount
-	 *            {@link IRODSAccount} describing the connection host and
-	 *            principal
+	 *            {@link IRODSAccount} describing the connection host and principal
 	 * @param irodsSession
 	 *            {@link IRODSSession} that is producing this connection
 	 * @param irodsProtocolManager
 	 *            {@link IRODSProtocolManager} that requested this connection
 	 * @return {@link AbstractConnection} implementation
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected abstract AbstractConnection instance(
-			final IRODSAccount irodsAccount, final IRODSSession irodsSession,
-			final IRODSProtocolManager irodsProtocolManager)
-			throws JargonException;
+	protected abstract AbstractConnection instance(final IRODSAccount irodsAccount, final IRODSSession irodsSession,
+			final IRODSProtocolManager irodsProtocolManager) throws JargonException;
 
 }
