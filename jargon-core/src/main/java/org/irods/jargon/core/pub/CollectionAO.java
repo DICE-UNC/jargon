@@ -181,12 +181,12 @@ public interface CollectionAO extends FileCatalogObjectAO {
 			boolean caseInsensitive) throws JargonQueryException, JargonException;
 
 	/**
-	 * Add AVU metadata for this collection. *
-	 * <p/>
+	 * Add AVU metadata for this collection.
+	 * <p>
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * that path, and is separate from metadata associated with the canonical file
 	 * path
-	 * <p/>
+	 * <p>
 	 * The new set method in this class may be preferable for later implementations.
 	 *
 	 * @param absolutePath
@@ -208,7 +208,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Add or set the metadata for the given collection. This follows the new
 	 * semantics of the imeta set command. This command can replace the add and
 	 * update semantics in many cases.
-	 * <p/>
+	 * <p>
 	 * 'set' modifies an AVU if it exists, or creates one if it does not. If the
 	 * AttName does not exist, or is used by multiple objects, the AVU for this
 	 * object is added. If the AttName is used only by this one object, the AVU
@@ -646,7 +646,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * that path, and is separate from metadata associated with the canonical file
 	 * path
-	 * <p/>
+	 * <p>
 	 * The new set method in this class may be preferable for later implementations.
 	 *
 	 *
@@ -678,7 +678,7 @@ public interface CollectionAO extends FileCatalogObjectAO {
 	 * Note that, in the case of a soft-linked path, the metadata is associated with
 	 * that path, and is separate from metadata associated with the canonical file
 	 * path
-	 * <p/>
+	 * <p>
 	 * The new set method in this class may be preferable for later implementations.
 	 *
 	 *

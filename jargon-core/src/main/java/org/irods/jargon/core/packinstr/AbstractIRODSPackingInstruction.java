@@ -42,13 +42,13 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 * internally by many packing instructions.
 	 *
 	 * @param kvps
-	 *            {@code List<KeyValuePair>} with the data to be formatted
-	 *            as key value pair tags.
+	 *            {@code List<KeyValuePair>} with the data to be formatted as key
+	 *            value pair tags.
 	 * @return {@code Tag} containing key value pairs.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected Tag createKeyValueTag(final List<KeyValuePair> kvps)
-			throws JargonException {
+	protected Tag createKeyValueTag(final List<KeyValuePair> kvps) throws JargonException {
 		/*
 		 * Must be like the following: <KeyValPair_PI> <ssLen>3</ssLen>
 		 * <keyWord>dataType</keyWord> <keyWord>destRescName</keyWord>
@@ -126,8 +126,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 		specCol.addTag("phyPath", specColInfo.getPhyPath());
 		specCol.addTag("cacheDir", specColInfo.getCacheDir());
-		specCol.addTag("cacheDirty",
-				String.valueOf(specColInfo.getCacheDirty()));
+		specCol.addTag("cacheDirty", String.valueOf(specColInfo.getCacheDirty()));
 		// FIXME: add create tag with int value and get rid of these valueOf
 		specCol.addTag("replNum", String.valueOf(specColInfo.getReplNum()));
 		return specCol;
@@ -139,17 +138,16 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	 * instructions.
 	 *
 	 * @param ivps
-	 *            {@code List<InxVal>} of data to be formatted as InxVal
-	 *            tags.
+	 *            {@code List<InxVal>} of data to be formatted as InxVal tags.
 	 * @return {@code Tag} with the InxVal formatted data.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected Tag createInxValueTag(final List<InxVal> ivps)
-			throws JargonException {
+	protected Tag createInxValueTag(final List<InxVal> ivps) throws JargonException {
 
 		/*
-		 * A key/value pair with an integer key and a string value #define
-		 * InxValPair_PI "int isLen; int *inx(isLen); str *svalue[isLen];"
+		 * A key/value pair with an integer key and a string value #define InxValPair_PI
+		 * "int isLen; int *inx(isLen); str *svalue[isLen];"
 		 */
 
 		if (ivps == null) {
@@ -207,12 +205,13 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 	}
 
 	/**
-	 * Abstract method returns the {@code Tag} structure for the given
-	 * packing instruction. Implemented by the specific subclass.
+	 * Abstract method returns the {@code Tag} structure for the given packing
+	 * instruction. Implemented by the specific subclass.
 	 *
 	 * @return {@link Tag} with the packing instruction as a nested array of tag
 	 *         objects.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public abstract Tag getTagValue() throws JargonException;
 
@@ -228,6 +227,7 @@ public abstract class AbstractIRODSPackingInstruction implements IRodsPI {
 
 	/**
 	 * @param apiNumber
+	 *            {@code int} with api numbrer
 	 */
 	protected void setApiNumber(final int apiNumber) {
 		this.apiNumber = apiNumber;

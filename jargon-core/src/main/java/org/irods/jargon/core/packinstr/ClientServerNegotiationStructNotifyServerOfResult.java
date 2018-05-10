@@ -12,8 +12,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE
  *
  */
-public class ClientServerNegotiationStructNotifyServerOfResult extends
-		AbstractIRODSPackingInstruction {
+public class ClientServerNegotiationStructNotifyServerOfResult extends AbstractIRODSPackingInstruction {
 
 	public enum Outcome {
 		CS_NEG_USE_TCP, CS_NEG_USE_SSL, CS_NEG_FAILURE
@@ -42,25 +41,23 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	 * @return {@link ClientServerNegotiationStructNotifyServerOfResult}
 	 */
 	public static ClientServerNegotiationStructNotifyServerOfResult instanceForFailure() {
-		return new ClientServerNegotiationStructNotifyServerOfResult(
-				STATUS_FAILURE, Outcome.CS_NEG_FAILURE.name());
+		return new ClientServerNegotiationStructNotifyServerOfResult(STATUS_FAILURE, Outcome.CS_NEG_FAILURE.name());
 	}
 
 	/**
 	 * Create an instance to send to iRODS
 	 *
 	 * @param status
+	 *            {@code int} with status to send
 	 * @param result
+	 *            {@code String} with result to send
 	 * @return {@link ClientServerNegotiationStructNotifyServerOfResult}
 	 */
-	public static ClientServerNegotiationStructNotifyServerOfResult instance(
-			final int status, final String result) {
-		return new ClientServerNegotiationStructNotifyServerOfResult(status,
-				result);
+	public static ClientServerNegotiationStructNotifyServerOfResult instance(final int status, final String result) {
+		return new ClientServerNegotiationStructNotifyServerOfResult(status, result);
 	}
 
-	private ClientServerNegotiationStructNotifyServerOfResult(final int status,
-			final String result) {
+	private ClientServerNegotiationStructNotifyServerOfResult(final int status, final String result) {
 
 		if (result == null || result.isEmpty()) {
 			throw new IllegalArgumentException("null or empty result");
@@ -95,8 +92,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ClientServerNegotiationStruct [status=").append(status)
-				.append(", ");
+		builder.append("ClientServerNegotiationStruct [status=").append(status).append(", ");
 		if (result != null) {
 			builder.append("result=").append(result);
 		}
@@ -120,8 +116,7 @@ public class ClientServerNegotiationStructNotifyServerOfResult extends
 		sb.append('=');
 		sb.append(result);
 		sb.append(';');
-		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status),
-				new Tag("result", sb.toString()) });
+		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status), new Tag("result", sb.toString()) });
 		return message;
 	}
 

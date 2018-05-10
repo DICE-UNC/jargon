@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Object to handle bundled file operations. This object contains functionality
- * similar to the iRODS <code>ibun</command> to transmit and register, or bundle
+ * similar to the iRODS <code>ibun</code> to transmit and register, or bundle
  * and receive files.
  *
  * @author Mike Conway - DICE (www.irods.org)

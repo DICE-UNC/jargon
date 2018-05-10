@@ -59,21 +59,20 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 	 * @param fileAbsolutePath
 	 *            {@code String} with the file absolute path.
 	 * @param lockType
+	 *            {@link LockType}
+	 * @param lockCommandType
 	 *            {@link LockCommandType}
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInpForFileLock instance(
-			final String fileAbsolutePath, final LockType lockType,
+	public static final DataObjInpForFileLock instance(final String fileAbsolutePath, final LockType lockType,
 			final LockCommandType lockCommandType) throws JargonException {
-		return new DataObjInpForFileLock(fileAbsolutePath, lockType,
-				lockCommandType, -1);
+		return new DataObjInpForFileLock(fileAbsolutePath, lockType, lockCommandType, -1);
 	}
 
-	private DataObjInpForFileLock(final String fileAbsolutePath,
-			final LockType lockType, final LockCommandType lockCommandType,
-			final int fd) throws JargonException {
+	private DataObjInpForFileLock(final String fileAbsolutePath, final LockType lockType,
+			final LockCommandType lockCommandType, final int fd) throws JargonException {
 
 		super();
 
@@ -99,14 +98,11 @@ public class DataObjInpForFileLock extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, 0) });
+		Tag message = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, 0) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		String lockTypeVal;

@@ -12,35 +12,19 @@ package org.irods.jargon.core.exception;
  */
 public class JargonRuntimeException extends RuntimeException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -187881112002016775L;
 
-	/**
-	 *
-	 */
 	public JargonRuntimeException() {
 	}
 
-	/**
-	 * @param message
-	 */
 	public JargonRuntimeException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public JargonRuntimeException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public JargonRuntimeException(final String message, final Throwable cause) {
 		super(message, cause);
 	}

@@ -28,22 +28,19 @@ public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 	 *
 	 * @param fileAbsolutePath
 	 *            {@code String} with the file absolute path.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInpForObjStat instance(
-			final String fileAbsolutePath) throws JargonException {
+	public static final DataObjInpForObjStat instance(final String fileAbsolutePath) throws JargonException {
 		return new DataObjInpForObjStat(fileAbsolutePath);
 	}
 
-	private DataObjInpForObjStat(final String fileAbsolutePath)
-			throws JargonException {
+	private DataObjInpForObjStat(final String fileAbsolutePath) throws JargonException {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"file absolute path is null or empty");
+			throw new IllegalArgumentException("file absolute path is null or empty");
 		}
 
 		this.fileAbsolutePath = fileAbsolutePath;
@@ -53,14 +50,11 @@ public class DataObjInpForObjStat extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, offset),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, operationType) });
+		Tag message = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, getFileAbsolutePath()), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, offset),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, operationType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		message.addTag(createKeyValueTag(kvps));

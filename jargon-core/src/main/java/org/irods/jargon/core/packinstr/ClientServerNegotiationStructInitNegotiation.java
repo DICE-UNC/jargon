@@ -15,8 +15,7 @@ import org.irods.jargon.core.exception.JargonException;
  * @author Mike Conway - DICE
  *
  */
-public class ClientServerNegotiationStructInitNegotiation extends
-		AbstractIRODSPackingInstruction {
+public class ClientServerNegotiationStructInitNegotiation extends AbstractIRODSPackingInstruction {
 
 	private int status = 0;
 	private SslNegotiationPolicy sslNegotiationPolicy = SslNegotiationPolicy.NO_NEGOTIATION;
@@ -26,8 +25,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	public static final int API_NBR = 0;
 	public static final String CS_NEG_RESULT_KW = "cs_neg_result_kw";
 
-	private ClientServerNegotiationStructInitNegotiation(final Tag tag)
-			throws ClientServerNegotiationException {
+	private ClientServerNegotiationStructInitNegotiation(final Tag tag) throws ClientServerNegotiationException {
 
 		if (tag == null) {
 			throw new IllegalArgumentException("Null tag");
@@ -42,20 +40,15 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		String sslNegResult = tag.getTag("result").getStringValue();
 
 		if (sslNegResult == null || sslNegResult.isEmpty()) {
-			throw new ClientServerNegotiationException(
-					"no ssl negotiation result found");
-		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE
-				.name())) {
+			throw new ClientServerNegotiationException("no ssl negotiation result found");
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_DONT_CARE.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_DONT_CARE);
-		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE
-				.name())) {
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REFUSE.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REFUSE);
-		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQUIRE
-				.name())) {
+		} else if (sslNegResult.equals(SslNegotiationPolicy.CS_NEG_REQUIRE.name())) {
 			setSslNegotiationPolicy(SslNegotiationPolicy.CS_NEG_REQUIRE);
 		} else {
-			throw new ClientServerNegotiationException(
-					"Unrecognized ssl negotiation response:" + sslNegResult);
+			throw new ClientServerNegotiationException("Unrecognized ssl negotiation response:" + sslNegResult);
 		}
 
 	}
@@ -64,11 +57,13 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	 * Create an instance of the struct based on deserializing the Tag structure
 	 *
 	 * @param tag
+	 *            {@link Tag} form of api call
 	 * @return {@link ClientServerNegotiationStructInitNegotiation}
 	 * @throws ClientServerNegotiationException
+	 *             for error in negotiation
 	 */
-	public static ClientServerNegotiationStructInitNegotiation instanceFromTag(
-			final Tag tag) throws ClientServerNegotiationException {
+	public static ClientServerNegotiationStructInitNegotiation instanceFromTag(final Tag tag)
+			throws ClientServerNegotiationException {
 
 		return new ClientServerNegotiationStructInitNegotiation(tag);
 
@@ -100,8 +95,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	 * @param sslNegotiationPolicy
 	 *            the sslNegotiationPolicy to set
 	 */
-	public void setSslNegotiationPolicy(
-			final SslNegotiationPolicy sslNegotiationPolicy) {
+	public void setSslNegotiationPolicy(final SslNegotiationPolicy sslNegotiationPolicy) {
 		this.sslNegotiationPolicy = sslNegotiationPolicy;
 	}
 
@@ -113,11 +107,9 @@ public class ClientServerNegotiationStructInitNegotiation extends
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ClientServerNegotiationStruct [status=").append(status)
-				.append(", ");
+		builder.append("ClientServerNegotiationStruct [status=").append(status).append(", ");
 		if (sslNegotiationPolicy != null) {
-			builder.append("sslNegotiationPolicy=")
-					.append(sslNegotiationPolicy);
+			builder.append("sslNegotiationPolicy=").append(sslNegotiationPolicy);
 		}
 		builder.append("]");
 		return builder.toString();
@@ -139,8 +131,7 @@ public class ClientServerNegotiationStructInitNegotiation extends
 		sb.append('=');
 		sb.append(sslNegotiationPolicy.name());
 		sb.append(';');
-		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status),
-				new Tag("result", sb.toString()) });
+		Tag message = new Tag(NEG_PI, new Tag[] { new Tag("status", status), new Tag("result", sb.toString()) });
 		return message;
 	}
 

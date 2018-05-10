@@ -13,58 +13,30 @@ package org.irods.jargon.core.exception;
  */
 public class InvalidResourceException extends ResourceHierarchyException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7796830852660980659L;
 
-	/**
-	 * @param message
-	 */
 	public InvalidResourceException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public InvalidResourceException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public InvalidResourceException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public InvalidResourceException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	/**
-	 * @param cause
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public InvalidResourceException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	/**
-	 * @param message
-	 * @param underlyingIRODSExceptionCode
-	 */
-	public InvalidResourceException(final String message,
-			final int underlyingIRODSExceptionCode) {
+	public InvalidResourceException(final String message, final int underlyingIRODSExceptionCode) {
 		super(message, underlyingIRODSExceptionCode);
 	}
 

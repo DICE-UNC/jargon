@@ -80,39 +80,38 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	/*
 	 * (Supported modes are:
 	 * 
-	 * READ 'r' Open for reading only; place the file pointer at the beginning
-	 * of the file.
+	 * READ 'r' Open for reading only; place the file pointer at the beginning of
+	 * the file.
 	 * 
-	 * READ_TRUNCATE 'r+' Open for reading and writing; place the file pointer
-	 * at the beginning of the file.
+	 * READ_TRUNCATE 'r+' Open for reading and writing; place the file pointer at
+	 * the beginning of the file.
 	 * 
-	 * WRITE 'w' Open for writing only; place the file pointer at the beginning
-	 * of the file. If the file does not exist, attempt to create it.
+	 * WRITE 'w' Open for writing only; place the file pointer at the beginning of
+	 * the file. If the file does not exist, attempt to create it.
 	 * 
-	 * WRITE_TRUNCATE 'w+' Open for reading and writing; place the file pointer
-	 * at the beginning of the file and truncate the file to zero length. If the
-	 * file does not exist, attempt to create it.
+	 * WRITE_TRUNCATE 'w+' Open for reading and writing; place the file pointer at
+	 * the beginning of the file and truncate the file to zero length. If the file
+	 * does not exist, attempt to create it.
 	 * 
-	 * READ_WRITE 'a' Open for writing only; place the file pointer at the end
-	 * of the file. If the file does not exist, attempt to create it.
+	 * READ_WRITE 'a' Open for writing only; place the file pointer at the end of
+	 * the file. If the file does not exist, attempt to create it.
 	 * 
-	 * READ_WRITE_CREATE_IF_NOT_EXISTS 'a+' Open for reading and writing; place
-	 * the file pointer at the end of the file. If the file does not exist,
-	 * attempt to create it.
+	 * READ_WRITE_CREATE_IF_NOT_EXISTS 'a+' Open for reading and writing; place the
+	 * file pointer at the end of the file. If the file does not exist, attempt to
+	 * create it.
 	 * 
 	 * WRITE_FAIL_IF_EXISTS 'x' Create and open for writing only; place the file
-	 * pointer at the beginning of the file. If the file already exists, the
-	 * fopen() call will fail by returning FALSE and generating an error of
-	 * level E_WARNING. If the file does not exist, attempt to create it. This
-	 * is equivalent to specifying O_EXCL|O_CREAT flags for the underlying
-	 * open(2) system call.
+	 * pointer at the beginning of the file. If the file already exists, the fopen()
+	 * call will fail by returning FALSE and generating an error of level E_WARNING.
+	 * If the file does not exist, attempt to create it. This is equivalent to
+	 * specifying O_EXCL|O_CREAT flags for the underlying open(2) system call.
 	 * 
-	 * READ_WRITE_FAIL_IF_EXISTS 'x+' Create and open for reading and writing;
-	 * place the file pointer at the beginning of the file. If the file already
-	 * exists, the fopen() call will fail by returning FALSE and generating an
-	 * error of level E_WARNING. If the file does not exist, attempt to create
-	 * it. This is equivalent to specifying O_EXCL|O_CREAT flags for the
-	 * underlying open(2) system call.
+	 * READ_WRITE_FAIL_IF_EXISTS 'x+' Create and open for reading and writing; place
+	 * the file pointer at the beginning of the file. If the file already exists,
+	 * the fopen() call will fail by returning FALSE and generating an error of
+	 * level E_WARNING. If the file does not exist, attempt to create it. This is
+	 * equivalent to specifying O_EXCL|O_CREAT flags for the underlying open(2)
+	 * system call.
 	 */
 
 	public enum OpenFlags {
@@ -135,8 +134,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	private boolean replicationToAll = false;
 	private TransferOptions transferOptions;
 	/**
-	 * Optional checksum value used for operations where a checksum validation
-	 * is requested. This will be the computed checksum of the file in question.
+	 * Optional checksum value used for operations where a checksum validation is
+	 * requested. This will be the computed checksum of the file in question.
 	 * <p>
 	 * Can be set to {@code null} if no checksum is specified
 	 */
@@ -144,9 +143,9 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Generic instance creation method with all constructor parameters. In this
-	 * class are {@code instance()} methods that are specific to the
-	 * desired operation, and are recommended. Some of these values are not used
-	 * in certain protocol operations.
+	 * class are {@code instance()} methods that are specific to the desired
+	 * operation, and are recommended. Some of these values are not used in certain
+	 * protocol operations.
 	 *
 	 * @param fileAbsolutePath
 	 *            {@code String} with the file absolute path.
@@ -162,35 +161,31 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the given resource.
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
 	 *
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instance(final String fileAbsolutePath,
-			final int createMode, final OpenFlags openFlags, final long offset,
-			final long dataSize, final String resource,
+	public static final DataObjInp instance(final String fileAbsolutePath, final int createMode,
+			final OpenFlags openFlags, final long offset, final long dataSize, final String resource,
 			final TransferOptions transferOptions) throws JargonException {
-		return new DataObjInp(fileAbsolutePath, createMode, openFlags, offset,
-				dataSize, resource, transferOptions);
+		return new DataObjInp(fileAbsolutePath, createMode, openFlags, offset, dataSize, resource, transferOptions);
 	}
 
 	/**
 	 * Specify a delete with the force option enabled
 	 *
 	 * @param fileAbsolutePath
-	 *            {@code String} with the absolute path to the file/data
-	 *            object to be deleted.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code String} with the absolute path to the file/data object to
+	 *            be deleted.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForDeleteWithNoForce(
-			final String fileAbsolutePath) throws JargonException {
-		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath,
-				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
+	public static final DataObjInp instanceForDeleteWithNoForce(final String fileAbsolutePath) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
 		dataObjInp.operationType = DEFAULT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(DELETE_FILE_API_NBR);
 		return dataObjInp;
@@ -200,16 +195,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Specify a delete with the force option enabled
 	 *
 	 * @param fileAbsolutePath
-	 *            {@code String} with the absolute path to the file/data
-	 *            object to be deleted.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code String} with the absolute path to the file/data object to
+	 *            be deleted.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForDeleteWithForce(
-			final String fileAbsolutePath) throws JargonException {
-		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
+	public static final DataObjInp instanceForDeleteWithForce(final String fileAbsolutePath) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
 		dataObjInp.forceOption = DataObjInp.ForceOptions.FORCE;
 		dataObjInp.operationType = DEFAULT_OPERATION_TYPE;
 		return dataObjInp;
@@ -221,14 +214,12 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param fileAbsolutePath
 	 *            {@code String} with the absolute file path to the iRODS
 	 *            file/collection to be moved
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForPhymove(
-			final String fileAbsolutePath) throws JargonException {
-		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath,
-				DEFAULT_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
+	public static final DataObjInp instanceForPhymove(final String fileAbsolutePath) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
 		dataObjInp.forceOption = DataObjInp.ForceOptions.FORCE;
 		dataObjInp.operationType = DEFAULT_OPERATION_TYPE;
 		return dataObjInp;
@@ -241,22 +232,19 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the absolute path of the irodsFile to
 	 *            replicate
 	 * @param resource
-	 *            {@code String} of the resource the file should be
-	 *            replicated to.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code String} of the resource the file should be replicated to
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForReplicate(
-			final String fileAbsolutePath, final String resource)
+	public static final DataObjInp instanceForReplicate(final String fileAbsolutePath, final String resource)
 			throws JargonException {
 
 		if (resource == null || resource.length() == 0) {
 			throw new JargonException("null or missing destination resource");
 		}
 
-		DataObjInp dataObjInp = DataObjInp.instance(fileAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, resource, null);
+		DataObjInp dataObjInp = DataObjInp.instance(fileAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resource, null);
 		dataObjInp.operationType = REPLICATE_OPERATION_TYPE;
 		dataObjInp.setApiNumber(REPLICATE_API_NBR);
 		return dataObjInp;
@@ -267,41 +255,42 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Replicate packing instruction for iRODS 4.1
 	 *
 	 * @param irodsFileAbsolutePath
+	 *            {@code String} with file path
 	 * @param targetResource
+	 *            {@code String} of the resource the file should be replicated to
 	 * @return {@link DataObjInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static DataObjInp instanceForReplicate410(
-			final String irodsFileAbsolutePath, final String targetResource)
+	public static DataObjInp instanceForReplicate410(final String irodsFileAbsolutePath, final String targetResource)
 			throws JargonException {
 		if (targetResource == null || targetResource.length() == 0) {
 			throw new JargonException("null or missing destination resource");
 		}
 
-		DataObjInp dataObjInp = DataObjInp.instance(irodsFileAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, targetResource, null);
+		DataObjInp dataObjInp = DataObjInp.instance(irodsFileAbsolutePath, 0, OpenFlags.READ, 0L, 0L, targetResource,
+				null);
 		dataObjInp.operationType = REPLICATE_OPERATION_TYPE;
 		dataObjInp.setApiNumber(REPLICATE_API_NBR_410);
 		return dataObjInp;
 	}
 
 	/**
-	 * Create an instance for replication of a file to a given resource group.
-	 * This will replicate to all resources in the resource group.
+	 * Create an instance for replication of a file to a given resource group. This
+	 * will replicate to all resources in the resource group.
 	 *
 	 * @param fileAbsolutePath
 	 *            {@code String} with the absolute path of the irodsFile to
 	 *            replicate
 	 * @param resourceGroup
-	 *            {@code String} of the resource group to which the file
-	 *            will be replicated. (Replicates to all members of the group).
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code String} of the resource group to which the file will be
+	 *            replicated. (Replicates to all members of the group).
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForReplicateToResourceGroup(
-			final String fileAbsolutePath, final String resourceGroup)
-			throws JargonException {
+	public static final DataObjInp instanceForReplicateToResourceGroup(final String fileAbsolutePath,
+			final String resourceGroup) throws JargonException {
 
 		if (resourceGroup == null || resourceGroup.length() == 0) {
 			throw new JargonException("null or missing resourceGroup");
@@ -311,8 +300,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null or missing fileAbsolutePath");
 		}
 
-		DataObjInp dataObjInp = DataObjInp.instance(fileAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, resourceGroup, null);
+		DataObjInp dataObjInp = DataObjInp.instance(fileAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resourceGroup, null);
 		dataObjInp.operationType = REPLICATE_OPERATION_TYPE;
 		dataObjInp.setApiNumber(REPLICATE_API_NBR);
 		dataObjInp.setReplicationToAll(true);
@@ -325,16 +313,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the protocol for a physical move operation.
 	 *
 	 * @param fileAbsolutePath
-	 *            {@code String} with the absolute path of the irodsFile to
-	 *            move
+	 *            {@code String} with the absolute path of the irodsFile to move
 	 * @param resource
-	 *            {@code String} of the resource the file should be moved
-	 *            to.
+	 *            {@code String} of the resource the file should be moved to.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForPhysicalMoveSpecifyingResource(
-			final String fileAbsolutePath, final String resource)
-			throws JargonException {
+	public static final DataObjInp instanceForPhysicalMoveSpecifyingResource(final String fileAbsolutePath,
+			final String resource) throws JargonException {
 
 		if (resource == null || resource.length() == 0) {
 			throw new JargonException("null or missing destination resource");
@@ -351,23 +337,22 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the protocol to compute a checksum
 	 *
 	 * @param dataObjectAbsolutePath
-	 *            {@code String} with the iRODS absolute file path for the
-	 *            data object upon which the checksum will be calculated.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code String} with the iRODS absolute file path for the data
+	 *            object upon which the checksum will be calculated.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForDataObjectChecksum(
-			final String dataObjectAbsolutePath) throws JargonException {
+	public static final DataObjInp instanceForDataObjectChecksum(final String dataObjectAbsolutePath)
+			throws JargonException {
 
 		if (dataObjectAbsolutePath == null || dataObjectAbsolutePath.isEmpty()) {
 			throw new JargonException("dataObjectAbsolutePath is empty");
 		}
 
-		log.info("creating dataObjInp for a checksum operation on file:{}",
-				dataObjectAbsolutePath);
-		DataObjInp dataObjInp = new DataObjInp(dataObjectAbsolutePath,
-				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, "", null);
+		log.info("creating dataObjInp for a checksum operation on file:{}", dataObjectAbsolutePath);
+		DataObjInp dataObjInp = new DataObjInp(dataObjectAbsolutePath, ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, "",
+				null);
 		dataObjInp.setApiNumber(CHECKSUM_API_NBR);
 		return dataObjInp;
 	}
@@ -376,21 +361,17 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the protocol for a file open operation.
 	 *
 	 * @param fileAbsolutePath
-	 *            {@code String} with the physical path of the file to
-	 *            open.
+	 *            {@code String} with the physical path of the file to open.
 	 * @param openFlags
 	 *            {@code OpenFlags} enum value.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForOpen(
-			final String fileAbsolutePath, final OpenFlags openFlags)
+	public static final DataObjInp instanceForOpen(final String fileAbsolutePath, final OpenFlags openFlags)
 			throws JargonException {
-		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath,
-				DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
-		if (openFlags == OpenFlags.WRITE
-				|| openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
+		DataObjInp dataObjInp = new DataObjInp(fileAbsolutePath, DEFAULT_CREATE_MODE, openFlags, 0L, 0L, "", null);
+		if (openFlags == OpenFlags.WRITE || openFlags == OpenFlags.WRITE_FAIL_IF_EXISTS
 				|| openFlags == OpenFlags.WRITE_TRUNCATE) {
 			dataObjInp.setOperationType(PUT_OPERATION_TYPE);
 		}
@@ -398,42 +379,38 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the proper packing instruction for the initial call that starts a
-	 * put operation. The iRODS response will indicate the mode for the actual
+	 * Create the proper packing instruction for the initial call that starts a put
+	 * operation. The iRODS response will indicate the mode for the actual
 	 * transmission (include the data in the byte stream, use parallel transfer,
-	 * etc). Jargon will interpret the guidance given by iRODS to effect the
-	 * actual data transmission.
+	 * etc). Jargon will interpret the guidance given by iRODS to effect the actual
+	 * data transmission.
 	 *
 	 * @param destinationAbsolutePath
 	 *            {@code String} with the absolute path to the file
 	 * @param length
 	 *            {@code long} with the length of the file
 	 * @param destinationResource
-	 *            {@code String} with the IRODS Resource where the file
-	 *            will be placed.
+	 *            {@code String} with the IRODS Resource where the file will be
+	 *            placed.
 	 * @param overwrite
-	 *            {@code boolean} that indicates that a force option will
-	 *            be used.
+	 *            {@code boolean} that indicates that a force option will be used.
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
 	 * @param execFlag
 	 *            {@code boolean} that indicates that the execBit should be
 	 *            preserved
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 *
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForInitialCallToPut(
-			final String destinationAbsolutePath, final long length,
-			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, final boolean execFlag)
-			throws JargonException {
+	public static final DataObjInp instanceForInitialCallToPut(final String destinationAbsolutePath, final long length,
+			final String destinationResource, final boolean overwrite, final TransferOptions transferOptions,
+			final boolean execFlag) throws JargonException {
 
-		if (destinationAbsolutePath == null
-				|| destinationAbsolutePath.isEmpty()) {
+		if (destinationAbsolutePath == null || destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
 		}
 
@@ -450,8 +427,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			createMode = EXEC_CREATE_MODE;
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				createMode, OpenFlags.READ_WRITE, 0L, length,
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath, createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -473,30 +449,26 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param length
 	 *            {@code long} with the length of the file
 	 * @param destinationResource
-	 *            {@code String} with the IRODS Resource where the file
-	 *            will be placed.
+	 *            {@code String} with the IRODS Resource where the file will be
+	 *            placed.
 	 * @param overwrite
-	 *            {@code boolean} that indicates that a force option will
-	 *            be used.
+	 *            {@code boolean} that indicates that a force option will be used.
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
 	 * @param execFlag
-	 *            {@code boolean} that indicates that the exec bit should
-	 *            be preserved
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code boolean} that indicates that the exec bit should be
+	 *            preserved
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForParallelPut(
-			final String destinationAbsolutePath, final long length,
-			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, final boolean execFlag)
-			throws JargonException {
+	public static final DataObjInp instanceForParallelPut(final String destinationAbsolutePath, final long length,
+			final String destinationResource, final boolean overwrite, final TransferOptions transferOptions,
+			final boolean execFlag) throws JargonException {
 
-		if (destinationAbsolutePath == null
-				|| destinationAbsolutePath.isEmpty()) {
+		if (destinationAbsolutePath == null || destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
 		}
 
@@ -513,8 +485,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			createMode = EXEC_CREATE_MODE;
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				createMode, OpenFlags.READ_WRITE, 0L, length,
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath, createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -530,40 +501,35 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create the proper packing instruction for a put operation. This method is
-	 * used for a response after calling
-	 * {@code instanceForInitialCallToPut()}, and is used when the data is
-	 * to be included in the binary response (e.g. no parallel file transfer or
-	 * other strategy required).
+	 * used for a response after calling {@code instanceForInitialCallToPut()}, and
+	 * is used when the data is to be included in the binary response (e.g. no
+	 * parallel file transfer or other strategy required).
 	 *
 	 * @param destinationAbsolutePath
 	 *            {@code String} with the absolute path to the file
 	 * @param length
 	 *            {@code long} with the length of the file
 	 * @param destinationResource
-	 *            {@code String} with the IRODS Resource where the file
-	 *            will be placed.
+	 *            {@code String} with the IRODS Resource where the file will be
+	 *            placed.
 	 * @param overwrite
-	 *            {@code boolean} that indicates that a force option will
-	 *            be used.
+	 *            {@code boolean} that indicates that a force option will be used.
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
 	 * @param execFlag
-	 *            {@code boolean} that indicates that the exec bit should
-	 *            be preserved
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code boolean} that indicates that the exec bit should be
+	 *            preserved
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForNormalPutStrategy(
-			final String destinationAbsolutePath, final long length,
-			final String destinationResource, final boolean overwrite,
-			final TransferOptions transferOptions, final boolean execFlag)
-			throws JargonException {
+	public static final DataObjInp instanceForNormalPutStrategy(final String destinationAbsolutePath, final long length,
+			final String destinationResource, final boolean overwrite, final TransferOptions transferOptions,
+			final boolean execFlag) throws JargonException {
 
-		if (destinationAbsolutePath == null
-				|| destinationAbsolutePath.isEmpty()) {
+		if (destinationAbsolutePath == null || destinationAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty destinationAbsolutePath");
 		}
 
@@ -580,8 +546,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			createMode = EXEC_CREATE_MODE;
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				createMode, OpenFlags.READ_WRITE, 0L, length,
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath, createMode, OpenFlags.READ_WRITE, 0L, length,
 				destinationResource, transferOptions);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(PUT_FILE_API_NBR);
@@ -594,13 +559,10 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		return dataObjInp;
 	}
 
-	public static final DataObjInp instanceForCopyDest(
-			final String destinationAbsolutePath,
-			final String destinationResource, final boolean overwrite)
-			throws JargonException {
-		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath,
-				ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L, destinationResource,
-				null);
+	public static final DataObjInp instanceForCopyDest(final String destinationAbsolutePath,
+			final String destinationResource, final boolean overwrite) throws JargonException {
+		DataObjInp dataObjInp = new DataObjInp(destinationAbsolutePath, ZERO_CREATE_MODE, OpenFlags.READ, 0L, 0L,
+				destinationResource, null);
 		dataObjInp.operationType = DataObjInp.COPY_FILE_DEST_OPERATION_TYPE;
 		if (overwrite) {
 			dataObjInp.setForceOption(ForceOptions.FORCE);
@@ -617,21 +579,20 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@code long} with the size of the data object to retrieve
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForGet(
-			final String sourceAbsolutePath, final long dataObjectSize,
+	public static final DataObjInp instanceForGet(final String sourceAbsolutePath, final long dataObjectSize,
 			final TransferOptions transferOptions) throws JargonException {
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
 			throw new JargonException("null or empty sourceAbsolutePath");
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
-				OpenFlags.READ, 0L, dataObjectSize, "", transferOptions);
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0, OpenFlags.READ, 0L, dataObjectSize, "",
+				transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
 
@@ -645,21 +606,20 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 * @param sourceAbsolutePath
 	 *            {@code String} with the absolute path to the file to get
 	 * @param resource
-	 *            {@code String} with the resource that contains the file
-	 *            that should be retrieved
+	 *            {@code String} with the resource that contains the file that
+	 *            should be retrieved
 	 * @param localPath
 	 *            {@code String} with the absolute path to the local file
 	 * @param transferOptions
 	 *            {@link TransferOptions} that configures details about the
-	 *            underlying technique used in the transfer. Can be set to null
-	 *            if not desired.
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            underlying technique used in the transfer. Can be set to null if
+	 *            not desired.
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInp instanceForGetSpecifyingResource(
-			final String sourceAbsolutePath, final String resource,
-			final String localPath, final TransferOptions transferOptions)
+	public static final DataObjInp instanceForGetSpecifyingResource(final String sourceAbsolutePath,
+			final String resource, final String localPath, final TransferOptions transferOptions)
 			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
@@ -671,12 +631,11 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (localPath == null) {
-			throw new IllegalArgumentException(
-					"localPath is null, set to spaces if not used");
+			throw new IllegalArgumentException("localPath is null, set to spaces if not used");
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, resource, transferOptions);
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resource,
+				transferOptions);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_FILE_API_NBR);
 		dataObjInp.setLocalPath(localPath);
@@ -685,20 +644,20 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create a packing instruction to inquire about the correct host to use for
-	 * a get. This supports re-routing a connection when data resides on a
-	 * different resource server.
+	 * Create a packing instruction to inquire about the correct host to use for a
+	 * get. This supports re-routing a connection when data resides on a different
+	 * resource server.
 	 *
 	 * @param sourceAbsolutePath
 	 *            {@code String} with the absolute path to the file to get
 	 * @param resource
-	 *            {@code String} with the resource that contains the file
-	 *            that should be retrieved
+	 *            {@code String} with the resource that contains the file that
+	 *            should be retrieved
 	 * @return {@link DataObjInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static DataObjInp instanceForGetHostForGet(
-			final String sourceAbsolutePath, final String resource)
+	public static DataObjInp instanceForGetHostForGet(final String sourceAbsolutePath, final String resource)
 			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
@@ -709,8 +668,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null resource");
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, resource, null);
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resource, null);
 		dataObjInp.operationType = GET_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_HOST_FOR_GET_API_NBR);
 
@@ -718,20 +676,20 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create a packing instruction to inquire about the correct host to use for
-	 * a put. This supports re-routing a connection when data resides on a
-	 * different resource server.
+	 * Create a packing instruction to inquire about the correct host to use for a
+	 * put. This supports re-routing a connection when data resides on a different
+	 * resource server.
 	 *
 	 * @param sourceAbsolutePath
 	 *            {@code String} with the absolute path to the file to put
 	 * @param resource
-	 *            {@code String} with the resource that contains the file
-	 *            that should be retrieved
+	 *            {@code String} with the resource that contains the file that
+	 *            should be retrieved
 	 * @return {@link DataObjInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static DataObjInp instanceForGetHostForPut(
-			final String sourceAbsolutePath, final String resource)
+	public static DataObjInp instanceForGetHostForPut(final String sourceAbsolutePath, final String resource)
 			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.isEmpty()) {
@@ -742,17 +700,15 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			throw new JargonException("null resource");
 		}
 
-		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0,
-				OpenFlags.READ, 0L, 0L, resource, null);
+		DataObjInp dataObjInp = new DataObjInp(sourceAbsolutePath, 0, OpenFlags.READ, 0L, 0L, resource, null);
 		dataObjInp.operationType = PUT_OPERATION_TYPE;
 		dataObjInp.setApiNumber(GET_HOST_FOR_PUT_API_NBR);
 
 		return dataObjInp;
 	}
 
-	private DataObjInp(final String fileAbsolutePath, final int createMode,
-			final OpenFlags openFlags, final long offset, final long dataSize,
-			final String resource, final TransferOptions transferOptions)
+	private DataObjInp(final String fileAbsolutePath, final int createMode, final OpenFlags openFlags,
+			final long offset, final long dataSize, final String resource, final TransferOptions transferOptions)
 			throws JargonException {
 
 		super();
@@ -773,8 +729,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		}
 
 		if (resource == null) {
-			throw new JargonException(
-					"resource is null, may be set to blank if not required");
+			throw new JargonException("resource is null, may be set to blank if not required");
 		}
 
 		if (openFlags == null) {
@@ -798,20 +753,16 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		int transferOptionsNumThreads = 0;
 
 		if (transferOptions != null) {
-			if (getApiNumber() == DataObjInp.PUT_FILE_API_NBR
-					|| getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
+			if (getApiNumber() == DataObjInp.PUT_FILE_API_NBR || getApiNumber() == DataObjInp.GET_FILE_API_NBR) {
 				transferOptionsNumThreads = transferOptions.getMaxThreads();
 			}
 		}
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(OBJ_PATH, getFileAbsolutePath()),
-				new Tag(CREATE_MODE, getCreateMode()),
-				new Tag(OPEN_FLAGS, tagOpenFlags),
-				new Tag(OFFSET, getOffset()),
-				new Tag(DATA_SIZE, getDataSize()),
-				new Tag(NUM_THREADS, transferOptionsNumThreads),
-				new Tag(OPR_TYPE, getOperationType()) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(OBJ_PATH, getFileAbsolutePath()), new Tag(CREATE_MODE, getCreateMode()),
+						new Tag(OPEN_FLAGS, tagOpenFlags), new Tag(OFFSET, getOffset()),
+						new Tag(DATA_SIZE, getDataSize()), new Tag(NUM_THREADS, transferOptionsNumThreads),
+						new Tag(OPR_TYPE, getOperationType()) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
@@ -823,8 +774,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 			kvps.add(KeyValuePair.instance(FORCE_FLAG_KW, ""));
 		}
 
-		if (getOperationType() == REPLICATE_OPERATION_TYPE
-				&& isReplicationToAll()) {
+		if (getOperationType() == REPLICATE_OPERATION_TYPE && isReplicationToAll()) {
 			kvps.add(KeyValuePair.instance(ALL, ""));
 		}
 
@@ -835,8 +785,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		// add a keyword tag for resource if a resource was given to the packing
 		// instruction.
 		if (getResource().length() > 0) {
-			if (getApiNumber() == DataObjInp.GET_FILE_API_NBR
-					|| getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
+			if (getApiNumber() == DataObjInp.GET_FILE_API_NBR || getApiNumber() == DataObjInp.GET_HOST_FOR_GET_API_NBR
 					|| getApiNumber() == DataObjInp.GET_HOST_FOR_PUT_API_NBR) {
 				kvps.add(KeyValuePair.instance(RESC_NAME, getResource()));
 			} else {
@@ -848,13 +797,8 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		return message;
 	}
 
-	/**
-	 * @param transferOptionsNumThreads
-	 * @param kvps
-	 * @throws JargonException
-	 */
-	private void processPutOperationKvps(final int transferOptionsNumThreads,
-			final List<KeyValuePair> kvps) throws JargonException {
+	private void processPutOperationKvps(final int transferOptionsNumThreads, final List<KeyValuePair> kvps)
+			throws JargonException {
 
 		if (transferOptions == null) {
 			kvps.add(KeyValuePair.instance(DATA_TYPE, DATA_TYPE_GENERIC));
@@ -876,8 +820,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 		if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()
 				|| transferOptions.isComputeChecksumAfterTransfer()) {
 			if (fileChecksumValue == null) {
-				throw new JargonException(
-						"no fileChecksumValue set, call the setter with the encoded checksum value");
+				throw new JargonException("no fileChecksumValue set, call the setter with the encoded checksum value");
 			}
 			log.info("local file checksum is:{}", getFileChecksumValue());
 
@@ -885,20 +828,14 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 
 			if (transferOptions.isComputeAndVerifyChecksumAfterTransfer()) {
 				log.info("adding kvps to compute and verify checksum");
-				kvps.add(KeyValuePair.instance("verifyChksum",
-						fileChecksumValue.getChecksumTransmissionFormat()));
+				kvps.add(KeyValuePair.instance("verifyChksum", fileChecksumValue.getChecksumTransmissionFormat()));
 			} else if (transferOptions.isComputeChecksumAfterTransfer()) {
 				log.info("adding dvp to compute checksum");
-				kvps.add(KeyValuePair.instance("regChksum",
-						fileChecksumValue.getChecksumTransmissionFormat()));
+				kvps.add(KeyValuePair.instance("regChksum", fileChecksumValue.getChecksumTransmissionFormat()));
 			}
 		}
 	}
 
-	/**
-	 * @return
-	 * @throws JargonException
-	 */
 	private int translateOpenFlagsValue() throws JargonException {
 		int tagOpenFlags = 0;
 

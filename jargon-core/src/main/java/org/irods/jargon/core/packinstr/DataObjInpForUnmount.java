@@ -18,12 +18,13 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 
 	private final String collectionToUnmountAbsolutePath;
 	private final String destResourceName;
-
 	private int operationType = 0;
 
 	/**
 	 * Create a packing instruction to unmount a special collection
-	 *
+	 * 
+	 * @param collectionToUnmountAbsolutePath
+	 *            {@code String} with iRODS path to unmount
 	 * @param destResourceName
 	 *            {@code String} with the absolute path for the mounted collection
 	 *            to be unmounted
@@ -75,15 +76,5 @@ public class DataObjInpForUnmount extends AbstractIRODSPackingInstruction {
 		message.addTag(createKeyValueTag(kvps));
 		return message;
 	}
-
-	/*
-	 * 
-	 * <DataObjInp_PI> <objPath>/test1/home/test1/linked</objPath>
-	 * <createMode>0</createMode> <openFlags>0</openFlags> <offset>0</offset>
-	 * <dataSize>0</dataSize> <numThreads>0</numThreads> <oprType>0</oprType>
-	 * <KeyValPair_PI> <ssLen>2</ssLen> <keyWord>collectionType</keyWord>
-	 * <keyWord>destRescName</keyWord> <svalue>unmount</svalue>
-	 * <svalue>test1-resc</svalue> </KeyValPair_PI> </DataObjInp_PI>
-	 */
 
 }
