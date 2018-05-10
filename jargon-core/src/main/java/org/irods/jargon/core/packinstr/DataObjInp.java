@@ -316,6 +316,7 @@ public class DataObjInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the absolute path of the irodsFile to move
 	 * @param resource
 	 *            {@code String} of the resource the file should be moved to.
+	 * @return {@link DataObjInp}
 	 * @throws JargonException
 	 *             for iRODS error
 	 */

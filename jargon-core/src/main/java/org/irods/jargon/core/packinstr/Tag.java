@@ -103,8 +103,8 @@ public class Tag implements Cloneable {
 			for (int i = 0; i < value.length(); i++) {
 				c = value.charAt(i);
 				/*
-				 * if I hit an & then consider this for the cache, and just dump
-				 * what was in the cache into the output buffer
+				 * if I hit an & then consider this for the cache, and just dump what was in the
+				 * cache into the output buffer
 				 */
 				if (c == '&') {
 					if (cache.length() > 0) {
@@ -113,8 +113,8 @@ public class Tag implements Cloneable {
 					cache.append(c);
 				} else if (c == ';') {
 					/*
-					 * a semi-colon will trigger evaluation of the cache if it
-					 * exists, otherwise, just dump it
+					 * a semi-colon will trigger evaluation of the cache if it exists, otherwise,
+					 * just dump it
 					 */
 					if (cache.length() > 0) {
 						cache.append(c);
@@ -124,9 +124,8 @@ public class Tag implements Cloneable {
 					}
 				} else {
 					/*
-					 * If I am caching (because I had a &) and this is not a
-					 * closing ; char, then put in the cache for eval later,
-					 * otherwise just dump it to the output buffer
+					 * If I am caching (because I had a &) and this is not a closing ; char, then
+					 * put in the cache for eval later, otherwise just dump it to the output buffer
 					 */
 					if (cache.length() > 0) {
 						cache.append(c);
@@ -229,11 +228,17 @@ public class Tag implements Cloneable {
 	}
 
 	/**
-	 * Get the {@code index}-th sub-tag, from the first level down, with
-	 * the name of {@code tagName}. Index count starts at zero.
+	 * Get the {@code index}-th sub-tag, from the first level down, with the name of
+	 * {@code tagName}. Index count starts at zero.
 	 *
 	 * So if tagname = taggy, and index = 2, get the 3rd subtag with the name of
 	 * 'taggy'.
+	 * 
+	 * @param tagName
+	 *            {@code String} with the name of the tag
+	 * @param index
+	 *            {@code int} with the index of the subtag
+	 * @return {@link Tag}
 	 */
 	public Tag getTag(final String tagName, final int index) {
 		if (tags == null) {
@@ -269,8 +274,10 @@ public class Tag implements Cloneable {
 	}
 
 	/**
-	 * Returns the values of this tags subtags. Which are probably more tags
-	 * unless we've finally reached a leaf.
+	 * Returns the values of this tags subtags. Which are probably more tags unless
+	 * we've finally reached a leaf.
+	 * 
+	 * @return {@code Object[]} at the tag location
 	 */
 	public Object[] getTagValues() {
 		if (tags == null) {
@@ -286,6 +293,11 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Convenience for addTag( new Tag(name, val) )
+	 * 
+	 * @param name
+	 *            {@code String} with the tag name
+	 * @param val
+	 *            {@code String} with the tag value
 	 */
 	public void addTag(final String name, final String val) {
 		addTag(new Tag(name, val));
@@ -352,8 +364,10 @@ public class Tag implements Cloneable {
 	}
 
 	/**
-	 * Outputs a string to send communications (function calls) to the iRODS
-	 * server. All values are strings
+	 * Outputs a string to send communications (function calls) to the iRODS server.
+	 * All values are strings
+	 * 
+	 * @return {@code String} with the parsed tag value
 	 */
 	public String parseTag() {
 		// If something isn't a string and you try to send a
@@ -408,6 +422,11 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Just a simple message to check if there was an error.
+	 * 
+	 * @param message
+	 *            {@link Tag}
+	 * @throws IOException
+	 *             for error check fail
 	 */
 	public static void status(final Tag message) throws IOException {
 		Tag s = message.getTag("status");
@@ -417,19 +436,23 @@ public class Tag implements Cloneable {
 	}
 
 	/**
-	 * Read the data buffer to discover the first tag. Fill the values of that
-	 * tag according to the above defined static final values.
-	 *
+	 * Read the data buffer to discover the first tag. Fill the values of that tag
+	 * according to the above defined static final values.
+	 * 
+	 * @param data
+	 *            {@code byte[]}
+	 * @param encoding
+	 *            {@code String}
+	 * @return {@link Tag}
 	 * @throws UnsupportedEncodingException
 	 *             shouldn't throw, already tested for
 	 */
-	public static Tag readNextTag(final byte[] data, final String encoding)
-			throws UnsupportedEncodingException {
+	public static Tag readNextTag(final byte[] data, final String encoding) throws UnsupportedEncodingException {
 		return readNextTag(data, true, encoding);
 	}
 
-	public static Tag readNextTag(final byte[] data, final boolean decode,
-			final String encoding) throws UnsupportedEncodingException {
+	public static Tag readNextTag(final byte[] data, final boolean decode, final String encoding)
+			throws UnsupportedEncodingException {
 		if (data == null) {
 			return null;
 		}
@@ -440,8 +463,7 @@ public class Tag implements Cloneable {
 		// had to find the end, sometimes '\n' is there, sometimes not.
 		// d = d.replaceAll(CLOSE_END_TAG + "\n", "" + CLOSE_END_TAG);
 		d = d.replaceAll(CLOSE_END_TAG_WITH_CR, CLOSE_END_TAG_STR);
-		int start = d.indexOf(OPEN_START_TAG), end = d.indexOf(CLOSE_START_TAG,
-				start);
+		int start = d.indexOf(OPEN_START_TAG), end = d.indexOf(CLOSE_START_TAG, start);
 		int offset = 0;
 		if (start < 0) {
 			return null;
@@ -457,8 +479,7 @@ public class Tag implements Cloneable {
 		Tag tag = new Tag(tagName);
 		offset = start + tagName.length() + 2;
 
-		while (d.indexOf(OPEN_START_TAG, offset) >= 0 && offset >= 0
-				&& offset < end) {
+		while (d.indexOf(OPEN_START_TAG, offset) >= 0 && offset >= 0 && offset < end) {
 			// send the rest of the bytes read
 			offset = readSubTag(tag, d, offset, decode);
 		}
@@ -469,12 +490,20 @@ public class Tag implements Cloneable {
 	/**
 	 * Read the data buffer to discover a sub tag. Fill the values of that tag
 	 * according to the above defined static final values.
-	 *
+	 * 
+	 * @param tag
+	 *            {@link Tag} to read
+	 * @param data
+	 *            {@code String} to put into the tag
+	 * @param offset
+	 *            {@code int} with offset into the tag data
+	 * @param decode
+	 *            {@code boolean}
 	 * @throws UnsupportedEncodingException
 	 *             shouldn't throw, already tested for
 	 */
-	private static int readSubTag(final Tag tag, final String data, int offset,
-			final boolean decode) throws UnsupportedEncodingException {
+	private static int readSubTag(final Tag tag, final String data, int offset, final boolean decode)
+			throws UnsupportedEncodingException {
 		// easier to just write a second slightly modified method
 		// instead of try to mix the two together,
 		// even though they are very similar.
@@ -498,8 +527,7 @@ public class Tag implements Cloneable {
 			subTag.setValue(data.substring(offset, end), decode);
 			return end + tagName.length() + 3; // endTagLocation + </endTag>
 		} else {
-			while (data.indexOf(OPEN_START_TAG, offset) >= 0 && offset >= 0
-					&& offset < end) {
+			while (data.indexOf(OPEN_START_TAG, offset) >= 0 && offset >= 0 && offset < end) {
 				// read the subTag, get new offset
 				offset = readSubTag(subTag, data, offset, decode);
 			}
@@ -509,6 +537,12 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Creates the KeyValPair_PI tag.
+	 * 
+	 * @param keyword
+	 *            {@code String} with the keyword
+	 * @param value
+	 *            {@code String} with the value
+	 * @return {@link Tag}
 	 */
 	public static Tag createKeyValueTag(final String keyword, final String value) {
 		return createKeyValueTag(new String[][] { { keyword, value } });
@@ -516,6 +550,10 @@ public class Tag implements Cloneable {
 
 	/**
 	 * Creates the KeyValPair_PI tag.
+	 * 
+	 * @param keyValue
+	 *            {@code String[][]} array with the kvps
+	 * @return {@link Tag}
 	 */
 	public static Tag createKeyValueTag(final String[][] keyValue) {
 		/*
@@ -525,8 +563,7 @@ public class Tag implements Cloneable {
 		 * <svalue>resourceB</svalue> <svalue></svalue> </KeyValPair_PI>
 		 */
 
-		Tag pair = new Tag(IRODSConstants.KeyValPair_PI, new Tag(
-				IRODSConstants.ssLen, 0));
+		Tag pair = new Tag(IRODSConstants.KeyValPair_PI, new Tag(IRODSConstants.ssLen, 0));
 		int i = 0, ssLength = 0;
 
 		// return the empty Tag

@@ -46,18 +46,19 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	private String arg9 = "";
 
 	/**
-	 * Generate the packing instruction suitable for adding the given user to
-	 * iRODS.
+	 * Generate the packing instruction suitable for adding the given user to iRODS.
 	 * <p>
-	 * Note that the user DN is not updated in this call, as there appears to be
-	 * bug where it gets truncated. The {@code UserAO} methods will instead add
-	 * a call to the equivalent of 'iadmin aua' to insert the user DN. See
-	 * comments for that class.
+	 * Note that the user DN is not updated in this call, as there appears to be bug
+	 * where it gets truncated. The {@code UserAO} methods will instead add a call
+	 * to the equivalent of 'iadmin aua' to insert the user DN. See comments for
+	 * that class.
 	 *
 	 * @param user
 	 *            {@link org.irods.jargon.core.pub.domain.User} to be added to
 	 *            iRODS.
+	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForAddUser(final User user) throws JargonException {
 
@@ -87,6 +88,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the data to be stored in the user comment.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForModifyUserComment(final String userName, final String comment)
 			throws JargonException {
@@ -104,8 +106,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Generate the packing instruction suitable for modifying the info
-	 * associated with the given user.
+	 * Generate the packing instruction suitable for modifying the info associated
+	 * with the given user.
 	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
@@ -113,6 +115,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the data to be stored in the user info.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForModifyUserInfo(final String userName, final String info)
 			throws JargonException {
@@ -136,6 +139,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the iRODS user name to be removed.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForDeleteUser(final String userName) throws JargonException {
 
@@ -156,6 +160,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code long} with the total (across resources) quota value
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS exception
 	 */
 	public static GeneralAdminInp instanceForSetUserQuotaTotal(final String userName, final long quotaValue)
 			throws JargonException {
@@ -181,6 +186,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaTotal(final String userGroupName, final long quotaValue)
 			throws JargonException {
@@ -203,10 +209,12 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userName
 	 *            {@code String} with the user name
 	 * @param resourceName
+	 *            {@code String} with the resource name
 	 * @param quotaValue
 	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             as iRODS error
 	 */
 	public static GeneralAdminInp instanceForSetUserQuotaForResource(final String userName, final String resourceName,
 			final long quotaValue) throws JargonException {
@@ -234,10 +242,12 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * @param userGroupName
 	 *            {@code String} with the user group name
 	 * @param resourceName
+	 *            {@code String} with the resource name
 	 * @param quotaValue
 	 *            {@code long} with the quota value for the given resource
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS exception
 	 */
 	public static GeneralAdminInp instanceForSetUserGroupQuotaForResource(final String userGroupName,
 			final String resourceName, final long quotaValue) throws JargonException {
@@ -263,6 +273,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             as iRODS exception
 	 */
 	public static GeneralAdminInp instanceForCalculateQuotaUsage() throws JargonException {
 		return new GeneralAdminInp("calculate-usage", BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK, BLANK,
@@ -270,8 +281,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Generate the packing instruction suitable for modifying the zone
-	 * associated with the given user.
+	 * Generate the packing instruction suitable for modifying the zone associated
+	 * with the given user.
 	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
@@ -279,6 +290,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the user's zone.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             as iRODS exception
 	 */
 	public static GeneralAdminInp instanceForModifyUserZone(final String userName, final String zone)
 			throws JargonException {
@@ -296,8 +308,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the iadmin command that is analogous to the aua command that adds
-	 * a user DN
+	 * Create the iadmin command that is analogous to the aua command that adds a
+	 * user DN
 	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name
@@ -305,6 +317,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the DN for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             as iRODS exception
 	 */
 	public static GeneralAdminInp instanceForModifyUserDN(final String userName, final String userDN)
 			throws JargonException {
@@ -322,8 +335,8 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create the iadmin command that is analogous to the rua command that
-	 * removes a user DN
+	 * Create the iadmin command that is analogous to the rua command that removes a
+	 * user DN
 	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name
@@ -331,6 +344,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the DN for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForRemoveUserDN(final String userName, final String userDN)
 			throws JargonException {
@@ -357,6 +371,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the user's password.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForModifyUserPasswordByAdmin(final String userName, final String password)
 			throws JargonException {
@@ -383,6 +398,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the user's password.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForModifyUserPassword(final String userName, final String password)
 			throws JargonException {
@@ -400,13 +416,13 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Create a packing instruction to add the given iRODS user group to the
-	 * zone
+	 * Create a packing instruction to add the given iRODS user group to the zone
 	 *
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForAddUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
@@ -420,15 +436,16 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to add a user to a given iRODS user group
 	 *
 	 * @param userGroupName
-	 *            {@code String} with the user group name to which the user will
-	 *            be added
+	 *            {@code String} with the user group name to which the user will be
+	 *            added
 	 * @param userName
 	 *            {@code String} user name to add to the group
 	 * @param zoneName
-	 *            {@code String} that is optional (set to blank or {@code null}
-	 *            if not applicable, that sets the zone for the user
+	 *            {@code String} that is optional (set to blank or {@code null} if
+	 *            not applicable, that sets the zone for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForAddUserToGroup(final String userGroupName, final String userName,
 			final String zoneName) throws JargonException {
@@ -456,15 +473,16 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 * Create the packing instruction to remove a user from a group
 	 *
 	 * @param userGroupName
-	 *            {@code String} with the user group name from which the user
-	 *            will be removed
+	 *            {@code String} with the user group name from which the user will
+	 *            be removed
 	 * @param userName
 	 *            {@code String} user name to remove
 	 * @param zoneName
-	 *            {@code String} that is optional (set to blank or {@code null}
-	 *            if not applicable, that sets the zone for the user
+	 *            {@code String} that is optional (set to blank or {@code null} if
+	 *            not applicable, that sets the zone for the user
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForRemoveUserFromGroup(final String userGroupName, final String userName,
 			final String zoneName) throws JargonException {
@@ -495,6 +513,7 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@link UserGroup} to remove
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForRemoveUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
@@ -505,16 +524,17 @@ public class GeneralAdminInp extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Generate the packing instruction suitable for modifying the type
-	 * associated with the given user.
+	 * Generate the packing instruction suitable for modifying the type associated
+	 * with the given user.
 	 *
 	 * @param userName
 	 *            {@code String} with the iRODS user name.
 	 * @param userType
-	 *            {@link org.irods.jargon.core.protovalues.UserTypeEnum} value
-	 *            for the user.
+	 *            {@link org.irods.jargon.core.protovalues.UserTypeEnum} value for
+	 *            the user.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GeneralAdminInp instanceForModifyUserType(final String userName, final UserTypeEnum userType)
 			throws JargonException {

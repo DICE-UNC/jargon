@@ -76,42 +76,38 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	 * statement
 	 *
 	 * @param args
-	 *            {@code List<String>} of arguments that match query
-	 *            parameters. Note that there may be a max of 10 parameters
-	 *            provided, or an error will result. This may be set to
-	 *            {@code null} if no parameters are passed in
+	 *            {@code List<String>} of arguments that match query parameters.
+	 *            Note that there may be a max of 10 parameters provided, or an
+	 *            error will result. This may be set to {@code null} if no
+	 *            parameters are passed in
 	 * @param queryOrAlias
-	 *            {@code String} with either the query alias, or a query
-	 *            that matches exactly to a query stored on the grid via the
-	 *            rods administrator.
+	 *            {@code String} with either the query alias, or a query that
+	 *            matches exactly to a query stored on the grid via the rods
+	 *            administrator.
 	 * @param maxRows
-	 *            {@code int} with the maximum number of rows to be
-	 *            returned.
+	 *            {@code int} with the maximum number of rows to be returned.
 	 * @param continueIndex
-	 *            {@code int} with the index passed back from a preceeding
-	 *            query
+	 *            {@code int} with the index passed back from a preceeding query
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
+	 * @return {@link SpecificQueryInp}
 	 */
-	public static final SpecificQueryInp instance(final List<String> args,
-			final String queryOrAlias, final int maxRows,
+	public static final SpecificQueryInp instance(final List<String> args, final String queryOrAlias, final int maxRows,
 			final int continueIndex, final String zoneHint) {
-		SpecificQueryInp specificQueryInp = new SpecificQueryInp(args,
-				queryOrAlias, maxRows, continueIndex, zoneHint);
+		SpecificQueryInp specificQueryInp = new SpecificQueryInp(args, queryOrAlias, maxRows, continueIndex, zoneHint);
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}
 
-	public static final SpecificQueryInp instanceForClose(
-			final SpecificQueryResultSet specificQueryResultSet) {
+	public static final SpecificQueryInp instanceForClose(final SpecificQueryResultSet specificQueryResultSet) {
 
 		if (specificQueryResultSet == null) {
 			throw new IllegalArgumentException("null specificQueryResultSet");
 		}
 
-		SpecificQueryInp specificQueryInp = new SpecificQueryInp(null, "close",
-				0, specificQueryResultSet.getContinuationIndex(), "");
+		SpecificQueryInp specificQueryInp = new SpecificQueryInp(null, "close", 0,
+				specificQueryResultSet.getContinuationIndex(), "");
 		specificQueryInp.setApiNumber(SPECIFIC_QUERY_API_NBR);
 		return specificQueryInp;
 	}
@@ -119,27 +115,25 @@ public class SpecificQueryInp extends AbstractIRODSPackingInstruction {
 	/**
 	 *
 	 * @param args
-	 *            {@code List<String>} of arguments that match query
-	 *            parameters. Note that there may be a max of 10 parameters
-	 *            provided, or an error will result. This may be set to
-	 *            {@code null} if no parameters are passed in
+	 *            {@code List<String>} of arguments that match query parameters.
+	 *            Note that there may be a max of 10 parameters provided, or an
+	 *            error will result. This may be set to {@code null} if no
+	 *            parameters are passed in
 	 * @param queryOrAlias
-	 *            <cod>String</code> with either the query alias, or a query
-	 *            that matches exactly to a query stored on the grid via the
-	 *            rods administrator.
+	 *            <cod>String</code> with either the query alias, or a query that
+	 *            matches exactly to a query stored on the grid via the rods
+	 *            administrator.
 	 * @param maxRows
-	 *            {@code int} with the maximum number of rows to be
-	 *            returned. Note that this will be ignored if the
-	 *            {@code autoClose} parameter is set to {@code true}
+	 *            {@code int} with the maximum number of rows to be returned. Note
+	 *            that this will be ignored if the {@code autoClose} parameter is
+	 *            set to {@code true}
 	 * @param continueIndexj
-	 *            {@code int} with the index passed back from a preceeding
-	 *            query
+	 *            {@code int} with the index passed back from a preceeding query
 	 * @param zoneHint
-	 *            {@code String} (optional, blank if not needed) zone hint
-	 *            for cross-zone invocation
+	 *            {@code String} (optional, blank if not needed) zone hint for
+	 *            cross-zone invocation
 	 */
-	private SpecificQueryInp(final List<String> args,
-			final String queryOrAlias, final int maxRows,
+	private SpecificQueryInp(final List<String> args, final String queryOrAlias, final int maxRows,
 			final int continueIndex, final String zoneHint) {
 
 		if (args == null) {

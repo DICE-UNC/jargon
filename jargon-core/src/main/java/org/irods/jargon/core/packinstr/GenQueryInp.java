@@ -47,6 +47,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	 * Return an instance of a query command that defaults to no partial start.
 	 *
 	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSGenQuery}
 	 * @param continueIndex
 	 *            {@code int} with a 0 or 1 to indicate continuation of a previous
 	 *            query that had more results
@@ -55,6 +56,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	 *            an optional zone for the query
 	 * @return {@code GenQueryInp} instance
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GenQueryInp instance(final TranslatedIRODSGenQuery translatedIRODSQuery, final int continueIndex,
 			final String zoneName) throws JargonException {
@@ -64,7 +66,9 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	/**
 	 * Static instance method for version of the packing instruction to close the
 	 * query down.
-	 *
+	 * 
+	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSGenQuery}
 	 * @param continueIndex
 	 *            {@code int} with value passed back from iRODS with the last query
 	 *            result.
@@ -80,11 +84,15 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	 * paging behavior.
 	 *
 	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIRODSGenQuery}
 	 * @param partialStartIndex
 	 *            {@code int} with the offset within the result set to start
 	 *            returning rows from
+	 * @param zoneName
+	 *            {@code String} with zone name
 	 * @return {@code GenQueryInp} instance
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static GenQueryInp instanceWithPartialStart(final TranslatedIRODSGenQuery translatedIRODSQuery,
 			final int partialStartIndex, final String zoneName) throws JargonException {
@@ -95,6 +103,8 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	 * Special private constructor builds the packing instruction when this is a
 	 * close of a result set that had been continued.
 	 *
+	 * @param translatedIRODSQuery
+	 *            {@link TranslatedIrodsQuery}
 	 * @param continueIndex
 	 *            {@code int} with value passed back from iRODS with the last query
 	 *            result.
@@ -151,6 +161,7 @@ public class GenQueryInp extends AbstractIRODSPackingInstruction implements IRod
 	 *         not been derived TODO: refactor out, possibly with a return container
 	 *         of multiple objects in getParsedTags()
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public TranslatedIRODSGenQuery getTranslatedIRODSQuery() throws JargonException {
 

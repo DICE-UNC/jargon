@@ -57,6 +57,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 * @return instance of {@code userAdminInp} packing instruction to change the
 	 *         password.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static UserAdminInp instanceForChangeUserPassword(final String userName, final String obfuscatedPassword)
 			throws JargonException {
@@ -80,6 +81,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 *            {@link UserGroup} to add
 	 * @return {@link UserAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static UserAdminInp instanceForAddUserGroup(final UserGroup userGroup) throws JargonException {
 		if (userGroup == null) {
@@ -100,6 +102,7 @@ public class UserAdminInp extends AbstractIRODSPackingInstruction {
 	 *            <code>String</code> with the zoneName to add
 	 * @return {@link UserAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static UserAdminInp instanceForAddUserToGroup(String userGroupName, String userName, String zoneName)
 			throws JargonException {

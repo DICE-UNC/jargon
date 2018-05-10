@@ -20,21 +20,18 @@ public class InxVal {
 	 * return a new instance
 	 *
 	 * @param name
-	 *            {@code String} with the 'key' value for this protocol
-	 *            element
+	 *            {@code String} with the 'key' value for this protocol element
 	 * @param value
-	 *            {@code String} with the value part for this protocol
-	 *            element
+	 *            {@code String} with the value part for this protocol element
 	 * @return {@code InxVal} as an immutable data object.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static InxVal instance(final Integer name, final String value)
-			throws JargonException {
+	public static InxVal instance(final Integer name, final String value) throws JargonException {
 		return new InxVal(name, value);
 	}
 
-	private InxVal(final Integer name, final String value)
-			throws JargonException {
+	private InxVal(final Integer name, final String value) throws JargonException {
 		if (name == null) {
 			throw new JargonException("name is null");
 		}

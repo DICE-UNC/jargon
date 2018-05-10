@@ -63,37 +63,15 @@ public class OpenedDataObjInp extends AbstractIRODSPackingInstruction {
 		return new OpenedDataObjInp(SEEK_API_NBR, offset, fileDescriptor, whence, 0L, false);
 	}
 
-	/**
-	 * Create a packing insruction for a file read operation
-	 *
-	 * @param fileDescriptor
-	 * @param length
-	 * @return {@link OpenedDataObjInp}
-	 */
 	public static final OpenedDataObjInp instanceForFileRead(final int fileDescriptor, final long length) {
 		return new OpenedDataObjInp(READ_API_NBR, 0L, fileDescriptor, 0, length, false);
 	}
 
-	/**
-	 * Create a packing instruction for a file write
-	 *
-	 * @param fileDescriptor
-	 * @param offset
-	 * @param length
-	 * @return {@link OpenedDataObjInp}
-	 */
 	public static final OpenedDataObjInp instanceForFileWrite(final int fileDescriptor, final long offset,
 			final long length) {
 		return new OpenedDataObjInp(WRITE_API_NBR, offset, fileDescriptor, 0, length, false);
 	}
 
-	/**
-	 *
-	 * @param fileDescriptor
-	 *            {@code int} that iRODS assigns to the file when opening.
-	 * @param length
-	 * @return {@link OpenedDataObjInp}
-	 */
 	public static final OpenedDataObjInp instanceForFilePut(final int fileDescriptor, final long length) {
 		return new OpenedDataObjInp(WRITE_API_NBR, 0L, fileDescriptor, 0, length, false);
 	}

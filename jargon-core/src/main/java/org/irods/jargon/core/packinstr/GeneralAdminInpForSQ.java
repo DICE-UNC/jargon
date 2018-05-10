@@ -34,19 +34,18 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 *            to be added to iRODS.
 	 * @return {@link GeneralAdminInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final GeneralAdminInpForSQ instanceForAddSpecificQuery(
-			final SpecificQueryDefinition specificQuery) throws JargonException {
+	public static final GeneralAdminInpForSQ instanceForAddSpecificQuery(final SpecificQueryDefinition specificQuery)
+			throws JargonException {
 
 		if (specificQuery == null) {
-			throw new IllegalArgumentException(
-					"null SpecificQueryDefinition object");
+			throw new IllegalArgumentException("null SpecificQueryDefinition object");
 		}
 		String query = specificQuery.getSql();
 		String alias = specificQuery.getAlias();
 
-		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(
-				query, alias, SQ_ADD);
+		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(query, alias, SQ_ADD);
 		return generalAdminInpForSQ;
 	}
 
@@ -55,9 +54,9 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 * (iadmin rsq)
 	 * <p>
 	 * NOTE: This method has the same effect as removing the Specific Query by
-	 * Alias. The server api does not accept both arguments for remove, and if
-	 * an SQL query string is provided for remove, it may have the affect of
-	 * removing more than this Specific Query object. <br>
+	 * Alias. The server api does not accept both arguments for remove, and if an
+	 * SQL query string is provided for remove, it may have the affect of removing
+	 * more than this Specific Query object. <br>
 	 * Use GeneralAdminInpForSQ.instanceForRemoveAllSpecificQueryBySQL for
 	 * explicitly removing Specific Queries by SQL query.
 	 *
@@ -66,14 +65,14 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 *            to be removed from iRODS.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
+	 *             for iRODS error
 	 *
 	 **/
-	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(
-			final SpecificQueryDefinition specificQuery) throws JargonException {
+	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQuery(final SpecificQueryDefinition specificQuery)
+			throws JargonException {
 
 		if (specificQuery == null) {
-			throw new IllegalArgumentException(
-					"null SpecificQueryDefinition object");
+			throw new IllegalArgumentException("null SpecificQueryDefinition object");
 		}
 
 		return instanceForRemoveSpecificQueryByAlias(specificQuery.getAlias());
@@ -87,17 +86,17 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the Specific Query alias identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
+	 *             for iRODS error
 	 *
 	 **/
-	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQueryByAlias(
-			final String alias) throws JargonException {
+	public static final GeneralAdminInpForSQ instanceForRemoveSpecificQueryByAlias(final String alias)
+			throws JargonException {
 
 		if ((alias == null) || (alias.isEmpty())) {
 			throw new IllegalArgumentException("null or missing alias name");
 		}
 
-		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(
-				BLANK, alias, SQ_RM);
+		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(BLANK, alias, SQ_RM);
 		return generalAdminInpForSQ;
 	}
 
@@ -106,48 +105,43 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 	 * (iadmin rsq)
 	 *
 	 * <p>
-	 * NOTE: This method will remove all Specific Queries whose SQL query
-	 * strings match the one provided
+	 * NOTE: This method will remove all Specific Queries whose SQL query strings
+	 * match the one provided
 	 *
 	 * @param query
-	 *            {@code String} with the Specific Query SQL query
-	 *            identifier.
+	 *            {@code String} with the Specific Query SQL query identifier.
 	 * @return {@link GeneralAdminInpForSQ}
 	 * @throws JargonException
+	 *             for iRODS error
 	 *
 	 **/
-	public static final GeneralAdminInpForSQ instanceForRemoveAllSpecificQueryBySQL(
-			final String query) throws JargonException {
+	public static final GeneralAdminInpForSQ instanceForRemoveAllSpecificQueryBySQL(final String query)
+			throws JargonException {
 
 		if ((query == null) || (query.isEmpty())) {
 			throw new IllegalArgumentException("null or missing SQL query");
 		}
 
-		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(
-				query, BLANK, SQ_RM);
+		GeneralAdminInpForSQ generalAdminInpForSQ = new GeneralAdminInpForSQ(query, BLANK, SQ_RM);
 		return generalAdminInpForSQ;
 	}
 
-	private GeneralAdminInpForSQ(final String query, final String alias,
-			final String action) {
+	private GeneralAdminInpForSQ(final String query, final String alias, final String action) {
 
 		// if this is an asq require both query and alias
 		// or if it is an rsq just query OR alias is required
 
 		if (action == SQ_ADD) {
 			if (query == null || query.isEmpty()) {
-				throw new IllegalArgumentException(
-						"null or missing SQL statement");
+				throw new IllegalArgumentException("null or missing SQL statement");
 			}
 
 			if (alias == null || alias.isEmpty()) {
 				throw new IllegalArgumentException("null or missing alias");
 			}
 		} else if (action == SQ_RM) {
-			if ((query == null || query.isEmpty())
-					&& (alias == null || alias.isEmpty())) {
-				throw new IllegalArgumentException(
-						"either sqlQuery or alias is required");
+			if ((query == null || query.isEmpty()) && (alias == null || alias.isEmpty())) {
+				throw new IllegalArgumentException("either sqlQuery or alias is required");
 			}
 		}
 
@@ -182,12 +176,10 @@ public class GeneralAdminInpForSQ extends AbstractIRODSPackingInstruction {
 			}
 		}
 
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(ARG0, getAction()),
-				new Tag(ARG1, ADMIN_OBJ), new Tag(ARG2, arg2),
-				new Tag(ARG3, arg3), new Tag(ARG4, BLANK),
-				new Tag(ARG5, BLANK), new Tag(ARG6, BLANK),
-				new Tag(ARG7, BLANK), new Tag(ARG8, BLANK),
-				new Tag(ARG9, BLANK) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(ARG0, getAction()), new Tag(ARG1, ADMIN_OBJ), new Tag(ARG2, arg2),
+						new Tag(ARG3, arg3), new Tag(ARG4, BLANK), new Tag(ARG5, BLANK), new Tag(ARG6, BLANK),
+						new Tag(ARG7, BLANK), new Tag(ARG8, BLANK), new Tag(ARG9, BLANK) });
 
 		return message;
 	}

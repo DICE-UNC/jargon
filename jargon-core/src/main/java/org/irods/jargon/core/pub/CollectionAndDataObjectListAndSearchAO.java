@@ -83,6 +83,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPath(final String absolutePathToParent,
 			final int partialStartIndex) throws FileNotFoundException, JargonException;
@@ -114,6 +115,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPath(final String absolutePathToParent,
 			final int partialStartIndex) throws FileNotFoundException, JargonException;
@@ -153,6 +155,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given path does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(final String absolutePathToParent)
 			throws FileNotFoundException, JargonException;
@@ -197,6 +200,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given path does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	PagingAwareCollectionListing listDataObjectsAndCollectionsUnderPathProducingPagingAwareCollectionListing(
 			String absolutePathToParent) throws FileNotFoundException, JargonException;
@@ -218,6 +222,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	int countDataObjectsAndCollectionsUnderPath(final String absolutePathToParent)
 			throws FileNotFoundException, JargonException;
@@ -236,10 +241,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @param searchTerm
 	 *            {@code String} that is the path search term, note that the "%" is
 	 *            added in the method and should not be provided as a parameter.
-	 * @return {@code List} of
-	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
-	 *         containing collections that match the search term * @throws
-	 *         JargonException
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
+	 *         containing collections that match the search term *
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(String searchTerm) throws JargonException;
 
@@ -247,9 +252,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any collections that have a match
 	 * on the search term. The typical case would be a search box on a form to find
 	 * all collections that have the given string.
-	 * <p>
+	 * 
 	 * Note that this will do a genquery like:
-	 * <p>
+	 * 
 	 *
 	 * <pre>
 	 * COL_COLL_NAME like '%thepathyougiveforsearch%'
@@ -262,10 +267,10 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            {@code int} with a partial start index of 0 or greater that
 	 *            indicates the offset into the returned results, suitable for
 	 *            paging.
-	 * @return {@code List} of
-	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
-	 *         containing collections that match the search term * @throws
-	 *         JargonException
+	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
+	 *         containing collections that match the search term *
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> searchCollectionsBasedOnName(String searchTerm, int partialStartIndex)
 			throws JargonException;
@@ -274,9 +279,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any data objects that have a match
 	 * on the given search term. The typical case would be a search box on a form to
 	 * find all data objects that have the given string in the name.
-	 * <p>
+	 * 
 	 * Note that this will do a genquery like:
-	 * <p>
+	 * 
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -291,6 +296,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(String searchTerm, int partialStartIndex)
 			throws JargonException;
@@ -299,9 +305,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * Provides a search capability to search for any data objects that have a match
 	 * on the given search term. The typical case would be a search box on a form to
 	 * find all data objects that have the given string in the name.
-	 * <p>
+	 * 
 	 * Note that this will do a genquery like:
-	 * <p>
+	 * 
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
@@ -314,6 +320,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> searchDataObjectsBasedOnName(String searchTerm) throws JargonException;
 
@@ -327,15 +334,15 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * called. The result collections can be inspected using the methods defined in
 	 * {@link org.irods.jargon.core.pub.domain.IRODSDomainObject} to see if more
 	 * results are available.
-	 * <p>
+	 *
 	 * Note that this will do a genquery like:
-	 * <p>
+	 * 
 	 *
 	 * <pre>
 	 * WHERE DATA_NAME LIKE '%searchTerm%'
 	 * </pre>
 	 *
-	 * <p>
+	 * 
 	 * Note that this method will compensate if strict ACL's are in place
 	 *
 	 * @param searchTerm
@@ -345,6 +352,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *         {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 *         containing data objects that match the search term
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> searchCollectionsAndDataObjectsBasedOnName(String searchTerm)
 			throws JargonException;
@@ -367,6 +375,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given objectAbsolutePath does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	Object getFullObjectForType(String objectAbsolutePath) throws FileNotFoundException, JargonException;
 
@@ -389,6 +398,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listCollectionsUnderPathWithPermissions(String absolutePathToParent,
 			int partialStartIndex) throws FileNotFoundException, JargonException;
@@ -401,7 +411,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * for each object. Clients of this method can inspect the returned results to
 	 * determine the position of each result and whether there are more records to
 	 * display.
-	 * <p>
+	 * 
 	 * This method is not a search method, it simply lists.
 	 *
 	 * @param absolutePathToParent
@@ -417,6 +427,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             exception if the given absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsUnderPathWithPermissions(String absolutePathToParent,
 			int partialStartIndex) throws FileNotFoundException, JargonException;
@@ -427,18 +438,18 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * that contains information about paging for each object, such as record count,
 	 * and whether this is the last record. This method adds the user ACL
 	 * information, which is derived from an extended query.
-	 * <p>
+	 * 
 	 * Note that there is an issue with GenQuery that makes it impossible to derive
 	 * user zone in this query. This is something that may be addressed by
 	 * converting the GenQuery to 'specific SQL query' at a later time. If zone
 	 * information is desired, it is recommended that the
 	 * {@code listPermissionsForDataObject()} in {@link DataObjectAO} and
 	 * {@code listPermissionsForCollection} in {@link CollectionAO} be consulted.
-	 * <p>
+	 * 
 	 * This method is meant for listings, or building trees. As such, it does not
 	 * show any information about replicas, rather, it groups the data by data
 	 * object path for all replicas.
-	 * <p>
+	 * 
 	 * Note that this collection is composed of a collection of objects for child
 	 * collections, and a collection of objects for child data objects
 	 * (subdirectories versus files). There are separate counts and 'isLastEntry'
@@ -462,6 +473,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the given absolutePathToParent does not exist
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPathWithPermissions(
 			String absolutePathToParent) throws FileNotFoundException, JargonException;
@@ -481,6 +493,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the file is not found
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	ObjStat retrieveObjectStatForPath(String irodsAbsolutePath) throws FileNotFoundException, JargonException;
 
@@ -496,7 +509,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *         containing information on the given file or directory at the given
 	 *         absolute path.
 	 * @throws FileNotFoundException
+	 *             if file missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	CollectionAndDataObjectListingEntry getCollectionAndDataObjectListingEntryAtGivenAbsolutePath(String absolutePath)
 			throws FileNotFoundException, JargonException;
@@ -518,6 +533,7 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 * @throws FileNotFoundException
 	 *             if the file is not found
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	ObjStat retrieveObjectStatForPathAndDataObjectName(String parentPath, String fileName)
 			throws FileNotFoundException, JargonException;
@@ -530,7 +546,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            {@code String} with the absolute path to an iRODS collection
 	 * @return {@code int} with the count of collections under the given path
 	 * @throws FileNotFoundException
+	 *             if file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	int countCollectionsUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
@@ -542,7 +560,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            {@code String} with the absolute path to an iRODS collection
 	 * @return {@code int} with the count of data objects under the given path
 	 * @throws FileNotFoundException
+	 *             if file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	int countDataObjectsUnderPath(String absolutePathToParent) throws FileNotFoundException, JargonException;
 
@@ -553,7 +573,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            {@link ObjStat} that describes the file
 	 * @return List of {@link CollectionAndDataObjectListingEntry}
 	 * @throws FileNotFoundException
+	 *             if file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
 	List<CollectionAndDataObjectListingEntry> listDataObjectsAndCollectionsUnderPath(ObjStat objStat)
@@ -572,7 +594,9 @@ public interface CollectionAndDataObjectListAndSearchAO extends IRODSAccessObjec
 	 *            {@code String} with the absolute path.
 	 * @return {@link ObjStat} associated witha path
 	 * @throws FileNotFoundException
+	 *             if file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	ObjStat retrieveObjectStatForPathWithHeuristicPathGuessing(final String irodsAbsolutePath)
 			throws FileNotFoundException, JargonException;

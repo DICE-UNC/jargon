@@ -26,19 +26,19 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 	private final long length;
 
 	/**
-	 * Static initializer creates a version of the packing instruction suitable
-	 * for reading the stream data
+	 * Static initializer creates a version of the packing instruction suitable for
+	 * reading the stream data
 	 *
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor bound to the stream
-	 *            in iRODS.
+	 *            {@code int} with the file descriptor bound to the stream in iRODS.
 	 * @param length
-	 *            {@code long} with the length of the stream data to be
-	 *            read
+	 *            {@code long} with the length of the stream data to be read
 	 * @return {@code FileReadInp} instance
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final FileReadInp instanceForReadStream(
-			final int fileDescriptor, final long length) throws JargonException {
+	public static final FileReadInp instanceForReadStream(final int fileDescriptor, final long length)
+			throws JargonException {
 		return new FileReadInp(FILE_READ_API_NBR, fileDescriptor, length);
 	}
 
@@ -46,27 +46,21 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 	 * Private constructor.
 	 *
 	 * @param apiNumber
-	 *            {@code int} with the appropriate API number for this
-	 *            invocation
+	 *            {@code int} with the appropriate API number for this invocation
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor bound to the stream
-	 *            in iRODS.
+	 *            {@code int} with the file descriptor bound to the stream in iRODS.
 	 * @param length
-	 *            {@code long} with the length of the stream data to be
-	 *            read
+	 *            {@code long} with the length of the stream data to be read
 	 */
-	private FileReadInp(final int apiNumber, final int fileDescriptor,
-			final long length) {
+	private FileReadInp(final int apiNumber, final int fileDescriptor, final long length) {
 		super();
 
 		if (fileDescriptor <= 0) {
-			throw new IllegalArgumentException(
-					"fileDescriptor is less than or equal to zero");
+			throw new IllegalArgumentException("fileDescriptor is less than or equal to zero");
 		}
 
 		if (length <= 0) {
-			throw new IllegalArgumentException(
-					"length is less than or equal to zero");
+			throw new IllegalArgumentException("length is less than or equal to zero");
 		}
 
 		this.fileDescriptor = fileDescriptor;
@@ -77,8 +71,7 @@ public class FileReadInp extends AbstractIRODSPackingInstruction {
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(FILE_INX, fileDescriptor), new Tag(LEN, length) });
+		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX, fileDescriptor), new Tag(LEN, length) });
 		return message;
 	}
 

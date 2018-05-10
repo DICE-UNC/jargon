@@ -41,48 +41,47 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	protected final transient IRODSGenQueryExecutor irodsGenQueryExecutor;
-	public static final Logger log = LoggerFactory
-			.getLogger(AbstractAuditAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(AbstractAuditAOImpl.class);
 
 	/**
 	 * Default constructor as invoked by {@link IRODSAccessObjectFactory}
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public AbstractAuditAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public AbstractAuditAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
-		irodsGenQueryExecutor = getIRODSAccessObjectFactory()
-				.getIRODSGenQueryExecutor(irodsAccount);
+		irodsGenQueryExecutor = getIRODSAccessObjectFactory().getIRODSGenQueryExecutor(irodsAccount);
 	}
 
 	/**
-	 * Get an individual audit action for afile, given that you know enough
-	 * fields to find the unique entry. This is sort of difficult (can can be
-	 * expensive) as there is not a unique index or generated id to an audit
-	 * event, so use sparingly.
+	 * Get an individual audit action for afile, given that you know enough fields
+	 * to find the unique entry. This is sort of difficult (can can be expensive) as
+	 * there is not a unique index or generated id to an audit event, so use
+	 * sparingly.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param auditActionCode
-	 *            {@code String} with the audited action code (the event
-	 *            type)
+	 *            {@code String} with the audited action code (the event type)
 	 * @param timeStampInIRODSFormat
-	 *            {@code String} with the time stamp (in irods format) that
-	 *            is associated with this event. Conveniently, the
-	 *            {@code AuditedAction} object returned from a query has
-	 *            this data in the correct format.
-	 * @return {@link AuditedAction} with available details about the audit
-	 *         event
+	 *            {@code String} with the time stamp (in irods format) that is
+	 *            associated with this event. Conveniently, the
+	 *            {@code AuditedAction} object returned from a query has this data
+	 *            in the correct format.
+	 * @return {@link AuditedAction} with available details about the audit event
 	 * @throws DataNotFoundException
 	 *             if the data object cannot be found
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected AuditedAction getAuditedActionForFile(final IRODSFile irodsFile,
-			final String auditActionCode, final String timeStampInIRODSFormat)
-					throws DataNotFoundException, JargonException {
+	protected AuditedAction getAuditedActionForFile(final IRODSFile irodsFile, final String auditActionCode,
+			final String timeStampInIRODSFormat) throws DataNotFoundException, JargonException {
 
 		log.info("getAuditedActionForDataObject()");
 
@@ -95,15 +94,13 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		}
 
 		if (timeStampInIRODSFormat == null || timeStampInIRODSFormat.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty timeStampInIRODSFormat");
+			throw new IllegalArgumentException("null or empty timeStampInIRODSFormat");
 		}
 
 		log.info("looking up data object id via objStat");
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
 
 		// make sure this special coll type has support
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
@@ -111,8 +108,7 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		// get the canonical path name as a collection parent and data name
 
 		// get absolute path to use for querying iCAT (could be a soft link)
-		String absPath = MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		String absPath = MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 
 		log.info("absPath for querying iCAT:{}", absPath);
 
@@ -121,40 +117,25 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_AUDIT_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_USER_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_AUDIT_COMMENT)
-									.addSelectAsGenQueryValue(
-											RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
-											.addSelectAsGenQueryValue(
-													RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
-													.addConditionAsGenQueryField(
-															RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
-															QueryConditionOperators.EQUAL, objStat.getDataId())
-															.addConditionAsGenQueryField(
-																	RodsGenQueryEnum.COL_AUDIT_ACTION_ID,
-																	QueryConditionOperators.EQUAL,
-																	String.valueOf(auditActionCode))
-																	.addConditionAsGenQueryField(
-																			RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-																			QueryConditionOperators.EQUAL,
-																			String.valueOf(timeStampInIRODSFormat))
-																			.addOrderByGenQueryField(
-																					RodsGenQueryEnum.COL_AUDIT_CREATE_TIME,
-																					OrderByType.ASC);
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_COMMENT)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_AUDIT_OBJ_ID, QueryConditionOperators.EQUAL,
+							objStat.getDataId())
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_AUDIT_ACTION_ID, QueryConditionOperators.EQUAL,
+							String.valueOf(auditActionCode))
+					.addConditionAsGenQueryField(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME, QueryConditionOperators.EQUAL,
+							String.valueOf(timeStampInIRODSFormat))
+					.addOrderByGenQueryField(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME, OrderByType.ASC);
 
 			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 			// GenQueryOrderByField.OrderByType.ASC);
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(1);
-			String zone = MiscIRODSUtils.getZoneInPath(objStat
-					.getAbsolutePath());
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(1);
+			String zone = MiscIRODSUtils.getZoneInPath(objStat.getAbsolutePath());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, 0, zone);
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
@@ -166,36 +147,33 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		/*
 		 * DataNotFoundException will be thrown if there was no result row
 		 */
-		return buildAuditedActionForResultRow(irodsFile,
-				resultSet.getFirstResult());
+		return buildAuditedActionForResultRow(irodsFile, resultSet.getFirstResult());
 
 	}
 
 	/**
-	 * List all audit records for a given file. This has a partial start index
-	 * for paging through very large data sets. The {@code AuditedAction}
-	 * objects contain information about 'more results' as well as sequence
-	 * numbers to aid in paging.
+	 * List all audit records for a given file. This has a partial start index for
+	 * paging through very large data sets. The {@code AuditedAction} objects
+	 * contain information about 'more results' as well as sequence numbers to aid
+	 * in paging.
 	 *
 	 * @param irodsFile
 	 *            {@link IRODSFile} that will be the target of the query
 	 * @param partialStart
-	 *            {@code int} that is 0 or an offset into the result set,
-	 *            for paging
+	 *            {@code int} that is 0 or an offset into the result set, for paging
 	 * @param numberOfResultsDesired
-	 *            {@code int} that indicates the number of results to
-	 *            return in one query
+	 *            {@code int} that indicates the number of results to return in one
+	 *            query
 	 *
-	 * @return {@code List} of {@link AuditedAction} with information about
-	 *         the audit history of the data object
+	 * @return {@code List} of {@link AuditedAction} with information about the
+	 *         audit history of the data object
 	 * @throws FileNotFoundException
 	 *             if file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected List<AuditedAction> findAllAuditRecordsForFile(
-			final IRODSFile irodsFile, final int partialStart,
-			final int numberOfResultsDesired) throws FileNotFoundException,
-			JargonException {
+	protected List<AuditedAction> findAllAuditRecordsForFile(final IRODSFile irodsFile, final int partialStart,
+			final int numberOfResultsDesired) throws FileNotFoundException, JargonException {
 
 		log.info("findAllAuditRecordsForFile()");
 
@@ -208,15 +186,13 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 		}
 
 		if (numberOfResultsDesired < 1) {
-			throw new IllegalArgumentException(
-					"numberOfResultsDesired must be >= 1");
+			throw new IllegalArgumentException("numberOfResultsDesired must be >= 1");
 		}
 
 		log.info("looking up data object id via objStat");
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsFile.getAbsolutePath());
 
 		log.info("irodsFile:{}", irodsFile);
 		log.info("partialStart:{}", partialStart);
@@ -231,29 +207,18 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 		try {
 			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_OBJ_ID)
-			.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_AUDIT_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_USER_ID)
 					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
-							.addSelectAsGenQueryValue(
-									RodsGenQueryEnum.COL_AUDIT_COMMENT)
-									.addSelectAsGenQueryValue(
-											RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
-											.addSelectAsGenQueryValue(
-													RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME)
-													.addConditionAsGenQueryField(
-															RodsGenQueryEnum.COL_AUDIT_OBJ_ID,
-															QueryConditionOperators.EQUAL, objStat.getDataId());
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_ACTION_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_COMMENT)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_AUDIT_MODIFY_TIME).addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_AUDIT_OBJ_ID, QueryConditionOperators.EQUAL, objStat.getDataId());
 			// .addOrderByGenQueryField(RodsGenQueryEnum.COL_DATA_NAME,
 			// GenQueryOrderByField.OrderByType.ASC);
-			IRODSGenQueryFromBuilder irodsQuery = builder
-					.exportIRODSQueryFromBuilder(numberOfResultsDesired);
-			String zone = MiscIRODSUtils.getZoneInPath(objStat
-					.getAbsolutePath());
-			resultSet = irodsGenQueryExecutor
-					.executeIRODSQueryAndCloseResultInZone(irodsQuery,
-							partialStart, zone);
+			IRODSGenQueryFromBuilder irodsQuery = builder.exportIRODSQueryFromBuilder(numberOfResultsDesired);
+			String zone = MiscIRODSUtils.getZoneInPath(objStat.getAbsolutePath());
+			resultSet = irodsGenQueryExecutor.executeIRODSQueryAndCloseResultInZone(irodsQuery, partialStart, zone);
 		} catch (GenQueryBuilderException e) {
 			log.error("error building query", e);
 			throw new JargonException("error building query", e);
@@ -273,23 +238,19 @@ public abstract class AbstractAuditAOImpl extends IRODSGenericAO {
 
 	}
 
-	protected AuditedAction buildAuditedActionForResultRow(
-			final IRODSFile irodsFile, final IRODSQueryResultRow row)
-					throws NumberFormatException, JargonException {
+	protected AuditedAction buildAuditedActionForResultRow(final IRODSFile irodsFile, final IRODSQueryResultRow row)
+			throws NumberFormatException, JargonException {
 		AuditedAction auditedAction;
 		auditedAction = new AuditedAction();
 		auditedAction.setObjectId(Integer.parseInt(row.getColumn(0)));
 		auditedAction.setDomainObjectUniqueName(irodsFile.getAbsolutePath());
 		auditedAction.setUserId(Integer.parseInt(row.getColumn(1)));
 		auditedAction.setUserName(row.getColumn(2));
-		auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer
-				.parseInt(row.getColumn(3))));
+		auditedAction.setAuditActionEnum(AuditActionEnum.valueOf(Integer.parseInt(row.getColumn(3))));
 		auditedAction.setComment(row.getColumn(4));
-		auditedAction.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(5)));
+		auditedAction.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(5)));
 		auditedAction.setTimeStampInIRODSFormat(row.getColumn(5));
-		auditedAction.setUpdatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(6)));
+		auditedAction.setUpdatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(6)));
 		auditedAction.setLastResult(row.isLastResult());
 		auditedAction.setCount(row.getRecordCount());
 		auditedAction.setCount(row.getRecordCount());
