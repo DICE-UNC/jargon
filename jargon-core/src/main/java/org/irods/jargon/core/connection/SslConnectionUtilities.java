@@ -46,21 +46,20 @@ class SslConnectionUtilities {
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
-	 *            current connection
+	 *            {@link AbstractIRODSMidLevelProtocol} that represents the current
+	 *            connection
 	 * @param doSslStartupSequence
 	 *            {@code boolean} that indicates that
-	 * @return {@link SSLSocket} that can be inserted into the existing
-	 *         connection. Note that this method will not manipulate the mid
-	 *         level protocol object, it is up to the caller to handle the
-	 *         disposition of that socket object.
+	 * @return {@link SSLSocket} that can be inserted into the existing connection.
+	 *         Note that this method will not manipulate the mid level protocol
+	 *         object, it is up to the caller to handle the disposition of that
+	 *         socket object.
 	 * @throws JargonException
 	 * @throws AssertionError
 	 */
 	SSLSocket createSslSocketForProtocol(final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands,
-			final boolean doSslStartupSequence) throws JargonException,
-			AssertionError {
+			final AbstractIRODSMidLevelProtocol irodsCommands, final boolean doSslStartupSequence)
+			throws JargonException, AssertionError {
 
 		if (doSslStartupSequence) {
 			// start ssl
@@ -88,8 +87,7 @@ class SslConnectionUtilities {
 		TrustManager[] trustManagers = null;
 
 		if (irodsCommands.getIrodsSession().getX509TrustManager() != null) {
-			trustManagers = new TrustManager[] { irodsCommands
-					.getIrodsSession().getX509TrustManager() };
+			trustManagers = new TrustManager[] { irodsCommands.getIrodsSession().getX509TrustManager() };
 		}
 		try {
 			ctx.init(null, trustManagers, null);
@@ -102,61 +100,47 @@ class SslConnectionUtilities {
 		// credential exchange, first grab an SSL enabled connection
 		log.debug("getting ssl socket factory");
 		SSLSocketFactory sslSocketFactory = ctx.getSocketFactory();
-		log.debug("supported cyphers:{}",
-				sslSocketFactory.getSupportedCipherSuites());
+		log.debug("supported cyphers:{}", sslSocketFactory.getSupportedCipherSuites());
 
 		SSLSocket sslSocket = null;
 		try {
 
-			sslSocket = (SSLSocket) sslSocketFactory.createSocket(irodsCommands
-					.getIrodsConnection().getConnection(), irodsAccount
-					.getHost(), irodsAccount.getPort(), false);
+			sslSocket = (SSLSocket) sslSocketFactory.createSocket(irodsCommands.getIrodsConnection().getConnection(),
+					irodsAccount.getHost(), irodsAccount.getPort(), false);
 			log.debug("ssl socket created for credential exchage..now connect");
 			// Prepare TLS parameters. These have to applied to every TLS
 			// socket before the handshake is triggered.
 			SSLParameters params = ctx.getDefaultSSLParameters();
 			// Do not send an SSL-2.0-compatible Client Hello.
-			ArrayList<String> protocols = new ArrayList<String>(
-					Arrays.asList(params.getProtocols()));
+			ArrayList<String> protocols = new ArrayList<String>(Arrays.asList(params.getProtocols()));
 			protocols.remove("SSLv2Hello");
 			params.setProtocols(protocols.toArray(new String[protocols.size()]));
 			// Adjust the supported ciphers.
-			ArrayList<String> ciphers = new ArrayList<String>(
-					Arrays.asList(params.getCipherSuites()));
-			ciphers.retainAll(Arrays.asList("TLS_RSA_WITH_AES_128_CBC_SHA256",
-					"TLS_RSA_WITH_AES_256_CBC_SHA256",
-					"TLS_RSA_WITH_AES_256_CBC_SHA",
-					"TLS_RSA_WITH_AES_128_CBC_SHA",
-					"SSL_RSA_WITH_3DES_EDE_CBC_SHA",
-					"SSL_RSA_WITH_RC4_128_SHA1", "SSL_RSA_WITH_RC4_128_MD5",
-					"TLS_EMPTY_RENEGOTIATION_INFO_SCSV"));
+			ArrayList<String> ciphers = new ArrayList<String>(Arrays.asList(params.getCipherSuites()));
+			ciphers.retainAll(Arrays.asList("TLS_RSA_WITH_AES_128_CBC_SHA256", "TLS_RSA_WITH_AES_256_CBC_SHA256",
+					"TLS_RSA_WITH_AES_256_CBC_SHA", "TLS_RSA_WITH_AES_128_CBC_SHA", "SSL_RSA_WITH_3DES_EDE_CBC_SHA",
+					"SSL_RSA_WITH_RC4_128_SHA1", "SSL_RSA_WITH_RC4_128_MD5", "TLS_EMPTY_RENEGOTIATION_INFO_SCSV"));
 			params.setCipherSuites(ciphers.toArray(new String[ciphers.size()]));
-			log.debug("supported protocols:{}",
-					sslSocket.getSupportedProtocols());
+			log.debug("supported protocols:{}", sslSocket.getSupportedProtocols());
 
 		} catch (IOException e) {
 			log.error("ioException creating socket", e);
-			throw new JargonException(
-					"unable to create the underlying ssl socket", e);
+			throw new JargonException("unable to create the underlying ssl socket", e);
 		}
 
 		/*
 		 * register a callback for handshaking completion event
 		 */
 		if (log.isDebugEnabled()) {
-			sslSocket
-					.addHandshakeCompletedListener(new HandshakeCompletedListener() {
-						@Override
-						public void handshakeCompleted(
-								final HandshakeCompletedEvent event) {
-							log.debug("Handshake finished!");
-							log.debug("\t CipherSuite:{}",
-									event.getCipherSuite());
-							log.debug("\t SessionId {}", event.getSession());
-							log.debug("\t PeerHost {}", event.getSession()
-									.getPeerHost());
-						}
-					});
+			sslSocket.addHandshakeCompletedListener(new HandshakeCompletedListener() {
+				@Override
+				public void handshakeCompleted(final HandshakeCompletedEvent event) {
+					log.debug("Handshake finished!");
+					log.debug("\t CipherSuite:{}", event.getCipherSuite());
+					log.debug("\t SessionId {}", event.getSession());
+					log.debug("\t PeerHost {}", event.getSession().getPeerHost());
+				}
+			});
 		}
 
 		log.debug("starting SSL handshake");
@@ -172,38 +156,29 @@ class SslConnectionUtilities {
 	}
 
 	/**
-	 * Create the SSL socket, and manipulate the provided irodsCommands to make
-	 * the secure socket the operative socket for the connection
+	 * Create the SSL socket, and manipulate the provided irodsCommands to make the
+	 * secure socket the operative socket for the connection
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} for connection
 	 * @param irodsCommands
-	 *            {@link AbstractIRODSMidLevelProtocol} that represents the
-	 *            current connection
+	 *            {@link AbstractIRODSMidLevelProtocol} that represents the current
+	 *            connection
 	 * @param doSslStartupSequence
 	 *            {@code boolean} that indicates that
-	 * @return {@link SSLSocket} that can be inserted into the existing
-	 *         connection. Note that this method will not manipulate the mid
-	 *         level protocol object, it is up to the caller to handle the
-	 *         disposition of that socket object.
 	 * @throws JargonException
 	 * @throws AssertionError
 	 */
-	void createSslSocketForProtocolAndIntegrateIntoProtocol(
-			final IRODSAccount irodsAccount,
-			final AbstractIRODSMidLevelProtocol irodsCommands,
-			final boolean doSslStartupSequence) throws JargonException,
-			AssertionError {
+	void createSslSocketForProtocolAndIntegrateIntoProtocol(final IRODSAccount irodsAccount,
+			final AbstractIRODSMidLevelProtocol irodsCommands, final boolean doSslStartupSequence)
+			throws JargonException, AssertionError {
 
 		log.info("createSslSocketForProtocolAndIntegrateIntoProtocol()");
-		SSLSocket sslSocket = createSslSocketForProtocol(irodsAccount,
-				irodsCommands, doSslStartupSequence);
+		SSLSocket sslSocket = createSslSocketForProtocol(irodsAccount, irodsCommands, doSslStartupSequence);
 		log.info("have SSL socket, introduce as the iRODS connection in the provided protocol");
-		irodsCommands.setIrodsConnection(new IRODSBasicTCPConnection(
-				irodsCommands.getIrodsAccount(), irodsCommands
-						.getPipelineConfiguration(), irodsCommands
-						.getIrodsProtocolManager(), sslSocket, irodsCommands
-						.getIrodsSession()));
+		irodsCommands.setIrodsConnection(
+				new IRODSBasicTCPConnection(irodsCommands.getIrodsAccount(), irodsCommands.getPipelineConfiguration(),
+						irodsCommands.getIrodsProtocolManager(), sslSocket, irodsCommands.getIrodsSession()));
 
 	}
 

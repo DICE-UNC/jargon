@@ -46,7 +46,7 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Write the string to a file
+	 * <<<<<<< HEAD Write the string to a file
 	 * 
 	 * @param file
 	 * @param string
@@ -98,8 +98,8 @@ public class LocalFileUtils {
 	}
 
 	/**
-	 * Parse a file name to get the stuff after the last '.' character to treat as
-	 * the file extension
+	 * ======= >>>>>>> origin/master Parse a file name to get the stuff after the
+	 * last '.' character to treat as the file extension
 	 *
 	 * @param fileName
 	 *            {@code String} with the file name to parse out.
@@ -123,7 +123,7 @@ public class LocalFileUtils {
 	 * Normalize any Windows paths from \ separators to / separators
 	 *
 	 * @param inPath
-	 * @return
+	 * @return {@link String} with the normalized path
 	 */
 	public static String normalizePath(final String inPath) {
 
@@ -226,7 +226,8 @@ public class LocalFileUtils {
 					localFileToHoldData.getAbsolutePath());
 			try {
 				localFileToHoldData.createNewFile();
-			} catch (final IOException e) {
+
+			} catch (IOException e) {
 				log.error("IOException when trying to create a new file for the local output stream for {}",
 						localFileToHoldData.getAbsolutePath(), e);
 				throw new JargonException(
@@ -250,7 +251,8 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
-		} catch (final FileNotFoundException e1) {
+
+		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
@@ -259,7 +261,8 @@ public class LocalFileUtils {
 		try {
 			while (in.read() != -1) {
 			}
-		} catch (final IOException e) {
+
+		} catch (IOException e) {
 			throw new JargonException("error computing checksum for file:" + absolutePathToLocalFile, e);
 		} finally {
 			try {
@@ -294,7 +297,8 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
-		} catch (final FileNotFoundException e1) {
+
+		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
@@ -347,7 +351,8 @@ public class LocalFileUtils {
 		FileInputStream file;
 		try {
 			file = new FileInputStream(absolutePathToLocalFile);
-		} catch (final FileNotFoundException e1) {
+
+		} catch (FileNotFoundException e1) {
 			throw new JargonException("error computing checksum, file not found:" + absolutePathToLocalFile, e1);
 
 		}
@@ -474,6 +479,7 @@ public class LocalFileUtils {
 		}
 
 		final InputStreamReader resourceReader = new InputStreamReader(
+
 				new BufferedInputStream(RuleProcessingAOImpl.class.getResourceAsStream(resourcePath)));
 
 		StringWriter writer = null;
@@ -511,7 +517,7 @@ public class LocalFileUtils {
 	 * files!)
 	 *
 	 * @param file
-	 * @return
+	 * @return <code>byte[]</code> with file contents
 	 * @throws IOException
 	 */
 	public static byte[] getBytesFromFile(final File file) throws IOException {

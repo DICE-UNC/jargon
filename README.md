@@ -11,7 +11,7 @@ https://github.com/DICE-UNC/jargon/milestone/13
 This version of Jargon is currently targeted at Metalnx.  There are still some features that are considered early access and may not support a full range
 of use cases for general cases, and having a separate stream allows us flexibility to break API on these more advanced features, such as advanced paging and virtual collections support.
 
-Please go to [[https://github.com/DICE-UNC/jargon]] for the latest news and info.
+Please go to https://github.com/DICE-UNC/jargon for the latest news and info.
 
 =======
 
@@ -36,7 +36,7 @@ Jargon-core consists of the following libraries
 
 Jargon-core uses Maven for dependency management.  See the pom.xml file for references to various dependencies.
 
-Note that the following bug and feature requests are logged in GForge with related commit information [[https://github.com/DICE-UNC/jargon/issues]]
+Note that the following bug and feature requests are logged in GForge with related commit information https://github.com/DICE-UNC/jargon/issues
 
 ## Changes
 

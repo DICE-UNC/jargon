@@ -37,78 +37,64 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	 * Create an instance for an ireg operation
 	 *
 	 * @param physicalFileAbsolutePath
-	 *            {@code String} with the absolute path to the physical
-	 *            file to be registered
+	 *            {@code String} with the absolute path to the physical file to be
+	 *            registered
 	 * @param irodsFileAbsolutePath
-	 *            {@code String} with the absolute path to the iRODS file to be registered
+	 *            {@code String} with the absolute path to the iRODS file to be
+	 *            registered
 	 * @param resourceGroup
-	 *            {@code String}specifies the resource group of the
-	 *            resource. This must be input together with the
-	 *            resourceToStoreTo
+	 *            {@code String}specifies the resource group of the resource. This
+	 *            must be input together with the resourceToStoreTo
 	 * @param resourceToStoreTo
-	 *            {@code String} specifies the resource to store to. This
-	 *            can also be specified in your environment or via a rule set up
-	 *            by the administrator
+	 *            {@code String} specifies the resource to store to. This can also
+	 *            be specified in your environment or via a rule set up by the
+	 *            administrator
 	 * @param force
 	 *            {@code boolean} indicates overwrite
 	 * @param recursive
-	 *            {@code boolean} which, if {@code true}, indicates
-	 *            that this is a recursive registration of a collection.
+	 *            {@code boolean} which, if {@code true}, indicates that this is a
+	 *            recursive registration of a collection.
 	 * @param checksumHandling
-	 *            {@link ChecksumHandling} enum value that indicates the
-	 *            approach used for checksums
+	 *            {@link ChecksumHandling} enum value that indicates the approach
+	 *            used for checksums
 	 * @param registerAsReplica
-	 *            {@code boolean} which, if true, registers the file as a
-	 *            replica
+	 *            {@code boolean} which, if true, registers the file as a replica
 	 * @param localFileChecksumValue
-	 *            {@code String} with an optional local file
-	 *            checksum,required if the {@code checksumHandling}
-	 *            indicates that the checksum should be verified. Should be set
-	 *            to blank otherwise.
+	 *            {@code String} with an optional local file checksum,required if
+	 *            the {@code checksumHandling} indicates that the checksum should be
+	 *            verified. Should be set to blank otherwise.
 	 * @return {@link DataObjInpForReg}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInpForReg instance(
-			final String physicalFileAbsolutePath,
-			final String irodsFileAbsolutePath, final String resourceGroup,
-			final String resourceToStoreTo, final boolean force,
-			final boolean recursive, final ChecksumHandling checksumHandling,
-			final boolean registerAsReplica, final String localFileChecksumValue)
-			throws JargonException {
-		return new DataObjInpForReg(physicalFileAbsolutePath,
-				irodsFileAbsolutePath, resourceGroup, resourceToStoreTo, force,
-				recursive, checksumHandling, registerAsReplica,
-				localFileChecksumValue);
+	public static final DataObjInpForReg instance(final String physicalFileAbsolutePath,
+			final String irodsFileAbsolutePath, final String resourceGroup, final String resourceToStoreTo,
+			final boolean force, final boolean recursive, final ChecksumHandling checksumHandling,
+			final boolean registerAsReplica, final String localFileChecksumValue) throws JargonException {
+		return new DataObjInpForReg(physicalFileAbsolutePath, irodsFileAbsolutePath, resourceGroup, resourceToStoreTo,
+				force, recursive, checksumHandling, registerAsReplica, localFileChecksumValue);
 	}
 
-	private DataObjInpForReg(final String physicalFileAbsolutePath,
-			final String irodsFileAbsolutePath, final String resourceGroup,
-			final String resourceToStoreTo, final boolean force,
-			final boolean recursive, final ChecksumHandling checksumHandling,
-			final boolean registerAsReplica, final String localFileChecksumValue)
-			throws JargonException {
+	private DataObjInpForReg(final String physicalFileAbsolutePath, final String irodsFileAbsolutePath,
+			final String resourceGroup, final String resourceToStoreTo, final boolean force, final boolean recursive,
+			final ChecksumHandling checksumHandling, final boolean registerAsReplica,
+			final String localFileChecksumValue) throws JargonException {
 
 		super();
-		if (physicalFileAbsolutePath == null
-				|| physicalFileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"physicalFileAbsolutePath is null or empty");
+		if (physicalFileAbsolutePath == null || physicalFileAbsolutePath.length() == 0) {
+			throw new IllegalArgumentException("physicalFileAbsolutePath is null or empty");
 		}
 
-		if (irodsFileAbsolutePath == null
-				|| irodsFileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"irodsFileAbsolutePath is null or empty");
+		if (irodsFileAbsolutePath == null || irodsFileAbsolutePath.length() == 0) {
+			throw new IllegalArgumentException("irodsFileAbsolutePath is null or empty");
 		}
 
 		if (resourceGroup == null) {
-			throw new IllegalArgumentException(
-					"null resource group, set to blank");
+			throw new IllegalArgumentException("null resource group, set to blank");
 		}
 
 		if (resourceToStoreTo == null) {
-			throw new IllegalArgumentException(
-					"null resourceToStoreTo, set to blank");
+			throw new IllegalArgumentException("null resourceToStoreTo, set to blank");
 		}
 
 		if (checksumHandling == null) {
@@ -116,14 +102,12 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 		}
 
 		if (localFileChecksumValue == null) {
-			throw new IllegalArgumentException(
-					"null localFileChecksumValue, set to blank if not used");
+			throw new IllegalArgumentException("null localFileChecksumValue, set to blank if not used");
 		}
 
 		if (checksumHandling == ChecksumHandling.VERFIY_CHECKSUM) {
 			if (localFileChecksumValue.isEmpty()) {
-				throw new ProtocolFormException(
-						"verify checksum was indicated, but no local checksum provided");
+				throw new ProtocolFormException("verify checksum was indicated, but no local checksum provided");
 			}
 		}
 
@@ -150,14 +134,11 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, irodsFileAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, operationType) });
+		Tag message = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, irodsFileAbsolutePath), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, operationType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 		kvps.add(KeyValuePair.instance("dataType", "generic"));
@@ -176,8 +157,7 @@ public class DataObjInpForReg extends AbstractIRODSPackingInstruction {
 
 		if (!resourceGroup.isEmpty()) {
 			if (resourceToStoreTo.isEmpty()) {
-				throw new ProtocolFormException(
-						"if a resource group is specified, a resource must be specified");
+				throw new ProtocolFormException("if a resource group is specified, a resource must be specified");
 			}
 			kvps.add(KeyValuePair.instance("rescGroupName", resourceGroup));
 		}

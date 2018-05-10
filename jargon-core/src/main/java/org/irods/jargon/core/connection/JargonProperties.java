@@ -1,7 +1,6 @@
 package org.irods.jargon.core.connection;
 
 import org.irods.jargon.core.connection.ClientServerNegotiationPolicy.SslNegotiationPolicy;
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.protovalues.ChecksumEncodingEnum;
 import org.irods.jargon.core.protovalues.EncryptionAlgorithmEnum;
 import org.irods.jargon.core.pub.CollectionAndDataObjectListAndSearchAO;
@@ -55,20 +54,15 @@ public interface JargonProperties {
 	 * This is done for backwards compatibility. Older versions of iRODS will
 	 * default to parallel processing if any nonzero number is sent in numThreads.
 	 *
-	 * @return {@code long} in megabytes for the size above which a non-zero
-	 *         numThreads of value maxParallelThreads will be sent.
-	 * @throws JargonException
-	 *             long getParallelThreadsLengthThreshold();
 	 *
-	 *             /** Sets a default number of results to ask for when executing
-	 *             GenQuery for listing files and collections.
-	 *
-	 * @return {@code int}
+	 * @return <code>int</code> with the max number of files and dirs to return
 	 */
 	int getMaxFilesAndDirsQueryMax();
 
 	/**
 	 * Am I using an executor pool for parallel transfer threads
+	 * 
+	 * @return {@code boolean} if using a transfer thread pool
 	 */
 	boolean isUseTransferThreadsPool();
 
@@ -89,7 +83,6 @@ public interface JargonProperties {
 	 * {@code isUseTranfsferThreadsPool()} value is true;
 	 *
 	 * @return {@code int} with the desired transfer thread pool max size
-	 * @throws JargonException
 	 */
 	int getTransferThreadPoolTimeoutMillis();
 
@@ -156,18 +149,32 @@ public interface JargonProperties {
 	/**
 	 * Get the internal buffer size used for the input stream between Jargon and
 	 * iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return {@code int} with the buffer size for the input
-	 * stream buffer. (0 = use defaults, -1 = do not wrap with buffered input
-	 * stream) jargon.io.internal.input.stream.buffer.size
+	 * NormalIOArrangement
+	 * 
+	 * <p>
+	 * jargon.io.internal.input.stream.buffer.size
+	 * 
+	 * @return {@code int} with the buffer size for the input stream buffer. (0 =
+	 *         use defaults, -1 = do not wrap with buffered input stream)
+	 * 
+	 * 
+	 * 
+	 * 
 	 */
 	int getInternalInputStreamBufferSize();
 
 	/**
 	 * Get the internal buffer size used for the output stream between Jargon and
 	 * iRODS. See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return {@code int} with the buffer size for the output
-	 * stream buffer. (0 = use defaults, -1 = do not wrap with buffered input
-	 * stream) jargon.io.internal.output.stream.buffer.size
+	 * NormalIOArrangement
+	 * 
+	 * <p>
+	 * 
+	 * jargon.io.internal.output.stream.buffer.size
+	 * 
+	 * @return {@code int} with the buffer size for the output stream buffer. (0 =
+	 *         use defaults, -1 = do not wrap with buffered input stream)
+	 * 
 	 */
 	int getInternalOutputStreamBufferSize();
 
@@ -179,9 +186,14 @@ public interface JargonProperties {
 	 * uses an internal cache buffer for the sends. This has been done historically,
 	 * but the benefits of this cache have not yet been measured. Setting this as a
 	 * parameter to turn off will assist in testing the use of the buffer, and the
-	 * option of eliminating the buffer altogether. return {@code int} with the size
-	 * of the internal cache (0 = do not utilize the cache buffer)
+	 * option of eliminating the buffer altogether.
+	 * 
+	 * <p>
 	 * jargon.io.internal.cache.buffer.size
+	 * 
+	 * @return {@code int} with the size of the internal cache (0 = do not utilize
+	 *         the cache buffer)
+	 * 
 	 */
 	int getInternalCacheBufferSize();
 
@@ -193,12 +205,17 @@ public interface JargonProperties {
 	 * {@code irodsFunction} method with the {@code InputStream} parameter, will
 	 * wrap the given input stream in a {@code BufferedInputStream} based on the
 	 * setting of this parameter.
+	 * <p>
+	 * jargon.io.send.input.stream.buffer.size
 	 *
 	 * See https://code.renci.org/gf/project/jargon/wiki/?pagename=
-	 * NormalIOArrangement return {@code int} with the buffer size for the buffered
-	 * stream that will wrap an {@code InputStream} to be sent to iRODS. (0 = use
-	 * defaults, -1 = do not wrap with buffered input stream)
-	 * jargon.io.send.input.stream.buffer.size
+	 * NormalIOArrangement
+	 * 
+	 * @return {@code int} with the buffer size for the buffered stream that will
+	 *         wrap an {@code InputStream} to be sent to iRODS. (0 = use defaults,
+	 *         -1 = do not wrap with buffered input stream)
+	 * 
+	 * 
 	 */
 	int getSendInputStreamBufferSize();
 
@@ -206,9 +223,11 @@ public interface JargonProperties {
 	 * Get the size of the buffer used in read/write operations to copy data from an
 	 * input stream to output stream in the {@link IRODSBasicTCPConnection} class
 	 * {@code send()} methods.
+	 * <p>
+	 * jargon.io.input.to.output.copy.byte.buffer.size
 	 *
 	 * @return {@code int} with the size of the read/write loop buffer
-	 *         jargon.io.input.to.output.copy.byte.buffer.size
+	 * 
 	 */
 	int getInputToOutputCopyBufferByteSize();
 
@@ -217,6 +236,7 @@ public interface JargonProperties {
 	 * the output stream for the local file. This is used in processing get
 	 * operations where the iRODS data is being saved to the local file system. (0 =
 	 * use defaults, -1 = do not wrap with buffered output stream)
+	 * <p>
 	 * jargon.io.local.output.stream.buffer.size
 	 *
 	 * @return {@code int} with the buffer size
@@ -228,6 +248,7 @@ public interface JargonProperties {
 	 * the intput stream for the local file. This is used in processing operations
 	 * where the data is being read from the local file system. (0 = use defaults,
 	 * -1 = do not wrap with buffered output stream)
+	 * <p>
 	 * jargon.io.local.input.stream.buffer.size
 	 *
 	 * @return {@code int} with the buffer size
@@ -481,11 +502,13 @@ public interface JargonProperties {
 	 * Get the renewal interval in seconds, after which a connection is discarded
 	 * and renewed. Used for preventing timeouts in recursive transfers. Expressed
 	 * as a number of seconds. Set to 0 to turn off this behavior
+	 * 
+	 * @return {@code} int with the socket renewal interval
 	 */
 	int getSocketRenewalIntervalInSeconds();
 
 	/**
-	 * Indicates whether long file transfer retarts should be done.
+	 * Indicates whether long file transfer restarts should be done.
 	 *
 	 * @return {@code boolean} of {@code true} if long file restarts should be done
 	 */

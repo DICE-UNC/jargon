@@ -26,13 +26,13 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	 * Create an instance of the packing instruction to close the given stream.
 	 *
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor representing the
-	 *            stream to close
+	 *            {@code int} with the file descriptor representing the stream to
+	 *            close
 	 * @return {@code ExecCmdStreamClose} instance.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static ExecCmdStreamClose instance(final int fileDescriptor)
-			throws JargonException {
+	public static ExecCmdStreamClose instance(final int fileDescriptor) throws JargonException {
 		return new ExecCmdStreamClose(STREAM_CLOSE_API_NBR, fileDescriptor);
 	}
 
@@ -46,24 +46,23 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	}
 
 	/**
-	 * Constructor for a remote execution service close stream packing
-	 * instruction call.
+	 * Constructor for a remote execution service close stream packing instruction
+	 * call.
 	 *
 	 * @param apiNumber
 	 *            {@code int} with the api number to use with this call.
 	 * @param fileDescriptor
-	 *            {@code int} with the file descriptor representing the
-	 *            stream to close
+	 *            {@code int} with the file descriptor representing the stream to
+	 *            close
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private ExecCmdStreamClose(final int apiNumber, final int fileDescriptor)
-			throws JargonException {
+	private ExecCmdStreamClose(final int apiNumber, final int fileDescriptor) throws JargonException {
 
 		super();
 
 		if (fileDescriptor < 1) {
-			throw new IllegalArgumentException(
-					"file descriptor is 0 or negative");
+			throw new IllegalArgumentException("file descriptor is 0 or negative");
 		}
 
 		this.fileDescriptor = fileDescriptor;
@@ -81,8 +80,7 @@ public final class ExecCmdStreamClose extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX,
-				fileDescriptor) });
+		Tag message = new Tag(PI_TAG, new Tag[] { new Tag(FILE_INX, fileDescriptor) });
 
 		return message;
 	}

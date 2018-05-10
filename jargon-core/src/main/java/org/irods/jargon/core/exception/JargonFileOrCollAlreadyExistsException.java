@@ -15,8 +15,7 @@ public class JargonFileOrCollAlreadyExistsException extends JargonException {
 
 	private static final long serialVersionUID = 8322543242606980799L;
 
-	public JargonFileOrCollAlreadyExistsException(final String message,
-			final Throwable cause) {
+	public JargonFileOrCollAlreadyExistsException(final String message, final Throwable cause) {
 		super(message, cause);
 	}
 
@@ -28,25 +27,16 @@ public class JargonFileOrCollAlreadyExistsException extends JargonException {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
-	public JargonFileOrCollAlreadyExistsException(final String message,
-			final Throwable cause, final int underlyingIRODSExceptionCode) {
+	public JargonFileOrCollAlreadyExistsException(final String message, final Throwable cause,
+			final int underlyingIRODSExceptionCode) {
 		super(message, cause, underlyingIRODSExceptionCode);
 	}
 
-	/**
-	 * @param cause
-	 */
-	public JargonFileOrCollAlreadyExistsException(final Throwable cause,
-			final int underlyingIRODSExceptionCode) {
+	public JargonFileOrCollAlreadyExistsException(final Throwable cause, final int underlyingIRODSExceptionCode) {
 		super(cause, underlyingIRODSExceptionCode);
 	}
 
-	public JargonFileOrCollAlreadyExistsException(final String message,
-			final int info) {
+	public JargonFileOrCollAlreadyExistsException(final String message, final int info) {
 		super(message, info);
 	}
 

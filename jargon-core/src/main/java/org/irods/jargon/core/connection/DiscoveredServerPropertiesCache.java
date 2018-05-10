@@ -179,11 +179,16 @@ public class DiscoveredServerPropertiesCache {
 	}
 
 	/**
-	 * Delete the {@code ClientHints} If the zone has no cache, silently ignore
+	 * <<<<<<< HEAD Delete the {@code ClientHints} If the zone has no cache,
+	 * silently ignore ======= Delete the {@code IRODSServerProperties} If the zone
+	 * has no cache, silently ignore >>>>>>> origin/master
 	 *
 	 * @param host
+	 *            {@link String} with the hostname
 	 * @param zoneName
+	 *            {@link String} with the zone name
 	 * @param propertyName
+	 *            {@link String} with the property name
 	 */
 	public void deleteCachedClientHints(final String host, final String zoneName) {
 
@@ -210,6 +215,7 @@ public class DiscoveredServerPropertiesCache {
 	 * @param zoneName
 	 * @param propertyName
 	 */
+
 	public void deleteCachedIRODSServerProperties(final String host, final String zoneName, final String propertyName) {
 
 		if (host == null || host.isEmpty()) {
@@ -232,8 +238,11 @@ public class DiscoveredServerPropertiesCache {
 	 * the property itself is not cached, silently ignore
 	 *
 	 * @param host
+	 *            {@link String} with the hostname
 	 * @param zoneName
+	 *            {@link String} with the zone name
 	 * @param propertyName
+	 *            {@link String} with the property name
 	 */
 	public void deleteCachedProperty(final String host, final String zoneName, final String propertyName) {
 
@@ -262,7 +271,9 @@ public class DiscoveredServerPropertiesCache {
 	 * ignore the request
 	 *
 	 * @param host
+	 *            {@link String} with hostname
 	 * @param zoneName
+	 *            {@link String} with zone name
 	 */
 	public void deleteCache(final String host, final String zoneName) {
 

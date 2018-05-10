@@ -39,14 +39,13 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the absolute path to the target file.
 	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjCopyInp instanceForRenameFile(
-			final String sourceFileAbsolutePath,
+	public static final DataObjCopyInp instanceForRenameFile(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR,
-				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.RENAME_FILE_OPERATION_TYPE, "", 0, false);
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR, sourceFileAbsolutePath,
+				targetFileAbsolutePath, DataObjInp.RENAME_FILE_OPERATION_TYPE, "", 0, false);
 		return dataObjCopyInp;
 	}
 
@@ -59,25 +58,21 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} with the absolute path to the target file
 	 * @param copyToResource
-	 *            {@code String} with an optional resource for the target
-	 *            file
+	 *            {@code String} with an optional resource for the target file
 	 * @param sourceFileLength
 	 *            {@code long} with the length of the source file
 	 * @param force
-	 *            {@code boolean} that indicates whether force option
-	 *            should be set
+	 *            {@code boolean} that indicates whether force option should be set
 	 * @return {@link DataObjCopyInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjCopyInp instanceForCopy410(
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String copyToResource,
-			final long sourceFileLength, final boolean force)
-			throws JargonException {
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR_410,
-				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
-				sourceFileLength, force);
+	public static final DataObjCopyInp instanceForCopy410(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String copyToResource, final long sourceFileLength,
+			final boolean force) throws JargonException {
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR_410, sourceFileAbsolutePath,
+				targetFileAbsolutePath, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource, sourceFileLength,
+				force);
 		return dataObjCopyInp;
 	}
 
@@ -89,31 +84,26 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} with the absolute path to the target file
 	 * @param copyToResource
-	 *            {@code String} with an optional resource for the target
-	 *            file
+	 *            {@code String} with an optional resource for the target file
 	 * @param sourceFileLength
 	 *            {@code long} with the length of the source file
 	 * @param force
-	 *            {@code boolean} that indicates whether force option
-	 *            should be set
+	 *            {@code boolean} that indicates whether force option should be set
 	 * @return {@link DataObjCopyInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjCopyInp instanceForCopy(
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath, final String copyToResource,
-			final long sourceFileLength, final boolean force)
-			throws JargonException {
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
-				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource,
-				sourceFileLength, force);
+	public static final DataObjCopyInp instanceForCopy(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String copyToResource, final long sourceFileLength,
+			final boolean force) throws JargonException {
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR, sourceFileAbsolutePath, targetFileAbsolutePath,
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, copyToResource, sourceFileLength, force);
 		return dataObjCopyInp;
 	}
 
 	/**
-	 * Create an instance of the packing instruction for a move of a collection
-	 * (not a data object, there is a different initializer for that).
+	 * Create an instance of the packing instruction for a move of a collection (not
+	 * a data object, there is a different initializer for that).
 	 *
 	 * @param sourceFileAbsolutePath
 	 *            {@code String} with the absolute path to the source file
@@ -121,14 +111,13 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 *            {@code String} with the absolute path to the target file
 	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjCopyInp instanceForRenameCollection(
-			final String sourceFileAbsolutePath,
+	public static final DataObjCopyInp instanceForRenameCollection(final String sourceFileAbsolutePath,
 			final String targetFileAbsolutePath) throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR,
-				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE, "", 0, false);
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(RENAME_FILE_API_NBR, sourceFileAbsolutePath,
+				targetFileAbsolutePath, DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE, "", 0, false);
 		return dataObjCopyInp;
 	}
 
@@ -140,39 +129,36 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	 * @param targetFileAbsolutePath
 	 *            {@code String} with the absolute path to the target file.
 	 * @param targetResourceName
-	 *            {@code String} with optional resource name for target.
-	 *            Blank if not used
+	 *            {@code String} with optional resource name for target. Blank if
+	 *            not used
+	 * @param sourceFileLength
+	 *            {@code long} with a length of the source file
+	 * @param force
+	 *            {@code boolean} if this is a force operation
 	 * @return {@code DataObjCopyInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjCopyInp instanceForCopyCollection(
-			final String sourceFileAbsolutePath,
-			final String targetFileAbsolutePath,
-			final String targetResourceName, final long sourceFileLength,
+	public static final DataObjCopyInp instanceForCopyCollection(final String sourceFileAbsolutePath,
+			final String targetFileAbsolutePath, final String targetResourceName, final long sourceFileLength,
 			final boolean force) throws JargonException {
 
-		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR,
-				sourceFileAbsolutePath, targetFileAbsolutePath,
-				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, targetResourceName,
-				sourceFileLength, force);
+		DataObjCopyInp dataObjCopyInp = new DataObjCopyInp(COPY_API_NBR, sourceFileAbsolutePath, targetFileAbsolutePath,
+				DataObjInp.COPY_FILE_SRC_OPERATION_TYPE, targetResourceName, sourceFileLength, force);
 		return dataObjCopyInp;
 	}
 
-	private DataObjCopyInp(final int apiNumber,
-			final String fromFileAbsolutePath, final String toFileAbsolutePath,
-			final int operationType, final String resourceName,
-			final long sourceFileLength, final boolean force)
+	private DataObjCopyInp(final int apiNumber, final String fromFileAbsolutePath, final String toFileAbsolutePath,
+			final int operationType, final String resourceName, final long sourceFileLength, final boolean force)
 			throws JargonException {
 		super();
 
 		if (fromFileAbsolutePath == null || fromFileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"from file absolute path is null or empty");
+			throw new IllegalArgumentException("from file absolute path is null or empty");
 		}
 
 		if (toFileAbsolutePath == null || toFileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"to file absolute path is null or empty");
+			throw new IllegalArgumentException("to file absolute path is null or empty");
 		}
 
 		if (operationType == DataObjInp.RENAME_DIRECTORY_OPERATION_TYPE
@@ -180,8 +166,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 				|| operationType == DataObjInp.COPY_FILE_SRC_OPERATION_TYPE) {
 			// ok
 		} else {
-			throw new IllegalArgumentException("unknown operation type:"
-					+ operationType);
+			throw new IllegalArgumentException("unknown operation type:" + operationType);
 		}
 
 		if (resourceName == null) {
@@ -204,26 +189,20 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 	/**
 	 * @return
 	 */
-	private Tag buildDataObjInpTag(final String filePath,
-			final int operationType) throws JargonException {
+	private Tag buildDataObjInpTag(final String filePath, final int operationType) throws JargonException {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, filePath),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, 0),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE, operationType),
-				createKeyValueTag(kvps) });
+		Tag fileTag = new Tag(DataObjInp.PI_TAG,
+				new Tag[] { new Tag(DataObjInp.OBJ_PATH, filePath), new Tag(DataObjInp.CREATE_MODE, 0),
+						new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+						new Tag(DataObjInp.DATA_SIZE, 0), new Tag(DataObjInp.NUM_THREADS, 0),
+						new Tag(DataObjInp.OPR_TYPE, operationType), createKeyValueTag(kvps) });
 		return fileTag;
 	}
 
 	@Override
 	public Tag getTagValue() throws JargonException {
-		if (getApiNumber() == COPY_API_NBR
-				|| getApiNumber() == COPY_API_NBR_410) {
+		if (getApiNumber() == COPY_API_NBR || getApiNumber() == COPY_API_NBR_410) {
 			return getTagValueForCopy();
 		} else {
 			return getTagValueForReplicate();
@@ -232,8 +211,7 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag getTagValueForReplicate() throws JargonException {
 		// get the DataObjInp tag for the from file
-		Tag fromFileTag = buildDataObjInpTag(fromFileAbsolutePath,
-				operationType);
+		Tag fromFileTag = buildDataObjInpTag(fromFileAbsolutePath, operationType);
 		Tag toFileTag = buildDataObjInpTag(toFileAbsolutePath, operationType);
 
 		// now build the whole tag
@@ -245,10 +223,8 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	private Tag getTagValueForCopy() throws JargonException {
 		// get the DataObjInp tag for the from file
-		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath,
-				sourceFileLength);
-		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath,
-				resourceName, force);
+		Tag fromFileTag = buildDataObjInpTagForCopySource(fromFileAbsolutePath, sourceFileLength);
+		Tag toFileTag = buildDataObjInpTagForCopyDest(toFileAbsolutePath, resourceName, force);
 
 		// now build the whole tag
 		Tag message = new Tag(PI_TAG, new Tag[] { fromFileTag, toFileTag });
@@ -257,29 +233,20 @@ public class DataObjCopyInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	private Tag buildDataObjInpTagForCopySource(
-			final String fromFileAbsolutePath, final long sourceFileLength)
+	private Tag buildDataObjInpTagForCopySource(final String fromFileAbsolutePath, final long sourceFileLength)
 			throws JargonException {
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 
-		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] {
-				new Tag(DataObjInp.OBJ_PATH, fromFileAbsolutePath),
-				new Tag(DataObjInp.CREATE_MODE, 0),
-				new Tag(DataObjInp.OPEN_FLAGS, 0),
-				new Tag(DataObjInp.OFFSET, 0),
-				new Tag(DataObjInp.DATA_SIZE, sourceFileLength),
-				new Tag(DataObjInp.NUM_THREADS, 0),
-				new Tag(DataObjInp.OPR_TYPE,
-						DataObjInp.COPY_FILE_SRC_OPERATION_TYPE),
-				createKeyValueTag(kvps) });
+		Tag fileTag = new Tag(DataObjInp.PI_TAG, new Tag[] { new Tag(DataObjInp.OBJ_PATH, fromFileAbsolutePath),
+				new Tag(DataObjInp.CREATE_MODE, 0), new Tag(DataObjInp.OPEN_FLAGS, 0), new Tag(DataObjInp.OFFSET, 0),
+				new Tag(DataObjInp.DATA_SIZE, sourceFileLength), new Tag(DataObjInp.NUM_THREADS, 0),
+				new Tag(DataObjInp.OPR_TYPE, DataObjInp.COPY_FILE_SRC_OPERATION_TYPE), createKeyValueTag(kvps) });
 		return fileTag;
 	}
 
-	private Tag buildDataObjInpTagForCopyDest(
-			final String destFileAbsolutePath, final String destResource,
+	private Tag buildDataObjInpTagForCopyDest(final String destFileAbsolutePath, final String destResource,
 			final boolean overwrite) throws JargonException {
-		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(
-				destFileAbsolutePath, destResource, overwrite);
+		DataObjInp dataObjInp = DataObjInp.instanceForCopyDest(destFileAbsolutePath, destResource, overwrite);
 		return dataObjInp.getTagValue();
 	}
 

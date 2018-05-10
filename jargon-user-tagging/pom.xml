@@ -65,7 +65,6 @@ test.option.exercise.remoteexecstream=${jargon.test.option.exercise.remoteexecst
     </plugins>
     <pluginManagement>
     	<plugins>
-
     	</plugins>
     </pluginManagement>
   </build>

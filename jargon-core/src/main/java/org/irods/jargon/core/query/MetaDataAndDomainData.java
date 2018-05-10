@@ -6,6 +6,7 @@ package org.irods.jargon.core.query;
 import java.util.Date;
 
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.pub.domain.IRODSDomainObject;
 
 /**
@@ -44,14 +45,14 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * Create an immutable instance
 	 *
 	 * @param metadataDomain
-	 *            {@code MetadataDomain} enum value that indicates the
-	 *            domain (RESOURCE, USER, etc) that this metadata applies to
+	 *            {@code MetadataDomain} enum value that indicates the domain
+	 *            (RESOURCE, USER, etc) that this metadata applies to
 	 * @param domainObjectId
-	 *            {@code String} represents the unique id value for this
-	 *            domain object in ICAT
+	 *            {@code String} represents the unique id value for this domain
+	 *            object in ICAT
 	 * @param domainObjectUniqueName
-	 *            {@code String} with the unique name in ICAT, such as
-	 *            absolute path or resource name
+	 *            {@code String} with the unique name in ICAT, such as absolute path
+	 *            or resource name
 	 * @param avuId
 	 *            {@code int} with the AVU id
 	 * @param avuAttribute
@@ -60,32 +61,29 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 *            {@code String} with the AVU value
 	 * @param avuUnit
 	 *            {@code String} with the AVU units
-	 * @return {@code MetaDataAndDomainData} representing an AVU for the
-	 *         given domain
+	 * @return {@code MetaDataAndDomainData} representing an AVU for the given
+	 *         domain
 	 * @throws JargonException
 	 */
-	public static MetaDataAndDomainData instance(
-			final MetadataDomain metadataDomain, final String domainObjectId,
-			final String domainObjectUniqueName, final int avuId,
-			final String avuAttribute, final String avuValue,
+	public static MetaDataAndDomainData instance(final MetadataDomain metadataDomain, final String domainObjectId,
+			final String domainObjectUniqueName, final int avuId, final String avuAttribute, final String avuValue,
 			final String avuUnit) throws JargonException {
-		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
-				domainObjectUniqueName, 0L, null, null, avuId, avuAttribute,
-				avuValue, avuUnit);
+		return new MetaDataAndDomainData(metadataDomain, domainObjectId, domainObjectUniqueName, 0L, null, null, avuId,
+				avuAttribute, avuValue, avuUnit);
 	}
 
 	/**
 	 * Create an immutable instance
 	 *
 	 * @param metadataDomain
-	 *            {@code MetadataDomain} enum value that indicates the
-	 *            domain (RESOURCE, USER, etc) that this metadata applies to
+	 *            {@code MetadataDomain} enum value that indicates the domain
+	 *            (RESOURCE, USER, etc) that this metadata applies to
 	 * @param domainObjectId
-	 *            {@code String} represents the unique id value for this
-	 *            domain object in ICAT
+	 *            {@code String} represents the unique id value for this domain
+	 *            object in ICAT
 	 * @param domainObjectUniqueName
-	 *            {@code String} with the unique name in ICAT, such as
-	 *            absolute path or resource name
+	 *            {@code String} with the unique name in ICAT, such as absolute path
+	 *            or resource name
 	 * @param size
 	 *            {@code long} with an optional data size
 	 * @param createdAt
@@ -100,18 +98,17 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 *            {@code String} with the AVU value
 	 * @param avuUnit
 	 *            {@code String} with the AVU units
-	 * @return {@code MetaDataAndDomainData} representing an AVU for the
-	 *         given domain
+	 * @return {@code MetaDataAndDomainData} representing an AVU for the given
+	 *         domain
 	 * @throws JargonException
 	 */
-	public static MetaDataAndDomainData instance(
-			final MetadataDomain metadataDomain, final String domainObjectId,
-			final String domainObjectUniqueName, final long size,
-			final Date createdAt, final Date modifiedAt, final int avuId,
-			final String avuAttribute, final String avuValue,
-			final String avuUnit) throws JargonException {
-		return new MetaDataAndDomainData(metadataDomain, domainObjectId,
-				domainObjectUniqueName, size, createdAt, modifiedAt, avuId,
+	public static MetaDataAndDomainData instance(final MetadataDomain metadataDomain, final String domainObjectId,
+			final String domainObjectUniqueName, final long size, final Date createdAt, final Date modifiedAt,
+			final int avuId, final String avuAttribute, final String avuValue, final String avuUnit)
+			throws JargonException {
+		return new MetaDataAndDomainData(metadataDomain, domainObjectId, domainObjectUniqueName, size, createdAt,
+				modifiedAt, avuId,
+
 				avuAttribute, avuValue, avuUnit);
 	}
 
@@ -182,11 +179,10 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 	 * @param avuUnit
 	 * @throws JargonException
 	 */
-	private MetaDataAndDomainData(final MetadataDomain metadataDomain,
-			final String domainObjectId, final String domainObjectUniqueName,
-			final long size, final Date createdAt, final Date modifiedAt,
-			final int avuId, final String avuAttribute, final String avuValue,
-			final String avuUnit) throws JargonException {
+	private MetaDataAndDomainData(final MetadataDomain metadataDomain, final String domainObjectId,
+			final String domainObjectUniqueName, final long size, final Date createdAt, final Date modifiedAt,
+			final int avuId, final String avuAttribute, final String avuValue, final String avuUnit)
+			throws JargonException {
 
 		if (metadataDomain == null) {
 			throw new JargonException("metadataDomain is null");
@@ -197,8 +193,7 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		}
 
 		if (domainObjectUniqueName == null || domainObjectUniqueName.isEmpty()) {
-			throw new JargonException(
-					"domain object unique name is null or empty");
+			throw new JargonException("domain object unique name is null or empty");
 		}
 
 		if (avuAttribute == null || avuAttribute.isEmpty()) {
@@ -265,4 +260,14 @@ public final class MetaDataAndDomainData extends IRODSDomainObject {
 		return modifiedAt;
 	}
 
+	@Override
+	public MetaDataAndDomainData clone() throws CloneNotSupportedException {
+		try {
+			return new MetaDataAndDomainData(this.metadataDomain, this.domainObjectId, this.domainObjectUniqueName,
+					size, createdAt, createdAt, avuId, avuAttribute, avuValue, avuUnit);
+		} catch (JargonException e) {
+			throw new JargonRuntimeException("exception during clone()", e);
+		}
+
+	}
 }

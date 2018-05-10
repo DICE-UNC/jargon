@@ -295,7 +295,6 @@ public interface IRODSAccessObjectFactory {
 	 * Close all connections for this session. Any resulting exceptions are logged
 	 * as a warning and ignored.
 	 *
-	 * @throws JargonException
 	 */
 	void closeSessionAndEatExceptions();
 

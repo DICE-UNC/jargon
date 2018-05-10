@@ -71,25 +71,23 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
-	 * (script). This version is compatable with versions prior to iRODS 2.5.
-	 * iRODS 2.5 added a dummy field for 64 bit alignment issues on some
-	 * platform.
+	 * (script). This version is compatable with versions prior to iRODS 2.5. iRODS
+	 * 2.5 added a dummy field for 64 bit alignment issues on some platform.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final ExecCmd instanceWithCommandPriorTo25(
-			final String commandToExecuteWithoutArguments,
+	public static final ExecCmd instanceWithCommandPriorTo25(final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				"", "", true, PathHandlingMode.NONE);
+		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR, commandToExecuteWithoutArguments,
+				argumentsToPassWithCommand, "", "", true, PathHandlingMode.NONE);
 	}
 
 	/**
@@ -97,19 +95,18 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script) using the newer API with 64 bit alignment for some platforms.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final ExecCmd instanceWithCommandPost25(
-			final String commandToExecuteWithoutArguments,
+	public static final ExecCmd instanceWithCommandPost25(final String commandToExecuteWithoutArguments,
 			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				"", "", false, PathHandlingMode.NONE);
 	}
 
@@ -120,59 +117,54 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * 2.4.1 and is not supported in prior releases.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @return {@code ExcecCmd} instance.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecCmd instanceWithCommandAllowingStreamingForLargeResultsPost25(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand) throws JargonException {
-		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand)
+			throws JargonException {
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
 				"", "", false, PathHandlingMode.NONE);
 	}
 
 	/**
 	 * Create an instance of the packing instruction to execute a remote command
-	 * (script) This version is compatable with versions prior to iRODS 2.5.
-	 * iRODS 2.5 added a dummy field for 64 bit alignment issues on some
-	 * platform.
+	 * (script) This version is compatable with versions prior to iRODS 2.5. iRODS
+	 * 2.5 added a dummy field for 64 bit alignment issues on some platform.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @param executionHost
-	 *            {@code String} that can optionally point to the host on
-	 *            which the command should be executed. Blank if not used.
+	 *            {@code String} that can optionally point to the host on which the
+	 *            command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            {@code String} that can optionally give an iRODS absolute
-	 *            path. This is used within iRODS to find the host upon which
-	 *            the file is located, and that host can be used to execute the
-	 *            given command.
+	 *            {@code String} that can optionally give an iRODS absolute path.
+	 *            This is used within iRODS to find the host upon which the file is
+	 *            located, and that host can be used to execute the given command.
 	 * @param pathHandlingMode
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
-	 *            additional information about the request functionality. This
-	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to {@code NONE}
+	 *            additional information about the request functionality. This is
+	 *            used in the -P and -p equivalent modes, and otherwise is set to
+	 *            {@code NONE}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPriorTo25(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String executionHost,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String executionHost, final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 			final PathHandlingMode pathHandlingMode) throws JargonException {
-		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+		return new ExecCmd(STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR, commandToExecuteWithoutArguments,
+				argumentsToPassWithCommand, executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 				true, pathHandlingMode);
 	}
 
@@ -181,37 +173,32 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * (script) using the newer API with 64 bit alignment for some platforms.
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @param executionHost
-	 *            {@code String} that can optionally point to the host on
-	 *            which the command should be executed. Blank if not used.
+	 *            {@code String} that can optionally point to the host on which the
+	 *            command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            {@code String} that can optionally give an iRODS absolute
-	 *            path. This is used within iRODS to find the host upon which
-	 *            the file is located, and that host can be used to execute the
-	 *            given command.
+	 *            {@code String} that can optionally give an iRODS absolute path.
+	 *            This is used within iRODS to find the host upon which the file is
+	 *            located, and that host can be used to execute the given command.
 	 * @param pathHandlingMode
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
-	 *            additional information about the request functionality. This
-	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to {@code NONE}
+	 *            additional information about the request functionality. This is
+	 *            used in the -P and -p equivalent modes, and otherwise is set to
+	 *            {@code NONE}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersPost25(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String executionHost,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String executionHost, final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 			final PathHandlingMode pathHandlingMode) throws JargonException {
-		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-				false, pathHandlingMode);
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+				executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, false, pathHandlingMode);
 	}
 
 	/**
@@ -221,37 +208,32 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * iRODS releases after 2.5
 	 *
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @param executionHost
-	 *            {@code String} that can optionally point to the host on
-	 *            which the command should be executed. Blank if not used.
+	 *            {@code String} that can optionally point to the host on which the
+	 *            command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            {@code String} that can optionally give an iRODS absolute
-	 *            path. This is used within iRODS to find the host upon which
-	 *            the file is located, and that host can be used to execute the
-	 *            given command.
+	 *            {@code String} that can optionally give an iRODS absolute path.
+	 *            This is used within iRODS to find the host upon which the file is
+	 *            located, and that host can be used to execute the given command.
 	 * @param pathHandlingMode
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
-	 *            additional information about the request functionality. This
-	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to {@code NONE}
+	 *            additional information about the request functionality. This is
+	 *            used in the -P and -p equivalent modes, and otherwise is set to
+	 *            {@code NONE}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final ExecCmd instanceWithHostAndArgumentsToPassParametersAllowingStreamingForLargeResultsPost25(
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String executionHost,
-			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
+			final String commandToExecuteWithoutArguments, final String argumentsToPassWithCommand,
+			final String executionHost, final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
 			final PathHandlingMode pathHandlingMode) throws JargonException {
-		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM,
-				commandToExecuteWithoutArguments, argumentsToPassWithCommand,
-				executionHost,
-				absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-				false, pathHandlingMode);
+		return new ExecCmd(EXEC_AND_USE_ENHANCED_STREAM, commandToExecuteWithoutArguments, argumentsToPassWithCommand,
+				executionHost, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, false, pathHandlingMode);
 	}
 
 	/**
@@ -260,56 +242,48 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 	 * @param apiNumber
 	 *            {@code int} with the api number to use with this call.
 	 * @param commandToExecuteWithoutArguments
-	 *            {@code String} with the name of the command to execute.
-	 *            Do not put arguments into this field.
+	 *            {@code String} with the name of the command to execute. Do not put
+	 *            arguments into this field.
 	 * @param argumentsToPassWithCommand
-	 *            {@code String} that is blank, or has the arguments to
-	 *            send with the given command
+	 *            {@code String} that is blank, or has the arguments to send with
+	 *            the given command
 	 * @param executionHost
-	 *            {@code String} that can optionally point to the host on
-	 *            which the command should be executed. Blank if not used.
+	 *            {@code String} that can optionally point to the host on which the
+	 *            command should be executed. Blank if not used.
 	 * @param absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-	 *            {@code String} that can optionally give an iRODS absolute
-	 *            path. This is used within iRODS to find the host upon which
-	 *            the file is located, and that host can be used to execute the
-	 *            given command.
+	 *            {@code String} that can optionally give an iRODS absolute path.
+	 *            This is used within iRODS to find the host upon which the file is
+	 *            located, and that host can be used to execute the given command.
 	 * @param useBackwardCompatableInstruction
-	 *            {@code boolean} that indicates that the older version
-	 *            (2.4.1 and prior) should be used. Otherwise, the newer API
-	 *            with fixes for streaming and 64 bit alignment issues will be
-	 *            used.
+	 *            {@code boolean} that indicates that the older version (2.4.1 and
+	 *            prior) should be used. Otherwise, the newer API with fixes for
+	 *            streaming and 64 bit alignment issues will be used.
 	 * @param pathHandlingMode
 	 *            {@link ExecCmd.PathHandlingMode} enum value that provides
-	 *            additional information about the request functionality. This
-	 *            is used in the -P and -p equivalent modes, and otherwise is
-	 *            set to {@code NONE}
+	 *            additional information about the request functionality. This is
+	 *            used in the -P and -p equivalent modes, and otherwise is set to
+	 *            {@code NONE}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private ExecCmd(
-			final int apiNumber,
-			final String commandToExecuteWithoutArguments,
-			final String argumentsToPassWithCommand,
-			final String executionHost,
+	private ExecCmd(final int apiNumber, final String commandToExecuteWithoutArguments,
+			final String argumentsToPassWithCommand, final String executionHost,
 			final String absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn,
-			final boolean useBackwardCompatableInstruction,
-			final PathHandlingMode pathHandlingMode) throws JargonException {
+			final boolean useBackwardCompatableInstruction, final PathHandlingMode pathHandlingMode)
+			throws JargonException {
 
 		super();
 
-		if (commandToExecuteWithoutArguments == null
-				|| commandToExecuteWithoutArguments.length() == 0) {
-			throw new IllegalArgumentException(
-					"null commandToExecuteWithoutArguments");
+		if (commandToExecuteWithoutArguments == null || commandToExecuteWithoutArguments.length() == 0) {
+			throw new IllegalArgumentException("null commandToExecuteWithoutArguments");
 		}
 
 		if (argumentsToPassWithCommand == null) {
-			throw new IllegalArgumentException(
-					"null argumentsToPassWithCommand, set to blank if not used");
+			throw new IllegalArgumentException("null argumentsToPassWithCommand, set to blank if not used");
 		}
 
 		if (executionHost == null) {
-			throw new IllegalArgumentException(
-					"null executionHost, set to blank if not used");
+			throw new IllegalArgumentException("null executionHost, set to blank if not used");
 		}
 
 		if (absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn == null) {
@@ -317,8 +291,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 					"null absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn, set to blank if not used");
 		}
 
-		if (getApiNumber() == STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR
-				&& useBackwardCompatableInstruction) {
+		if (getApiNumber() == STANDARD_EXEC_ENCAPSULATE_DATA_IN_RESPONSE_API_NBR && useBackwardCompatableInstruction) {
 			throw new IllegalArgumentException(
 					"cannot stream binary data using the older instruction, the parameters are in conflict");
 		}
@@ -353,8 +326,7 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 		int addPathToArgv = ExecCmd.ADD_PATH_TO_ARGV_DEFAULT;
 
-		if (!absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn
-				.isEmpty()) {
+		if (!absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn.isEmpty()) {
 
 			if (pathHandlingMode == PathHandlingMode.USE_PATH_TO_ADD_PHYS_PATH_ARGUMENT_TO_REMOTE_SCRIPT) {
 				addPathToArgv = ExecCmd.ADD_PATH_TO_ARGV_WHEN_USING_PATH_TO_ADD_ARGUMENT;
@@ -366,15 +338,11 @@ public final class ExecCmd extends AbstractIRODSPackingInstruction {
 
 		}
 
-		Tag message = new Tag(
-				piTagToUse,
-				new Tag[] {
-						new Tag(CMD, commandToExecuteWithoutArguments),
-						new Tag(CMD_ARGV, argumentsToPassWithCommand),
-						new Tag(EXEC_ADDR, executionHost),
-						new Tag(HINT_PATH,
-								absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
-								new Tag(ADD_PATH_TO_ARGV, addPathToArgv) });
+		Tag message = new Tag(piTagToUse,
+				new Tag[] { new Tag(CMD, commandToExecuteWithoutArguments),
+						new Tag(CMD_ARGV, argumentsToPassWithCommand), new Tag(EXEC_ADDR, executionHost),
+						new Tag(HINT_PATH, absolutePathOfIrodsFileThatWillBeUsedToFindHostToExecuteOn),
+						new Tag(ADD_PATH_TO_ARGV, addPathToArgv) });
 
 		if (!useBackwardCompatableInstruction) {
 			// a dummy tag is in the pi for 64 bit alignment issues starting

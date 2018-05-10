@@ -39,29 +39,26 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 	 * Specify a delete with the force option enabled
 	 *
 	 * @param fileAbsolutePath
-	 *            {@code String} with the absolute path to the file/data
-	 *            object to be deleted.
+	 *            {@code String} with the absolute path to the file/data object to
+	 *            be deleted.
 	 * @param force
-	 *            {@code boolean} that indicates whether a force option
-	 *            should be used
-	 * @return {@code DataObjInp} containing the necessary packing
-	 *         instruction
+	 *            {@code boolean} that indicates whether a force option should be
+	 *            used
+	 * @return {@code DataObjInp} containing the necessary packing instruction
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final DataObjInpForUnregister instanceForDelete(
-			final String fileAbsolutePath, final boolean force)
-					throws JargonException {
+	public static final DataObjInpForUnregister instanceForDelete(final String fileAbsolutePath, final boolean force)
+			throws JargonException {
 		return new DataObjInpForUnregister(fileAbsolutePath, force);
 
 	}
 
-	private DataObjInpForUnregister(final String fileAbsolutePath,
-			final boolean force) {
+	private DataObjInpForUnregister(final String fileAbsolutePath, final boolean force) {
 
 		super();
 		if (fileAbsolutePath == null || fileAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"file absolute path is null or empty");
+			throw new IllegalArgumentException("file absolute path is null or empty");
 		}
 		this.fileAbsolutePath = fileAbsolutePath;
 		this.force = force;
@@ -72,11 +69,9 @@ public class DataObjInpForUnregister extends AbstractIRODSPackingInstruction {
 	@Override
 	public Tag getTagValue() throws JargonException {
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(OBJ_PATH, fileAbsolutePath), new Tag(CREATE_MODE, 0),
-				new Tag(OPEN_FLAGS, 0), new Tag(OFFSET, 0),
-				new Tag(DATA_SIZE, 0), new Tag(NUM_THREADS, 0),
-				new Tag(OPR_TYPE, 26) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(OBJ_PATH, fileAbsolutePath), new Tag(CREATE_MODE, 0), new Tag(OPEN_FLAGS, 0),
+						new Tag(OFFSET, 0), new Tag(DATA_SIZE, 0), new Tag(NUM_THREADS, 0), new Tag(OPR_TYPE, 26) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 

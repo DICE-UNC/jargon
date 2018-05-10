@@ -87,6 +87,50 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
+	 * <<<<<<< HEAD ======= Create a set of selects for a data object, used in
+	 * general query.
+	 *
+	 * @param builder
+	 *            {@link IRODSGenQueryBuilder} that will be appended with the
+	 *            selects
+	 *
+	 */
+	void buildSelects(final IRODSGenQueryBuilder builder) throws JargonException {
+
+		if (builder == null) {
+			throw new IllegalArgumentException("null builder");
+		}
+		try {
+
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COLL_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_REPL_NUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_VERSION)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_TYPE_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_DATA_SIZE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_RESC_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_PATH)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_OWNER_ZONE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_REPL_STATUS)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_STATUS)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_DATA_CHECKSUM)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_EXPIRY)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MAP_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_COMMENTS)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_CREATE_TIME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_D_MODIFY_TIME);
+
+		} catch (GenQueryBuilderException e) {
+			throw new JargonException(e);
+		}
+
+	}
+
+	/**
 	 * Return a {@code DataObject} domain object given a result row from a query
 	 *
 	 * @param row
@@ -578,7 +622,6 @@ public final class DataAOHelper extends AOHelper {
 	 * @param irodsCollectionAbsolutePath
 	 * @param dataName
 	 * @param builder
-	 * @return
 	 */
 	static void buildACLQueryForCollectionPathAndDataName(final String irodsCollectionAbsolutePath,
 			final String dataName, final IRODSGenQueryBuilder builder) throws JargonException {

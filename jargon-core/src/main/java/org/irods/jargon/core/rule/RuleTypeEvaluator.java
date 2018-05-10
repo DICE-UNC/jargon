@@ -6,7 +6,6 @@ package org.irods.jargon.core.rule;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.irods.jargon.core.exception.JargonException;
 import org.irods.jargon.core.utils.LocalFileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -113,7 +112,6 @@ public class RuleTypeEvaluator {
 	 *            <code>String</code> with the rule text
 	 * @return {@link IrodsRuleInvocationTypeEnum} which can return
 	 *         <code>null</code> if it can't guess
-	 * @throws JargonException
 	 */
 	public IrodsRuleInvocationTypeEnum detectTypeFromRuleTextAnnotation(final String ruleText) {
 		log.info("detectTypeFromRuleTextAnnotation()");

@@ -10,7 +10,7 @@ package org.irods.jargon.core.connection;
  *
  * @author Mike Conway - DICE (www.irods.org)
  *
- * {@code
+ *         {@code
  *         <Version_PI> <status>0</status> <relVersion>rods3.1</relVersion>
  *         <apiVersion>d</apiVersion> <reconnPort>63610</reconnPort>
  *         <reconnAddr>192.168.43.202</reconnAddr> <cookie>1575067662</cookie>
@@ -27,26 +27,30 @@ public class StartupResponseData {
 	private final String cookie;
 
 	/**
-	 * Holds the result of any client/server negotiation, will always be
-	 * present, even if no negotiation is done. Defaults to no ssl unless
-	 * negotiated later...
+	 * Holds the result of any client/server negotiation, will always be present,
+	 * even if no negotiation is done. Defaults to no ssl unless negotiated later...
 	 */
 	private NegotiatedClientServerConfiguration negotiatedClientServerConfiguration = new NegotiatedClientServerConfiguration(
 			false);
 
 	/**
-	 * Default constructor initializes all of the required fields in response to
-	 * a startup packet operation.
+	 * Default constructor initializes all of the required fields in response to a
+	 * startup packet operation.
 	 *
 	 * @param status
+	 *            {@code int} with the status
 	 * @param relVersion
+	 *            {@link String} with the iRODS version
 	 * @param apiVersion
+	 *            {@link String} with the iRODS API version
 	 * @param reconnPort
+	 *            {@code int} with the reconnect port
 	 * @param reconnAddr
+	 *            {@link String} with the reconnect addreass
 	 * @param cookie
+	 *            {@link String} with the iRODS cookie
 	 */
-	public StartupResponseData(final int status, final String relVersion,
-			final String apiVersion, final int reconnPort,
+	public StartupResponseData(final int status, final String relVersion, final String apiVersion, final int reconnPort,
 			final String reconnAddr, final String cookie) {
 
 		if (relVersion == null || relVersion.isEmpty()) {
@@ -137,6 +141,8 @@ public class StartupResponseData {
 
 	/**
 	 * Convenience method to see if this is iRODS 4.1.0 or later version
+	 * 
+	 * @return {@code boolean} indicating version after 4.1.0
 	 */
 	public boolean checkIs410OrLater() {
 		IrodsVersion irodsVersion = new IrodsVersion(getRelVersion());

@@ -22,10 +22,11 @@ public abstract class AbstractChecksumComputeStrategy {
 	 *            {@code String} with the absolute path to a local file
 	 * @return {@link ChecksumValue} with a checksum in digest (string) form.
 	 * @throws FileNotFoundException
+	 *             if file cannot be found
 	 * @throws JargonException
+	 *             for a general exception
 	 */
-	public abstract ChecksumValue computeChecksumValueForLocalFile(
-			final String localFileAbsolutePath) throws FileNotFoundException,
-			JargonException;
+	public abstract ChecksumValue computeChecksumValueForLocalFile(final String localFileAbsolutePath)
+			throws FileNotFoundException, JargonException;
 
 }

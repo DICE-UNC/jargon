@@ -19,9 +19,11 @@ public interface TrashOperationsAO {
 	 *            optional (<code>null</code> or blank) <code>String</code> with a
 	 *            zone for which the trash will be emptied. defaults to the current
 	 *            logged in zone
-	 * @param trashOptions
-	 *            {@link TrashOptions} that control details of the processing
+	 * @param age
+	 *            with a minimum age in minutes, set to 0 or -1 if all files are to
+	 *            be deleted
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyTrashForLoggedInUser(String irodsZone, int age) throws JargonException;
 
@@ -30,6 +32,7 @@ public interface TrashOperationsAO {
 	 * 
 	 * @return {@link IRODSFile} that is the top of the logged in user's trash
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	IRODSFile getTrashHomeForLoggedInUser() throws JargonException;
 
@@ -41,6 +44,7 @@ public interface TrashOperationsAO {
 	 *            emptied. defaults to the current logged in zone
 	 * @return {@link IRODSFile} that is the top of the orphan trash collection
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	IRODSFile getOrphanTrashHome(final String zone) throws JargonException;
 
@@ -63,6 +67,7 @@ public interface TrashOperationsAO {
 	 * @param trashOptions
 	 *            {@link TrashOptions} that control details of the processing
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyTrashAdminMode(final String userName, final String zone, final int age) throws JargonException;
 
@@ -79,6 +84,7 @@ public interface TrashOperationsAO {
 	 *            files are to be deleted
 	 * 
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyAllTrashAsAdmin(final String zone, final int age) throws JargonException;
 
@@ -93,6 +99,7 @@ public interface TrashOperationsAO {
 	 *         given zone
 	 * 
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	IRODSFile getTrashHome(final String zone) throws JargonException;
 
@@ -110,6 +117,7 @@ public interface TrashOperationsAO {
 	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
 	 *            files are to be deleted
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyTrashAtPathForLoggedInUser(final String irodsPath, final String irodsZone, final int age)
 			throws JargonException;
@@ -130,6 +138,7 @@ public interface TrashOperationsAO {
 	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
 	 *            files are to be deleted
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyTrashAtPathAdminMode(String irodsPath, String userName, String zone, int age) throws JargonException;
 
@@ -141,6 +150,7 @@ public interface TrashOperationsAO {
 	 *            zone for which the trash will be emptied. defaults to the current
 	 *            logged in zone
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
 	void emptyOrphanTrash(final String zone) throws JargonException;
 

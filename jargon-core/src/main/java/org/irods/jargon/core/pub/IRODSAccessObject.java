@@ -25,8 +25,7 @@ public interface IRODSAccessObject {
 	AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException;
 
 	/**
-	 * Get the {@code IRODSSession} that provides connections to the iRODS
-	 * server.
+	 * Get the {@code IRODSSession} that provides connections to the iRODS server.
 	 *
 	 * @return {@link IRODSSession}
 	 */
@@ -40,16 +39,15 @@ public interface IRODSAccessObject {
 	IRODSAccount getIRODSAccount();
 
 	/**
-	 * Convenience method that gets the underlying
-	 * {@code IRODSServerProperties} associated with the connection.
+	 * Convenience method that gets the underlying {@code IRODSServerProperties}
+	 * associated with the connection.
 	 *
 	 * @return {@link IRODSServerProperties}
 	 */
 	IRODSServerProperties getIRODSServerProperties() throws JargonException;
 
 	/**
-	 * Convenience method gets configuration information that tunes Jargon
-	 * behavior
+	 * Convenience method gets configuration information that tunes Jargon behavior
 	 *
 	 * @return {@link JargonProperties}
 	 */
@@ -61,8 +59,7 @@ public interface IRODSAccessObject {
 	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
 	 */
-	IRODSAccessObjectFactory getIRODSAccessObjectFactory()
-			throws JargonException;
+	IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException;
 
 	/**
 	 * Retrieve a factory that can create iRODS file objects for this connected
@@ -74,28 +71,26 @@ public interface IRODSAccessObject {
 	IRODSFileFactory getIRODSFileFactory() throws JargonException;
 
 	/**
-	 * Convenience method builds a default {@code TransferControlBlock}
-	 * that has default {@code TransferOptions} based on the
-	 * {@code JargonProperties} configured for the system.
+	 * Convenience method builds a default {@code TransferControlBlock} that has
+	 * default {@code TransferOptions} based on the {@code JargonProperties}
+	 * configured for the system.
 	 *
 	 * @return {@link TransferControlBlock} containing default
 	 *         {@link TransferOptions} based on the configured
 	 *         {@link JargonProperties}
 	 * @throws JargonException
 	 */
-	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
-			throws JargonException;
+	TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException;
 
 	/**
-	 * Get the default transfer options based on the properties that have been
-	 * set. This can then be tuned for an individual transfer
+	 * Get the default transfer options based on the properties that have been set.
+	 * This can then be tuned for an individual transfer
 	 *
 	 * @return {@link TransferOptions} based on defaults set in the jargon
 	 *         properties
 	 * @throws JargonException
 	 */
-	TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			throws JargonException;
+	TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException;
 
 	/**
 	 * Send an operation complete message
@@ -111,25 +106,22 @@ public interface IRODSAccessObject {
 	 * Upon creation, refer to jargon properties and see if this code should be
 	 * instrumented
 	 *
-	 * @return {@code boolean} of {@code true} if performance
-	 *         instrumentation is desired
+	 * @return {@code boolean} of {@code true} if performance instrumentation is
+	 *         desired
 	 */
 	boolean isInstrumented();
 
 	/**
-	 * Convenience method closes all sessions associated with the current
-	 * Thread.
+	 * Convenience method closes all sessions associated with the current Thread.
 	 * 
 	 * @throws JargonException
 	 */
 	void closeSession() throws JargonException;
 
 	/**
-	 * Convenience method closes all sessions associated with the current
-	 * Thread, intercepts and logs/ignores any exceptions that occur in the
-	 * close operation.
+	 * Convenience method closes all sessions associated with the current Thread,
+	 * intercepts and logs/ignores any exceptions that occur in the close operation.
 	 * 
-	 * @throws JargonException
 	 */
 	void closeSessionAndEatExceptions();
 
@@ -145,12 +137,11 @@ public interface IRODSAccessObject {
 
 	/**
 	 * Convenience method closes any session associated with the given
-	 * {@code IRODSAccount} in the current thread. Logs and ignores any
-	 * exception in the close operation.
+	 * {@code IRODSAccount} in the current thread. Logs and ignores any exception in
+	 * the close operation.
 	 * 
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} associated with the connection
-	 * @throws JargonException
 	 */
 	void closeSessionAndEatExceptions(IRODSAccount irodsAccount);
 

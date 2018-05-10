@@ -21,8 +21,7 @@ public class RandomUtils {
 	 *
 	 * @param length
 	 *            {@code int} with length of desired array
-	 * @return {@code byte[]} of {@code length} filled with random
-	 *         bytes
+	 * @return {@code byte[]} of {@code length} filled with random bytes
 	 */
 	public static final byte[] generateRandomBytesOfLength(final int length) {
 		if (length <= 0) {
@@ -36,11 +35,12 @@ public class RandomUtils {
 	}
 
 	/**
-	 * Returns a random char array that has a total length of
-	 * {@code length} chars. Remember that char is a 2 byte value.
+	 * Returns a random char array that has a total length of {@code length} chars.
+	 * Remember that char is a 2 byte value.
 	 *
 	 * @param length
-	 * @return
+	 *            <code>int</code> with the length of the random char string
+	 * @return <code>char[]</code> with the generated random chars
 	 */
 	public static final char[] generateRandomChars(final int length) {
 

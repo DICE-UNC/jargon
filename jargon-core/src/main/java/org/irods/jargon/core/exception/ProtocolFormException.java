@@ -9,29 +9,16 @@ package org.irods.jargon.core.exception;
  */
 public class ProtocolFormException extends ProtocolException {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -810097979277699143L;
 
-	/**
-	 * @param message
-	 */
 	public ProtocolFormException(final String message) {
 		super(message);
 	}
 
-	/**
-	 * @param cause
-	 */
 	public ProtocolFormException(final Throwable cause) {
 		super(cause);
 	}
 
-	/**
-	 * @param message
-	 * @param cause
-	 */
 	public ProtocolFormException(final String message, final Throwable cause) {
 		super(message, cause);
 	}

@@ -39,17 +39,18 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	private final boolean unregister;
 
 	/**
-	 * Create the packing instruction to delete this collection from irods,
-	 * moving the deleted files to the trash.
+	 * Create the packing instruction to delete this collection from irods, moving
+	 * the deleted files to the trash.
 	 *
 	 * @param collectionName
-	 *            {@code String} with the absolute path to the iRODS
-	 *            collection to be deleted.
+	 *            {@code String} with the absolute path to the iRODS collection to
+	 *            be deleted.
 	 * @return {@code CollInp} packing instruction.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final CollInp instanceForRecursiveDeleteCollectionNoForce(
-			final String collectionName) throws JargonException {
+	public static final CollInp instanceForRecursiveDeleteCollectionNoForce(final String collectionName)
+			throws JargonException {
 		return new CollInp(collectionName, true, false);
 	}
 
@@ -57,50 +58,47 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 	 * Create an instance for unregistering a collection regestered via ireg
 	 *
 	 * @param collectionName
-	 *            {@code String} with the absolute path to the iRODS
-	 *            collection
+	 *            {@code String} with the absolute path to the iRODS collection
 	 * @param force
 	 *            {@code boolean} indicates force option
 	 * @param recursive
-	 *            {@code boolean} that indicates whether to recursively
-	 *            unregister
+	 *            {@code boolean} that indicates whether to recursively unregister
 	 * @return {@link CollInp}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final CollInp instanceForUnregisterCollection(
-			final String collectionName, final boolean force,
+	public static final CollInp instanceForUnregisterCollection(final String collectionName, final boolean force,
 			final boolean recursive) throws JargonException {
 		return new CollInp(collectionName, recursive, force, true);
 	}
 
 	/**
-	 * Create the packing instruction to delete this collection from irods,
-	 * without moving the deleted files and collections to the trash
+	 * Create the packing instruction to delete this collection from irods, without
+	 * moving the deleted files and collections to the trash
 	 *
 	 * @param collectionName
-	 *            {@code String} with the absolute path to the iRODS
-	 *            collection to be deleted.
+	 *            {@code String} with the absolute path to the iRODS collection to
+	 *            be deleted.
 	 * @return {@code CollInp} packing instruction.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final CollInp instanceForRecursiveDeleteCollectionWithForce(
-			final String collectionName) throws JargonException {
+	public static final CollInp instanceForRecursiveDeleteCollectionWithForce(final String collectionName)
+			throws JargonException {
 		return new CollInp(collectionName, true, true);
 	}
 
-	public static final CollInp instance(final String collectionName,
-			final boolean recursiveOperation) throws JargonException {
+	public static final CollInp instance(final String collectionName, final boolean recursiveOperation)
+			throws JargonException {
 		return new CollInp(collectionName, recursiveOperation);
 	}
 
-	public static final CollInp instance(final String collectionName,
-			final boolean recursiveOperation, final boolean forceOperation)
-			throws JargonException {
+	public static final CollInp instance(final String collectionName, final boolean recursiveOperation,
+			final boolean forceOperation) throws JargonException {
 		return new CollInp(collectionName, recursiveOperation, forceOperation);
 	}
 
-	private CollInp(final String collectionName,
-			final boolean recursiveOperation) throws JargonException {
+	private CollInp(final String collectionName, final boolean recursiveOperation) throws JargonException {
 		super();
 		if (collectionName == null || collectionName.length() == 0) {
 			throw new JargonException("collection name is null or blank");
@@ -111,8 +109,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 		unregister = false;
 	}
 
-	private CollInp(final String collectionName,
-			final boolean recursiveOperation, final boolean forceOperation)
+	private CollInp(final String collectionName, final boolean recursiveOperation, final boolean forceOperation)
 			throws JargonException {
 		super();
 		if (collectionName == null || collectionName.length() == 0) {
@@ -125,8 +122,7 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 
 	}
 
-	private CollInp(final String collectionName,
-			final boolean recursiveOperation, final boolean forceOperation,
+	private CollInp(final String collectionName, final boolean recursiveOperation, final boolean forceOperation,
 			final boolean unregister) throws JargonException {
 		super();
 		if (collectionName == null || collectionName.length() == 0) {
@@ -159,9 +155,8 @@ public class CollInp extends AbstractIRODSPackingInstruction {
 			oprType = 26;
 		}
 
-		Tag message = new Tag(PI_TAG, new Tag[] {
-				new Tag(COLL_NAME, getCollectionName()), new Tag(FLAGS, 0),
-				new Tag(OPR_TYPE, oprType) });
+		Tag message = new Tag(PI_TAG,
+				new Tag[] { new Tag(COLL_NAME, getCollectionName()), new Tag(FLAGS, 0), new Tag(OPR_TYPE, oprType) });
 
 		List<KeyValuePair> kvps = new ArrayList<KeyValuePair>();
 

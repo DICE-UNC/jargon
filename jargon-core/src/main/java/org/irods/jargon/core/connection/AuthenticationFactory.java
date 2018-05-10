@@ -14,27 +14,27 @@ public interface AuthenticationFactory {
 
 	/**
 	 * This is an abstract factory, so implementations need to use an arbitrary
-	 * {@code String} to determine the proper {@code AuthMechanism}
-	 * implementation to return.
+	 * {@code String} to determine the proper {@code AuthMechanism} implementation
+	 * to return.
 	 * <p>
-	 * In the default representation, the mechanism is the {@link IRODSAccount}
-	 * enum value contained in the {@code IRODSAccount} as returned by the
-	 * {@code getName()} method. Custom implementations of this factory may
-	 * use other schemes.
+	 * In the default representation, the mechanism is the {@link IRODSAccount} enum
+	 * value contained in the {@code IRODSAccount} as returned by the
+	 * {@code getName()} method. Custom implementations of this factory may use
+	 * other schemes.
 	 * <p>
-	 * Note that this factory will defaut to a standard iRODS auth when the
-	 * public (anonymous) account is supplied.
+	 * Note that this factory will defaut to a standard iRODS auth when the public
+	 * (anonymous) account is supplied.
 	 *
 	 * @param irodsAccount
 	 *            {@link IRODSAccount} account containing desired auth scheme
-	 * @return {@link AuthMechanism} that is created based on the
-	 *         {@code authScheme} in the given {@code IRODSAccount}
+	 * @return {@link AuthMechanism} that is created based on the {@code authScheme}
+	 *         in the given {@code IRODSAccount}
 	 * @throws AuthUnavailableException
-	 *             if the given {@code authScheme} is not supported by the
-	 *             factory implementation.
+	 *             if the given {@code authScheme} is not supported by the factory
+	 *             implementation.
 	 * @throws JargonException
+	 *             on iRODS error
 	 */
-	AuthMechanism instanceAuthMechanism(IRODSAccount irodsAccount)
-			throws AuthUnavailableException, JargonException;
+	AuthMechanism instanceAuthMechanism(IRODSAccount irodsAccount) throws AuthUnavailableException, JargonException;
 
 }
