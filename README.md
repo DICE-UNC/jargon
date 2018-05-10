@@ -47,6 +47,13 @@ Adding service object for managing trash to retrofit into MetaLnx
 
 Added escaping of characters that cause problems with the kvp processing when sending PAM passwords and integrated into PAMAuth. This is linked to iRODS https://github.com/irods/irods/issues/3528
 
-Indexer/visitor pattern for data utils #296
+#### Indexer/visitor pattern for data utils #296
 
-Add code to support easy impl of metadata/file indexers via a Visitor pattern on iRODS directories
+Add code to support easy impl of metadata/file indexers via a Visitor pattern on iRODS directories. This is added to the jargon-data-utils and 
+provides a reliable way of traversing an iRODS hierarchy with control, applying a user-supplied procedure at each node via the Hierarchical Visitor pattern. This also has a dedicated implementation (at least an initial one) of a visitor with additional facilities for indexing crawlers. This will be optimized as time goes forward but is in employment already for several locations.
+
+#### JavaDoc cleanups #279
+
+Cleanups and fixes to javadocs to allow generation
+
+
