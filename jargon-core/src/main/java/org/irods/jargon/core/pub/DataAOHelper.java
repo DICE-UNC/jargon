@@ -137,6 +137,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link IRODSQueryResultRow} containing the result of a query
 	 * @return {@link DataObject} that represents the data in the row.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static DataObject buildDomainFromResultSetRow(final IRODSQueryResultRow row) throws JargonException {
 		DataObject dataObject = new DataObject();
@@ -187,10 +188,11 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * @param metaDataDomain
 	 * @param irodsQueryResultSet
-	 * @return
+	 *            {@link IRODSQueryResultSetInterface}
+	 * @return {@code List} of {@link MetaDataAndDomainData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	static List<MetaDataAndDomainData> buildMetaDataAndDomainDataListFromResultSet(
 			final IRODSQueryResultSetInterface irodsQueryResultSet) throws JargonException {
@@ -210,11 +212,13 @@ public final class DataAOHelper extends AOHelper {
 	}
 
 	/**
-	 * @param metadataDomain
 	 * @param row
+	 *            {@link IRODSQueryResultRow}
 	 * @param totalRecordCount
-	 * @return
+	 *            {@code int}
+	 * @return {@link MetaDataAndDomainData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRowForDataObject(final IRODSQueryResultRow row,
 			final int totalRecordCount) throws JargonException {
@@ -249,11 +253,17 @@ public final class DataAOHelper extends AOHelper {
 	 * Overwrites have already been checked
 	 *
 	 * @param localFileToHoldData
+	 *            {@link File}
 	 * @param length
+	 *            {@code long} length
 	 * @param transferOptions
+	 *            {@link TransferOptions}
 	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}
 	 * @param transferControlBlock
+	 *            {@link TransferControlBlock}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void processNormalGetTransfer(final File localFileToHoldData, final long length,
 			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferOptions transferOptions,
@@ -343,7 +353,9 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link StatusCallbackListener} implementation to receive status
 	 *            callbacks, this can be set to {@code null} if desired
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws FileNotFoundException
+	 *             if file is missing
 	 */
 	void processNormalPutTransfer(final File localFile, final boolean overwrite, final IRODSFile targetFile,
 			final AbstractIRODSMidLevelProtocol irodsProtocol, final TransferControlBlock transferControlBlock,
@@ -423,11 +435,13 @@ public final class DataAOHelper extends AOHelper {
 	 * Given local file data, compute the appropriate checksum
 	 *
 	 * @param localFile
+	 *            {@link File}
 	 * @param overrideChecksumEncoding
 	 *            {@link ChecksumEncodingEnum} to use explicitly, otherwise will use
 	 *            a default and {@code null} can be passed here
-	 * @return
+	 * @return {@link ChecksumValue}
 	 * @throws JargonException
+	 *             for iRDOS error
 	 */
 	ChecksumValue computeLocalFileChecksum(final File localFile, final ChecksumEncodingEnum overrideChecksumEncoding)
 			throws JargonException {
@@ -466,20 +480,6 @@ public final class DataAOHelper extends AOHelper {
 			throw new JargonException("cannot find local file to do the checksum", e);
 		}
 
-	}
-
-	/**
-	 * Given a checksum value coming back from iRODS, compute the checksum value
-	 *
-	 * @param irodsValue
-	 * @return
-	 * @throws JargonException
-	 * @deprecated see {@link DataObjectChecksumUtilitiesAO} in future
-	 */
-	@Deprecated
-	ChecksumValue computeChecksumValueFromIrodsData(final String irodsValue) throws JargonException {
-		// param checks in delegated method
-		return checksumManager.determineChecksumEncodingFromIrodsData(irodsValue.trim());
 	}
 
 	void putReadWriteLoop(final File localFile, final boolean overwrite, final IRODSFile targetFile, final int fd,
@@ -578,10 +578,14 @@ public final class DataAOHelper extends AOHelper {
 	 * collection, it can carry over the fileName in the specified iRODS collection.
 	 *
 	 * @param localFile
+	 *            {@link File}
 	 * @param irodsFileDestination
+	 *            {@link IRODSFile}
 	 * @param ignoreChecks
-	 * @return
+	 *            {@code boolean}
+	 * @return {@link IRODSFile}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	IRODSFile checkTargetFileForPutOperation(final File localFile, final IRODSFile irodsFileDestination,
 			final boolean ignoreChecks, final IRODSFileFactory irodsFileFactory) throws JargonException {
@@ -620,8 +624,13 @@ public final class DataAOHelper extends AOHelper {
 
 	/**
 	 * @param irodsCollectionAbsolutePath
+	 *            {@code String}
 	 * @param dataName
+	 *            {@code String}
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	static void buildACLQueryForCollectionPathAndDataName(final String irodsCollectionAbsolutePath,
 			final String dataName, final IRODSGenQueryBuilder builder) throws JargonException {
@@ -646,13 +655,21 @@ public final class DataAOHelper extends AOHelper {
 	 * given output.
 	 *
 	 * @param irodsFile
+	 *            {@link IRODSFile}
 	 * @param localFileToHoldData
+	 *            {@link File}
 	 * @param irodsFileLength
+	 *            {@code long}
 	 * @param transferOptions
+	 *            {@link TransferOptions}
 	 * @param fd
+	 *            {@code int}
 	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener}
 	 * @param transferControlBlock
+	 *            {@link TransferControlBlock}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void processGetTransferViaRead(final IRODSFile irodsFile, final File localFileToHoldData,
 			final long irodsFileLength, final TransferOptions transferOptions, final int fd,
@@ -759,6 +776,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@link IRODSGenQueryBuilder} that will have the selects appended
 	 *            to it
 	 * @throws GenQueryBuilderException
+	 *             for gen query error
 	 */
 	public static void addDataObjectSelectsToBuilder(final IRODSGenQueryBuilder builder)
 			throws GenQueryBuilderException {
@@ -799,6 +817,8 @@ public final class DataAOHelper extends AOHelper {
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder} that will be augmented with the
 	 *            necessary selects
+	 * @throws GenQueryBuilderException
+	 *             for builder error
 	 *
 	 */
 	public static void buildDataObjectQuerySelectsNoReplicationInfo(final IRODSGenQueryBuilder builder)
@@ -827,6 +847,7 @@ public final class DataAOHelper extends AOHelper {
 	 *            {@code int} with total records in the result set
 	 * @return {@code List} of {@link CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQueryNoReplicationInfo(
 			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {

@@ -128,6 +128,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 *            contains the connection information used to get a connection from
 	 *            the {@code irodsSession}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected DataObjectAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -1414,8 +1415,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 
 				// compute iRODS first, use algorithm from iRODS to compute the
 				// local checksum that should match
+				DataObjectChecksumUtilitiesAO checksumUtils = this.getIRODSAccessObjectFactory()
+						.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
 
-				ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFileToGet);
+				ChecksumValue irodsChecksum = checksumUtils.computeChecksumOnDataObject(irodsFileToGet);
 
 				log.info("computing a checksum on the file at:{}", localFileToHoldData.getAbsolutePath());
 
@@ -2811,7 +2814,10 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 		}
 
 		try {
-			ChecksumValue irodsChecksum = computeChecksumOnDataObject(irodsFile);
+			DataObjectChecksumUtilitiesAO checksumUtils = this.getIRODSAccessObjectFactory()
+					.getDataObjectChecksumUtilitiesAO(getIRODSAccount());
+
+			ChecksumValue irodsChecksum = checksumUtils.computeChecksumOnDataObject(irodsFile);
 			log.info("irodsChecksum:{}", irodsChecksum);
 			ChecksumValue localChecksum = getIRODSSession().getLocalChecksumComputerFactory()
 					.instance(irodsChecksum.getChecksumEncoding())
@@ -2823,34 +2829,6 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 			throw new FileNotFoundException("local file not found when computing checksum", e);
 		}
 
-	}
-
-	@Deprecated
-	@Override
-	public ChecksumValue computeChecksumOnDataObject(final IRODSFile irodsFile) throws JargonException {
-
-		log.info("computeChecksumOnDataObject()");
-
-		if (irodsFile == null) {
-			throw new IllegalArgumentException("irodsFile is null");
-		}
-
-		log.info("computing checksum on irodsFile: {}", irodsFile.getAbsolutePath());
-
-		DataObjInp dataObjInp = DataObjInp.instanceForDataObjectChecksum(irodsFile.getAbsolutePath());
-		Tag response = getIRODSProtocol().irodsFunction(dataObjInp);
-
-		if (response == null) {
-			log.error("invalid response to checksum call, response was null, expected checksum value");
-			throw new JargonException(
-					"invalid response to checksum call, received null response when doing checksum on file:"
-							+ irodsFile);
-		}
-
-		String returnedChecksum = response.getTag(DataObjInp.MY_STR).getStringValue();
-		log.info("checksum is: {}", returnedChecksum);
-
-		return dataAOHelper.computeChecksumValueFromIrodsData(returnedChecksum);
 	}
 
 	/*
@@ -3970,6 +3948,7 @@ public final class DataObjectAOImpl extends FileCatalogObjectAOImpl implements D
 	 * @param asIRODSAdmin
 	 *            {@code boolean} to process the given action as the rodsAdmin
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	@Override
 	public void trimDataObjectReplicas(final String irodsCollectionAbsolutePath, final String fileName,

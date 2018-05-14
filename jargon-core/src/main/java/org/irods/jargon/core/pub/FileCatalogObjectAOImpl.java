@@ -27,18 +27,16 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
-		FileCatalogObjectAO {
+public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements FileCatalogObjectAO {
 
 	protected transient final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(FileCatalogObjectAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(FileCatalogObjectAOImpl.class);
 	public static final String STR_PI = "STR_PI";
 	public static final String MY_STR = "myStr";
 	/**
-	 * value returned from 'get host for get operation' indicating that the
-	 * given host address should be used
+	 * value returned from 'get host for get operation' indicating that the given
+	 * host address should be used
 	 */
 
 	public static final String USE_THIS_ADDRESS = "thisAddress";
@@ -48,8 +46,8 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 * @param irodsAccount
 	 * @throws JargonException
 	 */
-	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(irodsAccount);
@@ -58,45 +56,38 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
+	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForGetOperation(
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String getHostForGetOperation(final String sourceAbsolutePath,
-			final String resourceName) throws JargonException {
+	public String getHostForGetOperation(final String sourceAbsolutePath, final String resourceName)
+			throws JargonException {
 
 		if (sourceAbsolutePath == null || sourceAbsolutePath.length() == 0) {
-			throw new IllegalArgumentException(
-					"Null or empty sourceAbsolutePath");
+			throw new IllegalArgumentException("Null or empty sourceAbsolutePath");
 		}
 
 		if (resourceName == null) {
 			throw new IllegalArgumentException("null resourceName");
 		}
 
-		log.info("getHostForGetOperation with sourceAbsolutePath: {}",
-				sourceAbsolutePath);
+		log.info("getHostForGetOperation with sourceAbsolutePath: {}", sourceAbsolutePath);
 		log.info("resourceName:{}", resourceName);
 
 		/*
-		 * If resource is specified, then the call for getHostForGet() will
-		 * return the correct resource server, otherwise, I need to see if this
-		 * is a data object. When a data object is being obtained, look to iRODS
-		 * to find the resources that data object is located on and pick the
-		 * first one
+		 * If resource is specified, then the call for getHostForGet() will return the
+		 * correct resource server, otherwise, I need to see if this is a data object.
+		 * When a data object is being obtained, look to iRODS to find the resources
+		 * that data object is located on and pick the first one
 		 */
 
 		if (resourceName.isEmpty()) {
-			IRODSFile fileToGet = getIRODSFileFactory().instanceIRODSFile(
-					sourceAbsolutePath);
+			IRODSFile fileToGet = getIRODSFileFactory().instanceIRODSFile(sourceAbsolutePath);
 			if (fileToGet.isFile()) {
 				log.debug("this is a file, look for resource it is stored on to retrieve host");
-				DataObjectAO dataObjectAO = getIRODSAccessObjectFactory()
-						.getDataObjectAO(getIRODSAccount());
-				List<Resource> resources = dataObjectAO
-						.getResourcesForDataObject(fileToGet.getParent(),
-								fileToGet.getName());
+				DataObjectAO dataObjectAO = getIRODSAccessObjectFactory().getDataObjectAO(getIRODSAccount());
+				List<Resource> resources = dataObjectAO.getResourcesForDataObject(fileToGet.getParent(),
+						fileToGet.getName());
 				if (resources.isEmpty()) {
 					return null;
 				} else {
@@ -104,8 +95,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 					String thisHostName = getIRODSAccount().getHost();
 					for (Resource resource : resources) {
 						if (resource.getLocation().equals(thisHostName)) {
-							log.info("file replica is on current host:{}",
-									thisHostName);
+							log.info("file replica is on current host:{}", thisHostName);
 							return null;
 						}
 					}
@@ -122,64 +112,55 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		 * Did not locate a resource based on a data object location, ask iRODS
 		 */
 
-		DataObjInp dataObjInp = DataObjInp.instanceForGetHostForGet(
-				sourceAbsolutePath, resourceName);
+		DataObjInp dataObjInp = DataObjInp.instanceForGetHostForGet(sourceAbsolutePath, resourceName);
 		return evaluateGetHostResponseAndReturnReroutingHost(dataObjInp);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
+	 * @see org.irods.jargon.core.pub.FileCatalogObjectAO#getHostForPutOperation(
 	 * java.lang.String, java.lang.String)
 	 */
 	@Override
-	public String getHostForPutOperation(final String targetAbsolutePath,
-			final String resourceName) throws JargonException {
+	public String getHostForPutOperation(final String targetAbsolutePath, final String resourceName)
+			throws JargonException {
 
 		if (targetAbsolutePath == null || targetAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"Null or empty targetAbsolutePath");
+			throw new IllegalArgumentException("Null or empty targetAbsolutePath");
 		}
 
 		if (resourceName == null) {
 			throw new IllegalArgumentException("null resourceName");
 		}
 
-		log.info("getHostForPutOperation with targetAbsolutePath: {}",
-				targetAbsolutePath);
+		log.info("getHostForPutOperation with targetAbsolutePath: {}", targetAbsolutePath);
 		log.info("resourceName:{}", resourceName);
 
-		DataObjInp dataObjInp = DataObjInp.instanceForGetHostForPut(
-				targetAbsolutePath, resourceName);
+		DataObjInp dataObjInp = DataObjInp.instanceForGetHostForPut(targetAbsolutePath, resourceName);
 		return evaluateGetHostResponseAndReturnReroutingHost(dataObjInp);
 	}
 
 	/**
-	 * Send a get host for get/put request to iRODS and evaluate the returned
-	 * host. It will either be a host name, or null, indicating no re-routing
-	 * needed.
+	 * Send a get host for get/put request to iRODS and evaluate the returned host.
+	 * It will either be a host name, or null, indicating no re-routing needed.
 	 *
 	 * @param dataObjInp
 	 * @return
 	 * @throws JargonException
 	 */
-	private String evaluateGetHostResponseAndReturnReroutingHost(
-			final DataObjInp dataObjInp) throws JargonException {
+	private String evaluateGetHostResponseAndReturnReroutingHost(final DataObjInp dataObjInp) throws JargonException {
 		Tag result = getIRODSProtocol().irodsFunction(dataObjInp);
 
 		// irods file doesn't exist
 		if (result == null) {
-			throw new JargonException(
-					"null response from lookup of resource for get operation");
+			throw new JargonException("null response from lookup of resource for get operation");
 		}
 
 		// Need the total dataSize
 		Tag temp = result.getTag(MY_STR);
 		if (temp == null) {
-			throw new JargonException(
-					"no host name info in response to lookup of resource for get operation");
+			throw new JargonException("no host name info in response to lookup of resource for get operation");
 		}
 
 		String hostResponse = temp.getStringValue();
@@ -206,8 +187,7 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 			throws FileNotFoundException, JargonException {
 		CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		return collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+		return collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath);
 	}
 
 	/**
@@ -217,22 +197,21 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 *            {@code String} with the iRODS absolute path
 	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
+	 *             if a file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected ObjStat retrieveObjStat(final String irodsAbsolutePath)
-			throws FileNotFoundException, JargonException {
+	protected ObjStat retrieveObjStat(final String irodsAbsolutePath) throws FileNotFoundException, JargonException {
 
 		log.info("retrieveObjStat()");
 
 		if (irodsAbsolutePath == null || irodsAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsAbsolutePath");
+			throw new IllegalArgumentException("null or empty irodsAbsolutePath");
 		}
 
 		log.info("irodsAbsolutePath:{}", irodsAbsolutePath);
 
-		ObjStat objStat = collectionAndDataObjectListAndSearchAO
-				.retrieveObjectStatForPath(irodsAbsolutePath);
+		ObjStat objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(irodsAbsolutePath);
 
 		// make sure this special coll type has support
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
@@ -249,11 +228,12 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 	 *            {@code String} with the child file name
 	 * @return {@link ObjStat} with the file data from iRODS
 	 * @throws FileNotFoundException
+	 *             if a file is missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected ObjStat retrieveObjStat(final String parentPath,
-			final String fileName) throws FileNotFoundException,
-			JargonException {
+	protected ObjStat retrieveObjStat(final String parentPath, final String fileName)
+			throws FileNotFoundException, JargonException {
 		if (parentPath == null || parentPath.isEmpty()) {
 			throw new IllegalArgumentException("null or empty parentPath");
 		}
@@ -262,23 +242,22 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 			throw new IllegalArgumentException("null or empty fileName");
 		}
 
-		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(
-				parentPath, fileName);
+		IRODSFile irodsFile = getIRODSFileFactory().instanceIRODSFile(parentPath, fileName);
 		return retrieveObjStat(irodsFile.getAbsolutePath());
 	}
 
 	/**
-	 * Given an {@code ObjStat} return the absolute path to use considering
-	 * things like soft links.
+	 * Given an {@code ObjStat} return the absolute path to use considering things
+	 * like soft links.
 	 *
 	 * @param objStat
 	 *            {@link ObjStat} that has been previously retrieved
-	 * @return {@code String} with the absolute path to use to get to the
-	 *         actual file
+	 * @return {@code String} with the absolute path to use to get to the actual
+	 *         file
 	 * @throws JargonException
+	 *             for an iRODS error
 	 */
-	protected String resolveAbsolutePathGivenObjStat(final ObjStat objStat)
-			throws JargonException {
+	protected String resolveAbsolutePathGivenObjStat(final ObjStat objStat) throws JargonException {
 
 		if (objStat == null) {
 			throw new IllegalArgumentException("null objStat");
@@ -287,53 +266,48 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements
 		 * See if jargon supports the given object type
 		 */
 		MiscIRODSUtils.evaluateSpecCollSupport(objStat);
-		return MiscIRODSUtils
-				.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
+		return MiscIRODSUtils.determineAbsolutePathBasedOnCollTypeInObjectStat(objStat);
 	}
 
-	protected String resolveAbsolutePathViaObjStat(
-			final String irodsAbsolutePath) throws JargonException {
+	protected String resolveAbsolutePathViaObjStat(final String irodsAbsolutePath) throws JargonException {
 
 		log.info("resoveAbsolutePathViaObjStat()");
 
-		ObjStat objStat = retrieveObjStat(MiscIRODSUtils
-				.checkPathSizeForMax(irodsAbsolutePath));
+		ObjStat objStat = retrieveObjStat(MiscIRODSUtils.checkPathSizeForMax(irodsAbsolutePath));
 		return resolveAbsolutePathGivenObjStat(objStat);
 
 	}
 
 	@Override
-	public abstract boolean isUserHasAccess(final String irodsAbsolutePath,
-			final String userName) throws JargonException;
+	public abstract boolean isUserHasAccess(final String irodsAbsolutePath, final String userName)
+			throws JargonException;
 
 	/**
 	 * Given two permissions (one by user, one by group) score and return the
 	 * highest permission, or null if no permissions found
 	 *
 	 * @param userFilePermission
+	 *            {@link UserFilePermission}
 	 * @param groupFilePermission
-	 * @return {@link UserFilePermission} that is the highest level, or
-	 *         {@code null} if no permissions found
+	 *            {@link UserFilePermission}
+	 * @return {@link UserFilePermission} that is the highest level, or {@code null}
+	 *         if no permissions found
 	 */
-	protected UserFilePermission scoreAndReturnHighestPermission(
-			final UserFilePermission userFilePermission,
+	protected UserFilePermission scoreAndReturnHighestPermission(final UserFilePermission userFilePermission,
 			final UserFilePermission groupFilePermission) {
 		int userScore = -1;
 		int groupScore = -1;
 
 		if (userFilePermission != null) {
-			userScore = userFilePermission.getFilePermissionEnum()
-					.getPermissionNumericValue();
+			userScore = userFilePermission.getFilePermissionEnum().getPermissionNumericValue();
 		}
 
 		if (groupFilePermission != null) {
-			groupScore = groupFilePermission.getFilePermissionEnum()
-					.getPermissionNumericValue();
+			groupScore = groupFilePermission.getFilePermissionEnum().getPermissionNumericValue();
 		}
 
 		if (userScore >= groupScore && userScore > -1) {
-			log.info("user file permission greater, using this:{}",
-					userFilePermission);
+			log.info("user file permission greater, using this:{}", userFilePermission);
 			return userFilePermission;
 		} else if (groupScore > -1) {
 			log.info("returning groupFilePermission:{}", groupFilePermission);

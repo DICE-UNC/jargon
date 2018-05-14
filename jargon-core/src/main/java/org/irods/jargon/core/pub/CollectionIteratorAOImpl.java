@@ -25,8 +25,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionIteratorAOImpl extends IRODSGenericAO {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(CollectionIteratorAOImpl.class);
+	public static final Logger log = LoggerFactory.getLogger(CollectionIteratorAOImpl.class);
 
 	private final CollectionAndDataObjectListAndSearchAO collectionAndDataObjectListAndSearchAO;
 	private final CollectionListingUtils collectionListingUtils;
@@ -36,45 +35,43 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 	 * this object
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected CollectionIteratorAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected CollectionIteratorAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 		collectionAndDataObjectListAndSearchAO = getIRODSAccessObjectFactory()
 				.getCollectionAndDataObjectListAndSearchAO(getIRODSAccount());
-		collectionListingUtils = new CollectionListingUtils(
-				collectionAndDataObjectListAndSearchAO);
+		collectionListingUtils = new CollectionListingUtils(collectionAndDataObjectListAndSearchAO);
 	}
 
-	public PagingAwareCollectionListing retrivePagingAwareCollectionListing(
-			final String absolutePathToParent) throws FileNotFoundException,
-			JargonException {
+	public PagingAwareCollectionListing retrivePagingAwareCollectionListing(final String absolutePathToParent)
+			throws FileNotFoundException, JargonException {
 
 		log.info("retrivePagingAwareCollectionListing()");
 		if (absolutePathToParent == null || absolutePathToParent.isEmpty()) {
-			throw new IllegalArgumentException(
-					"absolutePathToParent is null or empty");
+			throw new IllegalArgumentException("absolutePathToParent is null or empty");
 		}
 
 		log.info("absolutePath:{}", absolutePathToParent);
 
 		PagingAwareCollectionListing pagingAwareCollectionListing = new PagingAwareCollectionListing();
-		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties()
-				.getMaxFilesAndDirsQueryMax());
+		pagingAwareCollectionListing.setPageSizeUtilized(getJargonProperties().getMaxFilesAndDirsQueryMax());
 		List<CollectionAndDataObjectListingEntry> entries = null;
 		ObjStat objStat = null;
 
 		try {
-			objStat = collectionAndDataObjectListAndSearchAO
-					.retrieveObjectStatForPath(absolutePathToParent);
+			objStat = collectionAndDataObjectListAndSearchAO.retrieveObjectStatForPath(absolutePathToParent);
 		} catch (FileNotFoundException fnf) {
-			log.info("didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
+			log.info(
+					"didnt find an objStat for the path, account for cases where there are strict acls and give Jargon a chance to drill down to a place where the user has permissions");
 			entries = collectionListingUtils
 					.handleNoListingUnderRootOrHomeByLookingForPublicAndHome(absolutePathToParent);
-			pagingAwareCollectionListing
-			.setCollectionAndDataObjectListingEntries(entries);
+			pagingAwareCollectionListing.setCollectionAndDataObjectListingEntries(entries);
 			pagingAwareCollectionListing.setCollectionsComplete(true);
 			pagingAwareCollectionListing.setCollectionsCount(entries.size());
 			return pagingAwareCollectionListing;
@@ -101,20 +98,14 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			pagingAwareCollectionListing.setCollectionsOffset(0);
 		} else {
 			log.info("adding child collections");
-			pagingAwareCollectionListing.setCollectionsComplete(queriedEntries
-					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setCollectionsCount(queriedEntries
-					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-			.setCollectionsTotalRecords(queriedEntries.get(0)
-					.getTotalRecords());
-			pagingAwareCollectionListing
-			.getCollectionAndDataObjectListingEntries().addAll(
-					queriedEntries);
+					.setCollectionsComplete(queriedEntries.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setCollectionsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing.setCollectionsTotalRecords(queriedEntries.get(0).getTotalRecords());
+			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
 		}
 
-		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(
-				objStat, 0);
+		queriedEntries = collectionListingUtils.listDataObjectsUnderPath(objStat, 0);
 
 		/*
 		 * characterize the data objects listing
@@ -126,20 +117,14 @@ public class CollectionIteratorAOImpl extends IRODSGenericAO {
 			pagingAwareCollectionListing.setDataObjectsOffset(0);
 		} else {
 			log.info("adding child data objects");
-			pagingAwareCollectionListing.setDataObjectsComplete(queriedEntries
-					.get(queriedEntries.size() - 1).isLastResult());
-			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries
-					.get(queriedEntries.size() - 1).getCount());
 			pagingAwareCollectionListing
-			.setDataObjectsTotalRecords(queriedEntries.get(0)
-					.getTotalRecords());
-			pagingAwareCollectionListing
-			.getCollectionAndDataObjectListingEntries().addAll(
-					queriedEntries);
+					.setDataObjectsComplete(queriedEntries.get(queriedEntries.size() - 1).isLastResult());
+			pagingAwareCollectionListing.setDataObjectsCount(queriedEntries.get(queriedEntries.size() - 1).getCount());
+			pagingAwareCollectionListing.setDataObjectsTotalRecords(queriedEntries.get(0).getTotalRecords());
+			pagingAwareCollectionListing.getCollectionAndDataObjectListingEntries().addAll(queriedEntries);
 		}
 
-		log.info("pagingAwareCollectionListing:{}",
-				pagingAwareCollectionListing);
+		log.info("pagingAwareCollectionListing:{}", pagingAwareCollectionListing);
 		return pagingAwareCollectionListing;
 
 	}

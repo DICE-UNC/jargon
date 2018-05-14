@@ -78,8 +78,11 @@ public final class CollectionAOImpl extends FileCatalogObjectAOImpl implements C
 	 * Default constructor
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected CollectionAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
