@@ -15,22 +15,23 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 * @return {@link IRODSServerProperties} containing information such as boot
 	 *         time, version
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer()
-			throws JargonException;
+	IRODSServerProperties getIRODSServerPropertiesFromIRODSServer() throws JargonException;
 
 	/**
 	 * Get the current time on the iRODS server
 	 *
-	 * @return {@code long} with the time since epoch that is the current
-	 *         server time
+	 * @return {@code long} with the time since epoch that is the current server
+	 *         time
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	long getIRODSServerCurrentTime() throws JargonException;
 
 	/**
-	 * List the available remote commands. This is an experimental method
-	 * subject to API change.
+	 * List the available remote commands. This is an experimental method subject to
+	 * API change.
 	 * <p>
 	 * Note that this command requires the cmd-scripts/listCommands.sh to be
 	 * installed in the target iRODS server/cmd/bin directory, otherwise, a
@@ -38,12 +39,12 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * @return List of {@link RemoteCommandInformation}
 	 * @throws DataNotFoundException
-	 *             if the {@code listCommands.sh} script is not in the
-	 *             iRODS remote exec bin directory
+	 *             if the {@code listCommands.sh} script is not in the iRODS remote
+	 *             exec bin directory
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	List<RemoteCommandInformation> listAvailableRemoteCommands()
-			throws DataNotFoundException, JargonException;
+	List<RemoteCommandInformation> listAvailableRemoteCommands() throws DataNotFoundException, JargonException;
 
 	/**
 	 * Generate a list of the available microservices on the target server.
@@ -52,24 +53,24 @@ public interface EnvironmentalInfoAO extends IRODSAccessObject {
 	 *
 	 * This method will operate on iRODS servers version 3.0 and up.
 	 *
-	 * @return {@code List<String>} with the names of the available
-	 *         microservices.
+	 * @return {@code List<String>} with the names of the available microservices.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listAvailableMicroservices() throws JargonException;
 
 	/**
 	 * Check (by version) whether this server can run specific (SQL) query
 	 * <p>
-	 * Note that there is some difficulty with using this method from eIRODS
-	 * 3.0. See [#1663] iRODS environment shows 'rods3.0' as version
+	 * Note that there is some difficulty with using this method from eIRODS 3.0.
+	 * See [#1663] iRODS environment shows 'rods3.0' as version
 	 * <p>
 	 * For EIRODS3.0, it is recommended to use the
 	 * SpecificQueryAO.isSupportsSpecificQuery method
 	 *
-	 * @return {@code boolean} that will be {@code true} if I can run
-	 *         specific query
+	 * @return {@code boolean} that will be {@code true} if I can run specific query
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	boolean isAbleToRunSpecificQuery() throws JargonException;
 

@@ -70,6 +70,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public IRODSFileSystemAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -152,6 +153,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * @return {@code boolean} of {@code true} if file is data object, exists, and
 	 *         is executable
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private boolean checkIfDataObjectExecutable(final IRODSFile irodsFile) throws JargonException {
 
@@ -579,12 +581,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		return subdirs;
 	}
 
-	/**
-	 * @param fileNameFilter
-	 * @param subdirs
-	 * @param row
-	 * @throws JargonException
-	 */
 	private void processRowForSubdirWhenListDirWithFilter(final FilenameFilter fileNameFilter,
 			final List<String> subdirs, final IRODSQueryResultRow row) throws JargonException {
 		File fileFromResult = new File(row.getColumn(1));
@@ -593,12 +589,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		}
 	}
 
-	/**
-	 * @param fileNameFilter
-	 * @param subdirs
-	 * @param row
-	 * @throws JargonException
-	 */
 	private void processRowWhenListDirWithFilter(final FilenameFilter fileNameFilter, final List<String> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
 
@@ -724,12 +714,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		return subdirs;
 	}
 
-	/**
-	 * @param fileFilter
-	 * @param subdirs
-	 * @param row
-	 * @throws JargonException
-	 */
 	private void processSubdirRowWhenListFilesWithFileFilter(final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
 		String thisFileDir = row.getColumn(1);
@@ -740,12 +724,6 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 		}
 	}
 
-	/**
-	 * @param fileFilter
-	 * @param subdirs
-	 * @param row
-	 * @throws JargonException
-	 */
 	private void processFileRowWhenListFilesWithFileFilter(final FileFilter fileFilter, final List<File> subdirs,
 			final IRODSQueryResultRow row) throws JargonException {
 		// this is a file, does it pass the file name filter?
@@ -1115,10 +1093,15 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	}
 
 	/**
+	 * Get the resource for the given file
+	 * 
 	 * @param irodsFile
+	 *            {@link IRODSFile}
 	 * @return {@link Resource}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
+	 *             if file not found
 	 */
 	protected Resource getFileResource(final IRODSFile irodsFile) throws JargonException, DataNotFoundException {
 
@@ -1314,6 +1297,7 @@ public final class IRODSFileSystemAOImpl extends IRODSGenericAO implements IRODS
 	 * @param reply
 	 *            {@code Tag} containing status messages from IRODS
 	 * @throws IOException
+	 *             for error
 	 */
 	private void processClientStatusMessages(final Tag reply) throws JargonException {
 

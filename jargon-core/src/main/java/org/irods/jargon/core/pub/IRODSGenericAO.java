@@ -29,8 +29,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	private final IRODSAccount irodsAccount;
 	private final boolean instrumented;
 
-	private static final Logger log = LoggerFactory
-			.getLogger(IRODSGenericAO.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSGenericAO.class);
 
 	/**
 	 * Constructor that initializes the access object with a pointer to the
@@ -38,16 +37,16 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * connections.
 	 *
 	 * @param irodsSession
-	 *            {@link org.irods.jargon.core.connection.IRODSSession} that
-	 *            will manage connecting to iRODS.
+	 *            {@link org.irods.jargon.core.connection.IRODSSession} that will
+	 *            manage connecting to iRODS.
 	 * @param irodsAccount
 	 *            (@link org.irods.jargon.core.connection.IRODSAccount} that
-	 *            contains the connection information used to get a connection
-	 *            from the {@code irodsSession}
+	 *            contains the connection information used to get a connection from
+	 *            the {@code irodsSession}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSGenericAO(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public IRODSGenericAO(final IRODSSession irodsSession, final IRODSAccount irodsAccount) throws JargonException {
 		if (irodsSession == null) {
 			throw new JargonException("IRODSSession is null");
 		}
@@ -58,8 +57,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 
 		this.irodsSession = irodsSession;
 		this.irodsAccount = irodsAccount;
-		instrumented = getIRODSAccessObjectFactory().getJargonProperties()
-				.isInstrument();
+		instrumented = getIRODSAccessObjectFactory().getJargonProperties().isInstrument();
 
 		log.debug("establishing connection");
 		irodsSession.currentConnection(irodsAccount);
@@ -98,21 +96,18 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSServerProperties()
+	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSServerProperties()
 	 */
 	@Override
-	public final IRODSServerProperties getIRODSServerProperties()
-			throws JargonException {
+	public final IRODSServerProperties getIRODSServerProperties() throws JargonException {
 
 		/*
-		 * I need to force a check if this is eirods here. Note that the actual
-		 * value will be cached in the DiscoveredServerPropertiesCache, so this
-		 * only takes place
+		 * I need to force a check if this is eirods here. Note that the actual value
+		 * will be cached in the DiscoveredServerPropertiesCache, so this only takes
+		 * place
 		 */
 
-		return getIRODSSession().currentConnection(getIRODSAccount())
-				.getIRODSServerProperties();
+		return getIRODSSession().currentConnection(getIRODSAccount()).getIRODSServerProperties();
 	}
 
 	/*
@@ -121,8 +116,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * @see org.irods.jargon.core.pub.IRODSAccessObject#getIRODSProtocol()
 	 */
 	@Override
-	public final AbstractIRODSMidLevelProtocol getIRODSProtocol()
-			throws JargonException {
+	public final AbstractIRODSMidLevelProtocol getIRODSProtocol() throws JargonException {
 		return getIRODSSession().currentConnection(getIRODSAccount());
 	}
 
@@ -140,14 +134,11 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock
-	 * ()
+	 * org.irods.jargon.core.pub.IRODSAccessObject#getDefaultTransferControlBlock ()
 	 */
 	@Override
-	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties()
-			throws JargonException {
-		return getIRODSSession()
-				.buildDefaultTransferControlBlockBasedOnJargonProperties();
+	public TransferControlBlock buildDefaultTransferControlBlockBasedOnJargonProperties() throws JargonException {
+		return getIRODSSession().buildDefaultTransferControlBlockBasedOnJargonProperties();
 	}
 
 	/*
@@ -157,8 +148,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * org.irods.jargon.core.pub.IRODSAccessObject#getIRODSAccessObjectFactory()
 	 */
 	@Override
-	public IRODSAccessObjectFactory getIRODSAccessObjectFactory()
-			throws JargonException {
+	public IRODSAccessObjectFactory getIRODSAccessObjectFactory() throws JargonException {
 		return IRODSAccessObjectFactoryImpl.instance(irodsSession);
 	}
 
@@ -169,8 +159,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public IRODSFileFactory getIRODSFileFactory() throws JargonException {
-		return IRODSAccessObjectFactoryImpl.instance(irodsSession)
-				.getIRODSFileFactory(irodsAccount);
+		return IRODSAccessObjectFactoryImpl.instance(irodsSession).getIRODSFileFactory(irodsAccount);
 	}
 
 	/*
@@ -180,10 +169,8 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 * buildTransferOptionsBasedOnJargonProperties()
 	 */
 	@Override
-	public TransferOptions buildTransferOptionsBasedOnJargonProperties()
-			throws JargonException {
-		return getIRODSAccessObjectFactory()
-				.buildTransferOptionsBasedOnJargonProperties();
+	public TransferOptions buildTransferOptionsBasedOnJargonProperties() throws JargonException {
+		return getIRODSAccessObjectFactory().buildTransferOptionsBasedOnJargonProperties();
 	}
 
 	/*
@@ -193,8 +180,7 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 	 */
 	@Override
 	public Tag operationComplete(final int status) throws JargonException {
-		OperationComplete operationComplete = OperationComplete
-				.instance(status);
+		OperationComplete operationComplete = OperationComplete.instance(status);
 		return getIRODSProtocol().irodsFunction(operationComplete);
 	}
 
@@ -209,15 +195,13 @@ public abstract class IRODSGenericAO implements IRODSAccessObject {
 		try {
 			irodsSession.closeSession();
 		} catch (JargonException e) {
-			log.warn("ignored exception on connection close:{}",
-					e.getMessage(), e);
+			log.warn("ignored exception on connection close:{}", e.getMessage(), e);
 		}
 
 	}
 
 	@Override
-	public void closeSession(final IRODSAccount irodsAccount)
-			throws JargonException {
+	public void closeSession(final IRODSAccount irodsAccount) throws JargonException {
 		if (irodsSession == null) {
 			throw new JargonException("null session");
 		}

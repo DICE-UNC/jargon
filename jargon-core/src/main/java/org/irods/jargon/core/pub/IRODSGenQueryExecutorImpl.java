@@ -24,11 +24,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements
-IRODSGenQueryExecutor {
+public final class IRODSGenQueryExecutorImpl extends IRODSGenericAO implements IRODSGenQueryExecutor {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(IRODSGenQueryExecutorImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(IRODSGenQueryExecutorImpl.class);
 
 	/**
 	 * enum describes how to handle closing of a query
@@ -39,11 +37,11 @@ IRODSGenQueryExecutor {
 
 	/**
 	 * Constructor for implementation class, called by
-	 * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}, this is
-	 * not meant to be created directly by API users. The visibility of this
-	 * constructor is public so it may be invoked by
-	 * {@code org.irods.jargon.core.pub.io} classes. Those classes may
-	 * later be converted to create this object via factory
+	 * {@link org.irods.jargon.core.pub.IRODSAccessObjectFactoryImpl}, this is not
+	 * meant to be created directly by API users. The visibility of this constructor
+	 * is public so it may be invoked by {@code org.irods.jargon.core.pub.io}
+	 * classes. Those classes may later be converted to create this object via
+	 * factory
 	 *
 	 * @param irodsSession
 	 *            {@link org.irods.jargon.core.connection.IRODSSession}
@@ -52,23 +50,22 @@ IRODSGenQueryExecutor {
 	 *            {@link org.irods.jargon.core.connection.IRODSAccount} that
 	 *            contains connection information.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public IRODSGenQueryExecutorImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public IRODSGenQueryExecutorImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQuery(org
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQuery(org
 	 * .irods.jargon.core.query.IRODSQuery, int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQuery(
-			final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet executeIRODSQuery(final AbstractIRODSGenQuery irodsQuery, final int continueIndex)
+			throws JargonException, JargonQueryException {
 		log.info("executeIRODSQuery()");
 
 		return executeIRODSQueryInZone(irodsQuery, continueIndex, null);
@@ -77,13 +74,11 @@ IRODSGenQueryExecutor {
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryInZone
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#executeIRODSQueryInZone
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryInZone(
-			final AbstractIRODSGenQuery irodsQuery, final int continueIndex,
+	public IRODSQueryResultSet executeIRODSQueryInZone(final AbstractIRODSGenQuery irodsQuery, final int continueIndex,
 			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryInZone()");
@@ -98,14 +93,11 @@ IRODSGenQueryExecutor {
 
 		log.info("query: {}", irodsQuery);
 
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
 
-		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
-				.translateProvidedQuery(irodsQuery);
+		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor.translateProvidedQuery(irodsQuery);
 
-		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, continueIndex, 0,
+		return genQueryProcessor.executeTranslatedIRODSQuery(translatedIRODSQuery, continueIndex, 0,
 				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
 	}
 
@@ -113,17 +105,15 @@ IRODSGenQueryExecutor {
 	 * (non-Javadoc)
 	 *
 	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
-	 * executeIRODSQueryAndCloseResult
-	 * (org.irods.jargon.core.query.IRODSGenQuery, int)
+	 * executeIRODSQueryAndCloseResult (org.irods.jargon.core.query.IRODSGenQuery,
+	 * int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(
-			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet executeIRODSQueryAndCloseResult(final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex) throws JargonException, JargonQueryException {
 		log.info("executeIRODSQueryAndCloseResult()");
 
-		return executeIRODSQueryAndCloseResultInZone(irodsQuery,
-				partialStartIndex, null);
+		return executeIRODSQueryAndCloseResultInZone(irodsQuery, partialStartIndex, null);
 	}
 
 	/*
@@ -134,10 +124,8 @@ IRODSGenQueryExecutor {
 	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(
-			final AbstractIRODSGenQuery irodsQuery,
-			final int partialStartIndex, final String zoneName)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet executeIRODSQueryAndCloseResultInZone(final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex, final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryAndCloseResultInZone()");
 
@@ -151,14 +139,11 @@ IRODSGenQueryExecutor {
 
 		log.info("query: {}", irodsQuery);
 
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
 
-		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
-				.translateProvidedQuery(irodsQuery);
+		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor.translateProvidedQuery(irodsQuery);
 
-		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, 0, partialStartIndex,
+		return genQueryProcessor.executeTranslatedIRODSQuery(translatedIRODSQuery, 0, partialStartIndex,
 				QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
@@ -170,27 +155,23 @@ IRODSGenQueryExecutor {
 	 * (org.irods.jargon.core.query.IRODSQuery, int)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryWithPaging(
-			final AbstractIRODSGenQuery irodsQuery, final int partialStartIndex)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet executeIRODSQueryWithPaging(final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPaging()");
-		return executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex,
-				null);
+		return executeIRODSQueryWithPagingInZone(irodsQuery, partialStartIndex, null);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
 	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#
-	 * executeIRODSQueryWithPagingInZone
-	 * (org.irods.jargon.core.query.IRODSGenQuery, int, java.lang.String)
+	 * executeIRODSQueryWithPagingInZone (org.irods.jargon.core.query.IRODSGenQuery,
+	 * int, java.lang.String)
 	 */
 	@Override
-	public IRODSQueryResultSet executeIRODSQueryWithPagingInZone(
-			final AbstractIRODSGenQuery irodsQuery,
-			final int partialStartIndex, final String zoneName)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet executeIRODSQueryWithPagingInZone(final AbstractIRODSGenQuery irodsQuery,
+			final int partialStartIndex, final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("executeIRODSQueryWithPagingInZone()");
 
@@ -199,27 +180,22 @@ IRODSGenQueryExecutor {
 		}
 
 		log.info("query: {}", irodsQuery);
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
-		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor
-				.translateProvidedQuery(irodsQuery);
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
+		TranslatedIRODSGenQuery translatedIRODSQuery = genQueryProcessor.translateProvidedQuery(irodsQuery);
 
-		return genQueryProcessor.executeTranslatedIRODSQuery(
-				translatedIRODSQuery, 0, partialStartIndex,
+		return genQueryProcessor.executeTranslatedIRODSQuery(translatedIRODSQuery, 0, partialStartIndex,
 				QueryCloseBehavior.AUTO_CLOSE, zoneName);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResults(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResults(org.irods
 	 * .jargon.core.query.IRODSQueryResultSet)
 	 */
 	@Override
-	public IRODSQueryResultSet getMoreResults(
-			final IRODSQueryResultSet irodsQueryResultSet)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet getMoreResults(final IRODSQueryResultSet irodsQueryResultSet)
+			throws JargonException, JargonQueryException {
 
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
@@ -230,26 +206,21 @@ IRODSGenQueryExecutor {
 			throw new JargonQueryException("no more results");
 		}
 
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
 
-		return genQueryProcessor.executeTranslatedIRODSQuery(
-				irodsQueryResultSet.getTranslatedIRODSQuery(),
-				irodsQueryResultSet.getContinuationIndex(), 0,
-				QueryCloseBehavior.MANUAL_CLOSE, null);
+		return genQueryProcessor.executeTranslatedIRODSQuery(irodsQueryResultSet.getTranslatedIRODSQuery(),
+				irodsQueryResultSet.getContinuationIndex(), 0, QueryCloseBehavior.MANUAL_CLOSE, null);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResultsInZone(
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#getMoreResultsInZone(
 	 * org.irods.jargon.core.query.IRODSQueryResultSet, java.lang.String)
 	 */
 	@Override
-	public IRODSQueryResultSet getMoreResultsInZone(
-			final IRODSQueryResultSet irodsQueryResultSet, final String zoneName)
-					throws JargonException, JargonQueryException {
+	public IRODSQueryResultSet getMoreResultsInZone(final IRODSQueryResultSet irodsQueryResultSet,
+			final String zoneName) throws JargonException, JargonQueryException {
 
 		log.info("getting more results for query");
 		if (irodsQueryResultSet == null) {
@@ -260,29 +231,23 @@ IRODSGenQueryExecutor {
 			throw new JargonQueryException("no more results");
 		}
 
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
 
-		return genQueryProcessor.executeTranslatedIRODSQuery(
-				irodsQueryResultSet.getTranslatedIRODSQuery(),
-				irodsQueryResultSet.getContinuationIndex(), 0,
-				QueryCloseBehavior.MANUAL_CLOSE, zoneName);
+		return genQueryProcessor.executeTranslatedIRODSQuery(irodsQueryResultSet.getTranslatedIRODSQuery(),
+				irodsQueryResultSet.getContinuationIndex(), 0, QueryCloseBehavior.MANUAL_CLOSE, zoneName);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods
+	 * @see org.irods.jargon.core.pub.IRODSGenQueryExecutor#closeResults(org.irods
 	 * .jargon.core.query.IRODSQueryResultSetInterface)
 	 */
 	@Override
-	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet)
-			throws JargonException {
+	public void closeResults(final IRODSQueryResultSet irodsQueryResultSet) throws JargonException {
 
 		log.info("closeResults()");
-		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(
-				getIRODSProtocol());
+		GenQueryProcessor genQueryProcessor = new GenQueryProcessor(getIRODSProtocol());
 		genQueryProcessor.closeResults(irodsQueryResultSet);
 	}
 

@@ -43,8 +43,11 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected FileCatalogObjectAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -146,8 +149,10 @@ public abstract class FileCatalogObjectAOImpl extends IRODSGenericAO implements 
 	 * It will either be a host name, or null, indicating no re-routing needed.
 	 *
 	 * @param dataObjInp
-	 * @return
+	 *            {@link DataObjInp}
+	 * @return {@code String}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private String evaluateGetHostResponseAndReturnReroutingHost(final DataObjInp dataObjInp) throws JargonException {
 		Tag result = getIRODSProtocol().irodsFunction(dataObjInp);

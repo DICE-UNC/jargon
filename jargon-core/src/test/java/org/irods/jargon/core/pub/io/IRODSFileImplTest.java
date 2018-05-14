@@ -1362,11 +1362,6 @@ public class IRODSFileImplTest {
 		fail("Not yet implemented");
 	}
 
-	/**
-	 * Test method for
-	 * {@link org.irods.jargon.core.pub.io.IRODSFileImpl#IRODSFile(java.lang.String, org.irods.jargon.core.pub.IRODSFileSystemAO)}
-	 * .
-	 */
 	@Test
 	public final void testIRODSFileStringIRODSFileSystemAO() throws Exception {
 		IRODSProtocolManager irodsConnectionManager = IRODSSimpleProtocolManager.instance();

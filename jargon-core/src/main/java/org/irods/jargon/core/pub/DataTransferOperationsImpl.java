@@ -62,8 +62,11 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 
 	/**
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected DataTransferOperationsImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
 			throws JargonException {
@@ -212,14 +215,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		log.info("treat as a normal move");
 		moveOperation(sourceFile, targetFile);
 
-		/*
-		 * if (sourceFile.isFile()) { log.info("source file is a data object");
-		 * moveOperation(sourceFile, targetFile); } else {
-		 * log.info("source file is a collection, reparent it");
-		 * moveTheSourceCollectionUnderneathTheTargetCollectionUsingSourceParentCollectionName
-		 * ( sourceFile, targetFile); }
-		 */
-
 	}
 
 	/*
@@ -305,14 +300,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		}
 	}
 
-	/**
-	 * See if the file in the get operation exists on another resource server, and
-	 * must be rerouted
-	 *
-	 * @param irodsSourceFile
-	 * @return
-	 * @throws JargonException
-	 */
 	private IRODSAccount checkForReroutedConnectionDuringGetOperation(final IRODSFile irodsSourceFile)
 			throws JargonException {
 
@@ -339,12 +326,19 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 * necessary.
 	 *
 	 * @param irodsSourceFile
+	 *            {@link File} as source
 	 * @param targetLocalFile
+	 *            {@link IRODSFile} as target
 	 * @param transferStatusCallbackListener
+	 *            {@link TransferStatusCallbackListener} can be null
 	 * @param operativeTransferControlBlock
+	 *            {@link TransferControlBlock}
 	 * @param targetLocalFileNameForCallbacks
+	 *            {@code String}
 	 * @throws FileNotFoundException
+	 *             if file missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected void processGetAfterAnyConnectionRerouting(final IRODSFile irodsSourceFile, final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -513,19 +507,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		getOperation(irodsSourceFile, localFile, transferStatusCallbackListener, transferControlBlock);
 	}
 
-	/**
-	 * An exception has occurred during a get operation. This method will check to
-	 * see if there is a callback listener. If there is, the exception is reported
-	 * to the listener and quashed. If there is not a callback listener, the error
-	 * is rethrown from this method.
-	 *
-	 * @param irodsSourceFile
-	 * @param targetLocalFile
-	 * @param transferStatusCallbackListener
-	 * @param transferControlBlock
-	 * @param je
-	 * @throws JargonException
-	 */
 	private void processExceptionDuringGetOperation(final IRODSFile irodsSourceFile, final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
 			final TransferControlBlock transferControlBlock, final JargonException je) throws JargonException {
@@ -553,11 +534,10 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 * and will be recursively processed.
 	 *
 	 * @param irodsSourceFile
-	 *            {@link org.irods.jargon.core.pub.io.IRODSFile} that is the source
-	 *            of the get.
+	 *            {@link IRODSFile} that is the source of the get.
 	 * @param targetLocalFile
 	 *            {@code File} on the local file system to which the files will be
-	 *            transferrred.
+	 *            transferred.
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure of
@@ -570,7 +550,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            initiator of the transfer and the transfer process. This is
 	 *            required
 	 * @throws FileNotFoundException
+	 *             if file missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void getOperationWhenSourceFileIsDirectory(final IRODSFile irodsSourceFile, final File targetLocalFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -708,6 +690,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            {@link TransferControlBlock} that contains information to control
 	 *            and monitor the transfer. Required
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected void processPutAfterAnyConnectionRerouting(final File sourceFile, final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -809,11 +792,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		}
 	}
 
-	/**
-	 * @param transferControlBlock
-	 * @return
-	 * @throws JargonException
-	 */
 	private TransferControlBlock buildTransferControlBlockAndOptionsBasedOnParameters(
 			final TransferControlBlock transferControlBlock) throws JargonException {
 
@@ -874,10 +852,6 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 		putOperation(sourceFile, targetFile, transferStatusCallbackListener, transferControlBlock);
 	}
 
-	/**
-	 * @param sourceFile
-	 * @param operativeTransferControlBlock
-	 */
 	private void preCountLocalFilesBeforeTransfer(final File sourceFile,
 			final TransferControlBlock operativeTransferControlBlock) {
 		if (operativeTransferControlBlock != null) {
@@ -894,7 +868,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 * listener was supplied, the error is rethrown to the caller.
 	 *
 	 * @param sourceFile
+	 *            {@link File}
 	 * @param targetIrodsFile
+	 *            {@link IRODSFile}
 	 * @param transferStatusCallbackListener
 	 *            {@link org.irods.jargon.core.transfer.TransferStatusCallbackListener}
 	 *            implementation that will receive callbacks of success/failure of
@@ -907,7 +883,9 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            initiator of the transfer and the transfer process. This may be
 	 *            set to {@code null} if those facilities are not needed.
 	 * @param je
+	 *            {@link JargonException} that was the error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void processExceptionDuringPutOperation(final File sourceFile, final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -959,6 +937,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            initiator of the transfer and the transfer process. At this point,
 	 *            this will not be null.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void putWhenSourceFileIsDirectory(final File sourceFile, final IRODSFile targetIrodsFile,
 			final TransferStatusCallbackListener transferStatusCallbackListener,
@@ -1524,6 +1503,7 @@ public final class DataTransferOperationsImpl extends IRODSGenericAO implements 
 	 *            initiator of the transfer and the transfer process. This may be
 	 *            set to {@code null} if those facilities are not needed.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void processReplicationOfSingleFile(final String irodsFileAbsolutePath, final String targetResource,
 			final TransferStatusCallbackListener transferStatusCallbackListener,

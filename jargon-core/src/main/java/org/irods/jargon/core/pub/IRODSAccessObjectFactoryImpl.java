@@ -108,6 +108,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	 * Construct an instance with the given {@code IRODSSession}
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 */
 	public IRODSAccessObjectFactoryImpl(final IRODSSession irodsSession) {
 		this.irodsSession = irodsSession;
@@ -210,6 +211,7 @@ public final class IRODSAccessObjectFactoryImpl implements IRODSAccessObjectFact
 	 *            capable of creating connections to iRODS on demand.
 	 * @return {@link IRODSAccessObjectFactory}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static IRODSAccessObjectFactory instance(final IRODSSession irodsSession) throws JargonException {
 		if (irodsSession == null) {
