@@ -23,9 +23,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Access object to execute queries using the iRODS Simple Query facility. This
- * is mainly used for administrative queries, as in the {@code iadmin}
- * icommand. Typically these commands require {@code rodsadmin}, and will
- * fail if executed without admin rights.
+ * is mainly used for administrative queries, as in the {@code iadmin} icommand.
+ * Typically these commands require {@code rodsadmin}, and will fail if executed
+ * without admin rights.
  * <p>
  * Simple Query allows the the execution of queries as parameterized SQL. These
  * SQL statements are pre-loaded in iRODS and validated before being allowed to
@@ -36,11 +36,9 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements
-SimpleQueryExecutorAO {
+public class SimpleQueryExecutorAOImpl extends IRODSGenericAO implements SimpleQueryExecutorAO {
 
-	private static final Logger log = LoggerFactory
-			.getLogger(SimpleQueryExecutorAOImpl.class);
+	private static final Logger log = LoggerFactory.getLogger(SimpleQueryExecutorAOImpl.class);
 
 	public static final String OUT_BUF = "outBuf";
 
@@ -48,24 +46,26 @@ SimpleQueryExecutorAO {
 	 * Standard constructor for access objects.
 	 *
 	 * @param irodsSession
+	 *            {@link IRODSSession}
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	protected SimpleQueryExecutorAOImpl(final IRODSSession irodsSession,
-			final IRODSAccount irodsAccount) throws JargonException {
+	protected SimpleQueryExecutorAOImpl(final IRODSSession irodsSession, final IRODSAccount irodsAccount)
+			throws JargonException {
 		super(irodsSession, irodsAccount);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 *
-	 * @see
-	 * org.irods.jargon.core.pub.SimpleQueryExecutorAO#executeSimpleQuery(org
+	 * @see org.irods.jargon.core.pub.SimpleQueryExecutorAO#executeSimpleQuery(org
 	 * .irods.jargon.core.query.SimpleQuery)
 	 */
 	@Override
-	public IRODSQueryResultSetInterface executeSimpleQuery(
-			final AbstractAliasedQuery simpleQuery) throws JargonException {
+	public IRODSQueryResultSetInterface executeSimpleQuery(final AbstractAliasedQuery simpleQuery)
+			throws JargonException {
 
 		List<IRODSQueryResultRow> result;
 		List<String> colNames;
@@ -82,8 +82,7 @@ SimpleQueryExecutorAO {
 		if (response == null) {
 			log.info("response from IRODS call indicates no rows found");
 
-			resultSet = IRODSSimpleQueryResultSet.instance(simpleQuery,
-					new ArrayList<IRODSQueryResultRow>(),
+			resultSet = IRODSSimpleQueryResultSet.instance(simpleQuery, new ArrayList<IRODSQueryResultRow>(),
 					new ArrayList<String>(), false);
 
 			return resultSet;
@@ -93,22 +92,22 @@ SimpleQueryExecutorAO {
 		colNames = parseColumnNames(rows);
 		result = generateResultRows(rows, colNames);
 
-		resultSet = IRODSSimpleQueryResultSet.instance(simpleQuery, result,
-				colNames, true);
+		resultSet = IRODSSimpleQueryResultSet.instance(simpleQuery, result, colNames, true);
 
 		return resultSet;
 	}
 
 	/**
-	 * Passes simpleQuery to the connected iRODS instances and returns a
-	 * response in the form of a Tag. Returns null if something goes wrong.
+	 * Passes simpleQuery to the connected iRODS instances and returns a response in
+	 * the form of a Tag. Returns null if something goes wrong.
 	 *
 	 * @param simpleQuery
 	 *            a SimpleQuery to be run on the server.
 	 * @return the response as a Tag instance.
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private Tag getResponse(final SimpleQuery simpleQuery)
-			throws JargonException {
+	private Tag getResponse(final SimpleQuery simpleQuery) throws JargonException {
 		SimpleQueryInp simpleQueryInp = SimpleQueryInp.instance(simpleQuery);
 		Tag response = null;
 
@@ -122,12 +121,13 @@ SimpleQueryExecutorAO {
 	}
 
 	/**
-	 * Takes a Tag and turns to into a List<String>. It does this by turning the
-	 * tag into a string and splitting it on newlines.
+	 * Takes a Tag and turns to into a List<String>. It does this by turning the tag
+	 * into a string and splitting it on newlines.
 	 *
 	 * @param response
 	 *            A Tag, probably the reponse returned by getResponse().
 	 * @return A List<String> created by splitting the raw tag on newlines.
+	 * 
 	 */
 	private List<String> extractRows(final Tag response) {
 		String rawResponse = response.getTag(OUT_BUF).getStringValue();
@@ -137,10 +137,10 @@ SimpleQueryExecutorAO {
 	}
 
 	/**
-	 * Divides the rows returned by extractRows() into grouped result rows. This
-	 * is accomplished by looking for the blank rows between result rows. We end
-	 * up with an ArrayList<ArrayList<String>>, where each inner
-	 * ArrayList<String> represents one row in the result set returned by iRODS.
+	 * Divides the rows returned by extractRows() into grouped result rows. This is
+	 * accomplished by looking for the blank rows between result rows. We end up
+	 * with an ArrayList<ArrayList<String>>, where each inner ArrayList<String>
+	 * represents one row in the result set returned by iRODS.
 	 *
 	 * @param rows
 	 *            The rows returned by extractRows().
@@ -164,18 +164,19 @@ SimpleQueryExecutorAO {
 	}
 
 	/**
-	 * Takes in one of the grouped result rows created by divideRows() and turns
-	 * it into an IRODSQueryResultRow.
+	 * Takes in one of the grouped result rows created by divideRows() and turns it
+	 * into an IRODSQueryResultRow.
 	 *
 	 * @param rowList
 	 *            A grouped result row created by extractRows().
 	 * @param columnNames
 	 *            A list of column names created by parseColumnNames().
 	 * @return an IRODSQueryResultRow.
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private IRODSQueryResultRow convertRowToResultRow(
-			final List<String> rowList, final List<String> columnNames)
-					throws JargonException {
+	private IRODSQueryResultRow convertRowToResultRow(final List<String> rowList, final List<String> columnNames)
+			throws JargonException {
 		char delimiter = ':';
 		List<String> columnValues = new ArrayList<String>();
 
@@ -188,18 +189,19 @@ SimpleQueryExecutorAO {
 
 	/**
 	 * Iterates over the grouped result rows generated by divideRows() and turns
-	 * them each into an IRODSQueryResultRow by calling convertRowToResultRow()
-	 * on them. Returns a List of IRODSQueryResultRows.
+	 * them each into an IRODSQueryResultRow by calling convertRowToResultRow() on
+	 * them. Returns a List of IRODSQueryResultRows.
 	 *
 	 * @param rows
 	 *            a list of rows created by extractRows().
 	 * @param columnNames
 	 *            a list of columnNames created by parseColumnNames().
 	 * @return A list o f IRODSQueryResultRows.
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	private List<IRODSQueryResultRow> generateResultRows(
-			final List<String> rows, final List<String> columnNames)
-					throws JargonException {
+	private List<IRODSQueryResultRow> generateResultRows(final List<String> rows, final List<String> columnNames)
+			throws JargonException {
 		List<IRODSQueryResultRow> results = new ArrayList<IRODSQueryResultRow>();
 
 		for (List<String> row : divideRows(rows)) {
@@ -211,8 +213,8 @@ SimpleQueryExecutorAO {
 
 	/**
 	 * Parses the column names for the result set from the first row in the
-	 * response. This allows us to avoid parsing out the column names for each
-	 * row in the result.
+	 * response. This allows us to avoid parsing out the column names for each row
+	 * in the result.
 	 *
 	 * @param rows
 	 *            The rows created by extractRows().

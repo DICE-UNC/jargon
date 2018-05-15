@@ -51,7 +51,7 @@ public interface TrashOperationsAO {
 	/**
 	 * Empty the trash can for the provided user, with an optional (blank or null)
 	 * zone. This operation is done as an administrator
-	 * <p/>
+	 * <p>
 	 * The caller must properly format the username and zone name appropriately.
 	 * 
 	 * @param userName
@@ -64,8 +64,7 @@ public interface TrashOperationsAO {
 	 * @param age
 	 *            {@link int} with a minimum age in minutes, set to 0 or -1 if all
 	 *            files are to be deleted
-	 * @param trashOptions
-	 *            {@link TrashOptions} that control details of the processing
+	 * 
 	 * @throws JargonException
 	 *             for an iRODS error
 	 */
@@ -130,7 +129,7 @@ public interface TrashOperationsAO {
 	 *            {@link String} absolute path to the trash item
 	 * @param userName
 	 *            <code>String</code> that will have trash emptied.
-	 * @param irodsZone
+	 * @param zone
 	 *            optional (<code>null</code> or blank) <code>String</code> with a
 	 *            zone for which the trash will be emptied. defaults to the current
 	 *            logged in zone

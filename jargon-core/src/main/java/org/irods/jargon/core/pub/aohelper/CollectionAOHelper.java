@@ -36,8 +36,7 @@ import org.slf4j.LoggerFactory;
  */
 public class CollectionAOHelper extends AOHelper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(CollectionAOHelper.class);
+	public static final Logger log = LoggerFactory.getLogger(CollectionAOHelper.class);
 
 	/**
 	 * Create a set of selects for a collection, used in general query
@@ -80,12 +79,12 @@ public class CollectionAOHelper extends AOHelper {
 	 * collection data in the iCAT
 	 *
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} to which the selects will be
-	 *            added
+	 *            {@link IRODSGenQueryBuilder} to which the selects will be added
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
-	public static void buildSelectsByAppendingToBuilder(
-			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
+	public static void buildSelectsByAppendingToBuilder(final IRODSGenQueryBuilder builder)
+			throws GenQueryBuilderException {
 		builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ID)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_NAME)
 				.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_PARENT_NAME)
@@ -102,9 +101,9 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build a set of selects for collection metadata. This method does not add
-	 * the "select" statement or any trailing delimiter, and is handy when you
-	 * want to tack a metadata selection onto the end of a query.
+	 * Build a set of selects for collection metadata. This method does not add the
+	 * "select" statement or any trailing delimiter, and is handy when you want to
+	 * tack a metadata selection onto the end of a query.
 	 *
 	 * @return {@code String} with metadata select fragment.
 	 */
@@ -119,20 +118,18 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Return a {@code Collection} domain object given a result row from a
-	 * query
+	 * Return a {@code Collection} domain object given a result row from a query
 	 *
 	 * @param row
-	 *            {@link org.irods.jargon.core.query.IRODSQueryResultRow}
-	 *            containing the result of a query
+	 *            {@link org.irods.jargon.core.query.IRODSQueryResultRow} containing
+	 *            the result of a query
 	 * @return {@link Collection} that represents the data in the row.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static Collection buildCollectionFromResultSetRow(
-			final IRODSQueryResultRow row) throws JargonException {
+	public static Collection buildCollectionFromResultSetRow(final IRODSQueryResultRow row) throws JargonException {
 		Collection collection = new Collection();
-		collection.setCollectionId(IRODSDataConversionUtil
-				.getIntOrZeroFromIRODSValue(row.getColumn(0)));
+		collection.setCollectionId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(0)));
 		collection.setCollectionName(row.getColumn(1));
 		collection.setCollectionParentName(row.getColumn(2));
 		collection.setCollectionOwnerName(row.getColumn(3));
@@ -140,10 +137,8 @@ public class CollectionAOHelper extends AOHelper {
 		collection.setCollectionMapId(row.getColumn(5));
 		collection.setCollectionInheritance(row.getColumn(6));
 		collection.setComments(row.getColumn(7));
-		collection.setCreatedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(8)));
-		collection.setModifiedAt(IRODSDataConversionUtil
-				.getDateFromIRODSValue(row.getColumn(9)));
+		collection.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(8)));
+		collection.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(9)));
 		collection.setInfo1(row.getColumn(10));
 		collection.setInfo2(row.getColumn(11));
 		collection.setInfo2(row.getColumn(11));
@@ -159,22 +154,20 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Given a set of AVU Query parameters, build the appropriate condition to
-	 * add to a query
+	 * Given a set of AVU Query parameters, build the appropriate condition to add
+	 * to a query
 	 *
 	 * @param queryElement
-	 *            {@code StringBuilder} with the given AVU query in iquest
-	 *            query form.
+	 *            {@code StringBuilder} with the given AVU query in iquest query
+	 *            form.
+	 * @return {@link StringBuilder} with condition data
 	 */
-	public static StringBuilder buildConditionPart(
-			final AVUQueryElement queryElement) {
+	public static StringBuilder buildConditionPart(final AVUQueryElement queryElement) {
 		StringBuilder queryCondition = new StringBuilder();
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME
-					.getName());
+			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME.getName());
 			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			queryCondition.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -182,11 +175,9 @@ public class CollectionAOHelper extends AOHelper {
 		}
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE
-					.getName());
+			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE.getName());
 			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			queryCondition.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -194,11 +185,9 @@ public class CollectionAOHelper extends AOHelper {
 		}
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS
-					.getName());
+			queryCondition.append(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS.getName());
 			queryCondition.append(SPACE);
-			queryCondition
-					.append(queryElement.getOperator().getOperatorValue());
+			queryCondition.append(queryElement.getOperator().getOperatorValue());
 			queryCondition.append(SPACE);
 			queryCondition.append(QUOTE);
 			queryCondition.append(queryElement.getValue());
@@ -209,40 +198,33 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Append the appropriately formed query condition to the provided builder
-	 * for a collection metadata query
+	 * Append the appropriately formed query condition to the provided builder for a
+	 * collection metadata query
 	 *
 	 * @param queryElement
 	 *            {@link AVUQueryElement} to be added as a condition
 	 * @param builder
-	 *            {@link IRODSGenQueryBuilder} that will have the derived
-	 *            condition appended
+	 *            {@link IRODSGenQueryBuilder} that will have the derived condition
+	 *            appended
 	 * @throws JargonQueryException
 	 *             if the query cannot be built
 	 */
-	public static void appendConditionPartToBuilderQuery(
-			final AVUQueryElement queryElement,
+	public static void appendConditionPartToBuilderQuery(final AVUQueryElement queryElement,
 			final IRODSGenQueryBuilder builder) throws JargonQueryException {
 
 		if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.ATTRIBUTE) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
-					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_NAME,
+					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.VALUE) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
-					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_VALUE,
+					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 
 		} else if (queryElement.getAvuQueryPart() == AVUQueryElement.AVUQueryPart.UNITS) {
-			builder.addConditionAsGenQueryField(
-					RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
-					BuilderQueryUtils
-							.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
+			builder.addConditionAsGenQueryField(RodsGenQueryEnum.COL_META_COLL_ATTR_UNITS,
+					BuilderQueryUtils.translateAVUQueryElementOperatorToBuilderQueryCondition(queryElement),
 					queryElement.getValue());
 		} else {
 			throw new JargonQueryException("unable to resolve AVU Query part");
@@ -254,11 +236,12 @@ public class CollectionAOHelper extends AOHelper {
 	 * Build a list of collection results based on the result of a query
 	 *
 	 * @param resultSet
+	 *            {@link IRODSQueryResultSetInterface}
 	 * @return List {@link Collection}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static List<Collection> buildListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet)
+	public static List<Collection> buildListFromResultSet(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 
 		final List<Collection> collections = new ArrayList<Collection>();
@@ -271,35 +254,30 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * for a result set row, create a
-	 * {@code CollectionAndDataObjectListingEntry}
+	 * for a result set row, create a {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@code IRODSQueryResultRow} with raw data.
 	 * @param totalRecords
-	 *            {@code int} with the optional total records in the
-	 *            database, not always available in the iCAT, this can be set to
-	 *            0 if not available
+	 *            {@code int} with the optional total records in the database, not
+	 *            always available in the iCAT, this can be set to 0 if not
+	 *            available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForCollectionQuery(
-			final IRODSQueryResultRow row, final int totalRecords)
-			throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.COLLECTION);
 		entry.setPathOrName(row.getColumn(1));
-		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(2)));
-		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(3)));
-		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-				.getColumn(4)));
+		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(2)));
+		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(4)));
 		entry.setOwnerName(row.getColumn(5));
 		entry.setOwnerZone(row.getColumn(6));
-		entry.setSpecColType(IRODSDataConversionUtil
-				.getCollectionTypeFromIRODSValue(row.getColumn(7)));
+		entry.setSpecColType(IRODSDataConversionUtil.getCollectionTypeFromIRODSValue(row.getColumn(7)));
 
 		entry.setCount(row.getRecordCount());
 		entry.setTotalRecords(totalRecords);
@@ -311,33 +289,29 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * for a result set row from a query for data objects in a collection,
-	 * create a {@code CollectionAndDataObjectListingEntry}
+	 * for a result set row from a query for data objects in a collection, create a
+	 * {@code CollectionAndDataObjectListingEntry}
 	 *
 	 * @param row
 	 *            {@code IRODSQueryResultRow} with raw data
 	 * @param totalRecords
-	 *            {@code int} with the optional total records in the
-	 *            database, not always available in the iCAT, this can be set to
-	 *            0 if not available
+	 *            {@code int} with the optional total records in the database, not
+	 *            always available in the iCAT, this can be set to 0 if not
+	 *            available
 	 * @return {@link org.irods.jargon.core.query.CollectionAndDataObjectListingEntry}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static CollectionAndDataObjectListingEntry buildCollectionListEntryFromResultSetRowForDataObjectQuery(
-			final IRODSQueryResultRow row, final int totalRecords)
-			throws JargonException {
+			final IRODSQueryResultRow row, final int totalRecords) throws JargonException {
 		CollectionAndDataObjectListingEntry entry = new CollectionAndDataObjectListingEntry();
 		entry.setParentPath(row.getColumn(0));
 		entry.setObjectType(ObjectType.DATA_OBJECT);
 		entry.setPathOrName(row.getColumn(1));
-		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(2)));
-		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row
-				.getColumn(3)));
-		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row
-				.getColumn(4)));
-		entry.setDataSize(IRODSDataConversionUtil
-				.getLongOrZeroFromIRODSValue(row.getColumn(5)));
+		entry.setCreatedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(2)));
+		entry.setModifiedAt(IRODSDataConversionUtil.getDateFromIRODSValue(row.getColumn(3)));
+		entry.setId(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(4)));
+		entry.setDataSize(IRODSDataConversionUtil.getLongOrZeroFromIRODSValue(row.getColumn(5)));
 		entry.setOwnerName(row.getColumn(7));
 		entry.setOwnerZone(row.getColumn(8));
 		entry.setCount(row.getRecordCount());
@@ -353,7 +327,9 @@ public class CollectionAOHelper extends AOHelper {
 	 * Append selects to the provided builder for collection queries
 	 *
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
 	public static void buildSelectsNeededForCollectionsInCollectionsAndDataObjectsListingEntry(
 			final IRODSGenQueryBuilder builder) throws GenQueryBuilderException {
@@ -372,24 +348,22 @@ public class CollectionAOHelper extends AOHelper {
 	}
 
 	/**
-	 * Build an inheritance query for the collection by appending the selects
-	 * and conditions to the {@code IRODSGenQueryBuilder} provided
+	 * Build an inheritance query for the collection by appending the selects and
+	 * conditions to the {@code IRODSGenQueryBuilder} provided
 	 *
 	 * @param absolutePathToCollection
-	 *            {@code String} with the absolute path to the iRODS
-	 *            collection for which the permission bit will be queried
+	 *            {@code String} with the absolute path to the iRODS collection for
+	 *            which the permission bit will be queried
 	 * @param builder
 	 *            {@link IRODSGenQueryBuilder}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static void buildInheritanceQueryForCollectionAbsolutePath(
-			final String absolutePathToCollection,
+	public static void buildInheritanceQueryForCollectionAbsolutePath(final String absolutePathToCollection,
 			final IRODSGenQueryBuilder builder) throws JargonException {
 
-		if (absolutePathToCollection == null
-				|| absolutePathToCollection.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty absolutePathToCollection");
+		if (absolutePathToCollection == null || absolutePathToCollection.isEmpty()) {
+			throw new IllegalArgumentException("null or empty absolutePathToCollection");
 		}
 
 		if (builder == null) {
@@ -397,12 +371,8 @@ public class CollectionAOHelper extends AOHelper {
 		}
 
 		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_INHERITANCE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							absolutePathToCollection);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_INHERITANCE).addConditionAsGenQueryField(
+					RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, absolutePathToCollection);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException("error building inheritance query", e);
 		}
@@ -410,45 +380,42 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * @param userFilePermissions
+	 *            {@code List} of {@link UserFilePermission}
 	 * @param row
+	 *            {@link IRODSQueryResultRow}
+	 * @param irodsAbsolutePath
+	 *            {@code String} with the iRODS path
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static void buildUserFilePermissionForCollection(
-			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row, final String irodsAbsolutePath)
-			throws JargonException {
+	public static void buildUserFilePermissionForCollection(final List<UserFilePermission> userFilePermissions,
+			final IRODSQueryResultRow row, final String irodsAbsolutePath) throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
-		 * permissions query, so, unfortunately, I need to do another query to
-		 * get the user type
+		 * permissions query, so, unfortunately, I need to do another query to get the
+		 * user type
 		 */
 		UserFilePermission userFilePermission;
 
 		/*
-		 * Gracefully ignore a not found for the user name and zone, just set
-		 * the type to unknown and return what I have.
+		 * Gracefully ignore a not found for the user name and zone, just set the type
+		 * to unknown and return what I have.
 		 */
 		try {
 			/*
-			 * User user = userAO .findByIdInZone(row.getColumn(10),
-			 * collectionZone);
+			 * User user = userAO .findByIdInZone(row.getColumn(10), collectionZone);
 			 */
 
-			userFilePermission = new UserFilePermission(row.getColumn(8),
-					row.getColumn(11),
-					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+			userFilePermission = new UserFilePermission(row.getColumn(8), row.getColumn(11),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(10))),
 					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 
 		} catch (DataNotFoundException dnf) {
-			log.warn(
-					"user info not found for permission for user:{}, this permission will not be added",
+			log.warn("user info not found for permission for user:{}, this permission will not be added",
 					row.getColumn(8));
-			userFilePermission = new UserFilePermission(row.getColumn(8),
-					row.getColumn(11),
-					FilePermissionEnum.valueOf(IRODSDataConversionUtil
-							.getIntOrZeroFromIRODSValue(row.getColumn(10))),
+			userFilePermission = new UserFilePermission(row.getColumn(8), row.getColumn(11),
+					FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(10))),
 					UserTypeEnum.RODS_UNKNOWN, row.getColumn(9));
 		}
 		userFilePermissions.add(userFilePermission);
@@ -456,61 +423,57 @@ public class CollectionAOHelper extends AOHelper {
 
 	/**
 	 * @param userFilePermissions
+	 *            {@code List} of {@link UserFilePermission}
 	 * @param row
+	 *            {@link IRODSQueryResultRow} with the query data
+	 * @param irodsAbsolutePath
+	 *            {@code String} with the iRODS path for the data object
+	 * @param currentZone
+	 *            {@code String} with the current zone
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static void buildUserFilePermissionForDataObject(
-			final List<UserFilePermission> userFilePermissions,
-			final IRODSQueryResultRow row, final String irodsAbsolutePath,
-			final String currentZone) throws JargonException {
+	public static void buildUserFilePermissionForDataObject(final List<UserFilePermission> userFilePermissions,
+			final IRODSQueryResultRow row, final String irodsAbsolutePath, final String currentZone)
+			throws JargonException {
 
 		/*
 		 * There appears to be a gen query issue with getting user type in the
-		 * permissions query, so, unfortunately, I need to do another query to
-		 * get the user type
+		 * permissions query, so, unfortunately, I need to do another query to get the
+		 * user type
 		 */
 		UserFilePermission userFilePermission;
 
-		userFilePermission = new UserFilePermission(row.getColumn(9),
-				row.getColumn(10),
-				FilePermissionEnum.valueOf(IRODSDataConversionUtil
-						.getIntOrZeroFromIRODSValue(row.getColumn(11))),
-				UserTypeEnum.findTypeByString(row.getColumn(12)),
-				row.getColumn(13));
+		userFilePermission = new UserFilePermission(row.getColumn(9), row.getColumn(10),
+				FilePermissionEnum.valueOf(IRODSDataConversionUtil.getIntOrZeroFromIRODSValue(row.getColumn(11))),
+				UserTypeEnum.findTypeByString(row.getColumn(12)), row.getColumn(13));
 		userFilePermissions.add(userFilePermission);
 	}
 
 	/**
-	 * Build a select for a collection ACL with the given collection absolute
-	 * path
+	 * Build a select for a collection ACL with the given collection absolute path
 	 *
 	 * @param irodsCollectionAbsolutePath
+	 *            {@code String} with the iRODS path
 	 * @param builder
+	 *            {@link IRODSGenQueryBuilder}
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 
-	public static void buildACLQueryForCollectionName(
-			final String irodsCollectionAbsolutePath,
+	public static void buildACLQueryForCollectionName(final String irodsCollectionAbsolutePath,
 			final IRODSGenQueryBuilder builder) throws JargonException {
 
-		if (irodsCollectionAbsolutePath == null
-				|| irodsCollectionAbsolutePath.isEmpty()) {
-			throw new IllegalArgumentException(
-					"null or empty irodsCollectionAbsolutePath");
+		if (irodsCollectionAbsolutePath == null || irodsCollectionAbsolutePath.isEmpty()) {
+			throw new IllegalArgumentException("null or empty irodsCollectionAbsolutePath");
 		}
 
 		try {
-			builder.addSelectAsGenQueryValue(
-					RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
-					.addSelectAsGenQueryValue(
-							RodsGenQueryEnum.COL_COLL_ACCESS_TYPE)
-					.addConditionAsGenQueryField(
-							RodsGenQueryEnum.COL_COLL_NAME,
-							QueryConditionOperators.EQUAL,
-							irodsCollectionAbsolutePath);
+			builder.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_NAME)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ZONE)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_USER_ID)
+					.addSelectAsGenQueryValue(RodsGenQueryEnum.COL_COLL_ACCESS_TYPE).addConditionAsGenQueryField(
+							RodsGenQueryEnum.COL_COLL_NAME, QueryConditionOperators.EQUAL, irodsCollectionAbsolutePath);
 		} catch (GenQueryBuilderException e) {
 			throw new JargonException(e);
 		}

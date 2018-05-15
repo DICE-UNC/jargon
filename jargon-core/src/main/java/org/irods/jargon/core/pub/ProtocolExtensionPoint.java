@@ -24,6 +24,7 @@ public interface ProtocolExtensionPoint {
 	 * @return {@link Tag} that represents the response from iRODS, this must be
 	 *         processed by the invoker
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	Tag irodsFunction(final IRodsPI irodsPI) throws JargonException;
 

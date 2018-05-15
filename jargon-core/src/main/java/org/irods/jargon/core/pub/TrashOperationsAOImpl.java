@@ -3,8 +3,6 @@
  */
 package org.irods.jargon.core.pub;
 
-import java.io.IOException;
-
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.connection.IRODSSession;
 import org.irods.jargon.core.exception.FileNotFoundException;
@@ -38,6 +36,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * @param irodsAccount
 	 *            {@link IRODSAccount}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public TrashOperationsAOImpl(IRODSSession irodsSession, IRODSAccount irodsAccount) throws JargonException {
 		super(irodsSession, irodsAccount);
@@ -277,7 +276,9 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * @param trashOptions
 	 *            {@link TrashOptions} that control details of the processing
 	 * @throws FileNotFoundException
+	 *             if file missing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void emptyTrash(final String irodsZone, final String irodsPath, final TrashOptions trashOptions)
 			throws FileNotFoundException, JargonException {
@@ -350,6 +351,7 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 * @param trashOptions
 	 *            {@link TrashOptions} that control details of the processing
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public void emptyTrashAdminMode(final String userName, final String irodsZone, final String irodsPath,
 			final TrashOptions trashOptions) throws JargonException {
@@ -361,7 +363,8 @@ public class TrashOperationsAOImpl extends IRODSGenericAO implements TrashOperat
 	 *
 	 * @param reply
 	 *            {@code Tag} containing status messages from IRODS
-	 * @throws IOException
+	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private void processClientStatusMessages(final Tag reply) throws JargonException {
 

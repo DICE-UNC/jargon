@@ -174,7 +174,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * @see org.irods.jargon.core.pub.ResourceAO#deleteResource(java.lang.String)
 	 */
 	@Override
-	public void deleteResource(final String resourceName) throws Exception {
+	public void deleteResource(final String resourceName) throws JargonException {
 		log.info("deleteResource()");
 		if (resourceName == null || resourceName.isEmpty()) {
 			throw new IllegalArgumentException("null or empty resourceName");
@@ -488,8 +488,10 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 * that represent the results
 	 *
 	 * @param resultSet
-	 * @return
+	 *            {@link IRODSQueryResultSet}
+	 * @return {@code List} of {@link Resource}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private List<Resource> buildResourceListFromResultSetComposable(final IRODSQueryResultSet resultSet)
 			throws JargonException {
@@ -519,6 +521,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 *            {@link IRODSQueryResultSetInterface} with a gen query result
 	 * @return {@code List} of {@link Resource}, which will be empty if no results
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private List<Resource> buildResourceListFromResultSetClassic(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
@@ -540,6 +543,7 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	 *            row represents resource data
 	 * @return {@link Resource} domain object
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	private Resource buildResourceFromResultSetRowClassic(final IRODSQueryResultRow row) throws JargonException {
 		Resource resource = new Resource();
@@ -810,13 +814,16 @@ public final class ResourceAOImpl extends IRODSGenericAO implements ResourceAO {
 	}
 
 	/**
-	 * FIXME: implement, add to interface Given a set of metadata query parameters,
-	 * return a list of Resources that match the metadata query
+	 * 
+	 * find the resources that match the given query
 	 *
 	 * @param avuQueryElements
+	 *            {@code List} of {@link AVUQueryElement} with the query
 	 * @return List of {@link Resource}
 	 * @throws JargonQueryException
+	 *             for query error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public List<Resource> findDomainByMetadataQuery(final List<AVUQueryElement> avuQueryElements)
 			throws JargonQueryException, JargonException {

@@ -24,7 +24,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return {@link Resource} which is the first (of potentially many) resources
 	 *         associated with the given file
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
+	 *             for missing file
 	 */
 	Resource getFirstResourceForIRODSFile(IRODSFile irodsFile) throws JargonException, DataNotFoundException;
 
@@ -34,6 +36,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *
 	 * @return a {@code List} of {@link org.irods.jargon.core.pub.domain.Resource};
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<Resource> findAll() throws JargonException;
 
@@ -44,6 +47,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *            {@code String} with the name of the resource to be looked up
 	 * @return {@link org.irods.jargon.core.pub.domain.Resource}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
 	 *             indicates that the resource with the given name is not found
 	 */
@@ -57,7 +61,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return {@link org.irods.jargon.core.pub.domain.Resource} with the matching
 	 *         id
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
+	 *             for missing id
 	 */
 	Resource findById(final String resourceId) throws JargonException, DataNotFoundException;
 
@@ -72,7 +78,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return {@code List} of
 	 *         {@link org.irods.jargon.core.query.MetaDataAndDomainData}
 	 * @throws JargonQueryException
+	 *             for query error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<MetaDataAndDomainData> findMetadataValuesByMetadataQuery(List<AVUQueryElement> avuQuery)
 			throws JargonQueryException, JargonException;
@@ -84,6 +92,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *            {@code String} containing the resource name
 	 * @return {@code List} of {@link AvuData} for this resource
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<AvuData> listResourceMetadata(String resourceName) throws JargonException;
 
@@ -98,6 +107,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listResourceNames() throws JargonException;
 
@@ -112,6 +122,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *
 	 * @return {@code List<String>} of resource names in the zone
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	List<String> listResourceAndResourceGroupNames() throws JargonException;
 
@@ -123,6 +134,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 * @throws DuplicateDataException
@@ -143,6 +155,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 */
@@ -156,6 +169,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param avuData
 	 *            {@link org.irods.jargon.core.pub.domain.AvuData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws InvalidResourceException
 	 *             when resource is missing
 	 */
@@ -167,7 +181,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param resource
 	 *            {@link Resource} to be added
 	 * @throws DuplicateDataException
+	 *             if resource already present
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addResource(final Resource resource) throws DuplicateDataException, JargonException;
 
@@ -179,10 +195,19 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param what
 	 *            what is modified among type, status, comment, info, context
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void modifyResource(final Resource resource, String what) throws JargonException;
 
-	void deleteResource(final String resourceName) throws Exception;
+	/**
+	 * Delete an iRODS resource
+	 * 
+	 * @param resourceName
+	 *            {@link String} with resource name to delete
+	 * @throws JargonException
+	 *             for iRODS error
+	 */
+	void deleteResource(final String resourceName) throws JargonException;
 
 	/**
 	 * Add the child resource to the parent resource
@@ -195,6 +220,7 @@ public interface ResourceAO extends IRODSAccessObject {
 	 *            {@code String} that is blank if not used, with an optional context
 	 *            string
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void addChildToResource(String parent, String child, String optionalContext) throws JargonException;
 
@@ -206,7 +232,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @param child
 	 *            {@code String} with the child resource name to be removed
 	 * @throws InvalidResourceException
+	 *             for invalid resource
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	void removeChildFromResource(String parent, String child) throws InvalidResourceException, JargonException;
 
@@ -218,7 +246,9 @@ public interface ResourceAO extends IRODSAccessObject {
 	 * @return <code>List</code> of {@link Resource} describing the resources
 	 *         associated with the data object
 	 * @throws JargonException
+	 *             for iRODS error
 	 * @throws DataNotFoundException
+	 *             if data missing
 	 */
 	List<Resource> listResourcesForIrodsFile(final IRODSFile irodsFile) throws JargonException, DataNotFoundException;
 }
