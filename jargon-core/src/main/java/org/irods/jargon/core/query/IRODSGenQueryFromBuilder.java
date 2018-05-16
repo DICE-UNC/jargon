@@ -26,14 +26,12 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
 	 * @param numberOfResultsDesired
-	 *            {@code int} with the number of results desired from the
-	 *            query
+	 *            {@code int} with the number of results desired from the query
+	 * @return {@link IRODSGenQueryFromBuilder}
 	 */
-	public static IRODSGenQueryFromBuilder instance(
-			final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData,
+	public static IRODSGenQueryFromBuilder instance(final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData,
 			final int numberOfResultsDesired) {
-		return new IRODSGenQueryFromBuilder(irodsGenQueryBuilderData,
-				numberOfResultsDesired);
+		return new IRODSGenQueryFromBuilder(irodsGenQueryBuilderData, numberOfResultsDesired);
 	}
 
 	/**
@@ -43,17 +41,14 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	 *            {@link IRODSGenQueryBuilderQueryData} that contains the actual
 	 *            query data
 	 * @param numberOfResultsDesired
-	 *            {@code int} with the number of results desired from the
-	 *            query
+	 *            {@code int} with the number of results desired from the query
 	 */
-	private IRODSGenQueryFromBuilder(
-			final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData,
+	private IRODSGenQueryFromBuilder(final IRODSGenQueryBuilderQueryData irodsGenQueryBuilderData,
 			final int numberOfResultsDesired) {
 		super(numberOfResultsDesired);
 
 		if (irodsGenQueryBuilderData == null) {
-			throw new IllegalArgumentException(
-					"irodsGenQueryBuilderData is null");
+			throw new IllegalArgumentException("irodsGenQueryBuilderData is null");
 		}
 
 		if (!irodsGenQueryBuilderData.isQueryValid()) {
@@ -72,27 +67,25 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 	}
 
 	/**
-	 * Format the query in a format understandable by the mechanism that
-	 * translates the query to iRODS protocol and sends to iRODS.
+	 * Format the query in a format understandable by the mechanism that translates
+	 * the query to iRODS protocol and sends to iRODS.
 	 *
-	 * @return {@link TranslatedIRODSGenQuery} in a format ready to send to
-	 *         iRODS
+	 * @return {@link TranslatedIRODSGenQuery} in a format ready to send to iRODS
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
-	public TranslatedIRODSGenQuery convertToTranslatedIRODSGenQuery()
-			throws GenQueryBuilderException {
+	public TranslatedIRODSGenQuery convertToTranslatedIRODSGenQuery() throws GenQueryBuilderException {
 		if (!irodsGenQueryBuilderData.isQueryValid()) {
 			throw new GenQueryBuilderException("Query is not valid");
 		}
 
 		List<TranslatedGenQueryCondition> conditions = new ArrayList<TranslatedGenQueryCondition>();
 
-		for (GenQueryBuilderCondition builderCondition : irodsGenQueryBuilderData
-				.getConditions()) {
+		for (GenQueryBuilderCondition builderCondition : irodsGenQueryBuilderData.getConditions()) {
 
 			/*
-			 * For case insensitive gen queries, iRODS really does 'upper' on
-			 * the database field, so make the condition upper too
+			 * For case insensitive gen queries, iRODS really does 'upper' on the database
+			 * field, so make the condition upper too
 			 */
 			String value;
 			if (irodsGenQueryBuilderData.isUpperCase()) {
@@ -102,32 +95,23 @@ public class IRODSGenQueryFromBuilder extends AbstractIRODSGenQuery {
 			}
 
 			try {
-				conditions.add(TranslatedGenQueryCondition
-						.instanceWithFieldNameAndNumericTranslation(
-								builderCondition.getSelectFieldColumnName(),
-								builderCondition.getOperator()
-								.getOperatorAsString(), value,
-								builderCondition
-								.getSelectFieldNumericTranslation()));
+				conditions.add(TranslatedGenQueryCondition.instanceWithFieldNameAndNumericTranslation(
+						builderCondition.getSelectFieldColumnName(),
+						builderCondition.getOperator().getOperatorAsString(), value,
+						builderCondition.getSelectFieldNumericTranslation()));
 			} catch (JargonQueryException e) {
-				throw new GenQueryBuilderException(
-						"error building translated query", e);
+				throw new GenQueryBuilderException("error building translated query", e);
 			}
 		}
 
 		try {
 
-			return TranslatedIRODSGenQuery.instance(
-					irodsGenQueryBuilderData.getSelectFields(), conditions,
-					irodsGenQueryBuilderData.getOrderByFields(), this,
-					irodsGenQueryBuilderData.isDistinct(),
-					irodsGenQueryBuilderData.isUpperCase(),
-					irodsGenQueryBuilderData.isComputeTotalRowCount());
+			return TranslatedIRODSGenQuery.instance(irodsGenQueryBuilderData.getSelectFields(), conditions,
+					irodsGenQueryBuilderData.getOrderByFields(), this, irodsGenQueryBuilderData.isDistinct(),
+					irodsGenQueryBuilderData.isUpperCase(), irodsGenQueryBuilderData.isComputeTotalRowCount());
 
 		} catch (JargonException e) {
-			throw new GenQueryBuilderException(
-					"exception building a translated query from this builder query",
-					e);
+			throw new GenQueryBuilderException("exception building a translated query from this builder query", e);
 		}
 
 	}

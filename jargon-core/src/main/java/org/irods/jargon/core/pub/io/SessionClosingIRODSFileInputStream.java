@@ -10,8 +10,8 @@ import org.irods.jargon.core.exception.JargonException;
 
 /**
  * This is a special version of a {@code IRODSFileInputStream} that add the
- * capability to close the underlying {@code IRODSSession} when the stream
- * is closed. This is used in situations where a stream is created and returned
+ * capability to close the underlying {@code IRODSSession} when the stream is
+ * closed. This is used in situations where a stream is created and returned
  * from a method, and the caller is not aware of the need to close the iRODS
  * connection. *
  *
@@ -30,10 +30,10 @@ public class SessionClosingIRODSFileInputStream extends IRODSFileInputStream {
 	 *            {@link FileIOOperations} object that handles the actual iRODS
 	 *            communication.
 	 * @throws FileNotFoundException
+	 *             if file missing
 	 */
-	protected SessionClosingIRODSFileInputStream(final IRODSFile irodsFile,
-			final FileIOOperations fileIOOperations)
-					throws FileNotFoundException {
+	protected SessionClosingIRODSFileInputStream(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
+			throws FileNotFoundException {
 		super(irodsFile, fileIOOperations);
 	}
 
@@ -47,11 +47,9 @@ public class SessionClosingIRODSFileInputStream extends IRODSFileInputStream {
 		super.close();
 		try {
 			// close the session in addition to the stream.
-			getFileIOOperations().getIRODSSession().closeSession(
-					getFileIOOperations().getIRODSAccount());
+			getFileIOOperations().getIRODSSession().closeSession(getFileIOOperations().getIRODSAccount());
 		} catch (JargonException e) {
-			throw new IOException(
-					"error in close session returned as IOException for method contracts");
+			throw new IOException("error in close session returned as IOException for method contracts");
 		}
 	}
 

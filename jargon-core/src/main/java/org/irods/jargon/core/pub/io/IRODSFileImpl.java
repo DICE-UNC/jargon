@@ -60,16 +60,6 @@ public class IRODSFileImpl extends File implements IRODSFile {
 
 	private static final long serialVersionUID = -6986662136294659059L;
 
-	/*
-	 * (non-Javadoc)
-	 *
-	 * @see org.irods.jargon.core.pub.io.IRODSFile#reset()
-	 */
-	@Deprecated
-	@Override
-	public void reset() {
-	}
-
 	protected IRODSFileImpl(final String pathName, final IRODSFileSystemAO irodsFileSystemAO) throws JargonException {
 		this("", pathName, irodsFileSystemAO);
 		if (pathName.isEmpty()) {
@@ -1241,6 +1231,7 @@ public class IRODSFileImpl extends File implements IRODSFile {
 	 * Set the iRODS file descriptor value. This will be set internally by Jargon.
 	 *
 	 * @param fileDescriptor
+	 *            {@code int} for the file descriptor
 	 */
 	protected synchronized void setFileDescriptor(final int fileDescriptor) {
 		this.fileDescriptor = fileDescriptor;

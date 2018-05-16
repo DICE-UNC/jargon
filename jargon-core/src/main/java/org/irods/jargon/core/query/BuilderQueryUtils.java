@@ -16,11 +16,14 @@ public class BuilderQueryUtils {
 	}
 
 	/**
-	 * Translate between operator values as defined in {@link AVUQueryElement}
-	 * and those understood in {@link GenQueryBuilderCondition}.
+	 * Translate between operator values as defined in {@link AVUQueryElement} and
+	 * those understood in {@link GenQueryBuilderCondition}.
 	 *
 	 * @param avuQueryElement
 	 *            {@link AVUQueryElement}
+	 * @return {@link QueryConditionOperators} enum translation
+	 * @throws JargonQueryException
+	 *             for translation error
 	 */
 	public static QueryConditionOperators translateAVUQueryElementOperatorToBuilderQueryCondition(
 			final AVUQueryElement avuQueryElement) throws JargonQueryException {

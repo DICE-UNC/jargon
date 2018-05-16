@@ -130,7 +130,9 @@ public class UserAOHelper {
 	 * Locate the user distinguished name, if it exists
 	 *
 	 * @param userId
+	 *            {@link String} with the user id
 	 * @param irodsGenQueryExecutor
+	 *            {@link IRODSGenQueryExecutor}
 	 * @return {@code String} with the distinguished name for the user, if it
 	 *         exists, otherwise, {@code null} will be returned
 	 * @throws JargonException

@@ -22,35 +22,35 @@ import org.slf4j.LoggerFactory;
  * sizes.
  *
  * Two sets of read methods are provided:
- * <P>
- * <UL>
- * <LI>Single-value read methods such as int readInt().
- * <LI>Multi-value read methods such as void readInts(int* values,int nValues).
- * </UL>
- * <P>
+ * 
+ * <ul>
+ * <li>Single-value read methods such as int readInt().
+ * <li>Multi-value read methods such as void readInts(int* values,int nValues).
+ * </ul>
+ * <p>
  * Single-value read methods read a single short, int, long, etc., and return
  * the value.
- * <P>
+ * <p>
  * Multi-value read methods read multiple consecutive shorts, ints, longs, etc.,
  * and return them in a given array.
- * <P>
+ * <p>
  * Two sets of write methods are provided:
- * <P>
- * <UL>
- * <LI>Single-value write methods such as int writeInt(int value).
- * <LI>Multi-value write methods such as void writeInts(int* values,int
+ * 
+ * <ul>
+ * <li>Single-value write methods such as int writeInt(int value).
+ * <li>Multi-value write methods such as void writeInts(int* values,int
  * nValues).
- * </UL>
- * <P>
+ * </ul>
+ * <p>
  * Single-value write methods write a single short, int, long, etc.
- * <P>
+ * <p>
  * Multi-value write methods write multiple shorts, ints, longs, etc., from an
  * array of values.
- * <P>
- * <B>Note:</B> This class offers features that extend those found in
- * java.io.RandomAccessFile. However, it <I>is not</I> a subclass, due to the
+ * <p>
+ * <b>Note:</b> This class offers features that extend those found in
+ * java.io.RandomAccessFile. However, it <i>is not</i> a subclass, due to the
  * unfortunate use of final methods in java.io.RandomAccessFile.
- * <P>
+ * 
  *
  * @author Mike Conway - DICE (www.irods.org) adopted from original Jargon
  *         implementation by Lucas Gilbert
@@ -74,6 +74,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            {@code FileIOOperations} that will encapsulate the actual methods
 	 *            in IRODS
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	protected IRODSRandomAccessFile(final IRODSFile irodsFile, final FileIOOperations fileIOOperations)
 			throws JargonException {
@@ -161,8 +162,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * detected, or an exception is thrown.
 	 *
 	 * @return the next two bytes of this file as a Unicode character.
-	 * @throws EOFException
-	 *             if this file reaches the end before reading two bytes.
+	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -259,8 +259,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            the start offset of the data.
 	 * @param len
 	 *            the number of bytes to read.
-	 * @throws EOFException
-	 *             if this file reaches the end before reading all the bytes.
+	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -437,8 +436,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *
 	 * @return the next byte of this file, interpreted as an unsigned eight-bit
 	 *         number.
-	 * @throws EOFException
-	 *             if this file has reached the end.
+	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -876,6 +874,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 *            the start offset in the data
 	 * @param len
 	 *            the maximum number of bytes read.
+	 * @return {@code int} with number of bytes read
 	 * @throws IOException
 	 *             If an I/O error has occurred.
 	 */
@@ -1031,8 +1030,7 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 	 * or an exception is thrown.
 	 *
 	 * @return the next byte of this file as a signed eight-bit {@code byte}.
-	 * @throws EOFException
-	 *             if this file has reached the end.
+	 * 
 	 * @throws IOException
 	 *             if an I/O error occurs.
 	 */
@@ -1048,6 +1046,9 @@ public class IRODSRandomAccessFile implements DataInput, DataOutput {
 
 	/**
 	 * This method closes the underlying IRODSFileImpl
+	 * 
+	 * @throws IOException
+	 *             for any underlying iRODS error
 	 */
 	public void close() throws IOException {
 		try {

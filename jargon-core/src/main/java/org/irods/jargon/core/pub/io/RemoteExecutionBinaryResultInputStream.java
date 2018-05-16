@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
  */
 public class RemoteExecutionBinaryResultInputStream extends InputStream {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(RemoteExecutionBinaryResultInputStream.class);
+	public static final Logger log = LoggerFactory.getLogger(RemoteExecutionBinaryResultInputStream.class);
 
 	private final AbstractIRODSMidLevelProtocol irodsCommands;
 	private final int fileDescriptor;
@@ -42,10 +41,9 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	/**
-	 * iRODS streams are simulated, so there are not bytes waiting to be read
-	 * from the socket until read is requested. This is set to return an
-	 * {@code int} value of 1 so it does not block if used. This may need
-	 * some further thought!
+	 * iRODS streams are simulated, so there are not bytes waiting to be read from
+	 * the socket until read is requested. This is set to return an {@code int}
+	 * value of 1 so it does not block if used. This may need some further thought!
 	 *
 	 * @return {@code int} with the available bytes
 	 */
@@ -56,32 +54,27 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	/**
-	 * Close the input stream. This method will send a command to iRODS to close
-	 * the file descriptor set up when the additional stream data was sent.
+	 * Close the input stream. This method will send a command to iRODS to close the
+	 * file descriptor set up when the additional stream data was sent.
 	 */
 	@Override
 	public void close() throws IOException {
 		log.info("closing input stream");
 		try {
-			IrodsVersion irodsVersion = irodsCommands
-					.getIRODSServerProperties().getIrodsVersion();
+			IrodsVersion irodsVersion = irodsCommands.getIRODSServerProperties().getIrodsVersion();
 			if (irodsVersion.hasVersionOfAtLeast("rods4.1.9")) {
 				log.debug("using 4.1.9 and later close");
-				ExecCmdStreamClose419 execCmdStreamClose = ExecCmdStreamClose419
-						.instance(fileDescriptor, "");
+				ExecCmdStreamClose419 execCmdStreamClose = ExecCmdStreamClose419.instance(fileDescriptor, "");
 				irodsCommands.irodsFunction(execCmdStreamClose);
 
 			} else {
 				log.debug("using pre4.1.9 close");
-				ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose
-						.instance(fileDescriptor);
+				ExecCmdStreamClose execCmdStreamClose = ExecCmdStreamClose.instance(fileDescriptor);
 				irodsCommands.irodsFunction(execCmdStreamClose);
 
 			}
 		} catch (JargonException e) {
-			log.error(
-					"Jargon exception will be rethrown as an IOException for the method contracts",
-					e);
+			log.error("Jargon exception will be rethrown as an IOException for the method contracts", e);
 			throw new IOException(e);
 		}
 	}
@@ -104,8 +97,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	@Override
-	public int read(final byte[] b, final int off, final int len)
-			throws IOException {
+	public int read(final byte[] b, final int off, final int len) throws IOException {
 		try {
 
 			log.info("stream read for fd: {}", fileDescriptor);
@@ -118,8 +110,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 				throw new IllegalArgumentException("invalid len");
 			}
 
-			FileReadInp fileReadInp = FileReadInp.instanceForReadStream(
-					fileDescriptor, len);
+			FileReadInp fileReadInp = FileReadInp.instanceForReadStream(fileDescriptor, len);
 
 			Tag message = irodsCommands.irodsFunction(fileReadInp);
 
@@ -128,19 +119,17 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 				return -1;
 			}
 
-			int buffLength = message.getTag(IRODSConstants.MsgHeader_PI)
-					.getTag(IRODSConstants.bsLen).getIntValue();
+			int buffLength = message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.bsLen).getIntValue();
 
 			// read the message byte stream for the length that the header
 			// indicates
 
 			int read = irodsCommands.read(b, off, buffLength);
 
-			if (read != message.getTag(IRODSConstants.MsgHeader_PI)
-					.getTag(IRODSConstants.intInfo).getIntValue()) {
+			if (read != message.getTag(IRODSConstants.MsgHeader_PI).getTag(IRODSConstants.intInfo).getIntValue()) {
 
-				log.error("did not read length equal to response length, expected"
-						+ buffLength + " bytes actually read:" + read);
+				log.error("did not read length equal to response length, expected" + buffLength
+						+ " bytes actually read:" + read);
 				throw new IOException("Bytes read mismatch");
 			}
 
@@ -151,9 +140,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 			return read;
 
 		} catch (JargonException e) {
-			log.error(
-					"JargonException in read is converted to IOException for method contract",
-					e);
+			log.error("JargonException in read is converted to IOException for method contract", e);
 			throw new IOException(e);
 		}
 	}
@@ -173,10 +160,10 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	/**
-	 * Skip the desired amount of bytes from the stream. This method will
-	 * repeatedly attempt to read past the skipped value, discard the bytes, and
-	 * continue reading until the full amount has been skipped, or the end of
-	 * the stream is encountered.
+	 * Skip the desired amount of bytes from the stream. This method will repeatedly
+	 * attempt to read past the skipped value, discard the bytes, and continue
+	 * reading until the full amount has been skipped, or the end of the stream is
+	 * encountered.
 	 *
 	 * @param n
 	 *            {@code long} with the amount to skip
@@ -186,8 +173,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	public long skip(final long n) throws IOException {
 
 		if (n <= 0) {
-			throw new IllegalArgumentException(
-					"attempt to skip a neg or zero amount");
+			throw new IllegalArgumentException("attempt to skip a neg or zero amount");
 		}
 
 		int skippedSoFar = 0;
@@ -206,9 +192,13 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	/**
 	 * Create a special type of binary input stream for data being streamed as a
 	 * result of the remote execution of an iRODS command.
+	 * 
+	 * @param irodsCommands
+	 *            {@link AbstractIRODSMidLevelProtocol} for iRODS connections
+	 * @param fileDescriptor
+	 *            {@code int} with the file handle
 	 */
-	public RemoteExecutionBinaryResultInputStream(
-			final AbstractIRODSMidLevelProtocol irodsCommands,
+	public RemoteExecutionBinaryResultInputStream(final AbstractIRODSMidLevelProtocol irodsCommands,
 			final int fileDescriptor) {
 		super();
 
@@ -217,8 +207,7 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 		}
 
 		if (fileDescriptor <= 0) {
-			throw new IllegalArgumentException(
-					"negative or zero file descriptor for stream");
+			throw new IllegalArgumentException("negative or zero file descriptor for stream");
 		}
 
 		this.irodsCommands = irodsCommands;
@@ -227,19 +216,18 @@ public class RemoteExecutionBinaryResultInputStream extends InputStream {
 	}
 
 	/**
-	 * Note: Use of this method is inadvisable due to the long delays that can
-	 * occur with network communications. Reading even a few bytes in this
-	 * manner could cause noticeable slow-downs.
+	 * Note: Use of this method is inadvisable due to the long delays that can occur
+	 * with network communications. Reading even a few bytes in this manner could
+	 * cause noticeable slow-downs.
 	 *
-	 * Reads the next byte of data from the input stream. The value byte is
-	 * returned as an {@code int} in the range {@code 0} to
-	 * {@code 255}. If no byte is available because the end of the stream
-	 * has been reached, the value {@code -1} is returned. This method
-	 * blocks until input data is available, the end of the stream is detected,
-	 * or an exception is thrown.
+	 * Reads the next byte of data from the input stream. The value byte is returned
+	 * as an {@code int} in the range {@code 0} to {@code 255}. If no byte is
+	 * available because the end of the stream has been reached, the value
+	 * {@code -1} is returned. This method blocks until input data is available, the
+	 * end of the stream is detected, or an exception is thrown.
 	 *
-	 * @return the next byte of data, or {@code -1} if the end of the
-	 *         stream is reached.
+	 * @return the next byte of data, or {@code -1} if the end of the stream is
+	 *         reached.
 	 * @exception IOException
 	 *                if an I/O error occurs.
 	 */

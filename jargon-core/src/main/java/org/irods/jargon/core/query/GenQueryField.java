@@ -20,15 +20,16 @@ public abstract class GenQueryField {
 
 	/**
 	 * @param selectFieldColumnName
+	 *            {@code String}
 	 * @param selectFieldSource
+	 *            {@link SelectFieldSource}
 	 * @param selectFieldNumericTranslation
+	 *            {@code String}
 	 */
-	public GenQueryField(final String selectFieldColumnName,
-			final SelectFieldSource selectFieldSource,
+	public GenQueryField(final String selectFieldColumnName, final SelectFieldSource selectFieldSource,
 			final String selectFieldNumericTranslation) {
 
-		if (selectFieldColumnName == null
-				|| selectFieldColumnName.length() == 0) {
+		if (selectFieldColumnName == null || selectFieldColumnName.length() == 0) {
 			throw new IllegalArgumentException("select field was or missing");
 		}
 
@@ -36,10 +37,8 @@ public abstract class GenQueryField {
 			throw new IllegalArgumentException("field source was null");
 		}
 
-		if (selectFieldNumericTranslation == null
-				|| selectFieldNumericTranslation.length() == 0) {
-			throw new IllegalArgumentException(
-					"field translation is null or blank");
+		if (selectFieldNumericTranslation == null || selectFieldNumericTranslation.length() == 0) {
+			throw new IllegalArgumentException("field translation is null or blank");
 		}
 
 		this.selectFieldColumnName = selectFieldColumnName;

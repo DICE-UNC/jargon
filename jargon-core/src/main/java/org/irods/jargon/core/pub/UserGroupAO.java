@@ -194,6 +194,7 @@ public interface UserGroupAO extends IRODSAccessObject {
 	 * @param userGroup
 	 *            {@link UserGroup} to add
 	 * @throws DuplicateDataException
+	 *             for duplicate user in group
 	 * @throws JargonException
 	 *             for iRODS error
 	 */
