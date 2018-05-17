@@ -349,6 +349,7 @@ public class IRODSGenQueryBuilder {
 	 *            {@link OrderByType} that must be ascending or descending
 	 * @return {@link IRODSGenQueryBuilder}
 	 * @throws GenQueryBuilderException
+	 *             for query error
 	 */
 	public IRODSGenQueryBuilder addOrderByGenQueryField(final RodsGenQueryEnum rodsGenQueryEnumValue,
 			final GenQueryOrderByField.OrderByType orderByType) throws GenQueryBuilderException {

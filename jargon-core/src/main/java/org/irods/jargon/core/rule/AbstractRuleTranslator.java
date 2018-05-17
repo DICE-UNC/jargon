@@ -26,7 +26,9 @@ public abstract class AbstractRuleTranslator {
 	 *            {@code String} with the rule body and input and output parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
+	 *             for rule error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public IRODSRule translatePlainTextRuleIntoIRODSRule(final String ruleAsPlainText)
 			throws JargonRuleException, JargonException {
@@ -41,7 +43,9 @@ public abstract class AbstractRuleTranslator {
 	 *            {@code String} with the rule body and input and output parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
+	 *             for rule error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public abstract IRODSRule translatePlainTextRuleIntoIrodsRule(final String ruleAsPlainText,
 			final List<IRODSRuleParameter> overrideInputParameters) throws JargonRuleException, JargonException;
@@ -117,14 +121,6 @@ public abstract class AbstractRuleTranslator {
 		return inputParameters;
 	}
 
-	/**
-	 * Break the line containing rule output parameters into a
-	 * {@code List<IRODSRuleParameter>}
-	 *
-	 * @param tokens
-	 * @return
-	 * @throws JargonException
-	 */
 	List<IRODSRuleParameter> processRuleOutputAttributesLine(String outputAttributesLine)
 			throws JargonRuleException, JargonException {
 
@@ -185,15 +181,6 @@ public abstract class AbstractRuleTranslator {
 		return new IRODSRuleParameter(parmName, "");
 	}
 
-	/**
-	 * Break the line containing rule input parameters into a
-	 * {@code List<IRODSRuleParameter>}
-	 *
-	 * @param inputAttributesLine
-	 * @return
-	 * @throws JargonRuleException
-	 * @throws JargonException
-	 */
 	List<IRODSRuleParameter> processRuleInputAttributesLine(String inputAttributesLine)
 			throws JargonRuleException, JargonException {
 

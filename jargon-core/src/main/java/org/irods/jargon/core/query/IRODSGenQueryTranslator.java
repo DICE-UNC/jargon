@@ -396,13 +396,6 @@ public class IRODSGenQueryTranslator {
 
 	}
 
-	/**
-	 * Make a list of strings that are each considered a select field
-	 *
-	 * @param query
-	 * @return {@code List<String>}
-	 * @throws JargonQueryException
-	 */
 	protected List<String> parseSelectsIntoListOfNames(final String query) throws JargonQueryException {
 
 		String queryDelimited;
@@ -463,13 +456,6 @@ public class IRODSGenQueryTranslator {
 
 	}
 
-	/**
-	 * Create a list where each entry is one condition from the raw query.
-	 *
-	 * @param query
-	 * @return {@code List} of {@link GenQueryCondition}
-	 * @throws JargonQueryException
-	 */
 	protected List<GenQueryCondition> parseConditionsIntoList(final String query) throws JargonQueryException {
 
 		String testQuery = query;
@@ -520,15 +506,6 @@ public class IRODSGenQueryTranslator {
 
 	}
 
-	/**
-	 * Create a list where each entry is one order by field from the raw query. Note
-	 * this is experimental, and is not integrated in GenQuery as of yet
-	 *
-	 * @param query
-	 *            {@code String} with the genquery
-	 * @return {@code List<String>} with the fields as a list
-	 * @throws JargonQueryException
-	 */
 	protected List<String> parseOrderByFieldsIntoList(final String query) throws JargonQueryException {
 
 		List<String> orderByVals = new ArrayList<String>();
@@ -560,19 +537,6 @@ public class IRODSGenQueryTranslator {
 		return orderByVals;
 	}
 
-	/**
-	 * Given a list of parsed-out query conditions, build a list of parsed query
-	 * conditions
-	 *
-	 * @param conditions
-	 * @param tokens
-	 * @param i
-	 * @param tokenCtr
-	 * @param parsedField
-	 * @param parsedOperator
-	 * @return
-	 * @throws JargonQueryException
-	 */
 	private List<GenQueryCondition> buildListOfQueryConditionsFromParsedTokens(
 			final List<GenQueryConditionToken> tokens) throws JargonQueryException {
 
@@ -656,11 +620,6 @@ public class IRODSGenQueryTranslator {
 		return queryConditions;
 	}
 
-	/**
-	 * Make sure the query operator is one of the allowed types
-	 *
-	 * @param parsedOperator
-	 */
 	private void validateOperatorAgainstPossibilities(final String parsedOperator) throws JargonQueryException {
 		boolean matched = false;
 		for (String opr : operatorStrings) {
@@ -675,13 +634,6 @@ public class IRODSGenQueryTranslator {
 
 	}
 
-	/**
-	 * Take a single condition as a string and parse it out into components
-	 *
-	 * @param query
-	 * @param conditionOffset
-	 * @throws JargonQueryException
-	 */
 	private List<GenQueryConditionToken> tokenizeConditions(final String query, final int conditionOffset)
 			throws JargonQueryException {
 		String conditionString = query.substring(conditionOffset);

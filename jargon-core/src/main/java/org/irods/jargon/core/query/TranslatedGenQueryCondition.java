@@ -26,72 +26,72 @@ public class TranslatedGenQueryCondition {
 	 * {@code RodsGenQueryEnum} enumeration.
 	 *
 	 * @param fieldName
-	 *            {@link org.irods.jargon.core.query.RodsGenQueryEnum} value for
-	 *            the condition field.
+	 *            {@link org.irods.jargon.core.query.RodsGenQueryEnum} value for the
+	 *            condition field.
 	 * @param operator
 	 *            {@code String} with the operator.
 	 * @param value
 	 *            {@code String} with the value component of the condition.
 	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
+	 *             for query error
 	 */
-	public static TranslatedGenQueryCondition instance(
-			final RodsGenQueryEnum fieldName, final String operator,
+	public static TranslatedGenQueryCondition instance(final RodsGenQueryEnum fieldName, final String operator,
 			final String value) throws JargonQueryException {
 		return new TranslatedGenQueryCondition(fieldName, operator, value);
 	}
 
 	/**
-	 * Static initializer when the field is given as a string that is the
-	 * translated name of the field in a format that GenQuery will understand.
-	 * This can be used when constructing query fields from extensible metadata
-	 * values.
+	 * Static initializer when the field is given as a string that is the translated
+	 * name of the field in a format that GenQuery will understand. This can be used
+	 * when constructing query fields from extensible metadata values.
 	 *
 	 * @param fieldName
-	 *            {@code String} with the translated value for the
-	 *            condition.
+	 *            {@code String} with the translated value for the condition.
 	 * @param operator
 	 *            {@code String} with the operator.
 	 * @param value
 	 *            {@code String} with the value component of the condition.
+	 * @param columnNumericTranslation
+	 *            {@code String} with the field number for a packing instruction
 	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
+	 *             for query error
 	 */
-	public static TranslatedGenQueryCondition instanceForExtensibleMetaData(
-			final String fieldName, final String operator, final String value,
-			final String columnNumericTranslation) throws JargonQueryException {
-		return new TranslatedGenQueryCondition(fieldName, operator, value,
-				columnNumericTranslation);
+	public static TranslatedGenQueryCondition instanceForExtensibleMetaData(final String fieldName,
+			final String operator, final String value, final String columnNumericTranslation)
+			throws JargonQueryException {
+		return new TranslatedGenQueryCondition(fieldName, operator, value, columnNumericTranslation);
 	}
 
 	/**
-	 * Static initializer when the field is given as a string that is the
-	 * translated name of the field in a format that GenQuery will understand.
+	 * Static initializer when the field is given as a string that is the translated
+	 * name of the field in a format that GenQuery will understand.
 	 *
 	 * @param fieldName
-	 *            {@code String} with the translated value for the
-	 *            condition.
+	 *            {@code String} with the translated value for the condition.
 	 * @param operator
 	 *            {@code String} with the operator.
 	 * @param value
 	 *            {@code String} with the value component of the condition.
+	 * @param columnNumericTranslation
+	 *            {@code String} with the translation to use in a packing
+	 *            instruction
 	 * @return {@code TranslatedQueryCondition} object.
 	 * @throws JargonQueryException
+	 *             for query error
 	 */
-	public static TranslatedGenQueryCondition instanceWithFieldNameAndNumericTranslation(
-			final String fieldName, final String operator, final String value,
-			final String columnNumericTranslation) throws JargonQueryException {
-		return new TranslatedGenQueryCondition(fieldName, operator, value,
-				columnNumericTranslation);
+	public static TranslatedGenQueryCondition instanceWithFieldNameAndNumericTranslation(final String fieldName,
+			final String operator, final String value, final String columnNumericTranslation)
+			throws JargonQueryException {
+		return new TranslatedGenQueryCondition(fieldName, operator, value, columnNumericTranslation);
 	}
 
-	private TranslatedGenQueryCondition(final String fieldName,
-			final String operator, final String value,
+	private TranslatedGenQueryCondition(final String fieldName, final String operator, final String value,
 			final String columnNumericTranslation) throws JargonQueryException {
 
 		if (fieldName == null || fieldName.isEmpty()) {
-			throw new JargonQueryException(
-					"field name in condition is null or blank");
+			throw new JargonQueryException("field name in condition is null or blank");
 		}
 
 		if (operator == null) {
@@ -102,10 +102,8 @@ public class TranslatedGenQueryCondition {
 			throw new JargonQueryException("value in condition is null");
 		}
 
-		if (columnNumericTranslation == null
-				|| columnNumericTranslation.isEmpty()) {
-			throw new JargonQueryException(
-					"columnNumericTranslation is null or blank");
+		if (columnNumericTranslation == null || columnNumericTranslation.isEmpty()) {
+			throw new JargonQueryException("columnNumericTranslation is null or blank");
 		}
 
 		columnName = fieldName;
@@ -116,9 +114,8 @@ public class TranslatedGenQueryCondition {
 
 	}
 
-	private TranslatedGenQueryCondition(final RodsGenQueryEnum fieldName,
-			final String operator, final String value)
-					throws JargonQueryException {
+	private TranslatedGenQueryCondition(final RodsGenQueryEnum fieldName, final String operator, final String value)
+			throws JargonQueryException {
 		if (fieldName == null) {
 			throw new JargonQueryException("field name in condition is null");
 		}
@@ -139,23 +136,19 @@ public class TranslatedGenQueryCondition {
 
 	}
 
-	private TranslatedGenQueryCondition(final String fieldName,
-			final SelectFieldSource fieldSource,
-			final String columnNumericTranslation, final String operator,
-			final String value) throws JargonQueryException {
+	private TranslatedGenQueryCondition(final String fieldName, final SelectFieldSource fieldSource,
+			final String columnNumericTranslation, final String operator, final String value)
+			throws JargonQueryException {
 		if (fieldName == null || fieldName.length() == 0) {
-			throw new JargonQueryException(
-					"field name in condition is blank or null");
+			throw new JargonQueryException("field name in condition is blank or null");
 		}
 
 		if (fieldSource == null) {
 			throw new JargonQueryException("field source in condition is null");
 		}
 
-		if (columnNumericTranslation == null
-				|| columnNumericTranslation.length() == 0) {
-			throw new JargonQueryException(
-					"field source in condition is blank or null");
+		if (columnNumericTranslation == null || columnNumericTranslation.length() == 0) {
+			throw new JargonQueryException("field source in condition is blank or null");
 		}
 
 		if (operator == null) {
