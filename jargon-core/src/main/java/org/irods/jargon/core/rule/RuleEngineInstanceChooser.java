@@ -58,6 +58,8 @@ public class RuleEngineInstanceChooser {
 	 *            {@link IRODSRule} to set with the instance. Note that invoking
 	 *            this method will alter the {@link RuleInvocationConfiguration} in
 	 *            the <code>IRODSRule</code>.
+	 * @throws UnknownRuleTypeException
+	 *             if the rule type cannot be determined
 	 */
 	public void decorateRuleInvocationConfugurationWithRuleEngineInstance(final IRODSRule irodsRule)
 			throws UnknownRuleTypeException {

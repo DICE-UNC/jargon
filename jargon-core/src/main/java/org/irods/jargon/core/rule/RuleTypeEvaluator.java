@@ -44,6 +44,8 @@ public class RuleTypeEvaluator {
 	 *            <code>String</code> with the text of the rule
 	 * @return {@link IrodsRuleInvocationTypeEnum} with the guessed type of the
 	 *         rule, or an exception will be thrown if it cannot be determined
+	 * @throws UnknownRuleTypeException
+	 *             for rule type not supported
 	 */
 	public IrodsRuleInvocationTypeEnum guessRuleLanguageType(final String ruleText) throws UnknownRuleTypeException {
 		if (ruleText == null || ruleText.isEmpty()) {

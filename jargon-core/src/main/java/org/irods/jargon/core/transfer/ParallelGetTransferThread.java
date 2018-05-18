@@ -29,9 +29,8 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE (www.irods.org)
  *
  */
-public final class ParallelGetTransferThread extends
-		AbstractParallelTransferThread implements
-		Callable<ParallelTransferResult> {
+public final class ParallelGetTransferThread extends AbstractParallelTransferThread
+		implements Callable<ParallelTransferResult> {
 
 	private final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy;
 
@@ -40,15 +39,13 @@ public final class ParallelGetTransferThread extends
 	 */
 	private ParallelDecryptionCipherWrapper parallelDecryptionCipherWrapper;
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ParallelGetTransferThread.class);
+	public static final Logger log = LoggerFactory.getLogger(ParallelGetTransferThread.class);
 
 	/**
-	 * Represents a thread used in a parallel file transfer. There will be
-	 * multiple threads controlled from the
-	 * {@code ParalellFileTransferStrategy}. This is an immutable object ,
-	 * as is the {@code parallelFileTransferStrategy} that this object
-	 * holds a reference to.
+	 * Represents a thread used in a parallel file transfer. There will be multiple
+	 * threads controlled from the {@code ParalellFileTransferStrategy}. This is an
+	 * immutable object , as is the {@code parallelFileTransferStrategy} that this
+	 * object holds a reference to.
 	 *
 	 * @param parallelGetFileTransferStrategy
 	 *            {@link org.irods.jargon.core.transfer.ParallelGetFileTransferStrategy}
@@ -57,16 +54,15 @@ public final class ParallelGetTransferThread extends
 	 *            {@code int} with the thread number
 	 * @return {@code ParallelGetTransferThread}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static ParallelGetTransferThread instance(
-			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy,
-			final int threadNumber) throws JargonException {
-		return new ParallelGetTransferThread(parallelGetFileTransferStrategy,
-				threadNumber);
+			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy, final int threadNumber)
+			throws JargonException {
+		return new ParallelGetTransferThread(parallelGetFileTransferStrategy, threadNumber);
 	}
 
-	private ParallelGetTransferThread(
-			final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy,
+	private ParallelGetTransferThread(final ParallelGetFileTransferStrategy parallelGetFileTransferStrategy,
 			final int threadNumber) throws JargonException {
 
 		super(threadNumber);
@@ -78,8 +74,7 @@ public final class ParallelGetTransferThread extends
 		log.info("setting up the encryption if so negotiated");
 		if (this.parallelGetFileTransferStrategy.doEncryption()) {
 			log.debug("am doing encryption, enable the cypher");
-			parallelDecryptionCipherWrapper = this.parallelGetFileTransferStrategy
-					.initializeCypherForDecryption();
+			parallelDecryptionCipherWrapper = this.parallelGetFileTransferStrategy.initializeCypherForDecryption();
 			log.debug("cypher initialized");
 		}
 	}
@@ -88,37 +83,31 @@ public final class ParallelGetTransferThread extends
 	public ParallelTransferResult call() throws JargonException {
 		try {
 			Socket s = new Socket();
-			if (parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpSendWindowSize() > 0) {
-				s.setSendBufferSize(parallelGetFileTransferStrategy
-						.getPipelineConfiguration()
-						.getParallelTcpSendWindowSize() * 1024);
+			if (parallelGetFileTransferStrategy.getPipelineConfiguration().getParallelTcpSendWindowSize() > 0) {
+				s.setSendBufferSize(
+						parallelGetFileTransferStrategy.getPipelineConfiguration().getParallelTcpSendWindowSize()
+								* 1024);
 			}
 
-			if (parallelGetFileTransferStrategy.getPipelineConfiguration()
-					.getParallelTcpReceiveWindowSize() > 0) {
-				s.setReceiveBufferSize(parallelGetFileTransferStrategy
-						.getPipelineConfiguration()
-						.getParallelTcpReceiveWindowSize() * 1024);
+			if (parallelGetFileTransferStrategy.getPipelineConfiguration().getParallelTcpReceiveWindowSize() > 0) {
+				s.setReceiveBufferSize(
+						parallelGetFileTransferStrategy.getPipelineConfiguration().getParallelTcpReceiveWindowSize()
+								* 1024);
 			}
 
-			s.setPerformancePreferences(parallelGetFileTransferStrategy
-					.getPipelineConfiguration()
-					.getParallelTcpPerformancePrefsConnectionTime(),
+			s.setPerformancePreferences(
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
-							.getParallelTcpPerformancePrefsLatency(),
+							.getParallelTcpPerformancePrefsConnectionTime(),
+					parallelGetFileTransferStrategy.getPipelineConfiguration().getParallelTcpPerformancePrefsLatency(),
 					parallelGetFileTransferStrategy.getPipelineConfiguration()
 							.getParallelTcpPerformancePrefsBandwidth());
 
-			InetSocketAddress address = new InetSocketAddress(
-					parallelGetFileTransferStrategy.getHost(),
+			InetSocketAddress address = new InetSocketAddress(parallelGetFileTransferStrategy.getHost(),
 					parallelGetFileTransferStrategy.getPort());
 
-			s.setSoTimeout(parallelGetFileTransferStrategy
-					.getParallelSocketTimeoutInSecs() * 1000);
+			s.setSoTimeout(parallelGetFileTransferStrategy.getParallelSocketTimeoutInSecs() * 1000);
 
-			s.setKeepAlive(parallelGetFileTransferStrategy
-					.getPipelineConfiguration().isParallelTcpKeepAlive());
+			s.setKeepAlive(parallelGetFileTransferStrategy.getPipelineConfiguration().isParallelTcpKeepAlive());
 
 			// assume reuse, nodelay
 			s.setReuseAddress(true);
@@ -126,21 +115,19 @@ public final class ParallelGetTransferThread extends
 			s.connect(address);
 			setS(s);
 			byte[] outputBuffer = new byte[4];
-			Host.copyInt(parallelGetFileTransferStrategy.getPassword(),
-					outputBuffer);
+			Host.copyInt(parallelGetFileTransferStrategy.getPassword(), outputBuffer);
 
-			int inputBuffSize = parallelGetFileTransferStrategy
-					.getJargonProperties().getInternalInputStreamBufferSize();
-			int outputBuffSize = parallelGetFileTransferStrategy
-					.getJargonProperties().getInternalOutputStreamBufferSize();
+			int inputBuffSize = parallelGetFileTransferStrategy.getJargonProperties()
+					.getInternalInputStreamBufferSize();
+			int outputBuffSize = parallelGetFileTransferStrategy.getJargonProperties()
+					.getInternalOutputStreamBufferSize();
 
 			if (inputBuffSize < 0) {
 				setIn(getS().getInputStream());
 			} else if (inputBuffSize == 0) {
 				setIn(new BufferedInputStream(getS().getInputStream()));
 			} else {
-				setIn(new BufferedInputStream(getS().getInputStream(),
-						inputBuffSize));
+				setIn(new BufferedInputStream(getS().getInputStream(), inputBuffSize));
 			}
 
 			if (outputBuffSize < 0) {
@@ -148,8 +135,7 @@ public final class ParallelGetTransferThread extends
 			} else if (outputBuffSize == 0) {
 				setOut(new BufferedOutputStream(getS().getOutputStream()));
 			} else {
-				setOut(new BufferedOutputStream(getS().getOutputStream(),
-						outputBuffSize));
+				setOut(new BufferedOutputStream(getS().getOutputStream(), outputBuffSize));
 			}
 
 			log.debug("socket established, sending cookie to iRODS listener");
@@ -165,11 +151,9 @@ public final class ParallelGetTransferThread extends
 			return result;
 
 		} catch (UnknownHostException e) {
-			log.error("Unknown host: {}",
-					parallelGetFileTransferStrategy.getHost(), e);
+			log.error("Unknown host: {}", parallelGetFileTransferStrategy.getHost(), e);
 			setExceptionInTransfer(e);
-			throw new JargonException("unknown host:"
-					+ parallelGetFileTransferStrategy.getHost(), e);
+			throw new JargonException("unknown host:" + parallelGetFileTransferStrategy.getHost(), e);
 		} catch (Throwable e) {
 			log.error("unchecked exception in transfer", e);
 			throw new JargonException(e);
@@ -180,8 +164,7 @@ public final class ParallelGetTransferThread extends
 	public void get() throws JargonException {
 		log.info("parallel transfer get");
 
-		if (parallelGetFileTransferStrategy
-				.getConnectionProgressStatusListener() == null) {
+		if (parallelGetFileTransferStrategy.getConnectionProgressStatusListener() == null) {
 			log.info("no connection progress status listener configured, no detailed callbacks");
 		} else {
 			log.info("connection listener configured, will produce callbacks");
@@ -191,8 +174,7 @@ public final class ParallelGetTransferThread extends
 
 		try {
 			log.info("opening local randomAccessFile");
-			local = new RandomAccessFile(
-					parallelGetFileTransferStrategy.getLocalFile(), "rw");
+			local = new RandomAccessFile(parallelGetFileTransferStrategy.getLocalFile(), "rw");
 			log.info("random access file opened rw mode");
 			processingLoopForGetData(local);
 
@@ -221,13 +203,12 @@ public final class ParallelGetTransferThread extends
 	 * @param local
 	 * @throws JargonException
 	 */
-	private void processingLoopForGetData(final RandomAccessFile local)
-			throws JargonException {
+	private void processingLoopForGetData(final RandomAccessFile local) throws JargonException {
 		// log.info("reading header info...");
 
 		// read the header
 		int operation = readInt();
-		// log.info("   operation:{}", operation);
+		// log.info(" operation:{}", operation);
 
 		readInt();
 
@@ -245,11 +226,8 @@ public final class ParallelGetTransferThread extends
 		int read = 0;
 
 		if (operation != GET_OPR) {
-			log.error("Parallel transfer expected GET,  server requested {}",
-					operation);
-			throw new JargonException(
-					"parallel get transfer, unexpected transfer type from iRODS:"
-							+ operation);
+			log.error("Parallel transfer expected GET,  server requested {}", operation);
+			throw new JargonException("parallel get transfer, unexpected transfer type from iRODS:" + operation);
 		}
 
 		log.info("seeking to offset: {}", offset);
@@ -264,7 +242,7 @@ public final class ParallelGetTransferThread extends
 				if (Thread.interrupted()) {
 					throw new IOException(
 
-					"interrupted, consider connection corrupted and return IOException to clear");
+							"interrupted, consider connection corrupted and return IOException to clear");
 				}
 
 				log.debug("reading....");
@@ -272,8 +250,8 @@ public final class ParallelGetTransferThread extends
 				int newSize;
 
 				/*
-				 * if encrypted, first read an int that reflects the new length,
-				 * as encryption may change the length of the data
+				 * if encrypted, first read an int that reflects the new length, as encryption
+				 * may change the length of the data
 				 */
 
 				if (parallelGetFileTransferStrategy.doEncryption()) {
@@ -282,8 +260,8 @@ public final class ParallelGetTransferThread extends
 					log.debug("new size of encrypted traffic:{}", newSize);
 
 				} else {
-					newSize = Math.min(parallelGetFileTransferStrategy
-							.getJargonProperties().getParallelCopyBufferSize(),
+					newSize = Math.min(
+							parallelGetFileTransferStrategy.getJargonProperties().getParallelCopyBufferSize(),
 							(int) length);
 					log.debug("newSize of non-encrypted traffic:{}", newSize);
 
@@ -304,8 +282,7 @@ public final class ParallelGetTransferThread extends
 				 */
 
 				if (parallelGetFileTransferStrategy.doEncryption()) {
-					buffer = this.parallelDecryptionCipherWrapper
-							.decrypt(buffer);
+					buffer = this.parallelDecryptionCipherWrapper.decrypt(buffer);
 					read = buffer.length;
 
 				}
@@ -319,28 +296,19 @@ public final class ParallelGetTransferThread extends
 						local.write(buffer, 0, read);
 
 						/*
-						 * Make an intra-file status call-back if a listener is
-						 * configured
+						 * Make an intra-file status call-back if a listener is configured
 						 */
-						if (parallelGetFileTransferStrategy
-								.getConnectionProgressStatusListener() != null) {
-							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
+						if (parallelGetFileTransferStrategy.getConnectionProgressStatusListener() != null) {
+							parallelGetFileTransferStrategy.getConnectionProgressStatusListener()
 									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+											ConnectionProgressStatus.instanceForReceive(read));
 						}
 
-						if (parallelGetFileTransferStrategy
-								.getFileRestartInfo() != null) {
+						if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
 
-							parallelGetFileTransferStrategy.getRestartManager()
-									.updateLengthForSegment(
-											parallelGetFileTransferStrategy
-													.getFileRestartInfo()
-													.identifierFromThisInfo(),
-											getThreadNumber(),
-											totalWrittenSinceLastRestartUpdate);
+							parallelGetFileTransferStrategy.getRestartManager().updateLengthForSegment(
+									parallelGetFileTransferStrategy.getFileRestartInfo().identifierFromThisInfo(),
+									getThreadNumber(), totalWrittenSinceLastRestartUpdate);
 							totalWrittenSinceLastRestartUpdate = 0;
 							log.debug("signal storage of new info");
 
@@ -373,43 +341,36 @@ public final class ParallelGetTransferThread extends
 
 						local.write(buffer, 0, read);
 						/*
-						 * Make an intra-file status call-back if a listener is
-						 * configured
+						 * Make an intra-file status call-back if a listener is configured
 						 */
-						if (parallelGetFileTransferStrategy
-								.getConnectionProgressStatusListener() != null) {
-							parallelGetFileTransferStrategy
-									.getConnectionProgressStatusListener()
+						if (parallelGetFileTransferStrategy.getConnectionProgressStatusListener() != null) {
+							parallelGetFileTransferStrategy.getConnectionProgressStatusListener()
 									.connectionProgressStatusCallback(
-											ConnectionProgressStatus
-													.instanceForReceive(read));
+											ConnectionProgressStatus.instanceForReceive(read));
 						}
 
 					}
 				} else {
-					log.warn("intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
+					log.warn(
+							"intercepted a loop condition on parallel file get, length is > 0 but I just read and got nothing...breaking...");
 					length = 0;
-					throw new JargonException(
-							"possible loop condition in parallel file get");
+					throw new JargonException("possible loop condition in parallel file get");
 				}
 
 				Thread.yield();
 			}
 
 		} catch (IOException e) {
-			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-					parallelGetFileTransferStrategy.toString());
-			throw new JargonException(
-					IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+			log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, parallelGetFileTransferStrategy.toString());
+			throw new JargonException(IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 		} catch (Throwable e) {
 			log.error("exception in parallel transfer", e);
-			throw new JargonException(
-					"unexpected exception in parallel transfer", e);
+			throw new JargonException("unexpected exception in parallel transfer", e);
 		}
 	}
 
-	private int myRead(final InputStream in, final byte[] buffer,
-			final int length) throws IOException, JargonException {
+	private int myRead(final InputStream in, final byte[] buffer, final int length)
+			throws IOException, JargonException {
 		int myLength = length;
 		int ptr = 0;
 		int read = 0;
@@ -420,16 +381,14 @@ public final class ParallelGetTransferThread extends
 		}
 
 		while (myLength > 0) {
-			log.info(">>>>>>>>>>>>> top of while, my length:{} <<<<<<<<<<<",
-					myLength);
+			log.info(">>>>>>>>>>>>> top of while, my length:{} <<<<<<<<<<<", myLength);
 			if (ptr > buffer.length) {
 				log.error("ptr out of synch");
 				log.error("buffer size:{}", buffer.length);
 				log.error("ptr:{}", ptr);
 				log.error("myLength:{}", myLength);
 				log.error("totalRead:{}", totalRead);
-				throw new JargonException(
-						"pointer is pointing out of range of the buffer");
+				throw new JargonException("pointer is pointing out of range of the buffer");
 			}
 
 			log.info("===========================");
@@ -467,8 +426,7 @@ public final class ParallelGetTransferThread extends
 	 * @param offset
 	 * @throws JargonRuntimeException
 	 */
-	private void seekToOffset(final RandomAccessFile local, final long offset)
-			throws JargonException {
+	private void seekToOffset(final RandomAccessFile local, final long offset) throws JargonException {
 		if (offset < 0) {
 			log.error("offset < 0 in transfer get() operation, return from get method");
 			return;
@@ -476,12 +434,9 @@ public final class ParallelGetTransferThread extends
 		} else if (offset > 0) {
 
 			if (parallelGetFileTransferStrategy.getFileRestartInfo() != null) {
-				parallelGetFileTransferStrategy.getRestartManager()
-						.updateOffsetForSegment(
-								parallelGetFileTransferStrategy
-										.getFileRestartInfo()
-										.identifierFromThisInfo(),
-								getThreadNumber(), offset);
+				parallelGetFileTransferStrategy.getRestartManager().updateOffsetForSegment(
+						parallelGetFileTransferStrategy.getFileRestartInfo().identifierFromThisInfo(),
+						getThreadNumber(), offset);
 			}
 
 			try {
@@ -492,10 +447,8 @@ public final class ParallelGetTransferThread extends
 
 				// log.debug("seek completed");
 			} catch (Exception e) {
-				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER,
-						parallelGetFileTransferStrategy.toString());
-				throw new JargonException(
-						IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
+				log.error(IO_EXEPTION_IN_PARALLEL_TRANSFER, parallelGetFileTransferStrategy.toString());
+				throw new JargonException(IO_EXCEPTION_OCCURRED_DURING_PARALLEL_FILE_TRANSFER, e);
 			}
 		}
 	}

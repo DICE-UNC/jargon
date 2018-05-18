@@ -31,6 +31,8 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 	 * @param ruleInvocationConfiguration
 	 *            {@link RuleInvocationConfiguration} with configuration regarding
 	 *            the type of rule and type of rule processing to be done
+	 * @param jargonProperties
+	 *            {@link JargonProperties}
 	 */
 	public IrodsRuleEngineRuleTranslator(final IRODSServerProperties irodsServerProperties,
 			final RuleInvocationConfiguration ruleInvocationConfiguration, final JargonProperties jargonProperties) {
@@ -45,7 +47,9 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 	 *            {@code String} with the rule body and input and output parameters
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
+	 *             for rule error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	@Override
 	public IRODSRule translatePlainTextRuleIntoIrodsRule(final String ruleAsPlainText,
@@ -134,11 +138,6 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 		return irodsRule;
 	}
 
-	/**
-	 * @param tokens
-	 * @return
-	 * @throws OperationNotSupportedByThisServerException
-	 */
 	private RuleCharacteristics processRuleBodyNewFormat(final List<String> tokenLines)
 			throws OperationNotSupportedByThisServerException {
 
@@ -221,10 +220,6 @@ public class IrodsRuleEngineRuleTranslator extends AbstractRuleTranslator {
 		return ruleCharacteristics;
 	}
 
-	/**
-	 * @param tokens
-	 * @return
-	 */
 	private String processRuleBodyOldFormat(final List<String> tokenLines) {
 		StringBuilder total = new StringBuilder();
 		// if formatting error, such as only one line, below breaks

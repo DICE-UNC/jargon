@@ -11,7 +11,7 @@ import org.irods.jargon.core.pub.RuleProcessingAO.RuleProcessingType;
  * Specifies the information needed to run a user submitted rule on a particular
  * rule engine. This is useful when a user-submitted rule needs to be bound to a
  * particular rule engine, e.g. phython versus iRODS native rule language.
- * <p/>
+ * <p>
  * The configuration may just ask Jargon to figure out where to run, setting an
  * automatic mode, it may select the default name for the iRODS or Python rule
  * engine based on the <code>JargonProperties</code>, or it can even directly
@@ -44,7 +44,7 @@ public class RuleInvocationConfiguration {
 	 * information to determine the appropriate instance according to the rule
 	 * language detected. Set to <code>true</code> to have Jargon guess the rule
 	 * engine instance name.
-	 * <p/>
+	 * <p>
 	 * Note that you can always just set the <code>ruleEngineSpecifier</code>
 	 * directly, and that is equivalent to setting the instance name via the irule
 	 * command.

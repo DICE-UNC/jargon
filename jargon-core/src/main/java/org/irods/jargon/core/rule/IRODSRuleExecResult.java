@@ -28,11 +28,10 @@ public class IRODSRuleExecResult {
 	 *            {@code Tag} with the response from iRODS
 	 * @return {@link IRODSRuleExecResult}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static IRODSRuleExecResult instance(
-			final IRODSRule irodsRule,
-			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-			throws JargonException {
+	public static IRODSRuleExecResult instance(final IRODSRule irodsRule,
+			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters) throws JargonException {
 		return new IRODSRuleExecResult(irodsRule, resultParameters);
 	}
 
@@ -47,10 +46,8 @@ public class IRODSRuleExecResult {
 		return sb.toString();
 	}
 
-	private IRODSRuleExecResult(
-			final IRODSRule irodsRule,
-			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters)
-			throws JargonException {
+	private IRODSRuleExecResult(final IRODSRule irodsRule,
+			final Map<String, IRODSRuleExecResultOutputParameter> resultParameters) throws JargonException {
 
 		if (irodsRule == null) {
 			throw new JargonException("null irodsRule");
@@ -73,15 +70,14 @@ public class IRODSRuleExecResult {
 	}
 
 	/**
-	 * Return the standard output from the rule invocation, this is a short-cut
-	 * to getting the ruleExecOut from the output parameters.
+	 * Return the standard output from the rule invocation, this is a short-cut to
+	 * getting the ruleExecOut from the output parameters.
 	 *
-	 * @return {@code String} with the rule exec out. This will be a blank
-	 *         value (not null) if no output was found.
+	 * @return {@code String} with the rule exec out. This will be a blank value
+	 *         (not null) if no output was found.
 	 */
 	public String getRuleExecOut() {
-		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
-				.get("ruleExecOut");
+		IRODSRuleExecResultOutputParameter execOut = outputParameterResults.get("ruleExecOut");
 		if (execOut == null) {
 			return "";
 		}
@@ -95,15 +91,14 @@ public class IRODSRuleExecResult {
 	}
 
 	/**
-	 * Return the standard error from the rule invocation, this is a short-cut
-	 * to getting the ruleExecOut from the output parameters.
+	 * Return the standard error from the rule invocation, this is a short-cut to
+	 * getting the ruleExecOut from the output parameters.
 	 *
-	 * @return {@code String} with the rule exec err. This will be a blank
-	 *         value (not null) if no output was found.
+	 * @return {@code String} with the rule exec err. This will be a blank value
+	 *         (not null) if no output was found.
 	 */
 	public String getRuleExecErr() {
-		IRODSRuleExecResultOutputParameter execOut = outputParameterResults
-				.get("ruleExecErrorOut");
+		IRODSRuleExecResultOutputParameter execOut = outputParameterResults.get("ruleExecErrorOut");
 		if (execOut == null) {
 			return "";
 		}

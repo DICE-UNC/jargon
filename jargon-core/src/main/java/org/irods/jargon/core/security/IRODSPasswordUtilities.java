@@ -31,8 +31,7 @@ public class IRODSPasswordUtilities {
 	public static final String RAND_STRING_V2 = "A.ObfV2";
 	public static final int MAX_PWD_LENGTH = 50;
 
-	static final Logger log = LoggerFactory
-			.getLogger(IRODSPasswordUtilities.class);
+	static final Logger log = LoggerFactory.getLogger(IRODSPasswordUtilities.class);
 
 	static {
 
@@ -67,14 +66,14 @@ public class IRODSPasswordUtilities {
 	 * @param adminPassword
 	 *            {@code String} with the password of the administrator
 	 * @param challengeValue
-	 *            {@code String} with the challenge value used during the
-	 *            login process for the administrator making this change
+	 *            {@code String} with the challenge value used during the login
+	 *            process for the administrator making this change
 	 * @return {@code String} with an obfuscated value for the password
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static String obfuscateIRODSPasswordForAdminPasswordChange(
-			final String newPassword, final String adminPassword,
-			final String challengeValue) throws JargonException {
+	public static String obfuscateIRODSPasswordForAdminPasswordChange(final String newPassword,
+			final String adminPassword, final String challengeValue) throws JargonException {
 
 		log.info("obfuscateIRODSPasswordForAdminPasswordChange()");
 
@@ -101,35 +100,32 @@ public class IRODSPasswordUtilities {
 		myKey.append(adminPassword);
 		myKey.append(challengeValue);
 
-		String myKey2 = MiscIRODSUtils.computeMD5HashOfAStringValue(pad(
-				myKey.toString(), 100, '\0'));
+		String myKey2 = MiscIRODSUtils.computeMD5HashOfAStringValue(pad(myKey.toString(), 100, '\0'));
 
 		// get a rand val based on current time
 		int firstCharOfMyIn = myIn.charAt(0);
 		firstCharOfMyIn += secs;
 		myIn.setCharAt(0, (char) firstCharOfMyIn);
 
-		String obfuscatedValue = obfuscateIRODSPasswordWithCypherChaining(
-				myIn.toString(), myKey2);
+		String obfuscatedValue = obfuscateIRODSPasswordWithCypherChaining(myIn.toString(), myKey2);
 		return obfuscatedValue;
 
 	}
 
 	/**
-	 * iRODS (see clientLogin.c) uses a subset of the challenge value in hex
-	 * form for its obfuscation purposes. This method takes the raw challenge
-	 * value and creates the same representation.
+	 * iRODS (see clientLogin.c) uses a subset of the challenge value in hex form
+	 * for its obfuscation purposes. This method takes the raw challenge value and
+	 * creates the same representation.
 	 *
 	 * @param challengeValue
-	 *            {@code String} with the raw iRODS challenge value from
-	 *            the login process
+	 *            {@code String} with the raw iRODS challenge value from the login
+	 *            process
 	 * @return {@code String} with a hex represnetation of a subset of the
 	 *         challenge, as in clientLogin.c
 	 */
 	public static String deriveHexSubsetOfChallenge(final String challengeValue) {
 		if (challengeValue == null || challengeValue.isEmpty()) {
-			throw new IllegalArgumentException(
-					"challengeValue is null or empty");
+			throw new IllegalArgumentException("challengeValue is null or empty");
 		}
 
 		byte[] temp = Base64.fromString(challengeValue);
@@ -153,14 +149,15 @@ public class IRODSPasswordUtilities {
 	 * @param key
 	 *            {@code String} with the encrtyption key
 	 * @param pad
-	 *            {@code boolean} indicating whether value source value
-	 *            should be padded
-	 * @return {@code String} with the obfuscated password to send to iRODS
-	 *         via the iRODS admin protocol.
+	 *            {@code boolean} indicating whether value source value should be
+	 *            padded
+	 * @return {@code String} with the obfuscated password to send to iRODS via the
+	 *         iRODS admin protocol.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static String obfEncodeByKey(final String sourceData,
-			final String key, final boolean pad) throws JargonException {
+	public static String obfEncodeByKey(final String sourceData, final String key, final boolean pad)
+			throws JargonException {
 
 		if (sourceData == null || sourceData.isEmpty()) {
 			throw new JargonException("newPassword is null or empty");
@@ -171,9 +168,9 @@ public class IRODSPasswordUtilities {
 		}
 
 		/**
-		 * If the password is already padded, this has no effect, so it's left
-		 * in without adding another signature or flag. If I am doing an admin
-		 * change the padding has already happened.
+		 * If the password is already padded, this has no effect, so it's left in
+		 * without adding another signature or flag. If I am doing an admin change the
+		 * padding has already happened.
 		 */
 		String randPaddedNewPassword;
 		if (pad) {
@@ -214,8 +211,7 @@ public class IRODSPasswordUtilities {
 		}
 
 		// concatenate the first two hashes, and take the hash of that
-		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-				+ digestRound2.length];
+		byte[] concatRound1AndRound2 = new byte[digestRound1.length + digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -235,8 +231,8 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
-		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-				+ digestRound2.length + digestRound3.length];
+		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length + digestRound2.length
+				+ digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -259,8 +255,8 @@ public class IRODSPasswordUtilities {
 		}
 
 		// concatenate all four hash buffers
-		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-				+ digestRound3.length + digestRound4.length];
+		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length + digestRound3.length
+				+ digestRound4.length];
 
 		concatI = 0;
 
@@ -335,8 +331,7 @@ public class IRODSPasswordUtilities {
 
 	}
 
-	public static String obfuscateIRODSPasswordWithCypherChaining(
-			final String newPassword, final String oldPassword)
+	public static String obfuscateIRODSPasswordWithCypherChaining(final String newPassword, final String oldPassword)
 			throws JargonException {
 
 		if (newPassword == null || newPassword.isEmpty()) {
@@ -379,8 +374,7 @@ public class IRODSPasswordUtilities {
 		}
 
 		// concatenate the first two hashes, and take the hash of that
-		byte[] concatRound1AndRound2 = new byte[digestRound1.length
-				+ digestRound2.length];
+		byte[] concatRound1AndRound2 = new byte[digestRound1.length + digestRound2.length];
 		int concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -400,8 +394,8 @@ public class IRODSPasswordUtilities {
 
 		// concatenate the previous 3 rounds and take a fourth MD5 hash
 
-		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length
-				+ digestRound2.length + digestRound3.length];
+		byte[] concatRound1AndRound2AndRound3 = new byte[digestRound1.length + digestRound2.length
+				+ digestRound3.length];
 		concatI = 0;
 
 		for (byte element : digestRound1) {
@@ -424,8 +418,8 @@ public class IRODSPasswordUtilities {
 		}
 
 		// concatenate all four hash buffers
-		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length
-				+ digestRound3.length + digestRound4.length];
+		byte[] cpKeyArray = new byte[digestRound1.length + digestRound2.length + digestRound3.length
+				+ digestRound4.length];
 
 		concatI = 0;
 
@@ -504,10 +498,10 @@ public class IRODSPasswordUtilities {
 
 	/**
 	 * @param newPassword
+	 *            {@code String} with desired new password
 	 * @return {@code String} with padded password
 	 */
-	public static String padPasswordWithRandomStringData(
-			final String newPassword) {
+	public static String padPasswordWithRandomStringData(final String newPassword) {
 		int lCopy = MAX_PWD_LENGTH - 10 - newPassword.length();
 		StringBuilder pwdBuf = new StringBuilder();
 		pwdBuf.append(newPassword);
@@ -525,16 +519,15 @@ public class IRODSPasswordUtilities {
 	 * debugging obfuscation routines.
 	 *
 	 * @param b
-	 *            {@code btye[]} to be converted into a hex representation
-	 *            for logging.
+	 *            {@code btye[]} to be converted into a hex representation for
+	 *            logging.
 	 * @return {@code String} with a hex representation.
 	 */
 	public static String getHexString(final byte[] b) {
 		StringBuilder result = new StringBuilder();
 		for (byte element : b) {
 
-			result.append(Integer.toString((element & 0xff) + 0x100, 16)
-					.substring(1));
+			result.append(Integer.toString((element & 0xff) + 0x100, 16).substring(1));
 		}
 		return result.toString();
 	}
@@ -553,15 +546,15 @@ public class IRODSPasswordUtilities {
 	 *
 	 * @param b
 	 *            {@code byte} to be converted to an int.
-	 * @return {@code int} which is the equivilant of the unsigned version
-	 *         of the {@code byte} param.
+	 * @return {@code int} which is the equivilant of the unsigned version of the
+	 *         {@code byte} param.
 	 */
 	public static int unsignedByteToInt(final byte b) {
 		return b & 0xFF;
 	}
 
-	public static String getHashedPassword(final String passwordHashValue,
-			final IRODSAccount irodsAccount) throws JargonException {
+	public static String getHashedPassword(final String passwordHashValue, final IRODSAccount irodsAccount)
+			throws JargonException {
 		StringBuilder sb = new StringBuilder();
 		sb.append(passwordHashValue);
 		sb.append(irodsAccount.getPassword());
@@ -590,8 +583,7 @@ public class IRODSPasswordUtilities {
 	 * @param str
 	 *            {@code String} to be padded
 	 * @param size
-	 *            {@code int} with the length of the final padded String
-	 *            value
+	 *            {@code int} with the length of the final padded String value
 	 * @param padChar
 	 *            {@code char} that will pad the given string
 	 * @return {@code String} that is padded out to the given length

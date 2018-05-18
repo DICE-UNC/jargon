@@ -25,10 +25,14 @@ public abstract class AbstractRestartManager {
 	 * Either return existing, or create a new restart identifier
 	 *
 	 * @param fileRestartInfoIdentifier
+	 *            {@link FileRestartInfoIdentifier} derived from the startup
 	 * @param localFilePath
 	 *            {@code String} with the local file name
+	 * @param numberOfThreads
+	 *            {@code int}
 	 * @return {@link FileRestartInfo}
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public synchronized FileRestartInfo retrieveRestartAndBuildIfNotStored(
 			final FileRestartInfoIdentifier fileRestartInfoIdentifier, final String localFilePath,
@@ -73,6 +77,7 @@ public abstract class AbstractRestartManager {
 	 * @param fileRestartDataSegment
 	 *            {@link FileRestartDataSegment} that contains the segment to
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public abstract void updateSegment(final FileRestartInfo fileRestartInfo,
 			final FileRestartDataSegment fileRestartDataSegment) throws FileRestartManagementException;
@@ -87,6 +92,7 @@ public abstract class AbstractRestartManager {
 	 * @exception RestartFailedException
 	 *                if the count is exceeded or the restart fails
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public abstract FileRestartInfo incrementRestartAttempts(final FileRestartInfo fileRestartInfo)
 			throws RestartFailedException, FileRestartManagementException;
@@ -102,6 +108,7 @@ public abstract class AbstractRestartManager {
 	 * @param length
 	 *            {@code long} with the length to add to the segment
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public void updateLengthForSegment(final FileRestartInfoIdentifier fileRestartInfoIdentifier,
 			final int threadNumber, final long length) throws FileRestartManagementException {
@@ -145,6 +152,7 @@ public abstract class AbstractRestartManager {
 	 * @param offset
 	 *            {@code long} with the length to add to the segment
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public void updateOffsetForSegment(final FileRestartInfoIdentifier fileRestartInfoIdentifier,
 			final int threadNumber, final long offset) throws FileRestartManagementException {
@@ -179,6 +187,7 @@ public abstract class AbstractRestartManager {
 	 * @return {@link FileRestartInfoIdentifier} that is the derived key from the
 	 *         restart info
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public abstract FileRestartInfoIdentifier storeRestart(final FileRestartInfo fileRestartInfo)
 			throws FileRestartManagementException;
@@ -187,7 +196,9 @@ public abstract class AbstractRestartManager {
 	 * Delete the file restart information
 	 *
 	 * @param fileRestartInfoIdentifier
+	 *            {@link FileRestartInfoIdentifier}
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 */
 	public abstract void deleteRestart(final FileRestartInfoIdentifier fileRestartInfoIdentifier)
 			throws FileRestartManagementException;
@@ -201,6 +212,7 @@ public abstract class AbstractRestartManager {
 	 * @return {@link FileRestartInfo} that matches the key or {@code null} if no
 	 *         match
 	 * @throws FileRestartManagementException
+	 *             for restart error
 	 *
 	 */
 	public abstract FileRestartInfo retrieveRestart(final FileRestartInfoIdentifier fileRestartInfoIdentifier)

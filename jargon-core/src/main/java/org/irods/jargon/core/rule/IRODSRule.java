@@ -68,6 +68,7 @@ public final class IRODSRule {
 	 *            type of rule (rule language) involved
 	 * @return {@code IRODSRule} containing an object model of the rule.
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static IRODSRule instance(final String ruleAsOriginalText,
 			final List<IRODSRuleParameter> irodsRuleInputParameters,

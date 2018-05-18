@@ -62,7 +62,9 @@ public class IrodsRuleFactory {
 	 *            {@link RuleInvocationConfiguration} with config hints
 	 * @return {@link IRODSRule} ready to submit to iRODS for processing
 	 * @throws JargonRuleException
+	 *             for rule error
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public IRODSRule instanceIrodsRule(String irodsRuleAsString, List<IRODSRuleParameter> inputParameterOverrides,
 			RuleInvocationConfiguration ruleInvocationConfiguration) throws JargonRuleException, JargonException {

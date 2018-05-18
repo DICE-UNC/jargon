@@ -41,6 +41,9 @@ public abstract class AbstractRuleTranslator {
 	 *
 	 * @param ruleAsPlainText
 	 *            {@code String} with the rule body and input and output parameters
+	 * @param overrideInputParameters
+	 *            {@code List} of {@link IRODSRuleParameter} which contains the
+	 *            input parameters as derived from the iRODS rule body
 	 * @return {@link IRODSRule}
 	 * @throws JargonRuleException
 	 *             for rule error

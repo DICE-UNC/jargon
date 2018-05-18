@@ -22,27 +22,25 @@ public class IRODSRuleExecResultOutputParameter {
 	private Object resultObject;
 
 	/**
-	 * Return a new immutable value object that encapsulates the output of a
-	 * rule for a specific designated output parameter
+	 * Return a new immutable value object that encapsulates the output of a rule
+	 * for a specific designated output parameter
 	 *
 	 * @param parameterName
-	 *            {@code String} with the parameter name as specified in
-	 *            the rule
+	 *            {@code String} with the parameter name as specified in the rule
 	 * @param outputParamType
-	 *            {@code OutputParamType} enum value that indicates the
-	 *            type of result
+	 *            {@code OutputParamType} enum value that indicates the type of
+	 *            result
 	 * @param resultObject
-	 *            {@code Object} with the value associated with the
-	 *            parameter. This result can be cast to the appropriate type by
-	 *            the caller based on the parameter name it is associated with.
+	 *            {@code Object} with the value associated with the parameter. This
+	 *            result can be cast to the appropriate type by the caller based on
+	 *            the parameter name it is associated with.
 	 * @return {@link IRODSRuleExecResultOutputParameter}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static final IRODSRuleExecResultOutputParameter instance(
-			final String parameterName, final OutputParamType outputParamType,
-			final Object resultObject) throws JargonException {
-		return new IRODSRuleExecResultOutputParameter(parameterName,
-				outputParamType, resultObject);
+	public static final IRODSRuleExecResultOutputParameter instance(final String parameterName,
+			final OutputParamType outputParamType, final Object resultObject) throws JargonException {
+		return new IRODSRuleExecResultOutputParameter(parameterName, outputParamType, resultObject);
 	}
 
 	@Override
@@ -58,9 +56,8 @@ public class IRODSRuleExecResultOutputParameter {
 		return sb.toString();
 	}
 
-	protected IRODSRuleExecResultOutputParameter(final String parameterName,
-			final OutputParamType outputParamType, final Object resultObject)
-			throws JargonException {
+	protected IRODSRuleExecResultOutputParameter(final String parameterName, final OutputParamType outputParamType,
+			final Object resultObject) throws JargonException {
 
 		if (parameterName == null || parameterName.isEmpty()) {
 			throw new JargonException("parameterName is null or empty");
