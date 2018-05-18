@@ -68,6 +68,7 @@ public class LocalFileUtils {
 	 * Normalize any Windows paths from \ separators to / separators
 	 *
 	 * @param inPath
+	 *            {@code String} with path to normalize
 	 * @return {@link String} with the normalized path
 	 */
 	public static String normalizePath(final String inPath) {
@@ -161,7 +162,9 @@ public class LocalFileUtils {
 
 	/**
 	 * @param localFileToHoldData
+	 *            {@link File} to create
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static void createLocalFileIfNotExists(final File localFileToHoldData) throws JargonException {
 		if (localFileToHoldData.exists()) {
@@ -188,6 +191,7 @@ public class LocalFileUtils {
 	 *            leading '/')
 	 * @return {@code long} with the file's checksum value
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static long computeCRC32FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
 			throws JargonException {
@@ -226,6 +230,7 @@ public class LocalFileUtils {
 	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static byte[] computeSHA256FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
 			throws JargonException {
@@ -285,6 +290,7 @@ public class LocalFileUtils {
 	 *            leading '/')
 	 * @return {@code byte[]} with the file's checksum value
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static byte[] computeMD5FileCheckSumViaAbsolutePath(final String absolutePathToLocalFile)
 			throws JargonException {
@@ -378,6 +384,7 @@ public class LocalFileUtils {
 	 *            classpath
 	 * @return {@code File} representing the resource in the classpath
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static File getClasspathResourceAsFile(final String resourcePath) throws JargonException {
 
@@ -410,6 +417,7 @@ public class LocalFileUtils {
 	 *            {@code String} for a classpath resource
 	 * @return {@code String} with the String value of that resource data
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static String getClasspathResourceFileAsString(final String resourcePath) throws JargonException {
 
@@ -457,6 +465,7 @@ public class LocalFileUtils {
 	 * @param file
 	 * @return <code>byte[]</code> with file contents
 	 * @throws IOException
+	 *             {@link IOException}
 	 */
 	public static byte[] getBytesFromFile(final File file) throws IOException {
 		InputStream is = new FileInputStream(file);

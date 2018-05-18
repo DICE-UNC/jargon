@@ -28,10 +28,11 @@ public class CollectionAndPath implements Serializable {
 
 	/**
 	 * @param collectionParent
+	 *            {@code String} with the collection parent
 	 * @param childName
+	 *            {@code String} with the child name
 	 */
-	public CollectionAndPath(final String collectionParent,
-			final String childName) {
+	public CollectionAndPath(final String collectionParent, final String childName) {
 
 		if (collectionParent == null) {
 			throw new IllegalArgumentException("null  collectionParent");

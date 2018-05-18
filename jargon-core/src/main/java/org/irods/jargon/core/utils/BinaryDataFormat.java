@@ -41,10 +41,10 @@
 package org.irods.jargon.core.utils;
 
 /**
- * <DIV ALIGN=JUSTIFY> The BinaryDataFormat class describes the byte order and
- * primitive data type sizes for binary numeric data. For instance, a format may
- * describe that data is stored with the most-significant byte first and with a
- * "short" taking 2 bytes, an "int" 4 bytes, a "long" 8 bytes, and so on.
+ * The BinaryDataFormat class describes the byte order and primitive data type
+ * sizes for binary numeric data. For instance, a format may describe that data
+ * is stored with the most-significant byte first and with a "short" taking 2
+ * bytes, an "int" 4 bytes, a "long" 8 bytes, and so on.
  * <P>
  * Methods on the class set or get a format's attributes. Methods also support
  * using those attributes to control conversion of numeric values into and out
@@ -60,7 +60,7 @@ package org.irods.jargon.core.utils;
  * object to describe the file's format, and then call that object's
  * shortValue(bytes*b), intValue(bytes*b), longValue(bytes*b), and
  * longLongValue(bytes*b) methods to convert to the host's format:
- * <P>
+ * 
  *
  * <PRE>
  * // Define the file's binary data attributes
@@ -113,10 +113,9 @@ package org.irods.jargon.core.utils;
  * <B>Floating point values</B><BR>
  * Methods on this class <I>assume</I> that floating point data types conform to
  * the IEEE 754 standard. That standard constrains floating point types to these
- * sizes:
- * <P>
- * <BLOCKQUOTE>
+ * sizes: <BLOCKQUOTE>
  * <TABLE>
+ * <caption>precision</caption>
  * <TR>
  * <TD><B>Precision</B></TD>
  * <TD><B>Size</B></TD>
@@ -145,12 +144,11 @@ package org.irods.jargon.core.utils;
  * While this class supports conversions for long doubles, the Java language
  * does not support this data type. As a result, conversion from a long double
  * into a Java double or float may truncate.
- * <P>
+ * 
  * <DL>
  * <DT>Sub-classing</DT>
  * <DD>Final</DD>
  * </DL>
- * </DIV>
  * <P>
  *
  * @author David R. Nadeau, San Diego Supercomputer Center
@@ -169,55 +167,47 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Holds the size, in bytes, of the short language primitive supported for
 	 * binary I/O.
-	 * <P>
 	 */
 	private byte shortSize = 0;
 
 	/**
-	 * Holds the size, in bytes, of the int language primitive supported for
-	 * binary I/O.
-	 * <P>
+	 * Holds the size, in bytes, of the int language primitive supported for binary
+	 * I/O.
 	 */
 	private byte intSize = 0;
 
 	/**
-	 * Holds the size, in bytes, of the long language primitive supported for
-	 * binary I/O.
-	 * <P>
+	 * Holds the size, in bytes, of the long language primitive supported for binary
+	 * I/O.
 	 */
 	private byte longSize = 0;
 
 	/**
-	 * Holds the size, in bytes, of the long long language primitive supported
-	 * for binary I/O.
-	 * <P>
+	 * Holds the size, in bytes, of the long long language primitive supported for
+	 * binary I/O.
 	 */
 	private byte longLongSize = 0;
 
 	/**
 	 * Holds the size, in bytes, of the float language primitive supported for
 	 * binary I/O.
-	 * <P>
 	 */
 	private byte floatSize = 0;
 
 	/**
 	 * Holds the size, in bytes, of the double language primitive supported for
 	 * binary I/O.
-	 * <P>
 	 */
 	private byte doubleSize = 0;
 
 	/**
-	 * Holds the size, in bytes, of the long double language primitive supported
-	 * for binary I/O.
-	 * <P>
+	 * Holds the size, in bytes, of the long double language primitive supported for
+	 * binary I/O.
 	 */
 	private byte longDoubleSize = 0;
 
 	/**
 	 * Holds true if the byte order is MBF, and false if LBF.
-	 * <P>
 	 */
 	private boolean isMBF = true;
 
@@ -229,56 +219,48 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Holds true if the host and this binary format have the same byte order.
-	 * <P>
 	 */
 	private boolean sameByteOrder = true;
 
 	/**
-	 * Holds true if the host and this binary format have the same size for
-	 * short values.
-	 * <P>
+	 * Holds true if the host and this binary format have the same size for short
+	 * values.
 	 */
 	private boolean sameShortSize = true;
 
 	/**
 	 * Holds true if the host and this binary format have the same size for int
 	 * values.
-	 * <P>
 	 */
 	private boolean sameIntSize = true;
 
 	/**
 	 * Holds true if the host and this binary format have the same size for long
 	 * values.
-	 * <P>
 	 */
 	private boolean sameLongSize = true;
 
 	/**
 	 * Holds true if the host and this binary format have the same size for long
 	 * long values.
-	 * <P>
 	 */
 	private boolean sameLongLongSize = true;
 
 	/**
-	 * Holds true if the host and this binary format have the same size for
-	 * float values.
-	 * <P>
+	 * Holds true if the host and this binary format have the same size for float
+	 * values.
 	 */
 	private boolean sameFloatSize = true;
 
 	/**
-	 * Holds true if the host and this binary format have the same size for
-	 * double values.
-	 * <P>
+	 * Holds true if the host and this binary format have the same size for double
+	 * values.
 	 */
 	private boolean sameDoubleSize = true;
 
 	/**
 	 * Holds true if the host and this binary format have the same size for long
 	 * double values.
-	 * <P>
 	 */
 	private boolean sameLongDoubleSize = true;
 
@@ -286,9 +268,8 @@ public final class BinaryDataFormat extends Object {
 	// Constructors / Destructors
 	// ----------------------------------------------------------------------
 	/**
-	 * Constructs a binary data format description with initial values set to
-	 * match the attributes of the host.
-	 * <P>
+	 * Constructs a binary data format description with initial values set to match
+	 * the attributes of the host.
 	 */
 	public BinaryDataFormat() {
 		// Copy the host's attributes to be the current values
@@ -313,8 +294,8 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Constructs a binary data format description with initial values copied
-	 * from the given binary data format. If the given format is null, a
+	 * Constructs a binary data format description with initial values copied from
+	 * the given binary data format. If the given format is null, a
 	 * NullPointerException is thrown.
 	 * <P>
 	 *
@@ -323,8 +304,7 @@ public final class BinaryDataFormat extends Object {
 	 * @throws NullPointerException
 	 *             if the given format is a null
 	 */
-	public BinaryDataFormat(final BinaryDataFormat format)
-			throws NullPointerException {
+	public BinaryDataFormat(final BinaryDataFormat format) throws NullPointerException {
 		if (format == null) {
 			throw new NullPointerException();
 		}
@@ -352,7 +332,6 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Destroys a binary data format description.
-	 * <P>
 	 */
 	@Override
 	public final void finalize() {
@@ -361,7 +340,6 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Selects the byte order for binary data to be Most-significant-Byte-First
 	 * (MBF).
-	 * <P>
 	 *
 	 * @see #setLBFByteOrder()
 	 * @see #isMBFByteOrder()
@@ -375,7 +353,6 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Selects the byte order for binary data to be Least-significant-Byte-First
 	 * (LBF).
-	 * <P>
 	 *
 	 * @see #setMBFByteOrder()
 	 * @see #isMBFByteOrder()
@@ -390,7 +367,6 @@ public final class BinaryDataFormat extends Object {
 	 * Returns true if the binary data byte order is Most-significant-Byte-First
 	 * (MBF); otherwise false when the byte order is instead
 	 * Least-significant-Byte-First (LBF).
-	 * <P>
 	 *
 	 * @return true if MBF; false if LBF
 	 * @see #setMBFByteOrder()
@@ -401,10 +377,9 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Returns true if the binary data byte order is
-	 * Least-significant-Byte-First (LBF); otherwise false when the byte order
-	 * is instead Most-significant-Byte-First (MBF).
-	 * <P>
+	 * Returns true if the binary data byte order is Least-significant-Byte-First
+	 * (LBF); otherwise false when the byte order is instead
+	 * Most-significant-Byte-First (MBF).
 	 *
 	 * @return true if LBF; false if MBF
 	 * @see #setMBFByteOrder()
@@ -416,15 +391,13 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Sets the number of bytes occupied by a short integer.
-	 * <P>
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a short
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0}
 	 */
-	public final void setShortSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setShortSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -434,15 +407,13 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Sets the number of bytes occupied by an integer.
-	 * <P>
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up an int
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0}
 	 */
-	public final void setIntSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setIntSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -452,15 +423,13 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Sets the number of bytes occupied by a long integer.
-	 * <P>
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0}
 	 */
-	public final void setLongSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setLongSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -471,19 +440,17 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a long long integer.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
-	 * <P>
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long long
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0}
 	 */
-	public final void setLongLongSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setLongLongSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -494,18 +461,16 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a single-precision float.
 	 * <P>
-	 * The IEEE 754 specification recognizes floating point values that are 4,
-	 * 8, or 16 bytes in size. An IllegalArgumentException is thrown if the
-	 * given size is not one of these.
-	 * <P>
+	 * The IEEE 754 specification recognizes floating point values that are 4, 8, or
+	 * 16 bytes in size. An IllegalArgumentException is thrown if the given size is
+	 * not one of these.
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a float
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
-	public final void setFloatSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setFloatSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -519,18 +484,16 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a double-precision float.
 	 * <P>
-	 * The IEEE 754 specification recognizes floating point values that are 4,
-	 * 8, or 16 bytes in size. An IllegalArgumentException is thrown if the
-	 * given size is not one of these.
-	 * <P>
+	 * The IEEE 754 specification recognizes floating point values that are 4, 8, or
+	 * 16 bytes in size. An IllegalArgumentException is thrown if the given size is
+	 * not one of these.
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a double
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
-	public final void setDoubleSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setDoubleSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -544,23 +507,21 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Sets the number of bytes occupied by a long double-precision float.
 	 * <P>
-	 * The IEEE 754 specification recognizes floating point values that are 4,
-	 * 8, or 16 bytes in size. An IllegalArgumentException is thrown if the
-	 * given size is not one of these.
+	 * The IEEE 754 specification recognizes floating point values that are 4, 8, or
+	 * 16 bytes in size. An IllegalArgumentException is thrown if the given size is
+	 * not one of these.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
-	 * <P>
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 *
 	 * @param nBytes
 	 *            the number of file bytes that make up a long double
 	 * @throws IllegalArgumentException
 	 *             if {@code nBytes <= 0} or not 4, 8, or 16
 	 */
-	public final void setLongDoubleSize(final int nBytes)
-			throws IllegalArgumentException {
+	public final void setLongDoubleSize(final int nBytes) throws IllegalArgumentException {
 		if (nBytes <= 0) {
 			throw new IllegalArgumentException();
 		}
@@ -604,11 +565,10 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a long long integer.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
-	 * <P>
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 *
 	 * @return the number of file bytes that make up a long long
 	 */
@@ -639,10 +599,10 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Gets the number of bytes occupied by a long double-precision float.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @return the number of file bytes that make up a long double
@@ -659,25 +619,25 @@ public final class BinaryDataFormat extends Object {
 	// Without array offset
 	//
 	/**
-	 * Decodes the binary short value contained in the byte array, and described
-	 * by this binary data format, into a short in the host's native binary data
+	 * Decodes the binary short value contained in the byte array, and described by
+	 * this binary data format, into a short in the host's native binary data
 	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and short size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format short.
+	 * This binary data format's byte order and short size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format short.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's short is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's short is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's short is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
-	 * negative, respectively.
+	 * If the number of bytes in this binary format's short is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -716,23 +676,22 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the binary unsigned short value contained in the byte array, and
-	 * described by this binary data format, into an unsigned short in the
-	 * host's native binary data format. The host-format value is returned.
+	 * described by this binary data format, into an unsigned short in the host's
+	 * native binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and short size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned short.
+	 * This binary data format's byte order and short size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format unsigned short.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned short is larger
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned short is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned short value is
-	 * therefore returned as an int, but with the upper bytes padded with
-	 * zeroes.
+	 * therefore returned as an int, but with the upper bytes padded with zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -766,25 +725,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary integer value contained in the byte array, and
-	 * described by this binary data format, into an integer in the host's
-	 * native binary data format. The host-format value is returned.
+	 * Decodes the binary integer value contained in the byte array, and described
+	 * by this binary data format, into an integer in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and integer size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format integer.
+	 * This binary data format's byte order and integer size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's integer is larger than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's integer is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's integer is smaller than
-	 * that of the host, the upper bytes of the returned value are padded with
-	 * zeroes or ones (sign-extension) depending upon if the value is positive
-	 * or negative, respectively.
+	 * If the number of bytes in this binary format's integer is smaller than that
+	 * of the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -822,24 +781,23 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary unsigned integer value contained in the byte array,
-	 * and described by this binary data format, into an unsigned integer in the
-	 * host's native binary data format. The host-format value is returned.
+	 * Decodes the binary unsigned integer value contained in the byte array, and
+	 * described by this binary data format, into an unsigned integer in the host's
+	 * native binary data format. The host-format value is returned.
 	 * <P>
 	 * This binary data format's byte order and unsigned integer size is used to
 	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format unsigned integer.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
 	 * If the number of bytes in this binary format's unsigned integer is larger
 	 * than that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned int value is
-	 * therefore returned as a long, but with the upper bytes padded with
-	 * zeroes.
+	 * therefore returned as a long, but with the upper bytes padded with zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -873,25 +831,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary long value contained in the byte array, and described
-	 * by this binary data format, into a long in the host's native binary data
-	 * format. The host-format value is returned.
+	 * Decodes the binary long value contained in the byte array, and described by
+	 * this binary data format, into a long in the host's native binary data format.
+	 * The host-format value is returned.
 	 * <P>
 	 * This binary data format's byte order and long size is used to extract the
-	 * appropriate number of bytes from the start of the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format integer.
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
-	 * negative, respectively.
+	 * If the number of bytes in this binary format's long is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -935,14 +893,14 @@ public final class BinaryDataFormat extends Object {
 	 * <P>
 	 * This binary data format's byte order and unsigned long size is used to
 	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format unsigned long.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long is larger
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned long is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned long value is
 	 * therefore returned as a long.
@@ -977,30 +935,30 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary long long value contained in the byte array, and
-	 * described by this binary data format, into a long long in the host's
-	 * native binary data format. The host-format value is returned.
+	 * Decodes the binary long long value contained in the byte array, and described
+	 * by this binary data format, into a long long in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and long long size is used to
-	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format integer.
+	 * This binary data format's byte order and long long size is used to extract
+	 * the appropriate number of bytes from the start of the byte array. Those bytes
+	 * may be swapped to match the host's byte order. The bytes are then assembled
+	 * to form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is larger than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long long is larger than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is smaller than
-	 * that of the host, the upper bytes of the returned value are padded with
-	 * zeroes or ones (sign-extension) depending upon if the value is positive
-	 * or negative, respectively.
+	 * If the number of bytes in this binary format's long long is smaller than that
+	 * of the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1038,25 +996,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary unsigned long long value contained in the byte array,
-	 * and described by this binary data format, into an unsigned long long in
-	 * the host's native binary data format. The host-format value is returned.
+	 * Decodes the binary unsigned long long value contained in the byte array, and
+	 * described by this binary data format, into an unsigned long long in the
+	 * host's native binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size is used
-	 * to extract the appropriate number of bytes from the start of the byte
-	 * array. Those bytes may be swapped to match the host's byte order. The
-	 * bytes are then assembled to form a host-format unsigned long long.
+	 * This binary data format's byte order and unsigned long long size is used to
+	 * extract the appropriate number of bytes from the start of the byte array.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned long long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long long is
-	 * larger than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned long long is larger
+	 * than that of the host, truncation may occur.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1088,20 +1046,20 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary float value contained in the byte array, and described
-	 * by this binary data format, into a float in the host's native binary data
+	 * Decodes the binary float value contained in the byte array, and described by
+	 * this binary data format, into a float in the host's native binary data
 	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and float size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format float.
+	 * This binary data format's byte order and float size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format float.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's float is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's float is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1140,20 +1098,20 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary double value contained in the byte array, and
-	 * described by this binary data format, into a double in the host's native
-	 * binary data format. The host-format value is returned.
+	 * Decodes the binary double value contained in the byte array, and described by
+	 * this binary data format, into a double in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and double size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format double.
+	 * This binary data format's byte order and double size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's double is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's double is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1193,24 +1151,24 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the binary long double value contained in the byte array, and
-	 * described by this binary data format, into a long double in the host's
-	 * native binary data format. The host-format value is returned.
+	 * described by this binary data format, into a long double in the host's native
+	 * binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and long double size is used to
-	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format long double.
+	 * This binary data format's byte order and long double size is used to extract
+	 * the appropriate number of bytes from the start of the byte array. Those bytes
+	 * may be swapped to match the host's byte order. The bytes are then assembled
+	 * to form a host-format long double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
 	 * If the number of bytes in this binary format's long double is larger than
 	 * that of the host, truncation may occur.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1252,25 +1210,25 @@ public final class BinaryDataFormat extends Object {
 	// With array offset
 	//
 	/**
-	 * Decodes the binary short value contained in the byte array, and described
-	 * by this binary data format, into a short in the host's native binary data
+	 * Decodes the binary short value contained in the byte array, and described by
+	 * this binary data format, into a short in the host's native binary data
 	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and short size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format short.
+	 * This binary data format's byte order and short size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format short.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's short is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's short is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's short is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
-	 * negative, respectively.
+	 * If the number of bytes in this binary format's short is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1311,23 +1269,22 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the binary unsigned short value contained in the byte array, and
-	 * described by this binary data format, into an unsigned short in the
-	 * host's native binary data format. The host-format value is returned.
+	 * described by this binary data format, into an unsigned short in the host's
+	 * native binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and short size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned short.
+	 * This binary data format's byte order and short size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format unsigned short.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned short is larger
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned short is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned short value is
-	 * therefore returned as an int, but with the upper bytes padded with
-	 * zeroes.
+	 * therefore returned as an int, but with the upper bytes padded with zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1363,25 +1320,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary integer value contained in the byte array, and
-	 * described by this binary data format, into an integer in the host's
-	 * native binary data format. The host-format value is returned.
+	 * Decodes the binary integer value contained in the byte array, and described
+	 * by this binary data format, into an integer in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and integer size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format integer.
+	 * This binary data format's byte order and integer size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's integer is larger than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's integer is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's integer is smaller than
-	 * that of the host, the upper bytes of the returned value are padded with
-	 * zeroes or ones (sign-extension) depending upon if the value is positive
-	 * or negative, respectively.
+	 * If the number of bytes in this binary format's integer is smaller than that
+	 * of the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1421,24 +1378,23 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary unsigned integer value contained in the byte array,
-	 * and described by this binary data format, into an unsigned integer in the
-	 * host's native binary data format. The host-format value is returned.
+	 * Decodes the binary unsigned integer value contained in the byte array, and
+	 * described by this binary data format, into an unsigned integer in the host's
+	 * native binary data format. The host-format value is returned.
 	 * <P>
 	 * This binary data format's byte order and unsigned integer size is used to
 	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format unsigned integer.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
 	 * If the number of bytes in this binary format's unsigned integer is larger
 	 * than that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned int value is
-	 * therefore returned as a long, but with the upper bytes padded with
-	 * zeroes.
+	 * therefore returned as a long, but with the upper bytes padded with zeroes.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1461,40 +1417,38 @@ public final class BinaryDataFormat extends Object {
 		long value = 0L;
 		if (isMBF) {
 			for (int i = 0; i < nBytes; i++) {
-				value = (value << 8)
-						| (((long) bytes[offset + i]) & (long) 0x000000FF);
+				value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 			}
 			value &= ~(~(long) 0 << Host.getSignificantBits(Host.INT));
 			return value;
 		}
 		for (int i = nBytes - 1; i >= 0; i--) {
-			value = (value << 8)
-					| (((long) bytes[offset + i]) & (long) 0x000000FF);
+			value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 		}
 		value &= ~(~(long) 0 << Host.getSignificantBits(Host.INT));
 		return value;
 	}
 
 	/**
-	 * Decodes the binary long value contained in the byte array, and described
-	 * by this binary data format, into a long in the host's native binary data
-	 * format. The host-format value is returned.
+	 * Decodes the binary long value contained in the byte array, and described by
+	 * this binary data format, into a long in the host's native binary data format.
+	 * The host-format value is returned.
 	 * <P>
 	 * This binary data format's byte order and long size is used to extract the
-	 * appropriate number of bytes from the start of the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format integer.
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
-	 * negative, respectively.
+	 * If the number of bytes in this binary format's long is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1540,14 +1494,14 @@ public final class BinaryDataFormat extends Object {
 	 * <P>
 	 * This binary data format's byte order and unsigned long size is used to
 	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format unsigned long.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long is larger
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned long is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * Java doesn't support unsigned types directly. The unsigned long value is
 	 * therefore returned as a long.
@@ -1573,43 +1527,41 @@ public final class BinaryDataFormat extends Object {
 		long value = 0L;
 		if (isMBF) {
 			for (int i = 0; i < nBytes; i++) {
-				value = (value << 8)
-						| (((long) bytes[offset + i]) & (long) 0x000000FF);
+				value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 			}
 			return value;
 		}
 		for (int i = nBytes - 1; i >= 0; i--) {
-			value = (value << 8)
-					| (((long) bytes[offset + i]) & (long) 0x000000FF);
+			value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 		}
 		return value;
 	}
 
 	/**
-	 * Decodes the binary long long value contained in the byte array, and
-	 * described by this binary data format, into a long long in the host's
-	 * native binary data format. The host-format value is returned.
+	 * Decodes the binary long long value contained in the byte array, and described
+	 * by this binary data format, into a long long in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and long long size is used to
-	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format integer.
+	 * This binary data format's byte order and long long size is used to extract
+	 * the appropriate number of bytes from the start of the byte array. Those bytes
+	 * may be swapped to match the host's byte order. The bytes are then assembled
+	 * to form a host-format integer.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is larger than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long long is larger than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is smaller than
-	 * that of the host, the upper bytes of the returned value are padded with
-	 * zeroes or ones (sign-extension) depending upon if the value is positive
-	 * or negative, respectively.
+	 * If the number of bytes in this binary format's long long is smaller than that
+	 * of the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1649,25 +1601,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary unsigned long long value contained in the byte array,
-	 * and described by this binary data format, into an unsigned long long in
-	 * the host's native binary data format. The host-format value is returned.
+	 * Decodes the binary unsigned long long value contained in the byte array, and
+	 * described by this binary data format, into an unsigned long long in the
+	 * host's native binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size is used
-	 * to extract the appropriate number of bytes from the start of the byte
-	 * array. Those bytes may be swapped to match the host's byte order. The
-	 * bytes are then assembled to form a host-format unsigned long long.
+	 * This binary data format's byte order and unsigned long long size is used to
+	 * extract the appropriate number of bytes from the start of the byte array.
+	 * Those bytes may be swapped to match the host's byte order. The bytes are then
+	 * assembled to form a host-format unsigned long long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long long is
-	 * larger than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned long long is larger
+	 * than that of the host, truncation may occur.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1690,33 +1642,31 @@ public final class BinaryDataFormat extends Object {
 		long value = 0L;
 		if (isMBF) {
 			for (int i = 0; i < nBytes; i++) {
-				value = (value << 8)
-						| (((long) bytes[offset + i]) & (long) 0x000000FF);
+				value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 			}
 			return value;
 		}
 		for (int i = nBytes - 1; i >= 0; i--) {
-			value = (value << 8)
-					| (((long) bytes[offset + i]) & (long) 0x000000FF);
+			value = (value << 8) | (((long) bytes[offset + i]) & (long) 0x000000FF);
 		}
 		return value;
 	}
 
 	/**
-	 * Decodes the binary float value contained in the byte array, and described
-	 * by this binary data format, into a float in the host's native binary data
+	 * Decodes the binary float value contained in the byte array, and described by
+	 * this binary data format, into a float in the host's native binary data
 	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and float size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format float.
+	 * This binary data format's byte order and float size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format float.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's float is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's float is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1757,20 +1707,20 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the binary double value contained in the byte array, and
-	 * described by this binary data format, into a double in the host's native
-	 * binary data format. The host-format value is returned.
+	 * Decodes the binary double value contained in the byte array, and described by
+	 * this binary data format, into a double in the host's native binary data
+	 * format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and double size is used to extract
-	 * the appropriate number of bytes from the start of the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format double.
+	 * This binary data format's byte order and double size is used to extract the
+	 * appropriate number of bytes from the start of the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's double is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's double is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1812,24 +1762,24 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the binary long double value contained in the byte array, and
-	 * described by this binary data format, into a long double in the host's
-	 * native binary data format. The host-format value is returned.
+	 * described by this binary data format, into a long double in the host's native
+	 * binary data format. The host-format value is returned.
 	 * <P>
-	 * This binary data format's byte order and long double size is used to
-	 * extract the appropriate number of bytes from the start of the byte array.
-	 * Those bytes may be swapped to match the host's byte order. The bytes are
-	 * then assembled to form a host-format long double.
+	 * This binary data format's byte order and long double size is used to extract
+	 * the appropriate number of bytes from the start of the byte array. Those bytes
+	 * may be swapped to match the host's byte order. The bytes are then assembled
+	 * to form a host-format long double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
 	 * If the number of bytes in this binary format's long double is larger than
 	 * that of the host, truncation may occur.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1872,28 +1822,71 @@ public final class BinaryDataFormat extends Object {
 	// Array methods
 	/**
 	 * Decodes the nValues binary short values contained in the byte array, and
-	 * described by this binary data format, into an array of shorts in the
-	 * host's native binary data format. The host-format values are returned in
+	 * described by this binary data format, into an array of shorts in the host's
+	 * native binary data format. The host-format values are returned in the values
+	 * array.
+	 * <P>
+	 * The given values array is presumed to be large enough to receive nValues
+	 * values. The bytes array is presumed to be large enough to supply data for
+	 * these values.
+	 * <P>
+	 * This binary data format's byte order and short size is used to extract the
+	 * appropriate number of bytes for the byte array. Those bytes may be swapped to
+	 * match the host's byte order. The bytes are then assembled to form a
+	 * host-format short.
+	 * <P>
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
+	 * <P>
+	 * If the number of bytes in this binary format's short is larger than that of
+	 * the host, truncation may occur.
+	 * <P>
+	 * If the number of bytes in this binary format's short is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
+	 * <P>
+	 *
+	 * @param bytes
+	 *            the byte array supplying the data
+	 * @param values
+	 *            the returned list of host-format values
+	 * @param nValues
+	 *            the number of values to return
+	 */
+	public final void shortValues(final byte[] bytes, final short[] values, final int nValues) {
+		int nBytes = shortSize;
+		int offset = 0;
+		for (int i = nValues - 1; i >= 0; i--) {
+			values[i] = shortValue(bytes, offset);
+			offset += nBytes;
+		}
+	}
+
+	/**
+	 * Decodes the nValues binary unsigned short values contained in the byte array,
+	 * and described by this binary data format, into an array of unsigned shorts in
+	 * the host's native binary data format. The host-format values are returned in
 	 * the values array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and short size is used to extract
-	 * the appropriate number of bytes for the byte array. Those bytes may be
-	 * swapped to match the host's byte order. The bytes are then assembled to
-	 * form a host-format short.
+	 * This binary data format's byte order and unsigned short size is used to
+	 * extract the appropriate number of bytes for the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format unsigned short.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's short is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned short is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's short is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
+	 * If the number of bytes in this binary format's unsigned short is smaller than
+	 * that of the host, the upper bytes of the returned value are padded with
+	 * zeroes or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
 	 *
@@ -1904,52 +1897,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void shortValues(final byte[] bytes, final short[] values,
-			final int nValues) {
-		int nBytes = shortSize;
-		int offset = 0;
-		for (int i = nValues - 1; i >= 0; i--) {
-			values[i] = shortValue(bytes, offset);
-			offset += nBytes;
-		}
-	}
-
-	/**
-	 * Decodes the nValues binary unsigned short values contained in the byte
-	 * array, and described by this binary data format, into an array of
-	 * unsigned shorts in the host's native binary data format. The host-format
-	 * values are returned in the values array.
-	 * <P>
-	 * The given values array is presumed to be large enough to receive nValues
-	 * values. The bytes array is presumed to be large enough to supply data for
-	 * these values.
-	 * <P>
-	 * This binary data format's byte order and unsigned short size is used to
-	 * extract the appropriate number of bytes for the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned short.
-	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
-	 * <P>
-	 * If the number of bytes in this binary format's unsigned short is larger
-	 * than that of the host, truncation may occur.
-	 * <P>
-	 * If the number of bytes in this binary format's unsigned short is smaller
-	 * than that of the host, the upper bytes of the returned value are padded
-	 * with zeroes or ones (sign-extension) depending upon if the value is
-	 * positive or negative, respectively.
-	 * <P>
-	 *
-	 * @param bytes
-	 *            the byte array supplying the data
-	 * @param values
-	 *            the returned list of host-format values
-	 * @param nValues
-	 *            the number of values to return
-	 */
-	public final void unsignedShortValues(final byte[] bytes,
-			final short[] values, final int nValues) {
+	public final void unsignedShortValues(final byte[] bytes, final short[] values, final int nValues) {
 		int nBytes = shortSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -1961,28 +1909,28 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Decodes the nValues binary int values contained in the byte array, and
 	 * described by this binary data format, into an array of ints in the host's
-	 * native binary data format. The host-format values are returned in the
-	 * values array.
+	 * native binary data format. The host-format values are returned in the values
+	 * array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
 	 * This binary data format's byte order and int size is used to extract the
-	 * appropriate number of bytes for the byte array. Those bytes may be
-	 * swapped to match the host's byte order. The bytes are then assembled to
-	 * form a host-format int.
+	 * appropriate number of bytes for the byte array. Those bytes may be swapped to
+	 * match the host's byte order. The bytes are then assembled to form a
+	 * host-format int.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's int is larger than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this binary format's int is larger than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's int is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
-	 * negative, respectively.
+	 * If the number of bytes in this binary format's int is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
 	 *
 	 * @param bytes
@@ -1992,8 +1940,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void intValues(final byte[] bytes, final int[] values,
-			final int nValues) {
+	public final void intValues(final byte[] bytes, final int[] values, final int nValues) {
 		int nBytes = intSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2003,33 +1950,33 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the nValues binary unsigned int values contained in the byte
-	 * array, and described by this binary data format, into an array of
-	 * unsigned ints in the host's native binary data format. The host-format
-	 * values are returned in the values array.
+	 * Decodes the nValues binary unsigned int values contained in the byte array,
+	 * and described by this binary data format, into an array of unsigned ints in
+	 * the host's native binary data format. The host-format values are returned in
+	 * the values array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and unsigned int size is used to
-	 * extract the appropriate number of bytes for the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned int.
+	 * This binary data format's byte order and unsigned int size is used to extract
+	 * the appropriate number of bytes for the byte array. Those bytes may be
+	 * swapped to match the host's byte order. The bytes are then assembled to form
+	 * a host-format unsigned int.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned int is larger
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned int is larger than
+	 * that of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned int is smaller
-	 * than that of the host, the upper bytes of the returned value are padded
-	 * with zeroes or ones (sign-extension) depending upon if the value is
-	 * positive or negative, respectively.
+	 * If the number of bytes in this binary format's unsigned int is smaller than
+	 * that of the host, the upper bytes of the returned value are padded with
+	 * zeroes or ones (sign-extension) depending upon if the value is positive or
+	 * negative, respectively.
 	 * <P>
-	 * Java doesn't support unsigned types directly. This method is identical to
-	 * the signed version.
+	 * Java doesn't support unsigned types directly. This method is identical to the
+	 * signed version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2039,8 +1986,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void unsignedIntValues(final byte[] bytes, final int[] values,
-			final int nValues) {
+	public final void unsignedIntValues(final byte[] bytes, final int[] values, final int nValues) {
 		int nBytes = intSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2051,28 +1997,71 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the nValues binary long values contained in the byte array, and
-	 * described by this binary data format, into an array of longs in the
-	 * host's native binary data format. The host-format values are returned in
-	 * the values array.
+	 * described by this binary data format, into an array of longs in the host's
+	 * native binary data format. The host-format values are returned in the values
+	 * array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
 	 * This binary data format's byte order and long size is used to extract the
-	 * appropriate number of bytes for the byte array. Those bytes may be
-	 * swapped to match the host's byte order. The bytes are then assembled to
-	 * form a host-format long.
+	 * appropriate number of bytes for the byte array. Those bytes may be swapped to
+	 * match the host's byte order. The bytes are then assembled to form a
+	 * host-format long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long is smaller than that
-	 * of the host, the upper bytes of the returned value are padded with zeroes
-	 * or ones (sign-extension) depending upon if the value is positive or
+	 * If the number of bytes in this binary format's long is smaller than that of
+	 * the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
+	 * <P>
+	 *
+	 * @param bytes
+	 *            the byte array supplying the data
+	 * @param values
+	 *            the returned list of host-format values
+	 * @param nValues
+	 *            the number of values to return
+	 */
+	public final void longValues(final byte[] bytes, final long[] values, final int nValues) {
+		int nBytes = longSize;
+		int offset = 0;
+		for (int i = nValues - 1; i >= 0; i--) {
+			values[i] = longValue(bytes, offset);
+			offset += nBytes;
+		}
+	}
+
+	/**
+	 * Decodes the nValues binary unsigned long values contained in the byte array,
+	 * and described by this binary data format, into an array of unsigned longs in
+	 * the host's native binary data format. The host-format values are returned in
+	 * the values array.
+	 * <P>
+	 * The given values array is presumed to be large enough to receive nValues
+	 * values. The bytes array is presumed to be large enough to supply data for
+	 * these values.
+	 * <P>
+	 * This binary data format's byte order and unsigned long size is used to
+	 * extract the appropriate number of bytes for the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format unsigned long.
+	 * <P>
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
+	 * <P>
+	 * If the number of bytes in this binary format's unsigned long is larger than
+	 * that of the host, truncation may occur.
+	 * <P>
+	 * If the number of bytes in this binary format's unsigned long is smaller than
+	 * that of the host, the upper bytes of the returned value are padded with
+	 * zeroes or ones (sign-extension) depending upon if the value is positive or
 	 * negative, respectively.
 	 * <P>
 	 *
@@ -2083,52 +2072,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void longValues(final byte[] bytes, final long[] values,
-			final int nValues) {
-		int nBytes = longSize;
-		int offset = 0;
-		for (int i = nValues - 1; i >= 0; i--) {
-			values[i] = longValue(bytes, offset);
-			offset += nBytes;
-		}
-	}
-
-	/**
-	 * Decodes the nValues binary unsigned long values contained in the byte
-	 * array, and described by this binary data format, into an array of
-	 * unsigned longs in the host's native binary data format. The host-format
-	 * values are returned in the values array.
-	 * <P>
-	 * The given values array is presumed to be large enough to receive nValues
-	 * values. The bytes array is presumed to be large enough to supply data for
-	 * these values.
-	 * <P>
-	 * This binary data format's byte order and unsigned long size is used to
-	 * extract the appropriate number of bytes for the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned long.
-	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
-	 * <P>
-	 * If the number of bytes in this binary format's unsigned long is larger
-	 * than that of the host, truncation may occur.
-	 * <P>
-	 * If the number of bytes in this binary format's unsigned long is smaller
-	 * than that of the host, the upper bytes of the returned value are padded
-	 * with zeroes or ones (sign-extension) depending upon if the value is
-	 * positive or negative, respectively.
-	 * <P>
-	 *
-	 * @param bytes
-	 *            the byte array supplying the data
-	 * @param values
-	 *            the returned list of host-format values
-	 * @param nValues
-	 *            the number of values to return
-	 */
-	public final void unsignedLongValues(final byte[] bytes,
-			final long[] values, final int nValues) {
+	public final void unsignedLongValues(final byte[] bytes, final long[] values, final int nValues) {
 		int nBytes = longSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2138,35 +2082,35 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the nValues binary long long values contained in the byte array,
-	 * and described by this binary data format, into an array of long longs in
-	 * the host's native binary data format. The host-format values are returned
-	 * in the values array.
+	 * Decodes the nValues binary long long values contained in the byte array, and
+	 * described by this binary data format, into an array of long longs in the
+	 * host's native binary data format. The host-format values are returned in the
+	 * values array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and long long size is used to
-	 * extract the appropriate number of bytes for the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format long long.
+	 * This binary data format's byte order and long long size is used to extract
+	 * the appropriate number of bytes for the byte array. Those bytes may be
+	 * swapped to match the host's byte order. The bytes are then assembled to form
+	 * a host-format long long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is larger than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's long long is larger than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's long long is smaller than
-	 * that of the host, the upper bytes of the returned value are padded with
-	 * zeroes or ones (sign-extension) depending upon if the value is positive
-	 * or negative, respectively.
+	 * If the number of bytes in this binary format's long long is smaller than that
+	 * of the host, the upper bytes of the returned value are padded with zeroes or
+	 * ones (sign-extension) depending upon if the value is positive or negative,
+	 * respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2176,8 +2120,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void longLongValues(final byte[] bytes, final long[] values,
-			final int nValues) {
+	public final void longLongValues(final byte[] bytes, final long[] values, final int nValues) {
 		int nBytes = longLongSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2187,35 +2130,35 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the nValues binary unsigned long long values contained in the
-	 * byte array, and described by this binary data format, into an array of
-	 * unsigned long longs in the host's native binary data format. The
-	 * host-format values are returned in the values array.
+	 * Decodes the nValues binary unsigned long long values contained in the byte
+	 * array, and described by this binary data format, into an array of unsigned
+	 * long longs in the host's native binary data format. The host-format values
+	 * are returned in the values array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size is used
-	 * to extract the appropriate number of bytes for the byte array. Those
-	 * bytes may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format unsigned long long.
+	 * This binary data format's byte order and unsigned long long size is used to
+	 * extract the appropriate number of bytes for the byte array. Those bytes may
+	 * be swapped to match the host's byte order. The bytes are then assembled to
+	 * form a host-format unsigned long long.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long long is
-	 * larger than that of the host, truncation may occur.
+	 * If the number of bytes in this binary format's unsigned long long is larger
+	 * than that of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this binary format's unsigned long long is
-	 * smaller than that of the host, the upper bytes of the returned value are
-	 * padded with zeroes or ones (sign-extension) depending upon if the value
-	 * is positive or negative, respectively.
+	 * If the number of bytes in this binary format's unsigned long long is smaller
+	 * than that of the host, the upper bytes of the returned value are padded with
+	 * zeroes or ones (sign-extension) depending upon if the value is positive or
+	 * negative, respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2225,8 +2168,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void unsignedLongLongValues(final byte[] bytes,
-			final long[] values, final int nValues) {
+	public final void unsignedLongLongValues(final byte[] bytes, final long[] values, final int nValues) {
 		int nBytes = longLongSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2237,24 +2179,24 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the nValues binary float values contained in the byte array, and
-	 * described by this binary data format, into an array of float in the
-	 * host's native binary data format. The host-format values are returned in
-	 * the values array.
+	 * described by this binary data format, into an array of float in the host's
+	 * native binary data format. The host-format values are returned in the values
+	 * array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and float size is used to extract
-	 * the appropriate number of bytes for the byte array. Those bytes may be
-	 * swapped to match the host's byte order. The bytes are then assembled to
-	 * form a host-format float.
+	 * This binary data format's byte order and float size is used to extract the
+	 * appropriate number of bytes for the byte array. Those bytes may be swapped to
+	 * match the host's byte order. The bytes are then assembled to form a
+	 * host-format float.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's float is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's float is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2264,8 +2206,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void floatValues(final byte[] bytes, final float[] values,
-			final int nValues) {
+	public final void floatValues(final byte[] bytes, final float[] values, final int nValues) {
 		int nBytes = floatSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2276,24 +2217,24 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Decodes the nValues binary double values contained in the byte array, and
-	 * described by this binary data format, into an array of double in the
-	 * host's native binary data format. The host-format values are returned in
-	 * the values array.
+	 * described by this binary data format, into an array of double in the host's
+	 * native binary data format. The host-format values are returned in the values
+	 * array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and double size is used to extract
-	 * the appropriate number of bytes for the byte array. Those bytes may be
-	 * swapped to match the host's byte order. The bytes are then assembled to
-	 * form a host-format double.
+	 * This binary data format's byte order and double size is used to extract the
+	 * appropriate number of bytes for the byte array. Those bytes may be swapped to
+	 * match the host's byte order. The bytes are then assembled to form a
+	 * host-format double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
-	 * If the number of bytes in this binary format's double is larger than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this binary format's double is larger than that of
+	 * the host, truncation may occur.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2303,8 +2244,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void doubleValues(final byte[] bytes, final double[] values,
-			final int nValues) {
+	public final void doubleValues(final byte[] bytes, final double[] values, final int nValues) {
 		int nBytes = doubleSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2314,28 +2254,28 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Decodes the nValues binary long double values contained in the byte
-	 * array, and described by this binary data format, into an array of long
-	 * double in the host's native binary data format. The host-format values
-	 * are returned in the values array.
+	 * Decodes the nValues binary long double values contained in the byte array,
+	 * and described by this binary data format, into an array of long double in the
+	 * host's native binary data format. The host-format values are returned in the
+	 * values array.
 	 * <P>
 	 * The given values array is presumed to be large enough to receive nValues
 	 * values. The bytes array is presumed to be large enough to supply data for
 	 * these values.
 	 * <P>
-	 * This binary data format's byte order and long double size is used to
-	 * extract the appropriate number of bytes for the byte array. Those bytes
-	 * may be swapped to match the host's byte order. The bytes are then
-	 * assembled to form a host-format long double.
+	 * This binary data format's byte order and long double size is used to extract
+	 * the appropriate number of bytes for the byte array. Those bytes may be
+	 * swapped to match the host's byte order. The bytes are then assembled to form
+	 * a host-format long double.
 	 * <P>
-	 * If byte swapping is needed, the order of bytes in the given byte array
-	 * will be reversed, in-place.
+	 * If byte swapping is needed, the order of bytes in the given byte array will
+	 * be reversed, in-place.
 	 * <P>
 	 * If the number of bytes in this binary format's long double is larger than
 	 * that of the host, truncation may occur.
 	 * <P>
-	 * Java doesn't support long doubles types directly. This method is
-	 * identical to the double version.
+	 * Java doesn't support long doubles types directly. This method is identical to
+	 * the double version.
 	 * <P>
 	 *
 	 * @param bytes
@@ -2345,8 +2285,7 @@ public final class BinaryDataFormat extends Object {
 	 * @param nValues
 	 *            the number of values to return
 	 */
-	public final void longDoubleValues(final byte[] bytes,
-			final double[] values, final int nValues) {
+	public final void longDoubleValues(final byte[] bytes, final double[] values, final int nValues) {
 		int nBytes = longDoubleSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -2363,22 +2302,22 @@ public final class BinaryDataFormat extends Object {
 	// Without array offsets
 	//
 	/**
-	 * Encodes the short value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an short described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the short value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an short described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and short size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a short value.
+	 * This binary data format's byte order and short size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a short value.
 	 * <P>
 	 * If the number of bytes in this format's short is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's short is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -2414,22 +2353,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the short value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an short described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the short value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an short described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and short size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a short value.
+	 * This binary data format's byte order and short size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a short value.
 	 * <P>
 	 * If the number of bytes in this format's short is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's short is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -2466,21 +2405,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned short value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned short
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes the unsigned short value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned short described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned short size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned short value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned short value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned short is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned short is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2516,21 +2455,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned short value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned short
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes the unsigned short value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned short described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned short size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned short value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned short value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned short is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned short is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2567,22 +2506,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the integer value, in the host's native binary data format, into
-	 * a byte array containing bytes that make up an integer described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the integer value, in the host's native binary data format, into a
+	 * byte array containing bytes that make up an integer described by this binary
+	 * data format. Differences in byte order and data type size between the host
+	 * and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and integer size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an integer value.
+	 * This binary data format's byte order and integer size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an integer value.
 	 * <P>
-	 * If the number of bytes in this format's integer is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's integer is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's integer is larger than that of
-	 * the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's integer is larger than that of the
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -2618,22 +2557,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned integer value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned
-	 * integer described by this binary data format. Differences in byte order
-	 * and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes the unsigned integer value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned integer described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned integer size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned integer value.
+	 * This binary data format's byte order and unsigned integer size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned integer value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned integer is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned integer is larger than that
+	 * of the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2669,22 +2607,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned integer value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned
-	 * integer described by this binary data format. Differences in byte order
-	 * and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes the unsigned integer value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned integer described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned integer size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned integer value.
+	 * This binary data format's byte order and unsigned integer size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned integer value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned integer is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned integer is larger than that
+	 * of the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2720,22 +2657,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an long described by this binary
-	 * data format. Differences in byte order and data type size between the
-	 * host and this binary data format are handled.
+	 * Encodes the long value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an long described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a long value.
+	 * This binary data format's byte order and long size are used to control how to
+	 * fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a long value.
 	 * <P>
 	 * If the number of bytes in this format's long is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * If the number of bytes in this format's long is larger than that of the host,
+	 * then the most significant bytes of the byte array will be padded with zeroes
+	 * or ones (sign-extensions) depending upon if the given value is positive or
+	 * negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -2772,20 +2709,20 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the unsigned long value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an unsigned long
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * into a byte array containing bytes that make up an unsigned long described by
+	 * this binary data format. Differences in byte order and data type size between
+	 * the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned long size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned long value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned long value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes.
+	 * If the number of bytes in this format's unsigned long is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2821,27 +2758,27 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long long value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an long long described by
-	 * this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * Encodes the long long value, in the host's native binary data format, into a
+	 * byte array containing bytes that make up an long long described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long long size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for a long long value.
+	 * This binary data format's byte order and long long size are used to control
+	 * how to fill the byte array with the given value. The byte array is assumed to
+	 * be large enough for a long long value.
 	 * <P>
-	 * If the number of bytes in this format's long long is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's long long is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long long is larger than that of
-	 * the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's long long is larger than that of the
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param value
@@ -2878,25 +2815,25 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the unsigned long long value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned long
-	 * long described by this binary data format. Differences in byte order and
-	 * data type size between the host and this binary data format are handled.
+	 * format, into a byte array containing bytes that make up an unsigned long long
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned long long value.
+	 * This binary data format's byte order and unsigned long long size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned long long value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long long is smaller
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long long is smaller than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's unsigned long long is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * that of the host, then the most significant bytes of the byte array will be
+	 * padded with zeroes.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param value
@@ -2932,21 +2869,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the float value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an float described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the float value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an float described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and float size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an float value.
+	 * This binary data format's byte order and float size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an float value.
 	 * <P>
 	 * If the number of bytes in this format's float is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's float is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -2990,21 +2927,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the float value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an float described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the float value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an float described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and float size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an float value.
+	 * This binary data format's byte order and float size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an float value.
 	 * <P>
 	 * If the number of bytes in this format's float is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's float is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3049,20 +2986,20 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the double value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an double described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * byte array containing bytes that make up an double described by this binary
+	 * data format. Differences in byte order and data type size between the host
+	 * and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and double size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an double value.
+	 * This binary data format's byte order and double size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an double value.
 	 * <P>
-	 * If the number of bytes in this format's double is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's double is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's double is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3106,26 +3043,26 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long double value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an long double described
-	 * by this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * Encodes the long double value, in the host's native binary data format, into
+	 * a byte array containing bytes that make up an long double described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long double size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an long double value.
+	 * This binary data format's byte order and long double size are used to control
+	 * how to fill the byte array with the given value. The byte array is assumed to
+	 * be large enough for an long double value.
 	 * <P>
-	 * If the number of bytes in this format's long double is smaller than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this format's long double is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long double is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes.
+	 * If the number of bytes in this format's long double is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @param value
@@ -3172,22 +3109,22 @@ public final class BinaryDataFormat extends Object {
 	// With array offsets
 	//
 	/**
-	 * Encodes the short value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an short described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the short value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an short described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and short size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a short value.
+	 * This binary data format's byte order and short size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a short value.
 	 * <P>
 	 * If the number of bytes in this format's short is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's short is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -3198,8 +3135,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeShort(short value, final byte[] bytes,
-			final int offset) {
+	public final int encodeShort(short value, final byte[] bytes, final int offset) {
 		if (sameShortSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyShort(value, bytes, offset);
@@ -3226,22 +3162,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the short value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an short described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the short value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an short described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and short size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a short value.
+	 * This binary data format's byte order and short size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a short value.
 	 * <P>
 	 * If the number of bytes in this format's short is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's short is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -3252,8 +3188,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeShort(final int value, final byte[] bytes,
-			final int offset) {
+	public final int encodeShort(final int value, final byte[] bytes, final int offset) {
 		if (sameShortSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyShort((short) value, bytes, offset);
@@ -3281,21 +3216,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned short value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned short
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes the unsigned short value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned short described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned short size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned short value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned short value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned short is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned short is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3306,8 +3241,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedShort(short value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedShort(short value, final byte[] bytes, final int offset) {
 		if (sameShortSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedShort(value, bytes, offset);
@@ -3334,21 +3268,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned short value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned short
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes the unsigned short value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned short described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned short size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned short value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned short value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned short is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned short is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3359,8 +3293,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedShort(final int value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedShort(final int value, final byte[] bytes, final int offset) {
 		if (sameShortSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedShort((short) value, bytes, offset);
@@ -3388,22 +3321,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the integer value, in the host's native binary data format, into
-	 * a byte array containing bytes that make up an integer described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the integer value, in the host's native binary data format, into a
+	 * byte array containing bytes that make up an integer described by this binary
+	 * data format. Differences in byte order and data type size between the host
+	 * and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and integer size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an integer value.
+	 * This binary data format's byte order and integer size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an integer value.
 	 * <P>
-	 * If the number of bytes in this format's integer is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's integer is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's integer is larger than that of
-	 * the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's integer is larger than that of the
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -3441,22 +3374,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned integer value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned
-	 * integer described by this binary data format. Differences in byte order
-	 * and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes the unsigned integer value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned integer described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned integer size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned integer value.
+	 * This binary data format's byte order and unsigned integer size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned integer value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned integer is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned integer is larger than that
+	 * of the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3467,8 +3399,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedInt(int value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedInt(int value, final byte[] bytes, final int offset) {
 		if (sameIntSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedInt(value, bytes, offset);
@@ -3495,22 +3426,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the unsigned integer value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned
-	 * integer described by this binary data format. Differences in byte order
-	 * and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes the unsigned integer value, in the host's native binary data format,
+	 * into a byte array containing bytes that make up an unsigned integer described
+	 * by this binary data format. Differences in byte order and data type size
+	 * between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned integer size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned integer value.
+	 * This binary data format's byte order and unsigned integer size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned integer value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned integer is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned integer is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * If the number of bytes in this format's unsigned integer is larger than that
+	 * of the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3521,8 +3451,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedInt(final long value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedInt(final long value, final byte[] bytes, final int offset) {
 		if (sameIntSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedInt(value, bytes, offset);
@@ -3550,22 +3479,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an long described by this binary
-	 * data format. Differences in byte order and data type size between the
-	 * host and this binary data format are handled.
+	 * Encodes the long value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an long described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for a long value.
+	 * This binary data format's byte order and long size are used to control how to
+	 * fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for a long value.
 	 * <P>
 	 * If the number of bytes in this format's long is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * If the number of bytes in this format's long is larger than that of the host,
+	 * then the most significant bytes of the byte array will be padded with zeroes
+	 * or ones (sign-extensions) depending upon if the given value is positive or
+	 * negative, respectively.
 	 * <P>
 	 *
 	 * @param value
@@ -3604,20 +3533,20 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the unsigned long value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an unsigned long
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * into a byte array containing bytes that make up an unsigned long described by
+	 * this binary data format. Differences in byte order and data type size between
+	 * the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned long size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an unsigned long value.
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned long value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes.
+	 * If the number of bytes in this format's unsigned long is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3628,8 +3557,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedLong(long value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedLong(long value, final byte[] bytes, final int offset) {
 		if (sameLongSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedLong(value, bytes, offset);
@@ -3656,27 +3584,27 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long long value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an long long described by
-	 * this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * Encodes the long long value, in the host's native binary data format, into a
+	 * byte array containing bytes that make up an long long described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long long size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for a long long value.
+	 * This binary data format's byte order and long long size are used to control
+	 * how to fill the byte array with the given value. The byte array is assumed to
+	 * be large enough for a long long value.
 	 * <P>
-	 * If the number of bytes in this format's long long is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's long long is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long long is larger than that of
-	 * the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's long long is larger than that of the
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param value
@@ -3687,8 +3615,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeLongLong(long value, final byte[] bytes,
-			final int offset) {
+	public final int encodeLongLong(long value, final byte[] bytes, final int offset) {
 		if (sameLongLongSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyLongLong(value, bytes, offset);
@@ -3716,25 +3643,25 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the unsigned long long value, in the host's native binary data
-	 * format, into a byte array containing bytes that make up an unsigned long
-	 * long described by this binary data format. Differences in byte order and
-	 * data type size between the host and this binary data format are handled.
+	 * format, into a byte array containing bytes that make up an unsigned long long
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size are used
-	 * to control how to fill the byte array with the given value. The byte
-	 * array is assumed to be large enough for an unsigned long long value.
+	 * This binary data format's byte order and unsigned long long size are used to
+	 * control how to fill the byte array with the given value. The byte array is
+	 * assumed to be large enough for an unsigned long long value.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long long is smaller
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long long is smaller than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's unsigned long long is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes.
+	 * that of the host, then the most significant bytes of the byte array will be
+	 * padded with zeroes.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param value
@@ -3745,8 +3672,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedLongLong(long value, final byte[] bytes,
-			final int offset) {
+	public final int encodeUnsignedLongLong(long value, final byte[] bytes, final int offset) {
 		if (sameLongLongSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyUnsignedLongLong(value, bytes, offset);
@@ -3773,21 +3699,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the float value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an float described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the float value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an float described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and float size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an float value.
+	 * This binary data format's byte order and float size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an float value.
 	 * <P>
 	 * If the number of bytes in this format's float is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's float is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3798,8 +3724,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeFloat(final float value, final byte[] bytes,
-			final int offset) {
+	public final int encodeFloat(final float value, final byte[] bytes, final int offset) {
 		if (sameFloatSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyFloat(value, bytes, offset);
@@ -3834,21 +3759,21 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the float value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an float described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * Encodes the float value, in the host's native binary data format, into a byte
+	 * array containing bytes that make up an float described by this binary data
+	 * format. Differences in byte order and data type size between the host and
+	 * this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and float size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an float value.
+	 * This binary data format's byte order and float size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an float value.
 	 * <P>
 	 * If the number of bytes in this format's float is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's float is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3859,8 +3784,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeFloat(final double value, final byte[] bytes,
-			final int offset) {
+	public final int encodeFloat(final double value, final byte[] bytes, final int offset) {
 		if (sameFloatSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyFloat((float) value, bytes, offset);
@@ -3896,20 +3820,20 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes the double value, in the host's native binary data format, into a
-	 * byte array containing bytes that make up an double described by this
-	 * binary data format. Differences in byte order and data type size between
-	 * the host and this binary data format are handled.
+	 * byte array containing bytes that make up an double described by this binary
+	 * data format. Differences in byte order and data type size between the host
+	 * and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and double size are used to control
-	 * how to fill the byte array with the given value. The byte array is
-	 * assumed to be large enough for an double value.
+	 * This binary data format's byte order and double size are used to control how
+	 * to fill the byte array with the given value. The byte array is assumed to be
+	 * large enough for an double value.
 	 * <P>
-	 * If the number of bytes in this format's double is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's double is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's double is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes.
 	 * <P>
 	 *
 	 * @param value
@@ -3920,8 +3844,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeDouble(final double value, final byte[] bytes,
-			final int offset) {
+	public final int encodeDouble(final double value, final byte[] bytes, final int offset) {
 		if (sameDoubleSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyDouble(value, bytes, offset);
@@ -3956,26 +3879,26 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes the long double value, in the host's native binary data format,
-	 * into a byte array containing bytes that make up an long double described
-	 * by this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * Encodes the long double value, in the host's native binary data format, into
+	 * a byte array containing bytes that make up an long double described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long double size are used to
-	 * control how to fill the byte array with the given value. The byte array
-	 * is assumed to be large enough for an long double value.
+	 * This binary data format's byte order and long double size are used to control
+	 * how to fill the byte array with the given value. The byte array is assumed to
+	 * be large enough for an long double value.
 	 * <P>
-	 * If the number of bytes in this format's long double is smaller than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this format's long double is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long double is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes.
+	 * If the number of bytes in this format's long double is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @param value
@@ -3986,8 +3909,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the starting offset into the byte array
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeLongDouble(final double value, final byte[] bytes,
-			final int offset) {
+	public final int encodeLongDouble(final double value, final byte[] bytes, final int offset) {
 		if (sameLongDoubleSize) {
 			// Same number of bytes as this host - cast and swap
 			Host.copyLongDouble(value, bytes, offset);
@@ -4023,22 +3945,22 @@ public final class BinaryDataFormat extends Object {
 
 	// Array methods
 	/**
-	 * Encodes an array of short values, in the host's native binary data
-	 * format, into a byte array containing bytes that make up each short
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes an array of short values, in the host's native binary data format,
+	 * into a byte array containing bytes that make up each short described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and short size are used to control
-	 * how to fill the byte array with the given values. The byte array is
-	 * assumed to be large enough for the given number of short values.
+	 * This binary data format's byte order and short size are used to control how
+	 * to fill the byte array with the given values. The byte array is assumed to be
+	 * large enough for the given number of short values.
 	 * <P>
 	 * If the number of bytes in this format's short is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's short is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4049,8 +3971,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeShorts(final short[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeShorts(final short[] values, final int nValues, final byte[] bytes) {
 		int nBytes = shortSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4061,24 +3982,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of unsigned short values, in the host's native binary
-	 * data format, into a byte array containing bytes that make up each
-	 * unsigned short described by this binary data format. Differences in byte
-	 * order and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes an array of unsigned short values, in the host's native binary data
+	 * format, into a byte array containing bytes that make up each unsigned short
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned short size are used to
-	 * control how to fill the byte array with the given values. The byte array
-	 * is assumed to be large enough for the given number of unsigned short
-	 * values.
+	 * control how to fill the byte array with the given values. The byte array is
+	 * assumed to be large enough for the given number of unsigned short values.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned short is smaller than that
+	 * of the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned short is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes or ones (sign-extensions) depending upon if the
-	 * given value is positive or negative, respectively.
+	 * If the number of bytes in this format's unsigned short is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4089,8 +4008,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedShorts(final short[] values,
-			final int nValues, final byte[] bytes) {
+	public final int encodeUnsignedShorts(final short[] values, final int nValues, final byte[] bytes) {
 		int nBytes = shortSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4101,22 +4019,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of int values, in the host's native binary data format,
-	 * into a byte array containing bytes that make up each int described by
-	 * this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * Encodes an array of int values, in the host's native binary data format, into
+	 * a byte array containing bytes that make up each int described by this binary
+	 * data format. Differences in byte order and data type size between the host
+	 * and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and int size are used to control how
-	 * to fill the byte array with the given values. The byte array is assumed
-	 * to be large enough for the given number of int values.
+	 * This binary data format's byte order and int size are used to control how to
+	 * fill the byte array with the given values. The byte array is assumed to be
+	 * large enough for the given number of int values.
 	 * <P>
-	 * If the number of bytes in this format's int is smaller than that of the
-	 * host, truncation may occur.
+	 * If the number of bytes in this format's int is smaller than that of the host,
+	 * truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's int is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * If the number of bytes in this format's int is larger than that of the host,
+	 * then the most significant bytes of the byte array will be padded with zeroes
+	 * or ones (sign-extensions) depending upon if the given value is positive or
+	 * negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4127,8 +4045,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeInts(final int[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeInts(final int[] values, final int nValues, final byte[] bytes) {
 		int nBytes = intSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4141,21 +4058,20 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Encodes an array of unsigned int values, in the host's native binary data
 	 * format, into a byte array containing bytes that make up each unsigned int
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned int size are used to
-	 * control how to fill the byte array with the given values. The byte array
-	 * is assumed to be large enough for the given number of unsigned int
-	 * values.
+	 * control how to fill the byte array with the given values. The byte array is
+	 * assumed to be large enough for the given number of unsigned int values.
 	 * <P>
-	 * If the number of bytes in this format's unsigned int is smaller than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned int is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned int is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's unsigned int is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4166,8 +4082,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedInts(final int[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeUnsignedInts(final int[] values, final int nValues, final byte[] bytes) {
 		int nBytes = intSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4179,21 +4094,21 @@ public final class BinaryDataFormat extends Object {
 
 	/**
 	 * Encodes an array of long values, in the host's native binary data format,
-	 * into a byte array containing bytes that make up each long described by
-	 * this binary data format. Differences in byte order and data type size
-	 * between the host and this binary data format are handled.
+	 * into a byte array containing bytes that make up each long described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long size are used to control
-	 * how to fill the byte array with the given values. The byte array is
-	 * assumed to be large enough for the given number of long values.
+	 * This binary data format's byte order and long size are used to control how to
+	 * fill the byte array with the given values. The byte array is assumed to be
+	 * large enough for the given number of long values.
 	 * <P>
 	 * If the number of bytes in this format's long is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * If the number of bytes in this format's long is larger than that of the host,
+	 * then the most significant bytes of the byte array will be padded with zeroes
+	 * or ones (sign-extensions) depending upon if the given value is positive or
+	 * negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4204,8 +4119,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeLongs(final long[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeLongs(final long[] values, final int nValues, final byte[] bytes) {
 		int nBytes = longSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4216,27 +4130,25 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of unsigned long values, in the host's native binary
-	 * data format, into a byte array containing bytes that make up each
-	 * unsigned long described by this binary data format. Differences in byte
-	 * order and data type size between the host and this binary data format are
-	 * handled.
+	 * Encodes an array of unsigned long values, in the host's native binary data
+	 * format, into a byte array containing bytes that make up each unsigned long
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
 	 * This binary data format's byte order and unsigned long size are used to
-	 * control how to fill the byte array with the given values. The byte array
-	 * is assumed to be large enough for the given number of unsigned long
-	 * values.
+	 * control how to fill the byte array with the given values. The byte array is
+	 * assumed to be large enough for the given number of unsigned long values.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is smaller than
-	 * that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's unsigned long is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support unsigned types directly. This method is identical to
-	 * the signed version.
+	 * Java doesn't support unsigned types directly. This method is identical to the
+	 * signed version.
 	 * <P>
 	 *
 	 * @param values
@@ -4247,8 +4159,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedLongs(final long[] values,
-			final int nValues, final byte[] bytes) {
+	public final int encodeUnsignedLongs(final long[] values, final int nValues, final byte[] bytes) {
 		int nBytes = longSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4261,25 +4172,25 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Encodes an array of long long values, in the host's native binary data
 	 * format, into a byte array containing bytes that make up each long long
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long long size are used to
-	 * control how to fill the byte array with the given values. The byte array
-	 * is assumed to be large enough for the given number of long long values.
+	 * This binary data format's byte order and long long size are used to control
+	 * how to fill the byte array with the given values. The byte array is assumed
+	 * to be large enough for the given number of long long values.
 	 * <P>
-	 * If the number of bytes in this format's long long is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's long long is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long long is larger than that of
-	 * the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's long long is larger than that of the
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param values
@@ -4290,8 +4201,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeLongLongs(final long[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeLongLongs(final long[] values, final int nValues, final byte[] bytes) {
 		int nBytes = longLongSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4302,29 +4212,27 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of unsigned long long values, in the host's native
-	 * binary data format, into a byte array containing bytes that make up each
-	 * unsigned long long described by this binary data format. Differences in
-	 * byte order and data type size between the host and this binary data
-	 * format are handled.
+	 * Encodes an array of unsigned long long values, in the host's native binary
+	 * data format, into a byte array containing bytes that make up each unsigned
+	 * long long described by this binary data format. Differences in byte order and
+	 * data type size between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and unsigned long long size are used
-	 * to control how to fill the byte array with the given values. The byte
-	 * array is assumed to be large enough for the given number of unsigned long
-	 * long values.
+	 * This binary data format's byte order and unsigned long long size are used to
+	 * control how to fill the byte array with the given values. The byte array is
+	 * assumed to be large enough for the given number of unsigned long long values.
 	 * <P>
-	 * If the number of bytes in this format's unsigned long long is smaller
-	 * than that of the host, truncation may occur.
+	 * If the number of bytes in this format's unsigned long long is smaller than
+	 * that of the host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's unsigned long long is larger than
-	 * that of the host, then the most significant bytes of the byte array will
-	 * be padded with zeroes or ones (sign-extensions) depending upon if the
-	 * given value is positive or negative, respectively.
+	 * that of the host, then the most significant bytes of the byte array will be
+	 * padded with zeroes or ones (sign-extensions) depending upon if the given
+	 * value is positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support long long types directly. While long long values may
-	 * be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long long is a Java long. Similarly, the largest encodable
-	 * value into a long long is one from a Java long.
+	 * Java doesn't support long long types directly. While long long values may be
+	 * manipulated using this class, if decoded, the largest returnable portion of
+	 * the long long is a Java long. Similarly, the largest encodable value into a
+	 * long long is one from a Java long.
 	 * <P>
 	 *
 	 * @param values
@@ -4335,8 +4243,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeUnsignedLongLongs(final long[] values,
-			final int nValues, final byte[] bytes) {
+	public final int encodeUnsignedLongLongs(final long[] values, final int nValues, final byte[] bytes) {
 		int nBytes = longLongSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4347,22 +4254,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of float values, in the host's native binary data
-	 * format, into a byte array containing bytes that make up each float
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes an array of float values, in the host's native binary data format,
+	 * into a byte array containing bytes that make up each float described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and float size are used to control
-	 * how to fill the byte array with the given values. The byte array is
-	 * assumed to be large enough for the given number of float values.
+	 * This binary data format's byte order and float size are used to control how
+	 * to fill the byte array with the given values. The byte array is assumed to be
+	 * large enough for the given number of float values.
 	 * <P>
 	 * If the number of bytes in this format's float is smaller than that of the
 	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's float is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4373,8 +4280,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeFloats(final float[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeFloats(final float[] values, final int nValues, final byte[] bytes) {
 		int nBytes = floatSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4385,22 +4291,22 @@ public final class BinaryDataFormat extends Object {
 	}
 
 	/**
-	 * Encodes an array of double values, in the host's native binary data
-	 * format, into a byte array containing bytes that make up each double
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * Encodes an array of double values, in the host's native binary data format,
+	 * into a byte array containing bytes that make up each double described by this
+	 * binary data format. Differences in byte order and data type size between the
+	 * host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and double size are used to control
-	 * how to fill the byte array with the given values. The byte array is
-	 * assumed to be large enough for the given number of double values.
+	 * This binary data format's byte order and double size are used to control how
+	 * to fill the byte array with the given values. The byte array is assumed to be
+	 * large enough for the given number of double values.
 	 * <P>
-	 * If the number of bytes in this format's double is smaller than that of
-	 * the host, truncation may occur.
+	 * If the number of bytes in this format's double is smaller than that of the
+	 * host, truncation may occur.
 	 * <P>
 	 * If the number of bytes in this format's double is larger than that of the
-	 * host, then the most significant bytes of the byte array will be padded
-	 * with zeroes or ones (sign-extensions) depending upon if the given value
-	 * is positive or negative, respectively.
+	 * host, then the most significant bytes of the byte array will be padded with
+	 * zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
 	 *
 	 * @param values
@@ -4411,8 +4317,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeDoubles(final double[] values, final int nValues,
-			final byte[] bytes) {
+	public final int encodeDoubles(final double[] values, final int nValues, final byte[] bytes) {
 		int nBytes = doubleSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {
@@ -4425,25 +4330,25 @@ public final class BinaryDataFormat extends Object {
 	/**
 	 * Encodes an array of long double values, in the host's native binary data
 	 * format, into a byte array containing bytes that make up each long double
-	 * described by this binary data format. Differences in byte order and data
-	 * type size between the host and this binary data format are handled.
+	 * described by this binary data format. Differences in byte order and data type
+	 * size between the host and this binary data format are handled.
 	 * <P>
-	 * This binary data format's byte order and long double size are used to
-	 * control how to fill the byte array with the given values. The byte array
-	 * is assumed to be large enough for the given number of long double values.
+	 * This binary data format's byte order and long double size are used to control
+	 * how to fill the byte array with the given values. The byte array is assumed
+	 * to be large enough for the given number of long double values.
 	 * <P>
-	 * If the number of bytes in this format's long double is smaller than that
-	 * of the host, truncation may occur.
+	 * If the number of bytes in this format's long double is smaller than that of
+	 * the host, truncation may occur.
 	 * <P>
-	 * If the number of bytes in this format's long double is larger than that
-	 * of the host, then the most significant bytes of the byte array will be
-	 * padded with zeroes or ones (sign-extensions) depending upon if the given
-	 * value is positive or negative, respectively.
+	 * If the number of bytes in this format's long double is larger than that of
+	 * the host, then the most significant bytes of the byte array will be padded
+	 * with zeroes or ones (sign-extensions) depending upon if the given value is
+	 * positive or negative, respectively.
 	 * <P>
-	 * Java doesn't support long double types directly. While long double values
-	 * may be manipulated using this class, if decoded, the largest returnable
-	 * portion of the long double is a Java double. Similarly, the largest
-	 * encodable value into a long double is one from a Java double.
+	 * Java doesn't support long double types directly. While long double values may
+	 * be manipulated using this class, if decoded, the largest returnable portion
+	 * of the long double is a Java double. Similarly, the largest encodable value
+	 * into a long double is one from a Java double.
 	 * <P>
 	 *
 	 * @param values
@@ -4454,8 +4359,7 @@ public final class BinaryDataFormat extends Object {
 	 *            the byte array supplying the data
 	 * @return the number of bytes set during encoding
 	 */
-	public final int encodeLongDoubles(final double[] values,
-			final int nValues, final byte[] bytes) {
+	public final int encodeLongDoubles(final double[] values, final int nValues, final byte[] bytes) {
 		int nBytes = longDoubleSize;
 		int offset = 0;
 		for (int i = nValues - 1; i >= 0; i--) {

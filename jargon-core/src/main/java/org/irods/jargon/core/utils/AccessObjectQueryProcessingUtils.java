@@ -24,16 +24,16 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AccessObjectQueryProcessingUtils {
-	private static Logger log = LoggerFactory
-			.getLogger(AccessObjectQueryProcessingUtils.class);
+	private static Logger log = LoggerFactory.getLogger(AccessObjectQueryProcessingUtils.class);
 
 	/**
 	 * @param resultSet
+	 *            {@link IRODSQueryResultSetInterface}
 	 * @return {@code List} of {@link AvuData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
-	public static List<AvuData> buildAvuDataListFromResultSet(
-			final IRODSQueryResultSetInterface resultSet)
+	public static List<AvuData> buildAvuDataListFromResultSet(final IRODSQueryResultSetInterface resultSet)
 			throws JargonException {
 		final List<AvuData> avuDatas = new ArrayList<AvuData>();
 		AvuData avuData = null;
@@ -46,8 +46,7 @@ public class AccessObjectQueryProcessingUtils {
 		}
 
 		for (IRODSQueryResultRow row : resultSet.getResults()) {
-			avuData = AvuData.instance(row.getColumn(0), row.getColumn(1),
-					row.getColumn(2));
+			avuData = AvuData.instance(row.getColumn(0), row.getColumn(1), row.getColumn(2));
 			avuDatas.add(avuData);
 			if (log.isDebugEnabled()) {
 				log.debug("found avu for user:" + avuData);
@@ -58,13 +57,15 @@ public class AccessObjectQueryProcessingUtils {
 
 	/**
 	 * @param metaDataDomain
+	 *            {@link MetadataDomain}
 	 * @param irodsQueryResultSet
+	 *            {@link IRODSQueryResultSetInterface}
 	 * @return {@code List} of {@link MetaDataAndDomainData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static List<MetaDataAndDomainData> buildMetaDataAndDomainDatalistFromResultSet(
-			final MetadataDomain metaDataDomain,
-			final IRODSQueryResultSetInterface irodsQueryResultSet)
+			final MetadataDomain metaDataDomain, final IRODSQueryResultSetInterface irodsQueryResultSet)
 			throws JargonException {
 		if (metaDataDomain == null) {
 			throw new JargonException("null metaDataDomain");
@@ -76,10 +77,8 @@ public class AccessObjectQueryProcessingUtils {
 
 		List<MetaDataAndDomainData> metaDataResults = new ArrayList<MetaDataAndDomainData>();
 		for (IRODSQueryResultRow row : irodsQueryResultSet.getResults()) {
-			metaDataResults
-					.add(buildMetaDataAndDomainDataFromResultSetRow(
-							metaDataDomain, row,
-							irodsQueryResultSet.getTotalRecords()));
+			metaDataResults.add(buildMetaDataAndDomainDataFromResultSetRow(metaDataDomain, row,
+					irodsQueryResultSet.getTotalRecords()));
 		}
 
 		return metaDataResults;
@@ -87,15 +86,18 @@ public class AccessObjectQueryProcessingUtils {
 
 	/**
 	 * @param metadataDomain
+	 *            {@link MetadataDomain}
 	 * @param row
+	 *            {@link IRODSQueryResultRow}
 	 * @param totalRecordCount
+	 *            {@code int}
 	 * @return {@link MetaDataAndDomainData}
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static MetaDataAndDomainData buildMetaDataAndDomainDataFromResultSetRow(
-			final MetaDataAndDomainData.MetadataDomain metadataDomain,
-			final IRODSQueryResultRow row, final int totalRecordCount)
-			throws JargonException {
+			final MetaDataAndDomainData.MetadataDomain metadataDomain, final IRODSQueryResultRow row,
+			final int totalRecordCount) throws JargonException {
 
 		String domainId = row.getColumn(0);
 		String domainUniqueName = row.getColumn(1);
@@ -104,10 +106,9 @@ public class AccessObjectQueryProcessingUtils {
 		String attributeUnits = row.getColumn(6);
 		int attributeId = row.getColumnAsIntOrZero(7);
 
-		MetaDataAndDomainData data = MetaDataAndDomainData.instance(
-				metadataDomain, domainId, domainUniqueName, 0L,
-				row.getColumnAsDateOrNull(2), row.getColumnAsDateOrNull(3),
-				attributeId, attributeName, attributeValue, attributeUnits);
+		MetaDataAndDomainData data = MetaDataAndDomainData.instance(metadataDomain, domainId, domainUniqueName, 0L,
+				row.getColumnAsDateOrNull(2), row.getColumnAsDateOrNull(3), attributeId, attributeName, attributeValue,
+				attributeUnits);
 		data.setCount(row.getRecordCount());
 		data.setLastResult(row.isLastResult());
 		data.setTotalRecords(totalRecordCount);

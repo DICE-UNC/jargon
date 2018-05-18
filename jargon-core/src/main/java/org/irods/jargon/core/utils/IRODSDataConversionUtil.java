@@ -28,10 +28,11 @@ public class IRODSDataConversionUtil {
 	}
 
 	/**
-	 * For a given string that should contain an integer value, return either
-	 * the {@code int} value or a zero if empty.
+	 * For a given string that should contain an integer value, return either the
+	 * {@code int} value or a zero if empty.
 	 *
 	 * @param irodsValue
+	 *            {@code String} to convert
 	 * @return {@code int} equivilent of irods value
 	 */
 	public static int getIntOrZeroFromIRODSValue(final String irodsValue) {
@@ -48,8 +49,7 @@ public class IRODSDataConversionUtil {
 			try {
 				result = Integer.parseInt(irodsValue);
 			} catch (NumberFormatException nfe) {
-				throw new IllegalArgumentException("cannot format number:"
-						+ irodsValue, nfe);
+				throw new IllegalArgumentException("cannot format number:" + irodsValue, nfe);
 			}
 		}
 
@@ -62,6 +62,7 @@ public class IRODSDataConversionUtil {
 	 * {@code long} value or a zero if empty.
 	 *
 	 * @param irodsValue
+	 *            {@code String} to convert
 	 * @return {@code long} equivilent of irods value
 	 */
 	public static long getLongOrZeroFromIRODSValue(final String irodsValue) {
@@ -78,8 +79,7 @@ public class IRODSDataConversionUtil {
 			try {
 				result = Long.parseLong(irodsValue);
 			} catch (NumberFormatException nfe) {
-				throw new IllegalArgumentException("cannot format number:"
-						+ irodsValue, nfe);
+				throw new IllegalArgumentException("cannot format number:" + irodsValue, nfe);
 			}
 		}
 
@@ -91,10 +91,10 @@ public class IRODSDataConversionUtil {
 	 * Utility to return an irods date value as a {@code java.util.Date}
 	 *
 	 * @param irodsValue
-	 *            {@code String} containing an IRODS date value as returned
-	 *            from a query to ICAT
-	 * @return {@code java.util.Date} reflecting the IRODS time, or
-	 *         {@code null} if no date in the data
+	 *            {@code String} containing an IRODS date value as returned from a
+	 *            query to ICAT
+	 * @return {@code java.util.Date} reflecting the IRODS time, or {@code null} if
+	 *         no date in the data
 	 */
 	public static Date getDateFromIRODSValue(final String irodsValue) {
 
@@ -111,9 +111,7 @@ public class IRODSDataConversionUtil {
 		try {
 			dateInteger = Integer.parseInt(irodsValue);
 		} catch (NumberFormatException nfe) {
-			throw new IllegalArgumentException(
-					"malformed date value, cannot translate to integer:"
-							+ irodsValue);
+			throw new IllegalArgumentException("malformed date value, cannot translate to integer:" + irodsValue);
 		}
 
 		TimeZone timeZone = TimeZone.getTimeZone("GMT");
@@ -128,17 +126,16 @@ public class IRODSDataConversionUtil {
 	}
 
 	/**
-	 * Utility to determine the collection type contained in an iRODS value.
-	 * Null and empty values are mapped to the normal type.
+	 * Utility to determine the collection type contained in an iRODS value. Null
+	 * and empty values are mapped to the normal type.
 	 *
 	 * @param irodsValue
-	 *            {@code String} containing an IRODS collection type value
-	 *            as returned from a query to ICAT. May be null.
+	 *            {@code String} containing an IRODS collection type value as
+	 *            returned from a query to ICAT. May be null.
 	 *
 	 * @return the collection type
 	 */
-	public static SpecColType getCollectionTypeFromIRODSValue(
-			final String irodsValue) {
+	public static SpecColType getCollectionTypeFromIRODSValue(final String irodsValue) {
 
 		if (irodsValue == null || irodsValue.isEmpty()) {
 			return SpecColType.NORMAL;
@@ -152,15 +149,13 @@ public class IRODSDataConversionUtil {
 			return SpecColType.MOUNTED_COLL;
 		}
 
-		if (irodsValue.equals(COLL_TYPE_HAAW)
-				|| irodsValue.equals(COLL_TYPE_TAR)
+		if (irodsValue.equals(COLL_TYPE_HAAW) || irodsValue.equals(COLL_TYPE_TAR)
 				|| irodsValue.equals(COLL_TYPE_MSSO)) {
 
 			return SpecColType.STRUCT_FILE_COLL;
 		}
 
-		throw new IllegalArgumentException("unknown iRODS collection type: "
-				+ irodsValue);
+		throw new IllegalArgumentException("unknown iRODS collection type: " + irodsValue);
 	}
 
 	public static String escapeSingleQuotes(final String inputString) {

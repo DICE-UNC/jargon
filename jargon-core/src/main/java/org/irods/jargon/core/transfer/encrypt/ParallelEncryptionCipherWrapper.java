@@ -17,28 +17,26 @@ import org.slf4j.LoggerFactory;
  * @author Mike Conway - DICE
  *
  */
-public abstract class ParallelEncryptionCipherWrapper extends
-		ParallelCipherWrapper {
+public abstract class ParallelEncryptionCipherWrapper extends ParallelCipherWrapper {
 
-	public static final Logger log = LoggerFactory
-			.getLogger(ParallelEncryptionCipherWrapper.class);
+	public static final Logger log = LoggerFactory.getLogger(ParallelEncryptionCipherWrapper.class);
 
-	ParallelEncryptionCipherWrapper(
-			final PipelineConfiguration pipelineConfiguration,
+	ParallelEncryptionCipherWrapper(final PipelineConfiguration pipelineConfiguration,
 			final NegotiatedClientServerConfiguration negotiatedClientServerConfiguration) {
 		super(pipelineConfiguration, negotiatedClientServerConfiguration);
 	}
 
 	/**
-	 * Client method that will invoke the implementation-specific encrypt()
-	 * method after checking for proper initialization {@code byte[]} of
-	 * plaintext data
+	 * Client method that will invoke the implementation-specific encrypt() method
+	 * after checking for proper initialization {@code byte[]} of plaintext data
 	 *
+	 * @param input
+	 *            {@code byte[]} of plaintext
 	 * @return {@link EncryptionBuffer}
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
-	public EncryptionBuffer encrypt(final byte[] input)
-			throws EncryptionException {
+	public EncryptionBuffer encrypt(final byte[] input) throws EncryptionException {
 		log.info("encrypt()");
 		return doEncrypt(input);
 	}
@@ -50,8 +48,8 @@ public abstract class ParallelEncryptionCipherWrapper extends
 	 *            {@code byte[]} of plaintext data
 	 * @return {@link EncryptionBuffer}
 	 * @throws EncryptionException
+	 *             {@link EncryptionException}
 	 */
-	protected abstract EncryptionBuffer doEncrypt(byte[] input)
-			throws EncryptionException;
+	protected abstract EncryptionBuffer doEncrypt(byte[] input) throws EncryptionException;
 
 }

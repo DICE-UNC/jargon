@@ -3,6 +3,7 @@
  */
 package org.irods.jargon.core.utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -16,6 +17,7 @@ import java.util.List;
 import org.irods.jargon.core.connection.ConnectionConstants;
 import org.irods.jargon.core.connection.IRODSAccount;
 import org.irods.jargon.core.exception.JargonException;
+import org.irods.jargon.core.exception.JargonRuntimeException;
 import org.irods.jargon.core.exception.PathTooLongException;
 import org.irods.jargon.core.pub.domain.ObjStat;
 import org.irods.jargon.core.pub.domain.ObjStat.SpecColType;
@@ -133,7 +135,9 @@ public class MiscIRODSUtils {
 	 * iRODS account is not propagated to the wrong zone.
 	 *
 	 * @param irodsAbsolutePath
+	 *            {@code String} with iRODS path
 	 * @param irodsAccount
+	 *            {@link IRODSAccount}
 	 * @return {@code String} with the proper resource name
 	 */
 	public static String getDefaultIRODSResourceFromAccountIfFileInZone(final String irodsAbsolutePath,
@@ -225,8 +229,9 @@ public class MiscIRODSUtils {
 	 * determine if the path is in the current zone
 	 * 
 	 * @param irodsAccount
-	 * @param inZone
+	 *            {@link IRODSAccount}
 	 * @param pathComponents
+	 *            {@code List<String}} with the parts of the path
 	 * @return {@code boolean} if this path is in the current zone
 	 */
 	private static boolean isFirstPartOfPathInZone(final IRODSAccount irodsAccount, final List<String> pathComponents) {
@@ -311,21 +316,26 @@ public class MiscIRODSUtils {
 	 *            {@link InputStream} to be converted to a string using the given
 	 *            encoding
 	 * @return {@link String} with the stream contents
-	 * @throws Exception
 	 */
-	public static String convertStreamToString(final InputStream inputStream) throws Exception {
+	public static String convertStreamToString(final InputStream inputStream) {
 		final char[] buffer = new char[0x10000];
 		StringBuilder out = new StringBuilder();
-		Reader in = new InputStreamReader(inputStream, "UTF-8");
-		int read;
-		do {
-			read = in.read(buffer, 0, buffer.length);
-			if (read > 0) {
-				out.append(buffer, 0, read);
-			}
-		} while (read >= 0);
-		String result = out.toString();
-		return result;
+		Reader in;
+		try {
+			in = new InputStreamReader(inputStream, "UTF-8");
+			int read;
+			do {
+				read = in.read(buffer, 0, buffer.length);
+				if (read > 0) {
+					out.append(buffer, 0, read);
+				}
+			} while (read >= 0);
+			String result = out.toString();
+			return result;
+		} catch (IOException e) {
+			throw new JargonRuntimeException("error converting to string", e);
+		}
+
 	}
 
 	/**
@@ -386,6 +396,7 @@ public class MiscIRODSUtils {
 	 * Get a displayable byte value from a long value
 	 *
 	 * @param bytes
+	 *            {@code long} with length
 	 * @return {@code String} with a human readable version of the byte count
 	 */
 	public static String humanReadableByteCount(final long bytes) {
@@ -544,7 +555,9 @@ public class MiscIRODSUtils {
 	 * See if jargon supports the given status
 	 *
 	 * @param objStat
+	 *            {@link ObjStat}
 	 * @throws JargonException
+	 *             for iRODS error - indicates collection type is not supported
 	 */
 	public static void evaluateSpecCollSupport(final ObjStat objStat) throws JargonException {
 		if (objStat.getSpecColType() == SpecColType.LINKED_COLL) {
@@ -672,6 +685,7 @@ public class MiscIRODSUtils {
 	 *            java {@code enum}
 	 * @return {@code List<String>} of enum values
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static <T extends Enum<T>> List<String> getDisplayValuesFromEnum(final Class<T> enumClass)
 			throws JargonException {
@@ -881,6 +895,7 @@ public class MiscIRODSUtils {
 	 *            {@code String} with the path for which the prefix is trimmed
 	 * @return {@code String} with the prefix removed
 	 * @throws JargonException
+	 *             for iRODS error
 	 */
 	public static final String subtractPrefixFromGivenPath(final String prefix, final String path)
 			throws JargonException {
